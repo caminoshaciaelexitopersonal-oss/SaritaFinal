@@ -25,6 +25,8 @@ class IsAdminOrFuncionario(BasePermission):
             and request.user.is_authenticated
             and request.user.role in [
                 CustomUser.Role.ADMIN,
+                CustomUser.Role.ADMIN_DEPARTAMENTAL,
+                CustomUser.Role.ADMIN_MUNICIPAL,
                 CustomUser.Role.FUNCIONARIO_DIRECTIVO,
                 CustomUser.Role.FUNCIONARIO_PROFESIONAL,
             ]
@@ -47,48 +49,63 @@ class IsAdminOrFuncionarioForUserManagement(BasePermission):
     """
     Permiso personalizado para la gestión de usuarios.
     - ADMIN puede gestionar a todos los usuarios.
-    - FUNCIONARIO (ambos tipos) puede gestionar a PRESTADOR, ARTESANO y TURISTA.
+    - FUNCIONARIO (cualquier tipo) puede gestionar a PRESTADOR, ARTESANO y TURISTA.
     """
     def has_permission(self, request, view):
         user = request.user
-        if not (user and user.is_authenticated):
+        if not user or not user.is_authenticated:
             return False
 
-        allowed_roles = [
-            CustomUser.Role.ADMIN,
-            CustomUser.Role.FUNCIONARIO_DIRECTIVO,
-            CustomUser.Role.FUNCIONARIO_PROFESIONAL,
-        ]
-        # Admin y Funcionarios pueden acceder a la vista (listar, crear, etc.)
-        if user.role in allowed_roles:
-            # Restricción especial: Funcionarios no pueden crear Admins ni otros Funcionarios
-            if request.method == 'POST':
-                role_to_create = request.data.get("role")
-                if user.role in [CustomUser.Role.FUNCIONARIO_DIRECTIVO, CustomUser.Role.FUNCIONARIO_PROFESIONAL]:
-                    if role_to_create not in [CustomUser.Role.PRESTADOR, CustomUser.Role.ARTESANO, CustomUser.Role.TURISTA]:
-                        return False
+        # El Super Admin puede hacer todo
+        if user.role == CustomUser.Role.ADMIN:
             return True
 
-        return False
+        # Los funcionarios pueden listar, pero el filtrado se hace en la vista.
+        if view.action == 'list':
+            return True
+
+        # Para crear, los funcionarios solo pueden crear roles de menor jerarquía
+        if view.action == 'create':
+            target_role = request.data.get('role')
+            allowed_target_roles = [
+                CustomUser.Role.PRESTADOR,
+                CustomUser.Role.ARTESANO,
+                CustomUser.Role.TURISTA,
+            ]
+            return target_role in allowed_target_roles
+
+        # Para otras acciones, se necesita un objeto, así que se delega a has_object_permission
+        return True
 
     def has_object_permission(self, request, view, obj):
         user = request.user
 
-        # Admin puede gestionar cualquier usuario
         if user.role == CustomUser.Role.ADMIN:
             return True
 
-        # Funcionarios solo pueden gestionar Prestador, Artesano y Turista
-        if user.role in [CustomUser.Role.FUNCIONARIO_DIRECTIVO, CustomUser.Role.FUNCIONARIO_PROFESIONAL]:
-            return obj.role in [CustomUser.Role.PRESTADOR, CustomUser.Role.ARTESANO, CustomUser.Role.TURISTA]
+        is_funcionario = user.role in [
+            CustomUser.Role.ADMIN_DEPARTAMENTAL,
+            CustomUser.Role.ADMIN_MUNICIPAL,
+            CustomUser.Role.FUNCIONARIO_DIRECTIVO,
+            CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+        ]
+
+        if is_funcionario:
+            target_role = obj.role
+            allowed_target_roles = [
+                CustomUser.Role.PRESTADOR,
+                CustomUser.Role.ARTESANO,
+                CustomUser.Role.TURISTA,
+            ]
+            return target_role in allowed_target_roles
 
         return False
 
 
-class IsAdminOrDirectivo(BasePermission):
+class IsAnyAdminOrDirectivo(BasePermission):
     """
-    Permiso personalizado para permitir el acceso solo a usuarios con rol de
-    ADMINISTRADOR o FUNCIONARIO_DIRECTIVO.
+    Permiso personalizado para permitir el acceso a cualquier tipo de Administrador
+    o a un Funcionario Directivo.
     """
     def has_permission(self, request, view):
         return bool(
@@ -96,6 +113,8 @@ class IsAdminOrDirectivo(BasePermission):
             and request.user.is_authenticated
             and request.user.role in [
                 CustomUser.Role.ADMIN,
+                CustomUser.Role.ADMIN_DEPARTAMENTAL,
+                CustomUser.Role.ADMIN_MUNICIPAL,
                 CustomUser.Role.FUNCIONARIO_DIRECTIVO,
             ]
         )
@@ -109,8 +128,21 @@ class IsPrestador(BasePermission):
         return bool(
             request.user
             and request.user.is_authenticated
+            and hasattr(request.user, 'perfil_prestador')
             and request.user.role == CustomUser.Role.PRESTADOR
         )
+
+class IsPrestadorOwner(BasePermission):
+    """
+    Permite el acceso solo si el objeto que se está viendo/editando
+    pertenece al prestador de servicios que está logueado.
+    """
+    def has_object_permission(self, request, view, obj):
+        # Asumimos que el obj (ej. Producto, RegistroCliente) tiene un campo 'prestador'
+        # que es una FK a PrestadorServicio.
+        if hasattr(obj, 'prestador'):
+            return obj.prestador == request.user.perfil_prestador
+        return False
 
 
 class CanManageAtractivos(BasePermission):
@@ -167,48 +199,3 @@ class CanManageAtractivos(BasePermission):
         # El autor del atractivo puede gestionarlo.
         # Esto cubre al guía que lo creó.
         return obj.autor == user
-
-
- # Generated by Django 5.2.6 on 2025-10-01 13:31
-
-import django.db.models.deletion
-from django.db import migrations, models
-
-
-class Migration(migrations.Migration):
-
-    dependencies = [
-        ("api", "0003_artesano_descripcion_en_artesano_descripcion_es_and_more"),
-        ("contenttypes", "0002_remove_content_type_name"),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name="formulario",
-            name="content_type",
-            field=models.ForeignKey(
-                blank=True,
-                help_text="El tipo de entidad al que se asocia este formulario.",
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                to="contenttypes.contenttype",
-            ),
-        ),
-        migrations.AddField(
-            model_name="formulario",
-            name="object_id",
-            field=models.PositiveIntegerField(
-                blank=True,
-                help_text="El ID de la entidad específica a la que se asocia.",
-                null=True,
-            ),
-        ),
-        migrations.AlterUniqueTogether(
-            name="formulario",
-            unique_together={("nombre", "content_type", "object_id")},
-        ),
-        migrations.RemoveField(
-            model_name="formulario",
-            name="categoria",
-        ),
-    ]
