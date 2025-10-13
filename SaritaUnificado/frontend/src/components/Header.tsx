@@ -75,6 +75,10 @@ const Header: React.FC = () => {
     ));
   };
 
+  const staticLinks = [
+    { id: 99, nombre: 'Empleo', url: '/empleo', parent: null, children: [] }
+  ];
+
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -110,7 +114,10 @@ const Header: React.FC = () => {
               ) : headerError ? (
                 <span className="text-sm text-red-500">{headerError}</span>
               ) : (
-                renderNavLinks(navItems)
+                <>
+                  {renderNavLinks(navItems)}
+                  {renderNavLinks(staticLinks)}
+                </>
               )}
             </nav>
 
@@ -169,7 +176,10 @@ const Header: React.FC = () => {
             ) : headerError ? (
                 <div className="px-3 py-2 text-base text-red-500">{headerError}</div>
             ) : (
-                renderNavLinks(navItems, true)
+              <>
+                {renderNavLinks(navItems, true)}
+                {renderNavLinks(staticLinks, true)}
+              </>
             )}
           </nav>
           <div className="px-4 py-3 border-t border-gray-200">
