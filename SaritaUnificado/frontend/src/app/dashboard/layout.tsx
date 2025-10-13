@@ -5,8 +5,6 @@ import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { DashboardProvider } from '@/contexts/DashboardContext'; // Importar el proveedor
-
 export default function DashboardLayout({
   children,
 }: {
@@ -53,42 +51,40 @@ export default function DashboardLayout({
   }
 
   return (
-    <DashboardProvider>
-      <div className="flex min-h-screen bg-gray-50">
-        {/* --- Sidebar --- */}
-        {/* Sidebar para Desktop (visible y estático) */}
-        <div className="hidden lg:flex lg:flex-shrink-0">
+    <div className="flex min-h-screen bg-gray-50">
+      {/* --- Sidebar --- */}
+      {/* Sidebar para Desktop (visible y estático) */}
+      <div className="hidden lg:flex lg:flex-shrink-0">
+        <Sidebar />
+      </div>
+
+      {/* Sidebar para Móvil (Drawer con transición) */}
+      <div
+        className={`lg:hidden fixed inset-0 z-50 transition-transform transform ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        role="dialog"
+        aria-modal="true"
+      >
+        {/* Overlay oscuro */}
+        <div
+          className="fixed inset-0 bg-black/60"
+          aria-hidden="true"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+
+        {/* Contenido del Sidebar */}
+        <div className="relative bg-white h-full w-64 shadow-xl">
           <Sidebar />
         </div>
-
-        {/* Sidebar para Móvil (Drawer con transición) */}
-        <div
-          className={`lg:hidden fixed inset-0 z-50 transition-transform transform ${
-            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-          role="dialog"
-          aria-modal="true"
-        >
-          {/* Overlay oscuro */}
-          <div
-            className="fixed inset-0 bg-black/60"
-            aria-hidden="true"
-            onClick={() => setIsSidebarOpen(false)}
-          ></div>
-
-          {/* Contenido del Sidebar */}
-          <div className="relative bg-white h-full w-64 shadow-xl">
-            <Sidebar />
-          </div>
-        </div>
-
-        <div className="flex flex-col flex-1 w-0 lg:overflow-x-hidden">
-          <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-          <main className="flex-1 relative z-0 focus:outline-none p-4 sm:p-6 lg:p-8">
-            {children}
-          </main>
-        </div>
       </div>
-    </DashboardProvider>
+
+      <div className="flex flex-col flex-1 w-0 lg:overflow-x-hidden">
+        <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+        <main className="flex-1 relative z-0 focus:outline-none p-4 sm:p-6 lg:p-8">
+          {children}
+        </main>
+      </div>
+    </div>
   );
 }

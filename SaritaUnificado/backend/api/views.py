@@ -54,7 +54,8 @@ from .models import (
     ItemVerificacion,
     Verificacion,
     RespuestaItemVerificacion,
-    AsistenciaCapacitacion
+    AsistenciaCapacitacion,
+    Vacante
 )
 from .serializers import (
     GaleriaItemSerializer,
@@ -127,7 +128,10 @@ from .serializers import (
     IniciarVerificacionSerializer,
     GuardarVerificacionSerializer,
     CapacitacionDetailSerializer,
-    RegistrarAsistenciaSerializer
+    RegistrarAsistenciaSerializer,
+    ProductoSerializer,
+    RegistroClienteSerializer,
+    VacanteSerializer
 )
 from .permissions import (
     IsTurista,
@@ -135,10 +139,61 @@ from .permissions import (
     IsAdmin,
     IsAdminOrFuncionarioForUserManagement,
     IsPrestador,
-    IsAdminOrDirectivo,
-    CanManageAtractivos
+    IsAnyAdminOrDirectivo,
+    CanManageAtractivos,
+    IsPrestadorOwner
 )
 from .filters import AuditLogFilter
+
+
+class VacanteViewSet(viewsets.ModelViewSet):
+    queryset = Vacante.objects.filter(activa=True).select_related('empresa')
+    serializer_class = VacanteSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['tipo_contrato', 'ubicacion']
+    search_fields = ['titulo', 'descripcion', 'empresa__nombre_negocio']
+    ordering_fields = ['fecha_publicacion', 'salario']
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            self.permission_classes = [IsAuthenticated, IsPrestador]
+        else: # list, retrieve
+            self.permission_classes = [AllowAny]
+        return super().get_permissions()
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and hasattr(user, 'perfil_prestador'):
+            return Vacante.objects.filter(empresa=user.perfil_prestador)
+        return super().get_queryset()
+
+    def perform_create(self, serializer):
+        serializer.save(empresa=self.request.user.perfil_prestador)
+
+    def perform_update(self, serializer):
+        serializer.save(empresa=self.request.user.perfil_prestador)
+
+
+class ProductoViewSet(viewsets.ModelViewSet):
+    serializer_class = ProductoSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        return Producto.objects.filter(prestador=self.request.user.perfil_prestador)
+
+    def perform_create(self, serializer):
+        serializer.save(prestador=self.request.user.perfil_prestador)
+
+
+class RegistroClienteViewSet(viewsets.ModelViewSet):
+    serializer_class = RegistroClienteSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        return RegistroCliente.objects.filter(prestador=self.request.user.perfil_prestador)
+
+    def perform_create(self, serializer):
+        serializer.save(prestador=self.request.user.perfil_prestador)
 
 
 class FormularioViewSet(viewsets.ModelViewSet):
@@ -151,7 +206,7 @@ class FormularioViewSet(viewsets.ModelViewSet):
         if self.action in ['list', 'retrieve']:
             self.permission_classes = [AllowAny]
         else:
-            self.permission_classes = [IsAdminOrDirectivo]
+            self.permission_classes = [IsAnyAdminOrDirectivo]
         return super().get_permissions()
     def get_queryset(self):
         user = self.request.user
@@ -291,9 +346,9 @@ class HechoHistoricoViewSet(viewsets.ModelViewSet):
     serializer_class = HechoHistoricoSerializer
     permission_classes = [AllowAny]
 
-class MenuItemViewSet(viewsets.ReadOnlyModelViewSet):
+class MenuItemViewSet(viewsets.ModelViewSet):
     serializer_class = MenuItemSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdmin] # Solo los admins pueden modificar el menú
 
     def get_queryset(self):
         # Devuelve solo los elementos raíz (los que no tienen padre)
@@ -377,12 +432,12 @@ class VerificacionViewSet(viewsets.ModelViewSet):
 class PreguntaViewSet(viewsets.ModelViewSet):
     queryset = Pregunta.objects.all()
     serializer_class = PreguntaSerializer
-    permission_classes = [IsAdminOrDirectivo]
+    permission_classes = [IsAnyAdminOrDirectivo]
 
 class OpcionRespuestaViewSet(viewsets.ModelViewSet):
     queryset = OpcionRespuesta.objects.all()
     serializer_class = OpcionRespuestaSerializer
-    permission_classes = [IsAdminOrDirectivo]
+    permission_classes = [IsAnyAdminOrDirectivo]
 
 class SiteConfigurationView(generics.RetrieveUpdateAPIView):
     queryset = SiteConfiguration.objects.all()
