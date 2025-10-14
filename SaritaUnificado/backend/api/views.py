@@ -366,15 +366,22 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     @transaction.atomic
     def reorder(self, request, *args, **kwargs):
-        # Función recursiva para procesar la estructura anidada
+        # El test envía una lista de diccionarios, cada uno con 'id' y 'children'
         def process_level(items, parent=None):
             for index, item_data in enumerate(items):
                 item_id = item_data.get('id')
-                if item_id:
-                    MenuItem.objects.filter(pk=item_id).update(orden=index, parent=parent)
+                # Asegurarse de que el item existe antes de intentar actualizarlo
+                try:
+                    menu_item = MenuItem.objects.get(pk=item_id)
+                    menu_item.orden = index
+                    menu_item.parent = parent
+                    menu_item.save()
+
                     if 'children' in item_data and item_data['children']:
-                        child_item = MenuItem.objects.get(pk=item_id)
-                        process_level(item_data['children'], parent=child_item)
+                        process_level(item_data['children'], parent=menu_item)
+                except MenuItem.DoesNotExist:
+                    # Si un item no existe, simplemente lo ignoramos para no romper la transacción
+                    continue
 
         process_level(request.data)
         return Response({'status': 'Menú reordenado con éxito'})
