@@ -37,6 +37,35 @@ def galeria_artesano_directory_path(instance, filename):
 def site_config_directory_path(instance, filename):
     return f'site_config/{filename}'
 
+class Entity(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+    type = models.CharField(max_length=20, choices=[('municipal','Municipal'),('departamental','Departamental'),('nacional','Nacional')])
+    logo = models.URLField(blank=True, null=True)
+    primary_color = models.CharField(max_length=7, default="#0070f3")
+    settings = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+class Department(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+class Municipality(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
 class CustomUser(AbstractUser):
     class Role(models.TextChoices):
         ADMIN = "ADMIN", _("Super Administrador")
@@ -88,6 +117,16 @@ class CustomUser(AbstractUser):
             elif not self.role:
                 self.role = self.base_role
         super().save(*args, **kwargs)
+
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    entity = models.ForeignKey(Entity, on_delete=models.SET_NULL, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
+    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"Profile for {self.user.username}"
+
 
 class UserLLMConfig(models.Model):
     """
@@ -161,7 +200,7 @@ class PrestadorServicio(models.Model):
     promociones_ofertas = models.TextField(blank=True, null=True, help_text="Detalles de promociones, menús, paquetes, etc.")
     aprobado = models.BooleanField(default=False, help_text="El administrador debe aprobar este perfil para que sea visible.")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now=True) 
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     # --- Scoring Fields ---
     puntuacion_verificacion = models.PositiveIntegerField(default=0, help_text="Puntaje acumulado de verificaciones de cumplimiento.")
