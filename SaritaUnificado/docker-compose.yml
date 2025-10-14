@@ -16,7 +16,7 @@ services:
   backend:
     build: .
     container_name: backend_test
-    command: python backend/manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
@@ -39,6 +39,8 @@ services:
       - .:/app
     depends_on:
       - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000/api
 
 volumes:
   postgres_data: {}

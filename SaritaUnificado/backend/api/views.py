@@ -166,7 +166,8 @@ class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['department']
- class EntityViewSet(viewsets.ReadOnlyModelViewSet):
+
+class EntityViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A simple ViewSet for viewing entities.
     """
