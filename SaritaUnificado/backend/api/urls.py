@@ -6,6 +6,11 @@ from . import views
 # --- Routers ---
 router = DefaultRouter()
 
+# Endpoints para Multi-Entity
+router.register(r'entities', views.EntityViewSet, basename='entity')
+router.register(r'departments', views.DepartmentViewSet, basename='department')
+router.register(r'municipalities', views.MunicipalityViewSet, basename='municipality')
+
 # Recursos de Administración y Contenido General
 router.register(r'notificaciones', views.NotificacionViewSet, basename='notificacion')
 router.register(r'atractivos', views.AtractivoTuristicoViewSet, basename='atractivo')
@@ -55,6 +60,7 @@ urlpatterns = [
     path('config/site-config/', views.SiteConfigurationView.as_view(), name='site-configuration'),
 
     # --- Vistas Privadas (Requieren Autenticación) ---
+    path('admin/my-entity/', views.EntityAdminView.as_view(), name='entity-admin'),
     path('profile/prestador/', views.PrestadorProfileView.as_view(), name='prestador-profile'),
     path('profile/artesano/', views.ArtesanoProfileView.as_view(), name='artesano-profile'),
     path('profile/feedback/', views.FeedbackProveedorView.as_view(), name='proveedor-feedback'),

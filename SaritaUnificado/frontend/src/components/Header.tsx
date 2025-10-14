@@ -4,9 +4,12 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEntity } from '@/contexts/EntityContext';
+import { useTranslations } from 'next-intl';
 import api from '@/lib/api';
 import { FiMenu, FiX, FiBell } from 'react-icons/fi';
 import { usePathname } from 'next/navigation';
+import LanguageSwitcher from './LanguageSwitcher';
 
 // Interfaces de datos
 interface NavLink {
@@ -25,7 +28,9 @@ interface SiteConfig {
 }
 
 const Header: React.FC = () => {
+  const t = useTranslations('Header');
   const { user, logout, isLoading: isAuthLoading } = useAuth(); // Renombrar para claridad
+  const { entity } = useEntity();
   const [navItems, setNavItems] = useState<NavLink[]>([]);
   const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -79,22 +84,26 @@ const Header: React.FC = () => {
     { id: 99, nombre: 'Empleo', url: '/empleo', parent: null, children: [] }
   ];
 
+  const headerStyle = {
+    backgroundColor: entity?.primary_color || '#ffffff',
+  };
+
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className="shadow-md sticky top-0 z-50" style={headerStyle}>
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
 
           {/* Sección Izquierda: Logo e Identificación Institucional */}
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0">
-              {siteConfig?.logo_url ? (
-                <Image src={siteConfig.logo_url} alt="Logo Institucional" width={60} height={60} className="h-14 w-auto" />
+              {(entity?.logo || siteConfig?.logo_url) ? (
+                <Image src={entity?.logo || siteConfig!.logo_url} alt="Logo Institucional" width={60} height={60} className="h-14 w-auto" />
               ) : (
                 <div className="w-14 h-14 bg-gray-200 rounded-full animate-pulse"></div>
               )}
             </Link>
             <div className="hidden md:block ml-4">
-              <h2 className="text-sm font-bold text-gray-800">{siteConfig?.nombre_entidad_principal} {siteConfig?.nombre_entidad_secundaria}</h2>
+              <h2 className="text-sm font-bold text-gray-800">{entity?.name || `${siteConfig?.nombre_entidad_principal} ${siteConfig?.nombre_entidad_secundaria}`}</h2>
               <p className="text-xs text-gray-600">{siteConfig?.nombre_secretaria}</p>
               <p className="text-xs font-light text-gray-500">Promoviendo las rutas turísticas</p>
             </div>
@@ -123,6 +132,7 @@ const Header: React.FC = () => {
 
             {/* Acciones de Usuario para Escritorio */}
             <div className="hidden md:flex items-center space-x-2">
+              <LanguageSwitcher />
               <button className="p-2 rounded-full hover:bg-gray-100 text-gray-600">
                 <FiBell size={20} />
               </button>
@@ -131,22 +141,22 @@ const Header: React.FC = () => {
                   {user ? (
                     <>
                       <Link href="/dashboard" className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
-                        Dashboard
+                        {t('dashboard')}
                       </Link>
                       <button
                         onClick={logout}
                         className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
                       >
-                        Salir
+                        {t('logout')}
                       </button>
                     </>
                   ) : (
                     <>
                       <Link href="/login" className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                        Ingresar
+                        {t('login')}
                       </Link>
                       <Link href="/registro" className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50">
-                        Registrarse
+                        {t('register')}
                       </Link>
                     </>
                   )}

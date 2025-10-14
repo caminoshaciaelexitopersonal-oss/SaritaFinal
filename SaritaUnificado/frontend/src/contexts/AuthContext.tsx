@@ -2,6 +2,7 @@
 
 import React, { createContext, useState, useContext, ReactNode, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEntity } from './EntityContext';
 import { toast } from 'react-toastify';
 import api from '@/lib/api'; // Importar la instancia centralizada de Axios
 import axios from 'axios'; // Importar axios solo para el type guard isAxiosError
@@ -40,8 +41,8 @@ export interface RegisterData {
     | 'FUNCIONARIO_PROFESIONAL';
 
   // Campos para Turista
-  origen?: 'LOCAL' | 'REGIONAL' | 'NACIONAL' | 'EXTRANJERO' | '';
-  pais_origen?: string;
+  department_id?: number;
+  municipality_id?: number;
 
   // Campos para Prestador
   nombre_establecimiento?: string;
@@ -93,10 +94,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [savedItemsMap, setSavedItemsMap] = useState<Map<string, number>>(new Map());
   const router = useRouter();
+  const { loadEntity, clearEntity } = useEntity();
 
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
+    clearEntity();
     setMfaRequired(false);
     setLoginCredentials(null);
     setSavedItemsMap(new Map());
@@ -124,12 +127,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         setSavedItemsMap(new Map());
       }
+
+      if (userData.role === 'ADMIN_ENTIDAD') {
+        await loadEntity();
+      } else {
+        clearEntity();
+      }
+
       return userData; // Devolver los datos del usuario para uso inmediato
     } catch (error) {
       logout();
       return null; // Devolver null en caso de error
     }
-  }, [logout]);
+  }, [logout, loadEntity, clearEntity]);
 
   useEffect(() => {
     const storedToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
@@ -300,10 +310,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Añadir campos específicos del rol al payload
     switch (data.role) {
       case 'TURISTA':
-        payload.origen = data.origen;
-        if (data.origen === 'EXTRANJERO') {
-          payload.pais_origen = data.pais_origen;
-        }
+        payload.department_id = data.department_id;
+        payload.municipality_id = data.municipality_id;
         break;
       case 'PRESTADOR':
         payload.nombre_establecimiento = data.nombre_establecimiento;

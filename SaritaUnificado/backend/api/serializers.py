@@ -18,9 +18,35 @@ from .models import (
     UserLLMConfig,
     Producto,
     RegistroCliente,
-    Vacante
+    Vacante,
+    Department,
+    Municipality,
+    Entity,
+    Profile
 )
 from django.db import transaction
+
+class EntitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Entity
+        fields = ['id', 'name', 'slug']
+
+class EntityAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Entity
+        fields = ['name', 'logo', 'primary_color', 'settings']
+
+class MunicipalitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Municipality
+        fields = ['id', 'name']
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    municipalities = MunicipalitySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Department
+        fields = ['id', 'name', 'municipalities']
 
 class VacanteSerializer(serializers.ModelSerializer):
     empresa_nombre = serializers.CharField(source='empresa.nombre_negocio', read_only=True)
@@ -530,16 +556,28 @@ class PrestadorServicioSerializer(serializers.ModelSerializer):
 
 
 class TuristaRegisterSerializer(RegisterSerializer):
-    origen = serializers.ChoiceField(choices=CustomUser.Origen.choices, required=False)
-    pais_origen = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    department_id = serializers.PrimaryKeyRelatedField(
+        queryset=Department.objects.all(), source='department', required=True
+    )
+    municipality_id = serializers.PrimaryKeyRelatedField(
+        queryset=Municipality.objects.all(), source='municipality', required=True
+    )
+
+    def validate_municipality_id(self, value):
+        department = self.initial_data.get('department_id')
+        if department and value.department.id != int(department):
+            raise serializers.ValidationError("Este municipio no pertenece al departamento seleccionado.")
+        return value
 
     @transaction.atomic
     def save(self, request):
         user = super().save(request)
         user.role = CustomUser.Role.TURISTA
-        user.origen = self.validated_data.get('origen', None)
-        user.pais_origen = self.validated_data.get('pais_origen', None)
         user.save()
+
+        department = self.validated_data.get('department')
+        municipality = self.validated_data.get('municipality')
+        Profile.objects.create(user=user, department=department, municipality=municipality)
         return user
 
 
