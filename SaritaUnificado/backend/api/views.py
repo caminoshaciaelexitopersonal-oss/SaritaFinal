@@ -158,7 +158,7 @@ class DepartmentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DepartmentSerializer
     permission_classes = [AllowAny]
 
- class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
+class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A simple ViewSet for viewing municipalities.
     Can be filtered by department.
