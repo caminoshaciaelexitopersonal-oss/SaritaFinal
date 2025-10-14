@@ -37,6 +37,9 @@ def galeria_artesano_directory_path(instance, filename):
 def site_config_directory_path(instance, filename):
     return f'site_config/{filename}'
 
+def documento_verificacion_path(instance, filename):
+    return f'documentos_verificacion/{instance.prestador.usuario.username}/{uuid.uuid4()}_{filename}'
+
 class Entity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
@@ -409,15 +412,6 @@ class ImagenGaleria(models.Model):
     alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad")
     def __str__(self):
         return f"Imagen de {self.prestador.nombre_negocio}"
-
-
-class DocumentoLegalizacion(models.Model):
-    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name="documentos_legalizacion")
-    documento = models.FileField(upload_to=documentos_directory_path)
-    nombre_documento = models.CharField(max_length=100)
-    fecha_subida = models.DateTimeField(auto_now_add=True)
-    def __str__(self):
-        return f"{self.nombre_documento} de {self.prestador.nombre_negocio}"
 
 
 class Publicacion(models.Model):
@@ -1189,53 +1183,56 @@ class Vacante(models.Model):
     def __str__(self):
         return f"{self.titulo} en {self.empresa.nombre_negocio}"
 
+   lass Meta:
+    verbose_name = "Vacante de Empleo"
+    verbose_name_plural = "Vacantes de Empleo"
+    ordering = ['-fecha_publicacion']
+
+
+# --------------------- Módulo de Verificación de Documentos ---------------------
+
+class TipoDocumentoVerificacion(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    nombre = models.CharField(_("Nombre del Documento"), max_length=255, unique=True, help_text="Ej: RNT, Cámara de Comercio, etc.")
+    descripcion = models.TextField(_("Descripción"), blank=True, help_text="Explicación breve del documento.")
+    requerido = models.BooleanField(_("Requerido"), default=True, help_text="Indica si es obligatorio para la verificación del prestador.")
+    activo = models.BooleanField(_("Activo"), default=True, help_text="Permite activar/desactivar tipos de documentos sin tocar el código.")
+
+    def __str__(self):
+        return self.nombre
+
     class Meta:
-        verbose_name = "Vacante de Empleo"
-        verbose_name_plural = "Vacantes de Empleo"
-        ordering = ['-fecha_publicacion']
+        verbose_name = "Tipo de Documento de Verificación"
+        verbose_name_plural = "Tipos de Documentos de Verificación"
 
+class DocumentoVerificacion(models.Model):
+    class Estado(models.TextChoices):
+        PENDIENTE = "PENDIENTE", _("Pendiente de Verificación")
+        APROBADO = "APROBADO", _("Aprobado")
+        RECHAZADO = "RECHAZADO", _("Rechazado")
 
-
-class Reservation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reservations')
-    entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='reservations')
-    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='reservations')
-    details = models.TextField()
-    reservation_date = models.DateTimeField()
-    status = models.CharField(
-        max_length=20,
-        choices=[
-            ('PENDING', 'Pending'),
-            ('CONFIRMED', 'Confirmed'),
-            ('CANCELLED', 'Cancelled')
-        ],
-        default='PENDING'
+    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name="documentos_verificacion")
+    tipo_documento = models.ForeignKey(TipoDocumentoVerificacion, on_delete=models.PROTECT, related_name="documentos")
+    archivo = models.FileField(_("Archivo"), upload_to=documento_verificacion_path)
+    estado = models.CharField(_("Estado de Verificación"), max_length=20, choices=Estado.choices, default=Estado.PENDIENTE, db_index=True)
+    observaciones = models.TextField(_("Observaciones del Verificador"), blank=True)
+    verificado_por = models.ForeignKey(
+        CustomUser,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="documentos_verificados",
+        help_text="El administrador (de entidad o súper) que realizó la verificación."
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    fecha_verificacion = models.DateTimeField(_("Fecha de Verificación"), null=True, blank=True)
+    fecha_subida = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Reservation for {self.user.username} at {self.prestador.nombre_negocio}"
+        return f"{self.tipo_documento.nombre} para {self.prestador.nombre_negocio} ({self.get_estado_display()})"
 
-
-class Transaction(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='transactions')
-    entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='transactions')
-    reservation = models.ForeignKey(Reservation, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions')
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.CharField(max_length=3, default='COP')
-    status = models.CharField(
-        max_length=20,
-        choices=[
-            ('PENDING', 'Pending'),
-            ('COMPLETED', 'Completed'),
-            ('FAILED', 'Failed')
-        ],
-        default='PENDING'
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Transaction of {self.amount} {self.currency} for {self.user.username}"
+    class Meta:
+        verbose_name = "Documento de Verificación"
+        verbose_name_plural = "Documentos de Verificación"
+        ordering = ['-fecha_subida']

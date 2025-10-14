@@ -44,16 +44,16 @@ const Header: React.FC = () => {
       setHeaderError(null);
       try {
         const [menuResponse, configResponse] = await Promise.all([
-          api.get('/config/menu-items/'),
-          api.get('/config/site-config/')
+          api.get('config/menu-items/'),
+          api.get('config/site-config/')
         ]);
 
         const menuData = menuResponse.data.results || menuResponse.data || [];
         setNavItems(menuData);
         setSiteConfig(configResponse.data);
 
-      } catch (error) {
-        console.error("Error fetching header data:", error);
+      } catch (error: any) {
+        console.error("Error fetching header data:", error.response ? error.response.data : error.message);
         setHeaderError("No se pudo cargar el menú."); // Mensaje de error para el usuario
       } finally {
         setIsHeaderLoading(false);

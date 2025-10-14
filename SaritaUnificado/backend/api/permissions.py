@@ -205,11 +205,16 @@ class IsEntityAdmin(BasePermission):
     """
     Permiso para permitir la gestión de una entidad solo a su administrador.
     """
+    message = "No tienes permisos de administrador para esta entidad."
+
     def has_permission(self, request, view):
+        # El usuario debe estar autenticado, tener el rol correcto, y tener un perfil con una entidad asignada.
         return bool(
             request.user and
             request.user.is_authenticated and
-            request.user.role == CustomUser.Role.ADMIN_ENTIDAD
+            request.user.role == CustomUser.Role.ADMIN_ENTIDAD and
+            hasattr(request.user, 'profile') and
+            request.user.profile.entity is not None
         )
 
     def has_object_permission(self, request, view, obj):

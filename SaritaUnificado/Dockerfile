@@ -45,8 +45,8 @@ WORKDIR /app/backend
 # Actualiza pip e instala las dependencias de Python
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# Instala Playwright y sus navegadores
-RUN npm install -g playwright && playwright install --with-deps
+# Instala los navegadores de Playwright (sin dependencias de SO, ya que se instalan arriba)
+RUN playwright install
 
 # Expone el puerto que usará la aplicación Django
 EXPOSE 8000
