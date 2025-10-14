@@ -1,0 +1,11 @@
+{
+  "Header": {
+    "dashboard": "Panel de Control",
+    "logout": "Salir",
+    "login": "Ingresar",
+    "register": "Registrarse"
+  },
+  "Footer": {
+    "rights_reserved": "Todos los derechos reservados."
+  }
+}

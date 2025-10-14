@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import api from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { RegisterData } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -13,9 +14,21 @@ type FormErrors = {
   [key: string]: string[];
 };
 
+interface Department {
+  id: number;
+  name: string;
+}
+
+interface Municipality {
+  id: number;
+  name: string;
+}
+
 export default function RegisterPage() {
   const { register: registerUser } = useAuth();
   const router = useRouter();
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
 
   const {
     register,
@@ -32,7 +45,35 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState<string | null>(null);
 
   const role = watch('role');
-  const origen = watch('origen');
+  const departmentId = watch('department_id');
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await api.get('/departments/');
+        setDepartments(response.data.results || response.data);
+      } catch (error) {
+        toast.error('No se pudieron cargar los departamentos.');
+      }
+    };
+    fetchDepartments();
+  }, []);
+
+  useEffect(() => {
+    const fetchMunicipalities = async () => {
+      if (departmentId) {
+        try {
+          const response = await api.get(`/municipalities/?department=${departmentId}`);
+          setMunicipalities(response.data.results || response.data);
+        } catch (error) {
+          toast.error('No se pudieron cargar los municipios.');
+        }
+      } else {
+        setMunicipalities([]);
+      }
+    };
+    fetchMunicipalities();
+  }, [departmentId]);
 
   const onSubmit: SubmitHandler<RegisterData> = async (data) => {
     setSuccess(null);
@@ -157,26 +198,37 @@ export default function RegisterPage() {
           {/* --- Campos para Turista --- */}
           {role === 'TURISTA' && (
             <div className="p-4 space-y-4 border-l-4 border-blue-500 bg-blue-50">
-              <h3 className="font-medium text-gray-800">Información del Turista</h3>
+              <h3 className="font-medium text-gray-800">Información de Ubicación</h3>
               <div>
-                <label htmlFor="origen" className="block text-sm font-medium text-gray-700">¿De dónde nos visitas?</label>
+                <label htmlFor="department_id" className="block text-sm font-medium text-gray-700">Departamento</label>
                 <select
-                  id="origen"
-                  {...register('origen', { required: role === 'TURISTA' ? 'Este campo es obligatorio.' : false })}
-                  className={`w-full px-3 py-2 mt-1 border rounded-md shadow-sm ${errors.origen ? 'border-red-500' : 'border-gray-300'}`}
+                  id="department_id"
+                  {...register('department_id', { required: 'Este campo es obligatorio.' })}
+                  className={`w-full px-3 py-2 mt-1 border rounded-md shadow-sm ${errors.department_id ? 'border-red-500' : 'border-gray-300'}`}
                 >
-                  <option value="">Selecciona tu origen</option>
-                  <option value="LOCAL">Soy de Puerto Gaitán</option>
-                  <option value="REGIONAL">Vengo del Meta</option>
-                  <option value="NACIONAL">Vengo de otro lugar de Colombia</option>
-                  <option value="EXTRANJERO">Soy extranjero</option>
+                  <option value="">Selecciona un departamento</option>
+                  {departments.map((dept) => (
+                    <option key={dept.id} value={dept.id}>{dept.name}</option>
+                  ))}
                 </select>
-                {errors.origen && <p className="mt-1 text-xs text-red-600">{errors.origen.message}</p>}
+                {errors.department_id && <p className="mt-1 text-xs text-red-600">{errors.department_id.message}</p>}
               </div>
 
-              {origen === 'EXTRANJERO' && (
-                <FormField name="pais_origen" label="País de Origen" register={register} errors={errors} required={origen === 'EXTRANJERO'} />
-              )}
+              <div>
+                <label htmlFor="municipality_id" className="block text-sm font-medium text-gray-700">Municipio</label>
+                <select
+                  id="municipality_id"
+                  {...register('municipality_id', { required: 'Este campo es obligatorio.' })}
+                  disabled={!departmentId || municipalities.length === 0}
+                  className={`w-full px-3 py-2 mt-1 border rounded-md shadow-sm ${errors.municipality_id ? 'border-red-500' : 'border-gray-300'} disabled:bg-gray-200`}
+                >
+                  <option value="">Selecciona un municipio</option>
+                  {municipalities.map((mun) => (
+                    <option key={mun.id} value={mun.id}>{mun.name}</option>
+                  ))}
+                </select>
+                {errors.municipality_id && <p className="mt-1 text-xs text-red-600">{errors.municipality_id.message}</p>}
+              </div>
             </div>
           )}
 

@@ -199,3 +199,24 @@ class CanManageAtractivos(BasePermission):
         # El autor del atractivo puede gestionarlo.
         # Esto cubre al guía que lo creó.
         return obj.autor == user
+
+
+class IsEntityAdmin(BasePermission):
+    """
+    Permiso para permitir la gestión de una entidad solo a su administrador.
+    """
+    def has_permission(self, request, view):
+        return bool(
+            request.user and
+            request.user.is_authenticated and
+            request.user.role == CustomUser.Role.ADMIN_ENTIDAD
+        )
+
+    def has_object_permission(self, request, view, obj):
+        # El objeto 'obj' es la instancia de la Entidad.
+        # Verificamos si el perfil del usuario está asociado a esta entidad.
+        try:
+            return request.user.profile.entity == obj
+        except AttributeError:
+            # El usuario no tiene un perfil, por lo tanto no puede ser admin de ninguna entidad.
+            return False

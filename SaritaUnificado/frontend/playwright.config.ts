@@ -44,6 +44,11 @@ export default defineConfig({
    * - En entornos CI → no se levanta el servidor.
    * - En desarrollo → usa `npm run dev`.
    * - En producción → usa `npm run preview`.
+   *
+   * NOTA: Si las pruebas fallan por timeout al iniciar el servidor,
+   * una estrategia es iniciar el servidor manualmente en una terminal
+   * (`npm run dev &`) y luego comentar toda esta sección `webServer`
+   * antes de ejecutar `npx playwright test`.
    */
   webServer: (() => {
     if (process.env.CI) {
