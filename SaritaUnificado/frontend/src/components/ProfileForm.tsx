@@ -84,6 +84,8 @@ export default function ProfileForm() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
 
   // State for Eventos Caracterizacion Modal
   const [isEventosModalOpen, setIsEventosModalOpen] = useState(false);
@@ -110,12 +112,40 @@ export default function ProfileForm() {
 
   useEffect(() => {
     fetchProfile();
+    const fetchDepartments = async () => {
+        try {
+            const data = await getDepartments();
+            setDepartments(data);
+        } catch (error) {
+            console.error("Failed to fetch departments", error);
+        }
+    };
+    fetchDepartments();
   }, [fetchProfile]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    if (profile?.department) {
+        const fetchMunicipalities = async () => {
+            try {
+                const data = await getMunicipalitiesByDepartment(profile.department);
+                setMunicipalities(data);
+            } catch (error) {
+                console.error("Failed to fetch municipalities", error);
+            }
+        };
+        fetchMunicipalities();
+    }
+  }, [profile?.department]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (!profile) return;
     const { name, value } = e.target;
-    setProfile({ ...profile, [name]: value });
+
+    if (name === 'department' || name === 'municipality') {
+      setProfile({ ...profile, [name]: value ? parseInt(value, 10) : null });
+    } else {
+      setProfile({ ...profile, [name]: value });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -214,7 +244,21 @@ export default function ProfileForm() {
           <InputField id="nombre_negocio" name="nombre_negocio" label="Nombre del Negocio" value={profile.nombre_negocio} onChange={handleChange} icon={<FiUser />} placeholder="Ej: Hotel Paraíso"/>
           <InputField id="telefono" name="telefono" label="Teléfono de Contacto" value={profile.telefono} onChange={handleChange} icon={<FiPhone />} placeholder="Ej: 3001234567"/>
           <InputField id="email_contacto" name="email_contacto" label="Email de Contacto" value={profile.email_contacto} onChange={handleChange} icon={<FiMail />} type="email" placeholder="Ej: contacto@hotelparaiso.com"/>
-          <InputField id="ubicacion_mapa" name="ubicacion_mapa" label="Dirección o Coordenadas" value={profile.ubicacion_mapa} onChange={handleChange} icon={<FiMapPin />} placeholder="Ej: Calle 5 # 4-32"/>
+          <InputField id="direccion" name="direccion" label="Dirección" value={profile.direccion || ''} onChange={handleChange} icon={<FiMapPin />} placeholder="Ej: Calle 5 # 4-32"/>
+          <div>
+            <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-1">Departamento</label>
+            <select id="department" name="department" value={profile.department || ''} onChange={handleChange} className="pl-10 pr-4 py-2.5 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm transition-all">
+              <option value="">Seleccione un departamento</option>
+              {departments.map(dep => <option key={dep.id} value={dep.id}>{dep.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="municipality" className="block text-sm font-medium text-gray-700 mb-1">Municipio</label>
+            <select id="municipality" name="municipality" value={profile.municipality || ''} onChange={handleChange} disabled={!profile.department} className="pl-10 pr-4 py-2.5 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm transition-all disabled:bg-gray-200">
+              <option value="">Seleccione un municipio</option>
+              {municipalities.map(mun => <option key={mun.id} value={mun.id}>{mun.name}</option>)}
+            </select>
+          </div>
         </div>
         <div>
           <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700 mb-1">Descripción del Negocio</label>

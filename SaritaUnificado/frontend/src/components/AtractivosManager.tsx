@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Atractivo, getMisAtractivos, deleteAtractivo, approveAtractivo } from '@/services/atractivoService';
-import { Formulario, getFormularios } from '@/services/formService';
+import { getFormularios } from '@/services/formService';
 import AtractivoForm from './AtractivoForm';
 import FormFiller from './FormFiller';
+import { Formulario } from '@/services/formService';
 import { FiEdit, FiPlusCircle, FiTrash2, FiCheckCircle, FiFileText } from 'react-icons/fi';
 import { useAuth } from '@/contexts/AuthContext';
 

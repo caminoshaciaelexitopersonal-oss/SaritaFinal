@@ -158,7 +158,7 @@ class DepartmentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DepartmentSerializer
     permission_classes = [AllowAny]
 
-class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
+ class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A simple ViewSet for viewing municipalities.
     Can be filtered by department.
@@ -169,6 +169,7 @@ class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['department']
 
+
 class EntityViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A simple ViewSet for viewing entities.
@@ -176,8 +177,6 @@ class EntityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Entity.objects.all()
     serializer_class = EntitySerializer
     permission_classes = [AllowAny]
-
-
 class CurrentEntityView(generics.RetrieveAPIView):
     """
     Devuelve la entidad actual basada en el subdominio.
@@ -722,22 +721,44 @@ class GaleriaListView(generics.ListAPIView):
 from agents.corps.turismo_coronel import get_turismo_coronel_graph
 
 class AgentChatView(views.APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny] # El agente está diseñado para manejar usuarios invitados
 
-    def post(self, request, *args, **kwargs):
+    async def post(self, request, *args, **kwargs):
         user_message = request.data.get('message', '')
         if not user_message:
-            return Response({'error': 'No message provided'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'No se proporcionó ningún mensaje.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Obtener el historial de la conversación de la sesión, o inicializarlo si no existe.
+        conversation_history = request.session.get('conversation_history', [])
 
         try:
-            # Aquí iría la lógica para invocar al agente LangChain/LangGraph
-            # Por ahora, devolvemos una respuesta simulada
             agent = get_turismo_coronel_graph()
-            response_message = agent.invoke(user_message) # Esto puede variar según la implementación del agente
+
+            # Preparar el diccionario de entrada para el agente, incluyendo el contexto.
+            agent_input = {
+                "general_order": user_message,
+                "app_context": {
+                    "user": request.user,
+                    "entity": getattr(request, 'entity', None) # Pasar la entidad del middleware
+                },
+                "conversation_history": conversation_history
+            }
+
+            # Invocar al agente de forma asíncrona.
+            final_state = await agent.ainvoke(agent_input)
+
+            # Extraer el informe final y el historial actualizado del estado de respuesta.
+            response_message = final_state.get('final_report', 'No se pudo generar una respuesta.')
+
+            # Guardar el historial actualizado en la sesión para el próximo turno.
+            request.session['conversation_history'] = final_state.get('conversation_history', [])
 
             return Response({'reply': response_message})
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # Es una buena práctica registrar la excepción para la depuración.
+            import logging
+            logging.error(f"Error en AgentChatView: {e}", exc_info=True)
+            return Response({'error': 'Ocurrió un error interno al procesar su solicitud.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class AgentTaskStatusView(generics.RetrieveAPIView):
     queryset = AgentTask.objects.all()
