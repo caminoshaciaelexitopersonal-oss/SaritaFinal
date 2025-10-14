@@ -1,13 +1,13 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 from .models import (
-    CustomUser, PrestadorServicio, ImagenGaleria, ImagenArtesano, DocumentoLegalizacion, Publicacion,
+    CustomUser, PrestadorServicio, ImagenGaleria, ImagenArtesano, Publicacion,
     ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, RutaTuristica, ImagenRutaTuristica, ElementoGuardado, ContentType,
     CategoriaPrestador, Video, ContenidoMunicipio, AgentTask, SiteConfiguration, MenuItem,
     HomePageComponent, AuditLog, PaginaInstitucional, ImagenPaginaInstitucional, HechoHistorico, Artesano, RubroArtesano,
     Resena, Sugerencia, ScoringRule, Notificacion,
     Formulario, Pregunta, OpcionRespuesta, RespuestaUsuario,
-    PlantillaVerificacion,
+    PlantillaVerificacion, TipoDocumentoVerificacion, DocumentoVerificacion,
     ItemVerificacion,
     Verificacion,
     RespuestaItemVerificacion,
@@ -372,11 +372,22 @@ class ImagenArtesanoSerializer(serializers.ModelSerializer):
         read_only_fields = ['artesano']
 
 
-class DocumentoLegalizacionSerializer(serializers.ModelSerializer):
+class TipoDocumentoVerificacionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DocumentoLegalizacion
-        fields = ['id', 'documento', 'nombre_documento', 'fecha_subida', 'prestador']
-        read_only_fields = ['prestador', 'fecha_subida']
+        model = TipoDocumentoVerificacion
+        fields = ['id', 'nombre', 'descripcion', 'requerido']
+
+class DocumentoVerificacionSerializer(serializers.ModelSerializer):
+    tipo_documento_nombre = serializers.CharField(source='tipo_documento.nombre', read_only=True)
+    archivo_url = serializers.FileField(source='archivo', read_only=True)
+
+    class Meta:
+        model = DocumentoVerificacion
+        fields = [
+            'id', 'tipo_documento', 'tipo_documento_nombre', 'archivo', 'archivo_url',
+            'estado', 'observaciones', 'fecha_subida', 'fecha_verificacion'
+        ]
+        read_only_fields = ['id', 'estado', 'observaciones', 'fecha_subida', 'fecha_verificacion', 'archivo_url']
 
 
 class CategoriaPrestadorSerializer(serializers.ModelSerializer):
@@ -534,74 +545,98 @@ class PrestadorServicioUpdateSerializer(serializers.ModelSerializer):
 class PrestadorServicioSerializer(serializers.ModelSerializer):
     categoria_nombre = serializers.CharField(source='categoria.nombre', read_only=True)
     galeria_imagenes = ImagenGaleriaSerializer(many=True, read_only=True)
-    documentos_legalizacion = DocumentoLegalizacionSerializer(many=True, read_only=True)
+    documentos_verificacion = DocumentoVerificacionSerializer(many=True, read_only=True)
     class Meta:
         model = PrestadorServicio
         fields = [
             'id',
             'nombre_negocio', 'descripcion', 'telefono', 'email_contacto',
             'red_social_facebook', 'red_social_instagram', 'red_social_whatsapp',
-            'ubicacion_mapa', 'promociones_ofertas',
-            'reporte_ocupacion_nacional', 'reporte_ocupacion_internacional',
+            'latitud', 'longitud', 'promociones_ofertas',
             'categoria_nombre', 'aprobado',
-            'galeria_imagenes', 'documentos_legalizacion',
+            'galeria_imagenes', 'documentos_verificacion',
             'puntuacion_verificacion', 'puntuacion_capacitacion',
             'puntuacion_reseñas', 'puntuacion_formularios', 'puntuacion_total'
         ]
         read_only_fields = [
-            'id', 'aprobado', 'categoria_nombre', 'galeria_imagenes', 'documentos_legalizacion',
+            'id', 'aprobado', 'categoria_nombre', 'galeria_imagenes', 'documentos_verificacion',
             'puntuacion_verificacion', 'puntuacion_capacitacion',
             'puntuacion_reseñas', 'puntuacion_formularios', 'puntuacion_total'
         ]
 
 
-class TuristaRegisterSerializer(RegisterSerializer):
+class LocationRegisterSerializer(RegisterSerializer):
     department_id = serializers.PrimaryKeyRelatedField(
-        queryset=Department.objects.all(), source='department', required=True
+        queryset=Department.objects.all(), source='department', required=True, write_only=True
     )
     municipality_id = serializers.PrimaryKeyRelatedField(
-        queryset=Municipality.objects.all(), source='municipality', required=True
+        queryset=Municipality.objects.all(), source='municipality', required=True, write_only=True
     )
 
     def validate_municipality_id(self, value):
-        department = self.initial_data.get('department_id')
-        if department and value.department.id != int(department):
+        # department_id is passed in the initial data of the request
+        department_id = self.initial_data.get('department_id')
+        if department_id and value.department.id != int(department_id):
             raise serializers.ValidationError("Este municipio no pertenece al departamento seleccionado.")
         return value
 
+    def create_profile(self, user):
+        department = self.validated_data.get('department')
+        municipality = self.validated_data.get('municipality')
+        Profile.objects.create(user=user, department=department, municipality=municipality)
+
+
+class TuristaRegisterSerializer(LocationRegisterSerializer):
     @transaction.atomic
     def save(self, request):
         user = super().save(request)
         user.role = CustomUser.Role.TURISTA
         user.save()
-
-        department = self.validated_data.get('department')
-        municipality = self.validated_data.get('municipality')
-        Profile.objects.create(user=user, department=department, municipality=municipality)
+        self.create_profile(user)
         return user
 
 
-class PrestadorRegisterSerializer(RegisterSerializer):
+class PrestadorRegisterSerializer(LocationRegisterSerializer):
+    entity_id = serializers.PrimaryKeyRelatedField(
+        queryset=Entity.objects.all(), source='entity', required=False, allow_null=True, write_only=True
+    )
+    @transaction.atomic
     def save(self, request):
         user = super().save(request)
         user.role = CustomUser.Role.PRESTADOR
         user.save()
+
+        self.create_profile(user)
+
+        entity = self.validated_data.get('entity')
+
         PrestadorServicio.objects.create(
             usuario=user,
-            nombre_negocio=f"Perfil de {user.username}"
+            nombre_negocio=f"Perfil de {user.username}",
+            entity=entity
         )
         return user
 
 
-class ArtesanoRegisterSerializer(RegisterSerializer):
+class ArtesanoRegisterSerializer(LocationRegisterSerializer):
+    entity_id = serializers.PrimaryKeyRelatedField(
+        queryset=Entity.objects.all(), source='entity', required=False, allow_null=True, write_only=True
+    )
+    @transaction.atomic
     def save(self, request):
         user = super().save(request)
         user.role = CustomUser.Role.ARTESANO
         user.save()
+
+        self.create_profile(user)
+
+        entity = self.validated_data.get('entity')
+
         Artesano.objects.create(
             usuario=user,
             nombre_artesano=user.get_full_name() or user.username,
-            nombre_taller=f"Taller de {user.username}"
+            nombre_taller=f"Taller de {user.username}",
+            entity=entity
         )
         return user
 
@@ -753,7 +788,7 @@ class AdminPrestadorDetailSerializer(serializers.ModelSerializer):
     usuario = CustomUserSerializer(read_only=True)
     categoria = CategoriaPrestadorSerializer(read_only=True)
     galeria_imagenes = ImagenGaleriaSerializer(many=True, read_only=True)
-    documentos_legalizacion = DocumentoLegalizacionSerializer(many=True, read_only=True)
+    documentos_verificacion = DocumentoVerificacionSerializer(many=True, read_only=True)
     class Meta:
         model = PrestadorServicio
         fields = '__all__'

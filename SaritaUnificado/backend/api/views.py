@@ -23,7 +23,6 @@ from .models import (
     PrestadorServicio,
     ImagenGaleria,
     ImagenArtesano,
-    DocumentoLegalizacion,
     Publicacion,
     ConsejoConsultivo,
     AtractivoTuristico,
@@ -55,7 +54,9 @@ from .models import (
     Verificacion,
     RespuestaItemVerificacion,
     AsistenciaCapacitacion,
-    Vacante
+    Vacante,
+    TipoDocumentoVerificacion,
+    DocumentoVerificacion
 )
 from .serializers import (
     GaleriaItemSerializer,
@@ -68,7 +69,8 @@ from .serializers import (
     ArtesanoUpdateSerializer,
     ImagenGaleriaSerializer,
     ImagenArtesanoSerializer,
-    DocumentoLegalizacionSerializer,
+    DocumentoVerificacionSerializer,
+    TipoDocumentoVerificacionSerializer,
     PublicacionListSerializer,
     PublicacionDetailSerializer,
     VideoSerializer,
@@ -293,11 +295,69 @@ class FuncionarioProfesionalRegisterView(RegisterView):
     serializer_class = FuncionarioProfesionalRegisterSerializer
 
 
-class DocumentoLegalizacionDetailView(generics.RetrieveDestroyAPIView):
-    serializer_class = DocumentoLegalizacionSerializer
-    permission_classes = [IsAuthenticated]
+class TipoDocumentoVerificacionViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet para listar los tipos de documentos que se pueden subir.
+    """
+    queryset = TipoDocumentoVerificacion.objects.filter(activo=True)
+    serializer_class = TipoDocumentoVerificacionSerializer
+    permission_classes = [IsAuthenticated] # Disponible para cualquier usuario autenticado
+
+class DocumentoVerificacionViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para que los prestadores gestionen sus documentos de verificación.
+    """
+    serializer_class = DocumentoVerificacionSerializer
+    parser_classes = [MultiPartParser, FormParser]
+
     def get_queryset(self):
-        return DocumentoLegalizacion.objects.filter(prestador=self.request.user.perfil_prestador)
+        """
+        Los prestadores solo ven sus propios documentos.
+        Los administradores pueden ver documentos de su entidad o todos si son super admins.
+        """
+        user = self.request.user
+        if hasattr(user, 'perfil_prestador'):
+            return DocumentoVerificacion.objects.filter(prestador=user.perfil_prestador)
+
+        if user.is_staff or user.role == CustomUser.Role.ADMIN:
+             return DocumentoVerificacion.objects.all()
+
+        if hasattr(user, 'profile') and user.profile.entity:
+            return DocumentoVerificacion.objects.filter(prestador__entity=user.profile.entity)
+
+        return DocumentoVerificacion.objects.none()
+
+    def perform_create(self, serializer):
+        if not hasattr(self.request.user, 'perfil_prestador'):
+            raise serializers.ValidationError("Solo los prestadores de servicios pueden subir documentos.")
+        serializer.save(prestador=self.request.user.perfil_prestador)
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAdminOrFuncionario])
+    def set_status(self, request, pk=None):
+        documento = self.get_object()
+        new_status = request.data.get('estado')
+
+        if new_status not in DocumentoVerificacion.Estado.values:
+            return Response({'error': 'Estado no válido.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Lógica de permisos para la validación
+        user = request.user
+        can_verify = False
+        if user.is_superuser or user.role == CustomUser.Role.ADMIN:
+            can_verify = True
+        elif hasattr(user, 'profile') and user.profile.entity and documento.prestador.entity == user.profile.entity:
+            can_verify = True
+
+        if not can_verify:
+            return Response({'error': 'No tiene permiso para verificar este documento.'}, status=status.HTTP_403_FORBIDDEN)
+
+        documento.estado = new_status
+        documento.verificado_por = user
+        documento.fecha_verificacion = timezone.now()
+        documento.observaciones = request.data.get('observaciones', documento.observaciones)
+        documento.save()
+
+        return Response(self.get_serializer(documento).data)
 
 class ElementoGuardadoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsTurista]
@@ -622,11 +682,6 @@ class ImagenGaleriaView(generics.ListCreateAPIView):
 class ImagenArtesanoView(generics.ListCreateAPIView):
     queryset = ImagenArtesano.objects.all()
     serializer_class = ImagenArtesanoSerializer
-    permission_classes = [IsAuthenticated]
-
-class DocumentoLegalizacionView(generics.ListCreateAPIView):
-    queryset = DocumentoLegalizacion.objects.all()
-    serializer_class = DocumentoLegalizacionSerializer
     permission_classes = [IsAuthenticated]
 
 class RespuestaUsuarioViewSet(viewsets.ModelViewSet):

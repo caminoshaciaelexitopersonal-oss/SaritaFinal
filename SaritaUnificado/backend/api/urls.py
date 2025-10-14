@@ -41,6 +41,8 @@ router.register(r'empleo/vacantes', views.VacanteViewSet, basename='vacante')
 # --- Módulo de Verificación de Cumplimiento ---
 router.register(r'plantillas-verificacion', views.PlantillaVerificacionViewSet, basename='plantilla-verificacion')
 router.register(r'verificaciones', views.VerificacionViewSet, basename='verificacion')
+router.register(r'documentos-verificacion/tipos', views.TipoDocumentoVerificacionViewSet, basename='tipo-documento-verificacion')
+router.register(r'documentos-verificacion', views.DocumentoVerificacionViewSet, basename='documento-verificacion')
 
 
 # --- Formularios Dinámicos (con rutas anidadas) ---
@@ -61,7 +63,6 @@ urlpatterns = [
 
     # --- Vistas de Entidad ---
     path('entities/current/', views.CurrentEntityView.as_view(), name='current-entity'),
-    path('admin/my-entity/', views.EntityAdminView.as_view(), name='entity-admin'),
 
     # --- Vistas Privadas (Requieren Autenticación) ---
     path('admin/my-entity/', views.EntityAdminView.as_view(), name='entity-admin'),
@@ -75,8 +76,6 @@ urlpatterns = [
     path('galeria/prestador/<int:pk>/', views.ImagenGaleriaDetailView.as_view(), name='prestador-galeria-detail'),
     path('galeria/artesano/', views.ImagenArtesanoView.as_view(), name='artesano-galeria-list-create'),
     path('galeria/artesano/<int:pk>/', views.ImagenArtesanoDetailView.as_view(), name='artesano-galeria-detail'),
-    path('documentos/', views.DocumentoLegalizacionView.as_view(), name='documentos-list-create'),
-    path('documentos/<int:pk>/', views.DocumentoLegalizacionDetailView.as_view(), name='documentos-detail'),
 
     # --- Rutas de Formularios Dinámicos (Respuestas) ---
 

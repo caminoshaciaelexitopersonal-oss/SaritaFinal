@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import (
-    CustomUser, CategoriaPrestador, PrestadorServicio, ImagenGaleria, DocumentoLegalizacion,
+    CustomUser, CategoriaPrestador, PrestadorServicio, ImagenGaleria,
     Publicacion, Video, ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, ScoringRule,
     Artesano, RubroArtesano, ImagenArtesano, Formulario, Pregunta, OpcionRespuesta,
     RespuestaUsuario, PlantillaVerificacion, ItemVerificacion, Verificacion,
     RespuestaItemVerificacion, AsistenciaCapacitacion, SiteConfiguration, MenuItem,
     HomePageComponent, PaginaInstitucional, ImagenPaginaInstitucional, ContenidoMunicipio, HechoHistorico,
-    Resena, Sugerencia, AuditLog, RutaTuristica, ImagenRutaTuristica, Notificacion
+    Resena, Sugerencia, AuditLog, RutaTuristica, ImagenRutaTuristica, Notificacion,
+    TipoDocumentoVerificacion, DocumentoVerificacion
 )
 from django.utils.html import format_html
 
@@ -104,9 +105,12 @@ class ImagenGaleriaInline(admin.TabularInline):
     def image_preview(self, obj):
         return format_html('<img src="{}" width="150" />', obj.imagen.url)
 
-class DocumentoLegalizacionInline(admin.TabularInline):
-    model = DocumentoLegalizacion
+class DocumentoVerificacionInline(admin.TabularInline):
+    model = DocumentoVerificacion
     extra = 1
+    fields = ('tipo_documento', 'archivo', 'estado', 'observaciones')
+    readonly_fields = ('fecha_subida', 'fecha_verificacion', 'verificado_por')
+    autocomplete_fields = ['tipo_documento']
 
 @admin.register(PrestadorServicio)
 class PrestadorServicioAdmin(admin.ModelAdmin):
@@ -114,7 +118,7 @@ class PrestadorServicioAdmin(admin.ModelAdmin):
     list_filter = ('aprobado', 'categoria')
     search_fields = ('nombre_negocio', 'usuario__username', 'descripcion')
     readonly_fields = ('fecha_creacion', 'fecha_actualizacion', 'puntuacion_total')
-    inlines = [ImagenGaleriaInline, DocumentoLegalizacionInline]
+    inlines = [ImagenGaleriaInline, DocumentoVerificacionInline]
     actions = ['aprobar_prestadores']
 
     def aprobar_prestadores(self, request, queryset):
@@ -360,8 +364,27 @@ class NotificacionAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+# -- MÓDULO DE VERIFICACIÓN DE DOCUMENTOS --
+
+@admin.register(TipoDocumentoVerificacion)
+class TipoDocumentoVerificacionAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'requerido', 'activo')
+    search_fields = ('nombre',)
+    list_filter = ('requerido', 'activo')
+
+@admin.register(DocumentoVerificacion)
+class DocumentoVerificacionAdmin(admin.ModelAdmin):
+    list_display = ('prestador', 'tipo_documento', 'estado', 'fecha_subida', 'verificado_por')
+    list_filter = ('estado', 'tipo_documento', 'fecha_verificacion')
+    search_fields = ('prestador__nombre_negocio', 'prestador__usuario__username', 'tipo_documento__nombre')
+    readonly_fields = ('prestador', 'tipo_documento', 'archivo')
+    autocomplete_fields = ['prestador', 'tipo_documento', 'verificado_por']
+
+    def has_add_permission(self, request):
+        # La creación se debe hacer via el inline en el prestador
+        return False
+
 # Modelos que se gestionan principalmente via inlines pero se registran para acceso directo
 admin.site.register(ImagenGaleria)
-admin.site.register(DocumentoLegalizacion)
 admin.site.register(ImagenArtesano)
 admin.site.register(ImagenAtractivo)
