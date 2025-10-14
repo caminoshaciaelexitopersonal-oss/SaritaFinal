@@ -566,7 +566,7 @@ class PrestadorServicioSerializer(serializers.ModelSerializer):
             'puntuacion_reseñas', 'puntuacion_formularios', 'puntuacion_total',
             'department', 'municipality'
         ]
- class LocationRegisterSerializer(RegisterSerializer):
+class LocationRegisterSerializer(RegisterSerializer):
     department_id = serializers.PrimaryKeyRelatedField(
         queryset=Department.objects.all(), source='department', required=True, write_only=True
     )

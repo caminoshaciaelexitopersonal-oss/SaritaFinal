@@ -1183,10 +1183,10 @@ class Vacante(models.Model):
     def __str__(self):
         return f"{self.titulo} en {self.empresa.nombre_negocio}"
 
-   lass Meta:
-    verbose_name = "Vacante de Empleo"
-    verbose_name_plural = "Vacantes de Empleo"
-    ordering = ['-fecha_publicacion']
+    class Meta:
+        verbose_name = "Vacante de Empleo"
+        verbose_name_plural = "Vacantes de Empleo"
+        ordering = ['-fecha_publicacion']
 
 
 # --------------------- Módulo de Verificación de Documentos ---------------------
