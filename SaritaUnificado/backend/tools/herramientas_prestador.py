@@ -6,7 +6,8 @@ from api.models import (
     PrestadorServicio,
     ImagenGaleria,
     DetallesHotel,
-    DocumentoLegalizacion
+    TipoDocumentoVerificacion,
+    DocumentoVerificacion
 )
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
@@ -169,22 +170,30 @@ def eliminar_foto_galeria(imagen_id: int) -> Dict:
         return {"status": "error", "message": f"No se encontró una imagen con el ID {imagen_id}."}
 
 @tool
-def subir_documento_legalizacion(prestador_id: int, nombre_documento: str, ruta_archivo: str) -> Dict:
+def subir_documento_verificacion(prestador_id: int, tipo_documento_id: str, ruta_archivo: str) -> Dict:
     """
-    (SOLDADO DE ARCHIVOS) Sube un documento de legalización para un prestador.
-    `ruta_archivo` es la ruta al archivo en el sistema de almacenamiento.
+    (SOLDADO DE ARCHIVOS) Sube un documento para su verificación.
+    Requiere el ID del prestador, el ID del tipo de documento, y la ruta al archivo en el sistema de almacenamiento.
     """
-    print(f"--- 💥 SOLDADO (Archivos): ¡ACCIÓN! Subiendo documento '{nombre_documento}' para el prestador_id {prestador_id}. ---")
+    print(f"--- 💥 SOLDADO (Archivos): ¡ACCIÓN! Subiendo documento tipo {tipo_documento_id} para el prestador_id {prestador_id}. ---")
     try:
         prestador = PrestadorServicio.objects.get(id=prestador_id)
-        documento = DocumentoLegalizacion.objects.create(
+        tipo_documento = TipoDocumentoVerificacion.objects.get(id=tipo_documento_id)
+
+        documento = DocumentoVerificacion.objects.create(
             prestador=prestador,
-            nombre_documento=nombre_documento,
-            documento=ruta_archivo
+            tipo_documento=tipo_documento,
+            archivo=ruta_archivo
         )
-        return {"status": "success", "documento_id": documento.id, "message": "Documento subido con éxito."}
-    except ObjectDoesNotExist:
-        return {"status": "error", "message": f"No se encontró un prestador con el ID {prestador_id}."}
+        return {"status": "success", "documento_id": str(documento.id), "message": f"Documento '{tipo_documento.nombre}' subido con éxito. Pendiente de verificación."}
+    except ObjectDoesNotExist as e:
+        if 'PrestadorServicio' in str(e):
+            return {"status": "error", "message": f"No se encontró un prestador con el ID {prestador_id}."}
+        if 'TipoDocumentoVerificacion' in str(e):
+            return {"status": "error", "message": f"No se encontró un tipo de documento con el ID {tipo_documento_id}."}
+        return {"status": "error", "message": f"Error de objeto no encontrado: {e}"}
+    except Exception as e:
+        return {"status": "error", "message": f"Ocurrió un error inesperado al subir el documento: {e}"}
 
 # --- SOLDADOS DE CONSULTA ---
 
@@ -259,7 +268,7 @@ def get_prestador_soldiers() -> List:
         establecer_foto_principal,
         agregar_foto_galeria,
         eliminar_foto_galeria,
-        subir_documento_legalizacion,
+        subir_documento_verificacion,
         consultar_prestador_por_id,
         listar_prestadores_por_categoria,
     ]
