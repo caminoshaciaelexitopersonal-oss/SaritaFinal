@@ -127,10 +127,11 @@ Actualmente, la creación de entidades y la asignación de administradores se re
         profile.entity = entidad_turismo
         profile.save()
     print(f"Perfil para '{admin_user.username}' asociado a la entidad '{entidad_turismo.name}'.")
-
     ```
 
 Una vez completado, puedes iniciar sesión con el usuario `admin_meta` (o el que hayas creado) y la contraseña `password123` para gestionar tu entidad.
+
+---
 
 ### Configuración de Subdominios para Desarrollo Local
 
@@ -150,6 +151,8 @@ Para probar la funcionalidad de subdominios (p. ej., `turismo-meta.localhost:300
 3.  **Guardar los cambios.**
 
 Ahora, al visitar `http://turismo-meta.localhost:3000` en tu navegador, el middleware de Django detectará el subdominio `turismo-meta` y cargará la entidad correspondiente.
+
+---
 
 ## Ejecutar Pruebas
 

@@ -1219,7 +1219,7 @@ class Municipality(models.Model):
         return self.name
 
 # Extender usuario para relacionar con Entity y ubicación:
-User = get_user_model()
+ User = get_user_model()
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -1230,6 +1230,7 @@ class Profile(models.Model):
     def __str__(self):
         return f"Profile for {self.user.username}"
 
+
 class Reservation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reservations')
@@ -1237,12 +1238,21 @@ class Reservation(models.Model):
     prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='reservations')
     details = models.TextField()
     reservation_date = models.DateTimeField()
-    status = models.CharField(max_length=20, choices=[('PENDING', 'Pending'), ('CONFIRMED', 'Confirmed'), ('CANCELLED', 'Cancelled')], default='PENDING')
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('PENDING', 'Pending'),
+            ('CONFIRMED', 'Confirmed'),
+            ('CANCELLED', 'Cancelled')
+        ],
+        default='PENDING'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Reservation for {self.user.username} at {self.prestador.nombre_negocio}"
+
 
 class Transaction(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -1251,7 +1261,15 @@ class Transaction(models.Model):
     reservation = models.ForeignKey(Reservation, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=3, default='COP')
-    status = models.CharField(max_length=20, choices=[('PENDING', 'Pending'), ('COMPLETED', 'Completed'), ('FAILED', 'Failed')], default='PENDING')
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('PENDING', 'Pending'),
+            ('COMPLETED', 'Completed'),
+            ('FAILED', 'Failed')
+        ],
+        default='PENDING'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -64,6 +64,7 @@ urlpatterns = [
     path('admin/my-entity/', views.EntityAdminView.as_view(), name='entity-admin'),
 
     # --- Vistas Privadas (Requieren Autenticación) ---
+    path('admin/my-entity/', views.EntityAdminView.as_view(), name='entity-admin'),
     path('profile/prestador/', views.PrestadorProfileView.as_view(), name='prestador-profile'),
     path('profile/artesano/', views.ArtesanoProfileView.as_view(), name='artesano-profile'),
     path('profile/feedback/', views.FeedbackProveedorView.as_view(), name='proveedor-feedback'),
