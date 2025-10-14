@@ -20,8 +20,8 @@ router.register(r'admin/publicaciones', views.AdminPublicacionViewSet, basename=
 router.register(r'admin/homepage-components', views.HomePageComponentViewSet, basename='homepage-component')
 router.register(r'admin/audit-logs', views.AuditLogViewSet, basename='audit-log')
 router.register(r'admin/scoring-rules', views.ScoringRuleViewSet, basename='scoring-rule')
-router.register(r'admin/prestadores', views.AdminPrestadorViewSet, basename='admin-prestador')
-router.register(r'admin/artesanos', views.AdminArtesanoViewSet, basename='admin-artesano')
+router.register(r'admin/prestadores', views.AdminPrestadorViewSet, basename='adminprestador')
+router.register(r'admin/artesanos', views.AdminArtesanoViewSet, basename='adminartesano')
 router.register(r'resenas', views.ResenaViewSet, basename='resena')
 router.register(r'sugerencias', views.SugerenciaViewSet, basename='sugerencia')
 router.register(r'admin/sugerencias', views.SugerenciaAdminViewSet, basename='sugerencia-admin')
@@ -111,7 +111,7 @@ path(
     path('galeria-media/', views.GaleriaListView.as_view(), name='galeria-media-list'),
 
     # --- Vistas para el Sistema de Agentes ---
-    path('agent/tasks/', views.AgentCommandView.as_view(), name='agent-command'),
+    path('agent/chat/', views.AgentChatView.as_view(), name='agent-chat'),
     path('agent/tasks/<uuid:id>/', views.AgentTaskStatusView.as_view(), name='agent-task-status'),
 
     # --- Vistas de Administración y Análisis (endpoints específicos no cubiertos por el router) ---

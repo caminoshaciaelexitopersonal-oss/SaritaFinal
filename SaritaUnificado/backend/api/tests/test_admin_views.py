@@ -42,20 +42,20 @@ class AdminAPITests(APITestCase):
 
     def test_list_prestadores_as_admin(self):
         """Un admin puede listar a los prestadores."""
-        url = reverse('admin-prestadores-list')
+        url = reverse('adminprestador-list')
         response = self.client.get(url, **self._get_auth_header(self.admin_token))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 1)
 
     def test_list_prestadores_as_funcionario(self):
         """Un funcionario puede listar a los prestadores."""
-        url = reverse('admin-prestadores-list')
+        url = reverse('adminprestador-list')
         response = self.client.get(url, **self._get_auth_header(self.funcionario_token))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_list_prestadores_as_turista_is_forbidden(self):
         """Un turista no puede listar a los prestadores desde el endpoint de admin."""
-        url = reverse('admin-prestadores-list')
+        url = reverse('adminprestador-list')
         response = self.client.get(url, **self._get_auth_header(self.turista_token))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -63,8 +63,8 @@ class AdminAPITests(APITestCase):
         """Un admin puede aprobar a un prestador."""
         self.assertFalse(self.prestador_profile.aprobado) # Verificar estado inicial
 
-        url = reverse('admin-prestador-approve', kwargs={'pk': self.prestador_profile.pk})
-        response = self.client.patch(url, {}, **self._get_auth_header(self.admin_token))
+        url = reverse('adminprestador-approve', kwargs={'pk': self.prestador_profile.pk})
+        response = self.client.post(url, {}, **self._get_auth_header(self.admin_token))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -76,8 +76,8 @@ class AdminAPITests(APITestCase):
         """Un turista no puede aprobar a un prestador."""
         self.assertFalse(self.prestador_profile.aprobado) # Verificar estado inicial
 
-        url = reverse('admin-prestador-approve', kwargs={'pk': self.prestador_profile.pk})
-        response = self.client.patch(url, {}, **self._get_auth_header(self.turista_token))
+        url = reverse('adminprestador-approve', kwargs={'pk': self.prestador_profile.pk})
+        response = self.client.post(url, {}, **self._get_auth_header(self.turista_token))
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 

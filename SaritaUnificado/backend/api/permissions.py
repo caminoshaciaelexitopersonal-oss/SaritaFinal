@@ -49,40 +49,55 @@ class IsAdminOrFuncionarioForUserManagement(BasePermission):
     """
     Permiso personalizado para la gestión de usuarios.
     - ADMIN puede gestionar a todos los usuarios.
-    - FUNCIONARIO (ambos tipos) puede gestionar a PRESTADOR, ARTESANO y TURISTA.
+    - FUNCIONARIO (cualquier tipo) puede gestionar a PRESTADOR, ARTESANO y TURISTA.
     """
     def has_permission(self, request, view):
         user = request.user
-        if not (user and user.is_authenticated):
+        if not user or not user.is_authenticated:
             return False
 
-        allowed_roles = [
-            CustomUser.Role.ADMIN,
-            CustomUser.Role.FUNCIONARIO_DIRECTIVO,
-            CustomUser.Role.FUNCIONARIO_PROFESIONAL,
-        ]
-        # Admin y Funcionarios pueden acceder a la vista (listar, crear, etc.)
-        if user.role in allowed_roles:
-            # Restricción especial: Funcionarios no pueden crear Admins ni otros Funcionarios
-            if request.method == 'POST':
-                role_to_create = request.data.get("role")
-                if user.role in [CustomUser.Role.FUNCIONARIO_DIRECTIVO, CustomUser.Role.FUNCIONARIO_PROFESIONAL]:
-                    if role_to_create not in [CustomUser.Role.PRESTADOR, CustomUser.Role.ARTESANO, CustomUser.Role.TURISTA]:
-                        return False
+        # El Super Admin puede hacer todo
+        if user.role == CustomUser.Role.ADMIN:
             return True
 
-        return False
+        # Los funcionarios pueden listar, pero el filtrado se hace en la vista.
+        if view.action == 'list':
+            return True
+
+        # Para crear, los funcionarios solo pueden crear roles de menor jerarquía
+        if view.action == 'create':
+            target_role = request.data.get('role')
+            allowed_target_roles = [
+                CustomUser.Role.PRESTADOR,
+                CustomUser.Role.ARTESANO,
+                CustomUser.Role.TURISTA,
+            ]
+            return target_role in allowed_target_roles
+
+        # Para otras acciones, se necesita un objeto, así que se delega a has_object_permission
+        return True
 
     def has_object_permission(self, request, view, obj):
         user = request.user
 
-        # Admin puede gestionar cualquier usuario
         if user.role == CustomUser.Role.ADMIN:
             return True
 
-        # Funcionarios solo pueden gestionar Prestador, Artesano y Turista
-        if user.role in [CustomUser.Role.FUNCIONARIO_DIRECTIVO, CustomUser.Role.FUNCIONARIO_PROFESIONAL]:
-            return obj.role in [CustomUser.Role.PRESTADOR, CustomUser.Role.ARTESANO, CustomUser.Role.TURISTA]
+        is_funcionario = user.role in [
+            CustomUser.Role.ADMIN_DEPARTAMENTAL,
+            CustomUser.Role.ADMIN_MUNICIPAL,
+            CustomUser.Role.FUNCIONARIO_DIRECTIVO,
+            CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+        ]
+
+        if is_funcionario:
+            target_role = obj.role
+            allowed_target_roles = [
+                CustomUser.Role.PRESTADOR,
+                CustomUser.Role.ARTESANO,
+                CustomUser.Role.TURISTA,
+            ]
+            return target_role in allowed_target_roles
 
         return False
 

@@ -7,6 +7,7 @@ import { AgentProvider } from "@/contexts/AgentContext";
 import AgentController from "@/components/agent/AgentController";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Chatbot from '@/components/shared/Chatbot';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -50,6 +51,7 @@ export default function RootLayout({
                 theme="light"
               />
               <Footer />
+              <Chatbot />
               <AgentController />
             </AgentProvider>
           </LanguageProvider>

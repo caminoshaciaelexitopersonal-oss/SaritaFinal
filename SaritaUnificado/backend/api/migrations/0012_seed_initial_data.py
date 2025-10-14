@@ -9,6 +9,9 @@ def create_initial_menu_items(apps, schema_editor):
     MenuItem = apps.get_model('api', 'MenuItem')
     db_alias = schema_editor.connection.alias
 
+    # Limpiar items existentes para evitar duplicados en ejecuciones repetidas
+    MenuItem.objects.using(db_alias).all().delete()
+
     menu_structure = [
         {'nombre': 'Inicio', 'url': '/', 'orden': 0},
         {
@@ -18,7 +21,8 @@ def create_initial_menu_items(apps, schema_editor):
             'children': [
                 {'nombre': 'Atractivos Turísticos', 'url': '/descubre/atractivos', 'orden': 0},
                 {'nombre': 'Rutas Turísticas', 'url': '/descubre/rutas', 'orden': 1},
-                {'nombre': '¿Cómo llegar?', 'url': '/descubre/como-llegar', 'orden': 2},
+                {'nombre': 'Guías Turísticos', 'url': '/guias', 'orden': 2},
+                {'nombre': '¿Cómo llegar?', 'url': '/descubre/como-llegar', 'orden': 3},
             ]
         },
         {
@@ -33,6 +37,7 @@ def create_initial_menu_items(apps, schema_editor):
         },
         {'nombre': 'Publicaciones', 'url': '/publicaciones', 'orden': 3},
         {'nombre': 'Mi Viaje', 'url': '/mi-viaje', 'orden': 4},
+        {'nombre': 'Empleo', 'url': '/empleo', 'orden': 5},
     ]
 
     for item_data in menu_structure:
@@ -47,12 +52,13 @@ def create_initial_menu_items(apps, schema_editor):
 
         if children_data:
             for child_data in children_data:
-                MenuItem.objects.using(db_alias).get_or_create(
+                child_item, child_created = MenuItem.objects.using(db_alias).get_or_create(
                     nombre=child_data['nombre'],
                     parent=parent_item,
                     defaults=child_data
                 )
-                print(f"  - Creado submenú: {child_data['nombre']}")
+                if child_created:
+                    print(f"  - Creado submenú: {child_data['nombre']}")
 
 class Migration(migrations.Migration):
 

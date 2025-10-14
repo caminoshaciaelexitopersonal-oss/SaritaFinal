@@ -25,3 +25,14 @@ class AuditLogFilter(django_filters.FilterSet):
     class Meta:
         model = AuditLog
         fields = ['user', 'action']
+
+from .models import PrestadorServicio
+
+class PrestadorServicioFilter(django_filters.FilterSet):
+    class Meta:
+        model = PrestadorServicio
+        fields = {
+            'aprobado': ['exact'],
+            'categoria__slug': ['exact'],
+            'nombre_negocio': ['icontains'],
+        }
