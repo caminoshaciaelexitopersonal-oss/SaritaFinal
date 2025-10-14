@@ -345,10 +345,10 @@ class HechoHistoricoViewSet(viewsets.ModelViewSet):
     queryset = HechoHistorico.objects.all()
     serializer_class = HechoHistoricoSerializer
     permission_classes = [AllowAny]
-
-class MenuItemViewSet(viewsets.ModelViewSet):
+ class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
+    permission_classes = [IsAdmin]  # Solo los admins pueden modificar el menú
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:

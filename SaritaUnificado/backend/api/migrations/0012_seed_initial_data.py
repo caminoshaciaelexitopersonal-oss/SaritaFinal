@@ -47,13 +47,18 @@ def create_initial_menu_items(apps, schema_editor):
             defaults=item_data
         )
 
+        if created:
+            print(f"Creado menú principal: {parent_item.nombre}")
+
         if children_data:
             for child_data in children_data:
-                MenuItem.objects.using(db_alias).get_or_create(
+                child_item, child_created = MenuItem.objects.using(db_alias).get_or_create(
                     nombre=child_data['nombre'],
                     parent=parent_item,
                     defaults=child_data
                 )
+                if child_created:
+                    print(f"  - Creado submenú: {child_data['nombre']}")
 
 class Migration(migrations.Migration):
 
