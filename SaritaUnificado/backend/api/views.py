@@ -144,7 +144,63 @@ from .permissions import (
     IsPrestadorOwner
 )
 from .filters import AuditLogFilter
+from .serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
+from .models import Department, Municipality, Entity
+from .permissions import IsEntityAdmin
 
+class DepartmentViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A simple ViewSet for viewing departments.
+    """
+    queryset = Department.objects.all().prefetch_related('municipality_set')
+    serializer_class = DepartmentSerializer
+    permission_classes = [AllowAny]
+
+class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A simple ViewSet for viewing municipalities.
+    Can be filtered by department.
+    """
+    queryset = Municipality.objects.all()
+    serializer_class = MunicipalitySerializer
+    permission_classes = [AllowAny]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['department']
+
+class EntityViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A simple ViewSet for viewing entities.
+    """
+    queryset = Entity.objects.all()
+    serializer_class = EntitySerializer
+    permission_classes = [AllowAny]
+
+class CurrentEntityView(generics.RetrieveAPIView):
+    """
+    Devuelve la entidad actual basada en el subdominio.
+    """
+    serializer_class = EntitySerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        # El middleware ya ha adjuntado la entidad a la petición.
+        # Si no se encuentra ninguna entidad, request.entity será None.
+        if not hasattr(self.request, 'entity') or not self.request.entity:
+            return None
+        return self.request.entity
+
+class EntityAdminView(generics.RetrieveUpdateAPIView):
+    """
+    Vista para que un Admin de Entidad gestione su propia entidad.
+    """
+    queryset = Entity.objects.all()
+    serializer_class = EntityAdminSerializer
+    permission_classes = [IsEntityAdmin]
+
+    def get_object(self):
+        # Devuelve la entidad asociada al perfil del usuario.
+        # El permiso IsEntityAdmin ya asegura que el perfil y la entidad existen.
+        return self.request.user.profile.entity
 
 class VacanteViewSet(viewsets.ModelViewSet):
     queryset = Vacante.objects.filter(activa=True).select_related('empresa')
@@ -345,7 +401,8 @@ class HechoHistoricoViewSet(viewsets.ModelViewSet):
     queryset = HechoHistorico.objects.all()
     serializer_class = HechoHistoricoSerializer
     permission_classes = [AllowAny]
- class MenuItemViewSet(viewsets.ModelViewSet):
+
+class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
     permission_classes = [IsAdmin]  # Solo los admins pueden modificar el menú
@@ -399,10 +456,6 @@ class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
     queryset = PaginaInstitucional.objects.all()
     serializer_class = PaginaInstitucionalSerializer
     permission_classes = [AllowAny]
-
-class UserViewSet(viewsets.ModelViewSet):
-    serializer_class = AdminUserSerializer
-    permission_classes = [IsAdminOrFuncionarioForUserManagement]
 
 from django.db.models import Q
 

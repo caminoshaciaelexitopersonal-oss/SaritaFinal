@@ -40,8 +40,8 @@ export interface RegisterData {
     | 'FUNCIONARIO_PROFESIONAL';
 
   // Campos para Turista
-  origen?: 'LOCAL' | 'REGIONAL' | 'NACIONAL' | 'EXTRANJERO' | '';
-  pais_origen?: string;
+  department_id?: number;
+  municipality_id?: number;
 
   // Campos para Prestador
   nombre_establecimiento?: string;
@@ -124,6 +124,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         setSavedItemsMap(new Map());
       }
+
       return userData; // Devolver los datos del usuario para uso inmediato
     } catch (error) {
       logout();
@@ -300,10 +301,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Añadir campos específicos del rol al payload
     switch (data.role) {
       case 'TURISTA':
-        payload.origen = data.origen;
-        if (data.origen === 'EXTRANJERO') {
-          payload.pais_origen = data.pais_origen;
-        }
+        payload.department_id = data.department_id;
+        payload.municipality_id = data.municipality_id;
         break;
       case 'PRESTADOR':
         payload.nombre_establecimiento = data.nombre_establecimiento;

@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth import get_user_model
 from .fields import EncryptedTextField
 
 
@@ -39,6 +40,7 @@ def site_config_directory_path(instance, filename):
 class CustomUser(AbstractUser):
     class Role(models.TextChoices):
         ADMIN = "ADMIN", _("Super Administrador")
+        ADMIN_ENTIDAD = "ADMIN_ENTIDAD", _("Admin de Entidad")
         ADMIN_DEPARTAMENTAL = "ADMIN_DEPARTAMENTAL", _("Admin Entidad Departamental")
         ADMIN_MUNICIPAL = "ADMIN_MUNICIPAL", _("Admin Entidad Municipal")
         FUNCIONARIO_DIRECTIVO = "FUNCIONARIO_DIRECTIVO", _("Funcionario Directivo")
@@ -1141,3 +1143,46 @@ class Vacante(models.Model):
         verbose_name = "Vacante de Empleo"
         verbose_name_plural = "Vacantes de Empleo"
         ordering = ['-fecha_publicacion']
+
+# --- Multi-Entity Models ---
+
+class Entity(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+    type = models.CharField(max_length=20, choices=[('municipal','Municipal'),('departamental','Departamental'),('nacional','Nacional')])
+    logo = models.URLField(blank=True, null=True)
+    primary_color = models.CharField(max_length=7, default="#0070f3")
+    settings = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+class Department(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+class Municipality(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+# Extender usuario para relacionar con Entity y ubicación:
+User = get_user_model()
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    entity = models.ForeignKey(Entity, on_delete=models.SET_NULL, null=True, blank=True)  # rol de qué entidad administra
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
+    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"Profile for {self.user.username}"

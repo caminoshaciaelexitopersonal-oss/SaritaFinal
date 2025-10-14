@@ -32,7 +32,11 @@ test.describe('Flujo de Registro de Usuarios', () => {
     await page.getByLabel('Quiero registrarme como:').selectOption('TURISTA');
 
     // Rellenar campos de turista
-    await page.getByLabel('¿De dónde nos visitas?').selectOption('NACIONAL');
+    await page.getByLabel('Departamento').selectOption({ label: 'CUNDINAMARCA' });
+
+    // Esperar a que el municipio esté disponible y seleccionarlo
+    await page.waitForSelector('select[id="municipality_id"] option[value="153"]');
+    await page.getByLabel('Municipio').selectOption({ label: 'Bogotá' });
 
     await page.getByRole('button', { name: 'Crear Cuenta' }).click();
 
@@ -122,32 +126,6 @@ test.describe('Flujo de Registro de Usuarios', () => {
     await expect(page).toHaveURL(`${BASE_URL}/login`);
   });
 
-  // --- Caso de Éxito: Registro de Turista Extranjero ---
-  test('debería registrar un Turista Extranjero y requerir país de origen', async ({ page }) => {
-    const email = generateUniqueEmail();
-    const username = generateUniqueUsername();
-
-    await page.goto(`${BASE_URL}/registro`);
-
-    await page.getByLabel('Correo Electrónico').fill(email);
-    await page.getByLabel('Nombre de Usuario').fill(username);
-    await page.getByLabel('Contraseña').fill(password);
-    await page.getByLabel('Confirmar Contraseña').fill(password);
-    await page.getByLabel('Quiero registrarme como:').selectOption('TURISTA');
-
-    // Seleccionar origen extranjero y verificar que el campo de país aparece y es requerido
-    await page.getByLabel('¿De dónde nos visitas?').selectOption('EXTRANJERO');
-    const paisOrigenInput = page.getByLabel('País de Origen');
-    await expect(paisOrigenInput).toBeVisible();
-    await paisOrigenInput.fill('Alemania');
-
-    await page.getByRole('button', { name: 'Crear Cuenta' }).click();
-
-    await expect(page.locator('text=¡Registro exitoso!')).toBeVisible({ timeout: 10000 });
-    await page.waitForURL(`${BASE_URL}/login`);
-    await expect(page).toHaveURL(`${BASE_URL}/login`);
-  });
-
   // --- Caso de Éxito: Registro de Funcionario Directivo ---
   test('debería registrar un Funcionario Directivo exitosamente', async ({ page }) => {
     const email = generateUniqueEmail();
@@ -228,7 +206,9 @@ test.describe('Flujo de Registro de Usuarios', () => {
     await page.getByLabel('Contraseña').fill(password);
     await page.getByLabel('Confirmar Contraseña').fill(password);
     await page.getByLabel('Quiero registrarme como:').selectOption('TURISTA');
-    await page.getByLabel('¿De dónde nos visitas?').selectOption('LOCAL');
+    await page.getByLabel('Departamento').selectOption({ label: 'CUNDINAMARCA' });
+    await page.waitForSelector('select[id="municipality_id"] option[value="153"]');
+    await page.getByLabel('Municipio').selectOption({ label: 'Bogotá' });
     await page.getByRole('button', { name: 'Crear Cuenta' }).click();
     await page.waitForURL(`${BASE_URL}/login`);
 
@@ -239,7 +219,9 @@ test.describe('Flujo de Registro de Usuarios', () => {
     await page.getByLabel('Contraseña').fill(password);
     await page.getByLabel('Confirmar Contraseña').fill(password);
     await page.getByLabel('Quiero registrarme como:').selectOption('TURISTA');
-    await page.getByLabel('¿De dónde nos visitas?').selectOption('LOCAL');
+    await page.getByLabel('Departamento').selectOption({ label: 'CUNDINAMARCA' });
+    await page.waitForSelector('select[id="municipality_id"] option[value="153"]');
+    await page.getByLabel('Municipio').selectOption({ label: 'Bogotá' });
     await page.getByRole('button', { name: 'Crear Cuenta' }).click();
 
     // Verificar el toast de error del backend (el mensaje puede variar)
