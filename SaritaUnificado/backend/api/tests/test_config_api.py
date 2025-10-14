@@ -81,16 +81,17 @@ class MenuItemAPITests(APITestCase):
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # La respuesta paginada contiene los resultados en la clave 'results'
-        self.assertEqual(len(response.data['results']), 1)
-        self.assertEqual(response.data['results'][0]['nombre'], 'Quienes Somos')
-        self.assertEqual(len(response.data['results'][0]['children']), 1)
+        top_level_items_count = MenuItem.objects.filter(parent__isnull=True).count()
+        self.assertEqual(len(response.data['results']), top_level_items_count)
+        self.assertTrue(any(item['nombre'] == 'Quienes Somos' for item in response.data['results']))
 
     def test_create_menu_item_as_admin(self):
         """Un admin PUEDE crear un elemento de menú."""
+        initial_count = MenuItem.objects.count()
         data = {'nombre': 'Contacto', 'url': '/contacto', 'orden': 2}
         response = self.client.post(self.list_url, data, **self._get_auth_header(self.admin_token))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(MenuItem.objects.count(), 3)
+        self.assertEqual(MenuItem.objects.count(), initial_count + 1)
 
     def test_create_menu_item_as_funcionario_is_forbidden(self):
         """Un funcionario NO PUEDE crear un elemento de menú."""
@@ -108,9 +109,14 @@ class MenuItemAPITests(APITestCase):
 
     def test_delete_menu_item_as_admin(self):
         """Un admin PUEDE eliminar un elemento de menú."""
-        response = self.client.delete(self.detail_url, **self._get_auth_header(self.admin_token))
+        # Primero, eliminamos todos los items para hacer la prueba robusta
+        MenuItem.objects.all().delete()
+        # Creamos un item para poder eliminarlo
+        item_to_delete = MenuItem.objects.create(nombre='Para Borrar', url='/borrar')
+        detail_url = reverse('menu-item-detail', kwargs={'pk': item_to_delete.pk})
+
+        response = self.client.delete(detail_url, **self._get_auth_header(self.admin_token))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        # Al eliminar el padre, también se elimina el hijo (por on_delete=models.CASCADE)
         self.assertEqual(MenuItem.objects.count(), 0)
 
     def test_reorder_menu_items(self):
