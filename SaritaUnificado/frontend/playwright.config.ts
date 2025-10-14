@@ -50,19 +50,19 @@ export default defineConfig({
    * (`npm run dev &`) y luego comentar toda esta sección `webServer`
    * antes de ejecutar `npx playwright test`.
    */
-  webServer: (() => {
-    if (process.env.CI) {
-      console.log('⚙️  Entorno CI detectado: se omite el arranque automático del servidor.');
-      return undefined;
-    }
+  // webServer: (() => {
+  //   if (process.env.CI) {
+  //     console.log('⚙️  Entorno CI detectado: se omite el arranque automático del servidor.');
+  //     return undefined;
+  //   }
 
-    const isProduction = process.env.NODE_ENV === 'production';
+  //   const isProduction = process.env.NODE_ENV === 'production';
 
-    return {
-      command: isProduction ? 'npm run preview' : 'npm run dev',
-      url: 'http://localhost:3000',
-      reuseExistingServer: true,
-      timeout: 120 * 1000,
-    };
-  })(),
+  //   return {
+  //     command: isProduction ? 'npm run preview' : 'npm run dev',
+  //     url: 'http://localhost:3000',
+  //     reuseExistingServer: true,
+  //     timeout: 120 * 1000,
+  //   };
+  // })(),
 });

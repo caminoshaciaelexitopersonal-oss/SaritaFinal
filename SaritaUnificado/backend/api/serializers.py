@@ -305,7 +305,8 @@ class AtractivoTuristicoDetailSerializer(serializers.ModelSerializer):
             'id', 'nombre', 'slug', 'descripcion', 'como_llegar',
             'latitud', 'longitud', 'categoria_color', 'categoria_color_display',
             'imagen_principal_url', 'imagenes', 'horario_funcionamiento', 'tarifas',
-            'recomendaciones', 'accesibilidad', 'informacion_contacto', 'autor_username'
+            'recomendaciones', 'accesibilidad', 'informacion_contacto', 'autor_username',
+            'department', 'municipality'
         ]
 
 class AtractivoTuristicoWriteSerializer(serializers.ModelSerializer):
@@ -476,7 +477,7 @@ class RutaTuristicaDetailSerializer(RutaTuristicaListSerializer):
     prestadores = PrestadorServicioPublicListSerializer(many=True, read_only=True)
 
     class Meta(RutaTuristicaListSerializer.Meta):
-        fields = RutaTuristicaListSerializer.Meta.fields + ['imagenes', 'atractivos', 'prestadores']
+        fields = RutaTuristicaListSerializer.Meta.fields + ['imagenes', 'atractivos', 'prestadores', 'municipalities']
 
 
 class PrestadorServicioPublicDetailSerializer(serializers.ModelSerializer):
@@ -516,7 +517,8 @@ class ArtesanoSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             'aprobado', 'rubro_nombre', 'foto_url', 'galeria_imagenes',
-            'puntuacion_capacitacion', 'puntuacion_reseñas', 'puntuacion_formularios', 'puntuacion_total'
+            'puntuacion_capacitacion', 'puntuacion_reseñas', 'puntuacion_formularios', 'puntuacion_total',
+            'department', 'municipality'
         ]
 
 
@@ -551,28 +553,37 @@ class PrestadorServicioSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'id', 'aprobado', 'categoria_nombre', 'galeria_imagenes', 'documentos_legalizacion',
             'puntuacion_verificacion', 'puntuacion_capacitacion',
-            'puntuacion_reseñas', 'puntuacion_formularios', 'puntuacion_total'
+            'puntuacion_reseñas', 'puntuacion_formularios', 'puntuacion_total',
+            'department', 'municipality'
         ]
 
 
 class TuristaRegisterSerializer(RegisterSerializer):
     department_id = serializers.PrimaryKeyRelatedField(
-        queryset=Department.objects.all(), source='department', required=True
+        queryset=Department.objects.all(), source='department', required=False, allow_null=True
     )
     municipality_id = serializers.PrimaryKeyRelatedField(
-        queryset=Municipality.objects.all(), source='municipality', required=True
+        queryset=Municipality.objects.all(), source='municipality', required=False, allow_null=True
     )
+    origen = serializers.ChoiceField(choices=CustomUser.Origen.choices, required=False)
+    pais_origen = serializers.CharField(max_length=100, required=False, allow_blank=True)
 
-    def validate_municipality_id(self, value):
-        department = self.initial_data.get('department_id')
-        if department and value.department.id != int(department):
-            raise serializers.ValidationError("Este municipio no pertenece al departamento seleccionado.")
-        return value
+    def validate(self, data):
+        data = super().validate(data)
+        department = data.get('department')
+        municipality = data.get('municipality')
+
+        if department and municipality:
+            if municipality.department != department:
+                raise serializers.ValidationError({"municipality_id": "Este municipio no pertenece al departamento seleccionado."})
+        return data
 
     @transaction.atomic
     def save(self, request):
         user = super().save(request)
         user.role = CustomUser.Role.TURISTA
+        user.origen = self.validated_data.get('origen', None)
+        user.pais_origen = self.validated_data.get('pais_origen', None)
         user.save()
 
         department = self.validated_data.get('department')
@@ -1121,3 +1132,29 @@ class UserLLMConfigSerializer(serializers.ModelSerializer):
             validated_data.pop('api_key', None)
 
         return super().update(instance, validated_data)
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('department', 'municipality')
+
+
+class CustomUserDetailSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+
+    class Meta:
+        model = CustomUser
+        fields = ('pk', 'username', 'email', 'role', 'profile')
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile', {})
+        # Actualizar el perfil
+        profile = instance.profile
+        profile.department = profile_data.get('department', profile.department)
+        profile.municipality = profile_data.get('municipality', profile.municipality)
+        profile.save()
+
+        # Actualizar el usuario
+        instance = super().update(instance, validated_data)
+        return instance

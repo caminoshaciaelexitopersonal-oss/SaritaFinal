@@ -193,6 +193,8 @@ class PrestadorServicio(models.Model):
     red_social_whatsapp = models.CharField(max_length=20, blank=True, null=True, help_text="Número de WhatsApp con código de país")
 
     # --- Campos de Ubicación Estructurados ---
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Departamento"))
+    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Municipio"))
     direccion = models.CharField(_("Dirección"), max_length=255, blank=True, null=True)
     latitud = models.FloatField(_("Latitud"), blank=True, null=True)
     longitud = models.FloatField(_("Longitud"), blank=True, null=True)
@@ -309,6 +311,8 @@ class Artesano(models.Model):
     red_social_whatsapp = models.CharField(max_length=20, blank=True, null=True, help_text="Número de WhatsApp con código de país")
 
     # --- Campos de Ubicación Estructurados ---
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Departamento"))
+    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Municipio"))
     direccion = models.CharField(_("Dirección"), max_length=255, blank=True, null=True)
     latitud = models.FloatField(_("Latitud"), blank=True, null=True)
     longitud = models.FloatField(_("Longitud"), blank=True, null=True)
@@ -504,6 +508,8 @@ class AtractivoTuristico(models.Model):
     como_llegar = models.TextField(help_text="Instrucciones sobre cómo llegar al atractivo.")
 
     # --- Campos de Ubicación Estructurados ---
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Departamento"))
+    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Municipio"))
     direccion = models.CharField(_("Dirección"), max_length=255, blank=True, null=True)
     latitud = models.FloatField(_("Latitud"), blank=True, null=True)
     longitud = models.FloatField(_("Longitud"), blank=True, null=True)
@@ -548,6 +554,7 @@ class RutaTuristica(models.Model):
 
     atractivos = models.ManyToManyField(AtractivoTuristico, related_name="rutas", blank=True, verbose_name=_("Atractivos en la Ruta"))
     prestadores = models.ManyToManyField(PrestadorServicio, related_name="rutas", blank=True, verbose_name=_("Prestadores en la Ruta"))
+    municipalities = models.ManyToManyField(Municipality, related_name="rutas_turisticas", blank=True, verbose_name=_("Municipios que abarca la Ruta"))
 
     es_publicado = models.BooleanField(_("Publicado"), default=False, help_text="Marcar para que la ruta sea visible en el sitio web público.")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -1187,48 +1194,6 @@ class Vacante(models.Model):
         verbose_name_plural = "Vacantes de Empleo"
         ordering = ['-fecha_publicacion']
 
-# --- Multi-Entity Models ---
-
-class Entity(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
-    type = models.CharField(max_length=20, choices=[('municipal','Municipal'),('departamental','Departamental'),('nacional','Nacional')])
-    logo = models.URLField(blank=True, null=True)
-    primary_color = models.CharField(max_length=7, default="#0070f3")
-    settings = models.JSONField(default=dict, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-class Department(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.name
-
-class Municipality(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-# Extender usuario para relacionar con Entity y ubicación:
- User = get_user_model()
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    entity = models.ForeignKey(Entity, on_delete=models.SET_NULL, null=True, blank=True)  # rol de qué entidad administra
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
-    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True)
-
-    def __str__(self):
-        return f"Profile for {self.user.username}"
 
 
 class Reservation(models.Model):

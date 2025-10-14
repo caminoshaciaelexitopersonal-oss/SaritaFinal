@@ -40,7 +40,6 @@ export interface RegisterData {
     | 'FUNCIONARIO_DIRECTIVO'
     | 'FUNCIONARIO_PROFESIONAL';
 
-  // Campos para Turista
   department_id?: number;
   municipality_id?: number;
 
@@ -308,12 +307,12 @@ useEffect(() => {
       role: data.role, // Enviar siempre el rol
     };
 
+    // Añadir campos de ubicación para todos los roles
+    payload.department_id = data.department_id;
+    payload.municipality_id = data.municipality_id;
+
     // Añadir campos específicos del rol al payload
     switch (data.role) {
-      case 'TURISTA':
-        payload.department_id = data.department_id;
-        payload.municipality_id = data.municipality_id;
-        break;
       case 'PRESTADOR':
         payload.nombre_establecimiento = data.nombre_establecimiento;
         payload.rnt = data.rnt;
@@ -376,7 +375,7 @@ useEffect(() => {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

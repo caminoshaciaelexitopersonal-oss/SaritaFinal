@@ -5,6 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Atractivo, createAtractivo, updateAtractivo } from '@/services/atractivoService';
+import { getDepartments, getMunicipalitiesByDepartment, Department, Municipality } from '@/services/locationService';
 import Image from 'next/image';
 import axios from 'axios';
 
@@ -15,12 +16,44 @@ interface AtractivoFormProps {
 }
 
 const AtractivoForm: React.FC<AtractivoFormProps> = ({ atractivo, onSuccess, onCancel }) => {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<Atractivo>({
+  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<Atractivo>({
     defaultValues: atractivo || { es_publicado: false }
   });
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(atractivo?.imagen_principal_url || null);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
+
+  const selectedDepartment = watch('department');
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const data = await getDepartments();
+        setDepartments(data);
+      } catch (error) {
+        console.error("Failed to fetch departments", error);
+      }
+    };
+    fetchDepartments();
+  }, []);
+
+  useEffect(() => {
+    if (selectedDepartment) {
+      const fetchMunicipalities = async () => {
+        try {
+          const data = await getMunicipalitiesByDepartment(selectedDepartment);
+          setMunicipalities(data);
+        } catch (error) {
+          console.error("Failed to fetch municipalities", error);
+        }
+      };
+      fetchMunicipalities();
+    } else {
+      setMunicipalities([]);
+    }
+  }, [selectedDepartment]);
 
   useEffect(() => {
     reset(atractivo || { es_publicado: false });
@@ -95,6 +128,35 @@ const AtractivoForm: React.FC<AtractivoFormProps> = ({ atractivo, onSuccess, onC
             <option value="ROJO">Urbano/Parque</option>
           </select>
           {errors.categoria_color && <p className="mt-2 text-sm text-red-600">{errors.categoria_color.message}</p>}
+        </div>
+        <div>
+          <label htmlFor="department" className="block text-sm font-medium text-gray-700">Departamento</label>
+          <select
+            id="department"
+            {...register('department', { required: 'El departamento es obligatorio' })}
+            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Seleccione un departamento</option>
+            {departments.map(dep => (
+              <option key={dep.id} value={dep.id}>{dep.name}</option>
+            ))}
+          </select>
+          {errors.department && <p className="mt-2 text-sm text-red-600">{errors.department.message}</p>}
+        </div>
+        <div>
+          <label htmlFor="municipality" className="block text-sm font-medium text-gray-700">Municipio</label>
+          <select
+            id="municipality"
+            {...register('municipality', { required: 'El municipio es obligatorio' })}
+            disabled={!selectedDepartment || municipalities.length === 0}
+            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-200"
+          >
+            <option value="">Seleccione un municipio</option>
+            {municipalities.map(mun => (
+              <option key={mun.id} value={mun.id}>{mun.name}</option>
+            ))}
+          </select>
+          {errors.municipality && <p className="mt-2 text-sm text-red-600">{errors.municipality.message}</p>}
         </div>
       </div>
 

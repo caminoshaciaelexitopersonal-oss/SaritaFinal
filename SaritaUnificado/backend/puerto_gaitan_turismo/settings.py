@@ -158,7 +158,7 @@ SITE_ID = 1
 
 # DJ-REST-AUTH
 REST_AUTH = {
-    "USER_DETAILS_SERIALIZER": "api.serializers.CustomUserSerializer",
+    "USER_DETAILS_SERIALIZER": "api.serializers.CustomUserDetailSerializer",
 }
 
 # CORS

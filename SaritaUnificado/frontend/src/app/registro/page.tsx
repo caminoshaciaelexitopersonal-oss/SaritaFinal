@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import api from '@/lib/api';
+import api from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { RegisterData } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -195,42 +195,40 @@ export default function RegisterPage() {
             </select>
           </div>
 
-          {/* --- Campos para Turista --- */}
-          {role === 'TURISTA' && (
-            <div className="p-4 space-y-4 border-l-4 border-blue-500 bg-blue-50">
-              <h3 className="font-medium text-gray-800">Información de Ubicación</h3>
-              <div>
-                <label htmlFor="department_id" className="block text-sm font-medium text-gray-700">Departamento</label>
-                <select
-                  id="department_id"
-                  {...register('department_id', { required: 'Este campo es obligatorio.' })}
-                  className={`w-full px-3 py-2 mt-1 border rounded-md shadow-sm ${errors.department_id ? 'border-red-500' : 'border-gray-300'}`}
-                >
-                  <option value="">Selecciona un departamento</option>
-                  {departments.map((dept) => (
-                    <option key={dept.id} value={dept.id}>{dept.name}</option>
-                  ))}
-                </select>
-                {errors.department_id && <p className="mt-1 text-xs text-red-600">{errors.department_id.message}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="municipality_id" className="block text-sm font-medium text-gray-700">Municipio</label>
-                <select
-                  id="municipality_id"
-                  {...register('municipality_id', { required: 'Este campo es obligatorio.' })}
-                  disabled={!departmentId || municipalities.length === 0}
-                  className={`w-full px-3 py-2 mt-1 border rounded-md shadow-sm ${errors.municipality_id ? 'border-red-500' : 'border-gray-300'} disabled:bg-gray-200`}
-                >
-                  <option value="">Selecciona un municipio</option>
-                  {municipalities.map((mun) => (
-                    <option key={mun.id} value={mun.id}>{mun.name}</option>
-                  ))}
-                </select>
-                {errors.municipality_id && <p className="mt-1 text-xs text-red-600">{errors.municipality_id.message}</p>}
-              </div>
+          {/* --- Campos de Ubicación --- */}
+          <div className="p-4 space-y-4 border-l-4 border-blue-500 bg-blue-50">
+            <h3 className="font-medium text-gray-800">Información de Ubicación</h3>
+            <div>
+              <label htmlFor="department_id" className="block text-sm font-medium text-gray-700">Departamento</label>
+              <select
+                id="department_id"
+                {...register('department_id', { required: 'Este campo es obligatorio.' })}
+                className={`w-full px-3 py-2 mt-1 border rounded-md shadow-sm ${errors.department_id ? 'border-red-500' : 'border-gray-300'}`}
+              >
+                <option value="">Selecciona un departamento</option>
+                {departments.map((dept) => (
+                  <option key={dept.id} value={dept.id}>{dept.name}</option>
+                ))}
+              </select>
+              {errors.department_id && <p className="mt-1 text-xs text-red-600">{errors.department_id.message}</p>}
             </div>
-          )}
+
+            <div>
+              <label htmlFor="municipality_id" className="block text-sm font-medium text-gray-700">Municipio</label>
+              <select
+                id="municipality_id"
+                {...register('municipality_id', { required: 'Este campo es obligatorio.' })}
+                disabled={!departmentId || municipalities.length === 0}
+                className={`w-full px-3 py-2 mt-1 border rounded-md shadow-sm ${errors.municipality_id ? 'border-red-500' : 'border-gray-300'} disabled:bg-gray-200`}
+              >
+                <option value="">Selecciona un municipio</option>
+                {municipalities.map((mun) => (
+                  <option key={mun.id} value={mun.id}>{mun.name}</option>
+                ))}
+              </select>
+              {errors.municipality_id && <p className="mt-1 text-xs text-red-600">{errors.municipality_id.message}</p>}
+            </div>
+          </div>
 
           {/* --- Campos para Prestador --- */}
           {role === 'PRESTADOR' && (
