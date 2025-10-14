@@ -37,6 +37,35 @@ def galeria_artesano_directory_path(instance, filename):
 def site_config_directory_path(instance, filename):
     return f'site_config/{filename}'
 
+class Entity(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+    type = models.CharField(max_length=20, choices=[('municipal','Municipal'),('departamental','Departamental'),('nacional','Nacional')])
+    logo = models.URLField(blank=True, null=True)
+    primary_color = models.CharField(max_length=7, default="#0070f3")
+    settings = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+class Department(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+class Municipality(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
 class CustomUser(AbstractUser):
     class Role(models.TextChoices):
         ADMIN = "ADMIN", _("Super Administrador")
@@ -88,6 +117,16 @@ class CustomUser(AbstractUser):
             elif not self.role:
                 self.role = self.base_role
         super().save(*args, **kwargs)
+
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    entity = models.ForeignKey(Entity, on_delete=models.SET_NULL, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
+    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"Profile for {self.user.username}"
+
 
 class UserLLMConfig(models.Model):
     """
@@ -141,6 +180,7 @@ class CategoriaPrestador(models.Model):
 
 class PrestadorServicio(models.Model):
     usuario = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="perfil_prestador")
+    entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='prestadores', null=True, blank=True)
     categoria = models.ForeignKey(CategoriaPrestador, on_delete=models.SET_NULL, null=True, related_name="prestadores")
     nombre_negocio = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
@@ -160,7 +200,7 @@ class PrestadorServicio(models.Model):
     promociones_ofertas = models.TextField(blank=True, null=True, help_text="Detalles de promociones, menús, paquetes, etc.")
     aprobado = models.BooleanField(default=False, help_text="El administrador debe aprobar este perfil para que sea visible.")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now=True) 
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     # --- Scoring Fields ---
     puntuacion_verificacion = models.PositiveIntegerField(default=0, help_text="Puntaje acumulado de verificaciones de cumplimiento.")
@@ -255,6 +295,7 @@ class RubroArtesano(models.Model):
 
 class Artesano(models.Model):
     usuario = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="perfil_artesano")
+    entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='artesanos', null=True, blank=True)
     rubro = models.ForeignKey(RubroArtesano, on_delete=models.SET_NULL, null=True, related_name="artesanos")
     nombre_taller = models.CharField(max_length=200, help_text="Nombre del taller o marca personal del artesano.")
     nombre_artesano = models.CharField(max_length=200, help_text="Nombre completo del artesano.")
@@ -388,6 +429,7 @@ class Publicacion(models.Model):
         PENDIENTE_ADMIN = "PENDIENTE_ADMIN", _("Pendiente de Aprobación por Administrador")
         PUBLICADO = "PUBLICADO", _("Publicado")
 
+    entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='publicaciones', null=True, blank=True)
     tipo = models.CharField(max_length=20, choices=Tipo.choices)
     titulo = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
@@ -455,6 +497,7 @@ class AtractivoTuristico(models.Model):
         AMARILLO = "AMARILLO", _("Cultural/Histórico")
         ROJO = "ROJO", _("Urbano/Parque")
         BLANCO = "BLANCO", _("Natural")
+    entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='atractivos', null=True, blank=True)
     nombre = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=220, unique=True, help_text="Versión del nombre amigable para URLs")
     descripcion = models.TextField()
@@ -1176,7 +1219,7 @@ class Municipality(models.Model):
         return self.name
 
 # Extender usuario para relacionar con Entity y ubicación:
-User = get_user_model()
+ User = get_user_model()
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -1186,3 +1229,48 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"Profile for {self.user.username}"
+
+
+class Reservation(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reservations')
+    entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='reservations')
+    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='reservations')
+    details = models.TextField()
+    reservation_date = models.DateTimeField()
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('PENDING', 'Pending'),
+            ('CONFIRMED', 'Confirmed'),
+            ('CANCELLED', 'Cancelled')
+        ],
+        default='PENDING'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Reservation for {self.user.username} at {self.prestador.nombre_negocio}"
+
+
+class Transaction(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='transactions')
+    entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='transactions')
+    reservation = models.ForeignKey(Reservation, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=3, default='COP')
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('PENDING', 'Pending'),
+            ('COMPLETED', 'Completed'),
+            ('FAILED', 'Failed')
+        ],
+        default='PENDING'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Transaction of {self.amount} {self.currency} for {self.user.username}"

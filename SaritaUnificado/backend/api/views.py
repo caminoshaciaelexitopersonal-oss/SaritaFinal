@@ -166,14 +166,29 @@ class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['department']
-
-class EntityViewSet(viewsets.ReadOnlyModelViewSet):
+ class EntityViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A simple ViewSet for viewing entities.
     """
     queryset = Entity.objects.all()
     serializer_class = EntitySerializer
     permission_classes = [AllowAny]
+
+
+class CurrentEntityView(generics.RetrieveAPIView):
+    """
+    Devuelve la entidad actual basada en el subdominio.
+    """
+    serializer_class = EntitySerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        # El middleware ya ha adjuntado la entidad a la petición.
+        # Si no se encuentra ninguna entidad, request.entity será None.
+        if not hasattr(self.request, 'entity') or not self.request.entity:
+            return None
+        return self.request.entity
+
 
 class EntityAdminView(generics.RetrieveUpdateAPIView):
     """
@@ -187,7 +202,6 @@ class EntityAdminView(generics.RetrieveUpdateAPIView):
         # Devuelve la entidad asociada al perfil del usuario.
         # El permiso IsEntityAdmin ya asegura que el perfil y la entidad existen.
         return self.request.user.profile.entity
-
 class VacanteViewSet(viewsets.ModelViewSet):
     queryset = Vacante.objects.filter(activa=True).select_related('empresa')
     serializer_class = VacanteSerializer

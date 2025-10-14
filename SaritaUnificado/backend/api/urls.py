@@ -59,6 +59,10 @@ urlpatterns = [
     # --- Configuración del Sitio (Acceso Público/Restringido) ---
     path('config/site-config/', views.SiteConfigurationView.as_view(), name='site-configuration'),
 
+    # --- Vistas de Entidad ---
+    path('entities/current/', views.CurrentEntityView.as_view(), name='current-entity'),
+    path('admin/my-entity/', views.EntityAdminView.as_view(), name='entity-admin'),
+
     # --- Vistas Privadas (Requieren Autenticación) ---
     path('admin/my-entity/', views.EntityAdminView.as_view(), name='entity-admin'),
     path('profile/prestador/', views.PrestadorProfileView.as_view(), name='prestador-profile'),

@@ -115,40 +115,41 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userData = userResponse.data;
       setUser(userData);
 
-      if (userData.role === 'TURISTA') {
-        const savedItemsResponse = await api.get<{ results: SavedItem[] }>('/mi-viaje/');
-        const itemMap = new Map(
-          savedItemsResponse.data.results.map((item) => [
-            `${item.content_type_name}_${item.object_id}`,
-            item.id,
-          ])
-        );
-        setSavedItemsMap(itemMap);
-      } else {
-        setSavedItemsMap(new Map());
-      }
+       if (userData.role === 'TURISTA') {
+  const savedItemsResponse = await api.get<{ results: SavedItem[] }>('/mi-viaje/');
+  const itemMap = new Map(
+    savedItemsResponse.data.results.map((item) => [
+      `${item.content_type_name}_${item.object_id}`,
+      item.id,
+    ])
+  );
+  setSavedItemsMap(itemMap);
+} else {
+  setSavedItemsMap(new Map());
+}
 
-      if (userData.role === 'ADMIN_ENTIDAD') {
-        await loadEntity();
-      } else {
-        clearEntity();
-      }
+if (userData.role === 'ADMIN_ENTIDAD') {
+  await loadEntity();
+} else {
+  clearEntity();
+}
 
-      return userData; // Devolver los datos del usuario para uso inmediato
-    } catch (error) {
-      logout();
-      return null; // Devolver null en caso de error
-    }
-  }, [logout, loadEntity, clearEntity]);
+return userData; // Devolver los datos del usuario para uso inmediato
+} catch (error) {
+  logout();
+  return null; // Devolver null en caso de error
+}
+}, [logout, loadEntity, clearEntity]);
 
-  useEffect(() => {
-    const storedToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-    if (storedToken) {
-      setToken(storedToken);
-      fetchUserData().finally(() => setIsLoading(false));
-    } else {
-      setIsLoading(false);
-    }
+useEffect(() => {
+  const storedToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+  if (storedToken) {
+    setToken(storedToken);
+    fetchUserData().finally(() => setIsLoading(false));
+  } else {
+    setIsLoading(false);
+  }
+}, []);
   }, [fetchUserData]);
 
   const completeLogin = (key: string, userData: User) => {
