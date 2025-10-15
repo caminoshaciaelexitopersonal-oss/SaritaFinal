@@ -5,10 +5,10 @@ from api.models import (
     CategoriaPrestador,
     PrestadorServicio,
     ImagenGaleria,
-    DetallesHotel,
     TipoDocumentoVerificacion,
     DocumentoVerificacion
 )
+from turismo.models import DetallesHotel
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.utils.text import slugify

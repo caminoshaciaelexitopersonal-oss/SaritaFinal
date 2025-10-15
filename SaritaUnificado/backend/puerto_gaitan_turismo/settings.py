@@ -61,6 +61,9 @@ INSTALLED_APPS = [
 
     # Mis Apps
     "api.apps.ApiConfig",
+    "empresa.apps.EmpresaConfig",
+    "restaurante.apps.RestauranteConfig",
+    "turismo.apps.TurismoConfig",
 ]
 
 MIDDLEWARE = [

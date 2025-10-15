@@ -10,6 +10,14 @@ El backend está construido con Django y Django REST Framework, mientras que el 
 - Node.js 18+
 - Docker y Docker Compose (recomendado para desarrollo)
 
+## Arquitectura del Backend
+
+El backend está construido con una arquitectura modular para facilitar el mantenimiento y la escalabilidad:
+*   `api`: Contiene los modelos y la lógica base (usuarios, perfiles, atractivos, etc.).
+*   `empresa`: Contiene los módulos de gestión empresarial genéricos (productos, clientes, vacantes).
+*   `restaurante`: Contendrá los módulos específicos para restaurantes.
+*   `turismo`: Contendrá los módulos específicos para otros operadores turísticos (hoteles, agencias).
+
 ## Instalación y Configuración (Backend)
 
 1.  **Navegar al directorio del backend:**
@@ -36,7 +44,7 @@ El backend está construido con Django y Django REST Framework, mientras que el 
 5.  **Poblar datos de ubicación (Departamentos y Municipios):**
     Este es un paso crucial para la funcionalidad de registro y ubicación.
     ```bash
-    python manage.py load_locations api/data/departamentos_municipios.json
+    python manage.py load_locations api/data/divipola_data.csv
     ```
 
 6.  **Crear un superusuario (opcional, para acceso de admin):**

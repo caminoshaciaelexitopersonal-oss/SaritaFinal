@@ -31,12 +31,9 @@ router.register(r'resenas', views.ResenaViewSet, basename='resena')
 router.register(r'sugerencias', views.SugerenciaViewSet, basename='sugerencia')
 router.register(r'admin/sugerencias', views.SugerenciaAdminViewSet, basename='sugerencia-admin')
 
-# --- Módulo de Gestión del Prestador ---
-router.register(r'prestador/productos', views.ProductoViewSet, basename='prestador-producto')
-router.register(r'prestador/clientes', views.RegistroClienteViewSet, basename='prestador-cliente')
+# --- Módulo de Gestión del Prestador (Movido a la app 'empresa') ---
 
-# --- Módulo de Empleo (Público y para Prestadores) ---
-router.register(r'empleo/vacantes', views.VacanteViewSet, basename='vacante')
+# --- Módulo de Empleo (Público y para Prestadores) (Movido a la app 'empresa') ---
 
 # --- Módulo de Verificación de Cumplimiento ---
 router.register(r'plantillas-verificacion', views.PlantillaVerificacionViewSet, basename='plantilla-verificacion')
