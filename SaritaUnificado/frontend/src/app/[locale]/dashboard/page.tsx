@@ -14,6 +14,7 @@ import Menu from './prestador/restaurante/Menu';
 import Mesas from './prestador/restaurante/Mesas';
 import Pedidos from './prestador/restaurante/Pedidos';
 import Habitaciones from './prestador/hotel/Habitaciones';
+import Reservas from './prestador/Reservas';
 
 const InicioDashboard = () => (
   <div>
@@ -37,6 +38,7 @@ const DashboardPage = () => {
     'mesas': Mesas,
     'pedidos': Pedidos,
     'habitaciones': Habitaciones,
+    'reservas': Reservas,
   };
 
   const ActiveComponent = views[activeView] || InicioDashboard;

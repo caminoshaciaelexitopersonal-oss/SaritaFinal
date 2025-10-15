@@ -14,3 +14,11 @@ class HotelSerializer(serializers.ModelSerializer):
         model = Hotel
         fields = ['prestador', 'categoria_estrellas', 'reporte_ocupacion_nacional', 'reporte_ocupacion_internacional', 'habitaciones']
         read_only_fields = ['prestador']
+
+class ReservaSerializer(serializers.ModelSerializer):
+    cliente_nombre = serializers.CharField(source='cliente.username', read_only=True, allow_null=True)
+
+    class Meta:
+        model = Reserva
+        fields = '__all__'
+        read_only_fields = ['prestador', 'cliente']

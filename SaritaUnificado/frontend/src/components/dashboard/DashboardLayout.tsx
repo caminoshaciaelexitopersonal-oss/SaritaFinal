@@ -2,7 +2,7 @@
 
 import React, { useState, createContext, useContext, ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { FiHome, FiBox, FiUsers, FiArchive, FiDollarSign, FiClipboard, FiTrendingUp, FiBookOpen, FiGrid, FiShoppingCart, FiBed } from 'react-icons/fi';
+import { FiHome, FiBox, FiUsers, FiArchive, FiDollarSign, FiClipboard, FiTrendingUp, FiBookOpen, FiGrid, FiShoppingCart, FiBed, FiCalendar } from 'react-icons/fi';
 
 // --- Contexto para el Dashboard ---
 interface DashboardContextType {
@@ -42,6 +42,7 @@ const Sidebar = () => {
     { name: 'costos', label: 'Costos', icon: FiDollarSign },
     { name: 'recursos', label: 'Recursos', icon: FiClipboard },
     { name: 'reglas-precio', label: 'Reglas de Precios', icon: FiTrendingUp },
+    { name: 'reservas', label: 'Reservas', icon: FiCalendar },
   ];
 
   const restauranteItems = [
