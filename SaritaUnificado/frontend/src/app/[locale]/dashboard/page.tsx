@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useDashboard } from '@/components/dashboard/DashboardLayout';
 
 // --- Importar vistas genéricas ---
@@ -38,7 +39,7 @@ const InicioDashboard = () => (
   </div>
 );
 
-const DashboardPage = () => {
+const DashboardContent = () => {
   const { activeView } = useDashboard();
 
   // Mapa de todas las vistas disponibles
@@ -78,5 +79,27 @@ const DashboardPage = () => {
 
   return <ActiveComponent />;
 };
+
+
+const DashboardPage = () => {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-screen">Cargando...</div>;
+  }
+
+  // Lógica de protección de ruta
+  if (!user || !user.perfil_prestador) {
+    return (
+        <div className="flex justify-center items-center h-screen">
+            <p>No estás autorizado para ver esta página o no tienes un perfil de prestador asignado.</p>
+        </div>
+    );
+  }
+
+  // Si el usuario está autenticado y tiene perfil, muestra el contenido del dashboard.
+  return <DashboardContent />;
+}
+
 
 export default DashboardPage;

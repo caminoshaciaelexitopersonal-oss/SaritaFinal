@@ -146,21 +146,6 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">Cargando...</div>;
-  }
-
-  // Redirigir o mostrar mensaje si no hay usuario o perfil de prestador
-  if (!user || !user.perfil_prestador) {
-    return (
-        <div className="flex justify-center items-center h-screen">
-            <p>No estás autorizado o no tienes un perfil de prestador asignado.</p>
-        </div>
-    );
-  }
-
   return (
     <DashboardProvider>
       <div className="flex flex-1 h-full bg-gray-50">
@@ -170,5 +155,5 @@ export default function DashboardLayout({
         </main>
       </div>
     </DashboardProvider>
-  )
+  );
 }
