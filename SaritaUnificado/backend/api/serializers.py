@@ -512,8 +512,8 @@ class PrestadorServicioUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'nombre_negocio', 'descripcion', 'telefono', 'email_contacto',
             'red_social_facebook', 'red_social_instagram', 'red_social_tiktok', 'red_social_whatsapp',
-            'ubicacion_mapa', 'promociones_ofertas',
-            'reporte_ocupacion_nacional', 'reporte_ocupacion_internacional',
+            'direccion', 'latitud', 'longitud',
+            'promociones_ofertas',
         ]
 
 
@@ -1133,20 +1133,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class CustomUserDetailSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer()
+    profile = ProfileSerializer(read_only=True)
+    perfil_prestador = PrestadorServicioSerializer(read_only=True)
 
     class Meta:
         model = CustomUser
-        fields = ('pk', 'username', 'email', 'role', 'profile')
-
-    def update(self, instance, validated_data):
-        profile_data = validated_data.pop('profile', {})
-        # Actualizar el perfil
-        profile = instance.profile
-        profile.department = profile_data.get('department', profile.department)
-        profile.municipality = profile_data.get('municipality', profile.municipality)
-        profile.save()
-
-        # Actualizar el usuario
-        instance = super().update(instance, validated_data)
-        return instance
+        fields = ('pk', 'username', 'email', 'role', 'profile', 'perfil_prestador')
