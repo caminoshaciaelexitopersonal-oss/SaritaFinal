@@ -1,3 +1,31 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from .models import Hotel, Habitacion
+from .serializers import HotelSerializer, HabitacionSerializer
+from api.permissions import IsPrestador, IsPrestadorOwner
 
-# Create your views here.
+class HotelViewSet(viewsets.ModelViewSet):
+    serializer_class = HotelSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return Hotel.objects.filter(prestador=self.request.user.perfil_prestador)
+        return Hotel.objects.none()
+
+    def perform_create(self, serializer):
+        # Asumiendo que el perfil de prestador ya existe
+        serializer.save(prestador=self.request.user.perfil_prestador)
+
+class HabitacionViewSet(viewsets.ModelViewSet):
+    serializer_class = HabitacionSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador') and hasattr(self.request.user.perfil_prestador, 'hotel_profile'):
+            return Habitacion.objects.filter(hotel=self.request.user.perfil_prestador.hotel_profile)
+        return Habitacion.objects.none()
+
+    def perform_create(self, serializer):
+        hotel_profile = self.request.user.perfil_prestador.hotel_profile
+        serializer.save(hotel=hotel_profile)

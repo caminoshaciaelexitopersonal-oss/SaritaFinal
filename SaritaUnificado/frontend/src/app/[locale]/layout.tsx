@@ -26,6 +26,41 @@ export const metadata: Metadata = {
 
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { usePathname } from 'next/navigation';
+
+const ClientLayout = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname();
+  const isDashboard = pathname.includes('/dashboard');
+
+  return (
+    <>
+      {!isDashboard && <Header />}
+      <main className={`flex-grow flex flex-col ${!isDashboard ? '' : 'h-full'}`}>
+        {isDashboard ? <DashboardLayout>{children}</DashboardLayout> : children}
+      </main>
+      {!isDashboard && (
+        <>
+          <Footer />
+          <Chatbot />
+        </>
+      )}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <AgentController />
+    </>
+  );
+};
 
 export default async function LocaleLayout({
   children,
@@ -46,25 +81,7 @@ export default async function LocaleLayout({
           <EntityProvider>
             <LanguageProvider>
               <AgentProvider>
-                <Header />
-                <main className="flex-grow flex flex-col">
-                  {children}
-                </main>
-                <ToastContainer
-                  position="bottom-right"
-                  autoClose={5000}
-                  hideProgressBar={false}
-                  newestOnTop={false}
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                  theme="light"
-                />
-                <Footer />
-                <Chatbot />
-                <AgentController />
+                <ClientLayout>{children}</ClientLayout>
               </AgentProvider>
             </LanguageProvider>
           </EntityProvider>

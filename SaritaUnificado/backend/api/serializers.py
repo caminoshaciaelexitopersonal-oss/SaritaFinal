@@ -859,28 +859,13 @@ class MenuItemSerializer(serializers.ModelSerializer):
         fields = ['id', 'nombre', 'url', 'parent', 'orden', 'children']
 
     def get_children(self, obj):
-        # Usamos el atributo 'children_data' que hemos adjuntado en la vista
+        # Usamos el atributo 'children_data' que hemos adjuntado eficientemente en la vista.
+        # Esto evita hacer una nueva consulta a la BD por cada item.
         if hasattr(obj, 'children_data'):
-            return MenuItemSerializer(obj.children_data, many=True).data
+            # Pasamos el contexto para asegurar que cualquier dato anidado (si lo hubiera)
+            # también tenga acceso a la request.
+            return MenuItemSerializer(obj.children_data, many=True, context=self.context).data
         return []
-        fields = ['id', 'nombre', 'url', 'parent', 'orden', 'children']
-
-    def to_representation(self, instance):
-        """
-        Prepara los datos para la serialización, asegurándose de que los 'children'
-        también se serialicen correctamente.
-        """
-        # Obtenemos la representación estándar del objeto.
-        representation = super().to_representation(instance)
-
-        # Si el objeto tiene un atributo 'children' (poblado por la vista),
-        # lo serializamos recursivamente usando el mismo serializador.
-        if hasattr(instance, 'children'):
-            representation['children'] = MenuItemSerializer(instance.children, many=True).data
-        else:
-            representation['children'] = []
-
-        return representation
 
 
 class ResenaSerializer(serializers.ModelSerializer):
