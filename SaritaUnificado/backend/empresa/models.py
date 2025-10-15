@@ -60,3 +60,82 @@ class Vacante(models.Model):
         verbose_name = "Vacante de Empleo"
         verbose_name_plural = "Vacantes de Empleo"
         ordering = ['-fecha_publicacion']
+
+class Inventario(models.Model):
+    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='inventarios')
+    nombre_item = models.CharField(_("Nombre del Ítem"), max_length=255)
+    descripcion = models.TextField(_("Descripción"), blank=True, null=True)
+    cantidad = models.PositiveIntegerField(_("Cantidad Disponible"), default=0)
+    unidad = models.CharField(_("Unidad de Medida"), max_length=50, help_text=_("Ej: unidades, kg, litros"))
+    punto_reorden = models.PositiveIntegerField(_("Punto de Reorden"), default=0, help_text=_("Cantidad mínima antes de necesitar reabastecimiento"))
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.nombre_item} ({self.cantidad} {self.unidad})"
+
+    class Meta:
+        verbose_name = "Ítem de Inventario"
+        verbose_name_plural = "Ítems de Inventario"
+        ordering = ['nombre_item']
+
+class Costo(models.Model):
+    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='costos')
+    concepto = models.CharField(_("Concepto del Costo"), max_length=255)
+    monto = models.DecimalField(_("Monto"), max_digits=12, decimal_places=2)
+    fecha = models.DateField(_("Fecha del Costo"))
+    es_recurrente = models.BooleanField(_("¿Es Recurrente?"), default=False)
+
+    class Tipo(models.TextChoices):
+        FIJO = 'FIJO', _('Fijo')
+        VARIABLE = 'VARIABLE', _('Variable')
+
+    tipo_costo = models.CharField(_("Tipo de Costo"), max_length=50, choices=Tipo.choices, default=Tipo.VARIABLE)
+
+    def __str__(self):
+        return f"{self.concepto} - ${self.monto}"
+
+    class Meta:
+        verbose_name = "Costo Operativo"
+        verbose_name_plural = "Costos Operativos"
+        ordering = ['-fecha']
+
+class Recurso(models.Model):
+    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='recursos')
+    nombre = models.CharField(_("Nombre del Recurso"), max_length=200)
+
+    class Tipo(models.TextChoices):
+        HUMANO = 'HUMANO', _('Humano')
+        LOGISTICO = 'LOGISTICO', _('Logístico') # Ej: Vehículo, Herramienta
+        TECNOLOGICO = 'TECNOLOGICO', _('Tecnológico')
+
+    tipo_recurso = models.CharField(_("Tipo de Recurso"), max_length=50, choices=Tipo.choices)
+    disponible = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.nombre} ({self.get_tipo_recurso_display()})"
+
+    class Meta:
+        verbose_name = "Recurso"
+        verbose_name_plural = "Recursos"
+
+class ReglaPrecio(models.Model):
+    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='reglas_precio')
+    nombre_regla = models.CharField(_("Nombre de la Regla"), max_length=200)
+    producto_asociado = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="reglas_precio", null=True, blank=True)
+
+    class TipoAjuste(models.TextChoices):
+        PORCENTAJE = 'PORCENTAJE', _('Porcentaje')
+        MONTO_FIJO = 'MONTO_FIJO', _('Monto Fijo')
+
+    tipo_ajuste = models.CharField(_("Tipo de Ajuste"), max_length=50, choices=TipoAjuste.choices)
+    valor_ajuste = models.DecimalField(_("Valor del Ajuste"), max_digits=10, decimal_places=2)
+    fecha_inicio = models.DateField(_("Fecha de Inicio"))
+    fecha_fin = models.DateField(_("Fecha de Fin"))
+    activa = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.nombre_regla
+
+    class Meta:
+        verbose_name = "Regla de Precio"
+        verbose_name_plural = "Reglas de Precios"
