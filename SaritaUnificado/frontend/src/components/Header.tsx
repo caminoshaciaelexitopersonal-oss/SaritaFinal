@@ -27,16 +27,36 @@ interface SiteConfig {
   nombre_secretaria: string;
 }
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  isSidebarOpen?: boolean;
+  setIsSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Header: React.FC<HeaderProps> = ({
+  isSidebarOpen: isSidebarOpenProp,
+  setIsSidebarOpen: setIsSidebarOpenProp,
+}) => {
   const t = useTranslations('Header');
-  const { user, logout, isLoading: isAuthLoading } = useAuth(); // Renombrar para claridad
+  const { user, logout, isLoading: isAuthLoading } = useAuth();
   const { entity } = useEntity();
   const [navItems, setNavItems] = useState<NavLink[]>([]);
   const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isHeaderLoading, setIsHeaderLoading] = useState(true); // Estado de carga para el menú
-  const [headerError, setHeaderError] = useState<string | null>(null); // Estado de error
+  const [isHeaderLoading, setIsHeaderLoading] = useState(true);
+  const [headerError, setHeaderError] = useState<string | null>(null);
   const pathname = usePathname();
+
+  // Estado local para el menú, usado si no se pasan las props
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Determinar qué estado y función usar
+  const isMenuActuallyOpen = isSidebarOpenProp !== undefined ? isSidebarOpenProp : isMenuOpen;
+  const toggleMenu = () => {
+    if (setIsSidebarOpenProp) {
+      setIsSidebarOpenProp(!isSidebarOpenProp);
+    } else {
+      setIsMenuOpen(!isMenuOpen);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,26 +67,29 @@ const Header: React.FC = () => {
           api.get('config/menu-items/'),
           api.get('config/site-config/')
         ]);
-
         const menuData = menuResponse.data.results || menuResponse.data || [];
         setNavItems(menuData);
         setSiteConfig(configResponse.data);
-
-      } catch (error: any) {
-        console.error("Error fetching header data:", error.response ? error.response.data : error.message);
-        setHeaderError("No se pudo cargar el menú."); // Mensaje de error para el usuario
+      } catch (error) {
+        console.error("Error fetching header data:", error);
+        setHeaderError("No se pudo cargar el menú.");
       } finally {
         setIsHeaderLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
-  // Cerrar el menú móvil al cambiar de ruta
+  // Cerrar el menú al cambiar de ruta
   useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
+    if (pathname) {
+      if (setIsSidebarOpenProp) {
+        setIsSidebarOpenProp(false);
+      } else {
+        setIsMenuOpen(false);
+      }
+    }
+  }, [pathname, setIsSidebarOpenProp]);
 
   const renderNavLinks = (items: NavLink[], isMobile: boolean = false) => {
     const baseClasses = "block text-gray-700 hover:bg-gray-100 rounded-md font-medium";
@@ -167,10 +190,10 @@ const Header: React.FC = () => {
             {/* Botón de Menú Móvil */}
             <div className="lg:hidden flex items-center">
               <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                onClick={toggleMenu}
                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none"
               >
-                {isMenuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
+                {isMenuActuallyOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
               </button>
             </div>
           </div>
@@ -178,7 +201,7 @@ const Header: React.FC = () => {
       </div>
 
       {/* Menú desplegable para Móvil y Tablet */}
-      {isMenuOpen && (
+      {isMenuActuallyOpen && (
         <div className="lg:hidden absolute top-full left-0 w-full bg-white shadow-lg">
           <nav className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {isHeaderLoading ? (

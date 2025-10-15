@@ -9,7 +9,7 @@ const SugerenciasPage = () => {
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
-    nombre_remitente: user?.first_name ? `${user.first_name} ${user.last_name}` : '',
+    nombre_remitente: user?.username || '',
     email_remitente: user?.email || '',
     tipo_mensaje: 'SUGERENCIA',
     mensaje: '',
@@ -35,7 +35,7 @@ const SugerenciasPage = () => {
       setSuccess('¡Gracias! Tu mensaje ha sido enviado correctamente.');
       // Reset form
       setFormData({
-        nombre_remitente: user?.first_name ? `${user.first_name} ${user.last_name}` : '',
+        nombre_remitente: user?.username || '',
         email_remitente: user?.email || '',
         tipo_mensaje: 'SUGERENCIA',
         mensaje: '',

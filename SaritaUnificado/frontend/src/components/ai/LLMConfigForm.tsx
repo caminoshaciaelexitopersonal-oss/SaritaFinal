@@ -61,9 +61,8 @@ const LLMConfigForm: React.FC = () => {
       setProvider(response.data.provider);
       setApiKey(''); // Limpia el campo de la clave después de guardar
       toast.success('¡Configuración de IA guardada con éxito!');
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || 'Ocurrió un error al guardar la configuración.';
-      toast.error(errorMessage);
+    } catch (error) {
+      toast.error('Ocurrió un error al guardar la configuración.');
       console.error('Error saving LLM config:', error);
     } finally {
       setSaving(false);
@@ -105,7 +104,7 @@ const LLMConfigForm: React.FC = () => {
           ))}
         </select>
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          Selecciona 'Usar Configuración del Sistema' para utilizar el modelo híbrido por defecto.
+          Selecciona &apos;Usar Configuración del Sistema&apos; para utilizar el modelo híbrido por defecto.
         </p>
       </div>
 

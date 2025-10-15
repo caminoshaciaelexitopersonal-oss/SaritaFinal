@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import api from '@/lib/api';
+import axios from 'axios';
 import FormField from '@/components/ui/FormField';
 import { Button } from '@/components/ui/Button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
@@ -17,6 +18,17 @@ interface ClienteFormData {
 interface ClienteResumen {
     pais_origen: string;
     total_clientes: number;
+}
+
+interface ApiCliente {
+    id: number;
+    pais_origen: string;
+    cantidad: number;
+    fecha_registro: string;
+}
+
+interface ApiClientesResponse {
+    results: ApiCliente[];
 }
 
 const paises = [
@@ -44,16 +56,18 @@ const ClienteManager = () => {
   const fetchResumen = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Asumimos que el endpoint de registros_clientes puede devolver un resumen.
-      // Si no, esto necesitaría un endpoint dedicado /prestador/clientes/resumen/
-      const response = await api.get('/prestador/clientes/');
-      // Aquí se necesitaría procesar los datos para agruparlos si la API no lo hace.
-      // Por ahora, simularemos que la API devuelve el resumen.
-      const groupedData = response.data.results.reduce((acc: any, curr: any) => {
+      const response = await api.get<ApiClientesResponse>('/prestador/clientes/');
+
+      const groupedData = response.data.results.reduce((acc: Record<string, number>, curr) => {
           acc[curr.pais_origen] = (acc[curr.pais_origen] || 0) + curr.cantidad;
           return acc;
       }, {});
-      const resumenData = Object.keys(groupedData).map(key => ({ pais_origen: key, total_clientes: groupedData[key] }));
+
+      const resumenData: ClienteResumen[] = Object.entries(groupedData).map(([pais, total]) => ({
+        pais_origen: pais,
+        total_clientes: total,
+      }));
+
       setResumen(resumenData);
     } catch (error) {
       toast.error('Error al cargar el resumen de clientes.');
@@ -72,8 +86,12 @@ const ClienteManager = () => {
       toast.success('Clientes registrados con éxito.');
       reset();
       fetchResumen();
-    } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Ocurrió un error al registrar los clientes.');
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            toast.error(error.response.data?.detail || 'Ocurrió un error al registrar los clientes.');
+        } else {
+            toast.error('Ocurrió un error al registrar los clientes.');
+        }
     }
   };
 

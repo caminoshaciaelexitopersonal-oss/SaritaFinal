@@ -59,8 +59,8 @@ const ProductoManager = () => {
       reset();
       setEditingProducto(null);
       fetchProductos(); // Recargar la lista
-    } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Ocurrió un error al guardar el producto.');
+    } catch (error) {
+      toast.error('Ocurrió un error al guardar el producto.');
     }
   };
 
