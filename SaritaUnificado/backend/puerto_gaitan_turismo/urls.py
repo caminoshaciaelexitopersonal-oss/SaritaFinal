@@ -43,6 +43,8 @@ urlpatterns = [
     path("api/admin/", include("api.admin_urls")),
     # Rutas de los nuevos módulos
     path("api/empresa/", include("empresa.urls")),
+    path("api/restaurante/", include("restaurante.urls")),
+    path("api/turismo/", include("turismo.urls")),
     # Rutas de la API de la aplicación
     path("api/", include("api.urls")),
 ]

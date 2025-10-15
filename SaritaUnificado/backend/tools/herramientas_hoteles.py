@@ -1,7 +1,7 @@
 from langchain_core.tools import tool
 from typing import List, Dict
 from api.models import PrestadorServicio
-from turismo.models import DetallesHotel
+from turismo.models import Hotel
 from django.core.exceptions import ObjectDoesNotExist
 
 @tool
@@ -16,10 +16,10 @@ def actualizar_detalles_hotel(prestador_id: int, ocupacion_nacional: int, ocupac
         if prestador.categoria.slug != 'hoteles':
             return {"status": "error", "message": "Esta operación solo es válida para prestadores de la categoría 'hoteles'."}
 
-        detalles, created = DetallesHotel.objects.get_or_create(prestador=prestador)
-        detalles.reporte_ocupacion_nacional = ocupacion_nacional
-        detalles.reporte_ocupacion_internacional = ocupacion_internacional
-        detalles.save()
+        hotel, created = Hotel.objects.get_or_create(prestador=prestador)
+        hotel.reporte_ocupacion_nacional = ocupacion_nacional
+        hotel.reporte_ocupacion_internacional = ocupacion_internacional
+        hotel.save()
 
         accion = "creados" if created else "actualizados"
         return {"status": "success", "message": f"Detalles de hotel para '{prestador.nombre_negocio}' {accion} correctamente."}

@@ -8,7 +8,7 @@ from api.models import (
     TipoDocumentoVerificacion,
     DocumentoVerificacion
 )
-from turismo.models import DetallesHotel
+from turismo.models import Hotel
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.utils.text import slugify

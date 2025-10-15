@@ -423,9 +423,32 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(parent__isnull=True).order_by('orden')
-        serializer = self.get_serializer(queryset, many=True)
-        # Devolver una estructura similar a la paginación para que el test no falle
+        # 1. Obtener todos los items en una sola consulta para eficiencia.
+        all_items = self.get_queryset().order_by('orden')
+
+        # 2. Construir un diccionario para acceder fácilmente a cada item por su ID.
+        items_map = {item.id: item for item in all_items}
+
+        # 3. Construir el árbol: adjuntar cada item a su padre.
+        root_items = []
+        for item in all_items:
+            # Inicializar un atributo 'children' para evitar errores si no tiene hijos.
+            if not hasattr(item, 'children_data'):
+                item.children_data = []
+
+            if item.parent_id:
+                parent = items_map.get(item.parent_id)
+                if parent:
+                    # Inicializar 'children_data' en el padre si no existe.
+                    if not hasattr(parent, 'children_data'):
+                        parent.children_data = []
+                    parent.children_data.append(item)
+            else:
+                # Si no tiene padre, es un item raíz.
+                root_items.append(item)
+
+        # 4. Serializar solo los items raíz. El serializador se encargará de los hijos.
+        serializer = self.get_serializer(root_items, many=True)
         return Response({'count': len(serializer.data), 'next': None, 'previous': None, 'results': serializer.data})
 
     @action(detail=False, methods=['post'])
