@@ -3,6 +3,23 @@ import { http, HttpResponse } from 'msw';
 // URL base de la API, debe coincidir con la configuración del cliente
 const API_BASE_URL = 'http://localhost:8000/api';
 
+interface LoginRequestBody {
+  username?: string;
+  email?: string;
+  password?: string;
+}
+
+interface RegistrationRequestBody {
+  email: string;
+  password1: string;
+  password2: string;
+}
+
+interface LlmConfigRequestBody {
+    provider?: string;
+    apiKey?: string;
+}
+
 // Simulación de "base de datos" en memoria para usuarios y configuraciones
 const users = new Map();
 const llmConfig = {
@@ -14,7 +31,7 @@ export const handlers = [
   // --- MANEJADOR DE LOGIN MEJORADO ---
   // Devuelve el token y el objeto de usuario en la misma respuesta.
   http.post(`${API_BASE_URL}/auth/login/`, async ({ request }) => {
-    const body = await request.json() as any;
+    const body = await request.json() as LoginRequestBody;
     const username = body.username || body.email;
 
     const userProfiles = {
@@ -50,7 +67,7 @@ export const handlers = [
   // Se crea un manejador para cada endpoint de registro específico
   ...['turista', 'prestador', 'artesano', 'administrador', 'funcionario_directivo', 'funcionario_profesional'].map(role =>
     http.post(`${API_BASE_URL}/auth/registration/${role}/`, async ({ request }) => {
-      const body = await request.json() as any;
+      const body = await request.json() as RegistrationRequestBody;
 
       if (body.password1 !== body.password2) {
         return HttpResponse.json({ password2: ['Las contraseñas no coinciden.'] }, { status: 400 });
@@ -88,7 +105,7 @@ export const handlers = [
   }),
 
   http.post(`${API_BASE_URL}/config/my-llm/`, async ({ request }) => {
-    const newConfig = await request.json() as any;
+    const newConfig = await request.json() as LlmConfigRequestBody;
     llmConfig.provider = newConfig.provider || llmConfig.provider;
     llmConfig.apiKey = newConfig.apiKey || llmConfig.apiKey;
     return HttpResponse.json(llmConfig, { status: 200 });

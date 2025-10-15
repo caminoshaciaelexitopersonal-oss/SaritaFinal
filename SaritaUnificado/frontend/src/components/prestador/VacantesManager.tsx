@@ -102,8 +102,8 @@ export default function VacantesManager() {
       }
       fetchVacantes();
       setIsModalOpen(false);
-    } catch (error: any) {
-        const errorMsg = error.response?.data?.detail || 'Ocurrió un error.';
+    } catch (error) {
+        const errorMsg = 'Ocurrió un error.';
         toast.error(`Error: ${errorMsg}`);
     }
   };

@@ -54,7 +54,6 @@ from .models import (
     Verificacion,
     RespuestaItemVerificacion,
     AsistenciaCapacitacion,
-    Vacante,
     TipoDocumentoVerificacion,
     DocumentoVerificacion
 )
@@ -131,9 +130,6 @@ from .serializers import (
     GuardarVerificacionSerializer,
     CapacitacionDetailSerializer,
     RegistrarAsistenciaSerializer,
-    ProductoSerializer,
-    RegistroClienteSerializer,
-    VacanteSerializer
 )
 from .permissions import (
     IsTurista,
@@ -204,54 +200,6 @@ class EntityAdminView(generics.RetrieveUpdateAPIView):
         # Devuelve la entidad asociada al perfil del usuario.
         # El permiso IsEntityAdmin ya asegura que el perfil y la entidad existen.
         return self.request.user.profile.entity
-class VacanteViewSet(viewsets.ModelViewSet):
-    queryset = Vacante.objects.filter(activa=True).select_related('empresa')
-    serializer_class = VacanteSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['tipo_contrato', 'ubicacion']
-    search_fields = ['titulo', 'descripcion', 'empresa__nombre_negocio']
-    ordering_fields = ['fecha_publicacion', 'salario']
-
-    def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            self.permission_classes = [IsAuthenticated, IsPrestador]
-        else: # list, retrieve
-            self.permission_classes = [AllowAny]
-        return super().get_permissions()
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and hasattr(user, 'perfil_prestador'):
-            return Vacante.objects.filter(empresa=user.perfil_prestador)
-        return super().get_queryset()
-
-    def perform_create(self, serializer):
-        serializer.save(empresa=self.request.user.perfil_prestador)
-
-    def perform_update(self, serializer):
-        serializer.save(empresa=self.request.user.perfil_prestador)
-
-
-class ProductoViewSet(viewsets.ModelViewSet):
-    serializer_class = ProductoSerializer
-    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
-
-    def get_queryset(self):
-        return Producto.objects.filter(prestador=self.request.user.perfil_prestador)
-
-    def perform_create(self, serializer):
-        serializer.save(prestador=self.request.user.perfil_prestador)
-
-
-class RegistroClienteViewSet(viewsets.ModelViewSet):
-    serializer_class = RegistroClienteSerializer
-    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
-
-    def get_queryset(self):
-        return RegistroCliente.objects.filter(prestador=self.request.user.perfil_prestador)
-
-    def perform_create(self, serializer):
-        serializer.save(prestador=self.request.user.perfil_prestador)
 
 
 class FormularioViewSet(viewsets.ModelViewSet):

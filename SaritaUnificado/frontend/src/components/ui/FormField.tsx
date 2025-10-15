@@ -1,19 +1,19 @@
 import React from 'react';
-import { UseFormRegister, FieldErrors, RegisterOptions } from 'react-hook-form';
+import { UseFormRegister, FieldErrors, RegisterOptions, FieldValues } from 'react-hook-form';
 
-interface FormFieldProps {
-  name: string;
+interface FormFieldProps<T extends FieldValues> {
+  name: keyof T & string;
   label: string;
   type?: string;
-  register: UseFormRegister<any>;
-  errors: FieldErrors;
+  register: UseFormRegister<T>;
+  errors: FieldErrors<T>;
   required?: boolean;
   validation?: RegisterOptions;
   autoComplete?: string;
   disabled?: boolean;
 }
 
-const FormField: React.FC<FormFieldProps> = ({
+const FormField = <T extends FieldValues>({
   name,
   label,
   type = 'text',

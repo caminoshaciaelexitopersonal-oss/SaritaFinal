@@ -44,8 +44,8 @@ const SiteConfigManager = () => {
     try {
       await api.patch('/config/site-config/', data);
       toast.success('Configuración guardada con éxito.');
-    } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Ocurrió un error al guardar la configuración.');
+    } catch (error) {
+      toast.error('Ocurrió un error al guardar la configuración.');
     }
   };
 

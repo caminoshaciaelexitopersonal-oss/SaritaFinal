@@ -41,6 +41,8 @@ urlpatterns = [
     path("api/auth/registration/funcionario_profesional/", FuncionarioProfesionalRegisterView.as_view(), name='funcionario-profesional-register'),
     # Rutas de Administración
     path("api/admin/", include("api.admin_urls")),
+    # Rutas de los nuevos módulos
+    path("api/empresa/", include("empresa.urls")),
     # Rutas de la API de la aplicación
     path("api/", include("api.urls")),
 ]

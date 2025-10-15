@@ -148,8 +148,7 @@ useEffect(() => {
   } else {
     setIsLoading(false);
   }
-}, []);
-  }, [fetchUserData]);
+}, [fetchUserData]);
 
   const completeLogin = (key: string, userData: User) => {
     setToken(key);
@@ -299,7 +298,7 @@ useEffect(() => {
     }
 
     // Construir el payload base con campos comunes
-    const payload: { [key: string]: any } = {
+    const payload: { [key: string]: string | number | undefined } = {
       username: data.username || `${data.email.split('@')[0]}${Math.floor(Math.random() * 10000)}`,
       email: data.email,
       password1: data.password1,

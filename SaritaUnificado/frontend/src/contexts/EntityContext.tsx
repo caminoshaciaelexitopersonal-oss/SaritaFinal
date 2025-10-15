@@ -8,7 +8,7 @@ interface Entity {
   name: string;
   logo: string | null;
   primary_color: string;
-  settings: Record<string, any>;
+  settings: Record<string, unknown>;
 }
 
 interface EntityContextType {
@@ -76,21 +76,6 @@ export const useEntity = (): EntityContextType => {
   const context = useContext(EntityContext);
   if (!context) {
     throw new Error('useEntity debe usarse dentro de un EntityProvider');
-  }
-  return context;
-};
-
-  return (
-    <EntityContext.Provider value={value}>
-      {children}
-    </EntityContext.Provider>
-  );
-};
-
-export const useEntity = () => {
-  const context = useContext(EntityContext);
-  if (context === undefined) {
-    throw new Error('useEntity must be used within an EntityProvider');
   }
   return context;
 };
