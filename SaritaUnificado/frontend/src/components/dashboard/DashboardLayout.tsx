@@ -2,7 +2,20 @@
 
 import React, { useState, createContext, useContext, ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { FiHome, FiBox, FiUsers, FiArchive, FiDollarSign, FiClipboard, FiTrendingUp, FiBookOpen, FiGrid, FiShoppingCart, FiBed, FiCalendar } from 'react-icons/fi';
+import {
+  FiHome,
+  FiBox,
+  FiUsers,
+  FiArchive,
+  FiDollarSign,
+  FiClipboard,
+  FiTrendingUp,
+  FiBookOpen,
+  FiGrid,
+  FiShoppingCart,
+  FiBed,
+  FiCalendar,
+} from 'react-icons/fi';
 
 // --- Contexto para el Dashboard ---
 interface DashboardContextType {
@@ -52,12 +65,12 @@ const Sidebar = () => {
   ];
 
   const hotelItems = [
-      { name: 'habitaciones', label: 'Habitaciones', icon: FiBed },
+    { name: 'habitaciones', label: 'Habitaciones', icon: FiBed },
   ];
 
-  // Lógica para mostrar menús según el tipo de prestador (a futuro)
-  const isRestaurante = true; // Placeholder
-  const isHotel = true; // Placeholder
+  // TODO: Determinar el tipo de prestador según el usuario autenticado
+  const isRestaurante = true;
+  const isHotel = true;
 
   return (
     <div className="w-64 bg-gray-800 text-white p-4 flex flex-col h-full">
@@ -79,58 +92,55 @@ const Sidebar = () => {
             </li>
           ))}
         </ul>
+
         {isRestaurante && (
-            <>
+          <>
             <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Restaurante</p>
             <ul>
-            {restauranteItems.map((item) => (
+              {restauranteItems.map((item) => (
                 <li key={item.name} className="mb-1">
-                <button
+                  <button
                     onClick={() => setActiveView(item.name)}
                     className={`w-full text-left flex items-center p-2 rounded-md transition-colors text-sm ${
-                    activeView === item.name ? 'bg-gray-900' : 'hover:bg-gray-700'
+                      activeView === item.name ? 'bg-gray-900' : 'hover:bg-gray-700'
                     }`}
-                >
+                  >
                     <item.icon className="mr-3" />
                     {item.label}
-                </button>
+                  </button>
                 </li>
-            ))}
+              ))}
             </ul>
-            </>
+          </>
         )}
+
         {isHotel && (
-            <>
+          <>
             <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Hotel</p>
             <ul>
-            {hotelItems.map((item) => (
+              {hotelItems.map((item) => (
                 <li key={item.name} className="mb-1">
-                <button
+                  <button
                     onClick={() => setActiveView(item.name)}
                     className={`w-full text-left flex items-center p-2 rounded-md transition-colors text-sm ${
-                    activeView === item.name ? 'bg-gray-900' : 'hover:bg-gray-700'
+                      activeView === item.name ? 'bg-gray-900' : 'hover:bg-gray-700'
                     }`}
-                >
+                  >
                     <item.icon className="mr-3" />
                     {item.label}
-                </button>
+                  </button>
                 </li>
-            ))}
+              ))}
             </ul>
-            </>
+          </>
         )}
       </nav>
     </div>
   );
 };
 
-
 // --- Layout Principal del Dashboard ---
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -138,17 +148,19 @@ export default function DashboardLayout({
   }
 
   if (!user) {
-    return <div className="flex justify-center items-center h-screen">No estás autorizado. Por favor, inicia sesión.</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        No estás autorizado. Por favor, inicia sesión.
+      </div>
+    );
   }
 
   return (
     <DashboardProvider>
       <div className="flex flex-1 h-full bg-gray-50">
         <Sidebar />
-        <main className="flex-1 p-8 overflow-y-auto">
-          {children}
-        </main>
+        <main className="flex-1 p-8 overflow-y-auto">{children}</main>
       </div>
     </DashboardProvider>
-  )
+  );
 }

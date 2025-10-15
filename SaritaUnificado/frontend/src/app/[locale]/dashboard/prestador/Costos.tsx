@@ -1,4 +1,4 @@
-'use client';
+ 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
@@ -43,7 +43,13 @@ const Costos = () => {
   }, [fetchCostos]);
 
   const openModalForCreate = () => {
-    reset({ concepto: '', monto: '0.00', fecha: new Date().toISOString().split('T')[0], tipo_costo: 'VARIABLE', es_recurrente: false });
+    reset({
+      concepto: '',
+      monto: '0.00',
+      fecha: new Date().toISOString().split('T')[0],
+      tipo_costo: 'VARIABLE',
+      es_recurrente: false,
+    });
     setEditingCosto(null);
     setIsModalOpen(true);
   };
@@ -99,39 +105,84 @@ const Costos = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Gestión de Costos</h1>
-        <button onClick={openModalForCreate} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button
+          onClick={openModalForCreate}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
           Añadir Costo
         </button>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} title={editingCosto ? 'Editar Costo' : 'Nuevo Costo'}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title={editingCosto ? 'Editar Costo' : 'Nuevo Costo'}
+      >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="concepto" className="block text-sm font-medium text-gray-700">Concepto</label>
-            <input id="concepto" {...register('concepto', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <label htmlFor="concepto" className="block text-sm font-medium text-gray-700">
+              Concepto
+            </label>
+            <input
+              id="concepto"
+              {...register('concepto', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
-            <label htmlFor="monto" className="block text-sm font-medium text-gray-700">Monto</label>
-            <input id="monto" type="number" step="0.01" {...register('monto', { required: true, valueAsNumber: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <label htmlFor="monto" className="block text-sm font-medium text-gray-700">
+              Monto
+            </label>
+            <input
+              id="monto"
+              type="number"
+              step="0.01"
+              {...register('monto', { required: true, valueAsNumber: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
-            <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">Fecha</label>
-            <input id="fecha" type="date" {...register('fecha', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">
+              Fecha
+            </label>
+            <input
+              id="fecha"
+              type="date"
+              {...register('fecha', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
-            <label htmlFor="tipo_costo" className="block text-sm font-medium text-gray-700">Tipo de Costo</label>
-            <select id="tipo_costo" {...register('tipo_costo')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <label htmlFor="tipo_costo" className="block text-sm font-medium text-gray-700">
+              Tipo de Costo
+            </label>
+            <select
+              id="tipo_costo"
+              {...register('tipo_costo')}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            >
               <option value="VARIABLE">Variable</option>
               <option value="FIJO">Fijo</option>
             </select>
           </div>
           <div className="flex items-center">
-            <input id="es_recurrente" type="checkbox" {...register('es_recurrente')} className="h-4 w-4 text-blue-600 border-gray-300 rounded" />
-            <label htmlFor="es_recurrente" className="ml-2 block text-sm text-gray-900">Es Recurrente</label>
+            <input
+              id="es_recurrente"
+              type="checkbox"
+              {...register('es_recurrente')}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+            />
+            <label htmlFor="es_recurrente" className="ml-2 block text-sm text-gray-900">
+              Es Recurrente
+            </label>
           </div>
           <div className="flex justify-end space-x-2">
-            <button type="button" onClick={closeModal} className="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Guardar</button>
+            <button type="button" onClick={closeModal} className="px-4 py-2 bg-gray-200 rounded">
+              Cancelar
+            </button>
+            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+              Guardar
+            </button>
           </div>
         </form>
       </Modal>
@@ -157,8 +208,18 @@ const Costos = () => {
                 <td className="py-2 px-4 border-b">{costo.fecha}</td>
                 <td className="py-2 px-4 border-b">{costo.tipo_costo}</td>
                 <td className="py-2 px-4 border-b">
-                  <button onClick={() => openModalForEdit(costo)} className="text-blue-500 hover:underline mr-2">Editar</button>
-                  <button onClick={() => handleDelete(costo.id)} className="text-red-500 hover:underline">Eliminar</button>
+                  <button
+                    onClick={() => openModalForEdit(costo)}
+                    className="text-blue-500 hover:underline mr-2"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDelete(costo.id)}
+                    className="text-red-500 hover:underline"
+                  >
+                    Eliminar
+                  </button>
                 </td>
               </tr>
             ))}

@@ -1,4 +1,4 @@
-'use client';
+ 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
@@ -43,7 +43,13 @@ const Habitaciones = () => {
   }, [fetchHabitaciones]);
 
   const openModalForCreate = () => {
-    reset({ nombre_o_numero: '', tipo_habitacion: 'INDIVIDUAL', capacidad: 1, precio_por_noche: '0.00', disponible: true });
+    reset({
+      nombre_o_numero: '',
+      tipo_habitacion: 'INDIVIDUAL',
+      capacidad: 1,
+      precio_por_noche: '0.00',
+      disponible: true
+    });
     setEditingHabitacion(null);
     setIsModalOpen(true);
   };
@@ -99,20 +105,33 @@ const Habitaciones = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Gestión de Habitaciones</h1>
-        <button onClick={openModalForCreate} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button
+          onClick={openModalForCreate}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
           Añadir Habitación
         </button>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} title={editingHabitacion ? 'Editar Habitación' : 'Nueva Habitación'}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title={editingHabitacion ? 'Editar Habitación' : 'Nueva Habitación'}
+      >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label>Nombre o Número</label>
-            <input {...register('nombre_o_numero', { required: true })} className="mt-1 block w-full" />
+            <input
+              {...register('nombre_o_numero', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
             <label>Tipo de Habitación</label>
-            <select {...register('tipo_habitacion')} className="mt-1 block w-full">
+            <select
+              {...register('tipo_habitacion')}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            >
               <option value="INDIVIDUAL">Individual</option>
               <option value="DOBLE">Doble</option>
               <option value="SUITE">Suite</option>
@@ -121,17 +140,27 @@ const Habitaciones = () => {
           </div>
           <div>
             <label>Capacidad</label>
-            <input type="number" {...register('capacidad', { required: true, min: 1 })} className="mt-1 block w-full" />
+            <input
+              type="number"
+              {...register('capacidad', { required: true, min: 1 })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
             <label>Precio por Noche</label>
-            <input type="number" step="0.01" {...register('precio_por_noche', { required: true })} className="mt-1 block w-full" />
+            <input
+              type="number"
+              step="0.01"
+              {...register('precio_por_noche', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div className="flex items-center">
             <input type="checkbox" {...register('disponible')} />
             <label className="ml-2">Disponible</label>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end space-x-2">
+            <button type="button" onClick={closeModal}>Cancelar</button>
             <button type="submit">Guardar</button>
           </div>
         </form>
@@ -146,7 +175,12 @@ const Habitaciones = () => {
               <p>${habitacion.precio_por_noche} / noche</p>
               <p>{habitacion.disponible ? 'Disponible' : 'No Disponible'}</p>
             </div>
-            <button onClick={() => handleDelete(habitacion.id)} className="absolute top-2 right-2 text-red-500 hover:text-red-700">X</button>
+            <button
+              onClick={() => handleDelete(habitacion.id)}
+              className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+            >
+              X
+            </button>
           </div>
         ))}
       </div>

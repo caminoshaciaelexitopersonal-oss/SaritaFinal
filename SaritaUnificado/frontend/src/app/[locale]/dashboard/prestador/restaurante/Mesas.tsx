@@ -16,7 +16,15 @@ interface Mesa {
 
 type FormInputs = Omit<Mesa, 'id'>;
 
-const MesaCard = ({ mesa, onEdit }: { mesa: Mesa, onEdit: (mesa: Mesa) => void }) => {
+const MesaCard = ({
+  mesa,
+  onEdit,
+  onDelete,
+}: {
+  mesa: Mesa;
+  onEdit: (mesa: Mesa) => void;
+  onDelete: (id: number) => void;
+}) => {
   const estadoColor = {
     DISPONIBLE: 'bg-green-100 border-green-400',
     OCUPADA: 'bg-red-100 border-red-400',
@@ -24,7 +32,9 @@ const MesaCard = ({ mesa, onEdit }: { mesa: Mesa, onEdit: (mesa: Mesa) => void }
   };
 
   return (
-    <div className={`p-4 rounded-lg border-2 ${estadoColor[mesa.estado]} relative`}>
+    <div
+      className={`p-4 rounded-lg border-2 ${estadoColor[mesa.estado]} relative`}
+    >
       <div onClick={() => onEdit(mesa)} className="cursor-pointer">
         <h3 className="text-lg font-bold">Mesa {mesa.numero_mesa}</h3>
         <div className="flex items-center text-gray-600 mt-2">
@@ -33,7 +43,12 @@ const MesaCard = ({ mesa, onEdit }: { mesa: Mesa, onEdit: (mesa: Mesa) => void }
         </div>
         <p className="mt-2 font-semibold">{mesa.estado}</p>
       </div>
-      <button onClick={() => onDelete(mesa.id)} className="absolute top-2 right-2 text-red-500 hover:text-red-700">X</button>
+      <button
+        onClick={() => onDelete(mesa.id)}
+        className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+      >
+        X
+      </button>
     </div>
   );
 };
@@ -51,9 +66,12 @@ const Mesas = () => {
     try {
       setIsLoading(true);
       const response = await api.get('/restaurante/mesas/');
-      setMesas(response.data.results || []);
+      setMesas(response.data.results || response.data);
     } catch (err: any) {
-      setError('No se pudieron cargar las mesas. ' + (err.response?.data?.detail || err.message));
+      setError(
+        'No se pudieron cargar las mesas. ' +
+          (err.response?.data?.detail || err.message)
+      );
     } finally {
       setIsLoading(false);
     }
@@ -95,7 +113,10 @@ const Mesas = () => {
       closeModal();
       fetchMesas();
     } catch (err: any) {
-      toast.error('Error al guardar la mesa: ' + (err.response?.data?.detail || err.message));
+      toast.error(
+        'Error al guardar la mesa: ' +
+          (err.response?.data?.detail || err.message)
+      );
     }
   };
 
@@ -106,7 +127,10 @@ const Mesas = () => {
         toast.success('Mesa eliminada con éxito');
         fetchMesas();
       } catch (err: any) {
-        toast.error('Error al eliminar la mesa: ' + (err.response?.data?.detail || err.message));
+        toast.error(
+          'Error al eliminar la mesa: ' +
+            (err.response?.data?.detail || err.message)
+        );
       }
     }
   };
@@ -118,31 +142,53 @@ const Mesas = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Gestión de Mesas</h1>
-        <button onClick={openModalForCreate} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button
+          onClick={openModalForCreate}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
           Añadir Mesa
         </button>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} title={editingMesa ? 'Editar Mesa' : 'Nueva Mesa'}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title={editingMesa ? 'Editar Mesa' : 'Nueva Mesa'}
+      >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="numero_mesa">Número o Nombre de Mesa</label>
-            <input id="numero_mesa" {...register('numero_mesa', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <input
+              id="numero_mesa"
+              {...register('numero_mesa', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
             <label htmlFor="capacidad">Capacidad</label>
-            <input id="capacidad" type="number" {...register('capacidad', { required: true, min: 1 })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <input
+              id="capacidad"
+              type="number"
+              {...register('capacidad', { required: true, min: 1 })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
             <label htmlFor="estado">Estado</label>
-            <select id="estado" {...register('estado')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <select
+              id="estado"
+              {...register('estado')}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            >
               <option value="DISPONIBLE">Disponible</option>
               <option value="OCUPADA">Ocupada</option>
               <option value="RESERVADA">Reservada</option>
             </select>
           </div>
           <div className="flex justify-end space-x-2">
-            <button type="button" onClick={closeModal}>Cancelar</button>
+            <button type="button" onClick={closeModal}>
+              Cancelar
+            </button>
             <button type="submit">Guardar</button>
           </div>
         </form>
@@ -153,7 +199,12 @@ const Mesas = () => {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {mesas.map((mesa) => (
-            <MesaCard key={mesa.id} mesa={mesa} onEdit={openModalForEdit} />
+            <MesaCard
+              key={mesa.id}
+              mesa={mesa}
+              onEdit={openModalForEdit}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
       )}

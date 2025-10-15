@@ -1,4 +1,4 @@
-'use client';
+ 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
@@ -41,7 +41,11 @@ const Clientes = () => {
   }, [fetchClientes]);
 
   const openModalForCreate = () => {
-    reset({ pais_origen: '', cantidad: 1, fecha_registro: new Date().toISOString().split('T')[0] });
+    reset({
+      pais_origen: '',
+      cantidad: 1,
+      fecha_registro: new Date().toISOString().split('T')[0],
+    });
     setEditingCliente(null);
     setIsModalOpen(true);
   };
@@ -95,28 +99,66 @@ const Clientes = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Gestión de Clientes</h1>
-        <button onClick={openModalForCreate} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button
+          onClick={openModalForCreate}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
           Añadir Registro
         </button>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} title={editingCliente ? 'Editar Registro' : 'Nuevo Registro'}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title={editingCliente ? 'Editar Registro' : 'Nuevo Registro'}
+      >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="pais_origen" className="block text-sm font-medium text-gray-700">País de Origen</label>
-            <input id="pais_origen" {...register('pais_origen', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <label htmlFor="pais_origen" className="block text-sm font-medium text-gray-700">
+              País de Origen
+            </label>
+            <input
+              id="pais_origen"
+              {...register('pais_origen', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
-            <label htmlFor="cantidad" className="block text-sm font-medium text-gray-700">Cantidad</label>
-            <input id="cantidad" type="number" {...register('cantidad', { required: true, valueAsNumber: true, min: 1 })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <label htmlFor="cantidad" className="block text-sm font-medium text-gray-700">
+              Cantidad
+            </label>
+            <input
+              id="cantidad"
+              type="number"
+              {...register('cantidad', { required: true, valueAsNumber: true, min: 1 })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
-            <label htmlFor="fecha_registro" className="block text-sm font-medium text-gray-700">Fecha de Registro</label>
-            <input id="fecha_registro" type="date" {...register('fecha_registro', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <label htmlFor="fecha_registro" className="block text-sm font-medium text-gray-700">
+              Fecha de Registro
+            </label>
+            <input
+              id="fecha_registro"
+              type="date"
+              {...register('fecha_registro', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div className="flex justify-end space-x-2">
-            <button type="button" onClick={closeModal} className="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Guardar</button>
+            <button
+              type="button"
+              onClick={closeModal}
+              className="px-4 py-2 bg-gray-200 rounded"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded"
+            >
+              Guardar
+            </button>
           </div>
         </form>
       </Modal>
@@ -140,8 +182,18 @@ const Clientes = () => {
                 <td className="py-2 px-4 border-b">{cliente.cantidad}</td>
                 <td className="py-2 px-4 border-b">{cliente.fecha_registro}</td>
                 <td className="py-2 px-4 border-b">
-                  <button onClick={() => openModalForEdit(cliente)} className="text-blue-500 hover:underline mr-2">Editar</button>
-                  <button onClick={() => handleDelete(cliente.id)} className="text-red-500 hover:underline">Eliminar</button>
+                  <button
+                    onClick={() => openModalForEdit(cliente)}
+                    className="text-blue-500 hover:underline mr-2"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDelete(cliente.id)}
+                    className="text-red-500 hover:underline"
+                  >
+                    Eliminar
+                  </button>
                 </td>
               </tr>
             ))}

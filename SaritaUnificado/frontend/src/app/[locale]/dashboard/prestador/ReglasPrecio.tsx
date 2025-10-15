@@ -1,4 +1,4 @@
-'use client';
+ 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
@@ -56,7 +56,15 @@ const ReglasPrecio = () => {
   }, [fetchReglasYProductos]);
 
   const openModalForCreate = () => {
-    reset({ nombre_regla: '', producto_asociado: null, tipo_ajuste: 'PORCENTAJE', valor_ajuste: '0.00', fecha_inicio: new Date().toISOString().split('T')[0], fecha_fin: '', activa: true });
+    reset({
+      nombre_regla: '',
+      producto_asociado: null,
+      tipo_ajuste: 'PORCENTAJE',
+      valor_ajuste: '0.00',
+      fecha_inicio: new Date().toISOString().split('T')[0],
+      fecha_fin: '',
+      activa: true
+    });
     setEditingRegla(null);
     setIsModalOpen(true);
   };
@@ -115,7 +123,10 @@ const ReglasPrecio = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Gestión de Reglas de Precios</h1>
-        <button onClick={openModalForCreate} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button
+          onClick={openModalForCreate}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
           Añadir Regla
         </button>
       </div>
@@ -124,33 +135,63 @@ const ReglasPrecio = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="nombre_regla">Nombre de la Regla</label>
-            <input id="nombre_regla" {...register('nombre_regla', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <input
+              id="nombre_regla"
+              {...register('nombre_regla', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
             <label htmlFor="producto_asociado">Producto (Opcional)</label>
-            <select id="producto_asociado" {...register('producto_asociado')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <select
+              id="producto_asociado"
+              {...register('producto_asociado')}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            >
               <option value="">Todos los productos</option>
-              {productos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
+              {productos.map(p => (
+                <option key={p.id} value={p.id}>{p.nombre}</option>
+              ))}
             </select>
           </div>
           <div>
             <label htmlFor="tipo_ajuste">Tipo de Ajuste</label>
-            <select id="tipo_ajuste" {...register('tipo_ajuste')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <select
+              id="tipo_ajuste"
+              {...register('tipo_ajuste')}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            >
               <option value="PORCENTAJE">Porcentaje</option>
               <option value="MONTO_FIJO">Monto Fijo</option>
             </select>
           </div>
           <div>
             <label htmlFor="valor_ajuste">Valor del Ajuste</label>
-            <input id="valor_ajuste" type="number" step="0.01" {...register('valor_ajuste', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <input
+              id="valor_ajuste"
+              type="number"
+              step="0.01"
+              {...register('valor_ajuste', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
             <label htmlFor="fecha_inicio">Fecha de Inicio</label>
-            <input id="fecha_inicio" type="date" {...register('fecha_inicio', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <input
+              id="fecha_inicio"
+              type="date"
+              {...register('fecha_inicio', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
             <label htmlFor="fecha_fin">Fecha de Fin</label>
-            <input id="fecha_fin" type="date" {...register('fecha_fin', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <input
+              id="fecha_fin"
+              type="date"
+              {...register('fecha_fin', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div className="flex items-center">
             <input id="activa" type="checkbox" {...register('activa')} />
@@ -181,11 +222,25 @@ const ReglasPrecio = () => {
               <tr key={regla.id}>
                 <td className="py-2 px-4 border-b">{regla.nombre_regla}</td>
                 <td className="py-2 px-4 border-b">{regla.producto_nombre || 'Todos'}</td>
-                <td className="py-2 px-4 border-b">{regla.tipo_ajuste === 'PORCENTAJE' ? `${regla.valor_ajuste}%` : `$${regla.valor_ajuste}`}</td>
+                <td className="py-2 px-4 border-b">
+                  {regla.tipo_ajuste === 'PORCENTAJE'
+                    ? `${regla.valor_ajuste}%`
+                    : `$${regla.valor_ajuste}`}
+                </td>
                 <td className="py-2 px-4 border-b">{regla.activa ? 'Sí' : 'No'}</td>
                 <td className="py-2 px-4 border-b">
-                  <button onClick={() => openModalForEdit(regla)} className="text-blue-500 hover:underline mr-2">Editar</button>
-                  <button onClick={() => handleDelete(regla.id)} className="text-red-500 hover:underline">Eliminar</button>
+                  <button
+                    onClick={() => openModalForEdit(regla)}
+                    className="text-blue-500 hover:underline mr-2"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDelete(regla.id)}
+                    className="text-red-500 hover:underline"
+                  >
+                    Eliminar
+                  </button>
                 </td>
               </tr>
             ))}

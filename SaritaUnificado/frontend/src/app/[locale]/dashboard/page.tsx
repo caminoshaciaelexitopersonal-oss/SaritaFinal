@@ -19,7 +19,9 @@ import Reservas from './prestador/Reservas';
 const InicioDashboard = () => (
   <div>
     <h1 className="text-2xl font-bold">Bienvenido a tu Panel de Control</h1>
-    <p className="mt-2">Selecciona un módulo del menú de la izquierda para comenzar a gestionar tu negocio.</p>
+    <p className="mt-2">
+      Selecciona un módulo del menú de la izquierda para comenzar a gestionar tu negocio.
+    </p>
   </div>
 );
 

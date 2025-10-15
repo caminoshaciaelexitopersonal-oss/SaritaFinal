@@ -1,4 +1,4 @@
-'use client';
+ 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
@@ -99,36 +99,79 @@ const Inventario = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Gestión de Inventario</h1>
-        <button onClick={openModalForCreate} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button
+          onClick={openModalForCreate}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
           Añadir Ítem
         </button>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} title={editingItem ? 'Editar Ítem' : 'Nuevo Ítem'}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title={editingItem ? 'Editar Ítem' : 'Nuevo Ítem'}
+      >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="nombre_item" className="block text-sm font-medium text-gray-700">Nombre del Ítem</label>
-            <input id="nombre_item" {...register('nombre_item', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-          </div>
-           <div>
-            <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700">Descripción</label>
-            <textarea id="descripcion" {...register('descripcion')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-          </div>
-          <div>
-            <label htmlFor="cantidad" className="block text-sm font-medium text-gray-700">Cantidad</label>
-            <input id="cantidad" type="number" {...register('cantidad', { required: true, valueAsNumber: true, min: 0 })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-          </div>
-           <div>
-            <label htmlFor="unidad" className="block text-sm font-medium text-gray-700">Unidad (ej: kg, litros, uds.)</label>
-            <input id="unidad" {...register('unidad', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <label htmlFor="nombre_item" className="block text-sm font-medium text-gray-700">
+              Nombre del Ítem
+            </label>
+            <input
+              id="nombre_item"
+              {...register('nombre_item', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div>
-            <label htmlFor="punto_reorden" className="block text-sm font-medium text-gray-700">Punto de Reorden</label>
-            <input id="punto_reorden" type="number" {...register('punto_reorden', { required: true, valueAsNumber: true, min: 0 })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700">
+              Descripción
+            </label>
+            <textarea
+              id="descripcion"
+              {...register('descripcion')}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
+          </div>
+          <div>
+            <label htmlFor="cantidad" className="block text-sm font-medium text-gray-700">
+              Cantidad
+            </label>
+            <input
+              id="cantidad"
+              type="number"
+              {...register('cantidad', { required: true, valueAsNumber: true, min: 0 })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
+          </div>
+          <div>
+            <label htmlFor="unidad" className="block text-sm font-medium text-gray-700">
+              Unidad (ej: kg, litros, uds.)
+            </label>
+            <input
+              id="unidad"
+              {...register('unidad', { required: true })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
+          </div>
+          <div>
+            <label htmlFor="punto_reorden" className="block text-sm font-medium text-gray-700">
+              Punto de Reorden
+            </label>
+            <input
+              id="punto_reorden"
+              type="number"
+              {...register('punto_reorden', { required: true, valueAsNumber: true, min: 0 })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            />
           </div>
           <div className="flex justify-end space-x-2">
-            <button type="button" onClick={closeModal} className="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Guardar</button>
+            <button type="button" onClick={closeModal} className="px-4 py-2 bg-gray-200 rounded">
+              Cancelar
+            </button>
+            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+              Guardar
+            </button>
           </div>
         </form>
       </Modal>
@@ -149,11 +192,23 @@ const Inventario = () => {
             {items.map((item) => (
               <tr key={item.id}>
                 <td className="py-2 px-4 border-b">{item.nombre_item}</td>
-                <td className="py-2 px-4 border-b">{item.cantidad} {item.unidad}</td>
+                <td className="py-2 px-4 border-b">
+                  {item.cantidad} {item.unidad}
+                </td>
                 <td className="py-2 px-4 border-b">{item.punto_reorden}</td>
                 <td className="py-2 px-4 border-b">
-                  <button onClick={() => openModalForEdit(item)} className="text-blue-500 hover:underline mr-2">Editar</button>
-                  <button onClick={() => handleDelete(item.id)} className="text-red-500 hover:underline">Eliminar</button>
+                  <button
+                    onClick={() => openModalForEdit(item)}
+                    className="text-blue-500 hover:underline mr-2"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="text-red-500 hover:underline"
+                  >
+                    Eliminar
+                  </button>
                 </td>
               </tr>
             ))}
