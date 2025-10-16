@@ -67,12 +67,6 @@ const Sidebar = () => {
                 {renderMenuItems(hotelItems)}
             </>
         )}
-        {categoriaPrestador.includes('hotel') && (
-            <>
-                <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Hotel</p>
-                {renderMenuItems(hotelItems)}
-            </>
-        )}
         {categoriaPrestador.includes('restaurante') && (
             <>
                 <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Restaurante</p>
