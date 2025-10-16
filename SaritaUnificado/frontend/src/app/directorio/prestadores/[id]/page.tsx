@@ -135,6 +135,22 @@ function PrestadorDetailPageContent() {
         </div>
       </div>
 
+      {/* Sección de Reservas (Calendario RAT) */}
+      <div className="mt-12">
+          <h2 className="text-3xl font-semibold text-center mb-6">Disponibilidad y Reservas</h2>
+          <div className="max-w-4xl mx-auto bg-white p-4 rounded-lg shadow-lg">
+             {/* Aquí iría el componente de calendario. Por ahora, un placeholder. */}
+             <div className="h-96 flex items-center justify-center bg-gray-100 rounded-md">
+                <p className="text-gray-500">Calendario de disponibilidad próximamente.</p>
+             </div>
+             <div className="text-center mt-4">
+                <button className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                    Solicitar Reserva
+                </button>
+             </div>
+          </div>
+      </div>
+
        <div className="text-center mt-12">
             <Link href="/prestadores" legacyBehavior>
                 <a className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors">
