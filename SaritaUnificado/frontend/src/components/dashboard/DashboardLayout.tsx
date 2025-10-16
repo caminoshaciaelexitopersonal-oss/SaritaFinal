@@ -33,7 +33,9 @@ const Sidebar = () => {
     { href: '/dashboard/prestador/restaurante/mesas', label: 'Gestión de Mesas', icon: FiGrid },
     { href: '/dashboard/prestador/restaurante/pedidos', label: 'Pedidos (TPV)', icon: FiShoppingCart },
   ];
-  // Añadir aquí otros items específicos...
+  const guiaItems = [ { href: '/dashboard/prestador/guias', label: 'Mis Rutas', icon: FiMap } ];
+  const transporteItems = [ { href: '/dashboard/prestador/transporte', label: 'Vehículos', icon: FiTruck } ];
+  const agenciaItems = [ { href: '/dashboard/prestador/agencias', label: 'Paquetes Turísticos', icon: FiBriefcase } ];
 
   const categoriaPrestador = user?.perfil_prestador?.categoria?.nombre?.toLowerCase() || '';
 
@@ -65,13 +67,36 @@ const Sidebar = () => {
                 {renderMenuItems(hotelItems)}
             </>
         )}
+        {categoriaPrestador.includes('hotel') && (
+            <>
+                <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Hotel</p>
+                {renderMenuItems(hotelItems)}
+            </>
+        )}
         {categoriaPrestador.includes('restaurante') && (
             <>
                 <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Restaurante</p>
                 {renderMenuItems(restauranteItems)}
             </>
         )}
-        {/* Añadir aquí otros renderizados condicionales */}
+        {categoriaPrestador.includes('guía') && (
+            <>
+                <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Guía Turístico</p>
+                {renderMenuItems(guiaItems)}
+            </>
+        )}
+        {categoriaPrestador.includes('transporte') && (
+            <>
+                <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Transporte</p>
+                {renderMenuItems(transporteItems)}
+            </>
+        )}
+        {categoriaPrestador.includes('agencia') && (
+            <>
+                <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Agencia de Viajes</p>
+                {renderMenuItems(agenciaItems)}
+            </>
+        )}
       </nav>
     </div>
   );

@@ -38,3 +38,8 @@ class ReservaSerializer(serializers.ModelSerializer):
             'estado', 'monto_total', 'notas_reserva'
         ]
         read_only_fields = ['id', 'prestador', 'cliente_info', 'monto_total']
+
+class RutaTuristicaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RutaTuristica
+        fields = ['id', 'nombre', 'slug', 'descripcion', 'imagen_principal', 'es_publicado']

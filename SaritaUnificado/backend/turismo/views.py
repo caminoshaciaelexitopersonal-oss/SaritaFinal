@@ -1,7 +1,7 @@
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Hotel, Habitacion, Tarifa, Disponibilidad, Reserva
-from .serializers import HotelSerializer, HabitacionSerializer, TarifaSerializer, DisponibilidadSerializer, ReservaSerializer
+from .models import Hotel, Habitacion, Tarifa, Disponibilidad, Reserva, RutaTuristica
+from .serializers import HotelSerializer, HabitacionSerializer, TarifaSerializer, DisponibilidadSerializer, ReservaSerializer, RutaTuristicaSerializer
 from api.permissions import IsPrestador, IsPrestadorOwner
 from django.contrib.contenttypes.models import ContentType
 
@@ -85,6 +85,33 @@ class PublicHabitacionListView(generics.ListAPIView):
     def get_queryset(self):
         hotel_id = self.kwargs.get('hotel_id')
         return Habitacion.objects.filter(hotel_id=hotel_id)
+
+class RutaTuristicaViewSet(viewsets.ModelViewSet):
+    serializer_class = RutaTuristicaSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return RutaTuristica.objects.filter(prestadores=self.request.user.perfil_prestador)
+        return RutaTuristica.objects.none()
+
+    def perform_create(self, serializer):
+        # Asigna automáticamente el prestador (guía) a la ruta.
+        instance = serializer.save()
+        instance.prestadores.add(self.request.user.perfil_prestador)
+
+class RutaTuristicaViewSet(viewsets.ModelViewSet):
+    serializer_class = RutaTuristicaSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return RutaTuristica.objects.filter(prestadores=self.request.user.perfil_prestador)
+        return RutaTuristica.objects.none()
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        instance.prestadores.add(self.request.user.perfil_prestador)
 
 class HabitacionViewSet(viewsets.ModelViewSet):
     serializer_class = HabitacionSerializer

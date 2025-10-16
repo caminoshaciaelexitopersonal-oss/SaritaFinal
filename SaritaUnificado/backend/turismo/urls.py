@@ -8,6 +8,7 @@ router.register(r'habitaciones', views.HabitacionViewSet, basename='habitacion')
 router.register(r'tarifas', views.TarifaViewSet, basename='tarifa')
 router.register(r'disponibilidades', views.DisponibilidadViewSet, basename='disponibilidad')
 router.register(r'reservas', views.ReservaViewSet, basename='reserva')
+router.register(r'rutas-turisticas', views.RutaTuristicaViewSet, basename='ruta-turistica-gestion')
 
 urlpatterns = [
     path('', include(router.urls)),
