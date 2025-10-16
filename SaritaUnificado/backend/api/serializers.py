@@ -872,7 +872,8 @@ class ResenaSerializer(serializers.ModelSerializer):
     usuario_nombre = serializers.CharField(source='usuario.username', read_only=True)
     class Meta:
         model = Resena
-        fields = ['id', 'usuario_nombre', 'calificacion', 'comentario', 'fecha_creacion']
+        fields = ['id', 'usuario_nombre', 'calificacion', 'comentario', 'fecha_creacion', 'respuesta_prestador']
+        read_only_fields = ['id', 'usuario_nombre', 'calificacion', 'comentario', 'fecha_creacion']
 
 
 class ResenaCreateSerializer(serializers.ModelSerializer):

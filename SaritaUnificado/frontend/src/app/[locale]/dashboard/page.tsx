@@ -12,6 +12,7 @@ import Reservas from './prestador/Reservas';
 import Valoraciones from './prestador/Valoraciones';
 import Certificaciones from './prestador/Certificaciones';
 import Galeria from './prestador/Galeria';
+import Estadisticas from './prestador/Estadisticas';
 
 // --- Importar vistas específicas ---
 import Habitaciones from './prestador/hotel/Habitaciones';
@@ -54,6 +55,7 @@ const DashboardContent = () => {
     'valoraciones': Valoraciones,
     'certificaciones': Certificaciones,
     'galeria': Galeria,
+    'estadisticas': Estadisticas,
     'inventario': Inventario,
     'costos': Costos,
     'recursos': Recursos,

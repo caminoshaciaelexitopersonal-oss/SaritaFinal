@@ -771,6 +771,7 @@ class Resena(models.Model):
     usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='resenas_hechas')
     calificacion = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], help_text="Calificación de 1 a 5 estrellas.")
     comentario = models.TextField()
+    respuesta_prestador = models.TextField(blank=True, null=True, help_text="Respuesta del prestador a la reseña.")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     aprobada = models.BooleanField(default=False, help_text="Las reseñas deben ser aprobadas por un administrador para ser visibles.")
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)

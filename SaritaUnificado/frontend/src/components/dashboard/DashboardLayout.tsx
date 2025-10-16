@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import {
   FiHome, FiBox, FiUsers, FiArchive, FiDollarSign, FiClipboard, FiTrendingUp,
   FiBookOpen, FiGrid, FiShoppingCart, FiBed, FiUser, FiCalendar, FiStar,
-  FiAward, FiMap, FiTruck, FiBriefcase, FiImage
+  FiAward, FiMap, FiTruck, FiBriefcase, FiImage, FiBarChart2
 } from 'react-icons/fi';
 
 // --- Contexto para el Dashboard ---
@@ -48,6 +48,7 @@ const Sidebar = () => {
     { name: 'valoraciones', label: 'Valoraciones', icon: FiStar },
     { name: 'certificaciones', label: 'Documentos', icon: FiAward },
     { name: 'galeria', label: 'Galería', icon: FiImage },
+    { name: 'estadisticas', label: 'Estadísticas', icon: FiBarChart2 },
   ];
 
   // Módulos Específicos
