@@ -1,7 +1,7 @@
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Hotel, Habitacion, Tarifa, Disponibilidad, Reserva, RutaTuristica
-from .serializers import HotelSerializer, HabitacionSerializer, TarifaSerializer, DisponibilidadSerializer, ReservaSerializer, RutaTuristicaSerializer
+from .models import Hotel, Habitacion, Tarifa, Disponibilidad, Reserva, RutaTuristica, VehiculoTuristico, PaqueteTuristico
+from .serializers import HotelSerializer, HabitacionSerializer, TarifaSerializer, DisponibilidadSerializer, ReservaSerializer, RutaTuristicaSerializer, VehiculoTuristicoSerializer, PaqueteTuristicoSerializer
 from api.permissions import IsPrestador, IsPrestadorOwner
 from django.contrib.contenttypes.models import ContentType
 
@@ -100,18 +100,29 @@ class RutaTuristicaViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         instance.prestadores.add(self.request.user.perfil_prestador)
 
-class RutaTuristicaViewSet(viewsets.ModelViewSet):
-    serializer_class = RutaTuristicaSerializer
+class VehiculoTuristicoViewSet(viewsets.ModelViewSet):
+    serializer_class = VehiculoTuristicoSerializer
     permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
 
     def get_queryset(self):
         if hasattr(self.request.user, 'perfil_prestador'):
-            return RutaTuristica.objects.filter(prestadores=self.request.user.perfil_prestador)
-        return RutaTuristica.objects.none()
+            return VehiculoTuristico.objects.filter(prestador=self.request.user.perfil_prestador)
+        return VehiculoTuristico.objects.none()
 
     def perform_create(self, serializer):
-        instance = serializer.save()
-        instance.prestadores.add(self.request.user.perfil_prestador)
+        serializer.save(prestador=self.request.user.perfil_prestador)
+
+class PaqueteTuristicoViewSet(viewsets.ModelViewSet):
+    serializer_class = PaqueteTuristicoSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return PaqueteTuristico.objects.filter(prestador_agencia=self.request.user.perfil_prestador)
+        return PaqueteTuristico.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(prestador_agencia=self.request.user.perfil_prestador)
 
 class HabitacionViewSet(viewsets.ModelViewSet):
     serializer_class = HabitacionSerializer

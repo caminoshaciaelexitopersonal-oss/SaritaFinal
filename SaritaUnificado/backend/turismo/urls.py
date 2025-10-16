@@ -9,6 +9,8 @@ router.register(r'tarifas', views.TarifaViewSet, basename='tarifa')
 router.register(r'disponibilidades', views.DisponibilidadViewSet, basename='disponibilidad')
 router.register(r'reservas', views.ReservaViewSet, basename='reserva')
 router.register(r'rutas-turisticas', views.RutaTuristicaViewSet, basename='ruta-turistica-gestion')
+router.register(r'vehiculos', views.VehiculoTuristicoViewSet, basename='vehiculo')
+router.register(r'paquetes', views.PaqueteTuristicoViewSet, basename='paquete')
 
 urlpatterns = [
     path('', include(router.urls)),
