@@ -11,4 +11,5 @@ router.register(r'reservas', views.ReservaViewSet, basename='reserva')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('hoteles/<int:hotel_id>/habitaciones/', views.PublicHabitacionListView.as_view(), name='public-habitaciones-list'),
 ]

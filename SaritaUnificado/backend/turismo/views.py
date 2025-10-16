@@ -1,8 +1,29 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, generics
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Hotel, Habitacion, Tarifa, Disponibilidad, Reserva
 from .serializers import HotelSerializer, HabitacionSerializer, TarifaSerializer, DisponibilidadSerializer, ReservaSerializer
 from api.permissions import IsPrestador, IsPrestadorOwner
+from django.contrib.contenttypes.models import ContentType
+
+class PublicDisponibilidadView(generics.ListAPIView):
+    """
+    Vista pública para consultar la disponibilidad de un recurso.
+    Ej: /api/public/disponibilidad/turismo/habitacion/1/
+    """
+    serializer_class = DisponibilidadSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        app_label = self.kwargs.get('app_label')
+        model = self.kwargs.get('model')
+        object_id = self.kwargs.get('object_id')
+
+        try:
+            content_type = ContentType.objects.get(app_label=app_label, model=model)
+            return Disponibilidad.objects.filter(content_type=content_type, object_id=object_id)
+        except ContentType.DoesNotExist:
+            return Disponibilidad.objects.none()
+
 
 class TarifaViewSet(viewsets.ModelViewSet):
     serializer_class = TarifaSerializer
@@ -53,6 +74,17 @@ class HotelViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Asumiendo que el perfil de prestador ya existe
         serializer.save(prestador=self.request.user.perfil_prestador)
+
+class PublicHabitacionListView(generics.ListAPIView):
+    """
+    Vista pública para listar las habitaciones de un hotel específico.
+    """
+    serializer_class = HabitacionSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        hotel_id = self.kwargs.get('hotel_id')
+        return Habitacion.objects.filter(hotel_id=hotel_id)
 
 class HabitacionViewSet(viewsets.ModelViewSet):
     serializer_class = HabitacionSerializer

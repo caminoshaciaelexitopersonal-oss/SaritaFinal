@@ -49,6 +49,9 @@ urlpatterns = [
     path("api/", include("api.urls")),
 ]
 
+from turismo.views import PublicDisponibilidadView
+urlpatterns.insert(len(urlpatterns) - 1, path("api/public/disponibilidad/<str:app_label>/<str:model>/<int:object_id>/", PublicDisponibilidadView.as_view(), name='public-disponibilidad'))
+
 # Servir archivos multimedia en modo de desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -736,6 +736,40 @@ export const deleteConsejoLocal = async (id: number): Promise<void> => {
     await api.delete(`/consejos-locales/${id}/`);
 };
 
+// --- API de Disponibilidad Pública (RAT) ---
+
+export interface Disponibilidad {
+  fecha: string;
+  cupos_disponibles: number;
+}
+
+export const getPublicDisponibilidad = async (
+  appLabel: string,
+  model: string,
+  objectId: number
+): Promise<Disponibilidad[]> => {
+  const response = await api.get<Disponibilidad[]>(
+    `/public/disponibilidad/${appLabel}/${model}/${objectId}/`
+  );
+  return response.data;
+};
+
+
+// --- API de Habitaciones Públicas ---
+export interface Habitacion {
+    id: number;
+    nombre_o_numero: string;
+    tipo_habitacion: string;
+    capacidad: number;
+    precio_por_noche: string;
+}
+
+export const getPublicHabitaciones = async (hotelId: number): Promise<Habitacion[]> => {
+    const response = await api.get<Habitacion[]>(`/turismo/hoteles/${hotelId}/habitaciones/`);
+    return response.data;
+};
+
+
 // --- API de Diagnóstico de Rutas Turísticas ---
 
 export interface DiagnosticoRutaTuristica {
