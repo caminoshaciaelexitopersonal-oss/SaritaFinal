@@ -19,21 +19,6 @@ class Producto(models.Model):
         verbose_name_plural = "Productos"
         ordering = ['-fecha_creacion']
 
-class RegistroCliente(models.Model):
-    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='registros_clientes')
-    pais_origen = models.CharField(max_length=100)
-    cantidad = models.PositiveIntegerField(default=1)
-    fecha_registro = models.DateField()
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.cantidad} cliente(s) de {self.pais_origen} para {self.prestador.nombre_negocio}"
-
-    class Meta:
-        verbose_name = "Registro de Cliente"
-        verbose_name_plural = "Registros de Clientes"
-        ordering = ['-fecha_registro']
-
 class Vacante(models.Model):
     empresa = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='vacantes', verbose_name=_("Empresa Ofertante"))
     titulo = models.CharField(_("Título de la Vacante"), max_length=200)
