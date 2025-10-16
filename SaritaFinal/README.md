@@ -1,89 +1,103 @@
-# Proyecto SaritaUnificado - Documentación Funcional
+# Proyecto SaritaUnificado - Documentación Funcional Definitiva
 
 ## 1. Introducción
 
-**SaritaUnificado** es una plataforma turística integral diseñada para conectar a turistas, prestadores de servicios y entidades administrativas en un ecosistema digital unificado. El sistema está construido como una "plataforma de triple vía", sirviendo a:
+**SaritaUnificado** es una plataforma turística integral de "triple vía" diseñada para crear un ecosistema digital cohesivo entre turistas, empresarios del sector y las entidades gubernamentales que regulan la actividad turística.
 
-1.  **Turistas:** Ofreciendo un portal completo para descubrir, planificar y reservar experiencias turísticas.
-2.  **Prestadores de Servicios:** Proporcionando un panel de administración privado y potente para gestionar su negocio.
-3.  **Entidades Administrativas:** Otorgando herramientas para la supervisión, validación y gestión del ecosistema turístico.
+1.  **Vía del Turista:** Un portal público y atractivo para descubrir, planificar y reservar experiencias en la región.
+2.  **Vía del Empresario:** Un potente panel de control privado para que los prestadores de servicios y artesanos gestionen su negocio, su oferta y su interacción con los clientes.
+3.  **Vía de la Gobernanza:** Herramientas para que las entidades administrativas (secretarías, direcciones de turismo, etc.) supervisen, validen y fomenten el ecosistema turístico.
 
-Este documento detalla todas las funcionalidades del sistema desde la perspectiva de cada rol de usuario.
+Este documento sirve como guía completa de todas las funcionalidades del sistema, segmentadas por el tipo de usuario y su rol.
 
 ---
 
 ## 2. Arquitectura del Sistema
 
-*   **Backend:** API RESTful desarrollada con **Django** y **Django REST Framework**.
-*   **Frontend:** Aplicación de Página Única (SPA) desarrollada con **Next.js 15**, **React 19** y **TypeScript**.
-*   **Base de Datos:** SQLite para desarrollo, con capacidad para PostgreSQL en producción.
+*   **Backend:** API RESTful robusta construida con **Django** y **Django REST Framework**.
+*   **Frontend:** Aplicación de Página Única (SPA) moderna y reactiva, construida con **Next.js 15** y **TypeScript**.
+*   **Base de Datos:** SQLite para desarrollo, preparada para PostgreSQL en producción.
 
 ---
 
-## 3. Guía de Funcionalidades por Rol
+## 3. Funcionalidades para el Turista (Cara al Público)
 
-### 👤 Para el Turista (Sitio Público)
+El portal público es la puerta de entrada para los visitantes y el escaparate de la oferta turística de la región.
 
-El turista interactúa con el portal público, que está diseñado para ser intuitivo y rico en información.
+### 3.1. Páginas de Contenido y Descubrimiento
+
+| Página | Funcionalidad |
+| :--- | :--- |
+| **Inicio** | Una página de bienvenida dinámica con componentes visuales (banners, sliders) que destacan los principales atractivos y noticias. |
+| **Conoce Nuestro Municipio**| Una sección rica en contenido que incluye: la **historia** del municipio, una guía de **sitios de interés** y un listado de **atractivos turísticos** detallados con fotos y descripciones. |
+| **Rutas Turísticas** | Un apartado dedicado a las rutas turísticas oficiales, donde cada ruta tiene su propia página con descripción, mapa y los atractivos y prestadores que la componen. |
+| **Páginas Institucionales**| Secciones dedicadas a las entidades gubernamentales, como la **Secretaría de Turismo**, la **Dirección de Turismo** y el **Consejo Municipal de Turismo**, donde publican información oficial, políticas y noticias. |
+| **Directorio Turístico** | El corazón del portal. Un buscador potente que permite a los turistas encontrar y filtrar todo tipo de **prestadores de servicios** (hoteles, restaurantes, agencias, etc.) y **artesanos**. |
+
+### 3.2. Interacción y Planificación
 
 | Funcionalidad | Descripción |
 | :--- | :--- |
-| **Directorio de Servicios** | Un buscador unificado que permite a los turistas encontrar y filtrar prestadores por categoría (Hoteles, Restaurantes, Guías, etc.), ubicación o nombre. |
-| **Perfil del Prestador** | Cada prestador tiene una página de detalle pública donde el turista puede ver toda su información: descripción, datos de contacto, redes sociales, y ubicación en un mapa. |
-| **Galería Multimedia** | Los turistas pueden ver una galería de fotos de alta calidad subidas por el prestador para conocer mejor sus instalaciones, productos o servicios. |
-| **Visualización de Servicios** | La página de detalle muestra los productos, paquetes o rutas turísticas que ofrece el prestador, con sus descripciones y precios. |
-| **Calendario de Disponibilidad** | Se integra un calendario interactivo (RAT) que muestra la disponibilidad en tiempo real de los servicios del prestador (ej. habitaciones de hotel, tours de un guía). |
-| **Sistema de Reservas** | Los turistas pueden seleccionar una fecha disponible en el calendario y realizar una solicitud de reserva directamente desde la página del prestador. |
-| **Sistema de Valoraciones** | Los turistas pueden dejar reseñas y calificaciones (de 1 a 5 estrellas) en el perfil de los prestadores con los que han interactuado. |
-| **Registro y Mi Viaje** | Los usuarios pueden registrarse como "Turistas" para acceder a funcionalidades personalizadas, como guardar prestadores o atractivos favoritos en una sección de "Mi Viaje". |
+| **Perfil Público del Prestador**| Cada prestador y artesano tiene una página de detalle con su información completa: descripción, datos de contacto, redes sociales, **galería de fotos**, y un mapa con su ubicación. |
+| **Catálogo de Servicios** | El perfil público muestra los **productos, paquetes o servicios** que el empresario ha configurado en su panel privado, permitiendo al turista conocer la oferta. |
+| **Calendario de Disponibilidad**| En el perfil de prestadores que ofrecen servicios reservables (hoteles, guías), el turista puede ver un **calendario en tiempo real** que muestra los días disponibles y ocupados. |
+| **Sistema de Reservas** | El turista puede seleccionar una fecha disponible en el calendario y enviar una **solicitud de reserva** directamente al prestador. |
+| **Sistema de Valoraciones** | Después de su visita, el turista puede dejar una **calificación con estrellas y un comentario** en el perfil del prestador, que será visible públicamente una vez aprobado por un administrador. |
+| **Registro y "Mi Viaje"** | Al crear una cuenta de "Turista", el usuario puede guardar sus atractivos y prestadores favoritos en una sección personalizada para planificar su viaje. |
 
-### 🏢 Para el Prestador de Servicios (Panel de Administración Privado)
+---
 
-Tras iniciar sesión, el prestador accede a un panel de control privado (`/dashboard`) con un menú de herramientas adaptado a su tipo de negocio.
+## 4. Guía de Roles de Usuario
 
-#### Módulos Genéricos (Disponibles para todos los prestadores)
+El sistema define roles específicos con permisos y funcionalidades adaptadas a cada necesidad.
 
-| Módulo | Funcionalidad Detallada | Beneficio para el Empresario |
-| :--- | :--- | :--- |
-| **Inicio** | Página de bienvenida al panel. | Acceso rápido y centralizado. |
-| **Mi Perfil** | Formulario para editar toda la información pública del negocio: nombre, descripción, teléfonos, redes sociales, dirección y ubicación en el mapa (lat/lon). | Control total sobre su imagen de marca y datos de contacto. |
-| **Productos/Servicios** | CRUD completo para crear, editar y eliminar los productos o servicios que ofrece, con nombre, descripción y precio. | Gestión de su catálogo de ofertas de forma sencilla. |
-| **Clientes (CRM)** | CRUD completo para gestionar una base de datos de clientes con nombre, email, teléfono y notas internas. | Fidelización y seguimiento de clientes recurrentes. |
-| **Galería** | Interfaz para subir, visualizar y eliminar imágenes que se mostrarán en la galería de su perfil público. | Enriquecer su perfil público para atraer más clientes. |
-| **Documentos** | Módulo para subir documentos oficiales (RNT, Cámara de Comercio, etc.) y ver su estado de verificación (Pendiente, Aprobado, Rechazado) por parte de la administración. | Centralizar la gestión de su documentación legal y cumplir con los requisitos. |
-| **Valoraciones** | Visualización de las reseñas y comentarios dejados por los turistas, con la opción de escribir una respuesta pública a cada valoración. | Gestionar su reputación online e interactuar con sus clientes. |
-| **Estadísticas** | Panel con métricas clave: total de reservas, total de clientes, ingresos del último mes y un gráfico de distribución de reservas por estado. | Obtener una visión rápida del rendimiento de su negocio. |
+### 4.1. Rol Turista
 
-#### Módulo de Reservas (RAT) y Calendario
+| Panel / Vista | Funcionalidades |
+| :--- | :--- |
+| **Sitio Público** | Acceso a todas las funcionalidades descritas en la sección 3. |
+| **Panel "Mi Viaje"**| Tras iniciar sesión, accede a un panel sencillo para ver y gestionar los elementos que ha guardado como favoritos. |
 
-| Funcionalidad | Descripción | Beneficio para el Empresario |
-| :--- | :--- | :--- |
-| **Calendario Interactivo** | Un calendario visual que muestra todas las reservas con códigos de color según su estado (Pendiente, Confirmada, Cancelada, Completada). | Vista centralizada y clara de la ocupación y planificación. |
-| **Gestión de Reservas** | Permite crear reservas manualmente (ej. por teléfono), editar los detalles de una reserva existente (cliente, fechas, personas) o eliminarla. | Control total sobre el flujo de reservas de su negocio. |
-| **Reprogramación Fácil** | Funcionalidad de "arrastrar y soltar" (`drag-and-drop`) para cambiar las fechas de una reserva directamente en el calendario. | Agilidad para gestionar cambios y reprogramaciones. |
+### 4.2. Rol Artesano
 
-#### Módulos Específicos (Según categoría del prestador)
+| Panel / Vista | Funcionalidades |
+| :--- | :--- |
+| **Panel de Artesano** | Un panel de control privado que incluye: gestión de **perfil** (nombre del taller, descripción, fotos), gestión de **productos artesanales**, y visualización de **valoraciones** recibidas. |
 
-| Categoría | Módulo | Funcionalidad Detallada |
-| :--- | :--- | :--- |
-| **Hotel** | **Habitaciones** | CRUD para gestionar los tipos de habitaciones del hotel, su capacidad y precios. |
-| **Restaurante** | **Menú/Carta** | CRUD para crear categorías (ej. Entradas, Platos Fuertes) y añadir productos a cada una. |
-| **Restaurante** | **Mesas** | CRUD para definir las mesas del establecimiento, su número y capacidad. |
-| **Guía Turístico**| **Mis Rutas** | CRUD para crear y gestionar las rutas o tours que ofrece, con su descripción y si son públicos. |
-| **Transporte** | **Vehículos** | CRUD para registrar los vehículos de su flota, con detalles como placa, marca, modelo y capacidad. |
-| **Agencia de Viajes**| **Paquetes** | CRUD para crear y gestionar paquetes turísticos que combinan diferentes servicios. |
+### 4.3. Rol Prestador de Servicios Turísticos
 
-### 👑 Para los Roles Administrativos (Panel de Django)
+El panel de administración más completo, con módulos que se activan según la categoría del negocio.
 
-Los usuarios con roles administrativos (Admin, Funcionario, etc.) gestionan el ecosistema desde el panel de administración de Django, que provee una interfaz potente para la supervisión y gestión de datos.
+#### Módulos Genéricos (Para todos los prestadores)
 
-| Funcionalidad | Roles Permitidos | Descripción |
-| :--- | :--- | :--- |
-| **Gestión de Usuarios** | Admin, Funcionario | Crear, editar, y eliminar usuarios de cualquier rol. Asignar roles y permisos. |
-| **Aprobación de Prestadores**| Admin, Funcionario | Revisar los perfiles de los nuevos prestadores de servicios registrados y aprobarlos para que sean visibles en el directorio público. |
-| **Verificación de Documentos**| Admin, Funcionario | Acceder a los documentos subidos por los prestadores, revisarlos y cambiar su estado a "Aprobado" o "Rechazado", añadiendo observaciones. |
-| **Gestión de Contenido** | Admin | Gestionar el contenido general del sitio, como publicaciones, noticias, eventos, páginas institucionales y los elementos del menú principal. |
-| **Gestión de Categorías** | Admin | Crear y editar las categorías de prestadores de servicios (Hotel, Restaurante, etc.) y los tipos de documentos de verificación. |
-| **Supervisión de Valoraciones** | Admin | Moderar las reseñas dejadas por los turistas, aprobándolas para que sean públicas o eliminando las que sean inapropiadas. |
-| **Estadísticas Globales** | Admin | Acceder a vistas de analítica y reportes con datos agregados de todo el ecosistema turístico (funcionalidad futura). |
-| **Configuración del Sitio**| Admin | Modificar parámetros globales del sitio, como el nombre de la entidad, logos, y claves de API de servicios externos. |
+| Módulo | Funcionalidad Detallada |
+| :--- | :--- |
+| **Perfil** | CRUD completo de la información pública del negocio. |
+| **Productos/Servicios** | CRUD del catálogo de ofertas. |
+| **Clientes (CRM)** | CRUD de la base de datos de clientes para seguimiento y fidelización. |
+| **Galería** | CRUD de la galería de imágenes del perfil público. |
+| **Documentos** | Subida de documentos legales y visualización de su estado de verificación. |
+| **Valoraciones** | Visualización de reseñas y la capacidad de escribir una respuesta pública. |
+| **Estadísticas** | Visualización de métricas de rendimiento (reservas, ingresos, etc.). |
+| **Reservas (RAT)** | Calendario interactivo para gestionar todas las reservas con `drag-and-drop` y estados visuales. |
+
+#### Módulos Específicos (Activados por Categoría)
+
+| Categoría | Módulos Específicos |
+| :--- | :--- |
+| 🏨 **Hotel** | **Habitaciones:** CRUD para gestionar tipos de habitaciones, capacidad y precios. |
+| 🍽️ **Restaurante** | **Menú/Carta** y **Mesas:** CRUD para gestionar categorías, productos y mesas del local. |
+| 🧭 **Guía Turístico**| **Mis Rutas:** CRUD para gestionar las rutas y tours que ofrece. |
+| 🚐 **Transporte** | **Vehículos:** CRUD para gestionar la flota de vehículos. |
+| 🏝️ **Agencia de Viajes**| **Paquetes:** CRUD para crear y gestionar paquetes turísticos. |
+
+### 4.4. Roles Administrativos
+
+Gestionan el sistema desde un panel de administración central (Django Admin) con distintos niveles de permisos.
+
+| Rol | Capacidades Principales |
+| :--- | :--- |
+| 👑 **Admin General** | **Control total.** Puede gestionar usuarios, contenido, configuraciones del sitio, categorías, y tiene acceso a todas las funcionalidades de los roles inferiores. Es el superusuario del sistema. |
+| 🏛️ **Admin de Entidad** | **Gestión a nivel de su entidad (Municipal o Departamental).** Puede aprobar prestadores y artesanos dentro de su jurisdicción, gestionar contenido relacionado con su entidad y supervisar la actividad local. |
+| 👔 **Funcionario Directivo**| **Rol de supervisión y aprobación.** Puede aprobar publicaciones y contenido generado por funcionarios profesionales antes de que pasen a la aprobación final del Admin. Tiene acceso a reportes y estadísticas. |
+| 💼 **Funcionario Profesional**| **Rol de creación de contenido.** Es el encargado de crear y gestionar el contenido de las páginas públicas (atractivos, rutas, noticias, eventos). Su trabajo pasa por un flujo de aprobación. |
