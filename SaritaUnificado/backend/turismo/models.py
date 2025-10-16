@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from api.models import PrestadorServicio
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+from empresa.models import Cliente
+
 
 class Hotel(models.Model):
     prestador = models.OneToOneField(PrestadorServicio, on_delete=models.CASCADE, primary_key=True, related_name='hotel_profile')
@@ -37,76 +41,46 @@ class Habitacion(models.Model):
         verbose_name = "Habitación"
         verbose_name_plural = "Habitaciones"
 
-
-class GuiaTuristico(models.Model):
-    prestador = models.OneToOneField(PrestadorServicio, on_delete=models.CASCADE, primary_key=True, related_name='guia_profile')
-    idiomas = models.CharField(max_length=200, help_text=_("Idiomas que domina, separados por coma"))
-    especialidades = models.TextField(blank=True, help_text=_("Áreas de especialización, ej: Ecoturismo, Historia, Aventura"))
-    rutas_asignadas = models.ManyToManyField('api.RutaTuristica', blank=True, related_name='guias_asignados')
-
-    def __str__(self):
-        return f"Perfil de Guía para {self.prestador.nombre_negocio}"
-
-    class Meta:
-        verbose_name = "Perfil de Guía Turístico"
-        verbose_name_plural = "Perfiles de Guías Turísticos"
-
-
-class VehiculoTuristico(models.Model):
-    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='vehiculos')
-    placa = models.CharField(max_length=10, unique=True)
-    marca = models.CharField(max_length=50)
-    modelo = models.CharField(max_length=50)
-
-    class Tipo(models.TextChoices):
-        BUS = 'BUS', _('Autobús')
-        BUSETA = 'BUSETA', _('Buseta')
-        VAN = 'VAN', _('Van de Turismo')
-        AUTOMOVIL = 'AUTOMOVIL', _('Automóvil Particular')
-        CHIVA = 'CHIVA', _('Chiva Turística')
-        LANCHA = 'LANCHA', _('Lancha Fluvial')
-
-    tipo_vehiculo = models.CharField(max_length=50, choices=Tipo.choices)
-    capacidad = models.PositiveIntegerField()
-    documentacion_al_dia = models.BooleanField(default=True, help_text=_("Indica si el SOAT, tecnomecánica, y otros permisos están vigentes."))
-    foto = models.ImageField(upload_to='vehiculos/', blank=True, null=True)
+class Tarifa(models.Model):
+    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='tarifas')
+    nombre = models.CharField(max_length=150, help_text="Ej: 'Tarifa Fin de Semana', 'Temporada Alta'")
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    recurso = GenericForeignKey('content_type', 'object_id')
+    precio = models.DecimalField(max_digits=12, decimal_places=2)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
 
     def __str__(self):
-        return f"{self.marca} {self.modelo} ({self.placa}) - {self.prestador.nombre_negocio}"
+        return f"{self.nombre} (${self.precio}) para {self.recurso}"
 
-    class Meta:
-        verbose_name = "Vehículo Turístico"
-        verbose_name_plural = "Vehículos Turísticos"
+class Disponibilidad(models.Model):
+    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='disponibilidades')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    recurso = GenericForeignKey('content_type', 'object_id')
+    fecha = models.DateField()
+    cupos_totales = models.PositiveIntegerField(default=1)
+    cupos_ocupados = models.PositiveIntegerField(default=0)
 
-
-from empresa.models import Cliente
-
-class PaqueteTuristico(models.Model):
-    prestador_agencia = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='paquetes_ofrecidos', help_text=_("La agencia de viajes que crea y vende el paquete."))
-    nombre = models.CharField(max_length=200)
-    descripcion = models.TextField()
-
-    # Simple fields for now, can be expanded to ManyToMany later if needed
-    servicios_incluidos = models.TextField(help_text=_("Descripción de los servicios incluidos (ej. Alojamiento, Transporte, Guía)."))
-
-    atractivos = models.ManyToManyField('api.AtractivoTuristico', blank=True, related_name='paquetes')
-
-    precio_por_persona = models.DecimalField(max_digits=10, decimal_places=2)
-    duracion_dias = models.PositiveIntegerField(default=1)
-
-    es_publico = models.BooleanField(default=False, help_text=_("Marcar para que el paquete sea visible al público."))
+    @property
+    def cupos_disponibles(self):
+        return self.cupos_totales - self.cupos_ocupados
 
     def __str__(self):
-        return f"{self.nombre} - {self.prestador_agencia.nombre_negocio}"
+        return f"{self.cupos_disponibles} cupos para {self.recurso} el {self.fecha}"
 
     class Meta:
-        verbose_name = "Paquete Turístico"
-        verbose_name_plural = "Paquetes Turísticos"
+        unique_together = ('content_type', 'object_id', 'fecha')
 
 class Reserva(models.Model):
     prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='reservas')
     cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, help_text="Cliente del CRM asociado a la reserva.")
-    fecha_reserva = models.DateTimeField()
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
+    object_id = models.PositiveIntegerField(null=True)
+    recurso_reservado = GenericForeignKey('content_type', 'object_id')
+    fecha_inicio_reserva = models.DateTimeField()
+    fecha_fin_reserva = models.DateTimeField(null=True, blank=True)
     numero_personas = models.PositiveIntegerField(default=1)
 
     class Estado(models.TextChoices):
@@ -116,13 +90,14 @@ class Reserva(models.Model):
         COMPLETADA = 'COMPLETADA', _('Completada')
 
     estado = models.CharField(max_length=20, choices=Estado.choices, default=Estado.PENDIENTE)
+    monto_total = models.DecimalField(max_digits=12, decimal_places=2, default=0.0)
     notas_reserva = models.TextField(blank=True, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Reserva para {self.cliente.nombre if self.cliente else 'N/A'} el {self.fecha_reserva.strftime('%Y-%m-%d')}"
+        return f"Reserva para {self.cliente.nombre if self.cliente else 'N/A'} del {self.fecha_inicio_reserva.strftime('%Y-%m-%d')}"
 
     class Meta:
         verbose_name = "Reserva"
         verbose_name_plural = "Reservas"
-        ordering = ['-fecha_reserva']
+        ordering = ['-fecha_inicio_reserva']

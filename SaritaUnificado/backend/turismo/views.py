@@ -1,8 +1,32 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .models import Hotel, Habitacion, GuiaTuristico, VehiculoTuristico, PaqueteTuristico, Reserva
-from .serializers import HotelSerializer, HabitacionSerializer, GuiaTuristicoSerializer, VehiculoTuristicoSerializer, PaqueteTuristicoSerializer, ReservaSerializer
+from .models import Hotel, Habitacion, Tarifa, Disponibilidad, Reserva
+from .serializers import HotelSerializer, HabitacionSerializer, TarifaSerializer, DisponibilidadSerializer, ReservaSerializer
 from api.permissions import IsPrestador, IsPrestadorOwner
+
+class TarifaViewSet(viewsets.ModelViewSet):
+    serializer_class = TarifaSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return Tarifa.objects.filter(prestador=self.request.user.perfil_prestador)
+        return Tarifa.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(prestador=self.request.user.perfil_prestador)
+
+class DisponibilidadViewSet(viewsets.ModelViewSet):
+    serializer_class = DisponibilidadSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return Disponibilidad.objects.filter(prestador=self.request.user.perfil_prestador)
+        return Disponibilidad.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(prestador=self.request.user.perfil_prestador)
 
 class ReservaViewSet(viewsets.ModelViewSet):
     serializer_class = ReservaSerializer
@@ -14,6 +38,7 @@ class ReservaViewSet(viewsets.ModelViewSet):
         return Reserva.objects.none()
 
     def perform_create(self, serializer):
+        # Aquí iría la lógica para verificar disponibilidad y calcular el monto
         serializer.save(prestador=self.request.user.perfil_prestador)
 
 class HotelViewSet(viewsets.ModelViewSet):
@@ -41,39 +66,3 @@ class HabitacionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         hotel_profile = self.request.user.perfil_prestador.hotel_profile
         serializer.save(hotel=hotel_profile)
-
-class GuiaTuristicoViewSet(viewsets.ModelViewSet):
-    serializer_class = GuiaTuristicoSerializer
-    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
-
-    def get_queryset(self):
-        if hasattr(self.request.user, 'perfil_prestador'):
-            return GuiaTuristico.objects.filter(prestador=self.request.user.perfil_prestador)
-        return GuiaTuristico.objects.none()
-
-    def perform_create(self, serializer):
-        serializer.save(prestador=self.request.user.perfil_prestador)
-
-class VehiculoTuristicoViewSet(viewsets.ModelViewSet):
-    serializer_class = VehiculoTuristicoSerializer
-    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
-
-    def get_queryset(self):
-        if hasattr(self.request.user, 'perfil_prestador'):
-            return VehiculoTuristico.objects.filter(prestador=self.request.user.perfil_prestador)
-        return VehiculoTuristico.objects.none()
-
-    def perform_create(self, serializer):
-        serializer.save(prestador=self.request.user.perfil_prestador)
-
-class PaqueteTuristicoViewSet(viewsets.ModelViewSet):
-    serializer_class = PaqueteTuristicoSerializer
-    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
-
-    def get_queryset(self):
-        if hasattr(self.request.user, 'perfil_prestador'):
-            return PaqueteTuristico.objects.filter(prestador_agencia=self.request.user.perfil_prestador)
-        return PaqueteTuristico.objects.none()
-
-    def perform_create(self, serializer):
-        serializer.save(prestador_agencia=self.request.user.perfil_prestador)

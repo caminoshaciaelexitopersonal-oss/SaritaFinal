@@ -1,18 +1,6 @@
 from rest_framework import serializers
-from .models import Hotel, Habitacion, GuiaTuristico, VehiculoTuristico, PaqueteTuristico, Reserva
-from empresa.serializers import ClienteSerializer # Importar para anidar
-
-class ReservaSerializer(serializers.ModelSerializer):
-    cliente_info = ClienteSerializer(source='cliente', read_only=True)
-
-    class Meta:
-        model = Reserva
-        fields = [
-            'id', 'cliente', 'cliente_info', 'fecha_reserva', 'numero_personas',
-            'estado', 'notas_reserva', 'fecha_creacion'
-        ]
-        read_only_fields = ['id', 'fecha_creacion', 'prestador', 'cliente_info']
-
+from .models import Hotel, Habitacion, Tarifa, Disponibilidad, Reserva
+from empresa.serializers import ClienteSerializer
 
 class HabitacionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,20 +16,25 @@ class HotelSerializer(serializers.ModelSerializer):
         fields = ['prestador', 'categoria_estrellas', 'reporte_ocupacion_nacional', 'reporte_ocupacion_internacional', 'habitaciones']
         read_only_fields = ['prestador']
 
-class GuiaTuristicoSerializer(serializers.ModelSerializer):
+class TarifaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = GuiaTuristico
+        model = Tarifa
         fields = '__all__'
         read_only_fields = ['prestador']
 
-class VehiculoTuristicoSerializer(serializers.ModelSerializer):
+class DisponibilidadSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VehiculoTuristico
+        model = Disponibilidad
         fields = '__all__'
         read_only_fields = ['prestador']
 
-class PaqueteTuristicoSerializer(serializers.ModelSerializer):
+class ReservaSerializer(serializers.ModelSerializer):
+    cliente_info = ClienteSerializer(source='cliente', read_only=True)
     class Meta:
-        model = PaqueteTuristico
-        fields = '__all__'
-        read_only_fields = ['prestador_agencia']
+        model = Reserva
+        fields = [
+            'id', 'cliente', 'cliente_info', 'content_type', 'object_id',
+            'fecha_inicio_reserva', 'fecha_fin_reserva', 'numero_personas',
+            'estado', 'monto_total', 'notas_reserva'
+        ]
+        read_only_fields = ['id', 'prestador', 'cliente_info', 'monto_total']
