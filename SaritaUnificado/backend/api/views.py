@@ -626,6 +626,21 @@ class ArtesanoProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user.artesano
 
+class PrestadorResenaViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Endpoint que permite a un prestador ver las reseñas de su negocio.
+    """
+    serializer_class = ResenaSerializer
+    permission_classes = [IsAuthenticated, IsPrestador]
+
+    def get_queryset(self):
+        user = self.request.user
+        if hasattr(user, 'perfil_prestador'):
+            prestador = user.perfil_prestador
+            content_type = ContentType.objects.get_for_model(prestador)
+            return Resena.objects.filter(content_type=content_type, object_id=prestador.pk, aprobada=True)
+        return Resena.objects.none()
+
 class FeedbackProveedorView(generics.ListAPIView):
     queryset = Sugerencia.objects.none()
     serializer_class = FeedbackProveedorSerializer

@@ -79,6 +79,8 @@ class VehiculoTuristico(models.Model):
         verbose_name_plural = "Vehículos Turísticos"
 
 
+from empresa.models import Cliente
+
 class PaqueteTuristico(models.Model):
     prestador_agencia = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='paquetes_ofrecidos', help_text=_("La agencia de viajes que crea y vende el paquete."))
     nombre = models.CharField(max_length=200)
@@ -100,3 +102,27 @@ class PaqueteTuristico(models.Model):
     class Meta:
         verbose_name = "Paquete Turístico"
         verbose_name_plural = "Paquetes Turísticos"
+
+class Reserva(models.Model):
+    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='reservas')
+    cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, help_text="Cliente del CRM asociado a la reserva.")
+    fecha_reserva = models.DateTimeField()
+    numero_personas = models.PositiveIntegerField(default=1)
+
+    class Estado(models.TextChoices):
+        PENDIENTE = 'PENDIENTE', _('Pendiente')
+        CONFIRMADA = 'CONFIRMADA', _('Confirmada')
+        CANCELADA = 'CANCELADA', _('Cancelada')
+        COMPLETADA = 'COMPLETADA', _('Completada')
+
+    estado = models.CharField(max_length=20, choices=Estado.choices, default=Estado.PENDIENTE)
+    notas_reserva = models.TextField(blank=True, null=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Reserva para {self.cliente.nombre if self.cliente else 'N/A'} el {self.fecha_reserva.strftime('%Y-%m-%d')}"
+
+    class Meta:
+        verbose_name = "Reserva"
+        verbose_name_plural = "Reservas"
+        ordering = ['-fecha_reserva']

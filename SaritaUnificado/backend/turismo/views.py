@@ -1,8 +1,20 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .models import Hotel, Habitacion, GuiaTuristico, VehiculoTuristico, PaqueteTuristico
-from .serializers import HotelSerializer, HabitacionSerializer, GuiaTuristicoSerializer, VehiculoTuristicoSerializer, PaqueteTuristicoSerializer
+from .models import Hotel, Habitacion, GuiaTuristico, VehiculoTuristico, PaqueteTuristico, Reserva
+from .serializers import HotelSerializer, HabitacionSerializer, GuiaTuristicoSerializer, VehiculoTuristicoSerializer, PaqueteTuristicoSerializer, ReservaSerializer
 from api.permissions import IsPrestador, IsPrestadorOwner
+
+class ReservaViewSet(viewsets.ModelViewSet):
+    serializer_class = ReservaSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return Reserva.objects.filter(prestador=self.request.user.perfil_prestador).select_related('cliente')
+        return Reserva.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(prestador=self.request.user.perfil_prestador)
 
 class HotelViewSet(viewsets.ModelViewSet):
     serializer_class = HotelSerializer

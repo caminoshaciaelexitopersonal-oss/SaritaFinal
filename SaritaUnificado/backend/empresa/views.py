@@ -2,9 +2,27 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Producto, RegistroCliente, Vacante
-from .serializers import ProductoSerializer, RegistroClienteSerializer, VacanteSerializer
+from .models import Producto, RegistroCliente, Vacante, Cliente
+from .serializers import ProductoSerializer, RegistroClienteSerializer, VacanteSerializer, ClienteSerializer
 from api.permissions import IsPrestador, IsPrestadorOwner # Reutilizamos los permisos de la app api
+
+class ClienteViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para la gestión de Clientes (CRM).
+    """
+    serializer_class = ClienteSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['nombre', 'email', 'telefono']
+    ordering_fields = ['nombre', 'fecha_creacion']
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return Cliente.objects.filter(prestador=self.request.user.perfil_prestador)
+        return Cliente.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(prestador=self.request.user.perfil_prestador)
 
 class ProductoViewSet(viewsets.ModelViewSet):
     serializer_class = ProductoSerializer

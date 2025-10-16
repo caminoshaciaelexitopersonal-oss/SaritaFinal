@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from .models import Producto, RegistroCliente, Vacante
+from .models import Producto, RegistroCliente, Vacante, Cliente
+
+class ClienteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cliente
+        fields = ['id', 'nombre', 'email', 'telefono', 'notas', 'fecha_creacion']
+        read_only_fields = ['id', 'fecha_creacion', 'prestador']
 
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
