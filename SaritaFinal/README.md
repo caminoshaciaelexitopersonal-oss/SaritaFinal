@@ -15,6 +15,7 @@ Este documento sirve como guía completa de todas las funcionalidades del sistem
 ## 2. Arquitectura del Sistema
 
 *   **Backend:** API RESTful robusta construida con **Django** y **Django REST Framework**.
+*   **Inteligencia Artificial:** Sistema de agentes autónomos jerárquicos construido con **LangChain** y **LangGraph**.
 *   **Frontend:** Aplicación de Página Única (SPA) moderna y reactiva, construida con **Next.js 15** y **TypeScript**.
 *   **Base de Datos:** SQLite para desarrollo, preparada para PostgreSQL en producción.
 
@@ -101,3 +102,35 @@ Gestionan el sistema desde un panel de administración central (Django Admin) co
 | 🏛️ **Admin de Entidad** | **Gestión a nivel de su entidad (Municipal o Departamental).** Puede aprobar prestadores y artesanos dentro de su jurisdicción, gestionar contenido relacionado con su entidad y supervisar la actividad local. |
 | 👔 **Funcionario Directivo**| **Rol de supervisión y aprobación.** Puede aprobar publicaciones y contenido generado por funcionarios profesionales antes de que pasen a la aprobación final del Admin. Tiene acceso a reportes y estadísticas. |
 | 💼 **Funcionario Profesional**| **Rol de creación de contenido.** Es el encargado de crear y gestionar el contenido de las páginas públicas (atractivos, rutas, noticias, eventos). Su trabajo pasa por un flujo de aprobación. |
+
+---
+
+## 5. Sistema de Asistencia con Inteligencia Artificial
+
+SaritaUnificado integra un sistema avanzado de agentes de IA para automatizar tareas, responder preguntas y asistir a los usuarios de manera proactiva.
+
+### 5.1. Arquitectura Jerárquica de Agentes
+
+El sistema utiliza una estructura de mando inspirada en una jerarquía militar, construida con LangGraph, para delegar tareas de forma eficiente:
+
+1.  **Coronel:** Es el agente principal que recibe todas las órdenes de los usuarios a través de la interfaz de chat. Su función es analizar la solicitud y delegarla al Capitán más adecuado para la tarea.
+2.  **Capitanes:** Son agentes especializados por dominio (ej. `prestadores_captain`, `atractivos_captain`). Reciben la orden del Coronel y la desglosan en tareas más pequeñas, delegándolas a los Tenientes.
+3.  **Tenientes:** Son sub-especialistas (ej. `hoteles_teniente`, `restaurantes_teniente`). Gestionan un tipo de recurso específico.
+4.  **Sargentos (Herramientas):** En la práctica, los Tenientes ejecutan "herramientas", que son funciones de Python que interactúan directamente con la base de datos (el "trabajo de campo").
+
+Este modelo permite una alta especialización y eficiencia en la ejecución de tareas complejas.
+
+### 5.2. Funcionalidades del Chat de IA
+
+| Funcionalidad | Descripción |
+| :--- | :--- |
+| **Interfaz de Chat** | Un componente de chat disponible en el sistema permite a los usuarios (principalmente administradores) interactuar con el agente Coronel usando lenguaje natural. |
+| **Ejecución de Tareas** | Los usuarios pueden solicitar tareas complejas como: "Crea una nueva publicación de evento sobre el Festival de Verano", "Genera un informe de los 5 hoteles con más reservas" o "Actualiza la descripción del atractivo turístico 'Cascada La Cristalina'". |
+| **Seguimiento de Tareas**| El sistema registra cada orden en el modelo `AgentTask`, permitiendo a los administradores ver el estado de las tareas (Pendiente, En Ejecución, Completada, Fallida) y el informe final generado por el agente. |
+
+### 5.3. Personalización por Usuario
+
+| Funcionalidad | Descripción |
+| :--- | :--- |
+| **Configuración de LLM** | A través del modelo `UserLLMConfig`, cada usuario puede, desde su perfil, configurar su propio proveedor de Modelos de Lenguaje Grandes (LLM) y su clave de API (ej. usar su propia cuenta de Groq). |
+| **Adaptabilidad** | El sistema puede cambiar dinámicamente entre el proveedor de IA por defecto del sistema y el configurado por el usuario, ofreciendo una flexibilidad avanzada. |
