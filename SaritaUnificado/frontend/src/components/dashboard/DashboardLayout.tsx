@@ -6,7 +6,8 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   FiHome, FiBox, FiUsers, FiCalendar, FiStar,
-  FiAward, FiMap, FiTruck, FiBriefcase, FiImage, FiBarChart2, FiUser
+  FiAward, FiMap, FiTruck, FiBriefcase, FiImage, FiBarChart2, FiUser,
+  FiBookOpen, FiGrid, FiShoppingCart
 } from 'react-icons/fi';
 
 // --- Componente Sidebar ---
@@ -27,6 +28,11 @@ const Sidebar = () => {
   ];
 
   const hotelItems = [ { href: '/dashboard/prestador/hotel/habitaciones', label: 'Habitaciones', icon: FiBed } ];
+  const restauranteItems = [
+    { href: '/dashboard/prestador/restaurante/menu', label: 'Menú/Carta', icon: FiBookOpen },
+    { href: '/dashboard/prestador/restaurante/mesas', label: 'Gestión de Mesas', icon: FiGrid },
+    { href: '/dashboard/prestador/restaurante/pedidos', label: 'Pedidos (TPV)', icon: FiShoppingCart },
+  ];
   // Añadir aquí otros items específicos...
 
   const categoriaPrestador = user?.perfil_prestador?.categoria?.nombre?.toLowerCase() || '';
@@ -57,6 +63,12 @@ const Sidebar = () => {
             <>
                 <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Hotel</p>
                 {renderMenuItems(hotelItems)}
+            </>
+        )}
+        {categoriaPrestador.includes('restaurante') && (
+            <>
+                <p className="px-2 mt-4 text-xs uppercase text-gray-400 mb-2">Restaurante</p>
+                {renderMenuItems(restauranteItems)}
             </>
         )}
         {/* Añadir aquí otros renderizados condicionales */}
