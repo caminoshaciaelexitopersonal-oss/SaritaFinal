@@ -19,6 +19,21 @@ class Producto(models.Model):
         verbose_name_plural = "Productos"
         ordering = ['-fecha_creacion']
 
+class RegistroCliente(models.Model):
+    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='registros_clientes')
+    pais_origen = models.CharField(max_length=100)
+    cantidad = models.PositiveIntegerField(default=1)
+    fecha_registro = models.DateField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.cantidad} cliente(s) de {self.pais_origen} para {self.prestador.nombre_negocio}"
+
+    class Meta:
+        verbose_name = "Registro de Cliente"
+        verbose_name_plural = "Registros de Clientes"
+        ordering = ['-fecha_registro']
+
 class Vacante(models.Model):
     empresa = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='vacantes', verbose_name=_("Empresa Ofertante"))
     titulo = models.CharField(_("Título de la Vacante"), max_length=200)
@@ -124,22 +139,3 @@ class ReglaPrecio(models.Model):
     class Meta:
         verbose_name = "Regla de Precio"
         verbose_name_plural = "Reglas de Precios"
-
-class Cliente(models.Model):
-    """Modelo para un cliente real (CRM)."""
-    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='clientes_crm')
-    nombre = models.CharField(max_length=150)
-    email = models.EmailField(max_length=254, blank=True, null=True)
-    telefono = models.CharField(max_length=20, blank=True, null=True)
-    notas = models.TextField(blank=True, null=True, help_text="Notas internas sobre el cliente.")
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Cliente: {self.nombre} - {self.prestador.nombre_negocio}"
-
-    class Meta:
-        verbose_name = "Cliente (CRM)"
-        verbose_name_plural = "Clientes (CRM)"
-        # Un cliente con el mismo email no puede estar dos veces para el mismo prestador
-        unique_together = ('prestador', 'email')
-        ordering = ['nombre']

@@ -39,9 +39,9 @@ const Productos = () => {
   const fetchProductos = async () => {
     try {
       setIsLoading(true);
-      // El endpoint viene de empresa/urls.py
-      const response = await api.get<Producto[]>('/empresa/productos/');
-      setProductos(response.data);
+      // El endpoint ahora apunta a la nueva ruta unificada
+      const response = await api.get<Producto[]>('/v1/mi-negocio/productos/');
+      setProductos(response.data.results || response.data);
       setError(null);
     } catch (err) {
       setError('No se pudieron cargar los productos.');
@@ -81,11 +81,11 @@ const Productos = () => {
     try {
       if (editingProducto) {
         // Actualizando
-        await api.put(`/empresa/productos/${editingProducto.id}/`, data);
+        await api.put(`/v1/mi-negocio/productos/${editingProducto.id}/`, data);
         toast.success('¡Producto actualizado con éxito!');
       } else {
         // Creando
-        await api.post('/empresa/productos/', data);
+        await api.post('/v1/mi-negocio/productos/', data);
         toast.success('¡Producto creado con éxito!');
       }
       fetchProductos(); // Recargar la lista
@@ -98,7 +98,7 @@ const Productos = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar este producto?')) {
       try {
-        await api.delete(`/empresa/productos/${id}/`);
+        await api.delete(`/v1/mi-negocio/productos/${id}/`);
         toast.success('Producto eliminado con éxito.');
         fetchProductos(); // Recargar la lista
       } catch (err) {

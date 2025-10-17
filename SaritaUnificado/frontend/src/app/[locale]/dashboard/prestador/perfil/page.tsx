@@ -44,7 +44,7 @@ const Perfil = () => {
     const fetchPrestadorData = async () => {
       try {
         setIsLoading(true);
-        const response = await api.get<PrestadorData>('/profile/prestador/');
+        const response = await api.get<PrestadorData>('/v1/mi-negocio/perfil/');
         setPrestador(response.data);
         reset(response.data); // Cargar datos en el formulario
         setError(null);
@@ -61,7 +61,7 @@ const Perfil = () => {
 
   const onSubmit: SubmitHandler<PerfilFormInputs> = async (data) => {
     try {
-      const response = await api.put('/profile/prestador/', data);
+      const response = await api.put('/v1/mi-negocio/perfil/', data);
       setPrestador(response.data);
       toast.success('¡Perfil actualizado con éxito!');
     } catch (err) {

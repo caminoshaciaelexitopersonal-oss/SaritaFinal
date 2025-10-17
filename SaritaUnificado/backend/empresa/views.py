@@ -1,28 +1,18 @@
+# empresa/views.py
+
+# --- Vistas de la App EMPRESA ---
+# Nota: La lógica del panel de prestadores (Productos, Clientes) ha sido
+# centralizada en el enrutador de 'mi_negocio' para mayor claridad.
+# Esta app ahora contiene principalmente la lógica de negocio no directamente
+# ligada al panel, como la gestión de vacantes de empleo.
+
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Producto, Vacante, Cliente
-from .serializers import ProductoSerializer, VacanteSerializer, ClienteSerializer
+from .models import Producto, RegistroCliente, Vacante
+from .serializers import ProductoSerializer, RegistroClienteSerializer, VacanteSerializer
 from api.permissions import IsPrestador, IsPrestadorOwner # Reutilizamos los permisos de la app api
-
-class ClienteViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet para la gestión de Clientes (CRM).
-    """
-    serializer_class = ClienteSerializer
-    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
-    filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['nombre', 'email', 'telefono']
-    ordering_fields = ['nombre', 'fecha_creacion']
-
-    def get_queryset(self):
-        if hasattr(self.request.user, 'perfil_prestador'):
-            return Cliente.objects.filter(prestador=self.request.user.perfil_prestador)
-        return Cliente.objects.none()
-
-    def perform_create(self, serializer):
-        serializer.save(prestador=self.request.user.perfil_prestador)
 
 class ProductoViewSet(viewsets.ModelViewSet):
     serializer_class = ProductoSerializer
@@ -33,6 +23,18 @@ class ProductoViewSet(viewsets.ModelViewSet):
         if hasattr(self.request.user, 'perfil_prestador'):
             return Producto.objects.filter(prestador=self.request.user.perfil_prestador)
         return Producto.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(prestador=self.request.user.perfil_prestador)
+
+class RegistroClienteViewSet(viewsets.ModelViewSet):
+    serializer_class = RegistroClienteSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return RegistroCliente.objects.filter(prestador=self.request.user.perfil_prestador)
+        return RegistroCliente.objects.none()
 
     def perform_create(self, serializer):
         serializer.save(prestador=self.request.user.perfil_prestador)

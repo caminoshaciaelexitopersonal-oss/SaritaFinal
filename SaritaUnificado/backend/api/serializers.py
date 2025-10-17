@@ -22,8 +22,6 @@ from .models import (
     Profile
 )
 from django.db import transaction
-from empresa.serializers import ProductoSerializer
-from turismo.serializers import PaqueteTuristicoSerializer, RutaTuristicaSerializer
 
 class EntitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -469,17 +467,12 @@ class RutaTuristicaDetailSerializer(RutaTuristicaListSerializer):
 class PrestadorServicioPublicDetailSerializer(serializers.ModelSerializer):
     categoria = CategoriaPrestadorSerializer(read_only=True)
     galeria_imagenes = ImagenGaleriaSerializer(many=True, read_only=True)
-    productos = ProductoSerializer(many=True, read_only=True)
-    paquetes_ofrecidos = PaqueteTuristicoSerializer(many=True, read_only=True)
-    rutas = RutaTuristicaSerializer(many=True, read_only=True)
-
     class Meta:
         model = PrestadorServicio
         fields = [
             'id', 'nombre_negocio', 'descripcion', 'telefono', 'email_contacto',
             'red_social_facebook', 'red_social_instagram', 'red_social_tiktok', 'red_social_whatsapp',
-            'latitud', 'longitud', 'promociones_ofertas', 'categoria', 'galeria_imagenes',
-            'productos', 'paquetes_ofrecidos', 'rutas'
+            'latitud', 'longitud', 'promociones_ofertas', 'categoria', 'galeria_imagenes'
         ]
 
 
@@ -519,8 +512,8 @@ class PrestadorServicioUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'nombre_negocio', 'descripcion', 'telefono', 'email_contacto',
             'red_social_facebook', 'red_social_instagram', 'red_social_tiktok', 'red_social_whatsapp',
-            'direccion', 'latitud', 'longitud',
-            'promociones_ofertas',
+            'ubicacion_mapa', 'promociones_ofertas',
+            'reporte_ocupacion_nacional', 'reporte_ocupacion_internacional',
         ]
 
 
@@ -879,8 +872,7 @@ class ResenaSerializer(serializers.ModelSerializer):
     usuario_nombre = serializers.CharField(source='usuario.username', read_only=True)
     class Meta:
         model = Resena
-        fields = ['id', 'usuario_nombre', 'calificacion', 'comentario', 'fecha_creacion', 'respuesta_prestador']
-        read_only_fields = ['id', 'usuario_nombre', 'calificacion', 'comentario', 'fecha_creacion']
+        fields = ['id', 'usuario_nombre', 'calificacion', 'comentario', 'fecha_creacion']
 
 
 class ResenaCreateSerializer(serializers.ModelSerializer):
@@ -1141,9 +1133,20 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class CustomUserDetailSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer(read_only=True)
-    perfil_prestador = PrestadorServicioSerializer(read_only=True)
+    profile = ProfileSerializer()
 
     class Meta:
         model = CustomUser
-        fields = ('pk', 'username', 'email', 'role', 'profile', 'perfil_prestador')
+        fields = ('pk', 'username', 'email', 'role', 'profile')
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile', {})
+        # Actualizar el perfil
+        profile = instance.profile
+        profile.department = profile_data.get('department', profile.department)
+        profile.municipality = profile_data.get('municipality', profile.municipality)
+        profile.save()
+
+        # Actualizar el usuario
+        instance = super().update(instance, validated_data)
+        return instance
