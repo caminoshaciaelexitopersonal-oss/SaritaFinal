@@ -1,219 +1,149 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import api from '@/lib/api';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import Modal from '@/components/shared/Modal';
 import { toast } from 'react-toastify';
-import api from '@/src/lib/api';
-import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
-import Modal from '@/src/components/dashboard/Modal'; // Asumo que existe un componente Modal reutilizable
 
-// Tipado para un producto, basado en ProductoSerializer
-type Producto = {
+interface Producto {
   id: number;
   nombre: string;
   descripcion: string;
-  precio: string; // El serializer lo devuelve como string
+  precio: string;
   activo: boolean;
-};
+}
 
-// Tipado para el formulario (sin el id)
-type ProductoFormInputs = Omit<Producto, 'id'>;
+type FormInputs = Omit<Producto, 'id'>;
 
 const Productos = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Estado para el modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProducto, setEditingProducto] = useState<Producto | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { isSubmitting, errors },
-  } = useForm<ProductoFormInputs>();
+  const { register, handleSubmit, reset, setValue } = useForm<FormInputs>();
 
-  const fetchProductos = async () => {
+  const fetchProductos = useCallback(async () => {
     try {
       setIsLoading(true);
-      // El endpoint ahora apunta a la nueva ruta unificada
-      const response = await api.get<Producto[]>('/v1/mi-negocio/productos/');
-      setProductos(response.data.results || response.data);
-      setError(null);
-    } catch (err) {
-      setError('No se pudieron cargar los productos.');
-      toast.error('Error al cargar productos.');
+      const response = await api.get('/v1/mi-negocio/productos/');
+      setProductos(response.data.results || []);
+    } catch (err: any) {
+      setError('No se pudieron cargar los productos. ' + (err.response?.data?.detail || err.message));
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchProductos();
-  }, []);
+  }, [fetchProductos]);
 
-  const openCreateModal = () => {
-    setEditingProducto(null);
+  const openModalForCreate = () => {
     reset({ nombre: '', descripcion: '', precio: '0.00', activo: true });
+    setEditingProducto(null);
     setIsModalOpen(true);
   };
 
-  const openEditModal = (producto: Producto) => {
+  const openModalForEdit = (producto: Producto) => {
     setEditingProducto(producto);
-    reset({
-        nombre: producto.nombre,
-        descripcion: producto.descripcion,
-        precio: producto.precio,
-        activo: producto.activo
-    });
+    setValue('nombre', producto.nombre);
+    setValue('descripcion', producto.descripcion);
+    setValue('precio', producto.precio);
+    setValue('activo', producto.activo);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingProducto(null);
+    reset();
   };
 
-  const onSubmit: SubmitHandler<ProductoFormInputs> = async (data) => {
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     try {
+      const url = editingProducto
+        ? `/v1/mi-negocio/productos/${editingProducto.id}/`
+        : '/v1/mi-negocio/productos/';
+
       if (editingProducto) {
-        // Actualizando
-        await api.put(`/v1/mi-negocio/productos/${editingProducto.id}/`, data);
-        toast.success('¡Producto actualizado con éxito!');
+        await api.patch(url, data);
+        toast.success('Producto actualizado con éxito');
       } else {
-        // Creando
-        await api.post('/v1/mi-negocio/productos/', data);
-        toast.success('¡Producto creado con éxito!');
+        await api.post(url, data);
+        toast.success('Producto creado con éxito');
       }
-      fetchProductos(); // Recargar la lista
       closeModal();
-    } catch (err) {
-      toast.error('Ocurrió un error al guardar el producto.');
+      fetchProductos(); // Recargar la lista
+    } catch (err: any) {
+      toast.error('Error al guardar el producto: ' + (err.response?.data?.detail || err.message));
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-      try {
-        await api.delete(`/v1/mi-negocio/productos/${id}/`);
-        toast.success('Producto eliminado con éxito.');
-        fetchProductos(); // Recargar la lista
-      } catch (err) {
-        toast.error('No se pudo eliminar el producto.');
-      }
-    }
-  };
-
-  if (isLoading) {
-    return <div>Cargando productos...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
+  if (isLoading) return <div>Cargando productos...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Gestión de Productos y Servicios</h1>
-        <button
-          onClick={openCreateModal}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full flex items-center"
-        >
-          <FiPlus className="mr-2" /> Añadir Producto
+    <div>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Gestión de Productos y Servicios</h1>
+        <button onClick={openModalForCreate} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Añadir Producto
         </button>
       </div>
 
-      {productos.length === 0 ? (
-        <p>No tienes productos registrados. ¡Añade el primero!</p>
-      ) : (
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {productos.map((producto) => (
-                <tr key={producto.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{producto.nombre}</div>
-                    <div className="text-sm text-gray-500 truncate max-w-xs">{producto.descripcion}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${parseFloat(producto.precio).toFixed(2)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${producto.activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {producto.activo ? 'Activo' : 'Inactivo'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button onClick={() => openEditModal(producto)} className="text-indigo-600 hover:text-indigo-900 mr-4"><FiEdit /></button>
-                    <button onClick={() => handleDelete(producto.id)} className="text-red-600 hover:text-red-900"><FiTrash2 /></button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <Modal isOpen={isModalOpen} onClose={closeModal} title={editingProducto ? 'Editar Producto' : 'Nuevo Producto'}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre</label>
+            <input id="nombre" {...register('nombre', { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+          </div>
+          <div>
+            <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700">Descripción</label>
+            <textarea id="descripcion" {...register('descripcion')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+          </div>
+          <div>
+            <label htmlFor="precio" className="block text-sm font-medium text-gray-700">Precio</label>
+            <input id="precio" type="number" step="0.01" {...register('precio', { required: true, valueAsNumber: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+          </div>
+          <div className="flex items-center">
+            <input id="activo" type="checkbox" {...register('activo')} className="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+            <label htmlFor="activo" className="ml-2 block text-sm text-gray-900">Activo</label>
+          </div>
+          <div className="flex justify-end space-x-2">
+            <button type="button" onClick={closeModal} className="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
+            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Guardar</button>
+          </div>
+        </form>
+      </Modal>
 
-      {isModalOpen && (
-        <Modal title={editingProducto ? 'Editar Producto' : 'Crear Producto'} onClose={closeModal}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre del Producto</label>
-              <input
-                id="nombre"
-                type="text"
-                {...register('nombre', { required: 'El nombre es obligatorio' })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-              {errors.nombre && <p className="text-red-500 text-xs mt-1">{errors.nombre.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700">Descripción</label>
-              <textarea
-                id="descripcion"
-                rows={3}
-                {...register('descripcion')}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="precio" className="block text-sm font-medium text-gray-700">Precio</label>
-              <input
-                id="precio"
-                type="number"
-                step="0.01"
-                {...register('precio', { required: 'El precio es obligatorio', valueAsNumber: true })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-               {errors.precio && <p className="text-red-500 text-xs mt-1">{errors.precio.message}</p>}
-            </div>
-            <div className="flex items-center">
-              <input
-                id="activo"
-                type="checkbox"
-                {...register('activo')}
-                className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-              />
-              <label htmlFor="activo" className="ml-2 block text-sm text-gray-900">Producto Activo</label>
-            </div>
-            <div className="flex justify-end space-x-2">
-              <button type="button" onClick={closeModal} className="bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded">Cancelar</button>
-              <button type="submit" disabled={isSubmitting} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50">
-                {isSubmitting ? 'Guardando...' : 'Guardar'}
-              </button>
-            </div>
-          </form>
-        </Modal>
+      {productos.length === 0 ? (
+        <p>No tienes productos registrados.</p>
+      ) : (
+        <table className="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border-b text-left">Nombre</th>
+              <th className="py-2 px-4 border-b text-left">Precio</th>
+              <th className="py-2 px-4 border-b text-left">Activo</th>
+              <th className="py-2 px-4 border-b text-left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {productos.map((producto) => (
+              <tr key={producto.id}>
+                <td className="py-2 px-4 border-b">{producto.nombre}</td>
+                <td className="py-2 px-4 border-b">${producto.precio}</td>
+                <td className="py-2 px-4 border-b">{producto.activo ? 'Sí' : 'No'}</td>
+                <td className="py-2 px-4 border-b">
+                  <button onClick={() => openModalForEdit(producto)} className="text-blue-500 hover:underline">Editar</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

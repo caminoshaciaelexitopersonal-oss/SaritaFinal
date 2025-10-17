@@ -64,8 +64,6 @@ urlpatterns = [
     # --- Vistas Privadas (Requieren Autenticación) ---
     path('admin/my-entity/', views.EntityAdminView.as_view(), name='entity-admin'),
     path('profile/prestador/', views.PrestadorProfileView.as_view(), name='prestador-profile'),
-    path('profile/prestador/valoraciones/', views.PrestadorResenaViewSet.as_view({'get': 'list'}), name='prestador-resenas'),
-    path('profile/prestador/analytics/', views.PrestadorDashboardAnalyticsView.as_view(), name='prestador-analytics'),
     path('profile/artesano/', views.ArtesanoProfileView.as_view(), name='artesano-profile'),
     path('profile/feedback/', views.FeedbackProveedorView.as_view(), name='proveedor-feedback'),
     path('config/my-llm/', views.UserLLMConfigView.as_view(), name='user-llm-config'),

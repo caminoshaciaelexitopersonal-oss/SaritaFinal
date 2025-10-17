@@ -131,8 +131,6 @@ from .serializers import (
     CapacitacionDetailSerializer,
     RegistrarAsistenciaSerializer,
 )
-from django.utils import timezone
-from datetime import timedelta
 from .permissions import (
     IsTurista,
     IsAdminOrFuncionario,
@@ -143,8 +141,6 @@ from .permissions import (
     CanManageAtractivos,
     IsPrestadorOwner
 )
-from turismo.models import Reserva
-from empresa.models import Cliente
 from .filters import AuditLogFilter
 from .serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
 from .models import Department, Municipality, Entity
@@ -629,70 +625,6 @@ class ArtesanoProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user.artesano
-
-class PrestadorDashboardAnalyticsView(views.APIView):
-    permission_classes = [IsAuthenticated, IsPrestador]
-
-    def get(self, request, *args, **kwargs):
-        prestador = request.user.perfil_prestador
-
-        # 1. Total de Reservas Confirmadas
-        total_reservas = Reserva.objects.filter(prestador=prestador, estado='CONFIRMADA').count()
-
-        # 2. Total de Clientes
-        total_clientes = Cliente.objects.filter(prestador=prestador).count()
-
-        # 3. Ingresos del último mes
-        today = timezone.now()
-        last_month = today - timedelta(days=30)
-        ingresos_mes = Reserva.objects.filter(
-            prestador=prestador,
-            estado='COMPLETADA',
-            fecha_fin_reserva__gte=last_month
-        ).aggregate(total=models.Sum('monto_total'))['total'] or 0
-
-        # 4. Reservas por estado
-        reservas_por_estado = Reserva.objects.filter(prestador=prestador)\
-            .values('estado').annotate(count=models.Count('id'))
-
-        data = {
-            'summary': {
-                'total_reservas_confirmadas': total_reservas,
-                'total_clientes': total_clientes,
-                'ingresos_ultimo_mes': f"{ingresos_mes:,.2f}",
-            },
-            'reservas_por_estado': list(reservas_por_estado)
-        }
-        return Response(data)
-
-class PrestadorResenaViewSet(viewsets.ModelViewSet):
-    """
-    Endpoint que permite a un prestador ver y responder a las reseñas de su negocio.
-    """
-    serializer_class = ResenaSerializer
-    permission_classes = [IsAuthenticated, IsPrestador]
-
-    def get_queryset(self):
-        user = self.request.user
-        if hasattr(user, 'perfil_prestador'):
-            prestador = user.perfil_prestador
-            content_type = ContentType.objects.get_for_model(prestador)
-            return Resena.objects.filter(content_type=content_type, object_id=prestador.pk, aprobada=True)
-        return Resena.objects.none()
-
-    def partial_update(self, request, *args, **kwargs):
-        # Solo permitir la actualización del campo 'respuesta_prestador'
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-
-        # Asegurarse de que solo se actualice el campo permitido
-        if 'respuesta_prestador' in serializer.validated_data:
-            instance.respuesta_prestador = serializer.validated_data['respuesta_prestador']
-            instance.save(update_fields=['respuesta_prestador'])
-            return Response(serializer.data)
-        else:
-            return Response({"error": "Solo se puede actualizar la respuesta del prestador."}, status=status.HTTP_400_BAD_REQUEST)
 
 class FeedbackProveedorView(generics.ListAPIView):
     queryset = Sugerencia.objects.none()

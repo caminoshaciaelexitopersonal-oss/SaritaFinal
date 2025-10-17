@@ -1,11 +1,3 @@
-# empresa/views.py
-
-# --- Vistas de la App EMPRESA ---
-# Nota: La lógica del panel de prestadores (Productos, Clientes) ha sido
-# centralizada en el enrutador de 'mi_negocio' para mayor claridad.
-# Esta app ahora contiene principalmente la lógica de negocio no directamente
-# ligada al panel, como la gestión de vacantes de empleo.
-
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter

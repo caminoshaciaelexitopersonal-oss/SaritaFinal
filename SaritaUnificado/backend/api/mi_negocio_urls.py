@@ -1,41 +1,41 @@
 from django.urls import path, include
-from rest_framework_nested import routers
-from empresa.views import ClienteViewSet, ProductoViewSet
+from rest_framework.routers import DefaultRouter
+from empresa.views import ProductoViewSet, RegistroClienteViewSet
 from turismo.views import (
-    HotelViewSet, HabitacionViewSet, TarifaViewSet, DisponibilidadViewSet,
-    ReservaViewSet, RutaTuristicaViewSet, VehiculoTuristicoViewSet, PaqueteTuristicoViewSet
+    HotelViewSet,
+    HabitacionViewSet,
+    ReservaTuristicaViewSet,
+    GuiaTuristicoViewSet,
+    VehiculoTuristicoViewSet,
+    PaqueteTuristicoViewSet
 )
-from .views import PrestadorProfileView, PrestadorResenaViewSet, ImagenGaleriaView, ImagenGaleriaDetailView
+from restaurante.views import (
+    CategoriaMenuViewSet,
+    ProductoMenuViewSet,
+    MesaViewSet,
+    PedidoViewSet
+)
 
-# --- Router Principal para "Mi Negocio" ---
-router = routers.DefaultRouter()
+router = DefaultRouter()
 
-# --- Gestión Operativa ---
-# Módulos Genéricos
-router.register(r'productos', ProductoViewSet, basename='negocio-productos')
-router.register(r'clientes', ClienteViewSet, basename='negocio-clientes')
-router.register(r'reservas', ReservaViewSet, basename='negocio-reservas')
-router.register(r'tarifas', TarifaViewSet, basename='negocio-tarifas')
-router.register(r'disponibilidades', DisponibilidadViewSet, basename='negocio-disponibilidades')
+# Módulos de Empresa (Genéricos)
+router.register(r'productos', ProductoViewSet, basename='negocio-producto')
+router.register(r'clientes', RegistroClienteViewSet, basename='negocio-cliente')
 
-# Módulos Especializados
-router.register(r'hoteles', HotelViewSet, basename='negocio-hoteles')
-router.register(r'rutas', RutaTuristicaViewSet, basename='negocio-rutas')
-router.register(r'vehiculos', VehiculoTuristicoViewSet, basename='negocio-vehiculos')
-router.register(r'paquetes', PaqueteTuristicoViewSet, basename='negocio-paquetes')
+# Módulos de Turismo
+router.register(r'hoteles', HotelViewSet, basename='negocio-hotel')
+router.register(r'habitaciones', HabitacionViewSet, basename='negocio-habitacion')
+router.register(r'reservas', ReservaTuristicaViewSet, basename='negocio-reserva')
+router.register(r'guias', GuiaTuristicoViewSet, basename='negocio-guia')
+router.register(r'vehiculos', VehiculoTuristicoViewSet, basename='negocio-vehiculo')
+router.register(r'paquetes', PaqueteTuristicoViewSet, basename='negocio-paquete')
 
-# --- Rutas Anidadas ---
-# /hoteles/{hotel_pk}/habitaciones/
-habitaciones_router = routers.NestedSimpleRouter(router, r'hoteles', lookup='hotel')
-habitaciones_router.register(r'habitaciones', HabitacionViewSet, basename='hotel-habitaciones')
+# Módulos de Restaurante
+router.register(r'menu-categorias', CategoriaMenuViewSet, basename='negocio-menu-categoria')
+router.register(r'menu-productos', ProductoMenuViewSet, basename='negocio-menu-producto')
+router.register(r'mesas', MesaViewSet, basename='negocio-mesa')
+router.register(r'pedidos', PedidoViewSet, basename='negocio-pedido')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('', include(habitaciones_router.urls)),
-
-    # Endpoints que no son ViewSets (perfil, valoraciones, etc.)
-    path('perfil/', PrestadorProfileView.as_view(), name='negocio-perfil'),
-    path('valoraciones/', PrestadorResenaViewSet.as_view({'get': 'list'}), name='negocio-valoraciones'),
-    path('galeria/', ImagenGaleriaView.as_view(), name='negocio-galeria'),
-    path('galeria/<int:pk>/', ImagenGaleriaDetailView.as_view(), name='negocio-galeria-detail'),
 ]
