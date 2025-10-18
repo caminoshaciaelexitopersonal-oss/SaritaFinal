@@ -5,6 +5,8 @@ from . import views
 
 # --- Routers ---
 router = DefaultRouter()
+prestador_resenas_router = DefaultRouter()
+prestador_resenas_router.register(r'valoraciones', views.PrestadorResenaUpdateViewSet, basename='prestador-resena-update')
 
 # Endpoints para Multi-Entity
 router.register(r'entities', views.EntityViewSet, basename='entity')
@@ -64,6 +66,7 @@ urlpatterns = [
     # --- Vistas Privadas (Requieren Autenticación) ---
     path('admin/my-entity/', views.EntityAdminView.as_view(), name='entity-admin'),
     path('profile/prestador/', views.PrestadorProfileView.as_view(), name='prestador-profile'),
+    path('profile/prestador/', include(prestador_resenas_router.urls)),
     path('profile/prestador/valoraciones/', views.PrestadorResenaViewSet.as_view({'get': 'list'}), name='prestador-resenas'),
     path('profile/prestador/analytics/', views.PrestadorDashboardAnalyticsView.as_view(), name='prestador-analytics'),
     path('profile/artesano/', views.ArtesanoProfileView.as_view(), name='artesano-profile'),

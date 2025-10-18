@@ -590,6 +590,11 @@ class PrestadorRegisterSerializer(LocationRegisterSerializer):
     entity_id = serializers.PrimaryKeyRelatedField(
         queryset=Entity.objects.all(), source='entity', required=False, allow_null=True, write_only=True
     )
+    nombre_negocio = serializers.CharField(max_length=255, required=True)
+    categoria_id = serializers.PrimaryKeyRelatedField(
+        queryset=CategoriaPrestador.objects.all(), source='categoria', required=True, write_only=True
+    )
+
     @transaction.atomic
     def save(self, request):
         user = super().save(request)
@@ -599,10 +604,13 @@ class PrestadorRegisterSerializer(LocationRegisterSerializer):
         self.create_profile(user)
 
         entity = self.validated_data.get('entity')
+        nombre_negocio = self.validated_data.get('nombre_negocio')
+        categoria = self.validated_data.get('categoria')
 
         PrestadorServicio.objects.create(
             usuario=user,
-            nombre_negocio=f"Perfil de {user.username}",
+            nombre_negocio=nombre_negocio,
+            categoria=categoria,
             entity=entity
         )
         return user
@@ -612,6 +620,11 @@ class ArtesanoRegisterSerializer(LocationRegisterSerializer):
     entity_id = serializers.PrimaryKeyRelatedField(
         queryset=Entity.objects.all(), source='entity', required=False, allow_null=True, write_only=True
     )
+    nombre_taller = serializers.CharField(max_length=255, required=True)
+    rubro_id = serializers.PrimaryKeyRelatedField(
+        queryset=RubroArtesano.objects.all(), source='rubro', required=True, write_only=True
+    )
+
     @transaction.atomic
     def save(self, request):
         user = super().save(request)
@@ -621,11 +634,14 @@ class ArtesanoRegisterSerializer(LocationRegisterSerializer):
         self.create_profile(user)
 
         entity = self.validated_data.get('entity')
+        nombre_taller = self.validated_data.get('nombre_taller')
+        rubro = self.validated_data.get('rubro')
 
         Artesano.objects.create(
             usuario=user,
             nombre_artesano=user.get_full_name() or user.username,
-            nombre_taller=f"Taller de {user.username}",
+            nombre_taller=nombre_taller,
+            rubro=rubro,
             entity=entity
         )
         return user

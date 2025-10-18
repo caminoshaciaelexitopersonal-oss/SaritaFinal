@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import api from '@/src/lib/api';
+import { useAuth } from '@/contexts/AuthContext';
+import { updatePrestadorProfile, PrestadorProfileData } from '@/services/api';
 
 // Tipado para los datos del formulario, basado en el serializer PrestadorServicioUpdateSerializer
 type PerfilFormInputs = {
@@ -21,17 +22,8 @@ type PerfilFormInputs = {
   promociones_ofertas: string;
 };
 
-// Tipado para los datos completos del prestador, basado en PrestadorServicioSerializer
-type PrestadorData = PerfilFormInputs & {
-  categoria_nombre: string;
-  aprobado: boolean;
-  puntuacion_total: number;
-};
-
 const Perfil = () => {
-  const [prestador, setPrestador] = useState<PrestadorData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { user, isLoading, fetchUserData } = useAuth();
 
   const {
     register,
@@ -41,28 +33,20 @@ const Perfil = () => {
   } = useForm<PerfilFormInputs>();
 
   useEffect(() => {
-    const fetchPrestadorData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await api.get<PrestadorData>('/profile/prestador/');
-        setPrestador(response.data);
-        reset(response.data); // Cargar datos en el formulario
-        setError(null);
-      } catch (err) {
-        setError('No se pudo cargar el perfil del prestador. Es posible que no tenga un perfil asignado.');
-        toast.error('Error al cargar el perfil.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPrestadorData();
-  }, [reset]);
+    if (user && user.perfil_prestador) {
+      reset(user.perfil_prestador);
+    }
+  }, [user, reset]);
 
   const onSubmit: SubmitHandler<PerfilFormInputs> = async (data) => {
     try {
-      const response = await api.put('/profile/prestador/', data);
-      setPrestador(response.data);
+      // Limpiamos los campos que no se deben enviar o que son null
+      const cleanData: PrestadorProfileData = Object.fromEntries(
+        Object.entries(data).filter(([, value]) => value !== null && value !== undefined)
+      );
+
+      await updatePrestadorProfile(cleanData);
+      await fetchUserData(); // Refrescar los datos del usuario en toda la app
       toast.success('¡Perfil actualizado con éxito!');
     } catch (err) {
       toast.error('Ocurrió un error al actualizar el perfil.');
@@ -73,13 +57,11 @@ const Perfil = () => {
     return <div>Cargando perfil...</div>;
   }
 
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
-
-  if (!prestador) {
+  if (!user || !user.perfil_prestador) {
     return <div>No se encontró un perfil de prestador.</div>;
   }
+
+  const { perfil_prestador } = user;
 
   return (
     <div className="container mx-auto p-4">
@@ -87,9 +69,8 @@ const Perfil = () => {
 
       <div className="bg-gray-100 p-4 rounded-lg mb-6">
         <h2 className="text-xl font-semibold">Información General</h2>
-        <p><strong>Categoría:</strong> {prestador.categoria_nombre}</p>
-        <p><strong>Estado:</strong> {prestador.aprobado ? 'Aprobado' : 'Pendiente de Aprobación'}</p>
-        <p><strong>Puntuación:</strong> {prestador.puntuacion_total}</p>
+        <p><strong>Categoría:</strong> {perfil_prestador.categoria?.nombre || 'No asignada'}</p>
+        <p><strong>Estado:</strong> {perfil_prestador.aprobado ? 'Aprobado' : 'Pendiente de Aprobación'}</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

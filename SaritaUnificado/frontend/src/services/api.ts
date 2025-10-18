@@ -480,6 +480,50 @@ export const createHechoHistorico = async (data: FormData): Promise<HechoHistori
   return response.data;
 };
 
+// --- API de Perfil de Prestador ---
+
+export interface PrestadorProfileData {
+  nombre_negocio?: string;
+  descripcion?: string;
+  telefono?: string;
+  email_contacto?: string;
+  red_social_facebook?: string;
+  red_social_instagram?: string;
+  red_social_whatsapp?: string;
+  // Añade otros campos que se puedan actualizar
+}
+
+/**
+ * Actualiza el perfil del prestador de servicios autenticado.
+ * @param profileData Los datos del perfil a actualizar.
+ * @returns Los datos del perfil actualizado.
+ */
+export const updatePrestadorProfile = async (profileData: PrestadorProfileData) => {
+  try {
+    const response = await api.patch('/profile/prestador/', profileData);
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar el perfil del prestador:", error);
+    throw error;
+  }
+};
+
+// --- API de Reservas ---
+
+export interface ReservaPayload {
+  recurso_id: number;
+  recurso_type: string;
+  prestador_id: number;
+  fecha_inicio: string;
+  fecha_fin: string;
+  cantidad_personas: number;
+}
+
+export const createReserva = async (payload: ReservaPayload) => {
+  const response = await api.post('/turismo/reservas/', payload);
+  return response.data;
+};
+
 // --- API de Caracterización de Agroturismo ---
 
 export interface CaracterizacionAgroturismo {

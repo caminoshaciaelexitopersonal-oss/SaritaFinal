@@ -4,27 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { FiGrid, FiPlusCircle, FiUserPlus, FiBarChart2, FiSettings, FiDollarSign, FiCalendar, FiBox, FiHome, FiKey, FiBookOpen } from 'react-icons/fi';
 
-// Hook para obtener datos del prestador (simulado por ahora)
-const usePrestadorData = () => {
-  // En el futuro, esto vendrá de una llamada a la API, ej: api.get('/profile/prestador/')
-  return {
-    isLoading: false,
-    error: null,
-    prestador: {
-      nombre_negocio: 'Hotel Paraíso Tropical',
-      categoria: {
-        slug: 'hoteles', // 'restaurantes', 'agencias-de-viajes'
-      },
-    },
-    stats: {
-      clientes: [
-        { pais: 'Colombia', total: 120 },
-        { pais: 'Estados Unidos', total: 15 },
-        { pais: 'España', total: 8 },
-      ],
-    },
-  };
-};
+import { useAuth } from '@/contexts/AuthContext';
 
 const StatCard = ({ title, value, icon: Icon }: { title: string; value: string | number; icon: React.ElementType }) => (
   <div className="p-4 bg-white rounded-lg shadow">
@@ -50,38 +30,62 @@ const ShortcutCard = ({ title, href, icon: Icon }: { title: string; href: string
 );
 
 const DashboardPrestador = () => {
-  const { prestador, stats, isLoading, error } = usePrestadorData();
+  const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return <div>Cargando panel...</div>;
   }
 
-  if (error) {
-    return <div className="text-red-500">Error al cargar los datos del prestador.</div>;
+  if (!user || !user.perfil_prestador) {
+    return (
+      <div className="p-6 text-center">
+        <h2 className="text-2xl font-bold text-red-600">Error al cargar el perfil</h2>
+        <p className="mt-2 text-gray-600">
+          No se pudo cargar la información de tu perfil de prestador.
+          Por favor, <Link href="/dashboard/prestador/perfil" className="text-blue-500 underline">completa tu perfil</Link> para continuar.
+        </p>
+      </div>
+    );
   }
 
+  const { perfil_prestador } = user;
+
   const getCategoriaAccesos = () => {
-    switch (prestador?.categoria?.slug) {
+    switch (perfil_prestador?.categoria?.slug) {
       case 'hoteles':
         return (
           <>
-            <ShortcutCard title="Gestionar Habitaciones" href="/dashboard/prestador/habitaciones" icon={FiHome} />
+            <ShortcutCard title="Gestionar Habitaciones" href="/dashboard/prestador/hotel/habitaciones" icon={FiHome} />
             <ShortcutCard title="Gestionar Reservas" href="/dashboard/prestador/reservas" icon={FiCalendar} />
           </>
         );
       case 'restaurantes':
          return (
           <>
-            <ShortcutCard title="Gestionar Menús" href="/dashboard/prestador/menus" icon={FiBookOpen} />
-            <ShortcutCard title="Gestionar Mesas" href="/dashboard/prestador/mesas" icon={FiGrid} />
-            <ShortcutCard title="Terminal Punto de Venta (TPV)" href="/dashboard/prestador/tpv" icon={FiDollarSign} />
+            <ShortcutCard title="Gestionar Menús" href="/dashboard/prestador/restaurante/menu" icon={FiBookOpen} />
+            <ShortcutCard title="Gestionar Mesas" href="/dashboard/prestador/restaurante/mesas" icon={FiGrid} />
+            <ShortcutCard title="Pedidos" href="/dashboard/prestador/restaurante/pedidos" icon={FiDollarSign} />
           </>
         );
       case 'agencias-de-viajes':
          return (
           <>
-            <ShortcutCard title="Gestionar Paquetes" href="/dashboard/prestador/paquetes" icon={FiBox} />
-            <ShortcutCard title="Gestionar Reservas" href="/dashboard/prestador/reservas-agencia" icon={FiKey} />
+            <ShortcutCard title="Gestionar Paquetes" href="/dashboard/prestador/agencias" icon={FiBox} />
+            <ShortcutCard title="Ver Reservas" href="/dashboard/prestador/reservas" icon={FiKey} />
+          </>
+        );
+      case 'guias-turisticos':
+        return (
+          <>
+            <ShortcutCard title="Mis Rutas" href="/dashboard/prestador/guias" icon={FiBookOpen} />
+            <ShortcutCard title="Ver Reservas" href="/dashboard/prestador/reservas" icon={FiKey} />
+          </>
+        );
+      case 'transporte-turistico':
+        return (
+          <>
+            <ShortcutCard title="Gestionar Vehículos" href="/dashboard/prestador/transporte" icon={FiBox} />
+            <ShortcutCard title="Ver Reservas" href="/dashboard/prestador/reservas" icon={FiKey} />
           </>
         );
       default:
@@ -93,14 +97,14 @@ const DashboardPrestador = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold text-gray-900">Panel de Control</h1>
-      <p className="text-lg text-gray-600 mb-6">Bienvenido, {prestador?.nombre_negocio || 'Prestador'}</p>
+      <p className="text-lg text-gray-600 mb-6">Bienvenido, {perfil_prestador?.nombre_negocio || user.username}</p>
 
-      {/* Sección de Estadísticas */}
+      {/* Sección de Estadísticas (con datos simulados temporalmente) */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-        <StatCard title="Clientes Registrados (Mes)" value={stats.clientes.reduce((acc, c) => acc + c.total, 0)} icon={FiUserPlus} />
-        <StatCard title="Productos Activos" value="12" icon={FiGrid} />
-        <StatCard title="Reservas Pendientes" value="3" icon={FiCalendar} />
-        <StatCard title="Ingresos del Mes" value="$1,250,000" icon={FiDollarSign} />
+        <StatCard title="Clientes Registrados (Mes)" value="0" icon={FiUserPlus} />
+        <StatCard title="Productos Activos" value="0" icon={FiGrid} />
+        <StatCard title="Reservas Pendientes" value="0" icon={FiCalendar} />
+        <StatCard title="Ingresos del Mes" value="$0" icon={FiDollarSign} />
       </div>
 
       {/* Sección de Accesos Directos */}
