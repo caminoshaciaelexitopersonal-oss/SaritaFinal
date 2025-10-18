@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
+import api from '@/services/api';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -33,10 +33,8 @@ export default function MiViajePage() {
     if (!token) return;
     setIsLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/mi-viaje/`, {
-        headers: { Authorization: `Token ${token}` },
-      });
-      setSavedItems(response.data);
+      const response = await api.get('/mi-viaje/');
+      setSavedItems(response.data.results || response.data);
     } catch (err) {
       setError('No se pudieron cargar tus elementos guardados.');
     } finally {
@@ -55,9 +53,13 @@ export default function MiViajePage() {
   }, [user, authLoading, router, fetchSavedItems]);
 
   const handleRemove = async (item: SavedItem) => {
-    await toggleSaveItem(item.content_type_name, item.content_object.id);
-    // Optimistically remove from UI, or refetch
-    setSavedItems(prev => prev.filter(i => i.id !== item.id));
+    try {
+        await toggleSaveItem(item.content_type_name, item.content_object.id);
+        // Refetch to ensure data consistency
+        await fetchSavedItems();
+    } catch (error) {
+        // The error is already handled in the toggleSaveItem function
+    }
   };
 
   if (authLoading || isLoading) {
