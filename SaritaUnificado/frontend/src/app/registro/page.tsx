@@ -24,11 +24,23 @@ interface Municipality {
   name: string;
 }
 
+interface Categoria {
+    id: number;
+    nombre: string;
+}
+
+interface Rubro {
+    id: number;
+    nombre: string;
+}
+
 export default function RegisterPage() {
   const { register: registerUser } = useAuth();
   const router = useRouter();
   const [departments, setDepartments] = useState<Department[]>([]);
   const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
+  const [categories, setCategories] = useState<Categoria[]>([]);
+  const [rubros, setRubros] = useState<Rubro[]>([]);
 
   const {
     register,
@@ -48,15 +60,21 @@ export default function RegisterPage() {
   const departmentId = watch('department_id');
 
   useEffect(() => {
-    const fetchDepartments = async () => {
+    const fetchInitialData = async () => {
       try {
-        const response = await api.get('/departments/');
-        setDepartments(response.data.results || response.data);
+        const [depts, cats, rubs] = await Promise.all([
+          api.get('/departments/'),
+          api.get('/prestadores/categorias/'),
+          api.get('/artesanos/rubros/')
+        ]);
+        setDepartments(depts.data.results || depts.data);
+        setCategories(cats.data.results || cats.data);
+        setRubros(rubs.data.results || rubs.data);
       } catch (error) {
-        toast.error('No se pudieron cargar los departamentos.');
+        toast.error('No se pudo cargar la información inicial para el registro.');
       }
     };
-    fetchDepartments();
+    fetchInitialData();
   }, []);
 
   useEffect(() => {
@@ -234,9 +252,21 @@ export default function RegisterPage() {
           {role === 'PRESTADOR' && (
             <div className="p-4 space-y-4 border-l-4 border-green-500 bg-green-50">
               <h3 className="font-medium text-gray-800">Información del Prestador de Servicios</h3>
-              <FormField name="nombre_establecimiento" label="Nombre del Establecimiento" register={register} errors={errors} required />
-              <FormField name="rnt" label="Registro Nacional de Turismo (RNT)" register={register} errors={errors} required />
-              <FormField name="tipo_servicio" label="Tipo de Servicio (Hotel, Restaurante, etc.)" register={register} errors={errors} required />
+              <FormField name="nombre_negocio" label="Nombre del Establecimiento" register={register} errors={errors} required />
+              <div>
+                  <label htmlFor="categoria_id" className="block text-sm font-medium text-gray-700">Categoría del Servicio</label>
+                  <select
+                      id="categoria_id"
+                      {...register('categoria_id', { required: 'Este campo es obligatorio.' })}
+                      className={`w-full px-3 py-2 mt-1 border rounded-md shadow-sm ${errors.categoria_id ? 'border-red-500' : 'border-gray-300'}`}
+                  >
+                      <option value="">Selecciona una categoría</option>
+                      {categories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+                      ))}
+                  </select>
+                  {errors.categoria_id && <p className="mt-1 text-xs text-red-600">{errors.categoria_id.message}</p>}
+              </div>
             </div>
           )}
 
@@ -245,8 +275,20 @@ export default function RegisterPage() {
             <div className="p-4 space-y-4 border-l-4 border-yellow-500 bg-yellow-50">
               <h3 className="font-medium text-gray-800">Información del Artesano</h3>
               <FormField name="nombre_taller" label="Nombre del Taller" register={register} errors={errors} required />
-              <FormField name="tipo_artesania" label="Tipo de Artesanía" register={register} errors={errors} required />
-              <FormField name="material_principal" label="Material Principal" register={register} errors={errors} required />
+              <div>
+                  <label htmlFor="rubro_id" className="block text-sm font-medium text-gray-700">Rubro Principal</label>
+                  <select
+                      id="rubro_id"
+                      {...register('rubro_id', { required: 'Este campo es obligatorio.' })}
+                      className={`w-full px-3 py-2 mt-1 border rounded-md shadow-sm ${errors.rubro_id ? 'border-red-500' : 'border-gray-300'}`}
+                  >
+                      <option value="">Selecciona un rubro</option>
+                      {rubros.map((rub) => (
+                          <option key={rub.id} value={rub.id}>{rub.nombre}</option>
+                      ))}
+                  </select>
+                  {errors.rubro_id && <p className="mt-1 text-xs text-red-600">{errors.rubro_id.message}</p>}
+              </div>
             </div>
           )}
 

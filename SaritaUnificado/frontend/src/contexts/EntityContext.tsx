@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useState, useContext, ReactNode, useCallback, useEffect } from 'react';
-import api from '@/lib/api';
+import api from '@/services/api';
 
 interface Entity {
   id: string;

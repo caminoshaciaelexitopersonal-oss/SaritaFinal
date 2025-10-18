@@ -4,7 +4,7 @@ import React, { createContext, useState, useContext, ReactNode, useCallback, use
 import { useRouter } from 'next/navigation';
 import { useEntity } from './EntityContext';
 import { toast } from 'react-toastify';
-import api from '@/lib/api'; // Importar la instancia centralizada de Axios
+import api from '@/services/api'; // Importar la instancia centralizada de Axios
 import axios from 'axios'; // Importar axios solo para el type guard isAxiosError
 
 interface SavedItem {
@@ -13,17 +13,39 @@ interface SavedItem {
   object_id: number;
 }
 
+// --- Tipos de Datos ---
+
+interface CategoriaPrestador {
+  id: number;
+  nombre: string;
+  slug: string;
+}
+
+interface PrestadorProfile {
+  id: number;
+  nombre_negocio: string;
+  descripcion: string;
+  telefono: string;
+  email_contacto: string;
+  latitud: number;
+  longitud: number;
+  categoria: CategoriaPrestador;
+  // Añade otros campos del perfil del prestador que necesites
+}
+
 interface User {
   pk: number;
   username: string;
   email: string;
   role:
     | 'ADMIN'
+    | 'ADMIN_ENTIDAD'
     | 'FUNCIONARIO_DIRECTIVO'
     | 'FUNCIONARIO_PROFESIONAL'
     | 'PRESTADOR'
     | 'ARTESANO'
     | 'TURISTA';
+  perfil_prestador?: PrestadorProfile; // El perfil es opcional
 }
 
 export interface RegisterData {
@@ -44,14 +66,12 @@ export interface RegisterData {
   municipality_id?: number;
 
   // Campos para Prestador
-  nombre_establecimiento?: string;
-  rnt?: string;
-  tipo_servicio?: string;
+  nombre_negocio?: string;
+  categoria_id?: number;
 
   // Campos para Artesano
   nombre_taller?: string;
-  tipo_artesania?: string;
-  material_principal?: string;
+  rubro_id?: number;
 
   // Campos para Administrador
   cargo?: string;
@@ -313,14 +333,12 @@ useEffect(() => {
     // Añadir campos específicos del rol al payload
     switch (data.role) {
       case 'PRESTADOR':
-        payload.nombre_establecimiento = data.nombre_establecimiento;
-        payload.rnt = data.rnt;
-        payload.tipo_servicio = data.tipo_servicio;
+        payload.nombre_negocio = data.nombre_negocio;
+        payload.categoria_id = data.categoria_id;
         break;
       case 'ARTESANO':
         payload.nombre_taller = data.nombre_taller;
-        payload.tipo_artesania = data.tipo_artesania;
-        payload.material_principal = data.material_principal;
+        payload.rubro_id = data.rubro_id;
         break;
       case 'ADMINISTRADOR':
         payload.cargo = data.cargo;

@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEntity } from '@/contexts/EntityContext';
 import { useTranslations } from 'next-intl';
-import api from '@/lib/api';
+import api from '@/services/api';
 import { FiMenu, FiX, FiBell } from 'react-icons/fi';
 import { usePathname } from 'next/navigation';
 import LanguageSwitcher from './LanguageSwitcher';

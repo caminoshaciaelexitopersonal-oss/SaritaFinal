@@ -8,9 +8,13 @@ import PrestadorCard from '@/components/common/PrestadorCard';
 import PrestadorDetailModal from '@/components/common/PrestadorDetailModal';
 import PrestadorCardSkeleton from '@/components/common/PrestadorCardSkeleton';
 
+import MapaInteractivo from '@/components/common/MapaInteractivo';
+import { getLocations, Location } from '@/services/api';
+
 function PrestadoresContent() {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [prestadores, setPrestadores] = useState<PrestadorPublico[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [selectedCategoria, setSelectedCategoria] = useState<string | undefined>(undefined);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -25,12 +29,14 @@ function PrestadoresContent() {
     async function loadInitialData() {
       try {
         setLoading(true);
-        const [fetchedCategorias, fetchedPrestadores] = await Promise.all([
+        const [fetchedCategorias, fetchedPrestadores, fetchedLocations] = await Promise.all([
           getCategorias(),
           getPrestadores(),
+          getLocations(),
         ]);
         setCategorias(fetchedCategorias.filter(c => c.slug !== 'artesanos'));
         setPrestadores(fetchedPrestadores.filter(p => p.categoria_nombre !== 'Artesanos'));
+        setLocations(fetchedLocations);
         setError(null);
       } catch (err) {
         setError('No se pudo cargar la información. Por favor, inténtalo de nuevo más tarde.');
@@ -104,6 +110,10 @@ function PrestadoresContent() {
               {cat.nombre}
             </button>
           ))}
+        </div>
+
+        <div className="mb-8">
+          <MapaInteractivo locations={locations} />
         </div>
 
         {error && <p className="text-center text-red-500">{error}</p>}

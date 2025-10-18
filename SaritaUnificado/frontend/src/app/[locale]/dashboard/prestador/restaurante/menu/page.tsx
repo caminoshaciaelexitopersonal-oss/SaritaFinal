@@ -35,7 +35,7 @@ const MenuPage = () => {
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get('/restaurante/categorias/');
+      const response = await api.get('/restaurante/categorias-con-productos/');
       setCategorias(response.data.results || response.data);
     } catch (error) { toast.error("Error al cargar el menú."); }
     finally { setIsLoading(false); }
@@ -54,7 +54,7 @@ const MenuPage = () => {
 
   // --- Handlers de Submit ---
   const onCategoriaSubmit: SubmitHandler<CategoriaForm> = async (data) => {
-    const apiCall = editingItem ? api.put(`/restaurante/categorias/${(editingItem as Categoria).id}/`, data) : api.post('/restaurante/categorias/', data);
+    const apiCall = editingItem ? api.put(`/restaurante/categorias-menu/${(editingItem as Categoria).id}/`, data) : api.post('/restaurante/categorias-menu/', data);
     try {
       await apiCall;
       toast.success(`Categoría ${editingItem ? 'actualizada' : 'creada'}.`);
@@ -65,7 +65,7 @@ const MenuPage = () => {
 
   const onProductoSubmit: SubmitHandler<ProductoForm> = async (data) => {
       const payload = {...data, categoria: categoriaParaProducto};
-      const apiCall = editingItem ? api.put(`/restaurante/productos/${(editingItem as Producto).id}/`, payload) : api.post('/restaurante/productos/', payload);
+      const apiCall = editingItem ? api.put(`/restaurante/productos-menu/${(editingItem as Producto).id}/`, payload) : api.post('/restaurante/productos-menu/', payload);
       try {
           await apiCall;
           toast.success(`Producto ${editingItem ? 'actualizado' : 'creado'}.`);
@@ -77,8 +77,9 @@ const MenuPage = () => {
   // --- Handlers de Delete ---
   const handleDelete = async (type: 'categoria' | 'producto', id: number) => {
       if (!window.confirm("¿Seguro que quieres eliminar este ítem?")) return;
+      const endpoint = type === 'categoria' ? 'categorias-menu' : 'productos-menu';
       try {
-          await api.delete(`/restaurante/${type}s/${id}/`);
+          await api.delete(`/restaurante/${endpoint}/${id}/`);
           toast.success("Ítem eliminado.");
           fetchData();
       } catch (error) { toast.error("Error al eliminar."); }

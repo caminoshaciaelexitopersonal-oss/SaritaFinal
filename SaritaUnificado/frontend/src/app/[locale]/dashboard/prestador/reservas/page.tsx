@@ -1,103 +1,96 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '@/src/lib/api';
-import Modal from '@/src/components/dashboard/Modal';
-import CalendarioReservas, { EventoCalendario } from './CalendarioReservas';
-import moment from 'moment';
+import { FiEye, FiCheck, FiX } from 'react-icons/fi';
 
-// Tipos
-type Cliente = { id: number; nombre: string; };
+// Tipos de datos
 type Reserva = {
   id: number;
-  cliente: number;
-  cliente_info: Cliente;
-  fecha_inicio_reserva: string;
-  fecha_fin_reserva: string | null;
-  numero_personas: number;
+  fecha_inicio: string;
+  fecha_fin: string;
+  cantidad_personas: number;
   estado: 'PENDIENTE' | 'CONFIRMADA' | 'CANCELADA' | 'COMPLETADA';
-};
-type ReservaFormInputs = {
-    cliente: number;
-    fecha_inicio_reserva: string;
-    fecha_fin_reserva: string;
-    numero_personas: number;
-    estado: 'PENDIENTE' | 'CONFIRMADA' | 'CANCELADA' | 'COMPLETADA';
+  cliente: {
+    username: string;
+    email: string;
+  };
+  recurso: {
+    nombre: string;
+  };
 };
 
-const estadoChoices = ['PENDIENTE', 'CONFIRMADA', 'CANCELADA', 'COMPLETADA'];
-
-const ReservasRAT = () => {
+const ReservasPage = () => {
   const [reservas, setReservas] = useState<Reserva[]>([]);
-  const [clientes, setClientes] = useState<Cliente[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingReserva, setEditingReserva] = useState<Reserva | null>(null);
-
-  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<ReservaFormInputs>();
 
   const fetchReservas = async () => {
+    setIsLoading(true);
     try {
       const response = await api.get<Reserva[]>('/turismo/reservas/');
       setReservas(response.data);
-    } catch (err) { toast.error('Error al cargar reservas.'); }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      await Promise.all([fetchReservas(), api.get<Cliente[]>('/empresa/gestion-clientes/').then(res => setClientes(res.data))]);
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
-
-  const eventosCalendario = useMemo(() => reservas.map((r): EventoCalendario => ({
-    id: r.id,
-    title: `${r.cliente_info?.nombre || 'Cliente'} (${r.numero_personas}p)`,
-    start: new Date(r.fecha_inicio_reserva),
-    end: r.fecha_fin_reserva ? new Date(r.fecha_fin_reserva) : moment(r.fecha_inicio_reserva).add(1, 'hour').toDate(),
-    resource: r,
-    estado: r.estado,
-  })), [reservas]);
-
-  const handleEventDrop = async ({ event, start, end }: any) => {
-    const reservaActualizada = {
-        ...event.resource,
-        fecha_inicio_reserva: start.toISOString(),
-        fecha_fin_reserva: end.toISOString(),
-    };
-    try {
-        await api.put(`/turismo/reservas/${event.id}/`, reservaActualizada);
-        toast.success("Reserva reprogramada con éxito.");
-        fetchReservas();
     } catch (error) {
-        toast.error("No se pudo reprogramar la reserva.");
+      toast.error("Error al cargar las reservas.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // ... (resto de manejadores de modal y submit sin cambios) ...
-  const handleSelectSlot = (slot: { start: Date; end: Date; }) => { /* ... */ };
-  const handleSelectEvent = (event: any) => { /* ... */ };
-  const closeModal = () => setIsModalOpen(false);
-  const onSubmit: SubmitHandler<ReservaFormInputs> = async (data) => { /* ... */ };
+  useEffect(() => {
+    fetchReservas();
+  }, []);
 
-  if (isLoading) return <div>Cargando calendario...</div>;
+  const handleUpdateEstado = async (id: number, estado: Reserva['estado']) => {
+    try {
+      await api.patch(`/turismo/reservas/${id}/`, { estado });
+      toast.success(`Reserva ${estado.toLowerCase()}.`);
+      fetchReservas();
+    } catch (error) {
+      toast.error("No se pudo actualizar el estado de la reserva.");
+    }
+  };
+
+  if (isLoading) return <div>Cargando reservas...</div>;
 
   return (
     <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-6">Calendario de Reservas (RAT)</h1>
-        <CalendarioReservas
-            eventos={eventosCalendario}
-            onSelectSlot={handleSelectSlot}
-            onSelectEvent={handleSelectEvent}
-            onEventDrop={handleEventDrop}
-        />
-        {/* ... (Modal sin cambios) ... */}
+      <h1 className="text-3xl font-bold mb-6">Gestión de Reservas</h1>
+      {reservas.length === 0 ? (
+        <p>No tienes ninguna reserva.</p>
+      ) : (
+        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th>Cliente</th>
+                <th>Recurso</th>
+                <th>Fechas</th>
+                <th>Personas</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {reservas.map((reserva) => (
+                <tr key={reserva.id}>
+                  <td>{reserva.cliente.username}</td>
+                  <td>{reserva.recurso.nombre}</td>
+                  <td>{new Date(reserva.fecha_inicio).toLocaleDateString()} - {new Date(reserva.fecha_fin).toLocaleDateString()}</td>
+                  <td>{reserva.cantidad_personas}</td>
+                  <td>{reserva.estado}</td>
+                  <td className="flex space-x-2">
+                    <button onClick={() => handleUpdateEstado(reserva.id, 'CONFIRMADA')} title="Confirmar"><FiCheck className="text-green-500" /></button>
+                    <button onClick={() => handleUpdateEstado(reserva.id, 'CANCELADA')} title="Cancelar"><FiX className="text-red-500" /></button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
 
-export default ReservasRAT;
+export default ReservasPage;
