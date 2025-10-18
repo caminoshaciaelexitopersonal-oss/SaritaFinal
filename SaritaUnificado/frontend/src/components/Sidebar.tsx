@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { FiChevronDown, FiChevronRight, FiBox, FiStar, FiBed, FiAward, FiMap, FiTruck, FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive, FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings, FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar } from 'react-icons/fi';
+import { FiChevronDown, FiChevronRight, FiBox, FiStar, FiBed, FiAward, FiMap, FiTruck, FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive, FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings, FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare } from 'react-icons/fi';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -130,7 +130,13 @@ export default function Sidebar() {
 
   const adminNavSections: NavSection[] = [
     { title: 'Gestión de Contenido', links: [ { href: '/dashboard/publicaciones', label: 'Publicaciones', icon: FiFileText }, { href: '/dashboard/atractivos', label: 'Atractivos', icon: FiMapPin }, { href: '/dashboard/rutas', label: 'Rutas Turísticas', icon: FiMapPin }, ]},
-    { title: 'Administración', links: [ { href: '/dashboard/admin/users', label: 'Usuarios', icon: FiUsers }, { href: '/dashboard/admin/site-config', label: 'Config. del Sitio', icon: FiSettings }, ]},
+    { title: 'Administración', links: [
+        { href: '/dashboard/admin/users', label: 'Usuarios', icon: FiUsers },
+        { href: '/dashboard/admin/site-config', label: 'Config. del Sitio', icon: FiSettings },
+        { href: '/dashboard/admin/formularios', label: 'Formularios', icon: FiClipboard },
+        { href: '/dashboard/admin/verificacion', label: 'Verificaciones', icon: FiCheckSquare },
+        { href: '/dashboard/admin/scoring', label: 'Puntuación', icon: FiAward },
+    ]},
   ];
 
   return (

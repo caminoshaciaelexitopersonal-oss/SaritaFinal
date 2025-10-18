@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Define la URL base de tu API de Django
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://backend:8000";
+  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
 
 const api = axios.create({
   baseURL: API_URL,

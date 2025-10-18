@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Producto, Vacante, Cliente, Inventario, Costo
+from .models import Producto, Vacante, Cliente
 
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,18 +12,6 @@ class ProductoSerializer(serializers.ModelSerializer):
         model = Producto
         fields = ['id', 'nombre', 'descripcion', 'precio', 'activo', 'fecha_creacion', 'fecha_actualizacion']
         read_only_fields = ['id', 'fecha_creacion', 'fecha_actualizacion']
-
-class InventarioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Inventario
-        fields = ['id', 'nombre_item', 'descripcion', 'cantidad', 'unidad', 'punto_reorden', 'fecha_actualizacion']
-        read_only_fields = ['id', 'fecha_actualizacion', 'prestador']
-
-class CostoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Costo
-        fields = ['id', 'concepto', 'monto', 'fecha', 'es_recurrente', 'tipo_costo']
-        read_only_fields = ['id', 'prestador']
 
 class VacanteSerializer(serializers.ModelSerializer):
     empresa_nombre = serializers.CharField(source='empresa.nombre_negocio', read_only=True)

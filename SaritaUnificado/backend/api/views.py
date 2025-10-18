@@ -1,4 +1,4 @@
-from rest_framework import generics, views, viewsets, status, mixins, permissions
+from rest_framework import generics, views, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -614,36 +614,23 @@ class SiteConfigurationView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return SiteConfiguration.load()
 
-# --- Vistas para el Perfil del Prestador ---
-
 class PrestadorProfileView(generics.RetrieveUpdateAPIView):
-    """
-    Endpoint para que un prestador vea y actualice su perfil principal.
-    """
     queryset = PrestadorServicio.objects.all()
     serializer_class = PrestadorServicioSerializer
-    permission_classes = [IsAuthenticated, IsPrestador]
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return self.request.user.perfil_prestador
 
 class ArtesanoProfileView(generics.RetrieveUpdateAPIView):
-    """
-    Endpoint para que un artesano vea y actualice su perfil.
-    """
     queryset = Artesano.objects.all()
     serializer_class = ArtesanoSerializer
-    permission_classes = [IsAuthenticated] # Debería ser IsArtesano
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.perfil_artesano
-
-# --- Vistas de Analíticas y Estadísticas ---
+        return self.request.user.artesano
 
 class PrestadorDashboardAnalyticsView(views.APIView):
-    """
-    Endpoint para las estadísticas del dashboard del prestador.
-    """
     permission_classes = [IsAuthenticated, IsPrestador]
 
     def get(self, request, *args, **kwargs):
@@ -678,11 +665,9 @@ class PrestadorDashboardAnalyticsView(views.APIView):
         }
         return Response(data)
 
-# --- Vistas para Reseñas y Valoraciones ---
-
 class PrestadorResenaViewSet(viewsets.ModelViewSet):
     """
-    Endpoint que permite a un prestador ver las reseñas de su negocio.
+    Endpoint que permite a un prestador ver y responder a las reseñas de su negocio.
     """
     serializer_class = ResenaSerializer
     permission_classes = [IsAuthenticated, IsPrestador]
@@ -743,12 +728,10 @@ class UserLLMConfigView(generics.RetrieveUpdateAPIView):
         llm_config, created = UserLLMConfig.objects.get_or_create(user=self.request.user)
         return llm_config
 
-# --- Vistas para Galerías de Imágenes ---
-
 class ImagenGaleriaView(generics.ListCreateAPIView):
     queryset = ImagenGaleria.objects.all()
     serializer_class = ImagenGaleriaSerializer
-    permission_classes = [IsAuthenticated, IsPrestador]
+    permission_classes = [IsAuthenticated]
 
 class ImagenArtesanoView(generics.ListCreateAPIView):
     queryset = ImagenArtesano.objects.all()
@@ -903,7 +886,7 @@ class ImagenArtesanoDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class ImagenGaleriaDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ImagenGaleriaSerializer
-    permission_classes = [IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
