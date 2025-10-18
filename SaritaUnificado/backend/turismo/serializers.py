@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Hotel, Habitacion, Tarifa, Disponibilidad, Reserva
+from api.models import RutaTuristica
 from empresa.serializers import ClienteSerializer
 
 class HabitacionSerializer(serializers.ModelSerializer):

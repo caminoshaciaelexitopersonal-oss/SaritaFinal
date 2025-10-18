@@ -45,6 +45,8 @@ urlpatterns = [
     path("api/empresa/", include("empresa.urls")),
     path("api/restaurante/", include("restaurante.urls")),
     path("api/turismo/", include("turismo.urls")),
+    # Nueva ruta unificada para el panel de prestadores
+    path("api/v1/prestadores/", include("api.urls_prestador")),
     # Rutas de la API de la aplicación
     path("api/", include("api.urls")),
 ]

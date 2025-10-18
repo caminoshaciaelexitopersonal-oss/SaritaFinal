@@ -1,72 +1,43 @@
-"use client";
+'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { FiChevronDown, FiChevronRight, FiAlertCircle } from 'react-icons/fi';
-import React, { useState, useEffect, useCallback } from 'react';
-import api from '@/services/api';
-import { useDashboard } from '@/contexts/DashboardContext'; // Importar el hook del contexto
-
-// --- Definición de Tipos y Componentes Internos ---
-
-export interface NavLink {
-  href: string; // Se usará como identificador de la vista
-  label: string;
-  icon: React.ElementType;
-  allowedRoles: string[];
-}
-
-export interface NavSection {
-  title: string;
-  links: NavLink[];
-}
-
-import {
-  FiHome, FiUsers, FiFileText, FiMapPin, FiSettings, FiBarChart2,
-  FiShield, FiFolder, FiAward, FiCamera, FiEdit
-} from 'react-icons/fi';
-
-// Mapeo de strings de iconos a componentes de React Icons
-const iconMap: { [key: string]: React.ElementType } = {
-  FiHome, FiUsers, FiFileText, FiMapPin, FiSettings, FiBarChart2,
-  FiShield, FiFolder, FiAward, FiCamera, FiEdit
-};
-
-// Componente para el estado de carga (esqueleto)
-const SidebarSkeleton = () => (
-  <div className="p-4 animate-pulse">
-    <div className="h-8 bg-gray-200 rounded-md w-3/4 mb-6"></div>
-    <div className="space-y-4">
-      {[...Array(4)].map((_, i) => (
-        <div key={i}>
-          <div className="h-6 bg-gray-200 rounded-md w-1/2 mb-3"></div>
-          <div className="space-y-2 pl-4">
-            <div className="h-5 bg-gray-200 rounded-md w-5/6"></div>
-            <div className="h-5 bg-gray-200 rounded-md w-4/6"></div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
+import { FiChevronDown, FiChevronRight, FiBox, FiStar, FiBed, FiAward, FiMap, FiTruck, FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive, FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings, FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-// Componente para un enlace individual en el menú, ahora usa next/link
-const SidebarLink = ({ link }: { link: NavLink }) => {
+// --- Tipos ---
+interface NavLink {
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  allowedRoles?: string[];
+  prestadorCategoria?: string;
+}
+
+interface NavSection {
+  title: string;
+  links: NavLink[];
+  isSubSection?: boolean;
+}
+
+// --- Componentes de UI ---
+const SidebarSkeleton = () => (
+  <div className="p-4 animate-pulse">
+    <div className="h-8 bg-gray-200 rounded-md w-3/4 mb-6"></div>
+    <div className="space-y-4">{[...Array(4)].map((_, i) => (<div key={i}><div className="h-6 bg-gray-200 rounded-md w-1/2 mb-3"></div><div className="space-y-2 pl-4"><div className="h-5 bg-gray-200 rounded-md w-5/6"></div><div className="h-5 bg-gray-200 rounded-md w-4/6"></div></div></div>))}</div>
+  </div>
+);
+
+const SidebarLink = ({ link, isSubSection }: { link: NavLink, isSubSection?: boolean }) => {
   const pathname = usePathname();
   const isActive = pathname === link.href;
-  const Icon = typeof link.icon === 'string' ? iconMap[link.icon] : link.icon;
+  const Icon = link.icon;
+  const paddingClass = isSubSection ? 'pl-14' : 'pl-10';
 
   return (
     <Link href={link.href} passHref>
-      <div
-        className={`w-full flex items-center pl-10 pr-4 py-2.5 text-sm font-medium rounded-lg transition-colors text-left cursor-pointer
-          ${isActive
-            ? 'bg-blue-100 text-blue-700'
-            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-          }`}
-      >
+      <div className={`w-full flex items-center pr-4 py-2.5 text-sm font-medium rounded-lg transition-colors text-left cursor-pointer ${paddingClass} ${isActive ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'}`}>
         {Icon && <Icon className="mr-3 h-5 w-5 flex-shrink-0" />}
         <span className="truncate">{link.label}</span>
       </div>
@@ -74,75 +45,72 @@ const SidebarLink = ({ link }: { link: NavLink }) => {
   );
 };
 
-// --- Estructura de Menú Estática ---
-const staticNavSections: NavSection[] = [
+// --- Estructura de Navegación "Mi Negocio" ---
+const miNegocioNav: NavSection[] = [
     {
-        title: 'Principal',
+        title: 'Gestión Operativa',
+        isSubSection: true,
         links: [
-            { href: '/dashboard', label: 'Inicio', icon: FiHome, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO', 'FUNCIONARIO_PROFESIONAL', 'PRESTADOR', 'ARTESANO'] },
-            { href: '/dashboard/ai-config', label: 'Configuración AI', icon: FiSettings, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO', 'FUNCIONARIO_PROFESIONAL', 'PRESTADOR', 'ARTESANO'] },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/perfil', label: 'Mi Perfil', icon: FiUser },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/productos', label: 'Productos/Servicios', icon: FiBox },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/clientes', label: 'Clientes', icon: FiUsers },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/reservas', label: 'Reservas', icon: FiCalendar },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/valoraciones', label: 'Valoraciones', icon: FiStar },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/documentos', label: 'Documentos', icon: FiAward },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/galeria', label: 'Galería', icon: FiImage },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/estadisticas', label: 'Estadísticas', icon: FiBarChart2 },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/inventario', label: 'Inventario', icon: FiArchive },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/costos', label: 'Costos', icon: FiTrendingDown },
         ],
     },
     {
-        title: 'Gestión de Contenido',
+        title: 'Módulos Especializados',
+        isSubSection: true,
         links: [
-            { href: '/dashboard/publicaciones', label: 'Publicaciones', icon: FiFileText, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO'] },
-            { href: '/dashboard/atractivos', label: 'Atractivos', icon: FiMapPin, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO'] },
-            { href: '/dashboard/rutas', label: 'Rutas Turísticas', icon: FiMapPin, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO'] },
-        ],
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/hoteles/habitaciones', label: 'Habitaciones', icon: FiBed, prestadorCategoria: 'hotel' },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes/menu', label: 'Menú/Carta', icon: FiBookOpen, prestadorCategoria: 'restaurante' },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes/mesas', label: 'Gestión de Mesas', icon: FiGrid, prestadorCategoria: 'restaurante' },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes/pedidos', label: 'Pedidos (TPV)', icon: FiShoppingCart, prestadorCategoria: 'restaurante' },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/guias', label: 'Mis Rutas', icon: FiMap, prestadorCategoria: 'guía' },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/transporte', label: 'Vehículos', icon: FiTruck, prestadorCategoria: 'transporte' },
+            { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/agencias', label: 'Paquetes Turísticos', icon: FiBriefcase, prestadorCategoria: 'agencia' },
+        ]
     },
-    {
-        title: 'Gestión de Prestador',
-        links: [
-            { href: '/dashboard/prestador', label: 'Mi Panel', icon: FiHome, allowedRoles: ['PRESTADOR'] },
-            { href: '/dashboard/prestador/productos', label: 'Productos', icon: FiBox, allowedRoles: ['PRESTADOR'] },
-            { href: '/dashboard/prestador/clientes', label: 'Clientes', icon: FiUsers, allowedRoles: ['PRESTADOR'] },
-        ],
-    },
-    {
-        title: 'Administración',
-        links: [
-            { href: '/dashboard/admin/users', label: 'Usuarios', icon: FiUsers, allowedRoles: ['ADMIN'] },
-            { href: '/dashboard/admin/site-config', label: 'Config. del Sitio', icon: FiSettings, allowedRoles: ['ADMIN'] },
-        ],
-    },
+    { title: 'Gestión Comercial', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-comercial', label: 'Ver Módulo', icon: FiBriefcase }] },
+    { title: 'Gestión Contable', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-contable', label: 'Ver Módulo', icon: FiDollarSign }] },
 ];
 
 
-// Componente para una sección de navegación colapsable
-const CollapsibleNavSection = ({ section, userRole }: { section: NavSection; userRole: string }) => {
+const CollapsibleNavSection = ({ section, userRole, prestadorCategoria }: { section: NavSection; userRole: string; prestadorCategoria?: string }) => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  const filteredLinks = section.links.filter(link =>
-    link.allowedRoles.includes(userRole)
-  );
+  const filteredLinks = section.links.filter(link => {
+    if (link.allowedRoles && !link.allowedRoles.includes(userRole)) return false;
+    if (link.prestadorCategoria) {
+      if (userRole !== 'PRESTADOR' || !prestadorCategoria) return false;
+      return prestadorCategoria.toLowerCase().includes(link.prestadorCategoria);
+    }
+    return true;
+  });
 
   const isSectionActive = filteredLinks.some(link => pathname.startsWith(link.href));
+  useEffect(() => { if (isSectionActive) setIsOpen(true) }, [isSectionActive]);
 
-  useEffect(() => {
-    if (isSectionActive) {
-      setIsOpen(true);
-    }
-  }, [isSectionActive]);
+  if (filteredLinks.length === 0) return null;
 
-  if (filteredLinks.length === 0) {
-    return null;
-  }
+  const paddingClass = section.isSubSection ? 'pl-8' : 'px-4';
 
   return (
     <div>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-left rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
+      <button onClick={() => setIsOpen(!isOpen)} className={`flex items-center justify-between w-full py-2.5 text-sm font-medium text-left rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${paddingClass}`}>
         <span className="font-semibold">{section.title}</span>
         {isOpen ? <FiChevronDown className="h-5 w-5" /> : <FiChevronRight className="h-5 w-5" />}
       </button>
       {isOpen && (
         <div className="mt-2 space-y-1">
           {filteredLinks.map((link) => (
-            <SidebarLink key={link.href} link={link} />
+            <SidebarLink key={link.href} link={link} isSubSection={section.isSubSection} />
           ))}
         </div>
       )}
@@ -152,23 +120,43 @@ const CollapsibleNavSection = ({ section, userRole }: { section: NavSection; use
 
 
 // --- Componente Principal del Sidebar ---
-
 export default function Sidebar() {
   const { user } = useAuth();
+  const [isMiNegocioOpen, setIsMiNegocioOpen] = useState(true);
 
-  if (!user) {
-    return <SidebarSkeleton />;
-  }
+  if (!user) return <SidebarSkeleton />;
+
+  const prestadorCategoria = user.perfil_prestador?.categoria?.nombre;
+
+  const adminNavSections: NavSection[] = [
+    { title: 'Gestión de Contenido', links: [ { href: '/dashboard/publicaciones', label: 'Publicaciones', icon: FiFileText }, { href: '/dashboard/atractivos', label: 'Atractivos', icon: FiMapPin }, { href: '/dashboard/rutas', label: 'Rutas Turísticas', icon: FiMapPin }, ]},
+    { title: 'Administración', links: [ { href: '/dashboard/admin/users', label: 'Usuarios', icon: FiUsers }, { href: '/dashboard/admin/site-config', label: 'Config. del Sitio', icon: FiSettings }, ]},
+  ];
 
   return (
     <aside className="w-64 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-4 border-b">
-        <h2 className="text-xl font-bold text-gray-800 truncate">SITYC</h2>
-        <p className="text-sm text-gray-500 truncate" title={user.email}>{user.username}</p>
-      </div>
+      <div className="p-4 border-b"><h2 className="text-xl font-bold text-gray-800 truncate">SITYC</h2><p className="text-sm text-gray-500 truncate" title={user.email}>{user.username}</p></div>
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-        {staticNavSections.map((section) => (
-          <CollapsibleNavSection key={section.title} section={section} userRole={user.role} />
+        <SidebarLink link={{ href: '/dashboard', label: 'Inicio', icon: FiHome }} />
+
+        {user.role === 'PRESTADOR' && (
+            <div>
+                <button onClick={() => setIsMiNegocioOpen(!isMiNegocioOpen)} className="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-left rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <span className="font-semibold text-lg">Mi Negocio</span>
+                    {isMiNegocioOpen ? <FiChevronDown className="h-5 w-5" /> : <FiChevronRight className="h-5 w-5" />}
+                </button>
+                {isMiNegocioOpen && (
+                    <div className="mt-2 space-y-1">
+                        {miNegocioNav.map((section) => (
+                            <CollapsibleNavSection key={section.title} section={section} userRole={user.role} prestadorCategoria={prestadorCategoria} />
+                        ))}
+                    </div>
+                )}
+            </div>
+        )}
+
+        { (user.role === 'ADMIN' || user.role === 'FUNCIONARIO_DIRECTIVO') && adminNavSections.map(section => (
+            <CollapsibleNavSection key={section.title} section={section} userRole={user.role} />
         ))}
       </nav>
     </aside>
