@@ -1,37 +1,30 @@
-"use client";
+'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { FiChevronDown, FiChevronRight, FiAlertCircle } from 'react-icons/fi';
-import React, { useState, useEffect, useCallback } from 'react';
-import api from '@/services/api';
-import { useDashboard } from '@/contexts/DashboardContext'; // Importar el hook del contexto
+import { FiChevronDown, FiChevronRight, FiBox, FiStar, FiBed, FiAward, FiMap, FiTruck, FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  FiHome, FiUsers, FiFileText, FiMapPin, FiSettings, FiBarChart2,
+  FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiArchive, FiTrendingDown
+} from 'react-icons/fi';
 
-// --- Definición de Tipos y Componentes Internos ---
-
-export interface NavLink {
-  href: string; // Se usará como identificador de la vista
+// --- Tipos ---
+interface NavLink {
+  href: string;
   label: string;
   icon: React.ElementType;
-  allowedRoles: string[];
+  allowedRoles?: string[];
+  prestadorCategoria?: string;
 }
 
-export interface NavSection {
+interface NavSection {
   title: string;
   links: NavLink[];
 }
 
-import {
-  FiHome, FiUsers, FiFileText, FiMapPin, FiSettings, FiBarChart2,
-  FiShield, FiFolder, FiAward, FiCamera, FiEdit
-} from 'react-icons/fi';
-
-// Mapeo de strings de iconos a componentes de React Icons
-const iconMap: { [key: string]: React.ElementType } = {
-  FiHome, FiUsers, FiFileText, FiMapPin, FiSettings, FiBarChart2,
-  FiShield, FiFolder, FiAward, FiCamera, FiEdit
-};
-
-// Componente para el estado de carga (esqueleto)
+// --- Componentes de UI ---
 const SidebarSkeleton = () => (
   <div className="p-4 animate-pulse">
     <div className="h-8 bg-gray-200 rounded-md w-3/4 mb-6"></div>
@@ -49,14 +42,10 @@ const SidebarSkeleton = () => (
   </div>
 );
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
-// Componente para un enlace individual en el menú, ahora usa next/link
 const SidebarLink = ({ link }: { link: NavLink }) => {
   const pathname = usePathname();
   const isActive = pathname === link.href;
-  const Icon = typeof link.icon === 'string' ? iconMap[link.icon] : link.icon;
+  const Icon = link.icon;
 
   return (
     <Link href={link.href} passHref>
@@ -74,49 +63,73 @@ const SidebarLink = ({ link }: { link: NavLink }) => {
   );
 };
 
-// --- Estructura de Menú Estática ---
-const staticNavSections: NavSection[] = [
-    {
-        title: 'Principal',
-        links: [
-            { href: '/dashboard', label: 'Inicio', icon: FiHome, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO', 'FUNCIONARIO_PROFESIONAL', 'PRESTADOR', 'ARTESANO'] },
-            { href: '/dashboard/ai-config', label: 'Configuración AI', icon: FiSettings, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO', 'FUNCIONARIO_PROFESIONAL', 'PRESTADOR', 'ARTESANO'] },
-        ],
-    },
-    {
-        title: 'Gestión de Contenido',
-        links: [
-            { href: '/dashboard/publicaciones', label: 'Publicaciones', icon: FiFileText, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO'] },
-            { href: '/dashboard/atractivos', label: 'Atractivos', icon: FiMapPin, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO'] },
-            { href: '/dashboard/rutas', label: 'Rutas Turísticas', icon: FiMapPin, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO'] },
-        ],
-    },
-    {
-        title: 'Gestión de Prestador',
-        links: [
-            { href: '/dashboard/prestador', label: 'Mi Panel', icon: FiHome, allowedRoles: ['PRESTADOR'] },
-            { href: '/dashboard/prestador/productos', label: 'Productos', icon: FiBox, allowedRoles: ['PRESTADOR'] },
-            { href: '/dashboard/prestador/clientes', label: 'Clientes', icon: FiUsers, allowedRoles: ['PRESTADOR'] },
-        ],
-    },
-    {
-        title: 'Administración',
-        links: [
-            { href: '/dashboard/admin/users', label: 'Usuarios', icon: FiUsers, allowedRoles: ['ADMIN'] },
-            { href: '/dashboard/admin/site-config', label: 'Config. del Sitio', icon: FiSettings, allowedRoles: ['ADMIN'] },
-        ],
-    },
+// --- Estructura de Navegación Completa ---
+const navSections: NavSection[] = [
+  {
+    title: 'Principal',
+    links: [
+      { href: '/dashboard', label: 'Inicio', icon: FiHome, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO', 'FUNCIONARIO_PROFESIONAL', 'PRESTADOR', 'ARTESANO'] },
+      { href: '/dashboard/ai-config', label: 'Configuración AI', icon: FiSettings, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO', 'FUNCIONARIO_PROFESIONAL', 'PRESTADOR', 'ARTESANO'] },
+    ],
+  },
+  {
+    title: 'Panel de Prestador',
+    links: [
+        { href: '/dashboard/prestador/perfil', label: 'Mi Perfil', icon: FiUser, allowedRoles: ['PRESTADOR'] },
+        { href: '/dashboard/prestador/productos', label: 'Productos/Servicios', icon: FiBox, allowedRoles: ['PRESTADOR'] },
+        { href: '/dashboard/prestador/clientes', label: 'Clientes', icon: FiUsers, allowedRoles: ['PRESTADOR'] },
+        { href: '/dashboard/prestador/reservas', label: 'Reservas', icon: FiCalendar, allowedRoles: ['PRESTADOR'] },
+        { href: '/dashboard/prestador/valoraciones', label: 'Valoraciones', icon: FiStar, allowedRoles: ['PRESTADOR'] },
+        { href: '/dashboard/prestador/certificaciones', label: 'Documentos', icon: FiAward, allowedRoles: ['PRESTADOR'] },
+        { href: '/dashboard/prestador/galeria', label: 'Galería', icon: FiImage, allowedRoles: ['PRESTADOR'] },
+        { href: '/dashboard/prestador/estadisticas', label: 'Estadísticas', icon: FiBarChart2, allowedRoles: ['PRESTADOR'] },
+        { href: '/dashboard/prestador/inventario', label: 'Inventario', icon: FiArchive, allowedRoles: ['PRESTADOR'] },
+        { href: '/dashboard/prestador/costos', label: 'Costos', icon: FiTrendingDown, allowedRoles: ['PRESTADOR'] },
+    ],
+  },
+  {
+      title: 'Módulos Específicos',
+      links: [
+        { href: '/dashboard/prestador/hotel/habitaciones', label: 'Habitaciones', icon: FiBed, prestadorCategoria: 'hotel' },
+        { href: '/dashboard/prestador/restaurante/menu', label: 'Menú/Carta', icon: FiBookOpen, prestadorCategoria: 'restaurante' },
+        { href: '/dashboard/prestador/restaurante/mesas', label: 'Gestión de Mesas', icon: FiGrid, prestadorCategoria: 'restaurante' },
+        { href: '/dashboard/prestador/restaurante/pedidos', label: 'Pedidos (TPV)', icon: FiShoppingCart, prestadorCategoria: 'restaurante' },
+        { href: '/dashboard/prestador/guias', label: 'Mis Rutas', icon: FiMap, prestadorCategoria: 'guía' },
+        { href: '/dashboard/prestador/transporte', label: 'Vehículos', icon: FiTruck, prestadorCategoria: 'transporte' },
+        { href: '/dashboard/prestador/agencias', label: 'Paquetes Turísticos', icon: FiBriefcase, prestadorCategoria: 'agencia' },
+      ]
+  },
+  {
+    title: 'Gestión de Contenido',
+    links: [
+      { href: '/dashboard/publicaciones', label: 'Publicaciones', icon: FiFileText, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO'] },
+      { href: '/dashboard/atractivos', label: 'Atractivos', icon: FiMapPin, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO'] },
+      { href: '/dashboard/rutas', label: 'Rutas Turísticas', icon: FiMapPin, allowedRoles: ['ADMIN', 'FUNCIONARIO_DIRECTIVO'] },
+    ],
+  },
+  {
+    title: 'Administración',
+    links: [
+      { href: '/dashboard/admin/users', label: 'Usuarios', icon: FiUsers, allowedRoles: ['ADMIN'] },
+      { href: '/dashboard/admin/site-config', label: 'Config. del Sitio', icon: FiSettings, allowedRoles: ['ADMIN'] },
+    ],
+  },
 ];
 
-
-// Componente para una sección de navegación colapsable
-const CollapsibleNavSection = ({ section, userRole }: { section: NavSection; userRole: string }) => {
+const CollapsibleNavSection = ({ section, userRole, prestadorCategoria }: { section: NavSection; userRole: string; prestadorCategoria?: string }) => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  const filteredLinks = section.links.filter(link =>
-    link.allowedRoles.includes(userRole)
-  );
+  const filteredLinks = section.links.filter(link => {
+    if (link.allowedRoles && !link.allowedRoles.includes(userRole)) {
+      return false;
+    }
+    if (link.prestadorCategoria) {
+      if (userRole !== 'PRESTADOR' || !prestadorCategoria) return false;
+      return prestadorCategoria.toLowerCase().includes(link.prestadorCategoria);
+    }
+    return true;
+  });
 
   const isSectionActive = filteredLinks.some(link => pathname.startsWith(link.href));
 
@@ -150,15 +163,15 @@ const CollapsibleNavSection = ({ section, userRole }: { section: NavSection; use
   );
 };
 
-
 // --- Componente Principal del Sidebar ---
-
 export default function Sidebar() {
   const { user } = useAuth();
 
   if (!user) {
     return <SidebarSkeleton />;
   }
+
+  const prestadorCategoria = user.perfil_prestador?.categoria?.nombre;
 
   return (
     <aside className="w-64 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col">
@@ -167,8 +180,13 @@ export default function Sidebar() {
         <p className="text-sm text-gray-500 truncate" title={user.email}>{user.username}</p>
       </div>
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-        {staticNavSections.map((section) => (
-          <CollapsibleNavSection key={section.title} section={section} userRole={user.role} />
+        {navSections.map((section) => (
+          <CollapsibleNavSection
+            key={section.title}
+            section={section}
+            userRole={user.role}
+            prestadorCategoria={prestadorCategoria}
+          />
         ))}
       </nav>
     </aside>

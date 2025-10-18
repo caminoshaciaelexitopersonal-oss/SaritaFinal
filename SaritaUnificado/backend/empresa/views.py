@@ -2,8 +2,8 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Producto, Vacante, Cliente
-from .serializers import ProductoSerializer, VacanteSerializer, ClienteSerializer
+from .models import Producto, Vacante, Cliente, Inventario, Costo
+from .serializers import ProductoSerializer, VacanteSerializer, ClienteSerializer, InventarioSerializer, CostoSerializer
 from api.permissions import IsPrestador, IsPrestadorOwner # Reutilizamos los permisos de la app api
 
 class ClienteViewSet(viewsets.ModelViewSet):
@@ -20,6 +20,30 @@ class ClienteViewSet(viewsets.ModelViewSet):
         if hasattr(self.request.user, 'perfil_prestador'):
             return Cliente.objects.filter(prestador=self.request.user.perfil_prestador)
         return Cliente.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(prestador=self.request.user.perfil_prestador)
+
+class InventarioViewSet(viewsets.ModelViewSet):
+    serializer_class = InventarioSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return Inventario.objects.filter(prestador=self.request.user.perfil_prestador)
+        return Inventario.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(prestador=self.request.user.perfil_prestador)
+
+class CostoViewSet(viewsets.ModelViewSet):
+    serializer_class = CostoSerializer
+    permission_classes = [IsAuthenticated, IsPrestador, IsPrestadorOwner]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return Costo.objects.filter(prestador=self.request.user.perfil_prestador)
+        return Costo.objects.none()
 
     def perform_create(self, serializer):
         serializer.save(prestador=self.request.user.perfil_prestador)

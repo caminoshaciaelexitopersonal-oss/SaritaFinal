@@ -23,7 +23,7 @@ from .models import (
 )
 from django.db import transaction
 from empresa.serializers import ProductoSerializer
-from turismo.serializers import PaqueteTuristicoSerializer, RutaTuristicaSerializer
+from turismo.serializers import RutaTuristicaSerializer
 
 class EntitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -470,7 +470,7 @@ class PrestadorServicioPublicDetailSerializer(serializers.ModelSerializer):
     categoria = CategoriaPrestadorSerializer(read_only=True)
     galeria_imagenes = ImagenGaleriaSerializer(many=True, read_only=True)
     productos = ProductoSerializer(many=True, read_only=True)
-    paquetes_ofrecidos = PaqueteTuristicoSerializer(many=True, read_only=True)
+    # paquetes_ofrecidos = PaqueteTuristicoSerializer(many=True, read_only=True) # Comentado hasta que se defina el serializer
     rutas = RutaTuristicaSerializer(many=True, read_only=True)
 
     class Meta:
@@ -479,7 +479,7 @@ class PrestadorServicioPublicDetailSerializer(serializers.ModelSerializer):
             'id', 'nombre_negocio', 'descripcion', 'telefono', 'email_contacto',
             'red_social_facebook', 'red_social_instagram', 'red_social_tiktok', 'red_social_whatsapp',
             'latitud', 'longitud', 'promociones_ofertas', 'categoria', 'galeria_imagenes',
-            'productos', 'paquetes_ofrecidos', 'rutas'
+            'productos', 'rutas' # 'paquetes_ofrecidos' eliminado temporalmente
         ]
 
 
