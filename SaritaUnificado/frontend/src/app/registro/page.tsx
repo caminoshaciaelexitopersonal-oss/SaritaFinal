@@ -71,7 +71,8 @@ export default function RegisterPage() {
         setCategories(cats.data.results || cats.data);
         setRubros(rubs.data.results || rubs.data);
       } catch (error) {
-        toast.error('No se pudo cargar la información inicial para el registro.');
+        console.error("Error fetching initial data:", error);
+        toast.error('ERROR DE API: No se pudo cargar la información inicial para el registro.');
       }
     };
     fetchInitialData();
