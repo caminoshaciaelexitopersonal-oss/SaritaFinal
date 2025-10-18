@@ -67,9 +67,11 @@ test.describe('Flujo de Inicio de Sesión para Todos los Roles', () => {
     await page.getByLabel('Contraseña').fill(password);
     await page.getByLabel('Confirmar Contraseña').fill(password);
     await page.getByLabel('Quiero registrarme como:').selectOption('PRESTADOR');
-    await page.getByLabel('Nombre del Establecimiento').fill('Test Hotel');
-    await page.getByLabel('Registro Nacional de Turismo (RNT)').fill('0987654321');
-    await page.getByLabel('Tipo de Servicio (Hotel, Restaurante, etc.)').fill('Hotel');
+
+    // Nuevos campos
+    await page.getByLabel('Nombre del Establecimiento').fill('Hotel de Prueba');
+    await page.getByLabel('Categoría del Servicio').selectOption({ label: 'Hoteles' });
+
     await page.getByRole('button', { name: 'Crear Cuenta' }).click();
     await page.waitForURL(`${BASE_URL}/login`);
 
@@ -79,9 +81,9 @@ test.describe('Flujo de Inicio de Sesión para Todos los Roles', () => {
     await page.getByRole('button', { name: 'Iniciar Sesión' }).click();
 
     // 3. Verificar redirección y contenido
-    await page.waitForURL(`${BASE_URL}/dashboard/prestador`);
-    await expect(page).toHaveURL(`${BASE_URL}/dashboard/prestador`);
-    const prestadorHeader = page.locator('h2', { hasText: 'Perfil del Prestador' });
+    await page.waitForURL(`${BASE_URL}/dashboard`);
+    await expect(page).toHaveURL(`${BASE_URL}/dashboard`);
+    const prestadorHeader = page.locator('h1', { hasText: 'Panel de Control' });
     await expect(prestadorHeader).toBeVisible({ timeout: 10000 });
   });
 
@@ -96,9 +98,11 @@ test.describe('Flujo de Inicio de Sesión para Todos los Roles', () => {
     await page.getByLabel('Contraseña').fill(password);
     await page.getByLabel('Confirmar Contraseña').fill(password);
     await page.getByLabel('Quiero registrarme como:').selectOption('ARTESANO');
+
+    // Nuevos campos
     await page.getByLabel('Nombre del Taller').fill('Taller de Prueba');
-    await page.getByLabel('Tipo de Artesanía').fill('Cerámica');
-    await page.getByLabel('Material Principal').fill('Arcilla');
+    await page.getByLabel('Rubro Principal').selectOption({ label: 'Tejidos' });
+
     await page.getByRole('button', { name: 'Crear Cuenta' }).click();
     await page.waitForURL(`${BASE_URL}/login`);
 
@@ -108,10 +112,10 @@ test.describe('Flujo de Inicio de Sesión para Todos los Roles', () => {
     await page.getByRole('button', { name: 'Iniciar Sesión' }).click();
 
     // 3. Verificar redirección y contenido
-    await page.waitForURL(`${BASE_URL}/dashboard/artesano`);
-    await expect(page).toHaveURL(`${BASE_URL}/dashboard/artesano`);
-    const artesanoHeader = page.locator('h2', { hasText: 'Perfil del Artesano' });
-    await expect(artesanoHeader).toBeVisible({ timeout: 10000 });
+    await page.waitForURL(`${BASE_URL}/dashboard`);
+    await expect(page).toHaveURL(`${BASE_URL}/dashboard`);
+    const header = page.locator('h1', { hasText: 'Panel de Control' });
+    await expect(header).toBeVisible({ timeout: 10000 });
   });
 
   // --- Test para Funcionario Directivo (registra y luego inicia sesión) ---
@@ -137,9 +141,9 @@ test.describe('Flujo de Inicio de Sesión para Todos los Roles', () => {
     await page.getByRole('button', { name: 'Iniciar Sesión' }).click();
 
     // 3. Verificar redirección y contenido
-    await page.waitForURL(`${BASE_URL}/dashboard/directivo`);
-    await expect(page).toHaveURL(`${BASE_URL}/dashboard/directivo`);
-    const header = page.locator('h1', { hasText: 'Panel de Funcionario' });
+    await page.waitForURL(`${BASE_URL}/dashboard`);
+    await expect(page).toHaveURL(`${BASE_URL}/dashboard`);
+    const header = page.locator('h1', { hasText: 'Panel de Control' });
     await expect(header).toBeVisible({ timeout: 10000 });
   });
 
@@ -166,9 +170,9 @@ test.describe('Flujo de Inicio de Sesión para Todos los Roles', () => {
     await page.getByRole('button', { name: 'Iniciar Sesión' }).click();
 
     // 3. Verificar redirección y contenido
-    await page.waitForURL(`${BASE_URL}/dashboard/profesional`);
-    await expect(page).toHaveURL(`${BASE_URL}/dashboard/profesional`);
-    const header = page.locator('h1', { hasText: 'Panel de Funcionario' });
+    await page.waitForURL(`${BASE_URL}/dashboard`);
+    await expect(page).toHaveURL(`${BASE_URL}/dashboard`);
+    const header = page.locator('h1', { hasText: 'Panel de Control' });
     await expect(header).toBeVisible({ timeout: 10000 });
   });
 

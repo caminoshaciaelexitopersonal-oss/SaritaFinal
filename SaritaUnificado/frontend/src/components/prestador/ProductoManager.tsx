@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import api from '@/lib/api';
+import api from '@/services/api';
 import FormField from '@/components/ui/FormField';
 import { Button } from '@/components/ui/Button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';

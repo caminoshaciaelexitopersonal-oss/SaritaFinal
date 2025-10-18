@@ -1,8 +1,20 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import CategoriaMenu, ProductoMenu, Mesa, Pedido
-from .serializers import CategoriaMenuSerializer, ProductoMenuSerializer, MesaSerializer, PedidoSerializer
+from .serializers import CategoriaMenuSerializer, ProductoMenuSerializer, MesaSerializer, PedidoSerializer, CategoriaConProductosSerializer
 from api.permissions import IsPrestador, IsPrestadorOwner
+
+class CategoriaConProductosViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Vista de solo lectura para obtener las categorías con sus productos anidados.
+    """
+    serializer_class = CategoriaConProductosSerializer
+    permission_classes = [IsAuthenticated, IsPrestador]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return CategoriaMenu.objects.filter(prestador=self.request.user.perfil_prestador).prefetch_related('productos')
+        return CategoriaMenu.objects.none()
 
 class CategoriaMenuViewSet(viewsets.ModelViewSet):
     serializer_class = CategoriaMenuSerializer

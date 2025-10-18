@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FiSend, FiMessageSquare } from 'react-icons/fi';
 import { Button } from '@/components/ui/Button';
-import api from '@/lib/api';
+import api from '@/services/api';
 
 interface Message {
   text: string;

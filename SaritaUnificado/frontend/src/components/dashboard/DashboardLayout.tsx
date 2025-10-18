@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import {
-  FiHome, FiBox, FiUsers, FiCalendar, FiStar,
+  FiHome, FiBox, FiUsers, FiCalendar, FiStar, FiBed,
   FiAward, FiMap, FiTruck, FiBriefcase, FiImage, FiBarChart2, FiUser,
   FiBookOpen, FiGrid, FiShoppingCart
 } from 'react-icons/fi';

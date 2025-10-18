@@ -7,12 +7,17 @@ class ProductoMenuSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategoriaMenu
+        fields = ['id', 'nombre']
+        read_only_fields = ['prestador']
+
+class CategoriaConProductosSerializer(serializers.ModelSerializer):
     productos = ProductoMenuSerializer(many=True, read_only=True)
 
     class Meta:
         model = CategoriaMenu
         fields = ['id', 'nombre', 'productos']
-        read_only_fields = ['prestador']
 
 class MesaSerializer(serializers.ModelSerializer):
     class Meta:

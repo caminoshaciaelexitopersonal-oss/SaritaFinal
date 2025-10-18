@@ -3,7 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { FiChevronDown, FiChevronRight, FiAlertCircle } from 'react-icons/fi';
 import React, { useState, useEffect, useCallback } from 'react';
-import api from '@/lib/api';
+import api from '@/services/api';
 import { useDashboard } from '@/contexts/DashboardContext'; // Importar el hook del contexto
 
 // --- Definición de Tipos y Componentes Internos ---

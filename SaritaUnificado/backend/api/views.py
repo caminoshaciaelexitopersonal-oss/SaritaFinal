@@ -680,6 +680,22 @@ class PrestadorResenaViewSet(viewsets.ModelViewSet):
             return Resena.objects.filter(content_type=content_type, object_id=prestador.pk, aprobada=True)
         return Resena.objects.none()
 
+class PrestadorResenaUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """
+    Permite a un prestador actualizar (específicamente, responder) una reseña.
+    """
+    serializer_class = ResenaSerializer
+    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    queryset = Resena.objects.all()
+
+    def get_queryset(self):
+        # Asegurarse de que el prestador solo pueda responder a sus propias reseñas
+        user = self.request.user
+        if hasattr(user, 'perfil_prestador'):
+            content_type = ContentType.objects.get_for_model(PrestadorServicio)
+            return Resena.objects.filter(content_type=content_type, object_id=user.perfil_prestador.id)
+        return Resena.objects.none()
+
     def partial_update(self, request, *args, **kwargs):
         # Solo permitir la actualización del campo 'respuesta_prestador'
         instance = self.get_object()
