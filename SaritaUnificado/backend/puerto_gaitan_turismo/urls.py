@@ -41,10 +41,13 @@ urlpatterns = [
     path("api/auth/registration/funcionario_profesional/", FuncionarioProfesionalRegisterView.as_view(), name='funcionario-profesional-register'),
     # Rutas de Administración
     path("api/admin/", include("api.admin_urls")),
-    # Rutas de los nuevos módulos
-    path("api/empresa/", include("empresa.urls")),
-    path("api/restaurante/", include("restaurante.urls")),
+    # Las rutas de 'empresa', 'restaurante' y 'turismo' se gestionan ahora
+    # a través del panel "Mi Negocio". Se mantienen las apps por la lógica no migrada.
     path("api/turismo/", include("turismo.urls")),
+
+    # Panel "Mi Negocio" para Prestadores
+    path("api/v1/prestadores/mi-negocio/", include("api.urls_prestador")),
+
     # Rutas de la API de la aplicación
     path("api/", include("api.urls")),
 ]

@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from api.models import PrestadorServicio
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from empresa.models import Cliente
+from apps.prestadores.mi_negocio.modelos.clientes import Cliente
 
 
 class Hotel(models.Model):

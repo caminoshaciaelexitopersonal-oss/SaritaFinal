@@ -64,6 +64,9 @@ INSTALLED_APPS = [
     "empresa.apps.EmpresaConfig",
     "restaurante.apps.RestauranteConfig",
     "turismo.apps.TurismoConfig",
+
+    # Mi App de Prestadores
+    "apps.prestadores.apps.PrestadoresConfig",
 ]
 
 MIDDLEWARE = [
