@@ -22,7 +22,7 @@ from .models import (
     Profile
 )
 from django.db import transaction
-from empresa.serializers import ProductoSerializer
+from apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
 from turismo.serializers import RutaTuristicaSerializer
 
 class EntitySerializer(serializers.ModelSerializer):

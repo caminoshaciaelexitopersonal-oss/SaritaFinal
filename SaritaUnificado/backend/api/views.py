@@ -144,7 +144,7 @@ from .permissions import (
     IsPrestadorOwner
 )
 from turismo.models import Reserva
-from empresa.models import Cliente
+from apps.prestadores.mi_negocio.modelos.clientes import Cliente
 from .filters import AuditLogFilter
 from .serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
 from .models import Department, Municipality, Entity
@@ -893,3 +893,13 @@ class ImagenGaleriaDetailView(generics.RetrieveUpdateDestroyAPIView):
         if hasattr(user, 'perfil_prestador'):
             return ImagenGaleria.objects.filter(prestador=user.perfil_prestador)
         return ImagenGaleria.objects.none()
+
+class PlaceholderView(views.APIView):
+    """
+    Vista de marcador de posición para módulos futuros.
+    Devuelve 204 No Content.
+    """
+    permission_classes = [IsAuthenticated, IsPrestador]
+
+    def get(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_204_NO_CONTENT)

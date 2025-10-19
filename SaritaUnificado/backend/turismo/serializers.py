@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Hotel, Habitacion, Tarifa, Disponibilidad, Reserva
 from api.models import RutaTuristica
-from empresa.serializers import ClienteSerializer
+from apps.prestadores.mi_negocio.serializers.clientes import ClienteSerializer
 
 class HabitacionSerializer(serializers.ModelSerializer):
     class Meta:
