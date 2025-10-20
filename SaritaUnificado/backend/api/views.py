@@ -27,7 +27,6 @@ from .models import (
     AtractivoTuristico,
     RutaTuristica,
     ElementoGuardado,
-    CategoriaPrestador,
     Video,
     ContenidoMunicipio,
     AgentTask,
@@ -129,7 +128,7 @@ from .permissions import (
     CanManageAtractivos,
     IsPrestadorOwner
 )
-from apps.turismo.models import Reserva
+# from apps.turismo.models import Reserva
 # from apps.prestadores.mi_negocio.modelos.clientes import Cliente
 from .filters import AuditLogFilter
 from .serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
@@ -609,47 +608,47 @@ class GaleriaListView(generics.ListAPIView):
     serializer_class = GaleriaItemSerializer
     permission_classes = [AllowAny]
 
-from agents.corps.turismo_coronel import get_turismo_coronel_graph
+# from agents.corps.turismo_coronel import get_turismo_coronel_graph
 
-class AgentChatView(views.APIView):
-    permission_classes = [AllowAny] # El agente está diseñado para manejar usuarios invitados
+# class AgentChatView(views.APIView):
+#     permission_classes = [AllowAny] # El agente está diseñado para manejar usuarios invitados
 
-    async def post(self, request, *args, **kwargs):
-        user_message = request.data.get('message', '')
-        if not user_message:
-            return Response({'error': 'No se proporcionó ningún mensaje.'}, status=status.HTTP_400_BAD_REQUEST)
+#     async def post(self, request, *args, **kwargs):
+#         user_message = request.data.get('message', '')
+#         if not user_message:
+#             return Response({'error': 'No se proporcionó ningún mensaje.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Obtener el historial de la conversación de la sesión, o inicializarlo si no existe.
-        conversation_history = request.session.get('conversation_history', [])
+#         # Obtener el historial de la conversación de la sesión, o inicializarlo si no existe.
+#         conversation_history = request.session.get('conversation_history', [])
 
-        try:
-            agent = get_turismo_coronel_graph()
+#         try:
+#             agent = get_turismo_coronel_graph()
 
-            # Preparar el diccionario de entrada para el agente, incluyendo el contexto.
-            agent_input = {
-                "general_order": user_message,
-                "app_context": {
-                    "user": request.user,
-                    "entity": getattr(request, 'entity', None) # Pasar la entidad del middleware
-                },
-                "conversation_history": conversation_history
-            }
+#             # Preparar el diccionario de entrada para el agente, incluyendo el contexto.
+#             agent_input = {
+#                 "general_order": user_message,
+#                 "app_context": {
+#                     "user": request.user,
+#                     "entity": getattr(request, 'entity', None) # Pasar la entidad del middleware
+#                 },
+#                 "conversation_history": conversation_history
+#             }
 
-            # Invocar al agente de forma asíncrona.
-            final_state = await agent.ainvoke(agent_input)
+#             # Invocar al agente de forma asíncrona.
+#             final_state = await agent.ainvoke(agent_input)
 
-            # Extraer el informe final y el historial actualizado del estado de respuesta.
-            response_message = final_state.get('final_report', 'No se pudo generar una respuesta.')
+#             # Extraer el informe final y el historial actualizado del estado de respuesta.
+#             response_message = final_state.get('final_report', 'No se pudo generar una respuesta.')
 
-            # Guardar el historial actualizado en la sesión para el próximo turno.
-            request.session['conversation_history'] = final_state.get('conversation_history', [])
+#             # Guardar el historial actualizado en la sesión para el próximo turno.
+#             request.session['conversation_history'] = final_state.get('conversation_history', [])
 
-            return Response({'reply': response_message})
-        except Exception as e:
-            # Es una buena práctica registrar la excepción para la depuración.
-            import logging
-            logging.error(f"Error en AgentChatView: {e}", exc_info=True)
-            return Response({'error': 'Ocurrió un error interno al procesar su solicitud.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#             return Response({'reply': response_message})
+#         except Exception as e:
+#             # Es una buena práctica registrar la excepción para la depuración.
+#             import logging
+#             logging.error(f"Error en AgentChatView: {e}", exc_info=True)
+#             return Response({'error': 'Ocurrió un error interno al procesar su solicitud.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class AgentTaskStatusView(generics.RetrieveAPIView):
     queryset = AgentTask.objects.all()

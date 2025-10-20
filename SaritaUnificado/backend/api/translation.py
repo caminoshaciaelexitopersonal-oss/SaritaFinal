@@ -1,17 +1,17 @@
 from modeltranslation.translator import register, TranslationOptions
+from modeltranslation.translator import register, TranslationOptions
 from .models import (
     Publicacion,
     AtractivoTuristico,
     PaginaInstitucional,
     ContenidoMunicipio,
     HechoHistorico,
-    CategoriaPrestador,
     RubroArtesano,
-    # PrestadorServicio eliminado
     Artesano,
     Video,
     ConsejoConsultivo
 )
+from apps.prestadores.models import CategoriaPrestador
 
 @register(Publicacion)
 class PublicacionTranslationOptions(TranslationOptions):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .mi_negocio.gestion_operativa.modulos_genericos.models import (
+from .models import (
     Perfil,
     ProductoServicio,
     Cliente,

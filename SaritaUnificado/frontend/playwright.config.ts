@@ -24,6 +24,8 @@ export default defineConfig({
   /* Configuración compartida */
   use: {
     trace: 'on-first-retry',
+    baseURL: 'http://localhost:3004',
+    headless: true,
   },
 
   /* Proyectos para diferentes navegadores */

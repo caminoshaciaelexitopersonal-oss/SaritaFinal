@@ -1,18 +1,16 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from . import views
+# from django.urls import path, include
+# from rest_framework.routers import DefaultRouter
+# from .views import HotelViewSet, HabitacionViewSet, TarifaViewSet, DisponibilidadViewSet, ReservaViewSet, RutaTuristicaViewSet
 
-router = DefaultRouter()
-router.register(r'hoteles', views.HotelViewSet, basename='hotel')
-router.register(r'habitaciones', views.HabitacionViewSet, basename='habitacion')
-router.register(r'tarifas', views.TarifaViewSet, basename='tarifa')
-router.register(r'disponibilidades', views.DisponibilidadViewSet, basename='disponibilidad')
-router.register(r'reservas', views.ReservaViewSet, basename='reserva')
-router.register(r'rutas-turisticas', views.RutaTuristicaViewSet, basename='ruta-turistica-gestion')
-# router.register(r'vehiculos', views.VehiculoTuristicoViewSet, basename='vehiculo')
-# router.register(r'paquetes', views.PaqueteTuristicoViewSet, basename='paquete')
+# router = DefaultRouter()
+# router.register(r'hoteles', HotelViewSet)
+# router.register(r'habitaciones', HabitacionViewSet)
+# router.register(r'tarifas', TarifaViewSet)
+# router.register(r'disponibilidades', DisponibilidadViewSet)
+# router.register(r'reservas', ReservaViewSet)
+# router.register(r'rutas-turisticas', RutaTuristicaViewSet)
 
-urlpatterns = [
-    path('', include(router.urls)),
-    path('hoteles/<int:hotel_id>/habitaciones/', views.PublicHabitacionListView.as_view(), name='public-habitaciones-list'),
-]
+
+# urlpatterns = [
+#     path('', include(router.urls)),
+# ]

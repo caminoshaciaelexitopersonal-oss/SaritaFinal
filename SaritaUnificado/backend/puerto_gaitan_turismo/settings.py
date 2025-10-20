@@ -61,9 +61,9 @@ INSTALLED_APPS = [
 
     # Mis Apps
     "api.apps.ApiConfig",
-    "empresa.apps.EmpresaConfig",
-    "restaurante.apps.RestauranteConfig",
-    "turismo.apps.TurismoConfig",
+    # "apps.empresa.apps.EmpresaConfig",
+    # "apps.restaurante.apps.RestauranteConfig",
+    # "apps.turismo.apps.TurismoConfig",
 
     # Mi App de Prestadores
     "apps.prestadores.apps.PrestadoresConfig",
@@ -174,10 +174,16 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # DJANGO-ALLAUTH
-ACCOUNT_LOGIN_METHODS = {"username", "email"}
-ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
-ACCOUNT_EMAIL_VERIFICATION = "mandatory" if not DEBUG else "none"
+ACCOUNT_LOGIN_METHODS = ['email']  # Reemplaza a ACCOUNT_AUTHENTICATION_METHOD
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*'] # Reemplaza a ACCOUNT_EMAIL_REQUIRED y ACCOUNT_USERNAME_REQUIRED
+ACCOUNT_EMAIL_VERIFICATION = 'none' # 'mandatory' en producción
 ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
+
+# Configuración específica de dj-rest-auth para usar email como login
+REST_AUTH = {
+    'LOGIN_SERIALIZER': 'dj_rest_auth.serializers.LoginSerializer',
+    'USER_DETAILS_SERIALIZER': 'api.serializers.CustomUserDetailSerializer',
+}
 
 AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",

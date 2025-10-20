@@ -111,7 +111,7 @@ path(
     path('galeria-media/', views.GaleriaListView.as_view(), name='galeria-media-list'),
 
     # --- Vistas para el Sistema de Agentes ---
-    path('agent/chat/', views.AgentChatView.as_view(), name='agent-chat'),
+    # path('agent/chat/', views.AgentChatView.as_view(), name='agent-chat'),
     path('agent/tasks/<uuid:id>/', views.AgentTaskStatusView.as_view(), name='agent-task-status'),
 
     # --- Vistas de Administración y Análisis (endpoints específicos no cubiertos por el router) ---

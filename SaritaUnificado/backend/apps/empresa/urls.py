@@ -1,13 +1,11 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from . import views
+# from django.urls import path, include
+# from rest_framework.routers import DefaultRouter
+# from .views import InventarioViewSet, CostoViewSet
 
-router = DefaultRouter()
-# Rutas eliminadas para Producto y Cliente
-router.register(r'vacantes', views.VacanteViewSet, basename='vacante')
-router.register(r'inventario', views.InventarioViewSet, basename='inventario')
-router.register(r'costos', views.CostoViewSet, basename='costo')
+# router = DefaultRouter()
+# router.register(r'inventarios', InventarioViewSet)
+# router.register(r'costos', CostoViewSet)
 
-urlpatterns = [
-    path('', include(router.urls)),
-]
+# urlpatterns = [
+#     path('', include(router.urls)),
+# ]

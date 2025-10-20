@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import (
     CustomUser, ImagenGaleria, ImagenArtesano, Publicacion,
     ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, RutaTuristica, ImagenRutaTuristica, ElementoGuardado, ContentType,
-    CategoriaPrestador, Video, ContenidoMunicipio, AgentTask, SiteConfiguration, MenuItem,
+    Video, ContenidoMunicipio, AgentTask, SiteConfiguration, MenuItem,
     HomePageComponent, AuditLog, PaginaInstitucional, ImagenPaginaInstitucional, HechoHistorico, Artesano, RubroArtesano,
     Resena, Sugerencia, ScoringRule, Notificacion,
     Formulario, Pregunta, OpcionRespuesta, RespuestaUsuario,
@@ -23,7 +23,7 @@ from .models import (
 )
 from django.db import transaction
 # from apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
-from apps.turismo.serializers import RutaTuristicaSerializer
+# from apps.turismo.serializers import RutaTuristicaSerializer
 
 class EntitySerializer(serializers.ModelSerializer):
     class Meta:

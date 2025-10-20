@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import (
-    CustomUser, CategoriaPrestador, # PrestadorServicio eliminado
+    CustomUser, # PrestadorServicio y CategoriaPrestador eliminados
     Publicacion, Video, ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, ScoringRule,
     Artesano, RubroArtesano, ImagenArtesano, Formulario, Pregunta, OpcionRespuesta,
     RespuestaUsuario, PlantillaVerificacion, ItemVerificacion, Verificacion,

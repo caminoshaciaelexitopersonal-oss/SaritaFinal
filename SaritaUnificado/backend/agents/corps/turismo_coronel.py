@@ -1,6 +1,6 @@
 import json
 from typing import TypedDict, List, Any, Dict
-from langchain_core.pydantic_v1 import BaseModel, Field
+# from langchain_core.pydantic_v1 import BaseModel, Field
 from langgraph.graph import StateGraph, END
 from ai_models.llm_router import route_llm_request
 
