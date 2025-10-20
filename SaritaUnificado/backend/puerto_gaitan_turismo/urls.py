@@ -22,16 +22,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # La autenticación ahora es manejada por allauth y las vistas de la app 'api'
-    path('api/auth/', include('allauth.urls')),
+    # La autenticación de la API es manejada por dj-rest-auth
+    path('api/auth/', include('dj_rest_auth.urls')),
 
     # Rutas de Administración
     path("api/admin/", include("api.admin_urls")),
-    # Las rutas de 'empresa', 'restaurante' y 'turismo' se gestionan ahora
-    # a través del panel "Mi Negocio". Se mantienen las apps por la lógica no migrada.
-    path("api/turismo/", include("apps.turismo.urls")),
-    path("api/empresa/", include("apps.empresa.urls")),
-    path("api/restaurante/", include("apps.restaurante.urls")),
 
     # Panel "Mi Negocio" para Prestadores
     path("api/v1/mi-negocio/", include("apps.prestadores.urls")),
@@ -40,8 +35,8 @@ urlpatterns = [
     path("api/", include("api.urls")),
 ]
 
-from apps.turismo.views import PublicDisponibilidadView
-urlpatterns.insert(len(urlpatterns) - 1, path("api/public/disponibilidad/<str:app_label>/<str:model>/<int:object_id>/", PublicDisponibilidadView.as_view(), name='public-disponibilidad'))
+# from apps.turismo.views import PublicDisponibilidadView
+# urlpatterns.insert(len(urlpatterns) - 1, path("api/public/disponibilidad/<str:app_label>/<str:model>/<int:object_id>/", PublicDisponibilidadView.as_view(), name='public-disponibilidad'))
 
 # Servir archivos multimedia en modo de desarrollo
 if settings.DEBUG:

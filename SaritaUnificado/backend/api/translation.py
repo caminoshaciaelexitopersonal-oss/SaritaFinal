@@ -1,13 +1,13 @@
 from modeltranslation.translator import register, TranslationOptions
+from apps.prestadores.models import CategoriaPrestador
 from .models import (
     Publicacion,
     AtractivoTuristico,
     PaginaInstitucional,
     ContenidoMunicipio,
     HechoHistorico,
-    CategoriaPrestador,
     RubroArtesano,
-    # PrestadorServicio eliminado
+    # CategoriaPrestador y PrestadorServicio eliminados
     Artesano,
     Video,
     ConsejoConsultivo
