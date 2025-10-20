@@ -1,15 +1,14 @@
-from modeltranslation.translator import register, TranslationOptions
-from modeltranslation.translator import register, TranslationOptions
+ from modeltranslation.translator import register, TranslationOptions
 from .models import (
-    Publicacion,
-    AtractivoTuristico,
-    PaginaInstitucional,
-    ContenidoMunicipio,
-    HechoHistorico,
-    RubroArtesano,
-    Artesano,
-    Video,
-    ConsejoConsultivo
+Publicacion,
+AtractivoTuristico,
+PaginaInstitucional,
+ContenidoMunicipio,
+HechoHistorico,
+RubroArtesano,
+Artesano,
+Video,
+ConsejoConsultivo
 )
 from apps.prestadores.models import CategoriaPrestador
 

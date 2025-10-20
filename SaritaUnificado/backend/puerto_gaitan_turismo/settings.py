@@ -58,17 +58,16 @@ INSTALLED_APPS = [
     "anymail",
     "django_filters",
     "modeltranslation",
+ # Mis Apps
+"api.apps.ApiConfig",
+# "apps.empresa.apps.EmpresaConfig",
+# "apps.restaurante.apps.RestauranteConfig",
+# "apps.turismo.apps.TurismoConfig",
 
-    # Mis Apps
-    "api.apps.ApiConfig",
-    # "apps.empresa.apps.EmpresaConfig",
-    # "apps.restaurante.apps.RestauranteConfig",
-    # "apps.turismo.apps.TurismoConfig",
+# Mi App de Prestadores
+"apps.prestadores.apps.PrestadoresConfig",
 
-    # Mi App de Prestadores
-    "apps.prestadores.apps.PrestadoresConfig",
 ]
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",

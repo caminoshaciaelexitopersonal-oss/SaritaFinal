@@ -1,5 +1,6 @@
 # from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
+from apps.prestadores.models import CategoriaPrestador
 from .models import (
     CustomUser, ImagenGaleria, ImagenArtesano, Publicacion,
     ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, RutaTuristica, ImagenRutaTuristica, ElementoGuardado, ContentType,
@@ -788,101 +789,101 @@ class ResenaCreateSerializer(serializers.ModelSerializer):
 
 # --------------------- Módulo de Verificación de Cumplimiento ---------------------
 
-class ItemVerificacionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ItemVerificacion
-        fields = ['id', 'texto_requisito', 'puntaje', 'orden', 'es_obligatorio']
+# class ItemVerificacionSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = ItemVerificacion
+#         fields = ['id', 'texto_requisito', 'puntaje', 'orden', 'es_obligatorio']
 
 
-class PlantillaVerificacionListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PlantillaVerificacion
-        fields = ['id', 'nombre', 'descripcion', 'categoria_prestador']
+# class PlantillaVerificacionListSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = PlantillaVerificacion
+#         fields = ['id', 'nombre', 'descripcion', 'categoria_prestador']
 
 
-class PlantillaVerificacionDetailSerializer(PlantillaVerificacionListSerializer):
-    items = ItemVerificacionSerializer(many=True, read_only=True)
-    class Meta(PlantillaVerificacionListSerializer.Meta):
-        fields = PlantillaVerificacionListSerializer.Meta.fields + ['items']
+# class PlantillaVerificacionDetailSerializer(PlantillaVerificacionListSerializer):
+#     items = ItemVerificacionSerializer(many=True, read_only=True)
+#     class Meta(PlantillaVerificacionListSerializer.Meta):
+#         fields = PlantillaVerificacionListSerializer.Meta.fields + ['items']
 
 
-class RespuestaItemVerificacionReadSerializer(serializers.ModelSerializer):
-    texto_requisito = serializers.CharField(source='item_original.texto_requisito', read_only=True)
-    puntaje = serializers.IntegerField(source='item_original.puntaje', read_only=True)
-    item_original_id = serializers.IntegerField(source='item_original.id', read_only=True)
-    class Meta:
-        model = RespuestaItemVerificacion
-        fields = ['id', 'item_original_id', 'texto_requisito', 'puntaje', 'cumple', 'justificacion']
+# class RespuestaItemVerificacionReadSerializer(serializers.ModelSerializer):
+#     texto_requisito = serializers.CharField(source='item_original.texto_requisito', read_only=True)
+#     puntaje = serializers.IntegerField(source='item_original.puntaje', read_only=True)
+#     item_original_id = serializers.IntegerField(source='item_original.id', read_only=True)
+#     class Meta:
+#         model = RespuestaItemVerificacion
+#         fields = ['id', 'item_original_id', 'texto_requisito', 'puntaje', 'cumple', 'justificacion']
 
 
-class RespuestaItemVerificacionWriteSerializer(serializers.ModelSerializer):
-    item_original_id = serializers.PrimaryKeyRelatedField(queryset=ItemVerificacion.objects.all(), source='item_original')
-    class Meta:
-        model = RespuestaItemVerificacion
-        fields = ['item_original_id', 'cumple', 'justificacion']
+# class RespuestaItemVerificacionWriteSerializer(serializers.ModelSerializer):
+#     item_original_id = serializers.PrimaryKeyRelatedField(queryset=ItemVerificacion.objects.all(), source='item_original')
+#     class Meta:
+#         model = RespuestaItemVerificacion
+#         fields = ['item_original_id', 'cumple', 'justificacion']
 
 
-class VerificacionListSerializer(serializers.ModelSerializer):
-    plantilla_nombre = serializers.CharField(source='plantilla_usada.nombre', read_only=True)
-    funcionario_nombre = serializers.CharField(source='funcionario_evaluador.username', read_only=True)
-    class Meta:
-        model = Verificacion
-        fields = ['id', 'fecha_visita', 'puntaje_obtenido', 'plantilla_nombre', 'funcionario_nombre']
+# class VerificacionListSerializer(serializers.ModelSerializer):
+#     plantilla_nombre = serializers.CharField(source='plantilla_usada.nombre', read_only=True)
+#     funcionario_nombre = serializers.CharField(source='funcionario_evaluador.username', read_only=True)
+#     class Meta:
+#         model = Verificacion
+#         fields = ['id', 'fecha_visita', 'puntaje_obtenido', 'plantilla_nombre', 'funcionario_nombre']
 
 
-class VerificacionDetailSerializer(serializers.ModelSerializer):
-    respuestas_items = RespuestaItemVerificacionReadSerializer(many=True, read_only=True)
-    plantilla_nombre = serializers.CharField(source='plantilla_usada.nombre', read_only=True)
-    prestador_nombre = serializers.CharField(source='prestador.nombre_negocio', read_only=True)
-    funcionario_nombre = serializers.CharField(source='funcionario_evaluador.username', read_only=True)
-    class Meta:
-        model = Verificacion
-        fields = [
-            'id', 'fecha_visita', 'puntaje_obtenido', 'observaciones_generales',
-            'recomendaciones', 'plantilla_usada', 'plantilla_nombre', 'prestador',
-            'prestador_nombre', 'funcionario_evaluador', 'funcionario_nombre',
-            'respuestas_items'
-        ]
+# class VerificacionDetailSerializer(serializers.ModelSerializer):
+#     respuestas_items = RespuestaItemVerificacionReadSerializer(many=True, read_only=True)
+#     plantilla_nombre = serializers.CharField(source='plantilla_usada.nombre', read_only=True)
+#     prestador_nombre = serializers.CharField(source='prestador.nombre_negocio', read_only=True)
+#     funcionario_nombre = serializers.CharField(source='funcionario_evaluador.username', read_only=True)
+#     class Meta:
+#         model = Verificacion
+#         fields = [
+#             'id', 'fecha_visita', 'puntaje_obtenido', 'observaciones_generales',
+#             'recomendaciones', 'plantilla_usada', 'plantilla_nombre', 'prestador',
+#             'prestador_nombre', 'funcionario_evaluador', 'funcionario_nombre',
+#             'respuestas_items'
+#         ]
 
 
-class IniciarVerificacionSerializer(serializers.Serializer):
-    plantilla_id = serializers.PrimaryKeyRelatedField(queryset=PlantillaVerificacion.objects.all())
+# class IniciarVerificacionSerializer(serializers.Serializer):
+#     plantilla_id = serializers.PrimaryKeyRelatedField(queryset=PlantillaVerificacion.objects.all())
 
 
-class GuardarVerificacionSerializer(serializers.ModelSerializer):
-    respuestas_items = RespuestaItemVerificacionWriteSerializer(many=True)
-    class Meta:
-        model = Verificacion
-        fields = [
-            'id', 'fecha_visita', 'observaciones_generales', 'recomendaciones', 'respuestas_items'
-        ]
-        read_only_fields = ['id']
-    @transaction.atomic
-    def update(self, instance, validated_data):
-        respuestas_data = validated_data.pop('respuestas_items')
-        instance.fecha_visita = validated_data.get('fecha_visita', instance.fecha_visita)
-        instance.observaciones_generales = validated_data.get('observaciones_generales', instance.observaciones_generales)
-        instance.recomendaciones = validated_data.get('recomendaciones', instance.recomendaciones)
-        puntaje_actual = 0
-        instance.respuestas_items.all().delete()
-        for respuesta_data in respuestas_data:
-            item = respuesta_data['item_original']
-            cumple = respuesta_data['cumple']
-            RespuestaItemVerificacion.objects.create(
-                verificacion=instance,
-                item_original=item,
-                cumple=cumple,
-                justificacion=respuesta_data.get('justificacion', '')
-            )
-            if cumple:
-                puntaje_actual += item.puntaje
-        instance.puntaje_obtenido = puntaje_actual
-        instance.save()
-        prestador = instance.prestador
-        puntaje_total_prestador = sum(v.puntaje_obtenido for v in prestador.verificaciones_recibidas.all())
-        prestador.puntuacion_total = puntaje_total_prestador
-        prestador.save()
-        return instance
+# class GuardarVerificacionSerializer(serializers.ModelSerializer):
+#     respuestas_items = RespuestaItemVerificacionWriteSerializer(many=True)
+#     class Meta:
+#         model = Verificacion
+#         fields = [
+#             'id', 'fecha_visita', 'observaciones_generales', 'recomendaciones', 'respuestas_items'
+#         ]
+#         read_only_fields = ['id']
+#     @transaction.atomic
+#     def update(self, instance, validated_data):
+#         respuestas_data = validated_data.pop('respuestas_items')
+#         instance.fecha_visita = validated_data.get('fecha_visita', instance.fecha_visita)
+#         instance.observaciones_generales = validated_data.get('observaciones_generales', instance.observaciones_generales)
+#         instance.recomendaciones = validated_data.get('recomendaciones', instance.recomendaciones)
+#         puntaje_actual = 0
+#         instance.respuestas_items.all().delete()
+#         for respuesta_data in respuestas_data:
+#             item = respuesta_data['item_original']
+#             cumple = respuesta_data['cumple']
+#             RespuestaItemVerificacion.objects.create(
+#                 verificacion=instance,
+#                 item_original=item,
+#                 cumple=cumple,
+#                 justificacion=respuesta_data.get('justificacion', '')
+#             )
+#             if cumple:
+#                 puntaje_actual += item.puntaje
+#         instance.puntaje_obtenido = puntaje_actual
+#         instance.save()
+#         prestador = instance.prestador
+#         puntaje_total_prestador = sum(v.puntaje_obtenido for v in prestador.verificaciones_recibidas.all())
+#         prestador.puntuacion_total = puntaje_total_prestador
+#         prestador.save()
+#         return instance
 
 
 # --------------------- Módulo de Capacitaciones ---------------------
@@ -1005,9 +1006,19 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('department', 'municipality')
 
 
+from apps.prestadores.models import Perfil
+
 class CustomUserDetailSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
 
     class Meta:
         model = CustomUser
         fields = ('pk', 'username', 'email', 'role', 'profile')
+
+class AdminPrestadorSerializer(serializers.ModelSerializer):
+    usuario_username = serializers.CharField(source='usuario.username', read_only=True)
+    categoria_nombre = serializers.CharField(source='categoria.nombre', read_only=True)
+
+    class Meta:
+        model = Perfil
+        fields = ('id', 'nombre_comercial', 'estado', 'usuario_username', 'categoria_nombre')

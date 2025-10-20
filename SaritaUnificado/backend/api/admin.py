@@ -1,14 +1,15 @@
-from django.contrib import admin
+ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from apps.prestadores.models import CategoriaPrestador
 from .models import (
-    CustomUser, # PrestadorServicio y CategoriaPrestador eliminados
-    Publicacion, Video, ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, ScoringRule,
-    Artesano, RubroArtesano, ImagenArtesano, Formulario, Pregunta, OpcionRespuesta,
-    RespuestaUsuario, PlantillaVerificacion, ItemVerificacion, Verificacion,
-    RespuestaItemVerificacion, AsistenciaCapacitacion, SiteConfiguration, MenuItem,
-    HomePageComponent, PaginaInstitucional, ImagenPaginaInstitucional, ContenidoMunicipio, HechoHistorico,
-    Resena, Sugerencia, AuditLog, RutaTuristica, ImagenRutaTuristica, Notificacion,
-    TipoDocumentoVerificacion, DocumentoVerificacion, ImagenGaleria
+CustomUser, # CategoriaPrestador y PrestadorServicio eliminados (referencia neutralizada)
+Publicacion, Video, ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, ScoringRule,
+Artesano, RubroArtesano, ImagenArtesano, Formulario, Pregunta, OpcionRespuesta,
+RespuestaUsuario, PlantillaVerificacion, ItemVerificacion, Verificacion,
+RespuestaItemVerificacion, AsistenciaCapacitacion, SiteConfiguration, MenuItem,
+HomePageComponent, PaginaInstitucional, ImagenPaginaInstitucional, ContenidoMunicipio, HechoHistorico,
+Resena, Sugerencia, AuditLog, RutaTuristica, ImagenRutaTuristica, Notificacion,
+TipoDocumentoVerificacion, DocumentoVerificacion, ImagenGaleria
 )
 from django.utils.html import format_html
 

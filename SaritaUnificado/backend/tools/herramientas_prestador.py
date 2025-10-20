@@ -9,7 +9,7 @@
 #     DocumentoVerificacion
 # )
 # from apps.turismo.models import Hotel
-# from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 # from django.db import IntegrityError
 # from django.utils.text import slugify
 # import os

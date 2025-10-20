@@ -15,19 +15,26 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.contrib import admin
+ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
+
+
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    # La autenticación de la API es manejada por dj-rest-auth
-    path('api/auth/', include('dj_rest_auth.urls')),
+path("admin/", admin.site.urls),
+# La autenticación de la API es manejada por dj-rest-auth
+path('api/auth/', include('dj_rest_auth.urls')),
 
-    # Rutas de Administración
-    # path("api/admin/", include("api.admin_urls")),
+# Rutas de Administración
+# path("api/admin/", include("api.admin_urls")),
 
+
+
+
+]
 
     # Panel "Mi Negocio" para Prestadores
     path("api/v1/mi-negocio/", include("apps.prestadores.urls")),

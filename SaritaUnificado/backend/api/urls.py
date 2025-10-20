@@ -23,6 +23,7 @@ router.register(r'config/menu-items', views.MenuItemViewSet, basename='menu-item
 router.register(r'contenido-municipio', views.ContenidoMunicipioViewSet, basename='contenido-municipio')
 router.register(r'paginas-institucionales', views.PaginaInstitucionalViewSet, basename='pagina-institucional')
 router.register(r'admin/users', views.UserViewSet, basename='user-admin')
+router.register(r'admin/prestadores', views.AdminPrestadorViewSet, basename='admin-prestador')
 router.register(r'admin/publicaciones', views.AdminPublicacionViewSet, basename='publicacion-admin')
 router.register(r'admin/homepage-components', views.HomePageComponentViewSet, basename='homepage-component')
 router.register(r'admin/audit-logs', views.AuditLogViewSet, basename='audit-log')
@@ -37,8 +38,8 @@ router.register(r'admin/sugerencias', views.SugerenciaAdminViewSet, basename='su
 # --- Módulo de Empleo (Público y para Prestadores) (Movido a la app 'empresa') ---
 
 # --- Módulo de Verificación de Cumplimiento ---
-router.register(r'plantillas-verificacion', views.PlantillaVerificacionViewSet, basename='plantilla-verificacion')
-router.register(r'verificaciones', views.VerificacionViewSet, basename='verificacion')
+# router.register(r'plantillas-verificacion', views.PlantillaVerificacionViewSet, basename='plantilla-verificacion')
+# router.register(r'verificaciones', views.VerificacionViewSet, basename='verificacion')
 router.register(r'documentos-verificacion/tipos', views.TipoDocumentoVerificacionViewSet, basename='tipo-documento-verificacion')
 
 

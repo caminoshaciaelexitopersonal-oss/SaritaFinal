@@ -18,6 +18,7 @@ from itertools import groupby
 from operator import attrgetter
 from django.db.models.functions import TruncDay
 from django.db.models import Count
+from apps.prestadores.models import CategoriaPrestador
 from .models import (
     CustomUser,
     ImagenGaleria,
@@ -107,12 +108,12 @@ from .serializers import (
     OpcionRespuestaSerializer,
     RespuestaUsuarioSerializer,
     RespuestaUsuarioCreateSerializer,
-    PlantillaVerificacionListSerializer,
-    PlantillaVerificacionDetailSerializer,
-    VerificacionListSerializer,
-    VerificacionDetailSerializer,
-    IniciarVerificacionSerializer,
-    GuardarVerificacionSerializer,
+    # PlantillaVerificacionListSerializer,
+    # PlantillaVerificacionDetailSerializer,
+    # VerificacionListSerializer,
+    # VerificacionDetailSerializer,
+    # IniciarVerificacionSerializer,
+    # GuardarVerificacionSerializer,
     CapacitacionDetailSerializer,
     RegistrarAsistenciaSerializer,
 )
@@ -401,6 +402,9 @@ class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
 
 from django.db.models import Q
 
+from apps.prestadores.models import Perfil
+from .serializers import AdminPrestadorSerializer
+
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = AdminUserSerializer
     permission_classes = [IsAdminOrFuncionarioForUserManagement]
@@ -419,6 +423,11 @@ class UserViewSet(viewsets.ModelViewSet):
         return CustomUser.objects.filter(
             Q(role__in=allowed_roles_to_view) | Q(pk=user.pk)
         )
+
+class AdminPrestadorViewSet(viewsets.ModelViewSet):
+    queryset = Perfil.objects.all()
+    serializer_class = AdminPrestadorSerializer
+    permission_classes = [IsAdminOrFuncionario]
 
 class AdminPublicacionViewSet(viewsets.ModelViewSet):
     queryset = Publicacion.objects.all()
@@ -472,15 +481,15 @@ class AdminArtesanoViewSet(viewsets.ModelViewSet):
     serializer_class = AdminArtesanoDetailSerializer
     permission_classes = [IsAdminOrFuncionario]
 
-class PlantillaVerificacionViewSet(viewsets.ModelViewSet):
-    queryset = PlantillaVerificacion.objects.all()
-    serializer_class = PlantillaVerificacionListSerializer
-    permission_classes = [IsAdminOrFuncionario]
+# class PlantillaVerificacionViewSet(viewsets.ModelViewSet):
+#     queryset = PlantillaVerificacion.objects.all()
+#     serializer_class = PlantillaVerificacionListSerializer
+#     permission_classes = [IsAdminOrFuncionario]
 
-class VerificacionViewSet(viewsets.ModelViewSet):
-    queryset = Verificacion.objects.all()
-    serializer_class = VerificacionListSerializer
-    permission_classes = [IsAuthenticated]
+# class VerificacionViewSet(viewsets.ModelViewSet):
+#     queryset = Verificacion.objects.all()
+#     serializer_class = VerificacionListSerializer
+#     permission_classes = [IsAuthenticated]
 
 class PreguntaViewSet(viewsets.ModelViewSet):
     queryset = Pregunta.objects.all()
@@ -607,54 +616,43 @@ class GaleriaListView(generics.ListAPIView):
     queryset = ImagenGaleria.objects.all() # Placeholder
     serializer_class = GaleriaItemSerializer
     permission_classes = [AllowAny]
-
-# from agents.corps.turismo_coronel import get_turismo_coronel_graph
-
-# class AgentChatView(views.APIView):
-#     permission_classes = [AllowAny] # El agente está diseñado para manejar usuarios invitados
-
-#     async def post(self, request, *args, **kwargs):
-#         user_message = request.data.get('message', '')
-#         if not user_message:
-#             return Response({'error': 'No se proporcionó ningún mensaje.'}, status=status.HTTP_400_BAD_REQUEST)
-
-#         # Obtener el historial de la conversación de la sesión, o inicializarlo si no existe.
-#         conversation_history = request.session.get('conversation_history', [])
-
-#         try:
-#             agent = get_turismo_coronel_graph()
-
-#             # Preparar el diccionario de entrada para el agente, incluyendo el contexto.
-#             agent_input = {
-#                 "general_order": user_message,
-#                 "app_context": {
-#                     "user": request.user,
-#                     "entity": getattr(request, 'entity', None) # Pasar la entidad del middleware
-#                 },
-#                 "conversation_history": conversation_history
-#             }
-
-#             # Invocar al agente de forma asíncrona.
-#             final_state = await agent.ainvoke(agent_input)
-
-#             # Extraer el informe final y el historial actualizado del estado de respuesta.
-#             response_message = final_state.get('final_report', 'No se pudo generar una respuesta.')
-
-#             # Guardar el historial actualizado en la sesión para el próximo turno.
-#             request.session['conversation_history'] = final_state.get('conversation_history', [])
-
-#             return Response({'reply': response_message})
-#         except Exception as e:
-#             # Es una buena práctica registrar la excepción para la depuración.
-#             import logging
-#             logging.error(f"Error en AgentChatView: {e}", exc_info=True)
-#             return Response({'error': 'Ocurrió un error interno al procesar su solicitud.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+from agents.corps.turismo_coronel import get_turismo_coronel_graph
+class AgentChatView(views.APIView):
+permission_classes = [AllowAny] # El agente está diseñado para manejar usuarios invitados
+async def post(self, request, *args, **kwargs):
+user_message = request.data.get('message', '')
+if not user_message:
+return Response({'error': 'No se proporcionó ningún mensaje.'}, status=status.HTTP_400_BAD_REQUEST)
+# Obtener el historial de la conversación de la sesión, o inicializarlo si no existe.
+conversation_history = request.session.get('conversation_history', [])
+try:
+agent = get_turismo_coronel_graph()
+# Preparar el diccionario de entrada para el agente, incluyendo el contexto.
+agent_input = {
+"general_order": user_message,
+"app_context": {
+"user": request.user,
+"entity": getattr(request, 'entity', None) # Pasar la entidad del middleware
+},
+"conversation_history": conversation_history
+}
+# Invocar al agente de forma asíncrona.
+final_state = await agent.ainvoke(agent_input)
+# Extraer el informe final y el historial actualizado del estado de respuesta.
+response_message = final_state.get('final_report', 'No se pudo generar una respuesta.')
+# Guardar el historial actualizado en la sesión para el próximo turno.
+request.session['conversation_history'] = final_state.get('conversation_history', [])
+return Response({'reply': response_message})
+except Exception as e:
+# Es una buena práctica registrar la excepción para la depuración.
+import logging
+logging.error(f"Error en AgentChatView: {e}", exc_info=True)
+return Response({'error': 'Ocurrió un error interno al procesar su solicitud.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class AgentTaskStatusView(generics.RetrieveAPIView):
-    queryset = AgentTask.objects.all()
-    serializer_class = AgentTaskSerializer
-    permission_classes = [IsAuthenticated]
-
+queryset = AgentTask.objects.all()
+serializer_class = AgentTaskSerializer
+permission_classes = [IsAuthenticated]
 class AnalyticsDataView(views.APIView):
     permission_classes = [IsAdminOrFuncionario]
     def get(self, request, *args, **kwargs):
