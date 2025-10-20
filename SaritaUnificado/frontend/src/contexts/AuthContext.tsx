@@ -209,7 +209,7 @@ useEffect(() => {
   const login = async (identifier: string, password: string) => {
     try {
       const payload = {
-        username: identifier,
+        email: identifier,
         password,
       };
       const response = await api.post('/auth/login/', payload);

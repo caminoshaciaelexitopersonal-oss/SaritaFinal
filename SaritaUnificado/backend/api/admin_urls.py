@@ -10,7 +10,6 @@ router.register(r'menu-items', views.MenuItemViewSet, basename='admin-menu-items
 router.register(r'homepage-components', views.HomePageComponentViewSet, basename='admin-homepage-components')
 router.register(r'audit-logs', views.AuditLogViewSet, basename='admin-audit-logs')
 router.register(r'sugerencias', views.SugerenciaAdminViewSet, basename='admin-sugerencias')
-router.register(r'prestadores', views.AdminPrestadorViewSet, basename='admin-prestadores')
 router.register(r'artesanos', views.AdminArtesanoViewSet, basename='admin-artesanos')
 
 urlpatterns = [

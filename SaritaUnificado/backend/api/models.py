@@ -170,80 +170,7 @@ class UserLLMConfig(models.Model):
         verbose_name = "Configuración LLM de Usuario"
         verbose_name_plural = "Configuraciones LLM de Usuarios"
 
-
-class CategoriaPrestador(models.Model):
-    nombre = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True, help_text="Versión del nombre amigable para URLs")
-    def __str__(self):
-        return self.nombre
-    class Meta:
-        verbose_name = "Categoría de Prestador"
-        verbose_name_plural = "Categorías de Prestadores"
-
-
-class PrestadorServicio(models.Model):
-    usuario = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="perfil_prestador")
-    entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='prestadores', null=True, blank=True)
-    categoria = models.ForeignKey(CategoriaPrestador, on_delete=models.SET_NULL, null=True, related_name="prestadores")
-    nombre_negocio = models.CharField(max_length=200)
-    descripcion = models.TextField(blank=True, null=True)
-    foto_principal = models.ImageField(upload_to=prestador_directory_path, blank=True, null=True, help_text="Una foto representativa del negocio o servicio.")
-    telefono = models.CharField(max_length=20, blank=True, null=True)
-    email_contacto = models.EmailField(max_length=254, blank=True, null=True)
-    red_social_facebook = models.URLField(blank=True, null=True)
-    red_social_instagram = models.URLField(blank=True, null=True)
-    red_social_tiktok = models.URLField(blank=True, null=True)
-    red_social_whatsapp = models.CharField(max_length=20, blank=True, null=True, help_text="Número de WhatsApp con código de país")
-
-    # --- Campos de Ubicación Estructurados ---
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Departamento"))
-    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Municipio"))
-    direccion = models.CharField(_("Dirección"), max_length=255, blank=True, null=True)
-    latitud = models.FloatField(_("Latitud"), blank=True, null=True)
-    longitud = models.FloatField(_("Longitud"), blank=True, null=True)
-
-    promociones_ofertas = models.TextField(blank=True, null=True, help_text="Detalles de promociones, menús, paquetes, etc.")
-    aprobado = models.BooleanField(default=False, help_text="El administrador debe aprobar este perfil para que sea visible.")
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now=True)
-
-    # --- Scoring Fields ---
-    puntuacion_verificacion = models.PositiveIntegerField(default=0, help_text="Puntaje acumulado de verificaciones de cumplimiento.")
-    puntuacion_capacitacion = models.PositiveIntegerField(default=0, help_text="Puntaje acumulado por asistencia a capacitaciones.")
-    puntuacion_reseñas = models.PositiveIntegerField(default=0, help_text="Puntaje acumulado por reseñas de turistas.")
-    puntuacion_formularios = models.PositiveIntegerField(default=0, help_text="Puntaje por completar formularios de caracterización.")
-    puntuacion_total = models.PositiveIntegerField(default=0, db_index=True, help_text="Puntaje total para posicionamiento. Se calcula automáticamente.")
-
-    def __str__(self):
-        return self.nombre_negocio
-
-    def recalcular_puntuacion_total(self):
-        """
-        Calcula la puntuación total y guarda todos los campos de puntuación
-        parciales y el total en una sola operación de base de datos.
-        """
-        self.puntuacion_total = (
-            getattr(self, 'puntuacion_verificacion', 0) +
-            getattr(self, 'puntuacion_capacitacion', 0) +
-            getattr(self, 'puntuacion_reseñas', 0) +
-            getattr(self, 'puntuacion_formularios', 0)
-        )
-        self.save(update_fields=[
-            'puntuacion_verificacion',
-            'puntuacion_capacitacion',
-            'puntuacion_reseñas',
-            'puntuacion_formularios',
-            'puntuacion_total'
-        ])
-
-    class Meta:
-        verbose_name = "Prestador de Servicio"
-        verbose_name_plural = "Prestadores de Servicios"
-
-
-
-
-
+# El modelo PrestadorServicio ha sido eliminado y su lógica movida a la app 'prestadores'
 
 class RubroArtesano(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
@@ -364,11 +291,11 @@ class ImagenArtesano(models.Model):
 
 
 class ImagenGaleria(models.Model):
-    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name="galeria_imagenes")
+    # prestador = models.ForeignKey('prestadores.Perfil', on_delete=models.CASCADE, related_name="galeria_imagenes")
     imagen = models.ImageField(upload_to=galeria_directory_path)
     alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad")
-    def __str__(self):
-        return f"Imagen de {self.prestador.nombre_negocio}"
+    # def __str__(self):
+    #     return f"Imagen de {self.prestador.nombre_comercial}"
 
 
 class Publicacion(models.Model):
@@ -504,7 +431,7 @@ class RutaTuristica(models.Model):
     imagen_principal = models.ImageField(_("Imagen Principal"), upload_to=ruta_turistica_directory_path, help_text="Imagen principal que se mostrará en listados y cabeceras.")
 
     atractivos = models.ManyToManyField(AtractivoTuristico, related_name="rutas", blank=True, verbose_name=_("Atractivos en la Ruta"))
-    prestadores = models.ManyToManyField(PrestadorServicio, related_name="rutas", blank=True, verbose_name=_("Prestadores en la Ruta"))
+    # prestadores = models.ManyToManyField('prestadores.Perfil', related_name="rutas", blank=True, verbose_name=_("Prestadores en la Ruta"))
     municipalities = models.ManyToManyField(Municipality, related_name="rutas_turisticas", blank=True, verbose_name=_("Municipios que abarca la Ruta"))
 
     es_publicado = models.BooleanField(_("Publicado"), default=False, help_text="Marcar para que la ruta sea visible en el sitio web público.")
@@ -950,7 +877,7 @@ class PlantillaVerificacion(models.Model):
     nombre = models.CharField(max_length=255, unique=True, help_text="Nombre único para la plantilla, ej: 'Verificación para Guías de Turismo'")
     descripcion = models.TextField(blank=True, help_text="Descripción detallada de la finalidad de esta plantilla.")
     categoria_prestador = models.ForeignKey(
-        CategoriaPrestador,
+        'prestadores.CategoriaPrestador',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -995,7 +922,7 @@ class Verificacion(models.Model):
     Contiene la información general de la visita y el resultado.
     """
     plantilla_usada = models.ForeignKey(PlantillaVerificacion, on_delete=models.PROTECT, related_name='verificaciones_realizadas')
-    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name='verificaciones_recibidas')
+    # prestador = models.ForeignKey('prestadores.Perfil', on_delete=models.CASCADE, related_name='verificaciones_recibidas')
     funcionario_evaluador = models.ForeignKey(
         CustomUser,
         on_delete=models.SET_NULL,
@@ -1011,7 +938,7 @@ class Verificacion(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Verificación a {self.prestador.nombre_negocio} el {self.fecha_visita}"
+        return f"Verificación a {self.prestador.nombre_comercial} el {self.fecha_visita}"
 
     class Meta:
         verbose_name = "Verificación de Cumplimiento"
@@ -1028,7 +955,7 @@ class RespuestaItemVerificacion(models.Model):
     justificacion = models.CharField(max_length=255, blank=True, help_text="Justificación o número de soporte si es necesario (ej. N° de resolución).")
 
     def __str__(self):
-        return f"Respuesta a '{self.item_original.texto_requisito}' para {self.verificacion.prestador.nombre_negocio}"
+        return f"Respuesta a '{self.item_original.texto_requisito}' para {self.verificacion.prestador.nombre_comercial}"
 
     class Meta:
         verbose_name = "Respuesta a Ítem de Verificación"
@@ -1144,7 +1071,7 @@ class DocumentoVerificacion(models.Model):
         RECHAZADO = "RECHAZADO", _("Rechazado")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    prestador = models.ForeignKey(PrestadorServicio, on_delete=models.CASCADE, related_name="documentos_verificacion")
+    # prestador = models.ForeignKey('prestadores.Perfil', on_delete=models.CASCADE, related_name="documentos_verificacion")
     tipo_documento = models.ForeignKey(TipoDocumentoVerificacion, on_delete=models.PROTECT, related_name="documentos")
     archivo = models.FileField(_("Archivo"), upload_to=documento_verificacion_path)
     estado = models.CharField(_("Estado de Verificación"), max_length=20, choices=Estado.choices, default=Estado.PENDIENTE, db_index=True)
@@ -1162,7 +1089,7 @@ class DocumentoVerificacion(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.tipo_documento.nombre} para {self.prestador.nombre_negocio} ({self.get_estado_display()})"
+        return f"{self.tipo_documento.nombre} para {self.prestador.nombre_comercial} ({self.get_estado_display()})"
 
     class Meta:
         verbose_name = "Documento de Verificación"

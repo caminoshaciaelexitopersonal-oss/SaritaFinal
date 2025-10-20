@@ -3,164 +3,156 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import api from '@/services/api';
-import axios from 'axios';
+import useMiNegocioApi from '../../app/dashboard/prestador/mi-negocio/ganchos/useMiNegocioApi';
 import FormField from '@/components/ui/FormField';
 import { Button } from '@/components/ui/Button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import { FiEdit, FiTrash2 } from 'react-icons/fi';
 
-interface ClienteFormData {
-  pais_origen: string;
-  cantidad: number;
-  fecha_registro: string;
+interface Cliente {
+  id: number;
+  nombre: string;
+  email: string;
+  telefono: string;
+  notas: string;
 }
 
-interface ClienteResumen {
-    pais_origen: string;
-    total_clientes: number;
-}
-
-interface ApiCliente {
-    id: number;
-    pais_origen: string;
-    cantidad: number;
-    fecha_registro: string;
-}
-
-interface ApiClientesResponse {
-    results: ApiCliente[];
-}
-
-const paises = [
-    "Colombia", "Estados Unidos", "España", "México", "Argentina", "Chile",
-    "Perú", "Ecuador", "Venezuela", "Brasil", "Canadá", "Francia", "Alemania",
-    "Italia", "Reino Unido", "Otro"
-];
+type ClienteFormData = Omit<Cliente, 'id'>;
 
 const ClienteManager = () => {
-  const [resumen, setResumen] = useState<ClienteResumen[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [editingCliente, setEditingCliente] = useState<Cliente | null>(null);
+  const { request, loading: apiLoading } = useMiNegocioApi();
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm<ClienteFormData>({
-      defaultValues: {
-          cantidad: 1,
-          fecha_registro: new Date().toISOString().split('T')[0], // Hoy por defecto
-      }
-  });
+  } = useForm<ClienteFormData>();
 
-  const fetchResumen = useCallback(async () => {
-    setIsLoading(true);
+  const fetchClientes = useCallback(async () => {
     try {
-      const response = await api.get<ApiClientesResponse>('/prestador/clientes/');
-
-      const groupedData = response.data.results.reduce((acc: Record<string, number>, curr) => {
-          acc[curr.pais_origen] = (acc[curr.pais_origen] || 0) + curr.cantidad;
-          return acc;
-      }, {});
-
-      const resumenData: ClienteResumen[] = Object.entries(groupedData).map(([pais, total]) => ({
-        pais_origen: pais,
-        total_clientes: total,
-      }));
-
-      setResumen(resumenData);
+      const response = await request('/clientes/');
+      setClientes(response.results || response);
     } catch (error) {
-      toast.error('Error al cargar el resumen de clientes.');
-    } finally {
-      setIsLoading(false);
+      toast.error('Error al cargar los clientes.');
     }
-  }, []);
+  }, [request]);
 
   useEffect(() => {
-    fetchResumen();
-  }, [fetchResumen]);
+    fetchClientes();
+  }, [fetchClientes]);
 
   const onSubmit: SubmitHandler<ClienteFormData> = async (data) => {
     try {
-      await api.post('/prestador/clientes/', data);
-      toast.success('Clientes registrados con éxito.');
+      if (editingCliente) {
+        await request(`/clientes/${editingCliente.id}/`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        });
+        toast.success('Cliente actualizado con éxito.');
+      } else {
+        await request('/clientes/', {
+          method: 'POST',
+          body: JSON.stringify(data),
+        });
+        toast.success('Cliente creado con éxito.');
+      }
       reset();
-      fetchResumen();
+      setEditingCliente(null);
+      fetchClientes();
     } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-            toast.error(error.response.data?.detail || 'Ocurrió un error al registrar los clientes.');
-        } else {
-            toast.error('Ocurrió un error al registrar los clientes.');
-        }
+      toast.error('Ocurrió un error al guardar el cliente.');
     }
+  };
+
+  const handleEdit = (cliente: Cliente) => {
+    setEditingCliente(cliente);
+    Object.keys(cliente).forEach((key) => {
+      setValue(key as keyof ClienteFormData, cliente[key as keyof Cliente]);
+    });
+  };
+
+  const handleDelete = async (id: number) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar este cliente?')) {
+      try {
+        await request(`/clientes/${id}/`, { method: 'DELETE' });
+        toast.success('Cliente eliminado con éxito.');
+        fetchClientes();
+      } catch (error) {
+        toast.error('Error al eliminar el cliente.');
+      }
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCliente(null);
+    reset();
   };
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Registro de Clientes por Nacionalidad</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-1">
-          <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-lg shadow-md space-y-4">
-            <h2 className="text-xl font-semibold mb-4">Registrar Nuevos Clientes</h2>
-            <div>
-              <label htmlFor="pais_origen" className="block text-sm font-medium text-gray-700">País de Origen</label>
-              <select
-                id="pais_origen"
-                {...register('pais_origen', { required: 'Este campo es obligatorio.' })}
-                className="w-full px-3 py-2 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="">Seleccione un país</option>
-                {paises.map(p => <option key={p} value={p}>{p}</option>)}
-              </select>
-              {errors.pais_origen && <p className="mt-1 text-xs text-red-600">{errors.pais_origen.message}</p>}
-            </div>
-            <FormField
-              name="cantidad"
-              label="Cantidad de Clientes"
-              type="number"
-              register={register}
-              errors={errors}
-              required
-            />
-            <FormField
-              name="fecha_registro"
-              label="Fecha del Registro"
-              type="date"
-              register={register}
-              errors={errors}
-              required
-            />
-            <Button type="submit" disabled={isSubmitting} className="w-full">
-              {isSubmitting ? 'Registrando...' : 'Registrar'}
-            </Button>
-          </form>
-        </div>
+      <h1 className="text-2xl font-bold mb-6">Gestión de Clientes (CRM)</h1>
 
-        <div className="md:col-span-2">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold mb-4">Resumen de Clientes</h2>
-                {isLoading ? (
-                <p>Cargando resumen...</p>
-                ) : (
-                <Table>
-                    <TableHeader>
-                    <TableRow>
-                        <TableHead>País de Origen</TableHead>
-                        <TableHead className="text-right">Total Clientes</TableHead>
-                    </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                    {resumen.map((item) => (
-                        <TableRow key={item.pais_origen}>
-                        <TableCell className="font-medium">{item.pais_origen}</TableCell>
-                        <TableCell className="text-right">{item.total_clientes}</TableCell>
-                        </TableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-                )}
-            </div>
-        </div>
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 className="text-xl font-semibold mb-4">{editingCliente ? 'Editar Cliente' : 'Crear Nuevo Cliente'}</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <FormField name="nombre" label="Nombre Completo" register={register} errors={errors} required />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField name="email" label="Correo Electrónico" type="email" register={register} errors={errors} />
+            <FormField name="telefono" label="Teléfono" register={register} errors={errors} />
+          </div>
+          <FormField name="notas" label="Notas Adicionales" type="textarea" register={register} errors={errors} />
+          <div className="flex space-x-4">
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Guardando...' : (editingCliente ? 'Actualizar Cliente' : 'Crear Cliente')}
+            </Button>
+            {editingCliente && (
+              <Button variant="outline" onClick={handleCancelEdit}>
+                Cancelar Edición
+              </Button>
+            )}
+          </div>
+        </form>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold mb-4">Listado de Clientes</h2>
+        {apiLoading ? (
+          <p>Cargando clientes...</p>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Teléfono</TableHead>
+                <TableHead>Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {clientes.map((cliente) => (
+                <TableRow key={cliente.id}>
+                  <TableCell className="font-medium">{cliente.nombre}</TableCell>
+                  <TableCell>{cliente.email}</TableCell>
+                  <TableCell>{cliente.telefono}</TableCell>
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      <Button variant="icon" onClick={() => handleEdit(cliente)}>
+                        <FiEdit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="icon" color="danger" onClick={() => handleDelete(cliente.id)}>
+                        <FiTrash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </div>
     </div>
   );

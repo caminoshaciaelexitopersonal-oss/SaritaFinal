@@ -7,7 +7,7 @@ from .models import (
     HechoHistorico,
     CategoriaPrestador,
     RubroArtesano,
-    PrestadorServicio,
+    # PrestadorServicio eliminado
     Artesano,
     Video,
     ConsejoConsultivo
@@ -41,9 +41,7 @@ class CategoriaPrestadorTranslationOptions(TranslationOptions):
 class RubroArtesanoTranslationOptions(TranslationOptions):
     fields = ('nombre',)
 
-@register(PrestadorServicio)
-class PrestadorServicioTranslationOptions(TranslationOptions):
-    fields = ('descripcion', 'promociones_ofertas')
+# Eliminada la clase PrestadorServicioTranslationOptions
 
 @register(Artesano)
 class ArtesanoTranslationOptions(TranslationOptions):

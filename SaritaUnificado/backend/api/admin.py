@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import (
-    CustomUser, CategoriaPrestador, PrestadorServicio, ImagenGaleria,
+    CustomUser, CategoriaPrestador, # PrestadorServicio eliminado
     Publicacion, Video, ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, ScoringRule,
     Artesano, RubroArtesano, ImagenArtesano, Formulario, Pregunta, OpcionRespuesta,
     RespuestaUsuario, PlantillaVerificacion, ItemVerificacion, Verificacion,
     RespuestaItemVerificacion, AsistenciaCapacitacion, SiteConfiguration, MenuItem,
     HomePageComponent, PaginaInstitucional, ImagenPaginaInstitucional, ContenidoMunicipio, HechoHistorico,
     Resena, Sugerencia, AuditLog, RutaTuristica, ImagenRutaTuristica, Notificacion,
-    TipoDocumentoVerificacion, DocumentoVerificacion
+    TipoDocumentoVerificacion, DocumentoVerificacion, ImagenGaleria
 )
 from django.utils.html import format_html
 
@@ -49,7 +49,7 @@ class RutaTuristicaAdmin(admin.ModelAdmin):
     list_filter = ('es_publicado',)
     search_fields = ('nombre', 'descripcion')
     prepopulated_fields = {'slug': ('nombre',)}
-    filter_horizontal = ('atractivos', 'prestadores')
+    filter_horizontal = ('atractivos',)
     fieldsets = (
         (None, {
             'fields': ('nombre', 'slug', 'es_publicado')
@@ -58,7 +58,7 @@ class RutaTuristicaAdmin(admin.ModelAdmin):
             'fields': ('descripcion', 'imagen_principal')
         }),
         ('Asociaciones', {
-            'fields': ('atractivos', 'prestadores')
+            'fields': ('atractivos',)
         }),
     )
 
@@ -88,7 +88,7 @@ class HomePageComponentAdmin(admin.ModelAdmin):
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     fieldsets = UserAdmin.fieldsets + (
-        ("Roles y Permisos", {"fields": ("role", "openai_api_key", "google_api_key")}),
+        ("Roles y Permisos", {"fields": ("role",)}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
         ("Roles y Permisos", {"fields": ("role",)}),
@@ -98,37 +98,7 @@ class CustomUserAdmin(UserAdmin):
 
 # -- DIRECTORIOS: PRESTADORES Y ARTESANOS --
 
-class ImagenGaleriaInline(admin.TabularInline):
-    model = ImagenGaleria
-    extra = 1
-    readonly_fields = ('image_preview',)
-    def image_preview(self, obj):
-        return format_html('<img src="{}" width="150" />', obj.imagen.url)
-
-class DocumentoVerificacionInline(admin.TabularInline):
-    model = DocumentoVerificacion
-    extra = 1
-    fields = ('tipo_documento', 'archivo', 'estado', 'observaciones')
-    readonly_fields = ('fecha_subida', 'fecha_verificacion', 'verificado_por')
-    autocomplete_fields = ['tipo_documento']
-
-@admin.register(PrestadorServicio)
-class PrestadorServicioAdmin(admin.ModelAdmin):
-    list_display = ('nombre_negocio', 'usuario', 'categoria', 'aprobado', 'puntuacion_total', 'fecha_creacion')
-    list_filter = ('aprobado', 'categoria')
-    search_fields = ('nombre_negocio', 'usuario__username', 'descripcion')
-    readonly_fields = ('fecha_creacion', 'fecha_actualizacion', 'puntuacion_total')
-    inlines = [ImagenGaleriaInline, DocumentoVerificacionInline]
-    actions = ['aprobar_prestadores']
-
-    def aprobar_prestadores(self, request, queryset):
-        queryset.update(aprobado=True)
-    aprobar_prestadores.short_description = "Aprobar perfiles de prestadores seleccionados"
-
-@admin.register(CategoriaPrestador)
-class CategoriaPrestadorAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'slug')
-    prepopulated_fields = {'slug': ('nombre',)}
+# Eliminadas las clases relacionadas con PrestadorServicio
 
 class ImagenArtesanoInline(admin.TabularInline):
     model = ImagenArtesano
@@ -309,9 +279,9 @@ class RespuestaItemVerificacionInline(admin.TabularInline):
 
 @admin.register(Verificacion)
 class VerificacionAdmin(admin.ModelAdmin):
-    list_display = ('prestador', 'plantilla_usada', 'funcionario_evaluador', 'fecha_visita', 'puntaje_obtenido')
+    list_display = ('plantilla_usada', 'funcionario_evaluador', 'fecha_visita', 'puntaje_obtenido')
     list_filter = ('plantilla_usada', 'funcionario_evaluador', 'fecha_visita')
-    search_fields = ('prestador__nombre_negocio', 'funcionario_evaluador__username')
+    search_fields = ('funcionario_evaluador__username',)
     inlines = [RespuestaItemVerificacionInline]
     readonly_fields = ('puntaje_obtenido',)
 
@@ -374,11 +344,11 @@ class TipoDocumentoVerificacionAdmin(admin.ModelAdmin):
 
 @admin.register(DocumentoVerificacion)
 class DocumentoVerificacionAdmin(admin.ModelAdmin):
-    list_display = ('prestador', 'tipo_documento', 'estado', 'fecha_subida', 'verificado_por')
+    list_display = ('tipo_documento', 'estado', 'fecha_subida', 'verificado_por')
     list_filter = ('estado', 'tipo_documento', 'fecha_verificacion')
-    search_fields = ('prestador__nombre_negocio', 'prestador__usuario__username', 'tipo_documento__nombre')
-    readonly_fields = ('prestador', 'tipo_documento', 'archivo')
-    autocomplete_fields = ['prestador', 'tipo_documento', 'verificado_por']
+    search_fields = ('tipo_documento__nombre',)
+    readonly_fields = ('tipo_documento', 'archivo',)
+    autocomplete_fields = ['tipo_documento', 'verificado_por']
 
     def has_add_permission(self, request):
         # La creación se debe hacer via el inline en el prestador

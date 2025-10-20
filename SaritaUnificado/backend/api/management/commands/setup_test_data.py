@@ -2,9 +2,10 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils.text import slugify
 from api.models import (
-    CustomUser, CategoriaPrestador, PrestadorServicio, RubroArtesano, Artesano,
+    CustomUser, RubroArtesano, Artesano,
     RutaTuristica, MenuItem, AtractivoTuristico, Publicacion, ContenidoMunicipio
 )
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.models import CategoriaPrestador
 
 class Command(BaseCommand):
     help = 'Crea o actualiza datos de prueba para el sistema, incluyendo todo el contenido de la plataforma. Es idempotente.'
