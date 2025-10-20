@@ -1,76 +1,118 @@
-# Backend de Sarita Unificado
+Escritura
+Backend de Sarita Unificado
+Estado Actual del Proyecto
 
-Este directorio contiene el backend de la aplicación Sarita Unificado, desarrollado con Django y Django REST Framework.
 
-## Estado Actual
 
-El proyecto se encuentra en un estado estable y funcional después de una fase intensiva de auditoría y corrección de errores. Los servidores de backend y frontend arrancan correctamente, y la comunicación entre ellos a través de la API REST está verificada.
+El backend de Sarita Unificado ha pasado por una fase intensiva de auditoría y estabilización para corregir errores críticos que impedían su arranque y asegurar un entorno funcional desde el cual continuar el desarrollo. Actualmente se encuentra en un estado estable y funcional, con comunicación verificada entre el backend (Django REST Framework) y el frontend (Next.js).
 
-### Decisiones de Arquitectura Clave:
+Decisiones de Arquitectura y Estabilización
+1. Autenticación y Seguridad
+Se configuró dj-rest-auth como sistema principal de autenticación.
+El login se realiza exclusivamente mediante el campo email; el username está deshabilitado para autenticación.
+En settings.py se estableció:
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
-1.  **Autenticación de API con `dj-rest-auth`:**
-    *   Se ha configurado `dj-rest-auth` para manejar la autenticación de la API, utilizando `TokenAuthentication`.
-    *   El login se realiza exclusivamente a través del campo `email`, con `username` deshabilitado para este propósito. Esto se configuró en `settings.py` con `ACCOUNT_AUTHENTICATION_METHOD = 'email'`.
-    *   Las URLs de autenticación de la API se encuentran bajo el prefijo `/api/auth/`, utilizando `dj_rest_auth.urls`.
+Las rutas de autenticación están disponibles bajo el prefijo /api/auth/, gestionadas por dj_rest_auth.urls.
+2. Neutralización Temporal de Aplicaciones Incompletas
 
-2.  **Neutralización y Restauración de Módulos:**
-    *   Las aplicaciones `empresa`, `restaurante` y `turismo` fueron temporalmente "neutralizadas" (código comentado y migraciones eliminadas) para resolver dependencias circulares y errores de arranque.
-    *   Tras estabilizar el núcleo, estas aplicaciones han sido restauradas a `INSTALLED_APPS` para permitir su desarrollo futuro, aunque su contenido sigue siendo un esqueleto.
 
-## Cómo Ejecutar el Proyecto
 
-### Prerrequisitos
+Durante la auditoría se detectaron módulos con código incompleto:
 
-*   Python 3.12+
-*   Pip (gestor de paquetes de Python)
+Aplicaciones afectadas: empresa, restaurante, turismo.
+Acciones tomadas:
+Creación de models.py vacíos para resolver dependencias circulares.
+Comentado de código en views.py, serializers.py y urls.py que impedía el arranque.
+Remoción temporal de estas apps de INSTALLED_APPS durante la fase de estabilización.
+Posteriormente, fueron reincorporadas a INSTALLED_APPS para permitir su desarrollo progresivo, aunque permanecen en estado esquelético.
+3. Corrección de Dependencias Cruzadas
 
-### Instalación
 
-1.  **Navegar al directorio del backend:**
-    ```bash
-    cd SaritaUnificado/backend
-    ```
 
-2.  **Crear y activar un entorno virtual:**
-    ```bash
-    python -m venv venv
-    source venv/bin/activate
-    ```
+Se resolvieron múltiples ImportError derivados de cambios previos de ubicación de modelos, como CategoriaPrestador, que fueron movidos entre aplicaciones sin actualizar las importaciones correspondientes.
 
-3.  **Instalar las dependencias:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+4. Actualización de Configuración Global
+Se modernizó la configuración de django-allauth para login y registro por correo.
+Se creó el directorio static faltante.
+Se limpiaron y reestructuraron los urls.py principales para evitar conflictos entre módulos.
+Cómo Ejecutar el Backend
+Prerrequisitos
+Python 3.12 o superior
+Pip (gestor de paquetes de Python)
+Instalación
 
-### Configuración de la Base de Datos
+Navegar al directorio del backend:
 
-1.  **Eliminar la base de datos anterior (si existe):**
-    ```bash
-    rm db.sqlite3
-    ```
+cd SaritaUnificado/backend
 
-2.  **Crear las migraciones:**
-    ```bash
-    python manage.py makemigrations
-    ```
 
-3.  **Aplicar las migraciones:**
-    ```bash
-    python manage.py migrate
-    ```
+Crear y activar un entorno virtual:
 
-### Cargar Datos de Prueba
+python -m venv venv
+source venv/bin/activate
 
-Para poblar la base de datos con usuarios y contenido de prueba, ejecute el siguiente comando:
-```bash
+
+Instalar las dependencias:
+
+pip install -r requirements.txt
+
+Configuración de la Base de Datos
+
+Eliminar la base de datos anterior (si existe):
+
+rm db.sqlite3
+
+
+Crear las migraciones:
+
+python manage.py makemigrations
+
+
+Aplicar las migraciones:
+
+python manage.py migrate
+
+Cargar Datos de Prueba (Opcional)
+
+
+
+Para poblar la base de datos con usuarios y contenido de prueba:
+
 python manage.py setup_test_data
-```
-Esto creará, entre otros, el usuario `prestador_test@example.com` con la contraseña `password123`.
 
-### Ejecutar el Servidor
 
-```bash
+
+
+Esto creará, entre otros, el usuario:
+
+Email: prestador_test@example.com
+Contraseña: password123
+
+Crear un Superusuario (Opcional)
+python manage.py createsuperuser
+
+Ejecutar el Servidor de Desarrollo
 python manage.py runserver
-```
 
-El servidor estará disponible en `http://localhost:8000`.
+
+
+
+El servidor estará disponible en:
+👉 http://localhost:8000
+
+Próximos Pasos
+Completar la auditoría funcional de endpoints activos.
+Avanzar con la refactorización lógica y visual del panel “Mi Negocio”.
+Reactivar y completar las aplicaciones neutralizadas:
+empresa
+restaurante
+turismo
+Implementar las fases de reportes y trazabilidad de auditorías en la rama feature-audit-and-report.
+Estado General
+
+
+
+El proyecto se considera estable, auditable y listo para desarrollo continuo bajo una estructura modular consolidada.
+
+

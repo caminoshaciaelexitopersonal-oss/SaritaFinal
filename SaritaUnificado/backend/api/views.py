@@ -616,54 +616,43 @@ class GaleriaListView(generics.ListAPIView):
     queryset = ImagenGaleria.objects.all() # Placeholder
     serializer_class = GaleriaItemSerializer
     permission_classes = [AllowAny]
-
-# from agents.corps.turismo_coronel import get_turismo_coronel_graph
-
+from agents.corps.turismo_coronel import get_turismo_coronel_graph
 class AgentChatView(views.APIView):
-    permission_classes = [AllowAny] # El agente está diseñado para manejar usuarios invitados
-
-    async def post(self, request, *args, **kwargs):
-        # user_message = request.data.get('message', '')
-        # if not user_message:
-        #     return Response({'error': 'No se proporcionó ningún mensaje.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # # Obtener el historial de la conversación de la sesión, o inicializarlo si no existe.
-        # conversation_history = request.session.get('conversation_history', [])
-
-        # try:
-        #     agent = get_turismo_coronel_graph()
-
-        #     # Preparar el diccionario de entrada para el agente, incluyendo el contexto.
-        #     agent_input = {
-        #         "general_order": user_message,
-        #         "app_context": {
-        #             "user": request.user,
-        #             "entity": getattr(request, 'entity', None) # Pasar la entidad del middleware
-        #         },
-        #         "conversation_history": conversation_history
-        #     }
-
-        #     # Invocar al agente de forma asíncrona.
-        #     final_state = await agent.ainvoke(agent_input)
-
-        #     # Extraer el informe final y el historial actualizado del estado de respuesta.
-        #     response_message = final_state.get('final_report', 'No se pudo generar una respuesta.')
-
-        #     # Guardar el historial actualizado en la sesión para el próximo turno.
-        #     request.session['conversation_history'] = final_state.get('conversation_history', [])
-
-        #     return Response({'reply': response_message})
-        # except Exception as e:
-        #     # Es una buena práctica registrar la excepción para la depuración.
-        #     import logging
-        #     logging.error(f"Error en AgentChatView: {e}", exc_info=True)
-        return Response({'error': 'Funcionalidad de agente IA temporalmente desactivada.'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+permission_classes = [AllowAny] # El agente está diseñado para manejar usuarios invitados
+async def post(self, request, *args, **kwargs):
+user_message = request.data.get('message', '')
+if not user_message:
+return Response({'error': 'No se proporcionó ningún mensaje.'}, status=status.HTTP_400_BAD_REQUEST)
+# Obtener el historial de la conversación de la sesión, o inicializarlo si no existe.
+conversation_history = request.session.get('conversation_history', [])
+try:
+agent = get_turismo_coronel_graph()
+# Preparar el diccionario de entrada para el agente, incluyendo el contexto.
+agent_input = {
+"general_order": user_message,
+"app_context": {
+"user": request.user,
+"entity": getattr(request, 'entity', None) # Pasar la entidad del middleware
+},
+"conversation_history": conversation_history
+}
+# Invocar al agente de forma asíncrona.
+final_state = await agent.ainvoke(agent_input)
+# Extraer el informe final y el historial actualizado del estado de respuesta.
+response_message = final_state.get('final_report', 'No se pudo generar una respuesta.')
+# Guardar el historial actualizado en la sesión para el próximo turno.
+request.session['conversation_history'] = final_state.get('conversation_history', [])
+return Response({'reply': response_message})
+except Exception as e:
+# Es una buena práctica registrar la excepción para la depuración.
+import logging
+logging.error(f"Error en AgentChatView: {e}", exc_info=True)
+return Response({'error': 'Ocurrió un error interno al procesar su solicitud.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class AgentTaskStatusView(generics.RetrieveAPIView):
-    queryset = AgentTask.objects.all()
-    serializer_class = AgentTaskSerializer
-    permission_classes = [IsAuthenticated]
-
+queryset = AgentTask.objects.all()
+serializer_class = AgentTaskSerializer
+permission_classes = [IsAuthenticated]
 class AnalyticsDataView(views.APIView):
     permission_classes = [IsAdminOrFuncionario]
     def get(self, request, *args, **kwargs):
