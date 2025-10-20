@@ -1,4 +1,4 @@
-from langchain_core.tools import tool
+# from langchain_core.tools import tool
 from typing import List, Dict
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.models.perfil import Perfil as PrestadorServicio
 
