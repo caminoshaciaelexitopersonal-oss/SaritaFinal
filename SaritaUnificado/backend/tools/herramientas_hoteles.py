@@ -1,7 +1,7 @@
 from langchain_core.tools import tool
 from typing import List, Dict
-from api.models import PrestadorServicio
-from turismo.models import Hotel
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.models.perfil import Perfil as PrestadorServicio
+from apps.turismo.models import Hotel
 from django.core.exceptions import ObjectDoesNotExist
 
 @tool

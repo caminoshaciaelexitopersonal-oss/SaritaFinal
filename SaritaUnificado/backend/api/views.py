@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from dj_rest_auth.registration.views import RegisterView
+# from dj_rest_auth.registration.views import RegisterView
 import asyncio
 import threading
 from django.contrib.contenttypes.models import ContentType
@@ -20,7 +20,6 @@ from django.db.models.functions import TruncDay
 from django.db.models import Count
 from .models import (
     CustomUser,
-    PrestadorServicio,
     ImagenGaleria,
     ImagenArtesano,
     Publicacion,
@@ -62,8 +61,6 @@ from .serializers import (
     PaginaInstitucionalSerializer,
     ScoringRuleSerializer,
     NotificacionSerializer,
-    PrestadorServicioSerializer,
-    PrestadorServicioUpdateSerializer,
     ArtesanoSerializer,
     ArtesanoUpdateSerializer,
     ImagenGaleriaSerializer,
@@ -80,22 +77,11 @@ from .serializers import (
     RutaTuristicaListSerializer,
     RutaTuristicaDetailSerializer,
     LocationSerializer,
-    PrestadorRegisterSerializer,
-    TuristaRegisterSerializer,
-    ArtesanoRegisterSerializer,
-    AdministradorRegisterSerializer,
-    FuncionarioDirectivoRegisterSerializer,
-    FuncionarioProfesionalRegisterSerializer,
     ElementoGuardadoSerializer,
     ElementoGuardadoCreateSerializer,
-    CategoriaPrestadorSerializer,
-    PrestadorServicioPublicListSerializer,
-    PrestadorServicioPublicDetailSerializer,
     RubroArtesanoSerializer,
     ArtesanoPublicListSerializer,
     ArtesanoPublicDetailSerializer,
-    AdminPrestadorListSerializer,
-    AdminPrestadorDetailSerializer,
     AdminArtesanoListSerializer,
     AdminArtesanoDetailSerializer,
     UsuarioListSerializer,
@@ -143,8 +129,8 @@ from .permissions import (
     CanManageAtractivos,
     IsPrestadorOwner
 )
-from turismo.models import Reserva
-from apps.prestadores.mi_negocio.modelos.clientes import Cliente
+from apps.turismo.models import Reserva
+# from apps.prestadores.mi_negocio.modelos.clientes import Cliente
 from .filters import AuditLogFilter
 from .serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
 from .models import Department, Municipality, Entity
@@ -224,28 +210,6 @@ class FormularioViewSet(viewsets.ModelViewSet):
             return self.queryset.filter(es_publico=True)
         return self.queryset
 
-class PrestadorRegisterView(RegisterView):
-    serializer_class = PrestadorRegisterSerializer
-
-class TuristaRegisterView(RegisterView):
-    serializer_class = TuristaRegisterSerializer
-
-class ArtesanoRegisterView(RegisterView):
-    serializer_class = ArtesanoRegisterSerializer
-
-
-class AdministradorRegisterView(RegisterView):
-    serializer_class = AdministradorRegisterSerializer
-
-
-class FuncionarioDirectivoRegisterView(RegisterView):
-    serializer_class = FuncionarioDirectivoRegisterSerializer
-
-
-class FuncionarioProfesionalRegisterView(RegisterView):
-    serializer_class = FuncionarioProfesionalRegisterSerializer
-
-
 class TipoDocumentoVerificacionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet para listar los tipos de documentos que se pueden subir.
@@ -253,62 +217,6 @@ class TipoDocumentoVerificacionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = TipoDocumentoVerificacion.objects.filter(activo=True)
     serializer_class = TipoDocumentoVerificacionSerializer
     permission_classes = [IsAuthenticated] # Disponible para cualquier usuario autenticado
-
-class DocumentoVerificacionViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet para que los prestadores gestionen sus documentos de verificación.
-    """
-    serializer_class = DocumentoVerificacionSerializer
-    parser_classes = [MultiPartParser, FormParser]
-
-    def get_queryset(self):
-        """
-        Los prestadores solo ven sus propios documentos.
-        Los administradores pueden ver documentos de su entidad o todos si son super admins.
-        """
-        user = self.request.user
-        if hasattr(user, 'perfil_prestador'):
-            return DocumentoVerificacion.objects.filter(prestador=user.perfil_prestador)
-
-        if user.is_staff or user.role == CustomUser.Role.ADMIN:
-             return DocumentoVerificacion.objects.all()
-
-        if hasattr(user, 'profile') and user.profile.entity:
-            return DocumentoVerificacion.objects.filter(prestador__entity=user.profile.entity)
-
-        return DocumentoVerificacion.objects.none()
-
-    def perform_create(self, serializer):
-        if not hasattr(self.request.user, 'perfil_prestador'):
-            raise serializers.ValidationError("Solo los prestadores de servicios pueden subir documentos.")
-        serializer.save(prestador=self.request.user.perfil_prestador)
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAdminOrFuncionario])
-    def set_status(self, request, pk=None):
-        documento = self.get_object()
-        new_status = request.data.get('estado')
-
-        if new_status not in DocumentoVerificacion.Estado.values:
-            return Response({'error': 'Estado no válido.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Lógica de permisos para la validación
-        user = request.user
-        can_verify = False
-        if user.is_superuser or user.role == CustomUser.Role.ADMIN:
-            can_verify = True
-        elif hasattr(user, 'profile') and user.profile.entity and documento.prestador.entity == user.profile.entity:
-            can_verify = True
-
-        if not can_verify:
-            return Response({'error': 'No tiene permiso para verificar este documento.'}, status=status.HTTP_403_FORBIDDEN)
-
-        documento.estado = new_status
-        documento.verificado_por = user
-        documento.fecha_verificacion = timezone.now()
-        documento.observaciones = request.data.get('observaciones', documento.observaciones)
-        documento.save()
-
-        return Response(self.get_serializer(documento).data)
 
 class ElementoGuardadoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsTurista]
@@ -345,7 +253,7 @@ class ResenaViewSet(viewsets.ModelViewSet):
             content_type_str = self.request.query_params.get('content_type')
             object_id_str = self.request.query_params.get('object_id')
             if content_type_str and object_id_str:
-                model_map = {'prestadorservicio': PrestadorServicio, 'artesano': Artesano}
+                model_map = {'artesano': Artesano}
                 Model = model_map.get(content_type_str.lower())
                 if Model:
                     try:
@@ -560,23 +468,6 @@ class ScoringRuleViewSet(viewsets.ModelViewSet):
     serializer_class = ScoringRuleSerializer
     permission_classes = [IsAdmin]
 
-from .filters import PrestadorServicioFilter
-
-class AdminPrestadorViewSet(viewsets.ModelViewSet):
-    queryset = PrestadorServicio.objects.all()
-    serializer_class = AdminPrestadorDetailSerializer
-    permission_classes = [IsAdminOrFuncionario]
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_class = PrestadorServicioFilter
-    search_fields = ['nombre_negocio', 'usuario__email']
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAdminOrFuncionario])
-    def approve(self, request, pk=None):
-        prestador = self.get_object()
-        prestador.aprobado = True
-        prestador.save()
-        return Response({'status': 'Prestador aprobado'})
-
 class AdminArtesanoViewSet(viewsets.ModelViewSet):
     queryset = Artesano.objects.all()
     serializer_class = AdminArtesanoDetailSerializer
@@ -614,14 +505,6 @@ class SiteConfigurationView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return SiteConfiguration.load()
 
-class PrestadorProfileView(generics.RetrieveUpdateAPIView):
-    queryset = PrestadorServicio.objects.all()
-    serializer_class = PrestadorServicioSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user.perfil_prestador
-
 class ArtesanoProfileView(generics.RetrieveUpdateAPIView):
     queryset = Artesano.objects.all()
     serializer_class = ArtesanoSerializer
@@ -630,55 +513,12 @@ class ArtesanoProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user.artesano
 
-class PrestadorDashboardAnalyticsView(views.APIView):
-    permission_classes = [IsAuthenticated, IsPrestador]
-
-    def get(self, request, *args, **kwargs):
-        prestador = request.user.perfil_prestador
-
-        # 1. Total de Reservas Confirmadas
-        total_reservas = Reserva.objects.filter(prestador=prestador, estado='CONFIRMADA').count()
-
-        # 2. Total de Clientes
-        total_clientes = Cliente.objects.filter(prestador=prestador).count()
-
-        # 3. Ingresos del último mes
-        today = timezone.now()
-        last_month = today - timedelta(days=30)
-        ingresos_mes = Reserva.objects.filter(
-            prestador=prestador,
-            estado='COMPLETADA',
-            fecha_fin_reserva__gte=last_month
-        ).aggregate(total=models.Sum('monto_total'))['total'] or 0
-
-        # 4. Reservas por estado
-        reservas_por_estado = Reserva.objects.filter(prestador=prestador)\
-            .values('estado').annotate(count=models.Count('id'))
-
-        data = {
-            'summary': {
-                'total_reservas_confirmadas': total_reservas,
-                'total_clientes': total_clientes,
-                'ingresos_ultimo_mes': f"{ingresos_mes:,.2f}",
-            },
-            'reservas_por_estado': list(reservas_por_estado)
-        }
-        return Response(data)
-
 class PrestadorResenaViewSet(viewsets.ModelViewSet):
     """
     Endpoint que permite a un prestador ver y responder a las reseñas de su negocio.
     """
     serializer_class = ResenaSerializer
     permission_classes = [IsAuthenticated, IsPrestador]
-
-    def get_queryset(self):
-        user = self.request.user
-        if hasattr(user, 'perfil_prestador'):
-            prestador = user.perfil_prestador
-            content_type = ContentType.objects.get_for_model(prestador)
-            return Resena.objects.filter(content_type=content_type, object_id=prestador.pk, aprobada=True)
-        return Resena.objects.none()
 
 class PrestadorResenaUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
@@ -690,10 +530,6 @@ class PrestadorResenaUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericView
 
     def get_queryset(self):
         # Asegurarse de que el prestador solo pueda responder a sus propias reseñas
-        user = self.request.user
-        if hasattr(user, 'perfil_prestador'):
-            content_type = ContentType.objects.get_for_model(PrestadorServicio)
-            return Resena.objects.filter(content_type=content_type, object_id=user.perfil_prestador.id)
         return Resena.objects.none()
 
     def partial_update(self, request, *args, **kwargs):
@@ -764,7 +600,7 @@ class VideoListView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
 class LocationListView(generics.ListAPIView):
-    queryset = PrestadorServicio.objects.all() # Placeholder
+    queryset = Artesano.objects.none() # Placeholder
     serializer_class = LocationSerializer
     permission_classes = [AllowAny]
 
@@ -830,21 +666,6 @@ class AdminUsuarioListView(generics.ListAPIView):
     serializer_class = UsuarioListSerializer
     permission_classes = [IsAdminOrFuncionario]
 
-class CategoriaPrestadorListView(generics.ListAPIView):
-    queryset = CategoriaPrestador.objects.all()
-    serializer_class = CategoriaPrestadorSerializer
-    permission_classes = [AllowAny]
-
-class PrestadorServicioPublicListView(generics.ListAPIView):
-    queryset = PrestadorServicio.objects.all()
-    serializer_class = PrestadorServicioPublicListSerializer
-    permission_classes = [AllowAny]
-
-class PrestadorServicioPublicDetailView(generics.RetrieveAPIView):
-    queryset = PrestadorServicio.objects.all()
-    serializer_class = PrestadorServicioPublicDetailSerializer
-    permission_classes = [AllowAny]
-
 class RubroArtesanoListView(generics.ListAPIView):
     queryset = RubroArtesano.objects.all()
     serializer_class = RubroArtesanoSerializer
@@ -889,9 +710,6 @@ class ImagenGaleriaDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        if hasattr(user, 'perfil_prestador'):
-            return ImagenGaleria.objects.filter(prestador=user.perfil_prestador)
         return ImagenGaleria.objects.none()
 
 class PlaceholderView(views.APIView):

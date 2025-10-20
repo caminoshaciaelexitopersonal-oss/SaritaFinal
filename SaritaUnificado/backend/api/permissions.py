@@ -2,6 +2,31 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 from .models import CustomUser, CategoriaPrestador
 
 
+class IsOwnerOrReadOnly(BasePermission):
+    """
+    Permiso personalizado para permitir solo a los propietarios de un objeto editarlo.
+    Asume que el modelo tiene un campo 'user' o 'usuario'.
+    """
+    def has_object_permission(self, request, view, obj):
+        # Los permisos de lectura están permitidos para cualquier solicitud,
+        # por lo que siempre permitiremos GET, HEAD u OPTIONS.
+        if request.method in SAFE_METHODS:
+            return True
+
+        # El permiso de escritura solo se concede al propietario del objeto.
+        # Intentamos buscar un campo 'user' o 'usuario'.
+        if hasattr(obj, 'user'):
+            return obj.user == request.user
+        if hasattr(obj, 'usuario'):
+            return obj.usuario == request.user
+
+        # Si el objeto es el propio usuario
+        if isinstance(obj, CustomUser):
+            return obj == request.user
+
+        return False
+
+
 class IsTurista(BasePermission):
     """
     Permiso personalizado para permitir el acceso solo a usuarios con el rol de TURISTA.

@@ -10,7 +10,6 @@ from api.models import (
     Verificacion,
     RespuestaItemVerificacion,
     AsistenciaCapacitacion,
-    PrestadorServicio,
     Publicacion
 )
 from django.core.exceptions import ObjectDoesNotExist
@@ -93,24 +92,6 @@ def agregar_item_a_plantilla(plantilla_id: int, texto_requisito: str, puntaje: i
         return {"status": "error", "message": f"Error al agregar el ítem: {e}"}
 
 @tool
-def iniciar_verificacion_prestador(plantilla_id: int, prestador_id: int, funcionario_id: int, fecha_visita: str) -> Dict:
-    """
-    (SOLDADO DE CAMPO) Inicia una nueva verificación de cumplimiento para un prestador de servicios.
-    `fecha_visita` debe estar en formato YYYY-MM-DD.
-    """
-    print(f"--- 💥 SOLDADO (Funcionario): ¡ACCIÓN! Iniciando verificación para prestador ID {prestador_id}. ---")
-    try:
-        verificacion = Verificacion.objects.create(
-            plantilla_usada_id=plantilla_id,
-            prestador_id=prestador_id,
-            funcionario_evaluador_id=funcionario_id,
-            fecha_visita=fecha_visita
-        )
-        return {"status": "success", "verificacion_id": verificacion.id, "message": "Verificación iniciada."}
-    except Exception as e:
-        return {"status": "error", "message": f"Error al iniciar la verificación: {e}"}
-
-@tool
 def registrar_respuesta_item_verificacion(verificacion_id: int, item_id: int, cumple: bool, justificacion: str = "") -> Dict:
     """
     (SOLDADO DE CAMPO) Registra la respuesta (si cumple o no) para un ítem específico de una verificación en curso.
@@ -166,7 +147,6 @@ def get_funcionario_soldiers() -> List:
         gestionar_contenido_municipio,
         crear_plantilla_verificacion,
         agregar_item_a_plantilla,
-        iniciar_verificacion_prestador,
         registrar_respuesta_item_verificacion,
         registrar_asistencia_capacitacion,
     ]

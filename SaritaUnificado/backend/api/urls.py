@@ -27,7 +27,6 @@ router.register(r'admin/publicaciones', views.AdminPublicacionViewSet, basename=
 router.register(r'admin/homepage-components', views.HomePageComponentViewSet, basename='homepage-component')
 router.register(r'admin/audit-logs', views.AuditLogViewSet, basename='audit-log')
 router.register(r'admin/scoring-rules', views.ScoringRuleViewSet, basename='scoring-rule')
-router.register(r'admin/prestadores', views.AdminPrestadorViewSet, basename='adminprestador')
 router.register(r'admin/artesanos', views.AdminArtesanoViewSet, basename='adminartesano')
 router.register(r'resenas', views.ResenaViewSet, basename='resena')
 router.register(r'sugerencias', views.SugerenciaViewSet, basename='sugerencia')
@@ -41,7 +40,6 @@ router.register(r'admin/sugerencias', views.SugerenciaAdminViewSet, basename='su
 router.register(r'plantillas-verificacion', views.PlantillaVerificacionViewSet, basename='plantilla-verificacion')
 router.register(r'verificaciones', views.VerificacionViewSet, basename='verificacion')
 router.register(r'documentos-verificacion/tipos', views.TipoDocumentoVerificacionViewSet, basename='tipo-documento-verificacion')
-router.register(r'documentos-verificacion', views.DocumentoVerificacionViewSet, basename='documento-verificacion')
 
 
 # --- Formularios Dinámicos (con rutas anidadas) ---
@@ -65,17 +63,11 @@ urlpatterns = [
 
     # --- Vistas Privadas (Requieren Autenticación) ---
     path('admin/my-entity/', views.EntityAdminView.as_view(), name='entity-admin'),
-    path('profile/prestador/', views.PrestadorProfileView.as_view(), name='prestador-profile'),
-    path('profile/prestador/', include(prestador_resenas_router.urls)),
-    path('profile/prestador/valoraciones/', views.PrestadorResenaViewSet.as_view({'get': 'list'}), name='prestador-resenas'),
-    path('profile/prestador/analytics/', views.PrestadorDashboardAnalyticsView.as_view(), name='prestador-analytics'),
     path('profile/artesano/', views.ArtesanoProfileView.as_view(), name='artesano-profile'),
     path('profile/feedback/', views.FeedbackProveedorView.as_view(), name='proveedor-feedback'),
     path('config/my-llm/', views.UserLLMConfigView.as_view(), name='user-llm-config'),
 
     # --- Rutas para galerías y documentos ---
-    path('galeria/prestador/', views.ImagenGaleriaView.as_view(), name='prestador-galeria-list-create'),
-    path('galeria/prestador/<int:pk>/', views.ImagenGaleriaDetailView.as_view(), name='prestador-galeria-detail'),
     path('galeria/artesano/', views.ImagenArtesanoView.as_view(), name='artesano-galeria-list-create'),
     path('galeria/artesano/<int:pk>/', views.ImagenArtesanoDetailView.as_view(), name='artesano-galeria-detail'),
 
@@ -108,9 +100,6 @@ path(
 
     # --- Vistas Públicas ---
     path('sugerencias/felicitaciones-publicas/', views.FelicitacionesPublicasView.as_view(), name='felicitaciones-publicas-list'),
-    path('prestadores/categorias/', views.CategoriaPrestadorListView.as_view(), name='prestador-categorias-list'),
-    path('prestadores/', views.PrestadorServicioPublicListView.as_view(), name='prestador-public-list'),
-    path('prestadores/<int:pk>/', views.PrestadorServicioPublicDetailView.as_view(), name='prestador-public-detail'),
     path('artesanos/rubros/', views.RubroArtesanoListView.as_view(), name='artesano-rubros-list'),
     path('artesanos/', views.ArtesanoPublicListView.as_view(), name='artesano-public-list'),
     path('artesanos/<int:pk>/', views.ArtesanoPublicDetailView.as_view(), name='artesano-public-detail'),

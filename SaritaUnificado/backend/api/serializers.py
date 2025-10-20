@@ -1,7 +1,7 @@
-from dj_rest_auth.registration.serializers import RegisterSerializer
+# from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 from .models import (
-    CustomUser, PrestadorServicio, ImagenGaleria, ImagenArtesano, Publicacion,
+    CustomUser, ImagenGaleria, ImagenArtesano, Publicacion,
     ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, RutaTuristica, ImagenRutaTuristica, ElementoGuardado, ContentType,
     CategoriaPrestador, Video, ContenidoMunicipio, AgentTask, SiteConfiguration, MenuItem,
     HomePageComponent, AuditLog, PaginaInstitucional, ImagenPaginaInstitucional, HechoHistorico, Artesano, RubroArtesano,
@@ -22,8 +22,8 @@ from .models import (
     Profile
 )
 from django.db import transaction
-from apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
-from turismo.serializers import RutaTuristicaSerializer
+# from apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
+from apps.turismo.serializers import RutaTuristicaSerializer
 
 class EntitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -366,38 +366,6 @@ class DocumentoVerificacionSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'estado', 'observaciones', 'fecha_subida', 'fecha_verificacion', 'archivo_url']
 
 
-class CategoriaPrestadorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CategoriaPrestador
-        fields = ['id', 'nombre', 'slug']
-
-
-class PrestadorServicioPublicListSerializer(serializers.ModelSerializer):
-    categoria_nombre = serializers.SerializerMethodField()
-    imagen_principal = serializers.ImageField(source='foto_principal', read_only=True)
-
-    class Meta:
-        model = PrestadorServicio
-        fields = [
-            'id',
-            'nombre_negocio',
-            'categoria_nombre',
-            'imagen_principal',
-            'descripcion',
-            'telefono',
-            'email_contacto',
-            'red_social_facebook',
-            'red_social_instagram',
-            'red_social_tiktok',
-            'red_social_whatsapp',
-            'latitud',
-            'longitud',
-        ]
-
-    def get_categoria_nombre(self, obj):
-        return obj.categoria.nombre if obj.categoria else None
-
-
 class RubroArtesanoSerializer(serializers.ModelSerializer):
     class Meta:
         model = RubroArtesano
@@ -460,27 +428,9 @@ class RutaTuristicaListSerializer(serializers.ModelSerializer):
 class RutaTuristicaDetailSerializer(RutaTuristicaListSerializer):
     imagenes = ImagenRutaTuristicaSerializer(many=True, read_only=True)
     atractivos = AtractivoTuristicoListSerializer(many=True, read_only=True)
-    prestadores = PrestadorServicioPublicListSerializer(many=True, read_only=True)
 
     class Meta(RutaTuristicaListSerializer.Meta):
-        fields = RutaTuristicaListSerializer.Meta.fields + ['imagenes', 'atractivos', 'prestadores', 'municipalities']
-
-
-class PrestadorServicioPublicDetailSerializer(serializers.ModelSerializer):
-    categoria = CategoriaPrestadorSerializer(read_only=True)
-    galeria_imagenes = ImagenGaleriaSerializer(many=True, read_only=True)
-    productos = ProductoSerializer(many=True, read_only=True)
-    # paquetes_ofrecidos = PaqueteTuristicoSerializer(many=True, read_only=True) # Comentado hasta que se defina el serializer
-    rutas = RutaTuristicaSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = PrestadorServicio
-        fields = [
-            'id', 'nombre_negocio', 'descripcion', 'telefono', 'email_contacto',
-            'red_social_facebook', 'red_social_instagram', 'red_social_tiktok', 'red_social_whatsapp',
-            'latitud', 'longitud', 'promociones_ofertas', 'categoria', 'galeria_imagenes',
-            'productos', 'rutas' # 'paquetes_ofrecidos' eliminado temporalmente
-        ]
+        fields = RutaTuristicaListSerializer.Meta.fields + ['imagenes', 'atractivos', 'municipalities']
 
 
 class ArtesanoUpdateSerializer(serializers.ModelSerializer):
@@ -513,212 +463,132 @@ class ArtesanoSerializer(serializers.ModelSerializer):
         ]
 
 
-class PrestadorServicioUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PrestadorServicio
-        fields = [
-            'nombre_negocio', 'descripcion', 'telefono', 'email_contacto',
-            'red_social_facebook', 'red_social_instagram', 'red_social_tiktok', 'red_social_whatsapp',
-            'direccion', 'latitud', 'longitud',
-            'promociones_ofertas',
-        ]
+# class LocationRegisterSerializer(RegisterSerializer):
+#     department_id = serializers.PrimaryKeyRelatedField(
+#         queryset=Department.objects.all(), source='department', required=True, write_only=True
+#     )
+#     municipality_id = serializers.PrimaryKeyRelatedField(
+#         queryset=Municipality.objects.all(), source='municipality', required=True, write_only=True
+#     )
+#     origen = serializers.ChoiceField(choices=CustomUser.Origen.choices, required=False)
+#     pais_origen = serializers.CharField(max_length=100, required=False, allow_blank=True)
+
+#     def validate(self, data):
+#         data = super().validate(data)
+#         department = data.get('department')
+#         municipality = data.get('municipality')
+
+#         if department and municipality:
+#             if municipality.department != department:
+#                 raise serializers.ValidationError({
+#                     "municipality_id": "Este municipio no pertenece al departamento seleccionado."
+#                 })
+#         return data
+
+#     def create_profile(self, user):
+#         department = self.validated_data.get('department')
+#         municipality = self.validated_data.get('municipality')
+#         Profile.objects.create(user=user, department=department, municipality=municipality)
 
 
-class PrestadorServicioSerializer(serializers.ModelSerializer):
-    categoria_nombre = serializers.CharField(source='categoria.nombre', read_only=True)
-    galeria_imagenes = ImagenGaleriaSerializer(many=True, read_only=True)
-    documentos_verificacion = DocumentoVerificacionSerializer(many=True, read_only=True)
-    class Meta:
-        model = PrestadorServicio
-        fields = [
-            'id',
-            'nombre_negocio', 'descripcion', 'telefono', 'email_contacto',
-            'red_social_facebook', 'red_social_instagram', 'red_social_whatsapp',
-            'latitud', 'longitud', 'promociones_ofertas',
-            'categoria_nombre', 'aprobado',
-            'galeria_imagenes', 'documentos_verificacion',
-            'puntuacion_verificacion', 'puntuacion_capacitacion',
-            'puntuacion_reseñas', 'puntuacion_formularios', 'puntuacion_total'
-        ]
-        read_only_fields = [
-            'id', 'aprobado', 'categoria_nombre', 'galeria_imagenes', 'documentos_verificacion',
-            'puntuacion_verificacion', 'puntuacion_capacitacion',
-            'puntuacion_reseñas', 'puntuacion_formularios', 'puntuacion_total',
-            'department', 'municipality'
-        ]
-class LocationRegisterSerializer(RegisterSerializer):
-    department_id = serializers.PrimaryKeyRelatedField(
-        queryset=Department.objects.all(), source='department', required=True, write_only=True
-    )
-    municipality_id = serializers.PrimaryKeyRelatedField(
-        queryset=Municipality.objects.all(), source='municipality', required=True, write_only=True
-    )
-    origen = serializers.ChoiceField(choices=CustomUser.Origen.choices, required=False)
-    pais_origen = serializers.CharField(max_length=100, required=False, allow_blank=True)
-
-    def validate(self, data):
-        data = super().validate(data)
-        department = data.get('department')
-        municipality = data.get('municipality')
-
-        if department and municipality:
-            if municipality.department != department:
-                raise serializers.ValidationError({
-                    "municipality_id": "Este municipio no pertenece al departamento seleccionado."
-                })
-        return data
-
-    def create_profile(self, user):
-        department = self.validated_data.get('department')
-        municipality = self.validated_data.get('municipality')
-        Profile.objects.create(user=user, department=department, municipality=municipality)
+# class TuristaRegisterSerializer(LocationRegisterSerializer):
+#     @transaction.atomic
+#     def save(self, request):
+#         user = super().save(request)
+#         user.role = CustomUser.Role.TURISTA
+#         user.origen = self.validated_data.get('origen', None)
+#         user.pais_origen = self.validated_data.get('pais_origen', None)
+#         user.save()
+#         self.create_profile(user)
+#         return user
 
 
-class TuristaRegisterSerializer(LocationRegisterSerializer):
-    @transaction.atomic
-    def save(self, request):
-        user = super().save(request)
-        user.role = CustomUser.Role.TURISTA
-        user.origen = self.validated_data.get('origen', None)
-        user.pais_origen = self.validated_data.get('pais_origen', None)
-        user.save()
-        self.create_profile(user)
-        return user
+# class ArtesanoRegisterSerializer(LocationRegisterSerializer):
+#     entity_id = serializers.PrimaryKeyRelatedField(
+#         queryset=Entity.objects.all(), source='entity', required=False, allow_null=True, write_only=True
+#     )
+#     nombre_taller = serializers.CharField(max_length=255, required=True)
+#     rubro_id = serializers.PrimaryKeyRelatedField(
+#         queryset=RubroArtesano.objects.all(), source='rubro', required=True, write_only=True
+#     )
+
+#     @transaction.atomic
+#     def save(self, request):
+#         user = super().save(request)
+#         user.role = CustomUser.Role.ARTESANO
+#         user.save()
+
+#         self.create_profile(user)
+
+#         entity = self.validated_data.get('entity')
+#         nombre_taller = self.validated_data.get('nombre_taller')
+#         rubro = self.validated_data.get('rubro')
+
+#         Artesano.objects.create(
+#             usuario=user,
+#             nombre_artesano=user.get_full_name() or user.username,
+#             nombre_taller=nombre_taller,
+#             rubro=rubro,
+#             entity=entity
+#         )
+#         return user
 
 
-class PrestadorRegisterSerializer(LocationRegisterSerializer):
-    entity_id = serializers.PrimaryKeyRelatedField(
-        queryset=Entity.objects.all(), source='entity', required=False, allow_null=True, write_only=True
-    )
-    nombre_negocio = serializers.CharField(max_length=255, required=True)
-    categoria_id = serializers.PrimaryKeyRelatedField(
-        queryset=CategoriaPrestador.objects.all(), source='categoria', required=True, write_only=True
-    )
+# class AdministradorRegisterSerializer(RegisterSerializer):
+#     cargo = serializers.CharField(max_length=150, required=True)
+#     dependencia_asignada = serializers.CharField(max_length=150, required=True)
+#     nivel_acceso = serializers.CharField(max_length=150, required=True)
 
-    @transaction.atomic
-    def save(self, request):
-        user = super().save(request)
-        user.role = CustomUser.Role.PRESTADOR
-        user.save()
-
-        self.create_profile(user)
-
-        entity = self.validated_data.get('entity')
-        nombre_negocio = self.validated_data.get('nombre_negocio')
-        categoria = self.validated_data.get('categoria')
-
-        PrestadorServicio.objects.create(
-            usuario=user,
-            nombre_negocio=nombre_negocio,
-            categoria=categoria,
-            entity=entity
-        )
-        return user
+#     @transaction.atomic
+#     def save(self, request):
+#         user = super().save(request)
+#         user.role = CustomUser.Role.ADMIN
+#         user.save()
+#         PerfilAdministrador.objects.create(
+#             usuario=user,
+#             cargo=self.validated_data.get('cargo', ''),
+#             dependencia_asignada=self.validated_data.get('dependencia_asignada', ''),
+#             nivel_acceso=self.validated_data.get('nivel_acceso', '')
+#         )
+#         return user
 
 
-class ArtesanoRegisterSerializer(LocationRegisterSerializer):
-    entity_id = serializers.PrimaryKeyRelatedField(
-        queryset=Entity.objects.all(), source='entity', required=False, allow_null=True, write_only=True
-    )
-    nombre_taller = serializers.CharField(max_length=255, required=True)
-    rubro_id = serializers.PrimaryKeyRelatedField(
-        queryset=RubroArtesano.objects.all(), source='rubro', required=True, write_only=True
-    )
+# class FuncionarioDirectivoRegisterSerializer(RegisterSerializer):
+#     dependencia = serializers.CharField(max_length=150, required=True)
+#     nivel_direccion = serializers.CharField(max_length=150, required=True)
+#     area_funcional = serializers.CharField(max_length=150, required=True)
 
-    @transaction.atomic
-    def save(self, request):
-        user = super().save(request)
-        user.role = CustomUser.Role.ARTESANO
-        user.save()
-
-        self.create_profile(user)
-
-        entity = self.validated_data.get('entity')
-        nombre_taller = self.validated_data.get('nombre_taller')
-        rubro = self.validated_data.get('rubro')
-
-        Artesano.objects.create(
-            usuario=user,
-            nombre_artesano=user.get_full_name() or user.username,
-            nombre_taller=nombre_taller,
-            rubro=rubro,
-            entity=entity
-        )
-        return user
+#     @transaction.atomic
+#     def save(self, request):
+#         user = super().save(request)
+#         user.role = CustomUser.Role.FUNCIONARIO_DIRECTIVO
+#         user.save()
+#         PerfilFuncionarioDirectivo.objects.create(
+#             usuario=user,
+#             dependencia=self.validated_data.get('dependencia', ''),
+#             nivel_direccion=self.validated_data.get('nivel_direccion', ''),
+#             area_funcional=self.validated_data.get('area_funcional', '')
+#         )
+#         return user
 
 
-class AdministradorRegisterSerializer(RegisterSerializer):
-    cargo = serializers.CharField(max_length=150, required=True)
-    dependencia_asignada = serializers.CharField(max_length=150, required=True)
-    nivel_acceso = serializers.CharField(max_length=150, required=True)
+# class FuncionarioProfesionalRegisterSerializer(RegisterSerializer):
+#     dependencia = serializers.CharField(max_length=150, required=True)
+#     profesion = serializers.CharField(max_length=150, required=True)
+#     area_asignada = serializers.CharField(max_length=150, required=True)
 
-    @transaction.atomic
-    def save(self, request):
-        user = super().save(request)
-        user.role = CustomUser.Role.ADMIN
-        user.save()
-        PerfilAdministrador.objects.create(
-            usuario=user,
-            cargo=self.validated_data.get('cargo', ''),
-            dependencia_asignada=self.validated_data.get('dependencia_asignada', ''),
-            nivel_acceso=self.validated_data.get('nivel_acceso', '')
-        )
-        return user
-
-
-class FuncionarioDirectivoRegisterSerializer(RegisterSerializer):
-    dependencia = serializers.CharField(max_length=150, required=True)
-    nivel_direccion = serializers.CharField(max_length=150, required=True)
-    area_funcional = serializers.CharField(max_length=150, required=True)
-
-    @transaction.atomic
-    def save(self, request):
-        user = super().save(request)
-        user.role = CustomUser.Role.FUNCIONARIO_DIRECTIVO
-        user.save()
-        PerfilFuncionarioDirectivo.objects.create(
-            usuario=user,
-            dependencia=self.validated_data.get('dependencia', ''),
-            nivel_direccion=self.validated_data.get('nivel_direccion', ''),
-            area_funcional=self.validated_data.get('area_funcional', '')
-        )
-        return user
-
-
-class FuncionarioProfesionalRegisterSerializer(RegisterSerializer):
-    dependencia = serializers.CharField(max_length=150, required=True)
-    profesion = serializers.CharField(max_length=150, required=True)
-    area_asignada = serializers.CharField(max_length=150, required=True)
-
-    @transaction.atomic
-    def save(self, request):
-        user = super().save(request)
-        user.role = CustomUser.Role.FUNCIONARIO_PROFESIONAL
-        user.save()
-        PerfilFuncionarioProfesional.objects.create(
-            usuario=user,
-            dependencia=self.validated_data.get('dependencia', ''),
-            profesion=self.validated_data.get('profesion', ''),
-            area_asignada=self.validated_data.get('area_asignada', '')
-        )
-        return user
-
-
-class AgenciaEventosRegisterSerializer(RegisterSerializer):
-    def save(self, request):
-        user = super().save(request)
-        user.role = CustomUser.Role.AGENCIA_EVENTOS
-        user.save()
-        categoria_eventos, _ = CategoriaPrestador.objects.get_or_create(
-            slug='agencias-de-eventos',
-            defaults={'nombre': 'Agencias de Eventos'}
-        )
-        PrestadorServicio.objects.create(
-            usuario=user,
-            nombre_negocio=f"Agencia de {user.username}",
-            categoria=categoria_eventos
-        )
-        return user
+#     @transaction.atomic
+#     def save(self, request):
+#         user = super().save(request)
+#         user.role = CustomUser.Role.FUNCIONARIO_PROFESIONAL
+#         user.save()
+#         PerfilFuncionarioProfesional.objects.create(
+#             usuario=user,
+#             dependencia=self.validated_data.get('dependencia', ''),
+#             profesion=self.validated_data.get('profesion', ''),
+#             area_asignada=self.validated_data.get('area_asignada', '')
+#         )
+#         return user
 
 
 class ElementoGuardadoSerializer(serializers.ModelSerializer):
@@ -778,25 +648,6 @@ class AdminArtesanoDetailSerializer(serializers.ModelSerializer):
     galeria_imagenes = ImagenArtesanoSerializer(many=True, read_only=True)
     class Meta:
         model = Artesano
-        fields = '__all__'
-
-class AdminPrestadorListSerializer(serializers.ModelSerializer):
-    categoria_nombre = serializers.CharField(source='categoria.nombre', read_only=True)
-    usuario_email = serializers.CharField(source='usuario.email', read_only=True)
-    class Meta:
-        model = PrestadorServicio
-        fields = [
-            'id', 'nombre_negocio', 'telefono', 'email_contacto',
-            'aprobado', 'fecha_creacion', 'categoria_nombre', 'usuario_email'
-        ]
-
-class AdminPrestadorDetailSerializer(serializers.ModelSerializer):
-    usuario = CustomUserSerializer(read_only=True)
-    categoria = CategoriaPrestadorSerializer(read_only=True)
-    galeria_imagenes = ImagenGaleriaSerializer(many=True, read_only=True)
-    documentos_verificacion = DocumentoVerificacionSerializer(many=True, read_only=True)
-    class Meta:
-        model = PrestadorServicio
         fields = '__all__'
 
 
@@ -907,7 +758,6 @@ class ResenaCreateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         content_type_str = data['content_type'].lower()
         model_map = {
-            'prestadorservicio': PrestadorServicio,
             'artesano': Artesano,
         }
         Model = model_map.get(content_type_str)
@@ -997,7 +847,6 @@ class VerificacionDetailSerializer(serializers.ModelSerializer):
 
 class IniciarVerificacionSerializer(serializers.Serializer):
     plantilla_id = serializers.PrimaryKeyRelatedField(queryset=PlantillaVerificacion.objects.all())
-    prestador_id = serializers.PrimaryKeyRelatedField(queryset=PrestadorServicio.objects.all())
 
 
 class GuardarVerificacionSerializer(serializers.ModelSerializer):
@@ -1158,8 +1007,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class CustomUserDetailSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
-    perfil_prestador = PrestadorServicioSerializer(read_only=True)
 
     class Meta:
         model = CustomUser
-        fields = ('pk', 'username', 'email', 'role', 'profile', 'perfil_prestador')
+        fields = ('pk', 'username', 'email', 'role', 'profile')
