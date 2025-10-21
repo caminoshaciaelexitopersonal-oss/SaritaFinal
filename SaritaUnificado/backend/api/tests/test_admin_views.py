@@ -77,7 +77,8 @@ class AdminAPITests(APITestCase):
         self.prestador_profile.refresh_from_db()
         self.assertEqual(self.prestador_profile.estado, 'Pendiente')
 
-    def test_filter_prestadores_by_pending(self):
+    def test_filter_prestadores_by_estado(self):
+        # Crear un segundo perfil con estado 'Activo'
         approved_user = CustomUser.objects.create_user(
             username='prestador_aprobado', email='aprobado@example.com', password='password123', role=CustomUser.Role.PRESTADOR
         )
@@ -85,12 +86,19 @@ class AdminAPITests(APITestCase):
             usuario=approved_user, nombre_comercial="Restaurante Sol", estado='Activo', categoria=self.categoria
         )
 
-        url = reverse('adminprestador-list') + '?estado=Pendiente'
-        response = self.client.get(url, **self._get_auth_header(self.admin_token))
+        # Probar el filtro para 'Activo'
+        url_activos = reverse('adminprestador-list') + '?estado=Activo'
+        response_activos = self.client.get(url_activos, **self._get_auth_header(self.admin_token))
+        self.assertEqual(response_activos.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response_activos.data['results']), 1)
+        self.assertEqual(response_activos.data['results'][0]['nombre_comercial'], "Restaurante Sol")
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 1)
-        self.assertEqual(response.data['results'][0]['nombre_comercial'], "Hotel La Roca")
+        # Probar el filtro para 'Pendiente'
+        url_pendientes = reverse('adminprestador-list') + '?estado=Pendiente'
+        response_pendientes = self.client.get(url_pendientes, **self._get_auth_header(self.admin_token))
+        self.assertEqual(response_pendientes.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response_pendientes.data['results']), 1)
+        self.assertEqual(response_pendientes.data['results'][0]['nombre_comercial'], "Hotel La Roca")
 
 
 class ContenidoMunicipioAPITests(APITestCase):

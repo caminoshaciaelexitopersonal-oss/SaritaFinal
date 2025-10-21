@@ -12,13 +12,14 @@ def actualizar_puntuacion_por_resena(sender, instance, created, **kwargs):
     Actualiza la puntuación de un Prestador o Artesano cuando se crea
     o actualiza una reseña aprobada.
     """
-    from .models import PrestadorServicio, Artesano, ScoringRule, Resena
+    from apps.prestadores.models import Perfil
+    from .models import Artesano, ScoringRule, Resena
 
     if not instance.aprobada:
         return
 
     content_object = instance.content_object
-    if not isinstance(content_object, (PrestadorServicio, Artesano)):
+    if not isinstance(content_object, (Perfil, Artesano)):
         return
 
     try:

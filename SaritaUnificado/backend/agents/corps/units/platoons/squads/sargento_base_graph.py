@@ -1,12 +1,12 @@
 from typing import TypedDict, Any, List, Annotated
 import operator
-# from langchain_core.messages import BaseMessage, HumanMessage
+from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import StateGraph, END, START
 from langgraph.prebuilt import ToolNode
 from langchain_openai import ChatOpenAI
 # Potencialmente para otros proveedores:
 # from langchain_google_genai import ChatGoogleGenerativeAI
-# from langchain_core.tools import BaseTool
+from langchain_core.tools import BaseTool
 from api.models import CustomUser
 
 
