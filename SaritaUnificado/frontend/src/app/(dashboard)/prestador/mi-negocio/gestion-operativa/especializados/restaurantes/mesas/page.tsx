@@ -1,80 +1,80 @@
 'use client';
 import React, { useState } from 'react';
-
-// Mock data - Reemplazar con llamadas a la API
-const mockMesas = [
-    { id: 1, numero: '1', capacidad: 4, ubicacion: 'Salón Principal', disponible: true },
-    { id: 2, numero: '2', capacidad: 2, ubicacion: 'Ventanal', disponible: false },
-    { id: 3, numero: 'T1', capacidad: 6, ubicacion: 'Terraza', disponible: true },
-    { id: 4, numero: 'Barra 1', capacidad: 1, ubicacion: 'Barra', disponible: true },
-];
-
-const mockReservas = [
-    { id: 1, mesa: '2', cliente: 'Carlos Mendoza', fecha: '2023-10-27 20:00', personas: 2 },
-    { id: 2, mesa: 'T1', cliente: 'Ana Sofía Rojas', fecha: '2023-10-27 21:00', personas: 5 },
-];
+import { useApi } from '@/hooks/useApi';
 
 const GestionMesasPage = () => {
-    const [mesas, setMesas] = useState(mockMesas);
-    const [reservas, setReservas] = useState(mockReservas);
+    const { data: mesas, loading: loadingMesas, createItem: createMesa, updateItem: updateMesa, deleteItem: deleteMesa } = useApi('restaurantes/mesas/');
+    const { data: reservas, loading: loadingReservas, createItem: createReserva, updateItem: updateReserva, deleteItem: deleteReserva } = useApi('restaurantes/reservas-mesas/');
+
+    const [isMesaModalOpen, setIsMesaModalOpen] = useState(false);
+    const [isReservaModalOpen, setIsReservaModalOpen] = useState(false);
+    const [currentMesa, setCurrentMesa] = useState(null);
+    const [currentReserva, setCurrentReserva] = useState(null);
+
+    const handleSaveMesa = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = {
+            numero: formData.get('numero'),
+            capacidad: formData.get('capacidad'),
+            ubicacion: formData.get('ubicacion'),
+        };
+        if (currentMesa) {
+            await updateMesa(currentMesa.id, data);
+        } else {
+            await createMesa(data);
+        }
+        setIsMesaModalOpen(false);
+    };
+
+    const handleSaveReserva = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = {
+            mesa: formData.get('mesa'),
+            nombre_cliente: formData.get('nombre_cliente'),
+            fecha_hora: formData.get('fecha_hora'),
+            numero_personas: formData.get('numero_personas'),
+        };
+        if (currentReserva) {
+            await updateReserva(currentReserva.id, data);
+        } else {
+            await createReserva(data);
+        }
+        setIsReservaModalOpen(false);
+    };
+
+    if (loadingMesas || loadingReservas) return <p>Cargando...</p>;
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">Gestión de Mesas y Reservaciones</h1>
+            {/* ... (renderizado de la página) */}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Sección de Gestión de Mesas */}
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-semibold">Mis Mesas</h2>
-                        <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                            Añadir Mesa
-                        </button>
+            {/* Modal para Mesa */}
+            {isMesaModalOpen && (
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 h-full w-full">
+                    <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                        <form onSubmit={handleSaveMesa}>
+                            {/* Campos del formulario para Mesa */}
+                            <button type="submit">Guardar</button>
+                            <button type="button" onClick={() => setIsMesaModalOpen(false)}>Cancelar</button>
+                        </form>
                     </div>
-                    <table className="min-w-full bg-white">
-                        <thead className="bg-gray-100">
-                            <tr>
-                                <th className="py-2 px-4 border-b">Número</th>
-                                <th className="py-2 px-4 border-b">Capacidad</th>
-                                <th className="py-2 px-4 border-b">Ubicación</th>
-                                <th className="py-2 px-4 border-b">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {mesas.map((mesa) => (
-                                <tr key={mesa.id}>
-                                    <td className="py-2 px-4 border-b text-center">{mesa.numero}</td>
-                                    <td className="py-2 px-4 border-b text-center">{mesa.capacidad}</td>
-                                    <td className="py-2 px-4 border-b">{mesa.ubicacion}</td>
-                                    <td className="py-2 px-4 border-b text-center">
-                                        <button className="text-blue-600 hover:underline mr-2">Editar</button>
-                                        <button className="text-red-600 hover:underline">Eliminar</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
                 </div>
+            )}
 
-                {/* Sección de Próximas Reservas */}
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-semibold">Próximas Reservas</h2>
-                        <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
-                            Nueva Reserva
-                        </button>
+            {/* Modal para Reserva */}
+            {isReservaModalOpen && (
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 h-full w-full">
+                    <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                        <form onSubmit={handleSaveReserva}>
+                            {/* Campos del formulario para Reserva */}
+                            <button type="submit">Guardar</button>
+                            <button type="button" onClick={() => setIsReservaModalOpen(false)}>Cancelar</button>
+                        </form>
                     </div>
-                    <ul className="space-y-3">
-                        {reservas.map(reserva => (
-                             <li key={reserva.id} className="p-3 bg-gray-50 rounded-md shadow-sm">
-                                <p><strong>Cliente:</strong> {reserva.cliente}</p>
-                                <p><strong>Mesa:</strong> {reserva.mesa} - <strong>Personas:</strong> {reserva.personas}</p>
-                                <p><strong>Fecha:</strong> {reserva.fecha}</p>
-                             </li>
-                        ))}
-                    </ul>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
