@@ -1,4 +1,4 @@
- from modeltranslation.translator import register, TranslationOptions
+from modeltranslation.translator import register, TranslationOptions
 from .models import (
 Publicacion,
 AtractivoTuristico,
@@ -32,9 +32,9 @@ class ContenidoMunicipioTranslationOptions(TranslationOptions):
 class HechoHistoricoTranslationOptions(TranslationOptions):
     fields = ('titulo', 'descripcion')
 
-@register(CategoriaPrestador)
-class CategoriaPrestadorTranslationOptions(TranslationOptions):
-    fields = ('nombre',)
+# @register(CategoriaPrestador)
+# class CategoriaPrestadorTranslationOptions(TranslationOptions):
+#     fields = ('nombre',)
 
 @register(RubroArtesano)
 class RubroArtesanoTranslationOptions(TranslationOptions):

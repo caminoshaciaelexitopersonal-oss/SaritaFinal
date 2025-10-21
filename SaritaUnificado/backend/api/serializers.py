@@ -1,6 +1,6 @@
 # from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
-from apps.prestadores.models import CategoriaPrestador
+# from apps.prestadores.models import CategoriaPrestador
 from .models import (
     CustomUser, ImagenGaleria, ImagenArtesano, Publicacion,
     ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, RutaTuristica, ImagenRutaTuristica, ElementoGuardado, ContentType,

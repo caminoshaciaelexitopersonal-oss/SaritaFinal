@@ -1,22 +1,14 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import (
-    PerfilViewSet,
-    CategoriaPrestadorListView,
-    ClienteViewSet,
-    ProductoServicioViewSet,
-    InventarioViewSet,
-    CostoViewSet
-)
+from .views import AdminPrestadorViewSet
 
-router = DefaultRouter()
-router.register(r'perfil', PerfilViewSet, basename='perfil')
-router.register(r'clientes', ClienteViewSet, basename='clientes')
-router.register(r'productos-servicios', ProductoServicioViewSet, basename='productos-servicios')
-router.register(r'inventario', InventarioViewSet, basename='inventario')
-router.register(r'costos', CostoViewSet, basename='costos')
+# Router para las vistas de administración (fuera de 'Mi Negocio')
+admin_router = DefaultRouter()
+admin_router.register(r'admin/prestadores', AdminPrestadorViewSet, basename='adminprestador')
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('categorias/', CategoriaPrestadorListView.as_view(), name='categoria-list'),
+    # Incluir las URLs de administración
+    path('', include(admin_router.urls)),
+    # Incluir las URLs del panel 'Mi Negocio'
+    path('mi-negocio/', include('apps.prestadores.mi_negocio.urls')),
 ]
