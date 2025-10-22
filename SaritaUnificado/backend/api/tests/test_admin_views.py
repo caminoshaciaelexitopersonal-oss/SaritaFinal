@@ -26,7 +26,7 @@ class AdminAPITests(APITestCase):
         self.categoria = CategoriaPrestador.objects.create(nombre="Hotel", slug="hoteles")
         # Usando el nuevo modelo 'Perfil' en lugar de 'PrestadorServicio'
         self.prestador_profile = Perfil.objects.create(
-            user=self.prestador_user_to_approve,
+            usuario=self.prestador_user_to_approve,
             nombre_comercial="Hotel La Roca",
             categoria=self.categoria
         )
@@ -82,7 +82,7 @@ class AdminAPITests(APITestCase):
             username='prestador_aprobado', email='aprobado@example.com', password='password123', role=CustomUser.Role.PRESTADOR
         )
         Perfil.objects.create(
-            user=approved_user, nombre_comercial="Restaurante Sol", estado='Activo', categoria=self.categoria
+            usuario=approved_user, nombre_comercial="Restaurante Sol", estado='Activo', categoria=self.categoria
         )
 
         # Probar el filtro para 'Activo'

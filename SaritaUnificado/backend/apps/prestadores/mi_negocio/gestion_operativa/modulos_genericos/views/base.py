@@ -31,4 +31,5 @@ class GenericViewSet(viewsets.ModelViewSet):
         Asigna automáticamente el Perfil del usuario al objeto
         que se está creando.
  
+        """
         serializer.save(perfil=self.request.user.perfil_prestador)

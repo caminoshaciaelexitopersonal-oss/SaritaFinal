@@ -611,7 +611,8 @@ class LocationListView(generics.ListAPIView):
     queryset = Artesano.objects.none() # Placeholder
     serializer_class = LocationSerializer
     permission_classes = [AllowAny]
- class GaleriaListView(generics.ListAPIView):
+
+class GaleriaListView(generics.ListAPIView):
     queryset = ImagenGaleria.objects.all()  # Placeholder
     serializer_class = GaleriaItemSerializer
     permission_classes = [AllowAny]

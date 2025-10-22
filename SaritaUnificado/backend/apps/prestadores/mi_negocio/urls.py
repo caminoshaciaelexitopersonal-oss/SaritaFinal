@@ -80,4 +80,4 @@ router.register(r'artesanos/categorias', CategoriaProductoArtesanalViewSet, base
 router.register(r'artesanos/pedidos', PedidoViewSet, basename='pedidos-artesanales')
 
 
- 
+urlpatterns = router.urls
