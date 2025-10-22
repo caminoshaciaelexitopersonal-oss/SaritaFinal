@@ -2,7 +2,9 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from .mi_negocio.gestion_operativa.modulos_genericos.perfil import Perfil
+ 
+from .models import Perfil
+ 
 from api.serializers import AdminPrestadorSerializer
 from api.permissions import IsAdminOrFuncionario
 

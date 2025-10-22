@@ -1,29 +1,34 @@
+ 
+# SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/views/base.py
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from ....permissions import IsOwner
+from ..permissions import IsOwner
 
 class GenericViewSet(viewsets.ModelViewSet):
     """
-    ViewSet genérico para los módulos de 'Mi Negocio'.
-    - Aplica permisos de IsAuthenticated y IsOwner.
-    - Filtra automáticamente el queryset para devolver solo los objetos
-      pertenecientes al perfil del prestador que realiza la solicitud.
+    Un ViewSet base que asegura que el usuario esté autenticado
+    y solo pueda ver/editar los objetos que le pertenecen (asociados a su perfil).
+ 
     """
     permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         """
-        Filtra el queryset para devolver solo los objetos asociados
-        al perfil del usuario autenticado.
+ 
+        Filtra el queryset para devolver solo los objetos
+        asociados al Perfil del usuario autenticado.
         """
-        # Asegurarse de que el usuario tenga un perfil de prestador
-        if hasattr(self.request.user, 'perfil_prestador'):
-            return self.queryset.filter(perfil=self.request.user.perfil_prestador)
-        # Si no tiene perfil, no puede poseer ningún objeto
+        user = self.request.user
+        # Asumiendo que el CustomUser tiene una relación 'perfil_prestador'
+        if hasattr(user, 'perfil_prestador') and user.perfil_prestador:
+            return self.queryset.filter(perfil=user.perfil_prestador)
+        # Si no tiene perfil, no puede ver nada.
+ 
         return self.queryset.none()
 
     def perform_create(self, serializer):
         """
-        Asigna automáticamente el perfil del prestador al crear un nuevo objeto.
-        """
+        Asigna automáticamente el Perfil del usuario al objeto
+        que se está creando.
+ 
         serializer.save(perfil=self.request.user.perfil_prestador)

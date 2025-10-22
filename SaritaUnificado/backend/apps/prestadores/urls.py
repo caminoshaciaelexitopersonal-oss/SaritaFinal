@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from django.urls import path, include
+ 
 from .views import AdminPrestadorViewSet
 
 # Router para las vistas de administración (fuera de 'Mi Negocio')
@@ -11,4 +11,6 @@ urlpatterns = [
     path('', include(admin_router.urls)),
     # Incluir las URLs del panel 'Mi Negocio'
     path('mi-negocio/', include('apps.prestadores.mi_negocio.urls')),
+ 
 ]
+ 

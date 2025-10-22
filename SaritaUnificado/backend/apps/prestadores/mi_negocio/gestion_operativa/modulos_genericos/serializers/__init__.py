@@ -1,11 +1,11 @@
-# flake8: noqa
-from .perfil import PerfilSerializer, CategoriaPrestadorSerializer
+# SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/serializers/__init__.py
+from .perfil import PerfilSerializer
 from .productos_servicios import ProductoServicioSerializer
-from .clientes import ClienteSerializer
-from .costos import CostoSerializer
-from .inventario import InventarioSerializer
-from .reservas_citas import ReservaSerializer
+from .crm import ClienteSerializer
+from .contabilidad import CostoSerializer, InventarioSerializer
+from .reservas import ReservaSerializer
 from .rat import RegistroActividadTuristicaSerializer
-from .reportes_estadisticas import ReporteSerializer
-from .soporte_ayuda import TicketSoporteSerializer
-from .configuraciones_ajustes import ConfiguracionPrestadorSerializer
+from .reportes import ReporteSerializer
+from .soporte import TicketSoporteSerializer
+from .configuracion import ConfiguracionPrestadorSerializer
+ 
