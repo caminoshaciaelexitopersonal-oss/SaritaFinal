@@ -8,3 +8,4 @@ from .rat import RegistroActividadTuristicaSerializer
 from .reportes import ReporteSerializer
 from .soporte import TicketSoporteSerializer
 from .configuracion import ConfiguracionPrestadorSerializer
+ 

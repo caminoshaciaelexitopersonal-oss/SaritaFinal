@@ -4,5 +4,6 @@ from apps.prestadores.models import ProductoServicio
 from ..serializers.productos_servicios import ProductoServicioSerializer
 
 class ProductoServicioViewSet(GenericViewSet):
+ 
     queryset = ProductoServicio.objects.all()
     serializer_class = ProductoServicioSerializer

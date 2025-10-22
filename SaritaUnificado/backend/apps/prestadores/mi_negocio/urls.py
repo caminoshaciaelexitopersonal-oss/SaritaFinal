@@ -11,6 +11,7 @@ from .gestion_operativa.modulos_genericos.views import (
     TicketSoporteViewSet,
     ConfiguracionPrestadorViewSet,
 )
+ 
 from .gestion_operativa.modulos_especializados.views.hoteles import (
     HabitacionViewSet,
     ServicioAdicionalHotelViewSet
@@ -42,6 +43,7 @@ from .gestion_operativa.modulos_especializados.views.artesanos import (
 
 router = routers.DefaultRouter()
 # Módulos Genéricos
+ 
 router.register(r'perfil', PerfilViewSet, basename='perfil')
 router.register(r'productos', ProductoServicioViewSet, basename='productos')
 router.register(r'clientes', ClienteViewSet, basename='clientes')
@@ -78,4 +80,4 @@ router.register(r'artesanos/categorias', CategoriaProductoArtesanalViewSet, base
 router.register(r'artesanos/pedidos', PedidoViewSet, basename='pedidos-artesanales')
 
 
-urlpatterns = router.urls
+ 

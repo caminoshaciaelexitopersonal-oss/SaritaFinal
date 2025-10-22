@@ -611,15 +611,15 @@ class LocationListView(generics.ListAPIView):
     queryset = Artesano.objects.none() # Placeholder
     serializer_class = LocationSerializer
     permission_classes = [AllowAny]
-
-class GaleriaListView(generics.ListAPIView):
-    queryset = ImagenGaleria.objects.all() # Placeholder
+ class GaleriaListView(generics.ListAPIView):
+    queryset = ImagenGaleria.objects.all()  # Placeholder
     serializer_class = GaleriaItemSerializer
     permission_classes = [AllowAny]
 
 # from agents.corps.turismo_coronel import get_turismo_coronel_graph
 class AgentChatView(views.APIView):
-    permission_classes = [AllowAny] # El agente está diseñado para manejar usuarios invitados
+    permission_classes = [AllowAny]  # El agente está diseñado para manejar usuarios invitados
+
     async def post(self, request, *args, **kwargs):
         # user_message = request.data.get('message', '')
         # if not user_message:
@@ -633,7 +633,7 @@ class AgentChatView(views.APIView):
         #         "general_order": user_message,
         #         "app_context": {
         #             "user": request.user,
-        #             "entity": getattr(request, 'entity', None) # Pasar la entidad del middleware
+        #             "entity": getattr(request, 'entity', None)  # Pasar la entidad del middleware
         #         },
         #         "conversation_history": conversation_history
         #     }
@@ -648,17 +648,21 @@ class AgentChatView(views.APIView):
         #     # Es una buena práctica registrar la excepción para la depuración.
         #     import logging
         #     logging.error(f"Error en AgentChatView: {e}", exc_info=True)
-        return Response({'error': 'Funcionalidad de agente temporalmente deshabilitada.'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+        return Response({'error': 'Funcionalidad de agente temporalmente deshabilitada.'},
+                        status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
 
 class AgentTaskStatusView(generics.RetrieveAPIView):
     queryset = AgentTask.objects.all()
     serializer_class = AgentTaskSerializer
     permission_classes = [IsAuthenticated]
+
+
 class AnalyticsDataView(views.APIView):
     permission_classes = [IsAdminOrFuncionario]
+
     def get(self, request, *args, **kwargs):
         return Response({"message": "Datos de analítica."})
-
 class AdminUsuarioListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UsuarioListSerializer

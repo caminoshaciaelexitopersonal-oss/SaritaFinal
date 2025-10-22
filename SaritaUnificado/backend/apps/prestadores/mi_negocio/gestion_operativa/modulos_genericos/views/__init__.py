@@ -8,3 +8,4 @@ from .rat import RegistroActividadTuristicaViewSet
 from .reportes import ReporteViewSet
 from .soporte import TicketSoporteViewSet
 from .configuracion import ConfiguracionPrestadorViewSet
+ 

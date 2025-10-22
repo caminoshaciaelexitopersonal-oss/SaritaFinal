@@ -1,8 +1,9 @@
-# SaritaUnificado/backend/api/signals.py
+ # SaritaUnificado/backend/api/signals.py
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import AsistenciaCapacitacion, Resena, ScoringRule
 from apps.prestadores.models import Perfil
+
 
 @receiver(post_save, sender=AsistenciaCapacitacion)
 def update_score_on_capacitacion(sender, instance, created, **kwargs):
@@ -15,6 +16,7 @@ def update_score_on_capacitacion(sender, instance, created, **kwargs):
             perfil.recalcular_puntuacion_total()
         except Perfil.DoesNotExist:
             pass
+
 
 @receiver(post_save, sender=Resena)
 def update_score_on_resena(sender, instance, **kwargs):
@@ -30,7 +32,9 @@ def update_score_on_resena(sender, instance, **kwargs):
                 object_id=instance.object_id,
                 aprobada=True
             )
-            total_puntos_reseñas = sum(r.calificacion * rules.puntos_por_estrella_reseña for r in reseñas_aprobadas)
+            total_puntos_reseñas = sum(
+                r.calificacion * rules.puntos_por_estrella_reseña for r in reseñas_aprobadas
+            )
 
             perfil.puntuacion_reseñas = total_puntos_reseñas
             perfil.save(update_fields=['puntuacion_reseñas'])

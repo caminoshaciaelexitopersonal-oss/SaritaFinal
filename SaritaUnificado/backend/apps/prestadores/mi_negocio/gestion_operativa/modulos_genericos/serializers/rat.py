@@ -6,3 +6,5 @@ class RegistroActividadTuristicaSerializer(serializers.ModelSerializer):
     class Meta:
         model = RegistroActividadTuristica
         fields = '__all__'
+
+ 
