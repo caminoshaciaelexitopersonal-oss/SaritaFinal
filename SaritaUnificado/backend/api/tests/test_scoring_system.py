@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
-from apps.prestadores.models import Perfil as PrestadorServicio
+from apps.prestadores.models import Perfil
 from api.models import (
     CustomUser,
     Artesano,
@@ -21,8 +21,8 @@ class ScoringSystemTests(TestCase):
         self.prestador_user = CustomUser.objects.create_user(
             'prestador_puntuado', 'prestador_puntuado@example.com', 'password123', role=CustomUser.Role.PRESTADOR
         )
-        self.prestador_profile = PrestadorServicio.objects.create(
-            user=self.prestador_user, nombre_comercial="Hotel Puntuado"
+        self.prestador_profile = Perfil.objects.create(
+            usuario=self.prestador_user, nombre_comercial="Hotel Puntuado"
         )
 
         self.turista_user = CustomUser.objects.create_user(

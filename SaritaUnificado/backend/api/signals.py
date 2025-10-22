@@ -9,7 +9,7 @@ from apps.prestadores.models import Perfil
 def update_score_on_capacitacion(sender, instance, created, **kwargs):
     if created:
         try:
-            perfil = Perfil.objects.get(user=instance.usuario)
+            perfil = Perfil.objects.get(usuario=instance.usuario)
             puntos = instance.capacitacion.puntos_asistencia
             perfil.puntuacion_capacitacion += puntos
             perfil.save(update_fields=['puntuacion_capacitacion'])
