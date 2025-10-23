@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import {
-  FiChevronDown, FiChevronRight, FiBox, FiStar, FiBed, FiAward, FiMap, FiTruck,
+  FiChevronDown, FiChevronRight, FiBox, FiStar, FiAward, FiMap, FiTruck,
   FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive,
   FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
   FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare
@@ -89,7 +89,7 @@ const miNegocioNav: NavSection[] = [
     title: 'Módulos Especializados',
     isSubSection: true,
     links: [
-      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/hoteles/habitaciones', label: 'Habitaciones', icon: FiBed, prestadorCategoria: 'hotel' },
+      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/hoteles/habitaciones', label: 'Habitaciones', icon: FiBriefcase, prestadorCategoria: 'hotel' },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes/menu', label: 'Menú/Carta', icon: FiBookOpen, prestadorCategoria: 'restaurante' },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes/mesas', label: 'Gestión de Mesas', icon: FiGrid, prestadorCategoria: 'restaurante' },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes/pedidos', label: 'Pedidos (TPV)', icon: FiShoppingCart, prestadorCategoria: 'restaurante' },

@@ -4,7 +4,7 @@ from django.conf import settings
 
 from django.utils.text import slugify
 
-from ..perfil import Perfil, CategoriaPrestador
+from ..perfil.models import Perfil, CategoriaPrestador
 
 
 class Puntuacion(models.Model):
