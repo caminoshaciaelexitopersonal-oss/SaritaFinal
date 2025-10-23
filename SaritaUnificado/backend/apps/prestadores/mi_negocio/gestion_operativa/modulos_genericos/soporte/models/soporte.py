@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .perfil import Perfil
+from django.utils import timezone
+from ...perfil.models import Perfil
 
 class TicketSoporte(models.Model):
     """
@@ -11,9 +12,9 @@ class TicketSoporte(models.Model):
         EN_PROGRESO = 'EN_PROGRESO', _('En Progreso')
         CERRADO = 'CERRADO', _('Cerrado')
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='tickets_soporte')
-    asunto = models.CharField(_("Asunto"), max_length=255)
-    mensaje = models.TextField(_("Mensaje"))
+    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='tickets_soporte_nuevos') # Renombrado
+    asunto = models.CharField(_("Asunto"), max_length=255, blank=True, null=True)
+    mensaje = models.TextField(_("Mensaje"), blank=True, null=True)
 
     estado = models.CharField(
         _("Estado del Ticket"),
@@ -22,7 +23,7 @@ class TicketSoporte(models.Model):
         default=EstadoTicket.ABIERTO
     )
 
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateTimeField(default=timezone.now)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     def __str__(self):

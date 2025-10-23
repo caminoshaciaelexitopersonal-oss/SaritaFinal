@@ -20,8 +20,8 @@ django-filter==24.2
 
 # --- LangChain / LangGraph Agent System ---
 langchain==0.3.27
-langchain-core==0.3.76
-langchain-openai==0.3.33
+langchain-core==0.3.79
+langchain-openai==0.3.35
 langchain-text-splitters==0.3.11
 langgraph==0.6.7
 langgraph-checkpoint==2.1.1

@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .perfil import Perfil
+from .perfil.models import Perfil
 
 def rat_directory_path(instance, filename):
     return f'prestadores/{instance.perfil.usuario.username}/rat/{filename}'

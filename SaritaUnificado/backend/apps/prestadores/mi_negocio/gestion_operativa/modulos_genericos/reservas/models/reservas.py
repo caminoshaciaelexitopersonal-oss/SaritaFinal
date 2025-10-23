@@ -1,8 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .perfil import Perfil
-from .clientes import Cliente
-from .productos_servicios import ProductoServicio
+from django.utils import timezone
+from ...perfil.models import Perfil
+from ...models.crm import Cliente
+from ...productos_servicios.models import ProductoServicio
 
 class Reserva(models.Model):
     """
@@ -14,11 +15,11 @@ class Reserva(models.Model):
         CANCELADA = 'CANCELADA', _('Cancelada')
         COMPLETADA = 'COMPLETADA', _('Completada')
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='reservas')
+    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='reservas_citas') # Renombrado
     cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='reservas')
     producto_servicio = models.ForeignKey(ProductoServicio, on_delete=models.SET_NULL, null=True, blank=True)
 
-    fecha_hora_inicio = models.DateTimeField(_("Fecha y Hora de Inicio"))
+    fecha_hora_inicio = models.DateTimeField(_("Fecha y Hora de Inicio"), blank=True, null=True)
     fecha_hora_fin = models.DateTimeField(_("Fecha y Hora de Fin"), null=True, blank=True)
 
     estado = models.CharField(
@@ -31,7 +32,7 @@ class Reserva(models.Model):
     notas = models.TextField(_("Notas Adicionales"), blank=True)
     monto_total = models.DecimalField(_("Monto Total"), max_digits=12, decimal_places=2, default=0.00)
 
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateTimeField(default=timezone.now)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     def __str__(self):

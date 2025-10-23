@@ -1,15 +1,15 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .perfil import Perfil
+from ...perfil.models import Perfil
 
 class Costo(models.Model):
     """
     Modelo para gestionar los costos operativos de un prestador.
     """
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='costos')
-    concepto = models.CharField(_("Concepto del Costo"), max_length=255)
+    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='costos_operativos') # Renombrado
+    concepto = models.CharField(_("Concepto del Costo"), max_length=255, blank=True, null=True)
     monto = models.DecimalField(_("Monto"), max_digits=12, decimal_places=2)
-    fecha = models.DateField(_("Fecha del Costo"))
+    fecha = models.DateField(_("Fecha del Costo"), blank=True, null=True)
     es_recurrente = models.BooleanField(_("¿Es Recurrente?"), default=False)
 
     class Tipo(models.TextChoices):

@@ -1,5 +1,5 @@
 # SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/serializers/__init__.py
-from .perfil import PerfilSerializer
+from ..perfil.serializers import PerfilSerializer
 from .productos_servicios import ProductoServicioSerializer
 from .crm import ClienteSerializer
 from .contabilidad import CostoSerializer, InventarioSerializer
