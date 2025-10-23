@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import "../globals.css";
+import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { EntityProvider } from "@/contexts/EntityContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AgentProvider } from "@/contexts/AgentContext";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
-import ClientLayout from "@/components/ClientLayout"; // Importar el nuevo componente
+import AgentController from "@/components/agent/AgentController";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import Chatbot from '@/components/shared/Chatbot';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const geist = Geist({
   subsets: ["latin"],
@@ -19,6 +22,44 @@ export const metadata: Metadata = {
   description: "Plataforma de Turismo del Municipio de Puerto Gaitán",
   manifest: "/manifest.json",
   themeColor: "#0070f3",
+};
+
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { usePathname } from 'next/navigation';
+
+const ClientLayout = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname();
+  const isDashboard = pathname.includes('/dashboard');
+
+  return (
+    <>
+      {!isDashboard && <Header />}
+      <main className={`flex-grow flex flex-col ${!isDashboard ? '' : 'h-full'}`}>
+        {isDashboard ? <DashboardLayout>{children}</DashboardLayout> : children}
+      </main>
+      {!isDashboard && (
+        <>
+          <Footer />
+          <Chatbot />
+        </>
+      )}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <AgentController />
+    </>
+  );
 };
 
 export default async function LocaleLayout({
@@ -36,15 +77,15 @@ export default async function LocaleLayout({
         className={`${geist.variable} antialiased flex flex-col min-h-full`}
       >
         <NextIntlClientProvider messages={messages}>
-          <AuthProvider>
-            <EntityProvider>
-              <LanguageProvider>
-                <AgentProvider>
-                  <ClientLayout>{children}</ClientLayout>
-                </AgentProvider>
-              </LanguageProvider>
-            </EntityProvider>
-          </AuthProvider>
+        <AuthProvider>
+          <EntityProvider>
+            <LanguageProvider>
+              <AgentProvider>
+                <ClientLayout>{children}</ClientLayout>
+              </AgentProvider>
+            </LanguageProvider>
+          </EntityProvider>
+        </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>
