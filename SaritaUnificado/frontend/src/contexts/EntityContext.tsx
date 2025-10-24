@@ -27,6 +27,13 @@ export const EntityProvider = ({ children }: { children: ReactNode }) => {
   // 🔹 Cargar entidad automáticamente desde el subdominio
   useEffect(() => {
     const fetchEntity = async () => {
+      // FIX: En desarrollo (localhost), no hay subdominio, por lo que esta llamada siempre falla.
+      // Omitimos la llamada para permitir que la aplicación se renderice correctamente.
+      if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(true);
       try {
         const response = await api.get<Entity>('/entities/current/');

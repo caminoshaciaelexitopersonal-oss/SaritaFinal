@@ -1,9 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from ...perfil.models import Perfil
-
-def rat_directory_path(instance, filename):
-    return f'prestadores/{instance.perfil.usuario.username}/rat/{filename}'
+from ..utils import rat_directory_path # Importación corregida
 
 class RegistroActividadTuristica(models.Model):
     """

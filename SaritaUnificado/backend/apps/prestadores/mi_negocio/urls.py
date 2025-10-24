@@ -1,17 +1,15 @@
 from django.urls import path, include
 from rest_framework_nested import routers
-from .gestion_operativa.modulos_genericos.views import (
-    PerfilViewSet,
-    ProductoServicioViewSet,
-    ClienteViewSet,
-    CostoViewSet,
-    InventarioViewSet,
-    ReservaViewSet,
-    RegistroActividadTuristicaViewSet,
-    ReporteViewSet,
-    TicketSoporteViewSet,
-    ConfiguracionPrestadorViewSet,
-)
+from .gestion_operativa.modulos_genericos.perfil.views import PerfilViewSet
+from .gestion_operativa.modulos_genericos.productos_servicios.views import ProductoServicioViewSet
+from .gestion_operativa.modulos_genericos.crm.views import ClienteViewSet
+from .gestion_operativa.modulos_genericos.costos.views import CostoViewSet
+from .gestion_operativa.modulos_genericos.inventario.views import InventarioViewSet
+from .gestion_operativa.modulos_genericos.reservas.views import ReservaViewSet
+from .gestion_operativa.modulos_genericos.rat.views import RegistroActividadTuristicaViewSet
+from .gestion_operativa.modulos_genericos.soporte.views import TicketSoporteViewSet
+from .gestion_operativa.modulos_genericos.views.configuracion import ConfiguracionPrestadorViewSet
+from .gestion_operativa.modulos_genericos.views.reportes import ReporteViewSet
 # ... (el resto de las importaciones de vistas especializadas)
 
 router = routers.DefaultRouter()
