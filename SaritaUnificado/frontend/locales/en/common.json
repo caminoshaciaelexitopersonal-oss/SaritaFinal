@@ -1,0 +1,11 @@
+{
+  "Header": {
+    "dashboard": "Dashboard",
+    "logout": "Log Out",
+    "login": "Log In",
+    "register": "Sign Up"
+  },
+  "Footer": {
+    "rights_reserved": "All rights reserved."
+  }
+}
