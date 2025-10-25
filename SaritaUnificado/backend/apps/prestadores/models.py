@@ -1,16 +1,23 @@
 # SaritaUnificado/backend/apps/prestadores/models.py
 
-# Este archivo sirve como el punto de entrada principal para que Django
-# descubra todos los modelos relacionados con la app 'prestadores'.
+"""
+Este archivo sirve como el punto de entrada principal para que Django
+descubra todos los modelos relacionados con la app 'prestadores', que ahora
+están organizados en una arquitectura modular bajo 'mi_negocio'.
+"""
 
-# Importa todos los modelos desde sus respectivos paquetes consolidados.
-from .mi_negocio.gestion_operativa.modulos_genericos.models import *
-from .mi_negocio.gestion_operativa.modulos_genericos.perfil.models import * # Importación directa del módulo refactorizado
-from .mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import * # Importación directa del módulo refactorizado
-from .mi_negocio.gestion_operativa.modulos_genericos.inventario.models import * # Importación directa del módulo refactorizado
-from .mi_negocio.gestion_operativa.modulos_genericos.costos.models import * # Importación directa del módulo refactorizado
-from .mi_negocio.gestion_operativa.modulos_genericos.reservas.models import * # Importación directa del módulo refactorizado
-from .mi_negocio.gestion_operativa.modulos_genericos.soporte.models import * # Importación directa del módulo refactorizado
-from .mi_negocio.gestion_operativa.modulos_genericos.rat.models import * # Importación directa del módulo refactorizado
-from .mi_negocio.gestion_operativa.modulos_especializados.models import *
- 
+# --- Módulos Genéricos de Gestión Operativa ---
+
+# Módulo de Perfil del Prestador (Refactorizado)
+from .mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil, CategoriaPrestador
+
+# Módulo de Clientes (CRM) (Refactorizado)
+from .mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+
+# Módulo de Productos y Servicios (Pendiente de refactorización completa)
+# from .mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import *
+
+# Módulo de Reservas (Pendiente de refactorización completa)
+# from .mi_negocio.gestion_operativa.modulos_genericos.reservas.models import *
+
+# ... (Se añadirán más importaciones a medida que se refactoricen los demás módulos)

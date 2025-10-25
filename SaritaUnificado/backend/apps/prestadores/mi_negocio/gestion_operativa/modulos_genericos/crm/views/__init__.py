@@ -1,1 +1,0 @@
-from .crm import ClienteViewSet
