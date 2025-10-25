@@ -1,91 +1,49 @@
 # Informe de Auditoría del Ecosistema Sarita
 
-**Fecha:** 22 de Octubre de 2025
-**Autor:** Jules, Ingeniero de Software IA
+**Fecha:** 24 de Octubre de 2025
 
-## 1. Resumen Ejecutivo
+## Resumen Ejecutivo
 
-Este informe detalla el estado actual de los tres sistemas que componen el ecosistema Sarita: `SaritaUnificado`, `Sarita` y `Turismoapp`.
+Este informe detalla el estado actual de los tres componentes del proyecto: `Sarita`, `Turismoapp` y `SaritaUnificado`. La auditoría revela que `SaritaUnificado`, el proyecto principal, tiene una base de backend estructuralmente sólida pero inactiva debido a la falta de configuración del entorno. Los problemas visuales en `Sarita` son un síntoma directo de este backend no funcional. `Turismoapp` sirve como un mapa conceptual claro para las funcionalidades que deben ser implementadas en el panel "Mi Negocio".
 
--   **`SaritaUnificado`**: Es el proyecto principal y el objetivo de la integración. Actualmente, **no es funcional**. El backend tiene un error crítico que impide su ejecución, y existe una desincronización importante entre la estructura de archivos del backend y del frontend.
--   **`Sarita`**: Es la versión web original. Se encuentra en un estado **estable y funcional**. Tanto su backend como su frontend se ejecutan sin problemas, sirviendo como una referencia valiosa para la funcionalidad esperada.
--   **`Turismoapp`**: Es la aplicación de escritorio Flet. Se encuentra en un estado **no funcional** debido a un error de importación de módulos en su código fuente.
+Se ha realizado un progreso inicial en la refactorización del panel "Mi Negocio" dentro de `SaritaUnificado`, pero la estructura de archivos aún no coincide con la arquitectura final deseada.
 
-El objetivo principal a corto plazo es estabilizar `SaritaUnificado` para poder continuar con la integración de funcionalidades.
+## 1. Análisis del Proyecto `Sarita`
 
----
+*   **Estado Funcional:** No funcional.
+*   **Causa Raíz:** La aplicación frontend depende completamente de llamadas a una API de backend que no está operativa.
+*   **Análisis del Menú:** Los componentes `Header.tsx` y `Sidebar.tsx` intentan cargar su configuración desde el endpoint `/api/config/menu-items/`. El "círculo de carga" que se observa es el estado de espera del frontend que nunca se resuelve porque el backend no responde. **El problema no está en el código del frontend, sino en la falta de respuesta del backend.**
+*   **Análisis del Flujo de Autenticación:** El `AuthContext.tsx` gestiona el registro y el inicio de sesión para múltiples roles. Al igual que el menú, esta funcionalidad está inoperativa porque los endpoints (`/auth/login/`, `/auth/registration/...`) no están activos.
 
-## 2. Estado de Ejecución Detallado
+## 2. Análisis del Proyecto `Turismoapp`
 
-| Proyecto | Componente | Estado | Puerto | Notas |
-| :--- | :--- | :--- | :--- | :--- |
-| **`SaritaUnificado`** | Backend (Django) | 🔴 **Falla** | N/A | Error crítico de modelos duplicados impide el arranque. |
-| | Frontend (Next.js) | 🟢 **Funcional** | 3000 | El servidor de desarrollo se inicia correctamente. |
-| **`Sarita`** | Backend (Django) | 🟢 **Funcional** | 8000 | Se ejecuta sin errores. |
-| | Frontend (Next.js) | 🟢 **Funcional** | 3001 | Se ejecuta sin errores. |
-| **`Turismoapp`** | App (Flet) | 🔴 **Falla** | N/A | Error `ModuleNotFoundError` impide la ejecución. |
+*   **Estado Funcional:** No funcional (falla en el arranque con `ModuleNotFoundError`, según memoria).
+*   **Propósito en el Ecosistema:** Sirve como un prototipo y una referencia clara de la lógica de negocio para el panel de administración de prestadores de servicios turísticos.
+*   **Funcionalidades Identificadas:** El análisis de `main.py` confirma la existencia de la lógica para los siguientes módulos, que son la base para "Mi Negocio":
+    *   **Módulos Genéricos:** Gestión de Productos/Servicios, CRM (Clientes), Calendario y Reservas.
+    *   **Módulos Especializados:**
+        *   **Restaurantes:** Gestión de Menú, Mesas, TPV.
+        *   **Agencias:** Gestión de Paquetes y Reservas.
+        *   **Guías:** Perfil y Reservas.
+    *   **Módulos Adicionales:** Gestión de Costos y Precios, que se alinean con los futuros módulos de `Gestión Comercial` y `Gestión Contable`.
 
----
+## 3. Análisis del Proyecto `SaritaUnificado`
 
-## 3. Análisis Profundo de `SaritaUnificado`
+*   **Estado Funcional:** **Parcialmente funcional.**
+    *   **Backend:** Tras instalar las dependencias, las migraciones de Django se ejecutan correctamente, lo que indica que los modelos y la configuración de la base de datos son coherentes. El backend está "listo para ser ejecutado".
+    *   **Frontend:** Se presume que es una copia de `Sarita` y, por lo tanto, no es funcional hasta que el backend esté sirviendo activamente la API.
+*   **Verificación de DIVIPOLA:**
+    *   El archivo `divipola.csv` **existe** en `SaritaUnificado/backend/`.
+    *   Contiene las columnas requeridas (`dpto`, `nom_mpio`).
+    *   Los datos se cargaron exitosamente en la base de datos ejecutando el comando `load_locations`.
+*   **Auditoría de la Estructura "Mi Negocio":**
+    *   **Existencia:** La carpeta `SaritaUnificado/backend/apps/prestadores/mi_negocio` **SÍ existe**.
+    *   **Subdirectorios Principales:** Dentro de `mi_negocio`, las carpetas `gestion_operativa`, `gestion_comercial` y `gestion_contable` **SÍ existen**.
+    *   **Módulos Genéricos y Especializados:** Dentro de `gestion_operativa`, las carpetas `modulos_genericos` y `modulos_especializados` **SÍ existen**.
+    *   **Estructura Interna (Estado Actual):** La organización dentro de `modulos_genericos` es **INCORRECTA**. En lugar de que cada módulo (ej. `perfil`) contenga sus propios `models.py`, `views.py` y `serializers.py`, existe una estructura con carpetas genéricas `models/`, `views/` y `serializers/` que contienen todo. Esto indica que la refactorización física está **incompleta** y no sigue la arquitectura final deseada.
 
-### 3.1. Backend (Django)
+## Conclusiones y Siguientes Pasos Recomendados
 
--   **Error Crítico de Arranque**:
-    -   Al ejecutar `python manage.py makemigrations`, el sistema arroja un `RuntimeError: Conflicting 'categoriaprestador' models`.
-    -   **Causa**: Existen dos definiciones del modelo `CategoriaPrestador` en la aplicación `prestadores`:
-        1.  `.../mi_negocio/gestion_operativa/modulos_genericos/perfil.py`
-        2.  `.../mi_negocio/gestion_operativa/modulos_genericos/models/base.py`
-    -   **Impacto**: Este error es bloqueante. Impide generar y aplicar migraciones, por lo que el servidor no puede iniciarse. Es la primera tarea a resolver.
+El trabajo más urgente es estabilizar y ejecutar el backend de `SaritaUnificado`. Una vez que la API esté activa, el frontend de `Sarita` (y `SaritaUnificado`) debería volverse funcional, lo que permitiría realizar pruebas de cara al cliente.
 
--   **Auditoría de la Estructura "Mi Negocio"**:
-    -   **Estructura de Carpetas**: La estructura base (`mi_negocio`, `gestion_operativa`, `gestion_comercial`, `gestion_contable`, `gestion_financiera`, `gestion_archivistica`) **existe**.
-    -   **Módulos Genéricos (`gestion_operativa/modulos_genericos/`)**:
-        -   Se encontraron archivos como `perfil.py`, `productos_servicios.py`, `clientes.py`, `reservas_citas.py`, lo que indica que el trabajo ha comenzado.
-        -   Sin embargo, la organización es inconsistente. Hay archivos de modelos directamente en la carpeta en lugar de estar dentro del subdirectorio `models/`.
-    -   **Módulos Especializados (`gestion_operativa/modulos_especializados/`)**:
-        -   **Incompleto**: Solo existe el archivo `hoteles.py`. Faltan los módulos para restaurantes, guías, agencias de viajes, transporte, etc.
-
--   **Verificación de DIVIPOLA**:
-    -   **Estado**: **Implementado**.
-    -   Se confirmó la existencia de los modelos `Department` y `Municipality` en `api/models.py`.
-    -   Se encontró un script de gestión en `api/management/commands/load_locations.py`, diseñado para poblar la base de datos con esta información. El sistema está preparado para manejar estos datos.
-
-### 3.2. Frontend (Next.js)
-
--   **Estado de Ejecución**: El frontend arranca y se ejecuta correctamente.
-
--   **Auditoría de la Estructura "Mi Negocio"**:
-    -   **Estructura de Carpetas**: La estructura base (`mi-negocio`, `gestion-operativa`, `gestion-comercial`, etc.) **existe** y es coherente con el backend.
-    -   **Módulos Genéricos (`gestion-operativa/`)**:
-        -   **Incompleto y Desincronizado**: Esta carpeta está prácticamente vacía. Solo contiene `estadisticas/` y `especializados/`. Faltan todas las vistas para los módulos genéricos como Perfil, Productos, Clientes, etc., que sí están definidos (aunque con errores) en el backend.
-    -   **Módulos Especializados (`gestion-operativa/especializados/`)**:
-        -   A diferencia del backend, aquí sí existen las carpetas para `hoteles`, `restaurantes`, `guias`, `transporte`, `agencias` y `artesanos`. Esto muestra una clara desincronización con el desarrollo del backend.
-
----
-
-## 4. Análisis de Sistemas de Origen
-
-### 4.1. `Sarita` (Aplicación Web)
-
--   **Estado General**: **Totalmente funcional**. El backend y el frontend se ejecutan sin problemas, proporcionando un entorno estable que puede ser utilizado como referencia para la lógica de negocio y la experiencia de usuario que se debe replicar y mejorar en `SaritaUnificado`.
--   **Componentes Clave**: El menú de navegación y el flujo de autenticación (registro e inicio de sesión) funcionan correctamente.
-
-### 4.2. `Turismoapp` (Aplicación de Escritorio)
-
--   **Estado General**: **No funcional**.
--   **Error Crítico**: La aplicación falla al intentar iniciarse con un `ModuleNotFoundError`. El archivo `main.py` intenta importar `turismo_app.views.ciudadano.ciudadano_turismo_view`, pero este módulo no existe en la ubicación especificada.
--   **Análisis de Módulos**: A pesar de no ser ejecutable, la estructura de archivos en `turismo_app/` puede ser analizada estáticamente para extraer la lógica de los módulos de gestión empresarial que deben ser integrados en `SaritaUnificado`.
-
----
-
-## 5. Conclusiones y Próximos Pasos Recomendados
-
-1.  **Prioridad Máxima**: Estabilizar el backend de `SaritaUnificado`. La corrección del conflicto de modelos duplicados es el primer paso indispensable.
-2.  **Alineación Backend-Frontend**: Existe una brecha importante entre el estado de desarrollo del backend y el frontend de "Mi Negocio". Se debe definir una hoja de ruta clara para desarrollar los módulos de forma sincronizada.
-3.  **Plan de Acción**: Se recomienda un plan por fases:
-    -   **Fase 1 (Estabilización)**: Corregir el error de modelos en el backend, generar migraciones y asegurar que el servidor se ejecute.
-    -   **Fase 2 (Integración DIVIPOLA y Login)**: Utilizar el script existente para cargar los datos de Departamentos y Municipios. Implementar el flujo de autenticación para todos los roles, usando los códigos DANE como se solicitó.
-    -   **Fase 3 (Refactorización de "Mi Negocio")**: Reorganizar y completar los módulos genéricos y especializados en el backend y, posteriormente, construir las vistas correspondientes en el frontend.
-
-Este informe proporciona una visión clara del estado actual y sienta las bases para la planificación de las siguientes fases de desarrollo.
+La Fase 2 del plan aprobado, que se centra en la refactorización física y lógica del panel "Mi Negocio", es el camino correcto a seguir. El trabajo consistirá en reorganizar el código existente dentro de `apps/prestadores/mi_negocio/` para que coincida con la arquitectura modular objetivo.
