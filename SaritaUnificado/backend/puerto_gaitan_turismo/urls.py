@@ -13,6 +13,7 @@ urlpatterns = [
     # path("admin/", admin.site.urls),
     # La autenticación de la API es manejada por dj-rest-auth
     path('api/auth/', include('dj_rest_auth.urls')),
+    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
 
     # Rutas de la API de la aplicación principal
     path("api/", include("api.urls")),

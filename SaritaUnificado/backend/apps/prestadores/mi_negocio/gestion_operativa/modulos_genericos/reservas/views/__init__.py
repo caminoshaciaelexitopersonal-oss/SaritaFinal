@@ -1,1 +1,0 @@
-from .reservas import ReservaViewSet
