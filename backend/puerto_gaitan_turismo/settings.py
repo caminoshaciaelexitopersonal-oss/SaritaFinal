@@ -161,7 +161,7 @@ SITE_ID = 1
 # DJ-REST-AUTH & DJANGO-ALLAUTH
 REST_AUTH = {
     "USER_DETAILS_SERIALIZER": "api.serializers.CustomUserDetailSerializer",
-    'LOGIN_SERIALIZER': 'dj_rest_auth.serializers.LoginSerializer',
+    'LOGIN_SERIALIZER': 'api.serializers.CustomLoginSerializer',
 }
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'

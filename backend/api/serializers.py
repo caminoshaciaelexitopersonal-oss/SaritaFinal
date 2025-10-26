@@ -23,6 +23,7 @@ from .models import (
     Profile
 )
 from django.db import transaction
+from dj_rest_auth.serializers import LoginSerializer
 # from apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
 # from apps.turismo.serializers import RutaTuristicaSerializer
 
@@ -1022,3 +1023,11 @@ class AdminPrestadorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Perfil
         fields = ('id', 'nombre_comercial', 'estado', 'usuario_username', 'categoria_nombre')
+
+
+class CustomLoginSerializer(LoginSerializer):
+    """
+    Serializador de Login personalizado para permitir iniciar sesión
+    con email como 'username'.
+    """
+    username = None
