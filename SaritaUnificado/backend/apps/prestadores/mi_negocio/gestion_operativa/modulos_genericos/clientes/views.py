@@ -2,14 +2,14 @@
 from rest_framework import viewsets, permissions
 from .models import Cliente
 from .serializers import ClienteSerializer
-from ....permissions import IsOwner
+from apps.prestadores.mi_negocio.permissions import IsOwnerAndPrestador
 
 class ClienteViewSet(viewsets.ModelViewSet):
     """
     ViewSet para gestionar los clientes (CRM) de un prestador.
     """
     serializer_class = ClienteSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerAndPrestador]
 
     def get_queryset(self):
         """

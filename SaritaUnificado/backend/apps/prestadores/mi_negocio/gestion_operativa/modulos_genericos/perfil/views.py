@@ -5,7 +5,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from .models import Perfil
 from .serializers import PerfilSerializer, PerfilUpdateSerializer
-from ....permissions import IsOwner
 
 class PerfilViewSet(viewsets.GenericViewSet):
     """

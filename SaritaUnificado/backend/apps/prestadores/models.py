@@ -20,4 +20,10 @@ from .mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Clie
 # Módulo de Reservas (Pendiente de refactorización completa)
 # from .mi_negocio.gestion_operativa.modulos_genericos.reservas.models import *
 
+# Módulo de Inventario (Refactorizado)
+from .mi_negocio.gestion_operativa.modulos_genericos.inventario.models import Inventario
+
+# Módulo de Costos (Refactorizado)
+from .mi_negocio.gestion_operativa.modulos_genericos.costos.models import Costo
+
 # ... (Se añadirán más importaciones a medida que se refactoricen los demás módulos)

@@ -11,7 +11,7 @@ urlpatterns = [
     # Incluir las URLs de administración
     path('', include(admin_router.urls)),
     # Incluir las URLs del panel 'Mi Negocio'
-    path('mi-negocio/', include('apps.prestadores.mi_negocio.urls')),
+    path('mi-negocio/', include(('apps.prestadores.mi_negocio.urls', 'mi_negocio'), namespace='mi_negocio')),
  
 ]
  

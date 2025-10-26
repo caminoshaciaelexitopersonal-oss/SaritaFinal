@@ -1,15 +1,22 @@
-from rest_framework.permissions import BasePermission
+# SaritaUnificado/backend/apps/prestadores/mi_negocio/permissions.py
+from rest_framework import permissions
 
-class IsOwner(BasePermission):
+class IsOwnerAndPrestador(permissions.BasePermission):
     """
-    Permiso personalizado para permitir solo a los dueños de un objeto editarlo.
-    Asume que el modelo tiene un campo 'perfil' que lo vincula al Perfil del prestador.
+    Permiso personalizado para permitir solo a los dueños de un perfil de prestador
+    editar o ver los objetos asociados.
     """
     def has_object_permission(self, request, view, obj):
-        # Los permisos de lectura están permitidos para cualquier solicitud,
-        # por lo que siempre permitiremos las solicitudes GET, HEAD u OPTIONS.
-        if request.method in ['GET', 'HEAD', 'OPTIONS']:
+        # Permisos de lectura están permitidos para cualquier solicitud,
+        # así que siempre permitiremos GET, HEAD o OPTIONS.
+        if request.method in permissions.SAFE_METHODS:
             return True
 
-        # El permiso de escritura solo se concede al dueño del perfil.
-        return obj.perfil == request.user.perfil_prestador
+        # El permiso de escritura solo se concede si el perfil del objeto
+        # pertenece al usuario que realiza la solicitud.
+        try:
+            perfil_usuario = request.user.perfil_prestador
+            return obj.perfil == perfil_usuario
+        except AttributeError:
+            # El usuario no tiene un perfil de prestador asociado.
+            return False
