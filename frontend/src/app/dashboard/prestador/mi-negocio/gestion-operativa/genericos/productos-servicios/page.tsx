@@ -22,7 +22,7 @@ export default function ProductosServiciosPage() {
 
   // Cargar datos cuando el componente se monta
   useEffect(() => {
-    fetchData('operativa/productos/');
+    fetchData('operativa/genericos/productos-servicios/');
   }, [fetchData]);
 
   const handleOpenCreateModal = () => {
@@ -42,18 +42,18 @@ export default function ProductosServiciosPage() {
 
   const handleFormSubmit = async (formData: any) => {
     if (editingProduct) {
-      await updateData(`operativa/productos/${editingProduct.id}/`, formData);
+      await updateData(`operativa/genericos/productos-servicios/${editingProduct.id}/`, formData);
     } else {
-      await createData('operativa/productos/', formData);
+      await createData('operativa/genericos/productos-servicios/', formData);
     }
-    fetchData('operativa/productos/'); // Recargar la lista
+    fetchData('operativa/genericos/productos-servicios/'); // Recargar la lista
     handleCloseModal();
   };
 
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar este ítem?')) {
-      await deleteData(`operativa/productos/${id}/`);
-      fetchData('operativa/productos/'); // Recargar la lista
+      await deleteData(`operativa/genericos/productos-servicios/${id}/`);
+      fetchData('operativa/genericos/productos-servicios/'); // Recargar la lista
     }
   };
 
