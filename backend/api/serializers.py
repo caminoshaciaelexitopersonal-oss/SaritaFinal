@@ -1,4 +1,4 @@
-from dj_rest_auth.registration.serializers import RegisterSerializer
+# from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 # from apps.prestadores.models import CategoriaPrestador
 from .models import (
@@ -24,6 +24,7 @@ from .models import (
 )
 from django.db import transaction
 from dj_rest_auth.serializers import LoginSerializer
+from dj_rest_auth.registration.serializers import RegisterSerializer
 # from apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
 # from apps.turismo.serializers import RutaTuristicaSerializer
 
@@ -1031,7 +1032,6 @@ class CustomLoginSerializer(LoginSerializer):
     con email como 'username'.
     """
     username = None
-
 
 class CustomRegisterSerializer(RegisterSerializer):
     """

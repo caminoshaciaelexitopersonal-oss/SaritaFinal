@@ -2,14 +2,15 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from api.models import CustomUser
-from apps.prestadores.models import (
-    CategoriaPrestador, Perfil
-    # Reserva, RegistroActividadTuristica, TicketSoporte, ConfiguracionPrestador
-)
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.models import Inventario
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.models import Costo
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+from apps.prestadores.models import CategoriaPrestador, Perfil
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import ProductoServicio
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.models import Costo
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.models import Inventario
+# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.rat.models import RegistroActividadTuristica
+# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.soporte.models import TicketSoporte
+# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.configuracion.models import ConfiguracionPrestador
 from rest_framework.authtoken.models import Token
 import datetime
 
@@ -168,7 +169,7 @@ class MiNegocioAPITests(APITestCase):
     #     # El ViewSet no tiene una vista de lista, por lo que no podemos usar reverse('configuracion-list')
     #     # Accedemos directamente al objeto a través de su pk.
     #     # El get_object del ViewSet se encargará de crear la configuración si no existe.
-    #     config = ConfiguracionPrestador.objects.create(perfil=self.perfil)
+    #     # config = ConfiguracionPrestador.objects.create(perfil=self.perfil)
     #     url = reverse('configuracion-detail', kwargs={'pk': config.pk})
 
     #     # Probar GET

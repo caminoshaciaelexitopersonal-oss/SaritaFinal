@@ -74,7 +74,7 @@ const miNegocioNav: NavSection[] = [
     isSubSection: true,
     links: [
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/perfil', label: 'Mi Perfil', icon: FiUser },
-      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/productos', label: 'Productos/Servicios', icon: FiBox },
+      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/productos-servicios', label: 'Productos/Servicios', icon: FiBox },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/clientes', label: 'Clientes', icon: FiUsers },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/reservas', label: 'Reservas', icon: FiCalendar },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/valoraciones', label: 'Valoraciones', icon: FiStar },
