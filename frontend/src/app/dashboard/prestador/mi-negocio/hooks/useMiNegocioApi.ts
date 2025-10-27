@@ -49,28 +49,28 @@ export function useMiNegocioApi() {
 
   // --- API de Perfil ---
   const getPerfil = useCallback(async () => {
-    return makeRequest(() => api.get<PerfilData>('/v1/mi-negocio/operativa/genericos/perfil/me/').then(res => res.data), undefined, "No se pudo cargar el perfil.");
+    return makeRequest(() => api.get<PerfilData>('/prestadores/mi-negocio/operativa/genericos/perfil/me/').then(res => res.data), undefined, "No se pudo cargar el perfil.");
   }, [makeRequest]);
 
   const updatePerfil = useCallback(async (data: Partial<PerfilData>) => {
-    return makeRequest(() => api.patch<PerfilData>('/v1/mi-negocio/operativa/genericos/perfil/update-me/', data).then(res => res.data), "Perfil actualizado con éxito.", "Error al actualizar el perfil.");
+    return makeRequest(() => api.patch<PerfilData>('/prestadores/mi-negocio/operativa/genericos/perfil/update-me/', data).then(res => res.data), "Perfil actualizado con éxito.", "Error al actualizar el perfil.");
   }, [makeRequest]);
 
   // --- API de Clientes (CRM) ---
   const getClientes = useCallback(async () => {
-    return makeRequest(() => api.get<Cliente[]>('/v1/mi-negocio/operativa/genericos/clientes/').then(res => res.data), undefined, "No se pudo cargar la lista de clientes.");
+    return makeRequest(() => api.get<Cliente[]>('/prestadores/mi-negocio/operativa/genericos/clientes/').then(res => res.data), undefined, "No se pudo cargar la lista de clientes.");
   }, [makeRequest]);
 
   const createCliente = useCallback(async (clienteData: Omit<Cliente, 'id'>) => {
-    return makeRequest(() => api.post<Cliente>('/v1/mi-negocio/operativa/genericos/clientes/', clienteData).then(res => res.data), "Cliente creado con éxito.", "Error al crear el cliente.");
+    return makeRequest(() => api.post<Cliente>('/prestadores/mi-negocio/operativa/genericos/clientes/', clienteData).then(res => res.data), "Cliente creado con éxito.", "Error al crear el cliente.");
   }, [makeRequest]);
 
   const updateCliente = useCallback(async (id: number, clienteData: Partial<Omit<Cliente, 'id'>>) => {
-    return makeRequest(() => api.patch<Cliente>(`/v1/mi-negocio/operativa/genericos/clientes/${id}/`, clienteData).then(res => res.data), "Cliente actualizado con éxito.", "Error al actualizar el cliente.");
+    return makeRequest(() => api.patch<Cliente>(`/prestadores/mi-negocio/operativa/genericos/clientes/${id}/`, clienteData).then(res => res.data), "Cliente actualizado con éxito.", "Error al actualizar el cliente.");
   }, [makeRequest]);
 
   const deleteCliente = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/v1/mi-negocio/operativa/genericos/clientes/${id}/`), "Cliente eliminado con éxito.", "Error al eliminar el cliente.");
+    return makeRequest(() => api.delete(`/prestadores/mi-negocio/operativa/genericos/clientes/${id}/`), "Cliente eliminado con éxito.", "Error al eliminar el cliente.");
   }, [makeRequest]);
 
   return {
