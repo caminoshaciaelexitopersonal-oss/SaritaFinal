@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useMiNegocioApi } from '../../../hooks/useMiNegocioApi';
 
 // Interfaz para tipar los datos del perfil recibidos de la API
 interface PerfilData {
-  id: number;
   nombre_comercial: string;
   telefono_principal: string;
   email_comercial: string;
@@ -14,31 +13,26 @@ interface PerfilData {
 }
 
 export default function PerfilPage() {
-  const { data: perfilData, isLoading, error, fetchData, updateData } = useMiNegocioApi<PerfilData>();
+  const { getPerfil, updatePerfil, isLoading, error } = useMiNegocioApi();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PerfilData>({
     nombre_comercial: '',
     telefono_principal: '',
     email_comercial: '',
     descripcion_corta: '',
   });
 
-  // Efecto para cargar los datos del perfil cuando el componente se monta
-  useEffect(() => {
-    fetchData('operativa/perfil/');
-  }, [fetchData]);
-
-  // Efecto para actualizar el formulario cuando los datos se cargan desde la API
-  useEffect(() => {
-    if (perfilData) {
-      setFormData({
-        nombre_comercial: perfilData.nombre_comercial || '',
-        telefono_principal: perfilData.telefono_principal || '',
-        email_comercial: perfilData.email_comercial || '',
-        descripcion_corta: perfilData.descripcion_corta || '',
-      });
+  // Cargar los datos del perfil al montar el componente
+  const cargarDatos = useCallback(async () => {
+    const data = await getPerfil();
+    if (data) {
+      setFormData(data);
     }
-  }, [perfilData]);
+  }, [getPerfil]);
+
+  useEffect(() => {
+    cargarDatos();
+  }, [cargarDatos]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -50,10 +44,10 @@ export default function PerfilPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateData('operativa/perfil/', formData);
+    await updatePerfil(formData);
   };
 
-  if (isLoading && !perfilData) {
+  if (isLoading && !formData.nombre_comercial) { // Condición de carga más robusta
     return <div className="p-8">Cargando perfil...</div>;
   }
 
