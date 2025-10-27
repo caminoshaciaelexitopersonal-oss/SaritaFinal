@@ -66,6 +66,7 @@ INSTALLED_APPS = [
 # "apps.empresa.apps.EmpresaConfig",
 # "apps.restaurante.apps.RestauranteConfig",
 # "apps.turismo.apps.TurismoConfig",
+]
  
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

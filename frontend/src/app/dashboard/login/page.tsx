@@ -83,7 +83,7 @@ export default function LoginPage() {
                 errors={loginErrors}
                 autoComplete="username"
                 disabled={isLoginSubmitting}
-                required
+                required={true}
               />
               <FormField
                 name="password"
@@ -93,7 +93,7 @@ export default function LoginPage() {
                 errors={loginErrors}
                 autoComplete="current-password"
                 disabled={isLoginSubmitting}
-                required
+                required={true}
               />
               <div>
                 <button
