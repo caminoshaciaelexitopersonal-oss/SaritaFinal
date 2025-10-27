@@ -61,9 +61,6 @@ INSTALLED_APPS = [
  # Mis Apps
 "apps.prestadores.apps.PrestadoresConfig",
 "api.apps.ApiConfig",
-# "apps.empresa.apps.EmpresaConfig",
-# "apps.restaurante.apps.RestauranteConfig",
-# "apps.turismo.apps.TurismoConfig",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
