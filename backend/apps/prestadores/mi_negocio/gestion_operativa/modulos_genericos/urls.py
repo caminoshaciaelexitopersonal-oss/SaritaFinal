@@ -22,9 +22,4 @@ perfil_urls = [
 urlpatterns = [
     path('', include(router.urls)),
     path('', include(perfil_urls)),
-    path('reservas/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.urls')),
-    path('galeria/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.galeria.urls')),
-    path('documentos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.documentos.urls')),
-    path('valoraciones/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.valoraciones.urls')),
-    path('estadisticas/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.estadisticas.urls')),
 ]

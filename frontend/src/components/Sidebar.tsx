@@ -10,27 +10,8 @@ import {
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import api from '@/services/api';
-
-// --- Icon Mapping ---
-const iconMap: { [key: string]: React.ElementType } = {
-  FiHome, FiUsers, FiFileText, FiMapPin, FiSettings, FiBarChart2, FiShield,
-  FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare, FiAward,
-  FiBox, FiStar, FiMap, FiTruck, FiBriefcase, FiImage, FiBookOpen, FiGrid,
-  FiShoppingCart, FiUser, FiArchive, FiTrendingDown, FiDollarSign,
-};
 
 // --- Tipos ---
-interface ApiMenuItem {
-  id: number;
-  nombre: string;
-  url: string;
-  orden: number;
-  parent: number | null;
-  children: ApiMenuItem[];
-  icon: string; // Asumimos que la API devuelve el nombre del ícono
-}
-
 interface NavLink {
   href: string;
   label: string;
@@ -119,8 +100,23 @@ const miNegocioNav: NavSection[] = [
   },
   { title: 'Gestión Comercial', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-comercial', label: 'Ver Módulo', icon: FiBriefcase }] },
   { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Ver Módulo', icon: FiArchive }] },
-  { title: 'Gestión Contable', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-contable', label: 'Ver Módulo', icon: FiDollarSign }] },
-  { title: 'Gestión Financiera', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-financiera', label: 'Ver Módulo', icon: FiTrendingDown }] },
+  {
+    title: 'Gestión Contable',
+    isSubSection: true,
+    links: [
+      { href: '/dashboard/prestador/mi-negocio/gestion-contable', label: 'Dashboard Contable', icon: FiBookOpen },
+      { href: '/dashboard/prestador/mi-negocio/gestion-contable/plan-de-cuentas', label: 'Plan de Cuentas', icon: FiClipboard },
+    ],
+  },
+  {
+    title: 'Gestión Financiera',
+    isSubSection: true,
+    links: [
+      { href: '/dashboard/prestador/mi-negocio/gestion-financiera', label: 'Dashboard Financiero', icon: FiDollarSign },
+      { href: '/dashboard/prestador/mi-negocio/gestion-financiera/cuentas-bancarias', label: 'Cuentas Bancarias', icon: FiCreditCard },
+      { href: '/dashboard/prestador/mi-negocio/gestion-financiera/transacciones', label: 'Transacciones', icon: FiRepeat },
+    ],
+  },
 ];
 
 // --- Sección Colapsable ---
@@ -178,47 +174,31 @@ const CollapsibleNavSection = ({
 export default function Sidebar() {
   const { user } = useAuth();
   const [isMiNegocioOpen, setIsMiNegocioOpen] = useState(true);
-  const [adminNavSections, setAdminNavSections] = useState<NavSection[]>([]);
-  const [isLoadingMenu, setIsLoadingMenu] = useState(true);
-
-  useEffect(() => {
-    const fetchAdminMenu = async () => {
-      if (!user || (user.role !== 'ADMIN' && user.role !== 'FUNCIONARIO_DIRECTIVO')) {
-        setIsLoadingMenu(false);
-        return;
-      }
-      try {
-        const response = await api.get<{ results: ApiMenuItem[] }>('/api/config/menu-items/');
-        const apiMenuItems = response.data.results;
-
-        // Transformar la respuesta de la API a la estructura de NavSection
-        const transformedSections = apiMenuItems
-          .filter(item => !item.parent) // Solo items de nivel superior
-          .map(sectionItem => ({
-            title: sectionItem.nombre,
-            links: sectionItem.children.map(linkItem => ({
-              href: linkItem.url,
-              label: linkItem.nombre,
-              icon: iconMap[linkItem.icon] || FiFolder, // Icono por defecto
-            })),
-          }));
-
-        setAdminNavSections(transformedSections);
-      } catch (error) {
-        console.error("Error fetching admin menu:", error);
-        // Opcional: podrías poner un menú por defecto en caso de error
-      } finally {
-        setIsLoadingMenu(false);
-      }
-    };
-
-    fetchAdminMenu();
-  }, [user]);
-
 
   if (!user) return <SidebarSkeleton />;
 
   const prestadorCategoria = user.perfil_prestador?.categoria?.nombre;
+
+  const adminNavSections: NavSection[] = [
+    {
+      title: 'Gestión de Contenido',
+      links: [
+        { href: '/dashboard/publicaciones', label: 'Publicaciones', icon: FiFileText },
+        { href: '/dashboard/atractivos', label: 'Atractivos', icon: FiMapPin },
+        { href: '/dashboard/rutas', label: 'Rutas Turísticas', icon: FiMapPin },
+      ],
+    },
+    {
+      title: 'Administración',
+      links: [
+        { href: '/dashboard/admin/users', label: 'Usuarios', icon: FiUsers },
+        { href: '/dashboard/admin/site-config', label: 'Config. del Sitio', icon: FiSettings },
+        { href: '/dashboard/admin/formularios', label: 'Formularios', icon: FiClipboard },
+        { href: '/dashboard/admin/verificacion', label: 'Verificaciones', icon: FiCheckSquare },
+        { href: '/dashboard/admin/scoring', label: 'Puntuación', icon: FiAward },
+      ],
+    },
+  ];
 
   return (
     <aside className="w-64 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col">
@@ -255,20 +235,10 @@ export default function Sidebar() {
           </div>
         )}
 
-        {isLoadingMenu ? (
-          <div className="p-4 space-y-2">
-            <div className="h-6 bg-gray-200 rounded-md w-1/2 mb-3"></div>
-            <div className="space-y-2 pl-4">
-              <div className="h-5 bg-gray-200 rounded-md w-5/6"></div>
-              <div className="h-5 bg-gray-200 rounded-md w-4/6"></div>
-            </div>
-          </div>
-        ) : (
-          (user.role === 'ADMIN' || user.role === 'FUNCIONARIO_DIRECTIVO') &&
+        {(user.role === 'ADMIN' || user.role === 'FUNCIONARIO_DIRECTIVO') &&
           adminNavSections.map((section) => (
             <CollapsibleNavSection key={section.title} section={section} userRole={user.role} />
-          ))
-        )}
+          ))}
       </nav>
     </aside>
   );
