@@ -162,13 +162,13 @@ SITE_ID = 1
 REST_AUTH = {
     "USER_DETAILS_SERIALIZER": "api.serializers.CustomUserDetailSerializer",
     'LOGIN_SERIALIZER': 'api.serializers.CustomLoginSerializer',
+    'REGISTER_SERIALIZER': 'api.serializers.CustomRegisterSerializer',
 }
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = ['email']
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = 'none' # 'mandatory' en producción
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # 'mandatory' en producción
+ACCOUNT_SIGNUP_FIELDS = ['email', 'password1']
 ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
 
 # CORS

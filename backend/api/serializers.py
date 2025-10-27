@@ -24,6 +24,7 @@ from .models import (
 )
 from django.db import transaction
 from dj_rest_auth.serializers import LoginSerializer
+from dj_rest_auth.registration.serializers import RegisterSerializer
 # from apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
 # from apps.turismo.serializers import RutaTuristicaSerializer
 
@@ -1031,3 +1032,23 @@ class CustomLoginSerializer(LoginSerializer):
     con email como 'username'.
     """
     username = None
+
+class CustomRegisterSerializer(RegisterSerializer):
+    """
+    Serializador de Registro personalizado para eliminar el requisito de 'username'.
+    El 'username' se autogenerará a partir del email.
+    """
+    username = None
+
+    def get_cleaned_data(self):
+        # Sobrescribimos para asegurar que no se pida el username
+        data = super().get_cleaned_data()
+        data.pop('username', None)
+        return data
+
+    @transaction.atomic
+    def save(self, request):
+        user = super().save(request)
+        user.username = self.validated_data.get('email', '')
+        user.save()
+        return user
