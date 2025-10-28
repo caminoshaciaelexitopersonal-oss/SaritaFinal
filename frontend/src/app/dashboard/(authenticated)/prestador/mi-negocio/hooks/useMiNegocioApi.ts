@@ -1,61 +1,51 @@
 // src/app/[locale]/(dashboard)/prestador/mi-negocio/hooks/useMiNegocioApi.ts
-import { useState, useCallback } from 'react';
-import api from '@/services/api';
-// ... (imports)
+// ... (imports y interfaces existentes)
 
-// --- INTERFACES ---
-export interface Cliente { /* ... */ }
-export interface FacturaVenta { /* ... */ }
-export interface Proveedor { /* ... */ }
-export interface FacturaProveedor { /* ... */ }
-export interface CostCenter { /* ... */ }
-export interface Producto { /* ... */ }
-export interface MovimientoInventario { /* ... */ }
-// ... (y todas las demás)
+// --- NUEVAS Interfaces de Activos Fijos ---
+export interface ActivoFijo {
+  id: number;
+  nombre: string;
+  fecha_adquisicion: string;
+  costo_inicial: string;
+  valor_residual: string;
+  vida_util_meses: number;
+  depreciacion_acumulada: string;
+  valor_en_libros: string;
+}
+
+export interface RegistroDepreciacion {
+  id: number;
+  fecha: string;
+  monto: string;
+}
+
 
 export function useMiNegocioApi() {
-  const { token } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // ... (setup y makeRequest sin cambios)
 
-  const makeRequest = useCallback(async <T>(requestFunc: () => Promise<T>, successMessage?: string, errorMessage?: string): Promise<T | null> => {
-    // ... (lógica de makeRequest)
-  }, [token]);
+  // --- APIs existentes ---
+  // ...
 
-  // --- API Comercial ---
-  const getClientes = useCallback(async () => { /* ... */ });
-  const createCliente = useCallback(async (data: any) => { /* ... */ });
-  const updateCliente = useCallback(async (id: number, data: any) => { /* ... */ });
-  const deleteCliente = useCallback(async (id: number) => { /* ... */ });
-  const getFacturasVenta = useCallback(async () => { /* ... */ });
-  const createFacturaVenta = useCallback(async (data: any) => { /* ... */ });
+  // --- NUEVAS APIs de Activos Fijos ---
+  const getActivosFijos = useCallback(async () => {
+    return makeRequest(() => api.get<ActivoFijo[]>('/api/v1/prestadores/mi-negocio/activos/activos-fijos/').then(res => res.data));
+  }, [makeRequest]);
 
-  // --- API Compras ---
-  const getProveedores = useCallback(async () => { /* ... */ });
-  const createProveedor = useCallback(async (data: any) => { /* ... */ });
-  const updateProveedor = useCallback(async (id: number, data: any) => { /* ... */ });
-  const deleteProveedor = useCallback(async (id: number) => { /* ... */ });
-  const getFacturasProveedor = useCallback(async () => { /* ... */ });
-  const createFacturaProveedor = useCallback(async (data: any) => { /* ... */ });
+  const createActivoFijo = useCallback(async (data: Omit<ActivoFijo, 'id' | 'depreciacion_acumulada' | 'valor_en_libros'>) => {
+    return makeRequest(() => api.post<ActivoFijo>('/api/v1/prestadores/mi-negocio/activos/activos-fijos/', data).then(res => res.data), "Activo creado.");
+  }, [makeRequest]);
 
-  // --- API Contabilidad ---
-  const getCostCenters = useCallback(async () => { /* ... */ });
-  const createCostCenter = useCallback(async (data: any) => { /* ... */ });
-  // ... (otras)
+  const getHistorialDepreciacion = useCallback(async (activoId: number) => {
+    return makeRequest(() => api.get<RegistroDepreciacion[]>(`/api/v1/prestadores/mi-negocio/activos/activos-fijos/${activoId}/depreciaciones/`).then(res => res.data));
+  }, [makeRequest]);
 
-  // --- API Inventario ---
-  const getProductos = useCallback(async () => { /* ... */ });
-  const createProducto = useCallback(async (data: any) => { /* ... */ });
-  const getKardex = useCallback(async (id: number) => { /* ... */ });
 
   return {
-    isLoading, error,
-    getClientes, createCliente, updateCliente, deleteCliente,
-    getFacturasVenta, createFacturaVenta,
-    getProveedores, createProveedor, updateProveedor, deleteProveedor,
-    getFacturasProveedor, createFacturaProveedor,
-    getCostCenters, createCostCenter,
-    getProductos, createProducto, getKardex,
-    // ... (todas las demás funciones)
+    // ... (funciones existentes)
+
+    // --- NUEVAS funciones ---
+    getActivosFijos,
+    createActivoFijo,
+    getHistorialDepreciacion,
   };
 }
