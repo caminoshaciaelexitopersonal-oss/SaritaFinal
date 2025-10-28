@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useMiNegocioApi, FacturaProveedor, Proveedor } from '../../../../hooks/useMiNegocioApi';
+import { useMiNegocioApi, FacturaProveedor, Proveedor, CostCenter } from '../../../../hooks/useMiNegocioApi';
 import FacturaProveedorList from './components/FacturaProveedorList';
 import FacturaProveedorForm from './components/FacturaProveedorForm';
 import Modal from '../../../../componentes/Modal';
@@ -12,12 +12,14 @@ export default function FacturasProveedorPage() {
     getFacturasProveedor,
     createFacturaProveedor,
     getProveedores,
+    getCostCenters,
     isLoading,
     error
   } = useMiNegocioApi();
 
   const [facturas, setFacturas] = useState<FacturaProveedor[]>([]);
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
+  const [costCenters, setCostCenters] = useState<CostCenter[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchData = useCallback(async () => {
@@ -25,7 +27,9 @@ export default function FacturasProveedorPage() {
     if (facturasData) setFacturas(facturasData);
     const proveedoresData = await getProveedores();
     if (proveedoresData) setProveedores(proveedoresData);
-  }, [getFacturasProveedor, getProveedores]);
+    const costCentersData = await getCostCenters();
+    if (costCentersData) setCostCenters(costCentersData);
+  }, [getFacturasProveedor, getProveedores, getCostCenters]);
 
   useEffect(() => {
     fetchData();
@@ -49,13 +53,14 @@ export default function FacturasProveedorPage() {
 
       <FacturaProveedorList
         facturas={facturas}
-        onView={(factura) => alert(`Viendo factura de proveedor #${factura.id}`)} // Placeholder
+        onView={(factura) => alert(`Viendo factura de proveedor #${factura.id}`)}
       />
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Registrar Nueva Factura de Proveedor">
         <FacturaProveedorForm
           onSubmit={handleSubmit}
           proveedores={proveedores}
+          costCenters={costCenters}
           isLoading={isLoading}
         />
       </Modal>

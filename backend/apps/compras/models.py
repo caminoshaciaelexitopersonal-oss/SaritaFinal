@@ -30,6 +30,7 @@ class FacturaProveedor(models.Model):
 
     estado = models.CharField(max_length=10, choices=EstadoChoices.choices, default=EstadoChoices.PENDIENTE)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    centro_costo = models.ForeignKey('contabilidad.CostCenter', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"Factura de {self.proveedor.nombre} - Total: {self.total}"

@@ -3,15 +3,16 @@
 
 import React from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
-import { Cliente } from '../../../../hooks/useMiNegocioApi';
+import { Cliente, CostCenter } from '../../../../hooks/useMiNegocioApi';
 
 interface FacturaFormProps {
   onSubmit: (data: any) => void;
   clientes: Cliente[];
+  costCenters: CostCenter[];
   isLoading: boolean;
 }
 
-export default function FacturaForm({ onSubmit, clientes, isLoading }: FacturaFormProps) {
+export default function FacturaForm({ onSubmit, clientes, costCenters, isLoading }: FacturaFormProps) {
   const { register, control, handleSubmit, formState: { errors } } = useForm();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -32,6 +33,17 @@ export default function FacturaForm({ onSubmit, clientes, isLoading }: FacturaFo
         )}
       />
       {errors.cliente && <p className="text-red-500">{errors.cliente.message as string}</p>}
+
+      <Controller
+        name="centro_costo"
+        control={control}
+        render={({ field }) => (
+          <select {...field} className="w-full p-2 border rounded">
+            <option value="">-- Sin Centro de Costo --</option>
+            {costCenters.map(cc => <option key={cc.id} value={cc.id}>{cc.name}</option>)}
+          </select>
+        )}
+      />
 
       <input type="date" {...register('fecha_emision', { required: true })} className="w-full p-2 border rounded" />
       <input type="date" {...register('fecha_vencimiento', { required: true })} className="w-full p-2 border rounded" />

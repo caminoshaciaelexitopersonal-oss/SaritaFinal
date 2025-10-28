@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useMiNegocioApi, FacturaVenta, Cliente } from '../../../../hooks/useMiNegocioApi';
+import { useMiNegocioApi, FacturaVenta, Cliente, CostCenter } from '../../../../hooks/useMiNegocioApi';
 import FacturaList from './components/FacturaList';
 import FacturaForm from './components/FacturaForm';
 import Modal from '../../../../componentes/Modal';
@@ -12,12 +12,14 @@ export default function FacturacionPage() {
     getFacturasVenta,
     createFacturaVenta,
     getClientes,
+    getCostCenters,
     isLoading,
     error
   } = useMiNegocioApi();
 
   const [facturas, setFacturas] = useState<FacturaVenta[]>([]);
   const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [costCenters, setCostCenters] = useState<CostCenter[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchData = useCallback(async () => {
@@ -25,7 +27,9 @@ export default function FacturacionPage() {
     if (facturasData) setFacturas(facturasData);
     const clientesData = await getClientes();
     if (clientesData) setClientes(clientesData);
-  }, [getFacturasVenta, getClientes]);
+    const costCentersData = await getCostCenters();
+    if (costCentersData) setCostCenters(costCentersData);
+  }, [getFacturasVenta, getClientes, getCostCenters]);
 
   useEffect(() => {
     fetchData();
@@ -56,6 +60,7 @@ export default function FacturacionPage() {
         <FacturaForm
           onSubmit={handleSubmit}
           clientes={clientes}
+          costCenters={costCenters}
           isLoading={isLoading}
         />
       </Modal>
