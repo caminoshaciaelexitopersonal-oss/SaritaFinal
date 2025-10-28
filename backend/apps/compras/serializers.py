@@ -1,7 +1,13 @@
 # backend/apps/compras/serializers.py
 from rest_framework import serializers
 from django.db import transaction
-from .models import Proveedor, FacturaProveedor, ItemFacturaProveedor
+from .models import Proveedor, FacturaProveedor, ItemFacturaProveedor, PagoRealizado
+
+class PagoRealizadoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PagoRealizado
+        fields = '__all__'
+        read_only_fields = ['perfil']
 
 class ProveedorSerializer(serializers.ModelSerializer):
     class Meta:

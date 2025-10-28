@@ -45,3 +45,10 @@ class ItemFacturaProveedor(models.Model):
     def save(self, *args, **kwargs):
         self.total_item = self.cantidad * self.costo_unitario
         super().save(*args, **kwargs)
+
+class PagoRealizado(models.Model):
+    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='pagos_realizados')
+    factura = models.ForeignKey(FacturaProveedor, on_delete=models.CASCADE, related_name='pagos')
+    fecha_pago = models.DateField()
+    monto = models.DecimalField(max_digits=15, decimal_places=2)
+    metodo_pago = models.CharField(max_length=50, blank=True)

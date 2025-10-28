@@ -1,48 +1,44 @@
 // src/app/[locale]/(dashboard)/prestador/mi-negocio/hooks/useMiNegocioApi.ts
 import { useState, useCallback } from 'react';
-import api from '@/services/api';
 // ... (imports)
 
 // --- Interfaces ---
-// ... (interfaces existentes)
-export interface FacturaVenta {
-  // ...
-  centro_costo?: number;
-}
-export interface FacturaProveedor {
-  // ...
-  centro_costo?: number;
-}
-export interface CostCenter { // Ya existe pero la redefino para claridad
+// ... (existentes)
+export interface PagoRecibido {
   id: number;
-  code: string;
-  name: string;
+  factura: number;
+  fecha_pago: string;
+  monto: string;
 }
-// ... (resto de interfaces)
+export interface PagoRealizado {
+  id: number;
+  factura: number;
+  fecha_pago: string;
+  monto: string;
+}
+// ...
 
 export function useMiNegocioApi() {
-  // ... (setup sin cambios)
-
-  // --- Lógica de makeRequest sin cambios ---
+  // ... (setup y makeRequest sin cambios)
 
   // --- APIs existentes ---
-  // ... (APIs de Comercial, Compras, etc.)
+  // ...
 
-  // --- NUEVAS APIs de Centros de Costo ---
-  const getCostCenters = useCallback(async () => {
-    return makeRequest(() => api.get<CostCenter[]>('/api/v1/prestadores/mi-negocio/contable/cost-centers/').then(res => res.data));
+  // --- NUEVAS/MODIFICADAS APIs ---
+  const getFacturaVenta = useCallback(async (id: number) => {
+    return makeRequest(() => api.get<FacturaVenta>(`/api/v1/prestadores/mi-negocio/comercial/facturas-venta/${id}/`).then(res => res.data));
   }, [makeRequest]);
 
-  const createCostCenter = useCallback(async (data: Omit<CostCenter, 'id'>) => {
-    return makeRequest(() => api.post<CostCenter>('/api/v1/prestadores/mi-negocio/contable/cost-centers/', data).then(res => res.data), "Centro de Costo creado.");
+  const registrarPagoRecibido = useCallback(async (data: Omit<PagoRecibido, 'id'>) => {
+    return makeRequest(() => api.post<PagoRecibido>('/api/v1/prestadores/mi-negocio/comercial/pagos-recibidos/', data).then(res => res.data), "Pago registrado con éxito.");
   }, [makeRequest]);
 
-  const updateCostCenter = useCallback(async (id: number, data: Partial<Omit<CostCenter, 'id'>>) => {
-    return makeRequest(() => api.patch<CostCenter>(`/api/v1/prestadores/mi-negocio/contable/cost-centers/${id}/`, data).then(res => res.data), "Centro de Costo actualizado.");
+  const getFacturaProveedor = useCallback(async (id: number) => {
+    return makeRequest(() => api.get<FacturaProveedor>(`/api/v1/prestadores/mi-negocio/compras/facturas-proveedor/${id}/`).then(res => res.data));
   }, [makeRequest]);
 
-  const deleteCostCenter = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/api/v1/prestadores/mi-negocio/contable/cost-centers/${id}/`), "Centro de Costo eliminado.");
+  const registrarPagoRealizado = useCallback(async (data: Omit<PagoRealizado, 'id'>) => {
+    return makeRequest(() => api.post<PagoRealizado>('/api/v1/prestadores/mi-negocio/compras/pagos-realizados/', data).then(res => res.data), "Pago registrado con éxito.");
   }, [makeRequest]);
 
 
@@ -50,9 +46,9 @@ export function useMiNegocioApi() {
     // ... (funciones existentes)
 
     // --- NUEVAS funciones ---
-    getCostCenters,
-    createCostCenter,
-    updateCostCenter,
-    deleteCostCenter,
+    getFacturaVenta,
+    registrarPagoRecibido,
+    getFacturaProveedor,
+    registrarPagoRealizado,
   };
 }

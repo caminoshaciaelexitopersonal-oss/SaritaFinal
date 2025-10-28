@@ -1,8 +1,8 @@
 # backend/apps/compras/views.py
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .models import Proveedor, FacturaProveedor
-from .serializers import ProveedorSerializer, FacturaProveedorSerializer
+from .models import Proveedor, FacturaProveedor, PagoRealizado
+from .serializers import ProveedorSerializer, FacturaProveedorSerializer, PagoRealizadoSerializer
 from api.permissions import IsOwnerOrReadOnly
 
 class BasePerfilViewSet(viewsets.ModelViewSet):
@@ -36,3 +36,7 @@ class FacturaProveedorViewSet(BasePerfilViewSet):
             perfil=self.request.user.perfil_prestador,
             created_by=self.request.user
         )
+
+class PagoRealizadoViewSet(BasePerfilViewSet):
+    queryset = PagoRealizado.objects.all().order_by('-fecha_pago')
+    serializer_class = PagoRealizadoSerializer
