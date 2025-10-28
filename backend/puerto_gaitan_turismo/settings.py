@@ -63,6 +63,7 @@ INSTALLED_APPS = [
 "api",
 "apps.contabilidad",
 "apps.financiera",
+"apps.comercial",
 # "apps.empresa.apps.EmpresaConfig",
 # "apps.restaurante.apps.RestauranteConfig",
 # "apps.turismo.apps.TurismoConfig",

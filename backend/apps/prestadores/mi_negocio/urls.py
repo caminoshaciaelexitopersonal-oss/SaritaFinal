@@ -12,7 +12,7 @@ urlpatterns = [
     # path('operativa/especializados/', include('...urls_especializados')),
 
     # --- Módulos de Gestión ---
-    path('comercial/', include('apps.prestadores.mi_negocio.gestion_comercial.urls')),
+    path('comercial/', include('apps.comercial.urls')),
     path('contable/', include(('apps.contabilidad.urls', 'contabilidad_api'), namespace='contabilidad_api')),
     path('financiera/', include('apps.financiera.urls')),
     path('archivistica/', include('apps.prestadores.mi_negocio.gestion_archivistica.urls')),
