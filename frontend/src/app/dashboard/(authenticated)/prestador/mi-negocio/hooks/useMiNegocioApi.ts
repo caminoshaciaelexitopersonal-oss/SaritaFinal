@@ -1,54 +1,61 @@
 // src/app/[locale]/(dashboard)/prestador/mi-negocio/hooks/useMiNegocioApi.ts
 import { useState, useCallback } from 'react';
+import api from '@/services/api';
 // ... (imports)
 
-// --- Interfaces ---
-// ... (existentes)
-export interface PagoRecibido {
-  id: number;
-  factura: number;
-  fecha_pago: string;
-  monto: string;
-}
-export interface PagoRealizado {
-  id: number;
-  factura: number;
-  fecha_pago: string;
-  monto: string;
-}
-// ...
+// --- INTERFACES ---
+export interface Cliente { /* ... */ }
+export interface FacturaVenta { /* ... */ }
+export interface Proveedor { /* ... */ }
+export interface FacturaProveedor { /* ... */ }
+export interface CostCenter { /* ... */ }
+export interface Producto { /* ... */ }
+export interface MovimientoInventario { /* ... */ }
+// ... (y todas las demás)
 
 export function useMiNegocioApi() {
-  // ... (setup y makeRequest sin cambios)
+  const { token } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // --- APIs existentes ---
-  // ...
+  const makeRequest = useCallback(async <T>(requestFunc: () => Promise<T>, successMessage?: string, errorMessage?: string): Promise<T | null> => {
+    // ... (lógica de makeRequest)
+  }, [token]);
 
-  // --- NUEVAS/MODIFICADAS APIs ---
-  const getFacturaVenta = useCallback(async (id: number) => {
-    return makeRequest(() => api.get<FacturaVenta>(`/api/v1/prestadores/mi-negocio/comercial/facturas-venta/${id}/`).then(res => res.data));
-  }, [makeRequest]);
+  // --- API Comercial ---
+  const getClientes = useCallback(async () => { /* ... */ });
+  const createCliente = useCallback(async (data: any) => { /* ... */ });
+  const updateCliente = useCallback(async (id: number, data: any) => { /* ... */ });
+  const deleteCliente = useCallback(async (id: number) => { /* ... */ });
+  const getFacturasVenta = useCallback(async () => { /* ... */ });
+  const createFacturaVenta = useCallback(async (data: any) => { /* ... */ });
 
-  const registrarPagoRecibido = useCallback(async (data: Omit<PagoRecibido, 'id'>) => {
-    return makeRequest(() => api.post<PagoRecibido>('/api/v1/prestadores/mi-negocio/comercial/pagos-recibidos/', data).then(res => res.data), "Pago registrado con éxito.");
-  }, [makeRequest]);
+  // --- API Compras ---
+  const getProveedores = useCallback(async () => { /* ... */ });
+  const createProveedor = useCallback(async (data: any) => { /* ... */ });
+  const updateProveedor = useCallback(async (id: number, data: any) => { /* ... */ });
+  const deleteProveedor = useCallback(async (id: number) => { /* ... */ });
+  const getFacturasProveedor = useCallback(async () => { /* ... */ });
+  const createFacturaProveedor = useCallback(async (data: any) => { /* ... */ });
 
-  const getFacturaProveedor = useCallback(async (id: number) => {
-    return makeRequest(() => api.get<FacturaProveedor>(`/api/v1/prestadores/mi-negocio/compras/facturas-proveedor/${id}/`).then(res => res.data));
-  }, [makeRequest]);
+  // --- API Contabilidad ---
+  const getCostCenters = useCallback(async () => { /* ... */ });
+  const createCostCenter = useCallback(async (data: any) => { /* ... */ });
+  // ... (otras)
 
-  const registrarPagoRealizado = useCallback(async (data: Omit<PagoRealizado, 'id'>) => {
-    return makeRequest(() => api.post<PagoRealizado>('/api/v1/prestadores/mi-negocio/compras/pagos-realizados/', data).then(res => res.data), "Pago registrado con éxito.");
-  }, [makeRequest]);
-
+  // --- API Inventario ---
+  const getProductos = useCallback(async () => { /* ... */ });
+  const createProducto = useCallback(async (data: any) => { /* ... */ });
+  const getKardex = useCallback(async (id: number) => { /* ... */ });
 
   return {
-    // ... (funciones existentes)
-
-    // --- NUEVAS funciones ---
-    getFacturaVenta,
-    registrarPagoRecibido,
-    getFacturaProveedor,
-    registrarPagoRealizado,
+    isLoading, error,
+    getClientes, createCliente, updateCliente, deleteCliente,
+    getFacturasVenta, createFacturaVenta,
+    getProveedores, createProveedor, updateProveedor, deleteProveedor,
+    getFacturasProveedor, createFacturaProveedor,
+    getCostCenters, createCostCenter,
+    getProductos, createProducto, getKardex,
+    // ... (todas las demás funciones)
   };
 }

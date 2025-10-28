@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from apps.prestadores.models import Perfil
+from apps.inventario.models import Producto
 
 class Cliente(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='clientes_comerciales')
@@ -42,7 +43,7 @@ class FacturaVenta(models.Model):
 
 class ItemFactura(models.Model):
     factura = models.ForeignKey(FacturaVenta, on_delete=models.CASCADE, related_name='items')
-    descripcion = models.CharField(max_length=255)
+    producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
     cantidad = models.DecimalField(max_digits=10, decimal_places=2)
     precio_unitario = models.DecimalField(max_digits=15, decimal_places=2)
     total_item = models.DecimalField(max_digits=15, decimal_places=2)
