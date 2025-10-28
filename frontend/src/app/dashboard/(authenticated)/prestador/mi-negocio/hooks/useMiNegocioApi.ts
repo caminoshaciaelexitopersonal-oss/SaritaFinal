@@ -47,11 +47,10 @@ export interface Costo {
 // --- Tipos de Datos de Contabilidad ---
 export interface ChartOfAccount {
   id: number;
-  account_number: string;
+  code: string;
   name: string;
-  account_type: 'ASSET' | 'LIABILITY' | 'EQUITY' | 'REVENUE' | 'EXPENSE';
-  is_active: boolean;
-  parent: number | null;
+  nature: 'DEBITO' | 'CREDITO';
+  allows_transactions: boolean;
 }
 
 export interface Transaction {

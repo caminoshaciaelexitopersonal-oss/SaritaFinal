@@ -1,78 +1,74 @@
 # backend/apps/contabilidad/services.py
-from django.db import transaction
-from django.core.exceptions import ValidationError
-from .models import JournalEntry, Transaction, ChartOfAccount
+from django.db import transaction as db_transaction
+from decimal import Decimal
+from .models import ChartOfAccount, JournalEntry, Transaction, CostCenter
+from api.models import CustomUser as User # Adaptado al modelo de usuario del proyecto
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
 
+# Se comentan las dependencias a módulos inexistentes
+# from closing_process.models import ClosingPeriod
+# from projects.models import Project
+
+@db_transaction.atomic
 def create_full_journal_entry(
-    perfil,
-    date,
-    description,
-    transactions_data,
-    created_by,
-    cost_center=None
-):
+    *, # Fuerza a que los argumentos se pasen por nombre
+    user: User,
+    perfil: Perfil,
+    entry_date,
+    description: str,
+    entry_type: str,
+    transactions_data: list
+) -> JournalEntry:
     """
-    Crea un asiento contable completo con sus transacciones de forma atómica.
-    Valida que los débitos y créditos totales sean iguales antes de guardar.
-
-    Args:
-        perfil (Perfil): El perfil del prestador al que pertenece el asiento.
-        date (date): La fecha del asiento.
-        description (str): Descripción general del asiento.
-        transactions_data (list): Una lista de diccionarios, cada uno representando una transacción.
-                                  Ej: [{'account_number': '110505', 'debit': 100, 'credit': 0}, ...]
-        created_by (User): El usuario que crea el asiento.
-        cost_center (CostCenter, optional): El centro de costo asociado.
-
-    Returns:
-        JournalEntry: La instancia del asiento contable creado.
-
-    Raises:
-        ValidationError: Si los débitos y créditos no cuadran o una cuenta no existe.
+    Crea un asiento contable completo y sus transacciones de forma atómica y validada,
+    asegurando que todos los datos pertenecen al perfil del prestador.
     """
 
-    total_debit = sum(t.get('debit', 0) for t in transactions_data)
-    total_credit = sum(t.get('credit', 0) for t in transactions_data)
+    # --- 1. VALIDACIÓN DE PRE-CONDICIONES (GUARD CLAUSES) ---
+    # La validación del período cerrado se implementará cuando exista el módulo `closing_process`
+    # ...
 
-    if total_debit != total_credit:
-        raise ValidationError("El total de débitos y créditos debe ser igual.")
+    # --- 2. VALIDACIÓN DE LÓGICA DE NEGOCIO ---
+    total_debits = sum(Decimal(t.get('debit', 0)) for t in transactions_data)
+    total_credits = sum(Decimal(t.get('credit', 0)) for t in transactions_data)
 
-    if not transactions_data:
-        raise ValidationError("Se requiere al menos una transacción.")
+    if total_debits != total_credits:
+        raise ValueError(f"La partida doble no cuadra: Débitos={total_debits}, Créditos={total_credits}.")
 
-    with transaction.atomic():
-        # Crear el asiento contable
-        journal_entry = JournalEntry.objects.create(
-            perfil=perfil,
-            date=date,
-            description=description,
-            created_by=created_by,
-            cost_center=cost_center
-        )
+    # --- 3. EJECUCIÓN ATÓMICA ---
+    journal_entry = JournalEntry.objects.create(
+        user=user,
+        perfil=perfil, # Asignación del perfil
+        entry_date=entry_date,
+        description=description,
+        entry_type=entry_type,
+    )
 
-        # Crear cada transacción
-        transactions_to_create = []
-        for t_data in transactions_data:
-            account_number = t_data.get('account_number')
+    for tx_data in transactions_data:
+        account_code = tx_data['account_code']
+        try:
+            # ROBUSTO: Se busca la cuenta dentro del perfil del prestador.
+            account = ChartOfAccount.objects.get(code=account_code, perfil=perfil)
+        except ChartOfAccount.DoesNotExist:
+            raise ValueError(f"La cuenta contable '{account_code}' no existe para este negocio.")
+
+        if not account.allows_transactions:
+            raise ValueError(f"La cuenta de control '{account.code} - {account.name}' no permite transacciones.")
+
+        cost_center = None
+        if tx_data.get('cost_center_code'):
             try:
-                # Se busca la cuenta dentro del plan de cuentas del perfil
-                account = ChartOfAccount.objects.get(perfil=perfil, account_number=account_number)
-            except ChartOfAccount.DoesNotExist:
-                raise ValidationError(f"La cuenta contable '{account_number}' no existe para este perfil.")
+                # ROBUSTO: Se busca el centro de costo dentro del perfil del prestador.
+                cost_center = CostCenter.objects.get(code=tx_data['cost_center_code'], perfil=perfil)
+            except CostCenter.DoesNotExist:
+                 raise ValueError(f"El centro de costo '{tx_data.get('cost_center_code')}' no existe para este negocio.")
 
-            transactions_to_create.append(
-                Transaction(
-                    journal_entry=journal_entry,
-                    account=account,
-                    debit=t_data.get('debit', 0),
-                    credit=t_data.get('credit', 0),
-                    description=t_data.get('description', '')
-                )
-            )
-
-        Transaction.objects.bulk_create(transactions_to_create)
-
-        # Re-validar el asiento completo (aunque la lógica ya lo hace, es una doble verificación)
-        journal_entry.full_clean()
+        Transaction.objects.create(
+            journal_entry=journal_entry,
+            account=account,
+            debit=tx_data.get('debit', 0),
+            credit=tx_data.get('credit', 0),
+            cost_center=cost_center,
+        )
 
     return journal_entry

@@ -1,7 +1,7 @@
 // /app/dashboard/prestador/mi-negocio/gestion-contable/components/ChartOfAccountForm.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { ChartOfAccount } from '../../../hooks/useMiNegocioApi';
 
@@ -11,42 +11,45 @@ interface ChartOfAccountFormProps {
   isLoading: boolean;
 }
 
-const accountTypes = [
-  { value: 'ASSET', label: 'Activo' },
-  { value: 'LIABILITY', label: 'Pasivo' },
-  { value: 'EQUITY', label: 'Patrimonio' },
-  { value: 'REVENUE', label: 'Ingreso' },
-  { value: 'EXPENSE', label: 'Gasto' },
+const natureTypes = [
+  { value: 'DEBITO', label: 'Débito' },
+  { value: 'CREDITO', label: 'Crédito' },
 ];
 
 export default function ChartOfAccountForm({ onSubmit, initialData, isLoading }: ChartOfAccountFormProps) {
   const { register, handleSubmit, control, reset, formState: { errors } } = useForm<Omit<ChartOfAccount, 'id'>>({
     defaultValues: initialData || {
-      account_number: '',
+      code: '',
       name: '',
-      account_type: 'ASSET',
-      is_active: true,
-      parent: null,
+      nature: 'DEBITO',
+      allows_transactions: true,
     }
   });
 
   useEffect(() => {
     if (initialData) {
       reset(initialData);
+    } else {
+      reset({
+        code: '',
+        name: '',
+        nature: 'DEBITO',
+        allows_transactions: true,
+      });
     }
   }, [initialData, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label htmlFor="account_number" className="block text-sm font-medium text-gray-700">Número de Cuenta</label>
+        <label htmlFor="code" className="block text-sm font-medium text-gray-700">Código de Cuenta</label>
         <input
-          id="account_number"
+          id="code"
           type="text"
-          {...register('account_number', { required: 'Este campo es obligatorio' })}
+          {...register('code', { required: 'Este campo es obligatorio' })}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
-        {errors.account_number && <p className="text-red-500 text-xs mt-1">{errors.account_number.message}</p>}
+        {errors.code && <p className="text-red-500 text-xs mt-1">{errors.code.message}</p>}
       </div>
 
       <div>
@@ -61,13 +64,13 @@ export default function ChartOfAccountForm({ onSubmit, initialData, isLoading }:
       </div>
 
       <div>
-        <label htmlFor="account_type" className="block text-sm font-medium text-gray-700">Tipo de Cuenta</label>
+        <label htmlFor="nature" className="block text-sm font-medium text-gray-700">Naturaleza de la Cuenta</label>
         <Controller
-          name="account_type"
+          name="nature"
           control={control}
           render={({ field }) => (
-            <select {...field} id="account_type" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-              {accountTypes.map(type => (
+            <select {...field} id="nature" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+              {natureTypes.map(type => (
                 <option key={type.value} value={type.value}>{type.label}</option>
               ))}
             </select>
@@ -77,12 +80,12 @@ export default function ChartOfAccountForm({ onSubmit, initialData, isLoading }:
 
       <div className="flex items-center">
         <input
-          id="is_active"
+          id="allows_transactions"
           type="checkbox"
-          {...register('is_active')}
+          {...register('allows_transactions')}
           className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
         />
-        <label htmlFor="is_active" className="ml-2 block text-sm text-gray-900">Activa</label>
+        <label htmlFor="allows_transactions" className="ml-2 block text-sm text-gray-900">Permite Transacciones (Cuenta Auxiliar)</label>
       </div>
 
       <div className="flex justify-end pt-4">

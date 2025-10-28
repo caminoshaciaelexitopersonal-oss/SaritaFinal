@@ -11,9 +11,9 @@ urlpatterns = [
     # (Aquí se añadirán las rutas para módulos especializados en el futuro)
     # path('operativa/especializados/', include('...urls_especializados')),
 
-    # --- Marcadores de posición para futuras gestiones ---
+    # --- Módulos de Gestión ---
     path('comercial/', include('apps.prestadores.mi_negocio.gestion_comercial.urls')),
-    path('contable/', include('apps.prestadores.mi_negocio.gestion_contable.urls')),
-    path('financiera/', include('apps.prestadores.mi_negocio.gestion_financiera.urls')),
+    path('contable/', include(('apps.contabilidad.urls', 'contabilidad_api'), namespace='contabilidad_api')),
+    path('financiera/', include('apps.financiera.urls')),
     path('archivistica/', include('apps.prestadores.mi_negocio.gestion_archivistica.urls')),
 ]

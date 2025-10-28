@@ -1,8 +1,8 @@
-# backend/apps/financiero/models.py
+# backend/apps/financiera/models.py
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.models import Perfil
 from apps.contabilidad.models import ChartOfAccount, JournalEntry
 
 class BankAccount(models.Model):
@@ -12,11 +12,10 @@ class BankAccount(models.Model):
     account_holder = models.CharField(max_length=255)
 
     class AccountType(models.TextChoices):
-        SAVINGS = 'SAVINGS', _('Savings')
-        CHECKING = 'CHECKING', _('Checking')
+        SAVINGS = 'SAVINGS', _('Ahorros')
+        CHECKING = 'CHECKING', _('Corriente')
 
     account_type = models.CharField(max_length=10, choices=AccountType.choices)
-    currency = models.ForeignKey('contabilidad.Currency', on_delete=models.PROTECT)
     balance = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     is_active = models.BooleanField(default=True)
     linked_account = models.OneToOneField(
@@ -29,8 +28,8 @@ class BankAccount(models.Model):
 
     class Meta:
         unique_together = ('perfil', 'account_number', 'bank_name')
-        verbose_name = _("Bank Account")
-        verbose_name_plural = _("Bank Accounts")
+        verbose_name = _("Cuenta Bancaria")
+        verbose_name_plural = _("Cuentas Bancarias")
 
     def __str__(self):
         return f"{self.bank_name} - {self.account_number}"
@@ -40,9 +39,9 @@ class CashTransaction(models.Model):
     bank_account = models.ForeignKey(BankAccount, on_delete=models.PROTECT)
 
     class TransactionType(models.TextChoices):
-        DEPOSIT = 'DEPOSIT', _('Deposit')
-        WITHDRAWAL = 'WITHDRAWAL', _('Withdrawal')
-        TRANSFER = 'TRANSFER', _('Transfer')
+        DEPOSIT = 'DEPOSIT', _('Depósito')
+        WITHDRAWAL = 'WITHDRAWAL', _('Retiro')
+        TRANSFER = 'TRANSFER', _('Transferencia')
 
     transaction_type = models.CharField(max_length=10, choices=TransactionType.choices)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
@@ -52,7 +51,6 @@ class CashTransaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
-    # Enlace opcional al asiento contable que se genera a partir de esta transacción
     journal_entry = models.OneToOneField(
         JournalEntry,
         on_delete=models.SET_NULL,
@@ -62,9 +60,9 @@ class CashTransaction(models.Model):
     )
 
     class Meta:
-        verbose_name = _("Cash Transaction")
-        verbose_name_plural = _("Cash Transactions")
+        verbose_name = _("Transacción de Caja")
+        verbose_name_plural = _("Transacciones de Caja")
         ordering = ['-date']
 
     def __str__(self):
-        return f"{self.transaction_type} of {self.amount} on {self.date}"
+        return f"{self.transaction_type} de {self.amount} en {self.date}"
