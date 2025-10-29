@@ -37,7 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useMiNegocioApi, Empleado, CreateEmpleadoDTO } from "../../../../(authenticated)/prestador/mi-negocio/hooks/useMiNegocioApi";
+import { useMiNegocioApi, Empleado, CreateEmpleadoDTO } from "../../hooks/useMiNegocioApi";
 
 // Esquema de validación para el formulario de empleado
 const empleadoSchema = z.object({
@@ -103,33 +103,17 @@ export default function EmpleadosPage() {
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                {/* Campos del formulario */}
                 <FormField name="nombre" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
+                  <FormItem><FormLabel>Nombre</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField name="apellido" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Apellido</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
+                  <FormItem><FormLabel>Apellido</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
-                 <FormField
-                  control={form.control}
-                  name="tipo_documento"
-                  render={({ field }) => (
+                 <FormField control={form.control} name="tipo_documento" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Tipo de Documento</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Seleccione un tipo" />
-                          </SelectTrigger>
-                        </FormControl>
+                        <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                         <SelectContent>
                           <SelectItem value="CC">Cédula de Ciudadanía</SelectItem>
                           <SelectItem value="CE">Cédula de Extranjería</SelectItem>
@@ -141,32 +125,16 @@ export default function EmpleadosPage() {
                   )}
                 />
                 <FormField name="numero_documento" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Número de Documento</FormLabel>
-                        <FormControl><Input {...field} /></FormControl>
-                        <FormMessage />
-                    </FormItem>
+                    <FormItem><FormLabel>Número de Documento</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField name="fecha_nacimiento" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Fecha de Nacimiento</FormLabel>
-                        <FormControl><Input type="date" {...field} /></FormControl>
-                        <FormMessage />
-                    </FormItem>
+                    <FormItem><FormLabel>Fecha de Nacimiento</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField name="fecha_contratacion" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Fecha de Contratación</FormLabel>
-                        <FormControl><Input type="date" {...field} /></FormControl>
-                        <FormMessage />
-                    </FormItem>
+                    <FormItem><FormLabel>Fecha de Contratación</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField name="salario_base" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Salario Base</FormLabel>
-                        <FormControl><Input type="number" {...field} /></FormControl>
-                        <FormMessage />
-                    </FormItem>
+                    <FormItem><FormLabel>Salario Base</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
 
                 <Button type="submit">Guardar</Button>

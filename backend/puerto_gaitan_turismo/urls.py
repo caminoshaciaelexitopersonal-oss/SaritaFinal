@@ -15,11 +15,11 @@ urlpatterns = [
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
 
-    # Panel "Mi Negocio" para Prestadores (más específica, va primero)
-    path("api/v1/", include("apps.prestadores.urls")),
-
     # Rutas de la API de la aplicación principal
     path("api/", include("api.urls")),
+
+    # Panel "Mi Negocio" para Prestadores
+    path("api/v1/", include("apps.prestadores.urls")),
 ]
 
 # Servir archivos multimedia en modo de desarrollo

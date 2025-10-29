@@ -1,82 +1,68 @@
 # backend/apps/contabilidad/serializers.py
 from rest_framework import serializers
-from .models import ChartOfAccount, JournalEntry, Transaction, CostCenter
-# Se comenta la dependencia a 'Project' que aún no existe
-# from projects.models import Project
-
-# --- SERIALIZERS DE SOLO LECTURA (PARA MOSTRAR DATOS) ---
-class ChartOfAccountReadSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChartOfAccount
-        fields = ['id', 'code', 'name', 'nature', 'allows_transactions']
+from .models import CostCenter, Currency, ChartOfAccount, JournalEntry, Transaction
+from .services import create_full_journal_entry
 
 class CostCenterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CostCenter
-        fields = ['id', 'code', 'name']
+        fields = ['id', 'name', 'description', 'perfil']
+        read_only_fields = ['perfil']
 
-class TransactionReadSerializer(serializers.ModelSerializer):
-    account = ChartOfAccountReadSerializer(read_only=True)
-    cost_center_code = serializers.CharField(source='cost_center.code', allow_null=True)
-    # project_code = serializers.CharField(source='project.code', allow_null=True)
+class CurrencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Currency
+        fields = ['code', 'name']
+
+class ChartOfAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChartOfAccount
+        fields = ['id', 'account_number', 'name', 'account_type', 'is_active', 'parent', 'perfil']
+        read_only_fields = ['perfil']
+
+class TransactionSerializer(serializers.ModelSerializer):
+    account_number = serializers.CharField(source='account.account_number', read_only=True)
 
     class Meta:
         model = Transaction
-        fields = ['id', 'account', 'debit', 'credit', 'cost_center_code'] # Removido 'project_code'
+        fields = ['id', 'account', 'account_number', 'debit', 'credit', 'description']
+        extra_kwargs = {
+            'account': {'write_only': True},
+        }
 
-class JournalEntryReadSerializer(serializers.ModelSerializer):
-    transactions = TransactionReadSerializer(many=True, read_only=True)
-    user_username = serializers.CharField(source='user.username', read_only=True)
+class WriteTransactionSerializer(serializers.Serializer):
+    """
+    Serializer para escribir transacciones anidadas.
+    Recibe el número de cuenta en lugar del ID para facilitar la creación.
+    """
+    account_number = serializers.CharField(max_length=20)
+    debit = serializers.DecimalField(max_digits=12, decimal_places=2, default=0)
+    credit = serializers.DecimalField(max_digits=12, decimal_places=2, default=0)
+    description = serializers.CharField(max_length=255, required=False, allow_blank=True)
 
-    class Meta:
-        model = JournalEntry
-        fields = ['id', 'entry_date', 'description', 'entry_type', 'user_username', 'created_at', 'transactions']
-
-
-# --- SERIALIZERS DE ESCRITURA (PARA CREAR DATOS) ---
-class TransactionWriteSerializer(serializers.Serializer):
-    account_code = serializers.CharField(max_length=20)
-    debit = serializers.DecimalField(max_digits=18, decimal_places=2, default=0)
-    credit = serializers.DecimalField(max_digits=18, decimal_places=2, default=0)
-    cost_center_code = serializers.CharField(max_length=20, required=False, allow_null=True)
-    # project_code = serializers.CharField(max_length=50, required=False, allow_null=True)
-
-    def validate(self, data):
-        if data.get('debit', 0) > 0 and data.get('credit', 0) > 0:
-            raise serializers.ValidationError("Débito y Crédito no pueden tener valor en la misma transacción.")
-        if data.get('debit', 0) == 0 and data.get('credit', 0) == 0:
-            raise serializers.ValidationError("La transacción debe tener un valor de débito o crédito.")
-        return data
-
-class JournalEntryWriteSerializer(serializers.ModelSerializer):
-    transactions = TransactionWriteSerializer(many=True, min_length=2)
+class JournalEntrySerializer(serializers.ModelSerializer):
+    transactions = TransactionSerializer(many=True, read_only=True)
+    transactions_data = WriteTransactionSerializer(many=True, write_only=True)
+    created_by_username = serializers.CharField(source='created_by.username', read_only=True)
 
     class Meta:
         model = JournalEntry
-        fields = ['entry_date', 'description', 'entry_type', 'transactions']
+        fields = [
+            'id', 'date', 'description', 'cost_center',
+            'created_at', 'created_by', 'created_by_username',
+            'transactions', 'transactions_data'
+        ]
+        read_only_fields = ['perfil', 'created_by']
 
     def create(self, validated_data):
-        from .services import create_full_journal_entry
+        transactions_data = validated_data.pop('transactions_data')
+        perfil = self.context['request'].user.perfil_prestador
+        created_by = self.context['request'].user
 
-        try:
-            # Se inyecta el usuario del request actual, garantizando la autoría.
-            user = self.context['request'].user
-
-            # **ADAPTACIÓN CLAVE**: Obtenemos el perfil directamente desde el usuario autenticado.
-            perfil = self.context['request'].user.perfil_prestador
-
-            # Se llama al servicio de negocio, manteniendo el serializer limpio.
-            journal_entry = create_full_journal_entry(
-                user=user,
-                perfil=perfil,
-                entry_date=validated_data['entry_date'],
-                description=validated_data['description'],
-                entry_type=validated_data['entry_type'],
-                transactions_data=validated_data['transactions']
-            )
-            return journal_entry
-        except ValueError as e:
-            # Propaga errores de negocio (partida doble, cuenta no válida) como errores de API.
-            raise serializers.ValidationError(str(e))
-        except AttributeError:
-             raise serializers.ValidationError("No se pudo determinar el perfil del negocio para esta operación.")
+        journal_entry = create_full_journal_entry(
+            perfil=perfil,
+            created_by=created_by,
+            transactions_data=transactions_data,
+            **validated_data
+        )
+        return journal_entry

@@ -5,8 +5,7 @@ import {
   FiChevronDown, FiChevronRight, FiBox, FiStar, FiAward, FiMap, FiTruck,
   FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive,
   FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
-  FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare,
-  FiCreditCard, FiRepeat
+  FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare
 } from 'react-icons/fi';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -99,14 +98,16 @@ const miNegocioNav: NavSection[] = [
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/agencias', label: 'Paquetes Turísticos', icon: FiBriefcase, prestadorCategoria: 'agencia' },
     ],
   },
+  { title: 'Gestión Comercial', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-comercial', label: 'Ver Módulo', icon: FiBriefcase }] },
+  { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Ver Módulo', icon: FiArchive }] },
   {
-    title: 'Gestión Comercial',
+    title: 'Gestión de Nómina',
     isSubSection: true,
     links: [
-      { href: '/dashboard/prestador/mi-negocio/gestion-comercial/ventas', label: 'Facturas de Venta', icon: FiFileText }
-    ]
+      { href: '/dashboard/prestador/mi-negocio/nomina', label: 'Procesar Nómina', icon: FiDollarSign },
+      { href: '/dashboard/prestador/mi-negocio/nomina/empleados', label: 'Empleados', icon: FiUsers },
+    ],
   },
-  { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Ver Módulo', icon: FiArchive }] },
   {
     title: 'Gestión Contable',
     isSubSection: true,
@@ -122,14 +123,6 @@ const miNegocioNav: NavSection[] = [
       { href: '/dashboard/prestador/mi-negocio/gestion-financiera', label: 'Dashboard Financiero', icon: FiDollarSign },
       { href: '/dashboard/prestador/mi-negocio/gestion-financiera/cuentas-bancarias', label: 'Cuentas Bancarias', icon: FiCreditCard },
       { href: '/dashboard/prestador/mi-negocio/gestion-financiera/transacciones', label: 'Transacciones', icon: FiRepeat },
-    ],
-  },
-  {
-    title: 'Gestión de Nómina',
-    isSubSection: true,
-    links: [
-      { href: '/dashboard/prestador/mi-negocio/nomina', label: 'Procesar Nómina', icon: FiDollarSign },
-      { href: '/dashboard/prestador/mi-negocio/nomina/empleados', label: 'Empleados', icon: FiUsers },
     ],
   },
 ];

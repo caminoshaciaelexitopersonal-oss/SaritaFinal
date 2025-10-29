@@ -1,11 +1,7 @@
+# backend/apps/prestadores/mi_negocio/gestion_financiera/urls.py
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from apps.financiera.views import BankAccountViewSet, CashTransactionViewSet
 
-router = DefaultRouter()
-router.register(r'cuentas-bancarias', BankAccountViewSet, basename='bank-accounts')
-router.register(r'transacciones', CashTransactionViewSet, basename='cash-transactions')
-
+# Redirige las solicitudes bajo '.../financiera/' a la app 'financiera'.
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include('apps.financiera.urls')),
 ]

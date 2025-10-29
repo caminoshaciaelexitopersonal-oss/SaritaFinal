@@ -11,8 +11,8 @@ están organizados en una arquitectura modular bajo 'mi_negocio'.
 # Módulo de Perfil del Prestador (Refactorizado)
 from .mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil, CategoriaPrestador
 
-# Módulo de Clientes (CRM) (Centralizado)
-from apps.comercial.models import Cliente
+# Módulo de Clientes (CRM) (Refactorizado)
+from .mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
 
 # Módulo de Productos y Servicios (Pendiente de refactorización completa)
 # from .mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import *

@@ -63,14 +63,11 @@ INSTALLED_APPS = [
 "api",
 "apps.contabilidad",
 "apps.financiera",
-"apps.comercial",
-"apps.compras",
 "apps.inventario",
 "apps.activos",
+"apps.compras",
+"apps.comercial",
 "apps.nomina",
-# "apps.empresa.apps.EmpresaConfig",
-# "apps.restaurante.apps.RestauranteConfig",
-# "apps.turismo.apps.TurismoConfig",
 ]
  
 MIDDLEWARE = [

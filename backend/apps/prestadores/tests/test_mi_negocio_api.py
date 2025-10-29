@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from api.models import CustomUser
 from apps.prestadores.models import CategoriaPrestador, Perfil
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import ProductoServicio
-from apps.comercial.models import Cliente  # Import centralizado
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
 # from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.models import Costo
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.models import Inventario
@@ -44,7 +44,7 @@ class MiNegocioAPITests(APITestCase):
         self.producto = ProductoServicio.objects.create(
             perfil=self.perfil, nombre="Café", precio=2.50
         )
-        # self.cliente_obj = Cliente.objects.create(perfil=self.perfil, nombre="Juan Perez", email="juan@example.com")
+        self.cliente_obj = Cliente.objects.create(perfil=self.perfil, nombre="Juan Perez", email="juan@example.com")
 
         self.prestador_token = Token.objects.create(user=self.prestador_user)
         self.turista_token = Token.objects.create(user=self.turista_user)
@@ -103,25 +103,17 @@ class MiNegocioAPITests(APITestCase):
 
     # --- Pruebas de Clientes ---
     def test_prestador_can_list_own_clientes(self):
-        # Crear un cliente específicamente para esta prueba
-        Cliente.objects.create(perfil=self.perfil, nombre="Cliente de Prueba Lista", email="lista@test.com")
-
         url = reverse('mi_negocio:cliente-list')
         response = self.client.get(url, **self._get_auth_header(self.prestador_token))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # Verificar que al menos un cliente es devuelto
-        self.assertGreaterEqual(len(response.data['results']), 1)
+        self.assertEqual(len(response.data['results']), 1)
 
     def test_prestador_can_create_cliente(self):
-        initial_count = Cliente.objects.filter(perfil=self.perfil).count()
-
         url = reverse('mi_negocio:cliente-list')
         data = {'nombre': 'Maria Lopez', 'email': 'maria@example.com'}
         response = self.client.post(url, data, **self._get_auth_header(self.prestador_token))
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Cliente.objects.filter(perfil=self.perfil).count(), initial_count + 1)
+        self.assertEqual(Cliente.objects.filter(perfil=self.perfil).count(), 2)
 
     # --- Pruebas de Reservas ---
     # def test_prestador_can_create_reserva(self):

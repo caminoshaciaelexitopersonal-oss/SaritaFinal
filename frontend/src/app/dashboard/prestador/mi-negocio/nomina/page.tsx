@@ -24,12 +24,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useMiNegocioApi, Nomina } from "../../../(authenticated)/prestador/mi-negocio/hooks/useMiNegocioApi";
+import { useMiNegocioApi, Nomina } from "../../hooks/useMiNegocioApi";
 
-// Esquema de validación para el formulario de procesamiento
 const procesarSchema = z.object({
-  fecha_inicio: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Formato de fecha inválido (YYYY-MM-DD)."),
-  fecha_fin: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Formato de fecha inválido (YYYY-MM-DD)."),
+  fecha_inicio: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida."),
+  fecha_fin: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida."),
 }).refine(data => new Date(data.fecha_inicio) <= new Date(data.fecha_fin), {
   message: "La fecha de inicio no puede ser posterior a la fecha de fin.",
   path: ["fecha_fin"],
@@ -64,25 +63,15 @@ export default function NominaPage() {
       <h1 className="text-2xl font-bold">Módulo de Nómina</h1>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Procesar Nueva Nómina</CardTitle>
-        </CardHeader>
+        <CardHeader><CardTitle>Procesar Nueva Nómina</CardTitle></CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-end gap-4">
               <FormField name="fecha_inicio" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Fecha de Inicio</FormLabel>
-                  <FormControl><Input type="date" {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
+                <FormItem><FormLabel>Fecha de Inicio</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField name="fecha_fin" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Fecha de Fin</FormLabel>
-                  <FormControl><Input type="date" {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
+                <FormItem><FormLabel>Fecha de Fin</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
               )} />
               <Button type="submit">Procesar</Button>
             </form>
@@ -91,9 +80,7 @@ export default function NominaPage() {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Historial de Nóminas</CardTitle>
-        </CardHeader>
+        <CardHeader><CardTitle>Historial de Nóminas</CardTitle></CardHeader>
         <CardContent>
           <Table>
             <TableHeader>

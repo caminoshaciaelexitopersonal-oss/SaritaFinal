@@ -1,85 +1,71 @@
 # backend/apps/contabilidad/views.py
-from rest_framework import viewsets, permissions, status
-from rest_framework.response import Response
-
-from .models import ChartOfAccount, JournalEntry, CostCenter
+from rest_framework import viewsets, permissions
+from rest_framework.exceptions import PermissionDenied
+from .models import CostCenter, Currency, ChartOfAccount, JournalEntry
 from .serializers import (
-    ChartOfAccountReadSerializer, JournalEntryReadSerializer,
-    JournalEntryWriteSerializer, CostCenterSerializer
+    CostCenterSerializer, CurrencySerializer, ChartOfAccountSerializer,
+    JournalEntrySerializer
 )
 
-# Un permiso personalizado para asegurar que el usuario es un prestador con perfil
-class IsPrestadorConPerfil(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return hasattr(request.user, 'perfil_prestador')
+class IsOwnerOfPerfil(permissions.BasePermission):
+    """
+    Permiso para verificar que el objeto pertenece al perfil del usuario autenticado.
+    """
+    def has_object_permission(self, request, view, obj):
+        # El perfil se obtiene del objeto mismo
+        if hasattr(obj, 'perfil'):
+            return obj.perfil == request.user.perfil_prestador
+        # Para modelos sin perfil (como Currency), se permite el acceso
+        return True
 
-class PerfilDataMixin:
+class ContabilidadBaseViewSet(viewsets.ModelViewSet):
     """
-    Mixin para filtrar querysets por el perfil del prestador
-    y para inyectar el perfil en el contexto del serializador.
+    ViewSet base para los modelos de contabilidad.
+    Filtra automáticamente el queryset para que solo devuelva objetos
+    pertenecientes al perfil del usuario autenticado.
     """
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOfPerfil]
+
     def get_queryset(self):
-        # Filtra el queryset para devolver solo objetos del perfil del usuario
-        return super().get_queryset().filter(perfil=self.request.user.perfil_prestador)
+        # Asegurarse de que el usuario tiene un perfil de prestador
+        try:
+            perfil = self.request.user.perfil_prestador
+        except AttributeError:
+            raise PermissionDenied("El usuario no tiene un perfil de prestador asociado.")
 
-    def get_serializer_context(self):
-        # Inyecta el perfil en el contexto para que el serializador lo use
-        context = super().get_serializer_context()
-        context['perfil'] = self.request.user.perfil_prestador
-        return context
+        # Filtrar el queryset por el perfil del usuario
+        return self.queryset.filter(perfil=perfil)
 
     def perform_create(self, serializer):
-        # Asigna el perfil automáticamente al crear un objeto
-        serializer.save(perfil=self.request.user.perfil_prestador)
+        # Asignar automáticamente el perfil del usuario al crear un objeto
+        try:
+            perfil = self.request.user.perfil_prestador
+            serializer.save(perfil=perfil)
+        except AttributeError:
+            raise PermissionDenied("No se puede crear el objeto sin un perfil de prestador.")
 
-class ChartOfAccountViewSet(PerfilDataMixin, viewsets.ModelViewSet):
-    """API para el Plan de Cuentas (PUC) de un prestador."""
-    queryset = ChartOfAccount.objects.all()
-    serializer_class = ChartOfAccountReadSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorConPerfil]
-
-class CostCenterViewSet(PerfilDataMixin, viewsets.ModelViewSet):
-    """API para los Centros de Costo de un prestador."""
+class CostCenterViewSet(ContabilidadBaseViewSet):
     queryset = CostCenter.objects.all()
     serializer_class = CostCenterSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorConPerfil]
 
-    def get_queryset(self):
-        """
-        Asegura que el queryset esté filtrado por el perfil del usuario autenticado.
-        """
-        user = self.request.user
-        if hasattr(user, 'perfil_prestador'):
-            return self.queryset.filter(perfil=user.perfil_prestador)
-        return self.queryset.none()
+class ChartOfAccountViewSet(ContabilidadBaseViewSet):
+    queryset = ChartOfAccount.objects.all().order_by('account_number')
+    serializer_class = ChartOfAccountSerializer
 
-class JournalEntryViewSet(PerfilDataMixin, viewsets.ModelViewSet):
-    """API para los Asientos Contables de un prestador."""
-    queryset = JournalEntry.objects.select_related('user').prefetch_related('transactions__account').all()
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorConPerfil]
+class JournalEntryViewSet(ContabilidadBaseViewSet):
+    queryset = JournalEntry.objects.all().prefetch_related('transactions', 'transactions__account').order_by('-date')
+    serializer_class = JournalEntrySerializer
 
-    def get_serializer_class(self):
-        if self.action in ['create', 'update', 'partial_update']:
-            return JournalEntryWriteSerializer
-        return JournalEntryReadSerializer
+    def perform_create(self, serializer):
+        # La lógica de creación ya está en el serializador, que extrae el perfil del request.
+        # Solo necesitamos pasar el usuario que crea el asiento.
+        serializer.save(created_by=self.request.user)
 
-    def create(self, request, *args, **kwargs):
-        """
-        Personalización para inyectar el perfil del prestador en el contexto del serializador
-        al momento de la creación.
-        """
-        # Adaptación: Pasamos el `request` completo al contexto del serializador
-        # para que pueda acceder tanto a `user` como a `perfil_prestador`.
-        context = self.get_serializer_context()
-        context['request'] = request
-
-        serializer = self.get_serializer(data=request.data, context=context)
-        serializer.is_valid(raise_exception=True)
-        # El serializer ahora llama al servicio y crea todo.
-        # `perform_create` ya no es necesario aquí para la creación.
-        serializer.save()
-
-        # Devolvemos el objeto creado usando el serializer de lectura
-        read_serializer = JournalEntryReadSerializer(serializer.instance, context=self.get_serializer_context())
-        headers = self.get_success_headers(read_serializer.data)
-        return Response(read_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+class CurrencyViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet para monedas. Es de solo lectura y accesible por cualquier usuario autenticado,
+    ya que no está ligado a un perfil específico.
+    """
+    queryset = Currency.objects.all()
+    serializer_class = CurrencySerializer
+    permission_classes = [permissions.IsAuthenticated]

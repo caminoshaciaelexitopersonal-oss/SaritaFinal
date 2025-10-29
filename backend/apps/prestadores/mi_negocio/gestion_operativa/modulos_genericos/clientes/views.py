@@ -1,6 +1,6 @@
 # SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/clientes/views.py
 from rest_framework import viewsets, permissions
-from apps.comercial.models import Cliente  # Import centralizado
+from .models import Cliente
 from .serializers import ClienteSerializer
 from apps.prestadores.mi_negocio.permissions import IsOwnerAndPrestador
 
