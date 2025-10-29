@@ -1,6 +1,36 @@
 // src/app/[locale]/(dashboard)/prestador/mi-negocio/hooks/useMiNegocioApi.ts
 // ... (imports y interfaces existentes)
 
+// --- Interfaces de Ventas ---
+export interface ItemFactura {
+  id?: number;
+  producto: number;
+  producto_nombre?: string;
+  cantidad: number;
+  precio_unitario: string;
+  total_item?: string;
+}
+
+export interface FacturaVenta {
+  id: number;
+  cliente: number;
+  cliente_nombre: string;
+  fecha_emision: string;
+  fecha_vencimiento: string;
+  subtotal: string;
+  impuestos: string;
+  total: string;
+  pagado: string;
+  estado: 'BORRADOR' | 'EMITIDA' | 'PAGADA' | 'VENCIDA' | 'ANULADA';
+  estado_display: string;
+  items: ItemFactura[];
+}
+
+export type CreateFacturaVentaDTO = Omit<FacturaVenta, 'id' | 'cliente_nombre' | 'subtotal' | 'impuestos' | 'total' | 'pagado' | 'estado_display'> & {
+  items: Omit<ItemFactura, 'id' | 'producto_nombre' | 'total_item'>[];
+};
+
+
 // --- NUEVAS Interfaces de Nómina ---
 export interface Empleado {
   id: number;
@@ -68,6 +98,16 @@ export function useMiNegocioApi() {
   // --- APIs existentes ---
   // ...
 
+  // --- APIs de Ventas ---
+  const getFacturasVenta = useCallback(async () => {
+    return makeRequest(() => api.get<FacturaVenta[]>('/api/v1/mi-negocio/comercial/facturas-venta/').then(res => res.data));
+  }, [makeRequest]);
+
+  const createFacturaVenta = useCallback(async (data: CreateFacturaVentaDTO) => {
+    return makeRequest(() => api.post<FacturaVenta>('/api/v1/mi-negocio/comercial/facturas-venta/', data).then(res => res.data), "Factura creada.");
+  }, [makeRequest]);
+
+
   // --- APIs de Nómina ---
   const getEmpleados = useCallback(async () => {
     return makeRequest(() => api.get<Empleado[]>('/api/v1/mi-negocio/nomina/empleados/').then(res => res.data));
@@ -110,6 +150,10 @@ export function useMiNegocioApi() {
 
   return {
     // ... (funciones existentes)
+
+    // --- funciones de Ventas ---
+    getFacturasVenta,
+    createFacturaVenta,
 
     // --- funciones de Nómina ---
     getEmpleados,

@@ -1,34 +1,58 @@
 # backend/apps/comercial/views.py
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, permissions
 from .models import Cliente, FacturaVenta, PagoRecibido, NotaCredito
-from .serializers import ClienteSerializer, FacturaVentaSerializer, PagoRecibidoSerializer, NotaCreditoSerializer
-from api.permissions import IsOwnerOrReadOnly
+from .serializers import (
+    ClienteSerializer,
+    FacturaVentaSerializer,
+    PagoRecibidoSerializer,
+    NotaCreditoSerializer
+)
 
-class BasePerfilViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+class IsOwner(permissions.BasePermission):
+    """
+    Permiso para asegurar que el objeto pertenece al perfil del usuario.
+    """
+    def has_object_permission(self, request, view, obj):
+        return obj.perfil == request.user.perfil_prestador
+
+class ClienteViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint para la gestión de Clientes (CRM).
+    """
+    serializer_class = ClienteSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+
     def get_queryset(self):
-        model_class = self.serializer_class.Meta.model
-        if hasattr(self.request.user, 'perfil_prestador'):
-            return model_class.objects.filter(perfil=self.request.user.perfil_prestador)
-        return model_class.objects.none()
+        """
+        Filtra los clientes para que solo devuelva los del perfil del usuario logueado.
+        """
+        return Cliente.objects.filter(perfil=self.request.user.perfil_prestador)
+
     def perform_create(self, serializer):
+        """
+        Asigna el perfil del usuario logueado automáticamente al crear un cliente.
+        """
         serializer.save(perfil=self.request.user.perfil_prestador)
 
-class ClienteViewSet(BasePerfilViewSet):
-    queryset = Cliente.objects.all()
-    serializer_class = ClienteSerializer
 
-class FacturaVentaViewSet(BasePerfilViewSet):
-    queryset = FacturaVenta.objects.all()
+class FacturaVentaViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint para la gestión de Facturas de Venta.
+    """
     serializer_class = FacturaVentaSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        """
+        Filtra las facturas para que solo devuelva las del perfil del usuario logueado.
+        """
+        return FacturaVenta.objects.filter(perfil=self.request.user.perfil_prestador).select_related('cliente')
+
     def perform_create(self, serializer):
-        serializer.save(perfil=self.request.user.perfil_prestador, created_by=self.request.user)
-
-class PagoRecibidoViewSet(BasePerfilViewSet): # <-- ViewSet añadido
-    queryset = PagoRecibido.objects.all()
-    serializer_class = PagoRecibidoSerializer
-
-class NotaCreditoViewSet(BasePerfilViewSet):
-    queryset = NotaCredito.objects.all()
-    serializer_class = NotaCreditoSerializer
+        """
+        Asigna el perfil y el usuario creador automáticamente al crear una factura.
+        """
+        serializer.save(
+            perfil=self.request.user.perfil_prestador,
+            created_by=self.request.user
+        )

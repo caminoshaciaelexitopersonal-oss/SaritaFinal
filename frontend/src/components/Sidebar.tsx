@@ -99,7 +99,13 @@ const miNegocioNav: NavSection[] = [
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/agencias', label: 'Paquetes Turísticos', icon: FiBriefcase, prestadorCategoria: 'agencia' },
     ],
   },
-  { title: 'Gestión Comercial', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-comercial', label: 'Ver Módulo', icon: FiBriefcase }] },
+  {
+    title: 'Gestión Comercial',
+    isSubSection: true,
+    links: [
+      { href: '/dashboard/prestador/mi-negocio/gestion-comercial/ventas', label: 'Facturas de Venta', icon: FiFileText }
+    ]
+  },
   { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Ver Módulo', icon: FiArchive }] },
   {
     title: 'Gestión Contable',
