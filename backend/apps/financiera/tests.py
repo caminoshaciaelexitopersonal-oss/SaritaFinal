@@ -23,6 +23,7 @@ class FinancieraAPITests(APITestCase):
 
         self.bank_accounts_url = reverse('mi_negocio:bankaccount-list')
         self.cash_transactions_url = reverse('mi_negocio:cashtransaction-list')
+        print(f"URL de Bank Accounts: {self.bank_accounts_url}") # DEBUG
 
     def test_create_bank_account(self):
         """Verifica que un usuario pueda crear una cuenta bancaria para su perfil."""
@@ -39,8 +40,8 @@ class FinancieraAPITests(APITestCase):
 
     def test_list_bank_accounts_isolates_data(self):
         """Verifica que un usuario solo vea sus propias cuentas bancarias."""
-        # Limpieza explícita para forzar el aislamiento
-        BankAccount.objects.all().delete()
+        # Forzar autenticación explícita para esta prueba
+        self.client.force_authenticate(user=self.user_prestador_1)
 
         # Se crea 1 cuenta para el usuario autenticado
         BankAccount.objects.create(perfil=self.perfil_1, bank_name='Banco Local', account_number='123', account_holder='Negocio 1', account_type='SAVINGS')
@@ -49,8 +50,12 @@ class FinancieraAPITests(APITestCase):
 
         response = self.client.get(self.bank_accounts_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['account_number'], '123')
+
+        # Si hay paginación, los resultados están en 'results'
+        results = response.data['results'] if 'results' in response.data else response.data
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['account_number'], '123')
 
     def test_create_cash_transaction(self):
         """Verifica la creación de una transacción de caja para una cuenta propia."""

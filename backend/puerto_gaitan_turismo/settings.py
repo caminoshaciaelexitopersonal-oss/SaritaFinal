@@ -67,6 +67,7 @@ INSTALLED_APPS = [
 "apps.compras",
 "apps.inventario",
 "apps.activos",
+"apps.nomina",
 # "apps.empresa.apps.EmpresaConfig",
 # "apps.restaurante.apps.RestauranteConfig",
 # "apps.turismo.apps.TurismoConfig",

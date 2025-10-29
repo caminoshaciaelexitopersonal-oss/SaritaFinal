@@ -19,4 +19,5 @@ urlpatterns = [
     path('contable/', include(('apps.contabilidad.urls', 'contabilidad_api'), namespace='contabilidad_api')),
     path('financiera/', include('apps.financiera.urls')),
     path('archivistica/', include('apps.prestadores.mi_negocio.gestion_archivistica.urls')),
+    path('nomina/', include('apps.nomina.urls')),
 ]

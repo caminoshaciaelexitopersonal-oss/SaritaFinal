@@ -44,6 +44,15 @@ class CostCenterViewSet(PerfilDataMixin, viewsets.ModelViewSet):
     serializer_class = CostCenterSerializer
     permission_classes = [permissions.IsAuthenticated, IsPrestadorConPerfil]
 
+    def get_queryset(self):
+        """
+        Asegura que el queryset esté filtrado por el perfil del usuario autenticado.
+        """
+        user = self.request.user
+        if hasattr(user, 'perfil_prestador'):
+            return self.queryset.filter(perfil=user.perfil_prestador)
+        return self.queryset.none()
+
 class JournalEntryViewSet(PerfilDataMixin, viewsets.ModelViewSet):
     """API para los Asientos Contables de un prestador."""
     queryset = JournalEntry.objects.select_related('user').prefetch_related('transactions__account').all()

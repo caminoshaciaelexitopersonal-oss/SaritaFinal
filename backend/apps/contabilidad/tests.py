@@ -31,8 +31,10 @@ class CostCenterAPITests(APITestCase):
         # Probar listado aislado
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['name'], 'Administración')
+
+        results = response.data['results'] if 'results' in response.data else response.data
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['code'], 'C01')
 
 class JournalEntryAPITests(APITestCase):
     """
