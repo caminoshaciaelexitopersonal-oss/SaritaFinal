@@ -107,23 +107,8 @@ const miNegocioNav: NavSection[] = [
     ],
   },
   { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Ver Módulo', icon: FiArchive }] },
-  {
-    title: 'Gestión Contable',
-    isSubSection: true,
-    links: [
-      { href: '/dashboard/prestador/mi-negocio/gestion-contable', label: 'Dashboard Contable', icon: FiBookOpen },
-      { href: '/dashboard/prestador/mi-negocio/gestion-contable/plan-de-cuentas', label: 'Plan de Cuentas', icon: FiClipboard },
-    ],
-  },
-  {
-    title: 'Gestión Financiera',
-    isSubSection: true,
-    links: [
-      { href: '/dashboard/prestador/mi-negocio/gestion-financiera', label: 'Dashboard Financiero', icon: FiDollarSign },
-      { href: '/dashboard/prestador/mi-negocio/gestion-financiera/cuentas-bancarias', label: 'Cuentas Bancarias', icon: FiCreditCard },
-      { href: '/dashboard/prestador/mi-negocio/gestion-financiera/transacciones', label: 'Transacciones', icon: FiRepeat },
-    ],
-  },
+  { title: 'Gestión Contable', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-contable', label: 'Ver Módulo', icon: FiDollarSign }] },
+  { title: 'Gestión Financiera', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-financiera', label: 'Ver Módulo', icon: FiTrendingDown }] },
 ];
 
 // --- Sección Colapsable ---

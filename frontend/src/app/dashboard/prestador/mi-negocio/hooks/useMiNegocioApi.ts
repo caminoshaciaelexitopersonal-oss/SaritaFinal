@@ -1,9 +1,10 @@
-// src/app/[locale]/(dashboard)/prestador/mi-negocio/hooks/useMiNegocioApi.ts
+// src/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi.ts
 import { useState, useCallback } from 'react';
 import api from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'react-toastify';
 
+ 
 // --- Tipos de Datos Genéricos---
 interface PerfilData {
   nombre_comercial: string;
@@ -95,6 +96,7 @@ export interface CashTransaction {
   created_by_username: string;
   journal_entry: number | null;
 }
+ 
 
 
 export function useMiNegocioApi() {
@@ -103,27 +105,20 @@ export function useMiNegocioApi() {
   const [error, setError] = useState<string | null>(null);
 
   const makeRequest = useCallback(async <T>(requestFunc: () => Promise<T>, successMessage?: string, errorMessage?: string): Promise<T | null> => {
-    if (!token) {
-      setError("No autenticado.");
-      return null;
-    }
-
-    setIsLoading(true);
-    setError(null);
+    if (!token) { setError("No autenticado."); return null; }
+    setIsLoading(true); setError(null);
     try {
       const result = await requestFunc();
       if (successMessage) toast.success(successMessage);
       return result;
     } catch (err: any) {
-      const msg = err.response?.data?.detail || Object.values(err.response?.data || {}).join(', ') || errorMessage || "Ocurrió un error.";
-      setError(msg);
-      toast.error(msg);
+      const msg = err.response?.data?.detail || "Ocurrió un error.";
+      setError(msg); toast.error(msg);
       return null;
-    } finally {
-      setIsLoading(false);
-    }
+    } finally { setIsLoading(false); }
   }, [token]);
 
+ 
   // --- API de Perfil ---
   const getPerfil = useCallback(async () => {
     return makeRequest(() => api.get<PerfilData>('/api/v1/prestadores/mi-negocio/operativa/genericos/perfil/me/').then(res => res.data), undefined, "No se pudo cargar el perfil.");
@@ -239,5 +234,6 @@ export function useMiNegocioApi() {
     createCashTransaction,
     getFacturasVenta,
     createFacturaVenta,
+ 
   };
 }

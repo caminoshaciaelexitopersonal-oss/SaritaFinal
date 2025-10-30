@@ -66,6 +66,7 @@ INSTALLED_APPS = [
 # "apps.empresa.apps.EmpresaConfig",
 # "apps.restaurante.apps.RestauranteConfig",
 # "apps.turismo.apps.TurismoConfig",
+ 
 "apps.comercial",
 "apps.inventario",
 "apps.compras",
@@ -73,6 +74,7 @@ INSTALLED_APPS = [
 "apps.financiera",
 "apps.nomina",
 ]
+ 
  
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
