@@ -1,3 +1,4 @@
+# backend/apps/comercial/models.py
 from django.db import models
 from django.conf import settings
 from apps.prestadores.models import Perfil
@@ -17,7 +18,7 @@ class FacturaVenta(models.Model):
     impuestos = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     estado = models.CharField(max_length=10, default='BORRADOR')
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self): return f"Factura #{self.id}"
 
 class ItemFactura(models.Model):

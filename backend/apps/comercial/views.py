@@ -1,28 +1,18 @@
 # backend/apps/comercial/views.py
 from rest_framework import viewsets, permissions
-from .models import Cliente, FacturaVenta
-from .serializers import ClienteSerializer, FacturaVentaSerializer
-
-class IsOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        return obj.perfil == request.user.perfil_prestador
-
-class ClienteViewSet(viewsets.ModelViewSet):
-    serializer_class = ClienteSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
-
-    def get_queryset(self):
-        return Cliente.objects.filter(perfil=self.request.user.perfil_prestador)
-
-    def perform_create(self, serializer):
-        serializer.save(perfil=self.request.user.perfil_prestador)
+from .models import FacturaVenta
+from .serializers import FacturaVentaSerializer
+from apps.prestadores.mi_negocio.permissions import IsOwnerAndPrestador
 
 class FacturaVentaViewSet(viewsets.ModelViewSet):
     serializer_class = FacturaVentaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerAndPrestador]
 
     def get_queryset(self):
-        return FacturaVenta.objects.filter(perfil=self.request.user.perfil_prestador).select_related('cliente')
+        user = self.request.user
+        if hasattr(user, 'perfil_prestador'):
+            return FacturaVenta.objects.filter(perfil=user.perfil_prestador)
+        return FacturaVenta.objects.none()
 
     def perform_create(self, serializer):
         serializer.save(
