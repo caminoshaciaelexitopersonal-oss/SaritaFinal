@@ -12,9 +12,8 @@ urlpatterns = [
     # path('operativa/especializados/', include('...urls_especializados')),
 
     # --- Marcadores de posición para futuras gestiones ---
-    path('comercial/', include('apps.prestadores.mi_negocio.gestion_comercial.urls')),
+    path('comercial/', include('apps.comercial.urls')),
     path('contable/', include('apps.prestadores.mi_negocio.gestion_contable.urls')),
     path('financiera/', include('apps.prestadores.mi_negocio.gestion_financiera.urls')),
     path('archivistica/', include('apps.prestadores.mi_negocio.gestion_archivistica.urls')),
-    path('nomina/', include('apps.nomina.urls')),
 ]

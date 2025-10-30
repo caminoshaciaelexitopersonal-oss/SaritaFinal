@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from api.models import CustomUser
 from apps.prestadores.models import CategoriaPrestador, Perfil
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import ProductoServicio
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+from apps.comercial.models import Cliente
 # from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.models import Costo
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.models import Inventario
@@ -44,7 +44,7 @@ class MiNegocioAPITests(APITestCase):
         self.producto = ProductoServicio.objects.create(
             perfil=self.perfil, nombre="Café", precio=2.50
         )
-        self.cliente_obj = Cliente.objects.create(perfil=self.perfil, nombre="Juan Perez", email="juan@example.com")
+        self.cliente_obj = Cliente.objects.create(perfil=self.perfil, nombre="Juan Perez")
 
         self.prestador_token = Token.objects.create(user=self.prestador_user)
         self.turista_token = Token.objects.create(user=self.turista_user)
@@ -110,7 +110,7 @@ class MiNegocioAPITests(APITestCase):
 
     def test_prestador_can_create_cliente(self):
         url = reverse('mi_negocio:cliente-list')
-        data = {'nombre': 'Maria Lopez', 'email': 'maria@example.com'}
+        data = {'nombre': 'Maria Lopez'}
         response = self.client.post(url, data, **self._get_auth_header(self.prestador_token))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Cliente.objects.filter(perfil=self.perfil).count(), 2)

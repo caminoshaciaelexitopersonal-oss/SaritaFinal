@@ -1,7 +1,7 @@
 # SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/clientes/views.py
 from rest_framework import viewsets, permissions
-from .models import Cliente
-from .serializers import ClienteSerializer
+from apps.comercial.models import Cliente
+from apps.comercial.serializers import ClienteSerializer
 from apps.prestadores.mi_negocio.permissions import IsOwnerAndPrestador
 
 class ClienteViewSet(viewsets.ModelViewSet):
