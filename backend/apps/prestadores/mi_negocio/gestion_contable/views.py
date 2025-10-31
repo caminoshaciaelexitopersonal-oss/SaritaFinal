@@ -1,10 +1,10 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-
-class PlaceholderView(APIView):
-    """
-    Una vista marcador de posición que indica que el módulo está en desarrollo.
-    """
-    def get(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_204_NO_CONTENT)
+# backend/apps/contabilidad/views.py
+from rest_framework import viewsets, permissions
+from .models import *; from .serializers import *
+class ContabilidadBaseViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self): return self.queryset.filter(perfil=self.request.user.perfil_prestador)
+    def perform_create(self, serializer): serializer.save(perfil=self.request.user.perfil_prestador)
+class ChartOfAccountViewSet(ContabilidadBaseViewSet): queryset = ChartOfAccount.objects.all(); serializer_class = ChartOfAccountSerializer
+class JournalEntryViewSet(ContabilidadBaseViewSet): queryset = JournalEntry.objects.all(); serializer_class = JournalEntrySerializer
+class CurrencyViewSet(viewsets.ReadOnlyModelViewSet): queryset = Currency.objects.all(); serializer_class = CurrencySerializer

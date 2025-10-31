@@ -1,6 +1,8 @@
-from django.urls import path
-from .views import PlaceholderView
+# backend/apps/comercial/urls.py
+from rest_framework.routers import DefaultRouter
+from .views import FacturaVentaViewSet
 
-urlpatterns = [
-    path('', PlaceholderView.as_view(), name='placeholder'),
-]
+router = DefaultRouter()
+router.register(r'facturas-venta', FacturaVentaViewSet, basename='facturaventa')
+
+urlpatterns = router.urls

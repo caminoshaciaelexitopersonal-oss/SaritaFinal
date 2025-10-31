@@ -1,7 +1,7 @@
 # backend/apps/financiero/services.py
 from django.db import transaction
 from .models import CashTransaction
-from apps.contabilidad.services import create_full_journal_entry
+from apps.prestadores.mi_negocio.gestion_contable.services import create_full_journal_entry
 def create_cash_transaction_with_accounting(perfil, bank_account, transaction_type, amount, date, description, created_by, **kwargs):
     with transaction.atomic():
         if transaction_type == 'DEPOSIT': bank_account.balance += amount

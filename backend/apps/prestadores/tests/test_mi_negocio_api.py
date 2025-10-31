@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from api.models import CustomUser
 from apps.prestadores.models import CategoriaPrestador, Perfil
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import ProductoServicio
-from apps.comercial.models import Cliente
+from apps.prestadores.mi_negocio.gestion_comercial.models import Cliente
 # from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.models import Costo
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.models import Inventario
