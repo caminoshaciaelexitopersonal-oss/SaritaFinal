@@ -1,10 +1,21 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+# backend/apps/comercial/views.py
+from rest_framework import viewsets, permissions
+from .models import FacturaVenta
+from .serializers import FacturaVentaSerializer
+from apps.prestadores.mi_negocio.permissions import IsOwnerAndPrestador
 
-class PlaceholderView(APIView):
-    """
-    Una vista marcador de posición que indica que el módulo está en desarrollo.
-    """
-    def get(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class FacturaVentaViewSet(viewsets.ModelViewSet):
+    serializer_class = FacturaVentaSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerAndPrestador]
+
+    def get_queryset(self):
+        user = self.request.user
+        if hasattr(user, 'perfil_prestador'):
+            return FacturaVenta.objects.filter(perfil=user.perfil_prestador)
+        return FacturaVenta.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(
+            perfil=self.request.user.perfil_prestador,
+            created_by=self.request.user
+        )
