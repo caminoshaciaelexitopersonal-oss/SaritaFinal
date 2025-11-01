@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import CalendarioReservas from '@/app/dashboard/prestador/mi-negocio/components/CalendarioReservas';
-import Modal from '@/app/dashboard/prestador/mi-negocio/components/Modal';
+import Modal from '@/components/ui/Modal';
 import { toast } from 'react-toastify';
 import api from '@/lib/api';
 

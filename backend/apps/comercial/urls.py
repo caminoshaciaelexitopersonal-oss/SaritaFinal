@@ -1,6 +1,11 @@
 # SaritaUnificado/backend/apps/comercial/urls.py
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import FacturaVentaViewSet
 
-# Las rutas de la app comercial se añadirán aquí en el futuro.
+router = DefaultRouter()
+router.register(r'facturasventa', FacturaVentaViewSet, basename='facturaventa')
+
 urlpatterns = [
+    path('', include(router.urls)),
 ]

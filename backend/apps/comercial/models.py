@@ -19,3 +19,16 @@ class Cliente(models.Model):
         verbose_name = 'Cliente'
         verbose_name_plural = 'Clientes'
         ordering = ['nombre']
+
+# Stub models for tests to pass
+class FacturaVenta(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    fecha_emision = models.DateField()
+    fecha_vencimiento = models.DateField()
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+class ItemFactura(models.Model):
+    factura = models.ForeignKey(FacturaVenta, related_name='items', on_delete=models.CASCADE)
+    producto = models.ForeignKey('inventario.Producto', on_delete=models.PROTECT)
+    cantidad = models.PositiveIntegerField()
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)

@@ -1,8 +1,16 @@
-// Placeholder for Badge component
-import React from 'react';
+import React from "react";
+import { cn } from "@/lib/utils";
 
-const Badge = ({ children }: { children: React.ReactNode }) => {
-  return <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: '#eee' }}>{children}</span>;
-};
+function Badge({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+        className
+      )}
+      {...props}
+    />
+  );
+}
 
-export default Badge;
+export { Badge };

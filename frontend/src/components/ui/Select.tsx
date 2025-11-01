@@ -1,11 +1,8 @@
-// Placeholder for Select component
+// Placeholder for Select component - a real one would be much more complex
 import React from 'react';
-
-// This is a very basic placeholder. A real Select component would be much more complex.
-const Select = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
-const SelectContent = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
-const SelectItem = ({ children, value }: { children: React.ReactNode; value: string }) => <div data-value={value}>{children}</div>;
+const Select = ({ children }: { children: React.ReactNode }) => <select>{children}</select>;
+const SelectContent = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+const SelectItem = ({ children, value }: { children: React.ReactNode; value: string }) => <option value={value}>{children}</option>;
 const SelectTrigger = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
 const SelectValue = ({ placeholder }: { placeholder: string }) => <span>{placeholder}</span>;
-
 export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue };
