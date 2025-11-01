@@ -2,13 +2,13 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .perfil.views import PerfilViewSet
-from .clientes.views import ClienteViewSet
+# from .clientes.views import ClienteViewSet # Deshabilitado temporalmente
 from .productos_servicios.views import ProductoServicioViewSet
 from .inventario.views import InventarioViewSet
 from .costos.views import CostoViewSet
 
 router = DefaultRouter()
-router.register(r'clientes', ClienteViewSet, basename='cliente')
+# router.register(r'clientes', ClienteViewSet, basename='cliente') # Deshabilitado temporalmente
 router.register(r'productos-servicios', ProductoServicioViewSet, basename='producto-servicio')
 router.register(r'inventario', InventarioViewSet, basename='inventario')
 router.register(r'costos', CostoViewSet, basename='costo')

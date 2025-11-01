@@ -249,7 +249,18 @@ useEffect(() => {
       };
       const response = await api.post('/auth/login/', payload);
       if (response.data?.key) {
-        await completeLogin(response.data.key);
+        // Primero, establece el token para que fetchUserData funcione
+        setToken(response.data.key);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('authToken', response.data.key);
+        }
+        // Ahora, obtén los datos del usuario
+        const userData = await fetchUserData();
+        if (userData) {
+          completeLogin(response.data.key, userData);
+        } else {
+            throw new Error('No se pudieron obtener los datos del usuario tras la verificación MFA.');
+        }
       } else {
         throw new Error('Respuesta inesperada del servidor durante la verificación MFA.');
       }
