@@ -1,7 +1,7 @@
 // /app/dashboard/prestador/mi-negocio/gestion-contable/informes/balance-general/page.tsx
 'use client';
 import { useState } from 'react';
-import { useMiNegocioApi, BalanceGeneralData } from '../../../../../hooks/useMiNegocioApi';
+import { useMiNegocioApi, BalanceGeneralData } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 export default function BalanceGeneralPage() {
   const { getBalanceGeneral, isLoading } = useMiNegocioApi();
   const [data, setData] = useState<BalanceGeneralData | null>(null);

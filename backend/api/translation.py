@@ -10,7 +10,7 @@ Artesano,
 Video,
 ConsejoConsultivo
 )
-from apps.prestadores.models import CategoriaPrestador
+from apps.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
 
 @register(Publicacion)
 class PublicacionTranslationOptions(TranslationOptions):
@@ -32,9 +32,9 @@ class ContenidoMunicipioTranslationOptions(TranslationOptions):
 class HechoHistoricoTranslationOptions(TranslationOptions):
     fields = ('titulo', 'descripcion')
 
-# @register(CategoriaPrestador)
-# class CategoriaPrestadorTranslationOptions(TranslationOptions):
-#     fields = ('nombre',)
+@register(CategoriaPrestador)
+class CategoriaPrestadorTranslationOptions(TranslationOptions):
+    fields = ('nombre',)
 
 @register(RubroArtesano)
 class RubroArtesanoTranslationOptions(TranslationOptions):

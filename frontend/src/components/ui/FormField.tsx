@@ -1,8 +1,8 @@
 import React from 'react';
-import { UseFormRegister, FieldErrors, RegisterOptions, FieldValues } from 'react-hook-form';
+import { UseFormRegister, FieldErrors, RegisterOptions, FieldValues, Path } from 'react-hook-form';
 
 interface FormFieldProps<T extends FieldValues> {
-  name: keyof T & string;
+  name: Path<T>;
   label: string;
   type?: string;
   register: UseFormRegister<T>;
@@ -23,7 +23,7 @@ const FormField = <T extends FieldValues>({
   validation = {},
   autoComplete,
   disabled = false,
-}) => {
+}: FormFieldProps<T>) => {
   const error = errors[name];
 
   return (
@@ -35,6 +35,7 @@ const FormField = <T extends FieldValues>({
         {type === 'textarea' ? (
           <textarea
             id={name}
+            // @ts-expect-error: Incompatibilidad de tipos complejos en `validation`
             {...register(name, { required: required && 'Este campo es obligatorio.', ...validation })}
             rows={4}
             className={`w-full px-3 py-2 border rounded-md shadow-sm ${
@@ -47,6 +48,7 @@ const FormField = <T extends FieldValues>({
           <input
             id={name}
             type={type}
+            // @ts-expect-error: Incompatibilidad de tipos complejos en `validation`
             {...register(name, { required: required && 'Este campo es obligatorio.', ...validation })}
             className={`w-full px-3 py-2 border rounded-md shadow-sm ${
               error ? 'border-red-500' : 'border-gray-300'

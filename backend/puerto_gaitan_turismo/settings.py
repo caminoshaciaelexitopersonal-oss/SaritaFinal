@@ -61,6 +61,7 @@ INSTALLED_APPS = [
  # Mis Apps
 "apps.prestadores.apps.PrestadoresConfig",
 "api.apps.ApiConfig",
+"apps.mi_negocio.apps.MiNegocioConfig",
 "apps.contabilidad.apps.ContabilidadConfig",
 "apps.financiero.apps.FinancieroConfig",
 # "apps.empresa.apps.EmpresaConfig",

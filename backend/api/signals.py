@@ -2,7 +2,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import AsistenciaCapacitacion, Resena, ScoringRule
-from apps.prestadores.models import Perfil
+from apps.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
 
 
 @receiver(post_save, sender=AsistenciaCapacitacion)

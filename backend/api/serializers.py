@@ -1008,7 +1008,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('department', 'municipality')
 
 
-from apps.prestadores.models import Perfil
+from apps.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
 
 class CustomUserDetailSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
@@ -1023,7 +1023,7 @@ class AdminPrestadorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Perfil
-        fields = ('id', 'nombre_comercial', 'estado', 'usuario_username', 'categoria_nombre')
+        fields = ('id', 'nombre_comercial', 'usuario_username', 'categoria_nombre')
 
 
 class CustomLoginSerializer(LoginSerializer):

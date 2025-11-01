@@ -1,71 +1,72 @@
 // SaritaUnificado/frontend/src/hooks/useApi.ts
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useAuth } from '@/contexts/AuthContext'; // Asumiendo que el contexto de autenticación se llama así
+import { useState, useEffect, useCallback } from 'react';
+import api from '@/services/api'; // Usar la instancia centralizada de Axios
+import { AxiosError } from 'axios';
 
-const api = axios.create({
-  baseURL: 'http://localhost:8000/api/v1/prestadores/mi-negocio/',
-});
+// Definir una interfaz base que todos los objetos de la API deben cumplir
+interface ApiObject {
+  id: number;
+}
 
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem('auth_token');
-  if (token) {
-    config.headers.Authorization = `Token ${token}`;
-  }
-  return config;
-}, error => {
-  return Promise.reject(error);
-});
-
-export const useApi = (endpoint) => {
-  const [data, setData] = useState([]);
+// El hook ahora usa un tipo genérico T, que debe extender de ApiObject
+export const useApi = <T extends ApiObject>(endpoint: string) => {
+  const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<AxiosError | null>(null);
 
-  const fetchData = async () => {
+  // Usar useCallback para memorizar la función y evitar re-renders innecesarios
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await api.get(endpoint);
-      setData(response.data.results); // Asumiendo paginación de DRF
+      const response = await api.get<{ results: T[] }>(endpoint); // Esperar una respuesta paginada
+      setData(response.data.results);
       setError(null);
     } catch (e) {
-      setError(e);
+      setError(e as AxiosError);
     } finally {
       setLoading(false);
     }
-  };
+  }, [endpoint]);
 
   useEffect(() => {
     fetchData();
+  }, [fetchData]);
+
+  const createItem = useCallback(async (item: Omit<T, 'id'>): Promise<T | null> => {
+    try {
+      const response = await api.post<T>(endpoint, item);
+      setData(prevData => [...prevData, response.data]);
+      return response.data;
+    } catch (e) {
+      setError(e as AxiosError);
+      console.error("Error creating item:", e);
+      return null;
+    }
   }, [endpoint]);
 
-  const createItem = async (item) => {
+  const updateItem = useCallback(async (id: number, updatedItem: Partial<Omit<T, 'id'>>): Promise<T | null> => {
     try {
-      const response = await api.post(endpoint, item);
-      setData([...data, response.data]);
+      const response = await api.patch<T>(`${endpoint}${id}/`, updatedItem);
+      setData(prevData => prevData.map(item => (item.id === id ? response.data : item)));
+      return response.data;
     } catch (e) {
-      // Manejar error
-      console.error("Error creating item:", e);
-    }
-  };
-
-  const updateItem = async (id, updatedItem) => {
-    try {
-      const response = await api.put(`${endpoint}${id}/`, updatedItem);
-      setData(data.map(item => (item.id === id ? response.data : item)));
-    } catch (e) {
+      setError(e as AxiosError);
       console.error("Error updating item:", e);
+      return null;
     }
-  };
+  }, [endpoint]);
 
-  const deleteItem = async (id) => {
+  const deleteItem = useCallback(async (id: number): Promise<boolean> => {
     try {
       await api.delete(`${endpoint}${id}/`);
-      setData(data.filter(item => item.id !== id));
+      setData(prevData => prevData.filter(item => item.id !== id));
+      return true;
     } catch (e) {
+      setError(e as AxiosError);
       console.error("Error deleting item:", e);
+      return false;
     }
-  };
+  }, [endpoint]);
 
   return { data, loading, error, fetchData, createItem, updateItem, deleteItem };
 };
