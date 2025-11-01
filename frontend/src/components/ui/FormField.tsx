@@ -35,7 +35,7 @@ const FormField = <T extends FieldValues>({
         {type === 'textarea' ? (
           <textarea
             id={name}
-            // @ts-ignore
+            // @ts-expect-error: Incompatibilidad de tipos complejos en `validation`
             {...register(name, { required: required && 'Este campo es obligatorio.', ...validation })}
             rows={4}
             className={`w-full px-3 py-2 border rounded-md shadow-sm ${
@@ -48,7 +48,7 @@ const FormField = <T extends FieldValues>({
           <input
             id={name}
             type={type}
-            // @ts-ignore
+            // @ts-expect-error: Incompatibilidad de tipos complejos en `validation`
             {...register(name, { required: required && 'Este campo es obligatorio.', ...validation })}
             className={`w-full px-3 py-2 border rounded-md shadow-sm ${
               error ? 'border-red-500' : 'border-gray-300'

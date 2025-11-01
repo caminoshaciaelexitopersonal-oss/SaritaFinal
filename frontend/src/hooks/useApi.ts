@@ -21,8 +21,8 @@ export const useApi = <T extends ApiObject>(endpoint: string) => {
       const response = await api.get<{ results: T[] }>(endpoint); // Esperar una respuesta paginada
       setData(response.data.results);
       setError(null);
-    } catch (e: any) {
-      setError(e);
+    } catch (e) {
+      setError(e as AxiosError);
     } finally {
       setLoading(false);
     }
@@ -37,8 +37,8 @@ export const useApi = <T extends ApiObject>(endpoint: string) => {
       const response = await api.post<T>(endpoint, item);
       setData(prevData => [...prevData, response.data]);
       return response.data;
-    } catch (e: any) {
-      setError(e);
+    } catch (e) {
+      setError(e as AxiosError);
       console.error("Error creating item:", e);
       return null;
     }
@@ -49,8 +49,8 @@ export const useApi = <T extends ApiObject>(endpoint: string) => {
       const response = await api.patch<T>(`${endpoint}${id}/`, updatedItem);
       setData(prevData => prevData.map(item => (item.id === id ? response.data : item)));
       return response.data;
-    } catch (e: any) {
-      setError(e);
+    } catch (e) {
+      setError(e as AxiosError);
       console.error("Error updating item:", e);
       return null;
     }
@@ -61,8 +61,8 @@ export const useApi = <T extends ApiObject>(endpoint: string) => {
       await api.delete(`${endpoint}${id}/`);
       setData(prevData => prevData.filter(item => item.id !== id));
       return true;
-    } catch (e: any) {
-      setError(e);
+    } catch (e) {
+      setError(e as AxiosError);
       console.error("Error deleting item:", e);
       return false;
     }

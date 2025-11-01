@@ -8,7 +8,7 @@ from datetime import date, timedelta
 
 from apps.prestadores.models import Perfil, CategoriaPrestador
 from apps.inventario.models import Producto
-from .models import Cliente, FacturaVenta, ItemFactura
+from apps.comercial.models import Cliente, FacturaVenta, ItemFactura
 
 User = get_user_model()
 
