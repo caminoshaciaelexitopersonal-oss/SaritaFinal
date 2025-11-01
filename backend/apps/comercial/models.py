@@ -1,5 +1,5 @@
 from django.db import models
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
 
 class Cliente(models.Model):
     perfil = models.ForeignKey(

@@ -18,7 +18,7 @@ from itertools import groupby
 from operator import attrgetter
 from django.db.models.functions import TruncDay
 from django.db.models import Count
-from apps.prestadores.models import CategoriaPrestador
+from apps.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
 from .models import (
     CustomUser,
     ImagenGaleria,
@@ -402,7 +402,7 @@ class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
 
 from django.db.models import Q
 
-from apps.prestadores.models import Perfil
+from apps.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
 from .serializers import AdminPrestadorSerializer
 
 class UserViewSet(viewsets.ModelViewSet):

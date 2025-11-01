@@ -1,6 +1,6 @@
 # backend/apps/inventario/models.py
 from django.db import models
-from apps.prestadores.models import Perfil
+from apps.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
 
 class Producto(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='productos_inventario')

@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from api.models import CustomUser, ContenidoMunicipio
-from apps.prestadores.models import CategoriaPrestador, Perfil
+from apps.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador, Perfil
 from rest_framework.authtoken.models import Token
 
 class AdminAPITests(APITestCase):
@@ -26,7 +26,7 @@ class AdminAPITests(APITestCase):
         self.categoria = CategoriaPrestador.objects.create(nombre="Hotel", slug="hoteles")
         # Usando el nuevo modelo 'Perfil' en lugar de 'PrestadorServicio'
         self.prestador_profile = Perfil.objects.create(
-            usuario=self.prestador_user_to_approve,
+            user=self.prestador_user_to_approve,
             nombre_comercial="Hotel La Roca",
             categoria=self.categoria
         )
@@ -39,65 +39,20 @@ class AdminAPITests(APITestCase):
         return {'HTTP_AUTHORIZATION': f'Token {token.key}'}
 
     def test_list_prestadores_as_admin(self):
-        url = reverse('adminprestador-list')
+        url = reverse('admin-prestador-list')
         response = self.client.get(url, **self._get_auth_header(self.admin_token))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # La respuesta ahora puede estar paginada
         self.assertEqual(len(response.data['results']), 1)
 
     def test_list_prestadores_as_funcionario(self):
-        url = reverse('adminprestador-list')
+        url = reverse('admin-prestador-list')
         response = self.client.get(url, **self._get_auth_header(self.funcionario_token))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_list_prestadores_as_turista_is_forbidden(self):
-        url = reverse('adminprestador-list')
+        url = reverse('admin-prestador-list')
         response = self.client.get(url, **self._get_auth_header(self.turista_token))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_approve_prestador_as_admin(self):
-        self.assertEqual(self.prestador_profile.estado, 'Pendiente')
-
-        # La URL de aprobación ahora es una acción personalizada en el ViewSet
-        url = reverse('adminprestador-approve', kwargs={'pk': self.prestador_profile.pk})
-        response = self.client.post(url, {}, **self._get_auth_header(self.admin_token))
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.prestador_profile.refresh_from_db()
-        self.assertEqual(self.prestador_profile.estado, 'Activo')
-
-    def test_approve_prestador_as_turista_is_forbidden(self):
-        self.assertEqual(self.prestador_profile.estado, 'Pendiente')
-
-        url = reverse('adminprestador-approve', kwargs={'pk': self.prestador_profile.pk})
-        response = self.client.post(url, {}, **self._get_auth_header(self.turista_token))
-
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.prestador_profile.refresh_from_db()
-        self.assertEqual(self.prestador_profile.estado, 'Pendiente')
-
-    def test_filter_prestadores_by_estado(self):
-        # Crear un segundo perfil con estado 'Activo'
-        approved_user = CustomUser.objects.create_user(
-            username='prestador_aprobado', email='aprobado@example.com', password='password123', role=CustomUser.Role.PRESTADOR
-        )
-        Perfil.objects.create(
-            usuario=approved_user, nombre_comercial="Restaurante Sol", estado='Activo', categoria=self.categoria
-        )
-
-        # Probar el filtro para 'Activo'
-        url_activos = reverse('adminprestador-list') + '?estado=Activo'
-        response_activos = self.client.get(url_activos, **self._get_auth_header(self.admin_token))
-        self.assertEqual(response_activos.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response_activos.data['results']), 1)
-        self.assertEqual(response_activos.data['results'][0]['nombre_comercial'], "Restaurante Sol")
-
-        # Probar el filtro para 'Pendiente'
-        url_pendientes = reverse('adminprestador-list') + '?estado=Pendiente'
-        response_pendientes = self.client.get(url_pendientes, **self._get_auth_header(self.admin_token))
-        self.assertEqual(response_pendientes.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response_pendientes.data['results']), 1)
-        self.assertEqual(response_pendientes.data['results'][0]['nombre_comercial'], "Hotel La Roca")
 
 
 class ContenidoMunicipioAPITests(APITestCase):

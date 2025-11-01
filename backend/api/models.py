@@ -877,7 +877,7 @@ class PlantillaVerificacion(models.Model):
     nombre = models.CharField(max_length=255, unique=True, help_text="Nombre único para la plantilla, ej: 'Verificación para Guías de Turismo'")
     descripcion = models.TextField(blank=True, help_text="Descripción detallada de la finalidad de esta plantilla.")
     categoria_prestador = models.ForeignKey(
-        'prestadores.CategoriaPrestador',
+        'mi_negocio.CategoriaPrestador',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
