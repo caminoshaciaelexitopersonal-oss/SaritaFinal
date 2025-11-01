@@ -7,7 +7,10 @@ const withNextIntl = createNextIntlPlugin('src/i18n.ts');
 
 const nextConfig: NextConfig = {
   webpack: (config) => {
-    config.resolve.alias['@'] = path.resolve(__dirname, "src");
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": path.resolve(__dirname, "src"),
+    };
     return config;
   },
   images: {

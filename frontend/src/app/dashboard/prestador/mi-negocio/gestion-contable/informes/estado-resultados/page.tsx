@@ -1,7 +1,7 @@
 // /app/dashboard/prestador/mi-negocio/gestion-contable/informes/estado-resultados/page.tsx
 'use client';
 import { useState } from 'react';
-import { useMiNegocioApi, EstadoResultadosData } from '../../../../../hooks/useMiNegocioApi';
+import { useMiNegocioApi, EstadoResultadosData } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 import DateRangePicker from '../../../components/DateRangePicker';
 export default function EstadoResultadosPage() {
   const { getEstadoResultados, isLoading } = useMiNegocioApi();

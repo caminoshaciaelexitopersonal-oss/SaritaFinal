@@ -1,7 +1,7 @@
 // /app/dashboard/prestador/mi-negocio/gestion-contable/informes/sumas-y-saldos/page.tsx
 'use client';
 import { useState } from 'react';
-import { useMiNegocioApi, SumasSaldosEntry } from '../../../../../hooks/useMiNegocioApi';
+import { useMiNegocioApi, SumasSaldosEntry } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 export default function SumasSaldosPage() {
   const { getSumasYSaldos, isLoading } = useMiNegocioApi();
   const [data, setData] = useState<SumasSaldosEntry[]>([]);

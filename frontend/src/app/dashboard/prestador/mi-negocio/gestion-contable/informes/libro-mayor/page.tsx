@@ -1,7 +1,7 @@
 // /app/dashboard/prestador/mi-negocio/gestion-contable/informes/libro-mayor/page.tsx
 'use client';
 import { useState } from 'react';
-import { useMiNegocioApi, LibroMayorEntry } from '../../../../../hooks/useMiNegocioApi';
+import { useMiNegocioApi, LibroMayorEntry } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 import DateRangePicker from '../../../components/DateRangePicker';
 export default function LibroMayorPage() {
   const { getLibroMayor, isLoading } = useMiNegocioApi();

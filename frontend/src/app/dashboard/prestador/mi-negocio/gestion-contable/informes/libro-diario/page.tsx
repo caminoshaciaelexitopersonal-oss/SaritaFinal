@@ -1,7 +1,7 @@
 // /app/dashboard/prestador/mi-negocio/gestion-contable/informes/libro-diario/page.tsx
 'use client';
 import { useState } from 'react';
-import { useMiNegocioApi, JournalEntry } from '../../../../../hooks/useMiNegocioApi';
+import { useMiNegocioApi, JournalEntry } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 import DateRangePicker from '../../../components/DateRangePicker';
 
 export default function LibroDiarioPage() {

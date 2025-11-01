@@ -9,10 +9,10 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import CalendarioReservas from '@/app/[locale]/dashboard/prestador/CalendarioReservas';
-import Modal from '@/src/components/dashboard/Modal';
+import CalendarioReservas from '@/app/dashboard/prestador/mi-negocio/components/CalendarioReservas';
+import Modal from '@/app/dashboard/prestador/mi-negocio/components/Modal';
 import { toast } from 'react-toastify';
-import api from '@/src/lib/api';
+import api from '@/lib/api';
 
 // --- Esqueleto y componente principal ... (sin cambios) ---
 function DetailPageSkeleton() { /* ... */ }
