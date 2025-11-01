@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '@/contexts/AuthContext';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'react-toastify';
 import { FaKey, FaSave, FaSpinner } from 'react-icons/fa';
 import { FiInfo } from 'react-icons/fi';
@@ -19,7 +19,7 @@ interface LLMConfig {
 }
 
 const LLMConfigForm: React.FC = () => {
-  const { apiClient } = useContext(AuthContext);
+  const { apiClient } = useAuth();
 
   const [config, setConfig] = useState<LLMConfig | null>(null);
   const [provider, setProvider] = useState<string>('');
