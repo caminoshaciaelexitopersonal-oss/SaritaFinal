@@ -175,6 +175,7 @@ REST_AUTH = {
     "USER_DETAILS_SERIALIZER": "api.serializers.CustomUserDetailSerializer",
     'LOGIN_SERIALIZER': 'api.serializers.CustomLoginSerializer',
     'REGISTER_SERIALIZER': 'api.serializers.CustomRegisterSerializer',
+    'TOKEN_SERIALIZER': 'api.serializers.CustomTokenSerializer',
 }
 
 ACCOUNT_LOGIN_METHODS = ['email']

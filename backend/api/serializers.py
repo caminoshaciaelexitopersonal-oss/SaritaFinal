@@ -1052,3 +1052,13 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.username = self.validated_data.get('email', '')
         user.save()
         return user
+
+from rest_framework.authtoken.models import Token
+from rest_framework import serializers
+
+class CustomTokenSerializer(serializers.ModelSerializer):
+    user = CustomUserDetailSerializer(read_only=True)
+
+    class Meta:
+        model = Token
+        fields = ('key', 'user')
