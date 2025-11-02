@@ -28,6 +28,7 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 # from apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
 # from apps.turismo.serializers import RutaTuristicaSerializer
 
+
 class EntitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Entity
@@ -1052,3 +1053,12 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.username = self.validated_data.get('email', '')
         user.save()
         return user
+
+from rest_framework.authtoken.models import Token
+
+class CustomTokenSerializer(serializers.ModelSerializer):
+    user = CustomUserDetailSerializer(read_only=True)
+
+    class Meta:
+        model = Token
+        fields = ('key', 'user')
