@@ -1,0 +1,95 @@
+[
+  {
+    "departamento": "Amazonas",
+    "municipios": [
+      "Leticia",
+      "Puerto Nariño"
+    ]
+  },
+  {
+    "departamento": "Antioquia",
+    "municipios": [
+      "Medellín",
+      "Bello",
+      "Envigado",
+      "Itagüí",
+      "Sabaneta",
+      "Rionegro",
+      "Guatapé"
+    ]
+  },
+  {
+    "departamento": "Boyacá",
+    "municipios": [
+      "Tunja",
+      "Duitama",
+      "Sogamoso",
+      "Villa de Leyva"
+    ]
+  },
+  {
+    "departamento": "Cundinamarca",
+    "municipios": [
+      "Bogotá D.C.",
+      "Soacha",
+      "Zipaquirá",
+      "Chía",
+      "Girardot"
+    ]
+  },
+  {
+    "departamento": "Meta",
+    "municipios": [
+        "Villavicencio",
+        "Acacías",
+        "Barranca de Upía",
+        "Cabuyaro",
+        "Castilla la Nueva",
+        "Cubarral",
+        "Cumaral",
+        "El Calvario",
+        "El Castillo",
+        "El Dorado",
+        "Fuente de Oro",
+        "Granada",
+        "Guamal",
+        "La Macarena",
+        "Lejanías",
+        "Mapiripán",
+        "Mesetas",
+        "Puerto Concordia",
+        "Puerto Gaitán",
+        "Puerto Lleras",
+        "Puerto López",
+        "Puerto Rico",
+        "Restrepo",
+        "San Carlos de Guaroa",
+        "San Juan de Arama",
+        "San Juanito",
+        "San Martín",
+        "Uribe",
+        "Vista Hermosa"
+    ]
+  },
+  {
+    "departamento": "Santander",
+    "municipios": [
+      "Bucaramanga",
+      "Floridablanca",
+      "Girón",
+      "Piedecuesta",
+      "San Gil",
+      "Barichara"
+    ]
+  },
+  {
+    "departamento": "Valle del Cauca",
+    "municipios": [
+      "Cali",
+      "Buenaventura",
+      "Palmira",
+      "Tuluá",
+      "Buga"
+    ]
+  }
+]

@@ -1,0 +1,22 @@
+from django.urls import path, include
+from api.views import PlaceholderView
+
+app_name = 'mi_negocio'
+
+urlpatterns = [
+    # Módulos principales con su propio enrutamiento interno
+    path('operativa/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.urls')),
+    path('comercial/', include('apps.prestadores.mi_negocio.gestion_comercial.urls')),
+    path('financiera/', include('apps.prestadores.mi_negocio.gestion_financiera.urls')),
+
+    # Módulo contable es una agrupación de otros módulos
+    path('contable/activos/', include('apps.prestadores.mi_negocio.gestion_contable.activos.urls')),
+    path('contable/compras/', include('apps.prestadores.mi_negocio.gestion_contable.compras.urls')),
+    path('contable/contabilidad/', include('apps.prestadores.mi_negocio.gestion_contable.contabilidad.urls')),
+    path('contable/inventario/', include('apps.prestadores.mi_negocio.gestion_contable.inventario.urls')),
+    path('contable/nomina/', include('apps.prestadores.mi_negocio.gestion_contable.nomina.urls')),
+    path('contable/proyectos/', include('apps.prestadores.mi_negocio.gestion_contable.proyectos.urls')),
+
+    # Gestión Archivística (sigue siendo un placeholder como se solicitó)
+    path('archivistica/', PlaceholderView.as_view(), name='archivistica-placeholder'),
+]
