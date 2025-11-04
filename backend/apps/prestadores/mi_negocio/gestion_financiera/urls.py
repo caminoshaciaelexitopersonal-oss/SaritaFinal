@@ -1,10 +1,10 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import CuentaBancariaViewSet, TransaccionBancariaViewSet, ReporteIngresosGastosView
+from .views import BankAccountViewSet, CashTransactionViewSet, ReporteIngresosGastosView
 
 router = DefaultRouter()
-router.register(r'cuentas-bancarias', CuentaBancariaViewSet, basename='cuenta-bancaria')
-router.register(r'transacciones', TransaccionBancariaViewSet, basename='transaccion-bancaria')
+router.register(r'bank-accounts', BankAccountViewSet, basename='bank-account')
+router.register(r'cash-transactions', CashTransactionViewSet, basename='cash-transaction')
 
 urlpatterns = router.urls
 
