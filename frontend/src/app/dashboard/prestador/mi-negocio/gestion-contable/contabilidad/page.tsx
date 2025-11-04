@@ -1,10 +1,10 @@
 'use client';
 import React, { useState } from 'react';
-import { useContabilidadApi } from '../hooks/useContabilidadApi';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useContabilidadApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useContabilidadApi';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import { PlusCircle } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import { format } from 'date-fns';
 
 const ContabilidadPage = () => {

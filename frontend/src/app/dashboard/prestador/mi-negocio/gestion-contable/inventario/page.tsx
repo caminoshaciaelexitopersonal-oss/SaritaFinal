@@ -1,11 +1,11 @@
 'use client';
 import React from 'react';
-import { useInventarioApi } from '../hooks/useInventarioApi';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useInventarioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useInventarioApi';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import { PlusCircle, Package } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import { Badge } from '@/components/ui/Badge';
 
 const InventarioPage = () => {
     const {

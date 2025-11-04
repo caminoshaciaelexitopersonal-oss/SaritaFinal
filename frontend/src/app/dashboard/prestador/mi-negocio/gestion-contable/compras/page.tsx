@@ -1,11 +1,11 @@
 'use client';
 import React, { useState } from 'react';
-import { useComprasApi } from '../hooks/useComprasApi';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useComprasApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useComprasApi';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import { PlusCircle, Download } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import { Checkbox } from '@/components/ui/Checkbox';
 import { format } from 'date-fns';
 
 const ComprasPage = () => {

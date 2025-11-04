@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
-import { useFinancieraApi } from '../hooks/useFinancieraApi';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useFinancieraApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useFinancieraApi';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
 const AnalisisFinancieroPage = () => {

@@ -9,7 +9,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import CalendarioReservas from '@/app/dashboard/prestador/mi-negocio/components/CalendarioReservas';
+import CalendarioReservas from '@/app/dashboard/prestador/mi-negocio/gestion-operativa/genericos/CalendarioReservas';
 import Modal from '@/components/ui/Modal';
 import { toast } from 'react-toastify';
 import api from '@/lib/api';
