@@ -6,7 +6,7 @@ from decimal import Decimal
 
 from .models import FacturaVenta, ReciboCaja, CuentaBancaria
 from .serializers import FacturaVentaSerializer, ReciboCajaSerializer
-from apps.prestadores.mi_negocio.gestion_financiera.models import CashTransaction
+from apps.prestadores.mi_negocio.gestion_financiera.models import TransaccionBancaria
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction as ContabTransaction, ChartOfAccount
 
 
@@ -49,12 +49,13 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
         )
 
         # 2. Crear Transacción de Tesorería
-        CashTransaction.objects.create(
-            perfil=perfil,
-            bank_account=cuenta_bancaria,
-            transaction_type='DEPOSIT',
-            amount=monto,
-            description=f"Pago de Factura No. {factura.numero_factura}"
+        TransaccionBancaria.objects.create(
+            cuenta=cuenta_bancaria,
+            fecha=recibo.fecha_pago,
+            tipo='INGRESO',
+            monto=monto,
+            descripcion=f"Pago de Factura No. {factura.numero_factura}",
+            creado_por=request.user
         )
 
         # 3. Crear Asiento Contable del Pago

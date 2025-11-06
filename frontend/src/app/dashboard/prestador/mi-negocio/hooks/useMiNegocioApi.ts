@@ -161,7 +161,63 @@ export interface CashTransaction {
   created_by_username: string;
   journal_entry: number | null;
 }
- 
+
+// --- Tipos de Datos de Activos Fijos ---
+export interface CategoriaActivo {
+  id: number;
+  nombre: string;
+  descripcion: string;
+}
+
+export interface ActivoFijo {
+  id: number;
+  nombre: string;
+  categoria: number;
+  categoria_nombre?: string;
+  descripcion: string;
+  fecha_adquisicion: string;
+  costo_adquisicion: string;
+  valor_residual: string;
+  vida_util_meses: number;
+  metodo_depreciacion: string;
+  depreciacion_acumulada: string;
+  valor_en_libros: string;
+}
+
+export interface CalculoDepreciacion {
+  id: number;
+  activo: number;
+  fecha: string;
+  monto: string;
+  creado_en: string;
+}
+
+// --- Tipos de Datos de Presupuesto ---
+export interface Presupuesto {
+  id: number;
+  nombre: string;
+  ano_fiscal: number;
+  total_ingresos_presupuestado: string;
+  total_gastos_presupuestado: string;
+}
+
+export interface PartidaPresupuestal {
+  id: number;
+  presupuesto: number;
+  cuenta_contable: number;
+  cuenta_contable_nombre?: string;
+  tipo: 'INGRESO' | 'GASTO';
+  monto_presupuestado: string;
+  monto_ejecutado: string;
+}
+
+export interface EjecucionPresupuestal {
+  id: number;
+  partida: number;
+  fecha: string;
+  monto: string;
+  descripcion: string;
+}
 
 
 export function useMiNegocioApi() {
@@ -400,6 +456,74 @@ export function useMiNegocioApi() {
     return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/proyectos/').then(res => res.data));
   }, [makeRequest]);
 
+  // --- API de Activos Fijos ---
+  const getCategoriasActivo = useCallback(async (page: number = 1, search: string = '') => {
+      const params = new URLSearchParams({ page: page.toString(), search });
+      return makeRequest(() => api.get<PaginatedResponse<CategoriaActivo>>(`/api/v1/mi-negocio/contable/activos-fijos/categorias/?${params.toString()}`).then(res => res.data));
+  }, [makeRequest]);
+
+  const createCategoriaActivo = useCallback(async (data: Omit<CategoriaActivo, 'id'>) => {
+      return makeRequest(() => api.post<CategoriaActivo>('/api/v1/mi-negocio/contable/activos-fijos/categorias/', data).then(res => res.data), "Categoría creada.");
+  }, [makeRequest]);
+
+  const updateCategoriaActivo = useCallback(async (id: number, data: Partial<CategoriaActivo>) => {
+      return makeRequest(() => api.patch<CategoriaActivo>(`/api/v1/mi-negocio/contable/activos-fijos/categorias/${id}/`, data).then(res => res.data), "Categoría actualizada.");
+  }, [makeRequest]);
+
+  const deleteCategoriaActivo = useCallback(async (id: number) => {
+      return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/activos-fijos/categorias/${id}/`), "Categoría eliminada.");
+  }, [makeRequest]);
+
+  const getActivosFijos = useCallback(async (page: number = 1, search: string = '') => {
+      const params = new URLSearchParams({ page: page.toString(), search });
+      return makeRequest(() => api.get<PaginatedResponse<ActivoFijo>>(`/api/v1/mi-negocio/contable/activos-fijos/activos/?${params.toString()}`).then(res => res.data));
+  }, [makeRequest]);
+
+  const createActivoFijo = useCallback(async (data: Omit<ActivoFijo, 'id' | 'depreciacion_acumulada' | 'valor_en_libros'>) => {
+      return makeRequest(() => api.post<ActivoFijo>('/api/v1/mi-negocio/contable/activos-fijos/activos/', data).then(res => res.data), "Activo creado.");
+  }, [makeRequest]);
+
+  const updateActivoFijo = useCallback(async (id: number, data: Partial<Omit<ActivoFijo, 'id' | 'depreciacion_acumulada' | 'valor_en_libros'>>) => {
+      return makeRequest(() => api.patch<ActivoFijo>(`/api/v1/mi-negocio/contable/activos-fijos/activos/${id}/`, data).then(res => res.data), "Activo actualizado.");
+  }, [makeRequest]);
+
+  const deleteActivoFijo = useCallback(async (id: number) => {
+      return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/activos-fijos/activos/${id}/`), "Activo eliminado.");
+  }, [makeRequest]);
+
+  const getDepreciaciones = useCallback(async (activoId: number, page: number = 1) => {
+      const params = new URLSearchParams({ page: page.toString() });
+      return makeRequest(() => api.get<PaginatedResponse<CalculoDepreciacion>>(`/api/v1/mi-negocio/contable/activos-fijos/depreciaciones/?activo=${activoId}&${params.toString()}`).then(res => res.data));
+  }, [makeRequest]);
+
+  const createDepreciacion = useCallback(async (data: { activo: number, fecha: string, monto: string }) => {
+      return makeRequest(() => api.post<CalculoDepreciacion>('/api/v1/mi-negocio/contable/activos-fijos/depreciaciones/', data).then(res => res.data), "Cálculo de depreciación registrado.");
+  }, [makeRequest]);
+
+  // --- API de Presupuesto ---
+  const getPresupuestos = useCallback(async (page: number = 1, search: string = '') => {
+      const params = new URLSearchParams({ page: page.toString(), search });
+      return makeRequest(() => api.get<PaginatedResponse<Presupuesto>>(`/api/v1/mi-negocio/contable/presupuesto/presupuestos/?${params.toString()}`).then(res => res.data));
+  }, [makeRequest]);
+
+  const createPresupuesto = useCallback(async (data: Omit<Presupuesto, 'id' | 'total_ingresos_presupuestado' | 'total_gastos_presupuestado'>) => {
+      return makeRequest(() => api.post<Presupuesto>('/api/v1/mi-negocio/contable/presupuesto/presupuestos/', data).then(res => res.data), "Presupuesto creado.");
+  }, [makeRequest]);
+
+  const getPartidas = useCallback(async (presupuestoId: number, page: number = 1, search: string = '') => {
+      const params = new URLSearchParams({ page: page.toString(), search, presupuesto: presupuestoId.toString() });
+      return makeRequest(() => api.get<PaginatedResponse<PartidaPresupuestal>>(`/api/v1/mi-negocio/contable/presupuesto/partidas/?${params.toString()}`).then(res => res.data));
+  }, [makeRequest]);
+
+  const createPartida = useCallback(async (data: Omit<PartidaPresupuestal, 'id' | 'monto_ejecutado'>) => {
+      return makeRequest(() => api.post<PartidaPresupuestal>('/api/v1/mi-negocio/contable/presupuesto/partidas/', data).then(res => res.data), "Partida creada.");
+  }, [makeRequest]);
+
+  const getEjecuciones = useCallback(async (partidaId: number, page: number = 1) => {
+      const params = new URLSearchParams({ page: page.toString(), partida: partidaId.toString() });
+      return makeRequest(() => api.get<PaginatedResponse<EjecucionPresupuestal>>(`/api/v1/mi-negocio/contable/presupuesto/ejecuciones/?${params.toString()}`).then(res => res.data));
+  }, [makeRequest]);
+
 
   return {
     isLoading,
@@ -460,5 +584,22 @@ export function useMiNegocioApi() {
     getBalanceComprobacion,
     getReporteFinanciero,
     getReporteIngresosGastos,
+    // Activos Fijos
+    getCategoriasActivo,
+    createCategoriaActivo,
+    updateCategoriaActivo,
+    deleteCategoriaActivo,
+    getActivosFijos,
+    createActivoFijo,
+    updateActivoFijo,
+    deleteActivoFijo,
+    getDepreciaciones,
+    createDepreciacion,
+    // Presupuesto
+    getPresupuestos,
+    createPresupuesto,
+    getPartidas,
+    createPartida,
+    getEjecuciones,
   };
 }
