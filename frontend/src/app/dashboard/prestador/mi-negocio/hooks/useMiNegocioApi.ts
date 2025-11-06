@@ -21,6 +21,14 @@ export interface Cliente {
   telefono: string | null;
 }
 
+// Interfaz para respuestas paginadas
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
 export interface Proveedor {
   id: number;
   nombre: string;
@@ -188,8 +196,12 @@ export function useMiNegocioApi() {
   }, [makeRequest]);
 
   // --- API de Clientes (CRM) ---
-  const getClientes = useCallback(async () => {
-    return makeRequest(() => api.get<Cliente[]>('/api/v1/mi-negocio/operativa/clientes/').then(res => res.data), undefined, "No se pudo cargar la lista de clientes.");
+  const getClientes = useCallback(async (page: number = 1, search: string = '') => {
+    const params = new URLSearchParams({
+        page: page.toString(),
+        search: search,
+    });
+    return makeRequest(() => api.get<PaginatedResponse<Cliente>>(`/api/v1/mi-negocio/operativa/clientes/?${params.toString()}`).then(res => res.data), undefined, "No se pudo cargar la lista de clientes.");
   }, [makeRequest]);
 
   const createCliente = useCallback(async (clienteData: Omit<Cliente, 'id'>) => {

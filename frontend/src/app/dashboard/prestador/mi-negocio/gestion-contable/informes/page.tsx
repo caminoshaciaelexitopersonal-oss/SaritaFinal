@@ -1,60 +1,25 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
-// Definimos el tipo para los datos del gráfico
-interface IngresosGastosData {
-  mes: string;
-  ingresos: number;
-  gastos: number;
-}
+import React from 'react';
+import AnalisisFinancieroChart from './AnalisisFinancieroChart'; // Suponiendo que el gráfico se refactoriza a su propio componente
+import LibroMayorReporte from './LibroMayorReporte';
+import BalanceComprobacionReporte from './BalanceComprobacionReporte';
+import EstadoResultadosReporte from './EstadoResultadosReporte';
+import BalanceGeneralReporte from './BalanceGeneralReporte';
 
 export default function InformesPage() {
-  const { getReporteIngresosGastos, isLoading } = useMiNegocioApi();
-  const [reportData, setReportData] = useState<IngresosGastosData[]>([]);
-
-  useEffect(() => {
-    const fetchReportData = async () => {
-      const data = await getReporteIngresosGastos();
-      if (data && data.length > 0) {
-        // Asumimos que la API devuelve los datos en el formato correcto
-        setReportData(data);
-      }
-    };
-    fetchReportData();
-  }, [getReporteIngresosGastos]);
-
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Análisis Financiero: Ingresos vs. Gastos</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <p>Cargando datos del informe...</p>
-          ) : reportData.length > 0 ? (
-            <div style={{ width: '100%', height: 300 }}>
-              <ResponsiveContainer>
-                <BarChart data={reportData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="mes" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="ingresos" fill="#82ca9d" name="Ingresos" />
-                  <Bar dataKey="gastos" fill="#8884d8" name="Gastos" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <p>No hay datos disponibles para mostrar en el gráfico.</p>
-          )}
-        </CardContent>
-      </Card>
-      {/* Aquí se pueden añadir más tarjetas para otros informes */}
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Informes Financieros y Contables</h1>
+
+      {/* Gráfico Principal */}
+      <AnalisisFinancieroChart />
+
+      {/* Reportes Detallados */}
+      <LibroMayorReporte />
+      <BalanceComprobacionReporte />
+      <EstadoResultadosReporte />
+      <BalanceGeneralReporte />
+
     </div>
   );
 }
