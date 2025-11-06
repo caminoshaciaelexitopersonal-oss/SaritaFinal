@@ -26,6 +26,27 @@ class FacturaCompraSerializer(serializers.ModelSerializer):
             'proveedor': {'write_only': True}
         }
 
+    def validate(self, data):
+        """
+        Verifica que no exista otra factura con el mismo número para el mismo proveedor.
+        La validación se aplica solo en la creación de una nueva factura.
+        """
+        # La validación se aplica solo en la creación (POST)
+        if not self.instance:
+            proveedor = data.get('proveedor')
+            numero_factura = data.get('numero_factura')
+            perfil = self.context['request'].user.perfil_prestador
+
+            if FacturaCompra.objects.filter(
+                perfil=perfil,
+                proveedor=proveedor,
+                numero_factura=numero_factura
+            ).exists():
+                raise serializers.ValidationError(
+                    f"Ya existe una factura con el número '{numero_factura}' para este proveedor."
+                )
+        return data
+
     def create(self, validated_data):
         validated_data['perfil'] = self.context['request'].user.perfil_prestador
         return super().create(validated_data)

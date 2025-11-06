@@ -1,14 +1,25 @@
 'use client';
-import React from 'react';
-import { useFinancieraApi } from '../hooks/useFinancieraApi';
+import React, { useEffect, useState } from 'react';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const AnalisisFinancieroPage = () => {
-    const {
-        reporteIngresosGastos,
-        reporteLoading,
-    } = useFinancieraApi();
+    const { getReporteIngresosGastos, isLoading } = useMiNegocioApi(); // Corregido
+    const [reporte, setReporte] = useState<any>(null);
+
+    useEffect(() => {
+        async function loadReporte() {
+            const data = await getReporteIngresosGastos(); // Suponiendo que existe
+            if(data) setReporte(data);
+        }
+        loadReporte();
+    }, [getReporteIngresosGastos]);
+
+    const chartData = [
+        { name: 'Finanzas', ingresos: reporte?.total_ingresos || 0, gastos: reporte?.total_gastos || 0 },
+    ];
 
     const formatCurrency = (value: number) => {
         return `$${(value || 0).toLocaleString('es-CO', { maximumFractionDigits: 0 })}`;
@@ -71,7 +82,23 @@ const AnalisisFinancieroPage = () => {
                 </Card>
             </div>
 
-            {/* Aquí se podrían agregar más componentes de visualización, como gráficos */}
+            <Card className="mt-6">
+                <CardHeader>
+                    <CardTitle>Resumen Gráfico</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={chartData}>
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip formatter={(value) => formatCurrency(value as number)} />
+                            <Legend />
+                            <Bar dataKey="ingresos" fill="#82ca9d" name="Ingresos" />
+                            <Bar dataKey="gastos" fill="#8884d8" name="Gastos" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </CardContent>
+            </Card>
 
         </div>
     );

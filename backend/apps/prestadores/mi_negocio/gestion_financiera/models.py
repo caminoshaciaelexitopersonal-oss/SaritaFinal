@@ -36,19 +36,28 @@ class TransaccionBancaria(models.Model):
     def __str__(self):
         return f"{self.tipo} de {self.monto} en {self.cuenta.numero_cuenta}"
 
+    def clean(self):
+        super().clean()
+        if self.tipo == self.TipoTransaccion.EGRESO:
+            if self.cuenta.saldo_actual < self.monto:
+                raise ValidationError({
+                    'monto': f"Saldo insuficiente. Saldo actual: ${self.cuenta.saldo_actual:,.2f}"
+                })
+
     def save(self, *args, **kwargs):
-        # Evitar doble contabilidad si el objeto ya existe
-        is_new = self._state.adding
+        # La validación se hace en clean(), que es llamado por los ModelForms y Serializers.
+        # Aquí se actualiza el saldo.
 
-        super().save(*args, **kwargs)
-
-        if is_new:
+        # Solo actualizar saldo para nuevas transacciones
+        if self._state.adding:
             cuenta = self.cuenta
             if self.tipo == self.TipoTransaccion.INGRESO:
                 cuenta.saldo_actual += self.monto
             elif self.tipo == self.TipoTransaccion.EGRESO:
-                if cuenta.saldo_actual < self.monto:
-                    raise ValidationError("Saldo insuficiente en la cuenta para realizar el egreso.")
+                # La validación ya ocurrió, aquí solo se resta.
                 cuenta.saldo_actual -= self.monto
-            # Transferencia se maneja como dos movimientos: un egreso y un ingreso
+
+            # Guardar la cuenta primero para asegurar la consistencia
             cuenta.save()
+
+        super().save(*args, **kwargs)

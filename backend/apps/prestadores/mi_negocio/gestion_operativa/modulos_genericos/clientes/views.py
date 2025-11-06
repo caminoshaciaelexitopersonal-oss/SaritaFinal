@@ -1,8 +1,14 @@
 # SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/clientes/views.py
 from rest_framework import viewsets, permissions
+from rest_framework.pagination import PageNumberPagination
 from .models import Cliente
 from .serializers import ClienteSerializer
 from ....permissions import IsPrestadorOwner
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 class ClienteViewSet(viewsets.ModelViewSet):
     """
@@ -10,6 +16,7 @@ class ClienteViewSet(viewsets.ModelViewSet):
     """
     serializer_class = ClienteSerializer
     permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         """
