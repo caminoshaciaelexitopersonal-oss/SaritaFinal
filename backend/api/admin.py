@@ -313,9 +313,9 @@ class AsistenciaCapacitacionAdmin(admin.ModelAdmin):
 
 @admin.register(AuditLog)
 class AuditLogAdmin(admin.ModelAdmin):
-    list_display = ('timestamp', 'user', 'get_action_display', 'content_object')
+    list_display = ('timestamp', 'user', 'get_action_display')
     list_filter = ('action', 'user')
-    readonly_fields = ('timestamp', 'user', 'action', 'details', 'content_type', 'object_id', 'content_object')
+    readonly_fields = ('timestamp', 'user', 'action', 'details', 'content_type', 'object_id')
     date_hierarchy = 'timestamp'
 
 @admin.register(Notificacion)

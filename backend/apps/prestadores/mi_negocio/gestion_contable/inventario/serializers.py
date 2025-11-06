@@ -34,6 +34,16 @@ class ProductoSerializer(serializers.ModelSerializer):
         validated_data['perfil'] = self.context['request'].user.perfil_prestador
         return super().create(validated_data)
 
+    def validate(self, data):
+        costo = data.get('costo', 0)
+        precio_venta = data.get('precio_venta', 0)
+        stock_minimo = data.get('stock_minimo', 0)
+
+        if costo < 0 or precio_venta < 0 or stock_minimo < 0:
+            raise serializers.ValidationError("Los valores de costo, precio y stock no pueden ser negativos.")
+
+        return data
+
 class MovimientoInventarioSerializer(serializers.ModelSerializer):
     usuario = serializers.HiddenField(default=serializers.CurrentUserDefault())
     producto_nombre = serializers.CharField(source='producto.nombre', read_only=True)

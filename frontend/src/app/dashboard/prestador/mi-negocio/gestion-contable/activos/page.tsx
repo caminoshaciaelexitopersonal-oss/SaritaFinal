@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
-import { useActivosApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useActivosApi';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { useActivosApi } from '../hooks/useActivosApi';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { PlusCircle, Archive } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format } from 'date-fns';
 
 const ActivosPage = () => {

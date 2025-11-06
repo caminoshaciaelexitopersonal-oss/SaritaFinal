@@ -3,59 +3,56 @@ import { useApi } from '@/services/api';
 import { useCallback } from 'react';
 
 // --- Tipos de Datos ---
-export interface BankAccount {
+interface CuentaBancaria {
     id: number;
-    name: string;
-    account_number: string;
-    bank_name: string;
-    linked_account_code: string;
+    banco: string;
+    numero_cuenta: string;
+    tipo_cuenta: string;
+    saldo_actual: string;
+    titular: string;
 }
-export interface CashTransaction {
+interface TransaccionBancaria {
     id: number;
-    transaction_date: string;
-    description: string;
-    amount: string;
-    transaction_type: string;
-    status: string;
-    bank_account_name: string;
+    cuenta: number;
+    fecha: string;
+    tipo: string;
+    monto: string;
+    descripcion: string;
 }
 
 export const useFinancieraApi = () => {
     const { api } = useApi();
-    const fetcher = useCallback((url: string) => api.get(url).then(res => res.data), [api]);
+    const fetcher = (url: string) => api.get(url).then(res => res.data);
 
     // --- Reportes ---
-    const { data: reporteIngresosGastos, error: reporteError } = useSWR('/v1/mi-negocio/financiera/reporte-ingresos-gastos/', fetcher);
+    const { data: reporteIngresosGastos, error: reporteError } = useSWR('/mi-negocio/financiera/reporte-ingresos-gastos/', fetcher);
 
     // --- Cuentas Bancarias ---
-    const { data: bankAccounts, error: bankAccountsError, mutate: mutateBankAccounts } = useSWR<{ results: BankAccount[] }>('/v1/mi-negocio/financiera/bank-accounts/', fetcher);
-
-    const createBankAccount = useCallback(async (data: any) => {
-        await api.post('/v1/mi-negocio/financiera/bank-accounts/', data);
-        mutateBankAccounts();
-    }, [api, mutateBankAccounts]);
+    const { data: cuentas, error: cuentasError, mutate: mutateCuentas } = useSWR('/mi-negocio/contabilidad/tesoreria/cuentas-bancarias/', fetcher);
+    const createCuenta = useCallback(async (data: Omit<CuentaBancaria, 'id' | 'saldo_actual'>) => {
+        await api.post('/mi-negocio/contabilidad/tesoreria/cuentas-bancarias/', data);
+        mutateCuentas();
+    }, [api, mutateCuentas]);
 
     // --- Transacciones Bancarias ---
-    const { data: cashTransactions, error: cashTransactionsError, mutate: mutateCashTransactions } = useSWR<{ results: CashTransaction[] }>('/v1/mi-negocio/financiera/cash-transactions/', fetcher);
-
-    const createCashTransaction = useCallback(async (data: any) => {
-        await api.post('/v1/mi-negocio/financiera/cash-transactions/', data);
-        mutateCashTransactions();
-        // Podríamos querer mutar las cuentas si el saldo se derivara, pero ahora viene de contabilidad
-    }, [api, mutateCashTransactions]);
+    const { data: transacciones, mutate: mutateTransacciones } = useSWR('/mi-negocio/contabilidad/tesoreria/transacciones/', fetcher);
+    const createTransaccion = useCallback(async (data: Omit<TransaccionBancaria, 'id'>) => {
+        await api.post('/mi-negocio/contabilidad/tesoreria/transacciones/', data);
+        mutateTransacciones();
+        mutateCuentas(); // Revalidar cuentas para actualizar saldos
+    }, [api, mutateTransacciones, mutateCuentas]);
 
     return {
         // Cuentas Bancarias
-        bankAccounts: bankAccounts?.results || [],
-        bankAccountsLoading: !bankAccounts && !bankAccountsError,
-        bankAccountsError,
-        createBankAccount,
+        cuentas,
+        cuentasLoading: !cuentas && !cuentasError,
+        cuentasError,
+        createCuenta,
 
         // Transacciones Bancarias
-        cashTransactions: cashTransactions?.results || [],
-        cashTransactionsLoading: !cashTransactions && !cashTransactionsError,
-        cashTransactionsError,
-        createCashTransaction,
+        transacciones,
+        transaccionesLoading: !transacciones,
+        createTransaccion,
 
         // Reportes
         reporteIngresosGastos,

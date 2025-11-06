@@ -27,6 +27,27 @@ api.interceptors.request.use(
   }
 );
 
+// Interceptor para manejar errores de respuesta (ej. 401 No Autorizado)
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      if (typeof window !== 'undefined') {
+        // Limpiar token inválido
+        localStorage.removeItem('authToken');
+        // Redirigir a la página de login para evitar bucles
+        // Usamos window.location para forzar una recarga completa fuera del router de Next.js
+        if (window.location.pathname !== '/dashboard/login') {
+            window.location.href = '/dashboard/login';
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
 
 // --- Tipos de Datos ---

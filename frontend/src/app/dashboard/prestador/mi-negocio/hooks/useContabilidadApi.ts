@@ -2,49 +2,47 @@ import useSWR from 'swr';
 import { useApi } from '@/services/api';
 import { useCallback } from 'react';
 
-// TODO: Definir interfaces más estrictas para los objetos de la API
-export interface CostCenter {
-    id: number;
-    code: string;
-    name: string;
-}
-
-export interface JournalEntry {
-    id: number;
-    entry_date: string;
-    description: string;
-    transactions: {
-        account: {
-            code: string;
-            name: string;
-        };
-        debit: string;
-        credit: string;
-    }[];
-}
-
 export const useContabilidadApi = () => {
     const { api } = useApi();
 
-    const fetcher = useCallback((url: string) => api.get(url).then(res => res.data), [api]);
-
     // --- Cost Centers ---
-    const { data: costCenters, error: costCentersError, mutate: mutateCostCenters } = useSWR('/v1/mi-negocio/contable/contabilidad/cost-centers/', fetcher);
+    const { data: costCenters, error: costCentersError, mutate: mutateCostCenters } = useSWR('/mi-negocio/contabilidad/cost-centers/', async (url: string) => {
+        const response = await api.get(url);
+        return response.data;
+    });
 
     const createCostCenter = useCallback(async (data: { code: string; name: string }) => {
-        const response = await api.post('/v1/mi-negocio/contable/contabilidad/cost-centers/', data);
+        const response = await api.post('/mi-negocio/contabilidad/cost-centers/', data);
+        mutateCostCenters(); // Revalidar datos locales
+        return response.data;
+    }, [api, mutateCostCenters]);
+
+    const updateCostCenter = useCallback(async (id: number, data: { code: string; name: string }) => {
+        const response = await api.put(`/mi-negocio/contabilidad/cost-centers/${id}/`, data);
         mutateCostCenters();
         return response.data;
     }, [api, mutateCostCenters]);
 
+    const deleteCostCenter = useCallback(async (id: number) => {
+        await api.delete(`/mi-negocio/contabilidad/cost-centers/${id}/`);
+        mutateCostCenters();
+    }, [api, mutateCostCenters]);
+
+
     // --- Chart of Accounts (Read-only) ---
-    const { data: chartOfAccounts, error: chartOfAccountsError } = useSWR('/v1/mi-negocio/contable/contabilidad/chart-of-accounts/', fetcher);
+    const { data: chartOfAccounts, error: chartOfAccountsError } = useSWR('/mi-negocio/contabilidad/chart-of-accounts/', async (url: string) => {
+        const response = await api.get(url);
+        return response.data;
+    });
 
     // --- Journal Entries ---
-    const { data: journalEntries, error: journalEntriesError, mutate: mutateJournalEntries } = useSWR<{ results: JournalEntry[] }>('/v1/mi-negocio/contable/contabilidad/journal-entries/', fetcher);
+    const { data: journalEntries, error: journalEntriesError, mutate: mutateJournalEntries } = useSWR('/mi-negocio/contabilidad/journal-entries/', async (url: string) => {
+        const response = await api.get(url);
+        return response.data;
+    });
 
     const createJournalEntry = useCallback(async (data: any) => {
-        const response = await api.post('/v1/mi-negocio/contable/contabilidad/journal-entries/', data);
+        const response = await api.post('/mi-negocio/contabilidad/journal-entries/', data);
         mutateJournalEntries();
         return response.data;
     }, [api, mutateJournalEntries]);
@@ -52,18 +50,20 @@ export const useContabilidadApi = () => {
 
     return {
         // Cost Centers
-        costCenters: costCenters?.results || [],
+        costCenters,
         costCentersLoading: !costCenters && !costCentersError,
         costCentersError,
         createCostCenter,
+        updateCostCenter,
+        deleteCostCenter,
 
         // Chart of Accounts
-        chartOfAccounts: chartOfAccounts?.results || [],
-        chartOfAccountsLoading: !chartOfAcounts && !chartOfAccountsError,
+        chartOfAccounts,
+        chartOfAccountsLoading: !chartOfAccounts && !chartOfAccountsError,
         chartOfAccountsError,
 
         // Journal Entries
-        journalEntries: journalEntries?.results || [],
+        journalEntries,
         journalEntriesLoading: !journalEntries && !journalEntriesError,
         journalEntriesError,
         createJournalEntry,

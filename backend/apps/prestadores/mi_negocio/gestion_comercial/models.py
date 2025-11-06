@@ -5,7 +5,7 @@ from django.db.models import Sum
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
 from apps.prestadores.mi_negocio.gestion_contable.inventario.models import Producto
-from apps.prestadores.mi_negocio.gestion_financiera.models import BankAccount
+from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria
 
 class FacturaVenta(models.Model):
     class Estado(models.TextChoices):
@@ -67,7 +67,7 @@ class ReciboCaja(models.Model):
 
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='recibos_caja')
     factura = models.ForeignKey(FacturaVenta, on_delete=models.CASCADE, related_name='recibos')
-    cuenta_bancaria = models.ForeignKey(BankAccount, on_delete=models.PROTECT, help_text="Cuenta donde se recibe el pago")
+    cuenta_bancaria = models.ForeignKey(CuentaBancaria, on_delete=models.PROTECT, help_text="Cuenta donde se recibe el pago")
     fecha_pago = models.DateField()
     monto = models.DecimalField(max_digits=18, decimal_places=2)
     metodo_pago = models.CharField(max_length=20, choices=MetodoPago.choices)

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Modal from '@/components/ui/Modal';
-import ProductServiceForm from '@/app/dashboard/prestador/mi-negocio/gestion-contable/components/ProductServiceForm';
+import ProductServiceForm from '@/app/dashboard/prestador/mi-negocio/components/ProductServiceForm';
 import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 
 // Tipado para los datos del producto/servicio

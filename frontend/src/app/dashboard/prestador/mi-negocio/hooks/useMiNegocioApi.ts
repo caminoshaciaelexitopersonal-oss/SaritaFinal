@@ -21,6 +21,63 @@ export interface Cliente {
   telefono: string | null;
 }
 
+export interface Proveedor {
+  id: number;
+  nombre: string;
+  identificacion: string | null;
+  telefono: string | null;
+  email: string | null;
+  direccion: string | null;
+}
+
+export interface FacturaCompra {
+  id: number;
+  proveedor: number;
+  proveedor_nombre?: string;
+  numero_factura: string;
+  fecha_emision: string;
+  fecha_vencimiento: string;
+  subtotal: string;
+  impuestos: string;
+  total: string;
+  estado: string;
+}
+
+export interface Producto {
+  id: number;
+  nombre: string;
+  sku: string;
+  categoria: number;
+  categoria_nombre?: string;
+  descripcion: string;
+  costo: string;
+  precio_venta: string;
+  stock_actual: string;
+  stock_minimo: string;
+}
+
+export interface Empleado {
+  id: number;
+  nombre: string;
+  apellido: string;
+  identificacion: string;
+  email: string;
+}
+
+export interface Planilla {
+  id: number;
+  periodo_inicio: string;
+  periodo_fin: string;
+  total_neto: string;
+}
+
+export interface ConceptoNomina {
+  id: number;
+  codigo: string;
+  descripcion: string;
+  tipo: 'DEVENGADO' | 'DEDUCCION';
+}
+
 // --- Tipos de Datos de Contabilidad ---
 export interface ChartOfAccount {
   id: number;
@@ -180,6 +237,110 @@ export function useMiNegocioApi() {
     return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/journal-entries/${id}/`), "Asiento eliminado.");
   }, [makeRequest]);
 
+  // --- API de Compras (Proveedores) ---
+  const getProveedores = useCallback(async () => {
+    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/compras/proveedores/').then(res => res.data));
+  }, [makeRequest]);
+
+  const createProveedor = useCallback(async (proveedorData: Omit<Proveedor, 'id'>) => {
+    return makeRequest(() => api.post<Proveedor>('/api/v1/mi-negocio/contable/compras/proveedores/', proveedorData).then(res => res.data), "Proveedor creado con éxito.");
+  }, [makeRequest]);
+
+  const updateProveedor = useCallback(async (id: number, proveedorData: Partial<Omit<Proveedor, 'id'>>) => {
+    return makeRequest(() => api.patch<Proveedor>(`/api/v1/mi-negocio/contable/compras/proveedores/${id}/`, proveedorData).then(res => res.data), "Proveedor actualizado con éxito.");
+  }, [makeRequest]);
+
+  const deleteProveedor = useCallback(async (id: number) => {
+    return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/compras/proveedores/${id}/`), "Proveedor eliminado con éxito.");
+  }, [makeRequest]);
+
+  const getFacturasCompra = useCallback(async () => {
+    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/compras/facturas/').then(res => res.data));
+  }, [makeRequest]);
+
+  const createFacturaCompra = useCallback(async (facturaData: any) => {
+    return makeRequest(() => api.post<FacturaCompra>('/api/v1/mi-negocio/contable/compras/facturas/', facturaData).then(res => res.data), "Factura de compra creada con éxito.");
+  }, [makeRequest]);
+
+  const updateFacturaCompra = useCallback(async (id: number, facturaData: any) => {
+    return makeRequest(() => api.patch<FacturaCompra>(`/api/v1/mi-negocio/contable/compras/facturas/${id}/`, facturaData).then(res => res.data), "Factura de compra actualizada con éxito.");
+  }, [makeRequest]);
+
+  const pagarFacturaCompra = useCallback(async (id: number, cuentaBancariaId: number) => {
+    return makeRequest(() => api.post(`/api/v1/mi-negocio/contable/compras/facturas/${id}/pagar/`, { cuenta_bancaria_id: cuentaBancariaId }).then(res => res.data), "Factura pagada con éxito.");
+  }, [makeRequest]);
+
+  // --- API de Inventario ---
+  const getProductos = useCallback(async () => {
+    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/inventario/productos/').then(res => res.data));
+  }, [makeRequest]);
+
+  const createProducto = useCallback(async (productoData: any) => {
+    return makeRequest(() => api.post<Producto>('/api/v1/mi-negocio/contable/inventario/productos/', productoData).then(res => res.data), "Producto creado con éxito.");
+  }, [makeRequest]);
+
+  const updateProducto = useCallback(async (id: number, productoData: any) => {
+    return makeRequest(() => api.patch<Producto>(`/api/v1/mi-negocio/contable/inventario/productos/${id}/`, productoData).then(res => res.data), "Producto actualizado con éxito.");
+  }, [makeRequest]);
+
+  const deleteProducto = useCallback(async (id: number) => {
+    return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/inventario/productos/${id}/`), "Producto eliminado con éxito.");
+  }, [makeRequest]);
+
+  const getMovimientosInventario = useCallback(async () => {
+    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/inventario/movimientos/').then(res => res.data));
+  }, [makeRequest]);
+
+  const createMovimientoInventario = useCallback(async (movimientoData: any) => {
+    return makeRequest(() => api.post('/api/v1/mi-negocio/contable/inventario/movimientos/', movimientoData).then(res => res.data), "Movimiento registrado con éxito.");
+  }, [makeRequest]);
+
+  // --- API de Nómina ---
+  const getEmpleados = useCallback(async () => {
+    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/nomina/empleados/').then(res => res.data));
+  }, [makeRequest]);
+
+  const createEmpleado = useCallback(async (empleadoData: any) => {
+    return makeRequest(() => api.post<Empleado>('/api/v1/mi-negocio/contable/nomina/empleados/', empleadoData).then(res => res.data), "Empleado creado con éxito.");
+  }, [makeRequest]);
+
+  const updateEmpleado = useCallback(async (id: number, empleadoData: any) => {
+    return makeRequest(() => api.patch<Empleado>(`/api/v1/mi-negocio/contable/nomina/empleados/${id}/`, empleadoData).then(res => res.data), "Empleado actualizado con éxito.");
+  }, [makeRequest]);
+
+  const deleteEmpleado = useCallback(async (id: number) => {
+    return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/nomina/empleados/${id}/`), "Empleado eliminado con éxito.");
+  }, [makeRequest]);
+
+  const getPlanillas = useCallback(async () => {
+    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/nomina/planillas/').then(res => res.data));
+  }, [makeRequest]);
+
+  const createPlanilla = useCallback(async (planillaData: any) => {
+    return makeRequest(() => api.post<Planilla>('/api/v1/mi-negocio/contable/nomina/planillas/', planillaData).then(res => res.data), "Planilla creada con éxito.");
+  }, [makeRequest]);
+
+  const getConceptosNomina = useCallback(async () => {
+    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/nomina/conceptos/').then(res => res.data));
+  }, [makeRequest]);
+
+  // --- API de Reportes ---
+  const getLibroMayor = useCallback(async (params: { codigo_cuenta: string, fecha_inicio: string, fecha_fin: string }) => {
+    return makeRequest(() => api.get('/api/v1/mi-negocio/contable/contabilidad/reportes/libro-mayor/', { params }).then(res => res.data));
+  }, [makeRequest]);
+
+  const getBalanceComprobacion = useCallback(async (params: { fecha_fin: string }) => {
+    return makeRequest(() => api.get('/api/v1/mi-negocio/contable/contabilidad/reportes/balance-comprobacion/', { params }).then(res => res.data));
+  }, [makeRequest]);
+
+  const getReporteFinanciero = useCallback(async (params: { reporte: string, fecha_fin: string }) => {
+    return makeRequest(() => api.get('/api/v1/mi-negocio/contable/contabilidad/reportes/financieros/', { params }).then(res => res.data));
+  }, [makeRequest]);
+
+  const getReporteIngresosGastos = useCallback(async () => {
+    return makeRequest(() => api.get('/api/v1/mi-negocio/financiera/reporte-ingresos-gastos/').then(res => res.data));
+  }, [makeRequest]);
+
   // --- API Financiera ---
   const getCurrencies = useCallback(async () => {
     return makeRequest(() => api.get<any[]>('/api/v1/mi-negocio/contable/currencies/').then(res => res.data));
@@ -257,6 +418,35 @@ export function useMiNegocioApi() {
     createCashTransaction,
     getFacturasVenta,
     createFacturaVenta,
- 
+    // Proveedores
+    getProveedores,
+    createProveedor,
+    updateProveedor,
+    deleteProveedor,
+    // Facturas de Compra
+    getFacturasCompra,
+    createFacturaCompra,
+    updateFacturaCompra,
+    pagarFacturaCompra,
+    // Inventario
+    getProductos,
+    createProducto,
+    updateProducto,
+    deleteProducto,
+    getMovimientosInventario,
+    createMovimientoInventario,
+    // Nómina
+    getEmpleados,
+    createEmpleado,
+    updateEmpleado,
+    deleteEmpleado,
+    getPlanillas,
+    createPlanilla,
+    getConceptosNomina,
+    // Reportes
+    getLibroMayor,
+    getBalanceComprobacion,
+    getReporteFinanciero,
+    getReporteIngresosGastos,
   };
 }

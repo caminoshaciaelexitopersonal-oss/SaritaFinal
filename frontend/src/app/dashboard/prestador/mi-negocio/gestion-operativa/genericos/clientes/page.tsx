@@ -5,24 +5,37 @@ import { useMiNegocioApi, Cliente } from '@/app/dashboard/prestador/mi-negocio/h
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import { Input } from '@/components/ui/Input';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 export default function ClientesPage() {
   const { getClientes, deleteCliente, isLoading } = useMiNegocioApi();
   const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredClientes, setFilteredClientes] = useState<Cliente[]>([]);
 
   const fetchClientes = useCallback(async () => {
     const data = await getClientes();
     if (data) {
-      // La API devuelve un objeto con 'results', accedemos a él
-      setClientes(data.results || []);
+      const clientesData = data.results || [];
+      setClientes(clientesData);
+      setFilteredClientes(clientesData);
     }
   }, [getClientes]);
 
   useEffect(() => {
     fetchClientes();
   }, [fetchClientes]);
+
+  useEffect(() => {
+    const results = clientes.filter(cliente =>
+      cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cliente.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (cliente.telefono && cliente.telefono.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+    setFilteredClientes(results);
+  }, [searchTerm, clientes]);
 
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar este cliente?')) {
@@ -46,6 +59,15 @@ export default function ClientesPage() {
         </Link>
       </CardHeader>
       <CardContent>
+        <div className="mb-4">
+          <Input
+            type="text"
+            placeholder="Buscar por nombre, email o teléfono..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full"
+          />
+        </div>
         {isLoading && clientes.length === 0 ? (
           <p>Cargando clientes...</p>
         ) : (
@@ -59,7 +81,7 @@ export default function ClientesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {clientes.map((cliente) => (
+              {filteredClientes.map((cliente) => (
                 <TableRow key={cliente.id}>
                   <TableCell>{cliente.nombre}</TableCell>
                   <TableCell>{cliente.email}</TableCell>

@@ -1,68 +1,56 @@
-from django.db.models import Sum, Q
-from rest_framework import viewsets, permissions, status
+from django.db.models import Sum
+from rest_framework import viewsets, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import BankAccount, CashTransaction
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import Transaction
-from .serializers import (
-    BankAccountReadSerializer, BankAccountWriteSerializer,
-    CashTransactionReadSerializer, CashTransactionWriteSerializer
-)
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from .models import CuentaBancaria, TransaccionBancaria
+# Corregir importaciones para apuntar a la estructura modular interna
+from apps.prestadores.mi_negocio.gestion_comercial.models import FacturaVenta
+from apps.prestadores.mi_negocio.gestion_contable.compras.models import FacturaCompra
+from .serializers import CuentaBancariaSerializer, TransaccionBancariaSerializer
 
-class BankAccountViewSet(viewsets.ModelViewSet):
+class IsPrestadorOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if hasattr(obj, 'perfil'):
+            return obj.perfil == request.user.perfil_prestador
+        if hasattr(obj, 'cuenta') and hasattr(obj.cuenta, 'perfil'):
+             return obj.cuenta.perfil == request.user.perfil_prestador
+        return False
+
+class CuentaBancariaViewSet(viewsets.ModelViewSet):
+    serializer_class = CuentaBancariaSerializer
     permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
 
-    def get_serializer_class(self):
-        if self.action in ['create', 'update', 'partial_update']:
-            return BankAccountWriteSerializer
-        return BankAccountReadSerializer
+    def get_queryset(self):
+        return CuentaBancaria.objects.filter(perfil=self.request.user.perfil_prestador)
+
+class TransaccionBancariaViewSet(viewsets.ModelViewSet):
+    serializer_class = TransaccionBancariaSerializer
+    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
 
     def get_queryset(self):
-        return BankAccount.objects.filter(perfil=self.request.user.perfil_prestador)
-
-class CashTransactionViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated] # Permiso a nivel de objeto se maneja en el serializer/servicio
-
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return CashTransactionWriteSerializer
-        return CashTransactionReadSerializer
-
-    def get_queryset(self):
-        # Asegurarse de que solo se listen transacciones de cuentas que pertenecen al perfil del usuario
-        return CashTransaction.objects.filter(
-            bank_account__perfil=self.request.user.perfil_prestador
-        ).select_related('bank_account', 'journal_entry')
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        instance = serializer.save()
-        read_serializer = CashTransactionReadSerializer(instance)
-        return Response(read_serializer.data, status=status.HTTP_201_CREATED)
+        return TransaccionBancaria.objects.filter(cuenta__perfil=self.request.user.perfil_prestador)
 
 class ReporteIngresosGastosView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         perfil = request.user.perfil_prestador
+
+        # Obtener fechas del query string, con valores por defecto si no se proveen
         fecha_inicio = request.query_params.get('fecha_inicio', '2000-01-01')
         fecha_fin = request.query_params.get('fecha_fin', '2999-12-31')
 
-        # Consulta robusta al libro contable
-        transactions = Transaction.objects.filter(
-            journal_entry__perfil=perfil,
-            journal_entry__entry_date__range=[fecha_inicio, fecha_fin]
-        )
+        total_ingresos = FacturaVenta.objects.filter(
+            perfil=perfil,
+            fecha_emision__range=[fecha_inicio, fecha_fin],
+            estado__in=[FacturaVenta.Estado.PAGADA, FacturaVenta.Estado.ENVIADA]
+        ).aggregate(total=Sum('total'))['total'] or 0
 
-        total_ingresos = transactions.filter(
-            account__code__startswith='4' # Cuentas de Ingresos
-        ).aggregate(total=Sum('credit'))['total'] or 0
-
-        total_gastos = transactions.filter(
-            Q(account__code__startswith='5') | Q(account__code__startswith='6') # Cuentas de Gasto y Costo
-        ).aggregate(total=Sum('debit'))['total'] or 0
+        total_gastos = FacturaCompra.objects.filter(
+            perfil=perfil,
+            fecha_emision__range=[fecha_inicio, fecha_fin],
+            estado__in=[FacturaCompra.Estado.PAGADA, FacturaCompra.Estado.POR_PAGAR]
+        ).aggregate(total=Sum('total'))['total'] or 0
 
         data = {
             'total_ingresos': total_ingresos,

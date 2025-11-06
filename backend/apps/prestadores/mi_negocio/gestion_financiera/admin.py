@@ -1,28 +1,27 @@
 from django.contrib import admin
-from .models import BankAccount, CashTransaction
+from .models import CuentaBancaria, TransaccionBancaria
 
-class CashTransactionInline(admin.TabularInline):
-    model = CashTransaction
+class TransaccionBancariaInline(admin.TabularInline):
+    model = TransaccionBancaria
     extra = 0
-    readonly_fields = ('created_by', 'created_at', 'journal_entry')
+    readonly_fields = ('creado_por', 'creado_en')
     can_delete = False
 
-@admin.register(BankAccount)
-class BankAccountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'bank_name', 'account_number', 'perfil', 'is_active')
-    search_fields = ('name', 'bank_name', 'account_number')
-    list_filter = ('perfil', 'is_active')
-    inlines = [CashTransactionInline]
+@admin.register(CuentaBancaria)
+class CuentaBancariaAdmin(admin.ModelAdmin):
+    list_display = ('banco', 'numero_cuenta', 'tipo_cuenta', 'saldo_actual', 'titular', 'perfil')
+    search_fields = ('banco', 'numero_cuenta', 'titular')
+    list_filter = ('tipo_cuenta', 'perfil')
+    inlines = [TransaccionBancariaInline]
 
-@admin.register(CashTransaction)
-class CashTransactionAdmin(admin.ModelAdmin):
-    list_display = ('bank_account', 'transaction_date', 'transaction_type', 'amount', 'description')
-    search_fields = ('bank_account__account_number', 'description')
-    list_filter = ('transaction_type', 'transaction_date')
-    date_hierarchy = 'transaction_date'
-    readonly_fields = ('journal_entry',)
+@admin.register(TransaccionBancaria)
+class TransaccionBancariaAdmin(admin.ModelAdmin):
+    list_display = ('cuenta', 'fecha', 'tipo', 'monto', 'descripcion')
+    search_fields = ('cuenta__numero_cuenta', 'descripcion')
+    list_filter = ('tipo', 'fecha')
+    date_hierarchy = 'fecha'
 
     def save_model(self, request, obj, form, change):
-        if not obj.pk:
-            obj.created_by = request.user
+        if not obj.pk: # Si es un objeto nuevo
+            obj.creado_por = request.user
         super().save_model(request, obj, form, change)

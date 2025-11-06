@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
-import { useFinancieraApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useFinancieraApi';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { useFinancieraApi } from '../../../hooks/useFinancieraApi'; // Ajustar ruta
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { PlusCircle, Landmark } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format } from 'date-fns';
 
 const TesoreriaPage = () => {

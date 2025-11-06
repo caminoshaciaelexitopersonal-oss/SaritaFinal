@@ -1,10 +1,19 @@
 import csv
 from django.http import HttpResponse
 from rest_framework import viewsets, permissions, status
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from decimal import Decimal
+
+# Modelos locales
 from .models import Proveedor, FacturaCompra
 from .serializers import ProveedorSerializer, FacturaCompraSerializer
+
+# Modelos de otros módulos para integración
+from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, TransaccionBancaria
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -24,6 +33,58 @@ class FacturaCompraViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return FacturaCompra.objects.filter(perfil=self.request.user.perfil_prestador)
+
+    @action(detail=True, methods=['post'], url_path='pagar')
+    def pagar_factura(self, request, pk=None):
+        factura = self.get_object()
+        cuenta_bancaria_id = request.data.get('cuenta_bancaria_id')
+
+        if not cuenta_bancaria_id:
+            return Response({"error": "Debe proporcionar el ID de la cuenta bancaria para el pago."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if factura.estado != FacturaCompra.Estado.POR_PAGAR:
+            return Response({"error": "La factura no está en estado 'Por Pagar'."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cuenta_bancaria = CuentaBancaria.objects.get(id=cuenta_bancaria_id, perfil=request.user.perfil_prestador)
+        except CuentaBancaria.DoesNotExist:
+            return Response({"error": "La cuenta bancaria no existe o no pertenece a su perfil."}, status=status.HTTP_404_NOT_FOUND)
+
+        # 1. Crear la transacción de egreso en el módulo financiero
+        TransaccionBancaria.objects.create(
+            cuenta=cuenta_bancaria,
+            fecha=factura.fecha_emision, # O usar la fecha actual: timezone.now().date()
+            tipo=TransaccionBancaria.TipoTransaccion.EGRESO,
+            monto=factura.total,
+            descripcion=f"Pago de Factura #{factura.numero_factura} a {factura.proveedor.nombre}",
+            creado_por=request.user
+        )
+
+        # 2. Crear el asiento contable del pago
+        try:
+            cuenta_por_pagar = ChartOfAccount.objects.get(code='210501') # Pasivo
+            cuenta_banco = ChartOfAccount.objects.get(code='111005')    # Activo - Bancos
+        except ChartOfAccount.DoesNotExist:
+            return Response({"error": "Cuentas contables para el pago no configuradas."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        journal_entry = JournalEntry.objects.create(
+            perfil=factura.perfil,
+            entry_date=factura.fecha_emision, # O fecha actual
+            description=f"Pago de Factura #{factura.numero_factura}",
+            entry_type="PAGO_COMPRA",
+            user=request.user,
+            origin_document=factura
+        )
+        # Débito a Cuentas por Pagar (disminuye el pasivo)
+        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_por_pagar, debit=factura.total)
+        # Crédito a Bancos (disminuye el activo)
+        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_banco, credit=factura.total)
+
+        # 3. Actualizar el estado de la factura
+        factura.estado = FacturaCompra.Estado.PAGADA
+        factura.save()
+
+        return Response({"status": "Factura pagada exitosamente."}, status=status.HTTP_200_OK)
 
 class GenerarPagoMasivoProveedoresView(APIView):
     permission_classes = [permissions.IsAuthenticated]
