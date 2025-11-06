@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { useFinancieraApi } from '../../../hooks/useFinancieraApi'; // Ajustar ruta
+import { useFinancieraApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useFinancieraApi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PlusCircle, Landmark } from 'lucide-react';

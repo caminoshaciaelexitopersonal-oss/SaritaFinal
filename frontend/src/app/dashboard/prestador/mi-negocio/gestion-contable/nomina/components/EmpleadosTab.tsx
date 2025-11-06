@@ -1,6 +1,6 @@
 // frontend/src/app/dashboard/prestador/mi-negocio/gestion-contable/nomina/components/EmpleadosTab.tsx
 'use client';
-import React, 'useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useMiNegocioApi, Empleado } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import { Button } from '@/components/ui/Button';
