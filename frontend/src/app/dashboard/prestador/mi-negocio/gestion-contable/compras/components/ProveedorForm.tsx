@@ -2,23 +2,30 @@
 'use client';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+// import { zodResolver } from '@hookform/resolvers/zod';
+// import * as z from 'zod';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/Form';
 import { Proveedor } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 
-const formSchema = z.object({
-  nombre: z.string().min(2, { message: "El nombre es requerido." }),
-  identificacion: z.string().optional(),
-  telefono: z.string().optional(),
-  email: z.string().email({ message: "Email inválido." }).optional(),
-  direccion: z.string().optional(),
-});
+// const formSchema = z.object({
+//   nombre: z.string().min(2, { message: "El nombre es requerido." }),
+//   identificacion: z.string().optional(),
+//   telefono: z.string().optional(),
+//   email: z.string().email({ message: "Email inválido." }).optional(),
+//   direccion: z.string().optional(),
+// });
 
-type ProveedorFormValues = z.infer<typeof formSchema>;
+// type ProveedorFormValues = z.infer<typeof formSchema>;
+interface ProveedorFormValues {
+    nombre: string;
+    identificacion?: string;
+    telefono?: string;
+    email?: string;
+    direccion?: string;
+}
 
 interface Props {
   onSubmit: (values: ProveedorFormValues) => void;
@@ -28,7 +35,7 @@ interface Props {
 
 export default function ProveedorForm({ onSubmit, initialData, isSubmitting }: Props) {
   const form = useForm<ProveedorFormValues>({
-    resolver: zodResolver(formSchema),
+    // resolver: zodResolver(formSchema),
     defaultValues: {
       nombre: initialData?.nombre || '',
       identificacion: initialData?.identificacion || '',

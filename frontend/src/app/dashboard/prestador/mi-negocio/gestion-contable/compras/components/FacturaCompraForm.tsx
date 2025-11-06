@@ -2,22 +2,28 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+// import { zodResolver } from '@hookform/resolvers/zod';
+// import * as z from 'zod';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/Form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { useMiNegocioApi, Proveedor, FacturaCompra } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 
-const formSchema = z.object({
-  proveedor: z.string().min(1, { message: "Debe seleccionar un proveedor." }),
-  numero_factura: z.string().min(1, { message: "El número es requerido." }),
-  fecha_emision: z.string().min(1, { message: "La fecha es requerida." }),
-  total: z.coerce.number().positive(),
-});
+// const formSchema = z.object({
+//   proveedor: z.string().min(1, { message: "Debe seleccionar un proveedor." }),
+//   numero_factura: z.string().min(1, { message: "El número es requerido." }),
+//   fecha_emision: z.string().min(1, { message: "La fecha es requerida." }),
+//   total: z.coerce.number().positive(),
+// });
 
-type FormValues = z.infer<typeof formSchema>;
+// type FormValues = z.infer<typeof formSchema>;
+interface FormValues {
+  proveedor: string;
+  numero_factura: string;
+  fecha_emision: string;
+  total: number;
+}
 
 interface Props {
   onSubmit: (values: FormValues) => void;
@@ -38,7 +44,7 @@ export default function FacturaCompraForm({ onSubmit, initialData, isSubmitting 
   }, [getProveedores]);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    // resolver: zodResolver(formSchema),
     defaultValues: {
       proveedor: initialData?.proveedor?.toString() || '',
       numero_factura: initialData?.numero_factura || '',
