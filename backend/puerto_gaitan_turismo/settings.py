@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     # Módulos de "Mi Negocio" - Implementados
     # Nota: 'mi_negocio' es un módulo paraguas, no una app instalable.
     # Las apps de gestión_operativa ya están contenidas en 'prestadores'.
+    "apps.prestadores.mi_negocio.gestion_archivistica.apps.GestionArchivisticaConfig",
 ]
  
  
