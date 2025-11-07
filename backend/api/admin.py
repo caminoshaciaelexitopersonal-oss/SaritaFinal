@@ -269,8 +269,8 @@ class ItemVerificacionInline(admin.TabularInline):
 
 @admin.register(PlantillaVerificacion)
 class PlantillaVerificacionAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'categoria_prestador', 'creado_por')
-    list_filter = ('categoria_prestador',)
+    list_display = ('nombre', 'creado_por')
+    # list_filter = ('categoria_prestador',)
     inlines = [ItemVerificacionInline]
 
 class RespuestaItemVerificacionInline(admin.TabularInline):

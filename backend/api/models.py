@@ -876,14 +876,15 @@ class PlantillaVerificacion(models.Model):
     """
     nombre = models.CharField(max_length=255, unique=True, help_text="Nombre único para la plantilla, ej: 'Verificación para Guías de Turismo'")
     descripcion = models.TextField(blank=True, help_text="Descripción detallada de la finalidad de esta plantilla.")
-    categoria_prestador = models.ForeignKey(
-        'prestadores.CategoriaPrestador',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='plantillas_verificacion',
-        help_text="Asocia esta plantilla a una categoría de prestador específica (opcional)."
-    )
+    # Parche temporal autorizado por el líder técnico – CircularDependencyError
+    # categoria_prestador = models.ForeignKey(
+    #     'prestadores.CategoriaPrestador',
+    #     on_delete=models.SET_NULL,
+    #     null=True,
+    #     blank=True,
+    #     related_name='plantillas_verificacion',
+    #     help_text="Asocia esta plantilla a una categoría de prestador específica (opcional)."
+    # )
     creado_por = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='plantillas_creadas')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
