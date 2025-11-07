@@ -1,88 +1,103 @@
 from rest_framework import serializers
-import uuid
+from .models import Document, DocumentVersion, Process, ProcessType, DocumentType
+from api.models import CustomUser
+from apps.companies.models import Company
 
 # ==========================================================
 # Serializers Anidados (para lectura)
 # ==========================================================
-# Estos serializers se usan para representar relaciones en las respuestas de la API,
-# proporcionando una estructura de datos rica y legible.
+class CompanyNestedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['id', 'name', 'code']
 
-class CompanyNestedSerializer(serializers.Serializer):
-    id = serializers.UUIDField(read_only=True)
-    name = serializers.CharField(read_only=True)
-    code = serializers.CharField(read_only=True)
+class UserNestedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username']
 
-class UserNestedSerializer(serializers.Serializer):
-    id = serializers.UUIDField(read_only=True)
-    username = serializers.CharField(read_only=True)
+class ProcessNestedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Process
+        fields = ['id', 'name', 'code']
 
-class ProcessNestedSerializer(serializers.Serializer):
-    id = serializers.UUIDField(read_only=True)
-    name = serializers.CharField(read_only=True)
-    code = serializers.CharField(read_only=True)
-
-class DocumentTypeNestedSerializer(serializers.Serializer):
-    id = serializers.UUIDField(read_only=True)
-    name = serializers.CharField(read_only=True)
-    code = serializers.CharField(read_only=True)
+class DocumentTypeNestedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentType
+        fields = ['id', 'name', 'code']
 
 # ==========================================================
 # Serializers de Versiones de Documento
 # ==========================================================
-
-class DocumentVersionSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    version_number = serializers.IntegerField(read_only=True)
-    title = serializers.CharField(read_only=True)
-    uploaded_at = serializers.DateTimeField(read_only=True)
+class DocumentVersionSerializer(serializers.ModelSerializer):
     uploaded_by = UserNestedSerializer(read_only=True)
-    status = serializers.CharField(read_only=True)
-    file_hash_sha256 = serializers.CharField(read_only=True, required=False)
-    blockchain_transaction = serializers.CharField(read_only=True, required=False)
-    blockchain_timestamp = serializers.DateTimeField(read_only=True, required=False)
+    class Meta:
+        model = DocumentVersion
+        fields = [
+            'id', 'version_number', 'title', 'uploaded_at', 'uploaded_by',
+            'status', 'file_hash_sha256', 'blockchain_transaction', 'blockchain_timestamp'
+        ]
 
-class DocumentVersionCreateSerializer(serializers.Serializer):
-    title = serializers.CharField(write_only=True)
-    validity_year = serializers.IntegerField(write_only=True)
-    # El campo 'file' se manejará directamente en la vista.
+class DocumentVersionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentVersion
+        fields = ['title', 'validity_year']
 
 # ==========================================================
 # Serializers de Documentos (Contenedores)
 # ==========================================================
+class DocumentListSerializer(serializers.ModelSerializer):
+    process = ProcessNestedSerializer(read_only=True)
+    latest_version = serializers.SerializerMethodField()
 
-class DocumentListSerializer(serializers.Serializer):
-    id = serializers.UUIDField(read_only=True)
-    document_code = serializers.CharField(read_only=True)
-    process = ProcessNestedSerializer(source="*", read_only=True) # Fuente es el objeto doc
-    latest_version = DocumentVersionSerializer(read_only=True)
+    class Meta:
+        model = Document
+        fields = ['id', 'document_code', 'process', 'latest_version']
 
-class DocumentDetailSerializer(serializers.Serializer):
-    id = serializers.UUIDField(read_only=True)
-    document_code = serializers.CharField(read_only=True)
-    created_at = serializers.DateTimeField(read_only=True)
+    def get_latest_version(self, obj):
+        latest = obj.versions.first()
+        if latest:
+            return DocumentVersionSerializer(latest).data
+        return None
+
+class DocumentDetailSerializer(serializers.ModelSerializer):
     process = ProcessNestedSerializer(read_only=True)
     document_type = DocumentTypeNestedSerializer(read_only=True)
     created_by = UserNestedSerializer(read_only=True)
     versions = DocumentVersionSerializer(many=True, read_only=True)
 
-class DocumentCreateSerializer(serializers.Serializer):
+    class Meta:
+        model = Document
+        fields = [
+            'id', 'document_code', 'created_at', 'process',
+            'document_type', 'created_by', 'versions'
+        ]
+
+class DocumentCreateSerializer(serializers.ModelSerializer):
+    process_id = serializers.UUIDField(write_only=True, source='process')
+    document_type_id = serializers.UUIDField(write_only=True, source='document_type')
     title = serializers.CharField(write_only=True, max_length=200)
     validity_year = serializers.IntegerField(write_only=True)
-    process_id = serializers.UUIDField(write_only=True)
-    document_type_id = serializers.UUIDField(write_only=True)
-    # El campo 'file' se manejará en la vista.
+
+    class Meta:
+        model = Document
+        fields = ['process_id', 'document_type_id', 'title', 'validity_year']
+
 
 # ==========================================================
 # Serializers de Catálogos (Solo Lectura)
 # ==========================================================
+class ProcessTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProcessType
+        fields = '__all__'
 
-class ProcessTypeSerializer(serializers.Serializer):
-    id = serializers.UUIDField(read_only=True)
-    name = serializers.CharField(read_only=True)
-    code = serializers.CharField(read_only=True)
+class ProcessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Process
+        fields = '__all__'
 
-class ProcessSerializer(ProcessNestedSerializer):
-    pass # Hereda de la versión anidada ya que los campos son los mismos
-
-class DocumentTypeSerializer(DocumentTypeNestedSerializer):
-    pass # Hereda de la versión anidada
+class DocumentTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentType
+        fields = '__all__'

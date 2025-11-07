@@ -78,6 +78,8 @@ INSTALLED_APPS = [
     # Módulos de "Mi Negocio" - Implementados
     # Nota: 'mi_negocio' es un módulo paraguas, no una app instalable.
     # Las apps de gestión_operativa ya están contenidas en 'prestadores'.
+    "apps.companies.apps.CompaniesConfig",
+    "apps.audit.apps.AuditConfig",
     "apps.prestadores.mi_negocio.gestion_archivistica.apps.GestionArchivisticaConfig",
 ]
  

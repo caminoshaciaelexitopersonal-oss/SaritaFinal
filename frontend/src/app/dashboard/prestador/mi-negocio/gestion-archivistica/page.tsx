@@ -1,50 +1,43 @@
 "use client";
 
 import React from 'react';
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "@/services/api"; // Usaremos el cliente de API real
 
-// --- Componentes Reales (con mayúsculas corregidas) ---
-import { columns } from "./components/columns";
+// --- Componentes Reales ---
+import { columns, DocumentData } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import { DataTableSkeleton } from "./components/data-table-skeleton";
 import { UploadDialog } from "./components/upload-dialog";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/Button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle } from 'lucide-react';
 
-// Simulación de datos de la API
-const mockDocuments = [
-    {
-        id: "doc-uuid-1",
-        document_code: "OP-CAL-MAN-01",
-        process: { name: "Gestión de Calidad" },
-        latest_version: {
-            title: "Manual de Procedimientos v2",
-            version_number: 2,
-            status: "VERIFIED",
-            uploaded_at: new Date().toISOString(),
-        },
-    },
-    {
-        id: "doc-uuid-2",
-        document_code: "RH-CON-FOR-03",
-        process: { name: "Recursos Humanos" },
-        latest_version: {
-            title: "Formato de Contratación",
-            version_number: 1,
-            status: "PENDING_CONFIRMATION",
-            uploaded_at: new Date().toISOString(),
-        },
-    },
-];
+// Función para obtener los datos desde el backend
+const fetchDocuments = async (): Promise<DocumentData[]> => {
+    const response = await apiClient.get('/mi-negocio/archivistica/documents/');
+    // La API de DRF devuelve los datos paginados en un objeto `results`
+    return response.data.results || response.data;
+};
 
 export default function GestionArchivisticaPage() {
-    const { data: documents, isLoading, isError } = {
-        data: mockDocuments,
-        isLoading: false,
-        isError: false,
-    };
+    const { data: documents, isLoading, isError, error } = useQuery<DocumentData[], Error>({
+        queryKey: ['archivisticaDocuments'],
+        queryFn: fetchDocuments,
+    });
 
     if (isError) {
-        return <div>Error al cargar los documentos.</div>;
+        return (
+            <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Error al Cargar Documentos</AlertTitle>
+                <AlertDescription>
+                    No se pudo obtener la lista de documentos. Por favor, intente de nuevo más tarde.
+                    <p className="text-xs mt-2">({error.message})</p>
+                </AlertDescription>
+            </Alert>
+        );
     }
 
     return (
@@ -64,7 +57,7 @@ export default function GestionArchivisticaPage() {
                 ) : (
                     <DataTable
                         columns={columns}
-                        data={documents}
+                        data={documents || []}
                         searchColumnId="title"
                         searchPlaceholder="Filtrar por título..."
                     />
