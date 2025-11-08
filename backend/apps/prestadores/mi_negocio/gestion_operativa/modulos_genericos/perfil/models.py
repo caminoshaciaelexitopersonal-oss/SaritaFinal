@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from apps.companies.models import Company
 
 class CategoriaPrestador(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
@@ -18,6 +19,13 @@ class Perfil(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='perfil_prestador'
+    )
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.CASCADE,
+        related_name='perfiles',
+        null=True,
+        blank=True
     )
     nombre_comercial = models.CharField(max_length=255, verbose_name="Nombre Comercial")
     categoria = models.ForeignKey(CategoriaPrestador, on_delete=models.SET_NULL, null=True, blank=True)

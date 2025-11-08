@@ -13,6 +13,9 @@ class ProcessType(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        app_label = 'gestion_archivistica'
+
 class Process(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='archivistica_processes')
@@ -23,6 +26,9 @@ class Process(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        app_label = 'gestion_archivistica'
+
 class DocumentType(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='archivistica_document_types')
@@ -31,6 +37,9 @@ class DocumentType(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        app_label = 'gestion_archivistica'
 
 class Document(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -44,6 +53,7 @@ class Document(models.Model):
 
     class Meta:
         unique_together = ('company', 'process', 'document_type', 'sequence')
+        app_label = 'gestion_archivistica'
 
     def __str__(self):
         return self.document_code
@@ -52,6 +62,7 @@ class DocumentVersion(models.Model):
     class ProcessingStatus(models.TextChoices):
         PENDING_UPLOAD = 'PENDING_UPLOAD', 'Pendiente de Subida'
         PENDING_CONFIRMATION = 'PENDING_CONFIRMATION', 'Pendiente de Confirmación'
+        IN_BATCH = 'IN_BATCH', 'En Lote para Notarización'
         VERIFIED = 'VERIFIED', 'Verificado'
         COMPROMISED = 'COMPROMISED', 'Comprometido'
 
@@ -77,6 +88,7 @@ class DocumentVersion(models.Model):
     class Meta:
         unique_together = ('document', 'version_number')
         ordering = ['-version_number']
+        app_label = 'gestion_archivistica'
 
     def __str__(self):
         return f"{self.document.document_code} - v{self.version_number}"

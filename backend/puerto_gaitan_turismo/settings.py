@@ -232,3 +232,31 @@ else:
         ADMINS = [("Admin", ADMIN_EMAIL)]
     else:
         ADMINS = []
+
+# --- CELERY ---
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BEAT_SCHEDULE = {
+    'notarize-batch-every-hour': {
+        'task': 'notarize_pending_documents_batch',
+        'schedule': 3600.0,  # Ejecutar cada hora
+    },
+}
+
+# --- Blockchain ---
+POLYGON_RPC_URL = os.environ.get("POLYGON_RPC_URL")
+SIGNER_PRIVATE_KEY = os.environ.get("SIGNER_PRIVATE_KEY")
+NOTARY_CONTRACT_ADDRESS = os.environ.get("NOTARY_CONTRACT_ADDRESS")
+NOTARY_CONTRACT_ABI = os.environ.get("NOTARY_CONTRACT_ABI")
+
+# --- Application Secrets ---
+GLOBAL_ENCRYPTION_PEPPER = os.environ.get("GLOBAL_ENCRYPTION_PEPPER")
+
+# --- AWS ---
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME")
