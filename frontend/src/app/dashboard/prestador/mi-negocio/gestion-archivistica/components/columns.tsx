@@ -1,103 +1,79 @@
-"use client";
+// frontend/src/app/dashboard/prestador/mi-negocio/gestion-archivistica/components/columns.tsx
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
+import { ColumnDef } from "@tanstack/react-table"
+import { MoreHorizontal, ArrowUpDown } from "lucide-react"
+import Link from "next/link"
 
-// --- Importaciones de Componentes de UI Reales (con mayúsculas corregidas) ---
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/Button"
+// Eliminado Dropdown
+// Eliminado Badge
 
-// Tipo de Dato para cada fila
+// --- Tipos de Datos ---
+// Este tipo debe coincidir con lo que devuelve el DocumentListSerializer del backend
 export type DocumentData = {
-    id: string;
-    document_code: string;
-    latest_version: {
-        title: string;
-        version_number: number;
-        status: 'PENDING_UPLOAD' | 'PENDING_CONFIRMATION' | 'VERIFIED' | 'COMPROMISED';
-        uploaded_at: string;
-    } | null;
-    process: {
-        name: string;
-    };
+    id: string
+    document_code: string
+    title: string
+    last_version_status: "PENDING_UPLOAD" | "PENDING_CONFIRMATION" | "VERIFIED" | "COMPROMISED" | null
+    created_at: string
 }
 
-// Definición del Array de Columnas
+const statusVariant = {
+    PENDING_UPLOAD: "secondary",
+    PENDING_CONFIRMATION: "warning",
+    VERIFIED: "success",
+    COMPROMISED: "destructive",
+}
+
 export const columns: ColumnDef<DocumentData>[] = [
     {
         accessorKey: "document_code",
-        header: "Código",
-        cell: ({ row }) => (
-            <Link href={`/dashboard/prestador/mi-negocio/gestion-archivistica/${row.original.id}`} passHref>
-                <span className="font-medium text-primary hover:underline cursor-pointer">
-                    {row.getValue("document_code")}
-                </span>
-            </Link>
+        header: ({ column }) => (
+            <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                Código
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
         ),
     },
     {
-        id: "title",
+        accessorKey: "title",
         header: "Título",
-        accessorFn: (row) => row.latest_version?.title,
-        cell: ({ row }) => row.original.latest_version?.title || "Sin Versiones",
+        // Hacemos que el título sea un enlace a la página de detalle
+        cell: ({ row }) => (
+            <Link href={`/dashboard/prestador/mi-negocio/gestion-archivistica/${row.original.id}`}>
+                <span className="font-medium text-blue-600 hover:underline">{row.getValue("title")}</span>
+            </Link>
+        )
     },
     {
-        accessorFn: (row) => row.process.name,
-        header: "Proceso",
-    },
-    {
-        id: 'status',
-        header: "Estado",
-        accessorFn: (row) => row.latest_version?.status,
+        accessorKey: "last_version_status",
+        header: "Estado Última Versión",
         cell: ({ row }) => {
-            const status = row.original.latest_version?.status;
-            if (!status) return null;
+            const status = row.getValue("last_version_status") as DocumentData["last_version_status"];
+            if (!status) return <span className="text-gray-500">N/A</span>
 
-            const variant = {
-                "VERIFIED": "default",
-                "PENDING_CONFIRMATION": "secondary",
-                "COMPROMISED": "destructive",
-                "PENDING_UPLOAD": "outline"
-            }[status] || "outline";
-
-            const text = {
-                "VERIFIED": "Verificado",
-                "PENDING_CONFIRMATION": "Pendiente Verif.",
-                "PENDING_UPLOAD": "Procesando",
-                "COMPROMISED": "Comprometido"
-            }[status] || "Desconocido";
-
-            return <Badge variant={variant as any}>{text}</Badge>;
-        }
-    },
-    {
-        id: "uploaded_at",
-        header: "Actualizado",
-        accessorFn: (row) => row.latest_version?.uploaded_at,
-        cell: ({ getValue }) => {
-            const date = getValue<string | null>();
-            return date ? new Date(date).toLocaleDateString("es-ES", { day: '2-digit', month: 'short', year: 'numeric'}) : "-";
+            return (
+                <span className="p-2 bg-gray-200 rounded">
+                    {status.replace(/_/g, ' ')}
+                </span>
+            )
         },
     },
     {
-        id: "actions",
-        cell: ({ row }) => (
-            <div className="text-right">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Abrir menú</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Ver Detalles</DropdownMenuItem>
-                        <DropdownMenuItem>Descargar</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-        ),
+        accessorKey: "created_at",
+        header: "Fecha de Creación",
+        cell: ({ row }) => new Date(row.getValue("created_at")).toLocaleDateString(),
     },
-];
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            const document = row.original
+            return (
+                <Link href={`/dashboard/prestador/mi-negocio/gestion-archivistica/${document.id}`}>
+                    <Button variant="outline" size="sm">Ver Detalles</Button>
+                </Link>
+            )
+        },
+    },
+]

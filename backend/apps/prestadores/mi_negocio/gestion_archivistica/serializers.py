@@ -74,14 +74,23 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
         ]
 
 class DocumentCreateSerializer(serializers.ModelSerializer):
-    process_id = serializers.UUIDField(write_only=True, source='process')
-    document_type_id = serializers.UUIDField(write_only=True, source='document_type')
+    process = serializers.PrimaryKeyRelatedField(queryset=Process.objects.all(), write_only=True)
+    document_type = serializers.PrimaryKeyRelatedField(queryset=DocumentType.objects.all(), write_only=True)
     title = serializers.CharField(write_only=True, max_length=200)
     validity_year = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Document
-        fields = ['process_id', 'document_type_id', 'title', 'validity_year']
+        fields = ['process', 'document_type', 'title', 'validity_year']
+
+    def validate(self, data):
+        # Asegurarse de que los catálogos pertenezcan a la compañía del usuario
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            company = request.user.company
+            if data['process'].company != company or data['document_type'].company != company:
+                raise serializers.ValidationError("Los catálogos seleccionados no son válidos.")
+        return data
 
 
 # ==========================================================

@@ -8,6 +8,8 @@ class AuditLog(models.Model):
         DOCUMENT_CREATED = 'DOCUMENT_CREATED', 'Creó concepto de documento'
         VERSION_UPLOADED = 'VERSION_UPLOADED', 'Subió nueva versión'
         VERSION_DOWNLOADED = 'VERSION_DOWNLOADED', 'Descargó versión'
+        VERSION_DELETED = 'VERSION_DELETED', 'Eliminó versión'
+        VERSION_VERIFIED = 'VERSION_VERIFIED', 'Verificó integridad de versión'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey('api.CustomUser', on_delete=models.SET_NULL, null=True, blank=True)

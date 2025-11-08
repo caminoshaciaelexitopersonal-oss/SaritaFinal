@@ -1,56 +1,23 @@
-"use client";
+// frontend/src/app/dashboard/prestador/mi-negocio/gestion-archivistica/components/data-table-skeleton.tsx
+import React from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/Table";
-
-export function DataTableSkeleton({
-    rowCount = 5,
-    columnCount = 6,
-}: {
-    rowCount?: number;
-    columnCount?: number;
-}) {
+export const DataTableSkeleton = ({ columnCount = 5, rowCount = 5 }) => {
     return (
-        <div className="w-full">
-            <div className="flex items-center justify-between py-4">
+        <div className="space-y-4">
+            <div className="flex justify-between">
                 <Skeleton className="h-10 w-64" />
-                <Skeleton className="h-10 w-40" />
+                <Skeleton className="h-10 w-32" />
             </div>
-            <div className="rounded-md border">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            {Array.from({ length: columnCount }).map((_, i) => (
-                                <TableHead key={i}>
-                                    <Skeleton className="h-5 w-20" />
-                                </TableHead>
-                            ))}
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {Array.from({ length: rowCount }).map((_, i) => (
-                            <TableRow key={i}>
-                                {Array.from({ length: columnCount }).map((_, j) => (
-                                    <TableCell key={j}>
-                                        <Skeleton className="h-5 w-full" />
-                                    </TableCell>
-                                ))}
-                            </TableRow>
+            <div className="space-y-2">
+                {[...Array(rowCount)].map((_, i) => (
+                    <div key={i} className="flex gap-2">
+                        {[...Array(columnCount)].map((_, j) => (
+                            <Skeleton key={j} className="h-10 flex-1" />
                         ))}
-                    </TableBody>
-                </Table>
-            </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <Skeleton className="h-8 w-24" />
-                <Skeleton className="h-8 w-24" />
+                    </div>
+                ))}
             </div>
         </div>
     );
-}
+};
