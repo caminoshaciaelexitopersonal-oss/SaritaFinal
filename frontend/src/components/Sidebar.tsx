@@ -174,10 +174,11 @@ const CollapsibleNavSection = ({
 
 // --- Componente Principal del Sidebar ---
 export default function Sidebar() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const [isMiNegocioOpen, setIsMiNegocioOpen] = useState(true);
 
-  if (!user) return <SidebarSkeleton />;
+  if (isLoading) return <SidebarSkeleton />;
+  if (!user) return null; // O un mensaje de "No autenticado" o redirección
 
   const prestadorCategoria = user.perfil_prestador?.categoria?.nombre;
 
