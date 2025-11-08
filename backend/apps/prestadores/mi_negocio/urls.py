@@ -18,6 +18,6 @@ urlpatterns = [
     path('contable/proyectos/', include('apps.prestadores.mi_negocio.gestion_contable.proyectos.urls')),
     path('contable/presupuesto/', include('apps.prestadores.mi_negocio.gestion_contable.presupuesto.urls')),
 
-    # Gestión Archivística (sigue siendo un placeholder como se solicitó)
-    path('archivistica/', PlaceholderView.as_view(), name='archivistica-placeholder'),
+    # Gestión Archivística
+    path('archivistica/', include('apps.prestadores.mi_negocio.gestion_archivistica.urls')),
 ]
