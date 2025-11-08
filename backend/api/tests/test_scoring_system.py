@@ -22,7 +22,7 @@ class ScoringSystemTests(TestCase):
             'prestador_puntuado', 'prestador_puntuado@example.com', 'password123', role=CustomUser.Role.PRESTADOR
         )
         self.prestador_profile = Perfil.objects.create(
-            user=self.prestador_user, nombre_comercial="Hotel Puntuado"
+            usuario=self.prestador_user, nombre_comercial="Hotel Puntuado"
         )
 
         self.turista_user = CustomUser.objects.create_user(

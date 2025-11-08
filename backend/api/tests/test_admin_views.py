@@ -26,7 +26,7 @@ class AdminAPITests(APITestCase):
         self.categoria = CategoriaPrestador.objects.create(nombre="Hotel", slug="hoteles")
         # Usando el nuevo modelo 'Perfil' en lugar de 'PrestadorServicio'
         self.prestador_profile = Perfil.objects.create(
-            user=self.prestador_user_to_approve,
+            usuario=self.prestador_user_to_approve,
             nombre_comercial="Hotel La Roca",
             categoria=self.categoria
         )
