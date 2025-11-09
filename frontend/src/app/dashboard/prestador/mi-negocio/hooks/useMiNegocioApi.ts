@@ -243,12 +243,12 @@ export function useMiNegocioApi() {
   // --- API de Perfil ---
   const getPerfil = useCallback(async () => {
     // Corregido: Se elimina /genericos/ de la ruta
-    return makeRequest(() => api.get<PerfilData>('/api/v1/mi-negocio/operativa/perfil/me/').then(res => res.data), undefined, "No se pudo cargar el perfil.");
+    return makeRequest(() => api.get<PerfilData>('/v1/mi-negocio/operativa/perfil/me/').then(res => res.data), undefined, "No se pudo cargar el perfil.");
   }, [makeRequest]);
 
   const updatePerfil = useCallback(async (data: Partial<PerfilData>) => {
     // Corregido: Se elimina /genericos/ de la ruta
-    return makeRequest(() => api.patch<PerfilData>('/api/v1/mi-negocio/operativa/perfil/update-me/', data).then(res => res.data), "Perfil actualizado con éxito.", "Error al actualizar el perfil.");
+    return makeRequest(() => api.patch<PerfilData>('/v1/mi-negocio/operativa/perfil/update-me/', data).then(res => res.data), "Perfil actualizado con éxito.", "Error al actualizar el perfil.");
   }, [makeRequest]);
 
   // --- API de Clientes (CRM) ---
@@ -257,271 +257,271 @@ export function useMiNegocioApi() {
         page: page.toString(),
         search: search,
     });
-    return makeRequest(() => api.get<PaginatedResponse<Cliente>>(`/api/v1/mi-negocio/operativa/clientes/?${params.toString()}`).then(res => res.data), undefined, "No se pudo cargar la lista de clientes.");
+    return makeRequest(() => api.get<PaginatedResponse<Cliente>>(`/v1/mi-negocio/operativa/clientes/?${params.toString()}`).then(res => res.data), undefined, "No se pudo cargar la lista de clientes.");
   }, [makeRequest]);
 
   const createCliente = useCallback(async (clienteData: Omit<Cliente, 'id'>) => {
-    return makeRequest(() => api.post<Cliente>('/api/v1/mi-negocio/operativa/clientes/', clienteData).then(res => res.data), "Cliente creado con éxito.", "Error al crear el cliente.");
+    return makeRequest(() => api.post<Cliente>('/v1/mi-negocio/operativa/clientes/', clienteData).then(res => res.data), "Cliente creado con éxito.", "Error al crear el cliente.");
   }, [makeRequest]);
 
   const updateCliente = useCallback(async (id: number, clienteData: Partial<Omit<Cliente, 'id'>>) => {
-    return makeRequest(() => api.patch<Cliente>(`/api/v1/mi-negocio/operativa/clientes/${id}/`, clienteData).then(res => res.data), "Cliente actualizado con éxito.", "Error al actualizar el cliente.");
+    return makeRequest(() => api.patch<Cliente>(`/v1/mi-negocio/operativa/clientes/${id}/`, clienteData).then(res => res.data), "Cliente actualizado con éxito.", "Error al actualizar el cliente.");
   }, [makeRequest]);
 
   const deleteCliente = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/api/v1/mi-negocio/operativa/clientes/${id}/`), "Cliente eliminado con éxito.", "Error al eliminar el cliente.");
+    return makeRequest(() => api.delete(`/v1/mi-negocio/operativa/clientes/${id}/`), "Cliente eliminado con éxito.", "Error al eliminar el cliente.");
   }, [makeRequest]);
 
   // --- API de Contabilidad ---
   const getChartOfAccounts = useCallback(async () => {
-    return makeRequest(() => api.get<ChartOfAccount[]>('/api/v1/mi-negocio/contable/chart-of-accounts/').then(res => res.data));
+    return makeRequest(() => api.get<ChartOfAccount[]>('/v1/mi-negocio/contable/chart-of-accounts/').then(res => res.data));
   }, [makeRequest]);
 
   const createChartOfAccount = useCallback(async (accountData: Omit<ChartOfAccount, 'id'>) => {
-    return makeRequest(() => api.post<ChartOfAccount>('/api/v1/mi-negocio/contable/chart-of-accounts/', accountData).then(res => res.data), "Cuenta creada con éxito.");
+    return makeRequest(() => api.post<ChartOfAccount>('/v1/mi-negocio/contable/chart-of-accounts/', accountData).then(res => res.data), "Cuenta creada con éxito.");
   }, [makeRequest]);
 
   const updateChartOfAccount = useCallback(async (id: number, accountData: Partial<Omit<ChartOfAccount, 'id'>>) => {
-    return makeRequest(() => api.patch<ChartOfAccount>(`/api/v1/mi-negocio/contable/chart-of-accounts/${id}/`, accountData).then(res => res.data), "Cuenta actualizada con éxito.");
+    return makeRequest(() => api.patch<ChartOfAccount>(`/v1/mi-negocio/contable/chart-of-accounts/${id}/`, accountData).then(res => res.data), "Cuenta actualizada con éxito.");
   }, [makeRequest]);
 
   const deleteChartOfAccount = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/chart-of-accounts/${id}/`), "Cuenta eliminada con éxito.");
+    return makeRequest(() => api.delete(`/v1/mi-negocio/contable/chart-of-accounts/${id}/`), "Cuenta eliminada con éxito.");
   }, [makeRequest]);
 
   const getJournalEntries = useCallback(async () => {
-    return makeRequest(() => api.get<JournalEntry[]>('/api/v1/mi-negocio/contable/journal-entries/').then(res => res.data));
+    return makeRequest(() => api.get<JournalEntry[]>('/v1/mi-negocio/contable/journal-entries/').then(res => res.data));
   }, [makeRequest]);
 
   const createJournalEntry = useCallback(async (entryData: any) => {
-    return makeRequest(() => api.post<JournalEntry>('/api/v1/mi-negocio/contable/journal-entries/', entryData).then(res => res.data), "Asiento contable creado.");
+    return makeRequest(() => api.post<JournalEntry>('/v1/mi-negocio/contable/journal-entries/', entryData).then(res => res.data), "Asiento contable creado.");
   }, [makeRequest]);
 
   const updateJournalEntry = useCallback(async (id: number, entryData: any) => {
-    return makeRequest(() => api.patch<JournalEntry>(`/api/v1/mi-negocio/contable/journal-entries/${id}/`, entryData).then(res => res.data), "Asiento actualizado.");
+    return makeRequest(() => api.patch<JournalEntry>(`/v1/mi-negocio/contable/journal-entries/${id}/`, entryData).then(res => res.data), "Asiento actualizado.");
   }, [makeRequest]);
 
   const deleteJournalEntry = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/journal-entries/${id}/`), "Asiento eliminado.");
+    return makeRequest(() => api.delete(`/v1/mi-negocio/contable/journal-entries/${id}/`), "Asiento eliminado.");
   }, [makeRequest]);
 
   // --- API de Compras (Proveedores) ---
   const getProveedores = useCallback(async () => {
-    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/compras/proveedores/').then(res => res.data));
+    return makeRequest(() => api.get<any>('/v1/mi-negocio/contable/compras/proveedores/').then(res => res.data));
   }, [makeRequest]);
 
   const createProveedor = useCallback(async (proveedorData: Omit<Proveedor, 'id'>) => {
-    return makeRequest(() => api.post<Proveedor>('/api/v1/mi-negocio/contable/compras/proveedores/', proveedorData).then(res => res.data), "Proveedor creado con éxito.");
+    return makeRequest(() => api.post<Proveedor>('/v1/mi-negocio/contable/compras/proveedores/', proveedorData).then(res => res.data), "Proveedor creado con éxito.");
   }, [makeRequest]);
 
   const updateProveedor = useCallback(async (id: number, proveedorData: Partial<Omit<Proveedor, 'id'>>) => {
-    return makeRequest(() => api.patch<Proveedor>(`/api/v1/mi-negocio/contable/compras/proveedores/${id}/`, proveedorData).then(res => res.data), "Proveedor actualizado con éxito.");
+    return makeRequest(() => api.patch<Proveedor>(`/v1/mi-negocio/contable/compras/proveedores/${id}/`, proveedorData).then(res => res.data), "Proveedor actualizado con éxito.");
   }, [makeRequest]);
 
   const deleteProveedor = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/compras/proveedores/${id}/`), "Proveedor eliminado con éxito.");
+    return makeRequest(() => api.delete(`/v1/mi-negocio/contable/compras/proveedores/${id}/`), "Proveedor eliminado con éxito.");
   }, [makeRequest]);
 
   const getFacturasCompra = useCallback(async () => {
-    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/compras/facturas/').then(res => res.data));
+    return makeRequest(() => api.get<any>('/v1/mi-negocio/contable/compras/facturas/').then(res => res.data));
   }, [makeRequest]);
 
   const createFacturaCompra = useCallback(async (facturaData: any) => {
-    return makeRequest(() => api.post<FacturaCompra>('/api/v1/mi-negocio/contable/compras/facturas/', facturaData).then(res => res.data), "Factura de compra creada con éxito.");
+    return makeRequest(() => api.post<FacturaCompra>('/v1/mi-negocio/contable/compras/facturas/', facturaData).then(res => res.data), "Factura de compra creada con éxito.");
   }, [makeRequest]);
 
   const updateFacturaCompra = useCallback(async (id: number, facturaData: any) => {
-    return makeRequest(() => api.patch<FacturaCompra>(`/api/v1/mi-negocio/contable/compras/facturas/${id}/`, facturaData).then(res => res.data), "Factura de compra actualizada con éxito.");
+    return makeRequest(() => api.patch<FacturaCompra>(`/v1/mi-negocio/contable/compras/facturas/${id}/`, facturaData).then(res => res.data), "Factura de compra actualizada con éxito.");
   }, [makeRequest]);
 
   const pagarFacturaCompra = useCallback(async (id: number, cuentaBancariaId: number) => {
-    return makeRequest(() => api.post(`/api/v1/mi-negocio/contable/compras/facturas/${id}/pagar/`, { cuenta_bancaria_id: cuentaBancariaId }).then(res => res.data), "Factura pagada con éxito.");
+    return makeRequest(() => api.post(`/v1/mi-negocio/contable/compras/facturas/${id}/pagar/`, { cuenta_bancaria_id: cuentaBancariaId }).then(res => res.data), "Factura pagada con éxito.");
   }, [makeRequest]);
 
   // --- API de Inventario ---
   const getProductos = useCallback(async () => {
-    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/inventario/productos/').then(res => res.data));
+    return makeRequest(() => api.get<any>('/v1/mi-negocio/contable/inventario/productos/').then(res => res.data));
   }, [makeRequest]);
 
   const createProducto = useCallback(async (productoData: any) => {
-    return makeRequest(() => api.post<Producto>('/api/v1/mi-negocio/contable/inventario/productos/', productoData).then(res => res.data), "Producto creado con éxito.");
+    return makeRequest(() => api.post<Producto>('/v1/mi-negocio/contable/inventario/productos/', productoData).then(res => res.data), "Producto creado con éxito.");
   }, [makeRequest]);
 
   const updateProducto = useCallback(async (id: number, productoData: any) => {
-    return makeRequest(() => api.patch<Producto>(`/api/v1/mi-negocio/contable/inventario/productos/${id}/`, productoData).then(res => res.data), "Producto actualizado con éxito.");
+    return makeRequest(() => api.patch<Producto>(`/v1/mi-negocio/contable/inventario/productos/${id}/`, productoData).then(res => res.data), "Producto actualizado con éxito.");
   }, [makeRequest]);
 
   const deleteProducto = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/inventario/productos/${id}/`), "Producto eliminado con éxito.");
+    return makeRequest(() => api.delete(`/v1/mi-negocio/contable/inventario/productos/${id}/`), "Producto eliminado con éxito.");
   }, [makeRequest]);
 
   const getMovimientosInventario = useCallback(async () => {
-    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/inventario/movimientos/').then(res => res.data));
+    return makeRequest(() => api.get<any>('/v1/mi-negocio/contable/inventario/movimientos/').then(res => res.data));
   }, [makeRequest]);
 
   const createMovimientoInventario = useCallback(async (movimientoData: any) => {
-    return makeRequest(() => api.post('/api/v1/mi-negocio/contable/inventario/movimientos/', movimientoData).then(res => res.data), "Movimiento registrado con éxito.");
+    return makeRequest(() => api.post('/v1/mi-negocio/contable/inventario/movimientos/', movimientoData).then(res => res.data), "Movimiento registrado con éxito.");
   }, [makeRequest]);
 
   // --- API de Nómina ---
   const getEmpleados = useCallback(async () => {
-    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/nomina/empleados/').then(res => res.data));
+    return makeRequest(() => api.get<any>('/v1/mi-negocio/contable/nomina/empleados/').then(res => res.data));
   }, [makeRequest]);
 
   const createEmpleado = useCallback(async (empleadoData: any) => {
-    return makeRequest(() => api.post<Empleado>('/api/v1/mi-negocio/contable/nomina/empleados/', empleadoData).then(res => res.data), "Empleado creado con éxito.");
+    return makeRequest(() => api.post<Empleado>('/v1/mi-negocio/contable/nomina/empleados/', empleadoData).then(res => res.data), "Empleado creado con éxito.");
   }, [makeRequest]);
 
   const updateEmpleado = useCallback(async (id: number, empleadoData: any) => {
-    return makeRequest(() => api.patch<Empleado>(`/api/v1/mi-negocio/contable/nomina/empleados/${id}/`, empleadoData).then(res => res.data), "Empleado actualizado con éxito.");
+    return makeRequest(() => api.patch<Empleado>(`/v1/mi-negocio/contable/nomina/empleados/${id}/`, empleadoData).then(res => res.data), "Empleado actualizado con éxito.");
   }, [makeRequest]);
 
   const deleteEmpleado = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/nomina/empleados/${id}/`), "Empleado eliminado con éxito.");
+    return makeRequest(() => api.delete(`/v1/mi-negocio/contable/nomina/empleados/${id}/`), "Empleado eliminado con éxito.");
   }, [makeRequest]);
 
   const getPlanillas = useCallback(async () => {
-    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/nomina/planillas/').then(res => res.data));
+    return makeRequest(() => api.get<any>('/v1/mi-negocio/contable/nomina/planillas/').then(res => res.data));
   }, [makeRequest]);
 
   const createPlanilla = useCallback(async (planillaData: any) => {
-    return makeRequest(() => api.post<Planilla>('/api/v1/mi-negocio/contable/nomina/planillas/', planillaData).then(res => res.data), "Planilla creada con éxito.");
+    return makeRequest(() => api.post<Planilla>('/v1/mi-negocio/contable/nomina/planillas/', planillaData).then(res => res.data), "Planilla creada con éxito.");
   }, [makeRequest]);
 
   const getConceptosNomina = useCallback(async () => {
-    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/nomina/conceptos/').then(res => res.data));
+    return makeRequest(() => api.get<any>('/v1/mi-negocio/contable/nomina/conceptos/').then(res => res.data));
   }, [makeRequest]);
 
   // --- API de Reportes ---
   const getLibroMayor = useCallback(async (params: { codigo_cuenta: string, fecha_inicio: string, fecha_fin: string }) => {
-    return makeRequest(() => api.get('/api/v1/mi-negocio/contable/contabilidad/reportes/libro-mayor/', { params }).then(res => res.data));
+    return makeRequest(() => api.get('/v1/mi-negocio/contable/contabilidad/reportes/libro-mayor/', { params }).then(res => res.data));
   }, [makeRequest]);
 
   const getBalanceComprobacion = useCallback(async (params: { fecha_fin: string }) => {
-    return makeRequest(() => api.get('/api/v1/mi-negocio/contable/contabilidad/reportes/balance-comprobacion/', { params }).then(res => res.data));
+    return makeRequest(() => api.get('/v1/mi-negocio/contable/contabilidad/reportes/balance-comprobacion/', { params }).then(res => res.data));
   }, [makeRequest]);
 
   const getReporteFinanciero = useCallback(async (params: { reporte: string, fecha_fin: string }) => {
-    return makeRequest(() => api.get('/api/v1/mi-negocio/contable/contabilidad/reportes/financieros/', { params }).then(res => res.data));
+    return makeRequest(() => api.get('/v1/mi-negocio/contable/contabilidad/reportes/financieros/', { params }).then(res => res.data));
   }, [makeRequest]);
 
   const getReporteIngresosGastos = useCallback(async () => {
-    return makeRequest(() => api.get('/api/v1/mi-negocio/financiera/reporte-ingresos-gastos/').then(res => res.data));
+    return makeRequest(() => api.get('/v1/mi-negocio/financiera/reporte-ingresos-gastos/').then(res => res.data));
   }, [makeRequest]);
 
   // --- API Financiera ---
   const getCurrencies = useCallback(async () => {
-    return makeRequest(() => api.get<any[]>('/api/v1/mi-negocio/contable/currencies/').then(res => res.data));
+    return makeRequest(() => api.get<any[]>('/v1/mi-negocio/contable/currencies/').then(res => res.data));
   }, [makeRequest]);
 
   const getBankAccounts = useCallback(async () => {
-    return makeRequest(() => api.get<BankAccount[]>('/api/v1/mi-negocio/financiera/bank-accounts/').then(res => res.data));
+    return makeRequest(() => api.get<BankAccount[]>('/v1/mi-negocio/financiera/bank-accounts/').then(res => res.data));
   }, [makeRequest]);
 
   const createBankAccount = useCallback(async (accountData: any) => {
-    return makeRequest(() => api.post<BankAccount>('/api/v1/mi-negocio/financiera/bank-accounts/', accountData).then(res => res.data), "Cuenta bancaria creada.");
+    return makeRequest(() => api.post<BankAccount>('/v1/mi-negocio/financiera/bank-accounts/', accountData).then(res => res.data), "Cuenta bancaria creada.");
   }, [makeRequest]);
 
   const updateBankAccount = useCallback(async (id: number, accountData: any) => {
-    return makeRequest(() => api.patch<BankAccount>(`/api/v1/mi-negocio/financiera/bank-accounts/${id}/`, accountData).then(res => res.data), "Cuenta bancaria actualizada.");
+    return makeRequest(() => api.patch<BankAccount>(`/v1/mi-negocio/financiera/bank-accounts/${id}/`, accountData).then(res => res.data), "Cuenta bancaria actualizada.");
   }, [makeRequest]);
 
   const deleteBankAccount = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/api/v1/mi-negocio/financiera/bank-accounts/${id}/`), "Cuenta bancaria eliminada.");
+    return makeRequest(() => api.delete(`/v1/mi-negocio/financiera/bank-accounts/${id}/`), "Cuenta bancaria eliminada.");
   }, [makeRequest]);
 
   const getCashTransactions = useCallback(async () => {
-    return makeRequest(() => api.get<CashTransaction[]>('/api/v1/mi-negocio/financiera/cash-transactions/').then(res => res.data));
+    return makeRequest(() => api.get<CashTransaction[]>('/v1/mi-negocio/financiera/cash-transactions/').then(res => res.data));
   }, [makeRequest]);
 
   const createCashTransaction = useCallback(async (transactionData: any) => {
-    return makeRequest(() => api.post<CashTransaction>('/api/v1/mi-negocio/financiera/cash-transactions/', transactionData).then(res => res.data), "Transacción creada.");
+    return makeRequest(() => api.post<CashTransaction>('/v1/mi-negocio/financiera/cash-transactions/', transactionData).then(res => res.data), "Transacción creada.");
   }, [makeRequest]);
 
   // --- API de Ventas ---
   const getFacturasVenta = useCallback(async () => {
-    return makeRequest(() => api.get<{results: FacturaVenta[]}>('/api/v1/mi-negocio/comercial/facturas-venta/').then(res => res.data.results), undefined, "No se pudo cargar la lista de facturas.");
+    return makeRequest(() => api.get<{results: FacturaVenta[]}>('/v1/mi-negocio/comercial/facturas-venta/').then(res => res.data.results), undefined, "No se pudo cargar la lista de facturas.");
   }, [makeRequest]);
 
   const createFacturaVenta = useCallback(async (facturaData: Omit<FacturaVenta, 'id' | 'subtotal' | 'impuestos' | 'total' | 'estado'>) => {
-    return makeRequest(() => api.post<FacturaVenta>('/api/v1/mi-negocio/comercial/facturas-venta/', facturaData).then(res => res.data), "Factura creada con éxito.", "Error al crear la factura.");
+    return makeRequest(() => api.post<FacturaVenta>('/v1/mi-negocio/comercial/facturas-venta/', facturaData).then(res => res.data), "Factura creada con éxito.", "Error al crear la factura.");
   }, [makeRequest]);
 
   // --- API de Placeholders para Operativa ---
   const getNominaPlaceholder = useCallback(async () => {
-    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/nomina/').then(res => res.data));
+    return makeRequest(() => api.get<any>('/v1/mi-negocio/contable/nomina/').then(res => res.data));
   }, [makeRequest]);
 
   const getProyectosPlaceholder = useCallback(async () => {
-    return makeRequest(() => api.get<any>('/api/v1/mi-negocio/contable/proyectos/').then(res => res.data));
+    return makeRequest(() => api.get<any>('/v1/mi-negocio/contable/proyectos/').then(res => res.data));
   }, [makeRequest]);
 
   // --- API de Activos Fijos ---
   const getCategoriasActivo = useCallback(async (page: number = 1, search: string = '') => {
       const params = new URLSearchParams({ page: page.toString(), search });
-      return makeRequest(() => api.get<PaginatedResponse<CategoriaActivo>>(`/api/v1/mi-negocio/contable/activos-fijos/categorias/?${params.toString()}`).then(res => res.data));
+      return makeRequest(() => api.get<PaginatedResponse<CategoriaActivo>>(`/v1/mi-negocio/contable/activos-fijos/categorias/?${params.toString()}`).then(res => res.data));
   }, [makeRequest]);
 
   const createCategoriaActivo = useCallback(async (data: Omit<CategoriaActivo, 'id'>) => {
-      return makeRequest(() => api.post<CategoriaActivo>('/api/v1/mi-negocio/contable/activos-fijos/categorias/', data).then(res => res.data), "Categoría creada.");
+      return makeRequest(() => api.post<CategoriaActivo>('/v1/mi-negocio/contable/activos-fijos/categorias/', data).then(res => res.data), "Categoría creada.");
   }, [makeRequest]);
 
   const updateCategoriaActivo = useCallback(async (id: number, data: Partial<CategoriaActivo>) => {
-      return makeRequest(() => api.patch<CategoriaActivo>(`/api/v1/mi-negocio/contable/activos-fijos/categorias/${id}/`, data).then(res => res.data), "Categoría actualizada.");
+      return makeRequest(() => api.patch<CategoriaActivo>(`/v1/mi-negocio/contable/activos-fijos/categorias/${id}/`, data).then(res => res.data), "Categoría actualizada.");
   }, [makeRequest]);
 
   const deleteCategoriaActivo = useCallback(async (id: number) => {
-      return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/activos-fijos/categorias/${id}/`), "Categoría eliminada.");
+      return makeRequest(() => api.delete(`/v1/mi-negocio/contable/activos-fijos/categorias/${id}/`), "Categoría eliminada.");
   }, [makeRequest]);
 
   const getActivosFijos = useCallback(async (page: number = 1, search: string = '') => {
       const params = new URLSearchParams({ page: page.toString(), search });
-      return makeRequest(() => api.get<PaginatedResponse<ActivoFijo>>(`/api/v1/mi-negocio/contable/activos-fijos/activos/?${params.toString()}`).then(res => res.data));
+      return makeRequest(() => api.get<PaginatedResponse<ActivoFijo>>(`/v1/mi-negocio/contable/activos-fijos/activos/?${params.toString()}`).then(res => res.data));
   }, [makeRequest]);
 
   const createActivoFijo = useCallback(async (data: Omit<ActivoFijo, 'id' | 'depreciacion_acumulada' | 'valor_en_libros'>) => {
-      return makeRequest(() => api.post<ActivoFijo>('/api/v1/mi-negocio/contable/activos-fijos/activos/', data).then(res => res.data), "Activo creado.");
+      return makeRequest(() => api.post<ActivoFijo>('/v1/mi-negocio/contable/activos-fijos/activos/', data).then(res => res.data), "Activo creado.");
   }, [makeRequest]);
 
   const updateActivoFijo = useCallback(async (id: number, data: Partial<Omit<ActivoFijo, 'id' | 'depreciacion_acumulada' | 'valor_en_libros'>>) => {
-      return makeRequest(() => api.patch<ActivoFijo>(`/api/v1/mi-negocio/contable/activos-fijos/activos/${id}/`, data).then(res => res.data), "Activo actualizado.");
+      return makeRequest(() => api.patch<ActivoFijo>(`/v1/mi-negocio/contable/activos-fijos/activos/${id}/`, data).then(res => res.data), "Activo actualizado.");
   }, [makeRequest]);
 
   const deleteActivoFijo = useCallback(async (id: number) => {
-      return makeRequest(() => api.delete(`/api/v1/mi-negocio/contable/activos-fijos/activos/${id}/`), "Activo eliminado.");
+      return makeRequest(() => api.delete(`/v1/mi-negocio/contable/activos-fijos/activos/${id}/`), "Activo eliminado.");
   }, [makeRequest]);
 
   const getDepreciaciones = useCallback(async (activoId: number, page: number = 1) => {
       const params = new URLSearchParams({ page: page.toString() });
-      return makeRequest(() => api.get<PaginatedResponse<CalculoDepreciacion>>(`/api/v1/mi-negocio/contable/activos-fijos/depreciaciones/?activo=${activoId}&${params.toString()}`).then(res => res.data));
+      return makeRequest(() => api.get<PaginatedResponse<CalculoDepreciacion>>(`/v1/mi-negocio/contable/activos-fijos/depreciaciones/?activo=${activoId}&${params.toString()}`).then(res => res.data));
   }, [makeRequest]);
 
   const createDepreciacion = useCallback(async (data: { activo: number, fecha: string, monto: string }) => {
-      return makeRequest(() => api.post<CalculoDepreciacion>('/api/v1/mi-negocio/contable/activos-fijos/depreciaciones/', data).then(res => res.data), "Cálculo de depreciación registrado.");
+      return makeRequest(() => api.post<CalculoDepreciacion>('/v1/mi-negocio/contable/activos-fijos/depreciaciones/', data).then(res => res.data), "Cálculo de depreciación registrado.");
   }, [makeRequest]);
 
   // --- API de Presupuesto ---
   const getPresupuestos = useCallback(async (page: number = 1, search: string = '') => {
       const params = new URLSearchParams({ page: page.toString(), search });
-      return makeRequest(() => api.get<PaginatedResponse<Presupuesto>>(`/api/v1/mi-negocio/contable/presupuesto/presupuestos/?${params.toString()}`).then(res => res.data));
+      return makeRequest(() => api.get<PaginatedResponse<Presupuesto>>(`/v1/mi-negocio/contable/presupuesto/presupuestos/?${params.toString()}`).then(res => res.data));
   }, [makeRequest]);
 
   const createPresupuesto = useCallback(async (data: Omit<Presupuesto, 'id' | 'total_ingresos_presupuestado' | 'total_gastos_presupuestado'>) => {
-      return makeRequest(() => api.post<Presupuesto>('/api/v1/mi-negocio/contable/presupuesto/presupuestos/', data).then(res => res.data), "Presupuesto creado.");
+      return makeRequest(() => api.post<Presupuesto>('/v1/mi-negocio/contable/presupuesto/presupuestos/', data).then(res => res.data), "Presupuesto creado.");
   }, [makeRequest]);
 
   const getPartidas = useCallback(async (presupuestoId: number, page: number = 1, search: string = '') => {
       const params = new URLSearchParams({ page: page.toString(), search, presupuesto: presupuestoId.toString() });
-      return makeRequest(() => api.get<PaginatedResponse<PartidaPresupuestal>>(`/api/v1/mi-negocio/contable/presupuesto/partidas/?${params.toString()}`).then(res => res.data));
+      return makeRequest(() => api.get<PaginatedResponse<PartidaPresupuestal>>(`/v1/mi-negocio/contable/presupuesto/partidas/?${params.toString()}`).then(res => res.data));
   }, [makeRequest]);
 
   const createPartida = useCallback(async (data: Omit<PartidaPresupuestal, 'id' | 'monto_ejecutado'>) => {
-      return makeRequest(() => api.post<PartidaPresupuestal>('/api/v1/mi-negocio/contable/presupuesto/partidas/', data).then(res => res.data), "Partida creada.");
+      return makeRequest(() => api.post<PartidaPrespuestal>('/v1/mi-negocio/contable/presupuesto/partidas/', data).then(res => res.data), "Partida creada.");
   }, [makeRequest]);
 
   const getEjecuciones = useCallback(async (partidaId: number, page: number = 1) => {
       const params = new URLSearchParams({ page: page.toString(), partida: partidaId.toString() });
-      return makeRequest(() => api.get<PaginatedResponse<EjecucionPresupuestal>>(`/api/v1/mi-negocio/contable/presupuesto/ejecuciones/?${params.toString()}`).then(res => res.data));
+      return makeRequest(() => api.get<PaginatedResponse<EjecucionPresupuestal>>(`/v1/mi-negocio/contable/presupuesto/ejecuciones/?${params.toString()}`).then(res => res.data));
   }, [makeRequest]);
 
 

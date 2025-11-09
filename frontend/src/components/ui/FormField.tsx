@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { UseFormRegister, FieldErrors, RegisterOptions, FieldValues, Path } from 'react-hook-form';
 
