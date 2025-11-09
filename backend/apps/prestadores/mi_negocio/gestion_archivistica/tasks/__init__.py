@@ -1,3 +1,2 @@
-# Este archivo vacío declara el directorio 'tasks' como un sub-paquete de Python.
-# Su presencia es CRUCIAL para que mecanismos de autodescubrimiento (como el de Celery)
-# puedan encontrar y registrar las tareas asíncronas definidas en este módulo.
+# Este archivo convierte el directorio 'tasks' en un sub-paquete de Python
+# y es crucial para que Celery pueda auto-descubrir las tareas.
