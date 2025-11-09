@@ -402,7 +402,7 @@ class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
 
 from django.db.models import Q
 
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from .serializers import AdminPrestadorSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -425,7 +425,7 @@ class UserViewSet(viewsets.ModelViewSet):
         )
 
 class AdminPrestadorViewSet(viewsets.ModelViewSet):
-    queryset = Perfil.objects.all()
+    queryset = ProviderProfile.objects.all()
     serializer_class = AdminPrestadorSerializer
     permission_classes = [IsAdminOrFuncionario]
 

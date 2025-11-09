@@ -1,10 +1,10 @@
 from django.db import models
 from django.conf import settings
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount
 
 class Presupuesto(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='presupuestos')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='presupuestos')
     nombre = models.CharField(max_length=255)
     ano_fiscal = models.PositiveIntegerField()
     total_ingresos_presupuestado = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)

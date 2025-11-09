@@ -2,10 +2,10 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from decimal import Decimal
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class CategoriaActivo(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='categorias_activos')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='categorias_activos')
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True)
 
@@ -17,7 +17,7 @@ class ActivoFijo(models.Model):
         LINEA_RECTA = 'LINEA_RECTA', 'Línea Recta'
         # Se pueden añadir otros métodos en el futuro
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='activos_fijos')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='activos_fijos')
     nombre = models.CharField(max_length=255)
     categoria = models.ForeignKey(CategoriaActivo, on_delete=models.PROTECT, related_name='activos')
     descripcion = models.TextField(blank=True)

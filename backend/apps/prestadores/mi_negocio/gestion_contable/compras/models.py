@@ -1,10 +1,10 @@
 from django.db import models
 from django.conf import settings
 from decimal import Decimal
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class Proveedor(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='proveedores')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='proveedores')
     nombre = models.CharField(max_length=255)
     identificacion = models.CharField(max_length=20, blank=True)
     telefono = models.CharField(max_length=20, blank=True)
@@ -22,7 +22,7 @@ class FacturaCompra(models.Model):
         VENCIDA = 'VENCIDA', 'Vencida'
         ANULADA = 'ANULADA', 'Anulada'
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='facturas_compra')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='facturas_compra')
     proveedor = models.ForeignKey(Proveedor, on_delete=models.PROTECT, related_name='facturas')
     numero_factura = models.CharField(max_length=50)
     fecha_emision = models.DateField()

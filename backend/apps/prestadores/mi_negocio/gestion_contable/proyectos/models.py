@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Sum
 from decimal import Decimal
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from apps.prestadores.mi_negocio.gestion_comercial.models import FacturaVenta
 from apps.prestadores.mi_negocio.gestion_contable.compras.models import FacturaCompra
 
@@ -12,7 +12,7 @@ class Proyecto(models.Model):
         COMPLETADO = 'COMPLETADO', 'Completado'
         CANCELADO = 'CANCELADO', 'Cancelado'
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='proyectos')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='proyectos')
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True)
     fecha_inicio = models.DateField()

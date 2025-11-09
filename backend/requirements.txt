@@ -148,3 +148,7 @@ redis==5.0.1
 # --- Blockchain ---
 web3==6.11.3
 # py-merkle-tree==3.0.0
+
+\nrest_framework_nested
+\ndjango-money
+ 

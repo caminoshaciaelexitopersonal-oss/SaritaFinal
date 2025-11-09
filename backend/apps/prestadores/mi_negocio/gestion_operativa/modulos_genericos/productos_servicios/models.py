@@ -1,34 +1,33 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from djmoney.models.fields import MoneyField
 
-class ProductoServicio(models.Model):
+from ..perfil.models import TenantAwareModel, CategoriaPrestador as OperationalTag
+from ..reservas.models import CancellationPolicy
+
+class Product(TenantAwareModel):
     """
-    Modelo para gestionar los productos o servicios ofrecidos por un prestador.
+    Modelo genérico y polimórfico para cualquier 'cosa' vendible o reservable.
+    Adaptado del modelo de referencia `tourism_core`.
     """
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='productos_servicios')
-    nombre = models.CharField(_("Nombre del Producto/Servicio"), max_length=255)
-    descripcion = models.TextField(_("Descripción"), blank=True, null=True)
-    precio = models.DecimalField(_("Precio"), max_digits=12, decimal_places=2, default=0.00)
+    class ProductNature(models.TextChoices):
+        SERVICE = 'SERVICE', _('Servicio (Reservable)')
+        GOOD = 'GOOD', _('Bien Físico (Comprable)')
+        PACKAGE = 'PACKAGE', _('Paquete (Compuesto)')
 
-    class Tipo(models.TextChoices):
-        PRODUCTO = 'PRODUCTO', _('Producto')
-        SERVICIO = 'SERVICIO', _('Servicio')
+    nombre = models.CharField(_("Nombre"), max_length=200)
+    descripcion = models.TextField(_("Descripción"), blank=True)
+    nature = models.CharField(_("Naturaleza"), max_length=10, choices=ProductNature.choices)
+    base_price = MoneyField(_("Precio Base"), max_digits=19, decimal_places=2, default_currency='COP')
+    stock = models.PositiveIntegerField(_("Stock/Capacidad"), default=1, help_text=_("Capacidad por evento, o unidades de un bien."))
 
-    tipo = models.CharField(_("Tipo"), max_length=50, choices=Tipo.choices, default=Tipo.PRODUCTO)
-
-    # Campos específicos para productos (inventario)
-    cantidad_disponible = models.PositiveIntegerField(_("Cantidad Disponible"), default=1, help_text=_("Para servicios, usualmente es 1 o se deja en blanco."))
-    unidad_medida = models.CharField(_("Unidad de Medida"), max_length=50, blank=True, help_text=_("Ej: unidades, kg, horas, etc."))
-
-    activo = models.BooleanField(_("Activo"), default=True, help_text=_("Indica si el producto/servicio está disponible para la venta."))
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    is_packageable = models.BooleanField(_("Es Empaquetable"), default=False, help_text=_("¿Puede este servicio ser parte de un paquete de agencia?"))
+    operational_tags = models.ManyToManyField(OperationalTag, blank=True)
+    cancellation_policy = models.ForeignKey(CancellationPolicy, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.nombre} - {self.perfil.nombre_comercial}"
+        return self.nombre
 
     class Meta:
-        verbose_name = "Producto o Servicio"
-        verbose_name_plural = "Productos y Servicios"
-        ordering = ['nombre']
+        verbose_name = "Producto/Servicio"
+        verbose_name_plural = "Productos/Servicios"

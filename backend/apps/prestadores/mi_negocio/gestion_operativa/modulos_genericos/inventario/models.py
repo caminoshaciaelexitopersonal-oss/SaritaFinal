@@ -1,18 +1,22 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from ..perfil.models import TenantAwareModel
 
-class Inventario(models.Model):
+class InventoryItem(TenantAwareModel):
     """
-    Modelo para gestionar el inventario de un prestador.
+    Modelo para gestionar el inventario de consumibles de un prestador.
+    Adaptado para la nueva arquitectura.
     """
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='inventario')
+    class ItemType(models.TextChoices):
+        CONSUMABLE = 'CONSUMABLE', _('Consumible')
+        ASSET = 'ASSET', _('Activo Fijo')
+        RETAIL = 'RETAIL', _('Producto de Venta')
+
     nombre_item = models.CharField(_("Nombre del Ítem"), max_length=255)
-    descripcion = models.TextField(_("Descripción"), blank=True, null=True)
-    cantidad = models.PositiveIntegerField(_("Cantidad Disponible"), default=0)
+    item_type = models.CharField(_("Tipo de Ítem"), max_length=20, choices=ItemType.choices, default=ItemType.CONSUMABLE)
+    cantidad = models.DecimalField(_("Cantidad Disponible"), max_digits=10, decimal_places=2, default=0.00)
     unidad = models.CharField(_("Unidad de Medida"), max_length=50, help_text=_("Ej: unidades, kg, litros"))
-    punto_reorden = models.PositiveIntegerField(_("Punto de Reorden"), default=0, help_text=_("Cantidad mínima antes de necesitar reabastecimiento"))
-    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    punto_reorden = models.DecimalField(_("Punto de Reorden"), max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return f"{self.nombre_item} ({self.cantidad} {self.unidad})"
