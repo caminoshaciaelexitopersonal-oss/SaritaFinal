@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from decimal import Decimal
 from django.db.models import Sum
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
 from apps.prestadores.mi_negocio.gestion_contable.inventario.models import Producto
 from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria
@@ -15,7 +15,7 @@ class FacturaVenta(models.Model):
         VENCIDA = 'VENCIDA', 'Vencida'
         ANULADA = 'ANULADA', 'Anulada'
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='facturas_venta')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='facturas_venta')
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='facturas')
     numero_factura = models.CharField(max_length=50)
     fecha_emision = models.DateField()
@@ -65,7 +65,7 @@ class ReciboCaja(models.Model):
         TARJETA = 'TARJETA', 'Tarjeta'
         OTRO = 'OTRO', 'Otro'
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='recibos_caja')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='recibos_caja')
     factura = models.ForeignKey(FacturaVenta, on_delete=models.CASCADE, related_name='recibos')
     cuenta_bancaria = models.ForeignKey(CuentaBancaria, on_delete=models.PROTECT, help_text="Cuenta donde se recibe el pago")
     fecha_pago = models.DateField()

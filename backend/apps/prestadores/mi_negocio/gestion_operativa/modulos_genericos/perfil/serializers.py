@@ -1,6 +1,6 @@
 # SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/perfil/serializers.py
 from rest_framework import serializers
-from .models import Perfil, CategoriaPrestador
+from .models import ProviderProfile, CategoriaPrestador
 
 class CategoriaPrestadorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,14 +15,13 @@ class PerfilSerializer(serializers.ModelSerializer):
     usuario = serializers.StringRelatedField()
 
     class Meta:
-        model = Perfil
+        model = ProviderProfile
         fields = [
-            'id', 'usuario', 'nombre_comercial', 'categoria', 'telefono_principal',
-            'email_comercial', 'direccion', 'latitud', 'longitud',
-            'descripcion_corta', 'logo', 'sitio_web', 'redes_sociales',
-            'estado', 'puntuacion_total'
+            'id', 'usuario', 'nombre_comercial', 'provider_type', 'telefono_principal',
+            'email_comercial', 'direccion',
+            'is_verified'
         ]
-        read_only_fields = ['usuario', 'estado', 'puntuacion_total']
+        read_only_fields = ['usuario', 'is_verified']
 
 class PerfilUpdateSerializer(serializers.ModelSerializer):
     """
@@ -30,9 +29,9 @@ class PerfilUpdateSerializer(serializers.ModelSerializer):
     Permite la actualización de campos específicos.
     """
     class Meta:
-        model = Perfil
+        model = ProviderProfile
         fields = [
             'nombre_comercial', 'telefono_principal', 'email_comercial',
-            'direccion', 'latitud', 'longitud', 'descripcion_corta',
+            'direccion',
             'logo', 'sitio_web', 'redes_sociales'
         ]

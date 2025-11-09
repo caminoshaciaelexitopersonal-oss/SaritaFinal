@@ -1,10 +1,10 @@
 from django.db import models
 from django.conf import settings
 from decimal import Decimal
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class Empleado(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='empleados')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='empleados')
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
     identificacion = models.CharField(max_length=20, unique=True)
@@ -40,7 +40,7 @@ class ConceptoNomina(models.Model):
         return self.descripcion
 
 class Planilla(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='planillas')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='planillas')
     periodo_inicio = models.DateField()
     periodo_fin = models.DateField()
     total_devengado = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)

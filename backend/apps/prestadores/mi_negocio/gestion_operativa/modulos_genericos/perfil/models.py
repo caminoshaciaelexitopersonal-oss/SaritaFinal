@@ -1,20 +1,83 @@
+import uuid
 from django.db import models
 from django.conf import settings
 from apps.companies.models import Company
 
-class CategoriaPrestador(models.Model):
+# --- MODELOS BASE DE ROBUSTEZ ---
+
+class BaseModel(models.Model):
+    """
+    Modelo base abstracto que añade campos de auditoría comunes.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True, db_index=True)
+
+    class Meta:
+        abstract = True
+        ordering = ['-created_at']
+
+from ..permissions import get_current_tenant
+
+class TenantQuerySet(models.QuerySet):
+    def for_tenant(self, tenant):
+        return self.filter(provider=tenant)
+
+class TenantManager(models.Manager):
+    """
+    Manager que AUTOMÁTICAMENTE filtra cada consulta por el inquilino activo.
+    """
+    def get_queryset(self):
+        queryset = TenantQuerySet(self.model, using=self._db)
+        tenant = get_current_tenant()
+        if tenant:
+            return queryset.for_tenant(tenant)
+        # Principio de fallo seguro: si no hay inquilino, no devolver nada.
+        return queryset.none()
+
+class TenantAwareModel(BaseModel):
+    """
+    Modelo base abstracto para todos los datos que pertenecen a un inquilino.
+    """
+    provider = models.ForeignKey('perfil.ProviderProfile', on_delete=models.CASCADE, related_name="%(class)s_items")
+    objects = TenantManager()
+    objects_unfiltered = models.Manager()
+
+    class Meta:
+        abstract = True
+
+
+# --- MODELOS DE PERFIL Y CATEGORÍA ---
+
+class CategoriaPrestador(BaseModel):
     nombre = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True, help_text="Versión del nombre amigable para URLs")
+
     def __str__(self):
         return self.nombre
+
     class Meta:
         verbose_name = "Categoría de Prestador"
         verbose_name_plural = "Categorías de Prestadores"
 
-class Perfil(models.Model):
+
+class ProviderProfile(BaseModel):
     """
-    Modelo unificado para el perfil del prestador de servicios turísticos.
+    EL INQUILINO (TENANT).
+    Representa a una empresa prestadora de servicios. No hereda de TenantAwareModel.
+    Refactorizado desde el modelo original 'Perfil'.
     """
+    class ProviderTypes(models.TextChoices):
+        RESTAURANT = 'RESTAURANT', 'Restaurante'
+        HOTEL = 'HOTEL', 'Hotel'
+        AGENCY = 'AGENCY', 'Agencia de Viajes'
+        GUIDE = 'GUIDE', 'Guía Turístico'
+        TRANSPORT = 'TRANSPORT', 'Transportadora Turística'
+        # Añadimos otros tipos para compatibilidad
+        BAR_DISCO = 'BAR_DISCO', 'Bar o Discoteca'
+        ARTISAN = 'ARTISAN', 'Artesano'
+
     usuario = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -23,66 +86,17 @@ class Perfil(models.Model):
     company = models.ForeignKey(
         Company,
         on_delete=models.CASCADE,
-        related_name='perfiles',
-        null=True,
-        blank=True
+        related_name='perfiles'
     )
     nombre_comercial = models.CharField(max_length=255, verbose_name="Nombre Comercial")
-    categoria = models.ForeignKey(CategoriaPrestador, on_delete=models.SET_NULL, null=True, blank=True)
+    provider_type = models.CharField(max_length=20, choices=ProviderTypes.choices, default=ProviderTypes.HOTEL)
+
+    # Mantenemos otros campos relevantes del modelo original 'Perfil'
     telefono_principal = models.CharField(max_length=50, blank=True)
     email_comercial = models.EmailField(max_length=255, blank=True)
     direccion = models.CharField(max_length=255, blank=True)
-    latitud = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
-    longitud = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
-    descripcion_corta = models.TextField(blank=True)
-    logo = models.ImageField(upload_to='logos_prestadores/', blank=True, null=True)
-    sitio_web = models.URLField(max_length=255, blank=True)
-    redes_sociales = models.JSONField(blank=True, null=True, default=dict)
 
-    class EstadoChoices(models.TextChoices):
-        PENDIENTE = 'Pendiente', 'Pendiente de Revisión'
-        ACTIVO = 'Activo', 'Activo y Visible'
-        RECHAZADO = 'Rechazado', 'Rechazado'
-        INACTIVO = 'Inactivo', 'Inactivo por el Usuario'
-
-    estado = models.CharField(
-        max_length=20,
-        choices=EstadoChoices.choices,
-        default=EstadoChoices.PENDIENTE
-    )
-
-    # --- Scoring Fields ---
-    puntuacion_verificacion = models.PositiveIntegerField(default=0, help_text="Puntaje acumulado de verificaciones de cumplimiento.")
-    puntuacion_capacitacion = models.PositiveIntegerField(default=0, help_text="Puntaje acumulado por asistencia a capacitaciones.")
-    puntuacion_reseñas = models.PositiveIntegerField(default=0, help_text="Puntaje acumulado por reseñas de turistas.")
-    puntuacion_formularios = models.PositiveIntegerField(default=0, help_text="Puntaje por completar formularios de caracterización.")
-    puntuacion_total = models.PositiveIntegerField(default=0, db_index=True, help_text="Puntaje total para posicionamiento. Se calcula automáticamente.")
-
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    is_verified = models.BooleanField(default=False, help_text="Verificado por el Super Admin")
 
     def __str__(self):
         return self.nombre_comercial
-
-    def recalcular_puntuacion_total(self):
-        """
-        Calcula la puntuación total y guarda todos los campos de puntuación
-        parciales y el total en una sola operación de base de datos.
-        """
-        self.puntuacion_total = (
-            getattr(self, 'puntuacion_verificacion', 0) +
-            getattr(self, 'puntuacion_capacitacion', 0) +
-            getattr(self, 'puntuacion_reseñas', 0) +
-            getattr(self, 'puntuacion_formularios', 0)
-        )
-        self.save(update_fields=[
-            'puntuacion_verificacion',
-            'puntuacion_capacitacion',
-            'puntuacion_reseñas',
-            'puntuacion_formularios',
-            'puntuacion_total'
-        ])
-
-    class Meta:
-        verbose_name = "Perfil de Prestador"
-        verbose_name_plural = "Perfiles de Prestadores"

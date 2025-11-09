@@ -2,14 +2,14 @@ from django.db import models
 from django.conf import settings
 from decimal import Decimal
 from django.core.exceptions import ValidationError
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class CuentaBancaria(models.Model):
     class TipoCuenta(models.TextChoices):
         AHORROS = 'AHORROS', 'Ahorros'
         CORRIENTE = 'CORRIENTE', 'Corriente'
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='cuentas_bancarias')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='cuentas_bancarias')
     banco = models.CharField(max_length=100)
     numero_cuenta = models.CharField(max_length=50)
     tipo_cuenta = models.CharField(max_length=20, choices=TipoCuenta.choices)

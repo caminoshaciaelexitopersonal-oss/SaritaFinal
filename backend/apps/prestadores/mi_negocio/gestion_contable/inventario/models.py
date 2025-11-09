@@ -2,10 +2,10 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from decimal import Decimal
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class CategoriaProducto(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='categorias_producto')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='categorias_producto')
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True)
 
@@ -13,7 +13,7 @@ class CategoriaProducto(models.Model):
         return self.nombre
 
 class Almacen(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='almacenes')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='almacenes')
     nombre = models.CharField(max_length=100)
     ubicacion = models.CharField(max_length=255, blank=True)
 
@@ -21,7 +21,7 @@ class Almacen(models.Model):
         return self.nombre
 
 class Producto(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='productos')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='productos')
     nombre = models.CharField(max_length=255)
     sku = models.CharField(max_length=100, unique=True)
     categoria = models.ForeignKey(CategoriaProducto, on_delete=models.SET_NULL, null=True, blank=True, related_name='productos')

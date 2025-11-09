@@ -1008,7 +1008,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('department', 'municipality')
 
 
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class CustomUserDetailSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
@@ -1022,7 +1022,7 @@ class AdminPrestadorSerializer(serializers.ModelSerializer):
     categoria_nombre = serializers.CharField(source='categoria.nombre', read_only=True)
 
     class Meta:
-        model = Perfil
+        model = ProviderProfile
         fields = ('id', 'nombre_comercial', 'usuario_username', 'categoria_nombre')
 
 

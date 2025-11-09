@@ -4,10 +4,10 @@ from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class CostCenter(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name="cost_centers")
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="cost_centers")
     code = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=255)
 
@@ -47,7 +47,7 @@ class ChartOfAccount(models.Model):
         return f"{self.code} - {self.name}"
 
 class JournalEntry(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name="journal_entries")
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="journal_entries")
     entry_date = models.DateField(db_index=True)
     description = models.TextField()
     entry_type = models.CharField(max_length=100)
