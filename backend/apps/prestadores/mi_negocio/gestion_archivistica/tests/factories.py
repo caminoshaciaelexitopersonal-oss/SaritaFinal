@@ -1,32 +1,42 @@
-# backend/apps/prestadores/mi_negocio/gestion_archivistica/tests/factories.py
 import factory
 from factory.django import DjangoModelFactory
 import uuid
 
-# Usar importaciones absolutas para evitar problemas con el path de pytest
-from apps.prestadores.mi_negocio.gestion_archivistica.models import Document, DocumentVersion, Process, DocumentType, ProcessType
 from apps.companies.models import Company
-from api.models import CustomUser
+from apps.api.models import CustomUser
+from ..models import Document, DocumentVersion, Process, DocumentType, ProcessType
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
 
+# --- FÁBRICAS DE ENTIDADES BASE ---
 class CompanyFactory(DjangoModelFactory):
     class Meta:
         model = Company
-        # django_get_or_create = ('name',) # Eliminado para evitar el FieldError
+        django_get_or_create = ('name',)
 
     id = factory.LazyFunction(uuid.uuid4)
     name = factory.Faker('company')
     code = factory.Sequence(lambda n: f"C{n:03d}")
+    is_active = True
 
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = CustomUser
         django_get_or_create = ('username',)
 
+    id = factory.LazyFunction(uuid.uuid4)
     username = factory.Faker('user_name')
     email = factory.Faker('email')
-    # Por ahora, no asociamos perfil/compañía por defecto
-    # se hará en la prueba específica.
+    password = factory.PostGenerationMethodCall('set_password', 'defaultpassword')
 
+class PerfilFactory(DjangoModelFactory):
+    class Meta:
+        model = Perfil
+
+    usuario = factory.SubFactory(UserFactory)
+    company = factory.SubFactory(CompanyFactory)
+    nombre_comercial = factory.Faker('company')
+
+# --- FÁBRICAS DE CATÁLOGOS DE GESTIÓN ARCHIVÍSTICA ---
 class ProcessTypeFactory(DjangoModelFactory):
     class Meta:
         model = ProcessType
@@ -49,23 +59,23 @@ class DocumentTypeFactory(DjangoModelFactory):
     name = factory.Faker('word')
     code = factory.Sequence(lambda n: f"DT{n}")
 
+# --- FÁBRICAS DE DOCUMENTOS Y VERSIONES ---
 class DocumentFactory(DjangoModelFactory):
     class Meta:
         model = Document
+
     company = factory.SubFactory(CompanyFactory)
     created_by = factory.SubFactory(UserFactory)
     process = factory.SubFactory(ProcessFactory, company=factory.SelfAttribute('..company'))
     document_type = factory.SubFactory(DocumentTypeFactory, company=factory.SelfAttribute('..company'))
-    sequence = 1
-    document_code = factory.LazyAttribute(
-        lambda o: f"{o.process.process_type.code}-{o.process.code}-{o.document_type.code}-{o.sequence:02d}"
-    )
 
 class DocumentVersionFactory(DjangoModelFactory):
     class Meta:
         model = DocumentVersion
+
     document = factory.SubFactory(DocumentFactory)
     uploaded_by = factory.SubFactory(UserFactory)
+
     version_number = 1
     title = factory.Faker('sentence', nb_words=5)
     validity_year = 2024

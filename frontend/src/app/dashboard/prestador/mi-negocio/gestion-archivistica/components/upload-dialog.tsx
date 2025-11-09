@@ -3,8 +3,8 @@
 
 import { useState, ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
-// import { zodResolver } from '@hookform/resolvers/zod'; // Eliminado
-// import * as z from 'zod'; // Eliminado
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/services/api';
 
@@ -18,14 +18,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 
-// Esquema Zod eliminado
-type UploadFormValues = {
-    title: string;
-    validity_year: number;
-    process_id: string;
-    document_type_id: string;
-    file: FileList;
-};
+// Esquema de validación con Zod
+const formSchema = z.object({
+    title: z.string().min(3, { message: "El título debe tener al menos 3 caracteres." }),
+    validity_year: z.coerce.number().min(2000, { message: "El año debe ser 2000 o posterior." }),
+    process_id: z.string({ required_error: "Debe seleccionar un proceso." }),
+    document_type_id: z.string({ required_error: "Debe seleccionar un tipo de documento." }),
+    file: z.instanceof(FileList).refine(files => files?.length === 1, "Debe seleccionar un archivo."),
+});
+
+type UploadFormValues = z.infer<typeof formSchema>;
 
 // Tipos para los catálogos
 interface Catalog { id: string; name: string; }
@@ -54,7 +56,9 @@ export function UploadDialog({ children }: { children: ReactNode }) {
     const { data: processes, isLoading: isLoadingProcesses } = useQuery({ queryKey: ['archivisticaProcesses'], queryFn: fetchProcesses });
     const { data: documentTypes, isLoading: isLoadingDocTypes } = useQuery({ queryKey: ['archivisticaDocTypes'], queryFn: fetchDocumentTypes });
 
-    const form = useForm<UploadFormValues>();
+    const form = useForm<UploadFormValues>({
+        resolver: zodResolver(formSchema),
+    });
 
     const mutation = useMutation({
         mutationFn: uploadDocument,

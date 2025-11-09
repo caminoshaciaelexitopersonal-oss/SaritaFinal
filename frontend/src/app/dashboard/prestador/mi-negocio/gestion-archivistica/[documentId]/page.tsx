@@ -1,18 +1,19 @@
 // frontend/src/app/dashboard/prestador/mi-negocio/gestion-archivistica/[documentId]/page.tsx
 "use client";
 
-import React from 'react';
-import { useQuery } from "@tanstack/react-query";
+import React, { useState } from 'react';
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams } from 'next/navigation';
 import apiClient from "@/services/api";
-// import { PageHeader } from "@/components/shared/page-header"; // Eliminado
 import { Button } from "@/components/ui/Button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle, Download, ChevronsRight, Hash, ShieldCheck } from 'lucide-react';
-// import { Badge } from "@/components/ui/badge"; // Usaremos un span simple
+import { AlertTriangle, Download, ChevronsRight, Hash, ShieldCheck, Upload } from 'lucide-react';
 import Link from 'next/link';
+import { PageHeader } from '@/components/shared/page-header';
+import { UploadDialog } from '../components/upload-dialog';
+import { toast } from 'react-hot-toast';
 
-// --- Tipos de Datos (deben coincidir con el DocumentDetailSerializer) ---
+// --- Tipos de Datos ---
 interface VersionData {
     id: number;
     version_number: number;
@@ -38,7 +39,22 @@ const fetchDocumentDetail = async (id: string): Promise<DocumentDetailData> => {
     return response.data;
 };
 
-// --- Componentes de UI de la página ---
+const downloadVersion = async ({ docId, versionId, filename }: { docId: string; versionId: number; filename: string }) => {
+    const response = await apiClient.get(`/mi-negocio/archivistica/documents/${docId}/versions/${versionId}/download/`, {
+        responseType: 'blob',
+    });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode?.removeChild(link);
+};
+
+
+// --- Componentes de UI ---
+// ... CryptoProof y statusVariant se mantienen igual ...
 const CryptoProof = ({ version }: { version: VersionData }) => {
     if (version.status !== 'VERIFIED') return null;
     return (
@@ -64,40 +80,51 @@ const CryptoProof = ({ version }: { version: VersionData }) => {
     );
 };
 
-const statusVariant = {
-    PENDING_UPLOAD: "secondary",
-    PENDING_CONFIRMATION: "warning",
-    VERIFIED: "success",
-    COMPROMISED: "destructive",
-};
-
-
-// --- Componente Principal de la Página ---
+// --- Componente Principal ---
 export default function DocumentDetailPage() {
     const params = useParams();
     const documentId = params.documentId as string;
+    const [downloadingId, setDownloadingId] = useState<number | null>(null);
 
     const { data: document, isLoading, isError, error } = useQuery<DocumentDetailData, Error>({
         queryKey: ['archivisticaDocumentDetail', documentId],
         queryFn: () => fetchDocumentDetail(documentId),
-        enabled: !!documentId, // Solo ejecutar si el ID está presente
+        enabled: !!documentId,
     });
 
+    const downloadMutation = useMutation({
+        mutationFn: downloadVersion,
+        onSuccess: () => {
+            toast.success("Descarga iniciada.");
+            setDownloadingId(null);
+        },
+        onError: (error: any) => {
+            toast.error("No se pudo descargar el archivo.");
+            setDownloadingId(null);
+        }
+    });
+
+    const handleDownload = (version: VersionData) => {
+        setDownloadingId(version.id);
+        downloadMutation.mutate({
+            docId: documentId,
+            versionId: version.id,
+            filename: version.original_filename
+        });
+    };
+
     if (isLoading) return <div>Cargando detalle del documento...</div>;
-    if (isError) return (
-        <Alert variant="destructive">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error.message}</AlertDescription>
-        </Alert>
-    );
+    if (isError) return <Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>Error</AlertTitle><AlertDescription>{error.message}</AlertDescription></Alert>;
 
     return (
         <div className="flex flex-col gap-8">
-            <div>
-                <h1 className="text-2xl font-bold">Documento: {document?.document_code}</h1>
-                <p className="text-gray-500">Historial de versiones y pruebas de integridad para "{document?.title}".</p>
-            </div>
+            <PageHeader
+                title={`Documento: ${document?.document_code}`}
+                description={`Historial de versiones para "${document?.title}".`}
+            >
+                {/* Asumimos que UploadDialog puede manejar una prop para subir una nueva versión */}
+                {/* <UploadDialog documentId={documentId}><Button><Upload className="mr-2 h-4 w-4"/>Subir Nueva Versión</Button></UploadDialog> */}
+            </PageHeader>
 
             <div className="space-y-6">
                 {document?.versions.map(version => (
@@ -109,9 +136,13 @@ export default function DocumentDetailPage() {
                             </div>
                             <div className="flex items-center gap-4">
                                 <span className="p-2 bg-gray-200 rounded">{version.status.replace(/_/g, ' ')}</span>
-                                <Button size="sm" variant="outline" disabled={version.status !== 'VERIFIED'}>
-                                    <Download className="mr-2 h-4 w-4"/>
-                                    Descargar
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    disabled={version.status !== 'VERIFIED' || downloadingId === version.id}
+                                    onClick={() => handleDownload(version)}
+                                >
+                                    {downloadingId === version.id ? 'Descargando...' : <><Download className="mr-2 h-4 w-4"/>Descargar</>}
                                 </Button>
                             </div>
                         </div>

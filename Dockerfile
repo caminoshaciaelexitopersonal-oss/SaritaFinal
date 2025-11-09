@@ -1,55 +1,51 @@
-# Usa una imagen base de Python slim
-FROM python:3.12-slim AS backend
+# ETAPA 1: BUILDER
+# Propósito: Instalar dependencias en un entorno con herramientas de compilación.
+FROM python:3.11-slim as builder
 
-# Etiqueta para identificar al mantenedor
-LABEL maintainer="Jules"
+# --- Configuración del Entorno ---
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# Evita que los diálogos interactivos bloqueen la compilación
-ENV DEBIAN_FRONTEND=noninteractive
+# --- Instalación de Dependencias del Sistema Operativo ---
+RUN apt-get update && apt-get install -y --no-install-recommends gcc build-essential libpq-dev
 
-# Instala dependencias del sistema requeridas por Playwright y otras herramientas
-RUN apt-get update && apt-get install -y \
-    nodejs \
-    npm \
-    curl \
-    wget \
-    git \
-    # Dependencias de Playwright para navegadores
-    libgtk-3-0 \
-    libnss3 \
-    libxss1 \
-    libasound2 \
-    libgbm-dev \
-    libxkbcommon-x11-0 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    fonts-liberation \
-    libappindicator3-1 \
-    libatk-bridge2.0-0 \
-    libdrm2 \
-    gstreamer1.0-plugins-base \
-    gstreamer1.0-plugins-good \
-    gstreamer1.0-tools \
-    && apt-get clean
+# --- Instalación de Dependencias de Python ---
+WORKDIR /opt/venv
+RUN python -m venv .
+ENV PATH="/opt/venv/bin:$PATH"
 
-# Establece el directorio de trabajo
+COPY ./backend/requirements.txt .
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+
+# ==============================================================================
+# ETAPA 2: RUNNER (Imagen Final de Producción)
+# Propósito: Crear una imagen final ligera y segura, sin herramientas de build.
+# ==============================================================================
+FROM python:3.11-slim
+
+# --- Configuración del Entorno de Producción ---
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV DJANGO_SETTINGS_MODULE=puerto_gaitan_turismo.settings
+
+# --- Creación de Usuario no-root ---
+RUN addgroup --system appgroup && adduser --system --group appuser
+
+# --- Creación del Directorio de la Aplicación ---
 WORKDIR /app
+RUN mkdir -p /app/staticfiles && chown -R appuser:appgroup /app
 
-# Copia el código fuente del backend al contenedor
-COPY backend/ ./backend/
+# --- Copia de Archivos ---
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-# Establece el directorio de trabajo dentro de la carpeta del backend
-WORKDIR /app/backend
+COPY ./backend /app
+RUN chown -R appuser:appgroup /app
 
-# Actualiza pip e instala las dependencias de Python
-RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
+# --- Preparación Final ---
+USER appuser
+RUN python manage.py collectstatic --noinput
 
-# Instala los navegadores de Playwright (sin dependencias de SO, ya que se instalan arriba)
-RUN playwright install
-
-# Expone el puerto que usará la aplicación Django
+# --- Ejecución ---
 EXPOSE 8000
-
-# Comando por defecto para iniciar el servidor de Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "--log-level", "info", "puerto_gaitan_turismo.wsgi:application"]
