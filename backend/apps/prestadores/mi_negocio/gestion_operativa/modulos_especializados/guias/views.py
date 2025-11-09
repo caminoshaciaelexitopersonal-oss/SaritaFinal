@@ -7,7 +7,7 @@ from .serializers import SkillSerializer
 # Asumimos que TeamMember y su serializer existirán
 # from ..personal.models import TeamMember
 # from ..personal.serializers import TeamMemberSerializer
-from ..productos_servicios.views import ProductoServicioViewSet as ProductViewSet
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.views import ProductViewSet
 
 class SkillViewSet(viewsets.ModelViewSet):
     queryset = Skill.objects.all()

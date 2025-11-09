@@ -5,11 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEntity } from '@/contexts/EntityContext';
-import { useTranslations } from 'next-intl';
 import api from '@/services/api';
 import { FiMenu, FiX, FiBell } from 'react-icons/fi';
 import { usePathname } from 'next/navigation';
-import LanguageSwitcher from './LanguageSwitcher';
 
 // Interfaces de datos
 interface NavLink {
@@ -36,7 +34,6 @@ const Header: React.FC<HeaderProps> = ({
   isSidebarOpen: isSidebarOpenProp,
   setIsSidebarOpen: setIsSidebarOpenProp,
 }) => {
-  const t = useTranslations('Header');
   const { user, logout, isLoading: isAuthLoading } = useAuth();
   const { entity } = useEntity();
   const [navItems, setNavItems] = useState<NavLink[]>([]);
@@ -155,7 +152,6 @@ const Header: React.FC<HeaderProps> = ({
 
             {/* Acciones de Usuario para Escritorio */}
             <div className="hidden md:flex items-center space-x-2">
-              <LanguageSwitcher />
               <button className="p-2 rounded-full hover:bg-gray-100 text-gray-600">
                 <FiBell size={20} />
               </button>
@@ -164,22 +160,22 @@ const Header: React.FC<HeaderProps> = ({
                   {user ? (
                     <>
                       <Link href="/dashboard" className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
-                        {t('dashboard')}
+                        Dashboard
                       </Link>
                       <button
                         onClick={logout}
                         className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
                       >
-                        {t('logout')}
+                        Cerrar Sesión
                       </button>
                     </>
                   ) : (
                     <>
                       <Link href="/login" className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                        {t('login')}
+                        Ingresar
                       </Link>
                       <Link href="/registro" className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50">
-                        {t('register')}
+                        Registrarse
                       </Link>
                     </>
                   )}

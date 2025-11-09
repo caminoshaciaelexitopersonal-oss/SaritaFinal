@@ -1,7 +1,7 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/sitios_turisticos/models.py
 from django.db import models
 from django.conf import settings
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class SitioTuristico(models.Model):
     """
@@ -18,7 +18,7 @@ class SitioTuristico(models.Model):
         ('otro', 'Otro'),
     ]
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='sitios_turisticos')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='sitios_turisticos')
     nombre = models.CharField(max_length=150)
     descripcion_corta = models.CharField(max_length=255)
     descripcion_larga = models.TextField()

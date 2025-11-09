@@ -31,3 +31,4 @@ class Product(TenantAwareModel):
     class Meta:
         verbose_name = "Producto/Servicio"
         verbose_name_plural = "Productos/Servicios"
+        app_label = 'prestadores'

@@ -3,14 +3,14 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .perfil.views import PerfilViewSet
 from .clientes.views import ClienteViewSet
-from .productos_servicios.views import ProductoServicioViewSet
-from .inventario.views import InventarioViewSet
+from .productos_servicios.views import ProductViewSet
+from .inventario.views import InventoryItemViewSet
 from .costos.views import CostoViewSet
 
 router = DefaultRouter()
 router.register(r'clientes', ClienteViewSet, basename='cliente')
-router.register(r'productos-servicios', ProductoServicioViewSet, basename='producto-servicio')
-router.register(r'inventario', InventarioViewSet, basename='inventario')
+router.register(r'productos-servicios', ProductViewSet, basename='producto-servicio')
+router.register(r'inventario', InventoryItemViewSet, basename='inventario')
 router.register(r'costos', CostoViewSet, basename='costo')
 
 # El PerfilViewSet no usa un router estándar porque tiene acciones personalizadas

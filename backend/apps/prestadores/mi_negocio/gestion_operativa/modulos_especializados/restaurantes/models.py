@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from ..perfil.models import TenantAwareModel
-from ..productos_servicios.models import Product
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 
 class KitchenStation(TenantAwareModel):
     """
@@ -12,6 +12,9 @@ class KitchenStation(TenantAwareModel):
 
     def __str__(self):
         return self.nombre
+
+    class Meta:
+        app_label = 'prestadores'
 
 class MenuItemDetail(models.Model):
     """
@@ -34,6 +37,9 @@ class MenuItemDetail(models.Model):
 
     def __str__(self):
         return f"Detalles de Menú para: {self.product.nombre}"
+
+    class Meta:
+        app_label = 'prestadores'
 
 class RestaurantTable(TenantAwareModel):
     """
@@ -62,3 +68,4 @@ class RestaurantTable(TenantAwareModel):
 
     class Meta:
         unique_together = ('provider', 'table_number')
+        app_label = 'prestadores'

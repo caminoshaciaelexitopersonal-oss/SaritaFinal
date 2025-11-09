@@ -1,12 +1,12 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class Costo(models.Model):
     """
     Modelo para gestionar los costos operativos de un prestador.
     """
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='costos')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='costos')
     concepto = models.CharField(_("Concepto del Costo"), max_length=255)
     monto = models.DecimalField(_("Monto"), max_digits=12, decimal_places=2)
     fecha = models.DateField(_("Fecha del Costo"))

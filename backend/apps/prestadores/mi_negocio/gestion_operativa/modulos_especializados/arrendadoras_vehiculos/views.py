@@ -5,14 +5,14 @@ from rest_framework.decorators import action
 from django.utils import timezone
 from .models import VehiculoDeAlquiler, Alquiler
 from .serializers import VehiculoDeAlquilerSerializer, AlquilerSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsPrestadorOwner
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
 
 class VehiculoDeAlquilerViewSet(viewsets.ModelViewSet):
     """
     ViewSet para gestionar la flota de vehículos de alquiler.
     """
     serializer_class = VehiculoDeAlquilerSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         return VehiculoDeAlquiler.objects.filter(perfil=self.request.user.perfil_prestador)
@@ -43,7 +43,7 @@ class AlquilerViewSet(viewsets.ModelViewSet):
     ViewSet para gestionar los alquileres de vehículos.
     """
     serializer_class = AlquilerSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         # Un prestador solo ve los alquileres de su propia flota.

@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Inventario
+from .models import InventoryItem
 
-class InventarioSerializer(serializers.ModelSerializer):
+class InventoryItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Inventario
+        model = InventoryItem
         fields = '__all__'
         read_only_fields = ['perfil']

@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from apps.companies.models import Company
 
 # --- MODELOS BASE DE ROBUSTEZ ---
@@ -10,7 +11,7 @@ class BaseModel(models.Model):
     Modelo base abstracto que añade campos de auditoría comunes.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True, db_index=True)
 
@@ -40,7 +41,7 @@ class TenantAwareModel(BaseModel):
     """
     Modelo base abstracto para todos los datos que pertenecen a un inquilino.
     """
-    provider = models.ForeignKey('perfil.ProviderProfile', on_delete=models.CASCADE, related_name="%(class)s_items")
+    provider = models.ForeignKey('prestadores.ProviderProfile', on_delete=models.CASCADE, related_name="%(class)s_items")
     objects = TenantManager()
     objects_unfiltered = models.Manager()
 
@@ -60,6 +61,7 @@ class CategoriaPrestador(BaseModel):
     class Meta:
         verbose_name = "Categoría de Prestador"
         verbose_name_plural = "Categorías de Prestadores"
+        app_label = 'prestadores'
 
 
 class ProviderProfile(BaseModel):
@@ -100,3 +102,6 @@ class ProviderProfile(BaseModel):
 
     def __str__(self):
         return self.nombre_comercial
+
+    class Meta:
+        app_label = 'prestadores'
