@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Amenity, RoomType, Room
 from .serializers import AmenitySerializer, RoomTypeSerializer, RoomSerializer
-from ..perfil.models import TenantAwareModel # Para permisos
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel # Para permisos
 
 class HotelFeatureViewSet(viewsets.ModelViewSet):
     """

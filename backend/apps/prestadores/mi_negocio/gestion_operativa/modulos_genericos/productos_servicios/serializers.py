@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import ProductoServicio
+from .models import Product
 
-class ProductoServicioSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProductoServicio
+        model = Product
         fields = '__all__'
         read_only_fields = ['perfil']

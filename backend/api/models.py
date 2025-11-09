@@ -7,6 +7,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from .fields import EncryptedTextField
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 
 def prestador_directory_path(instance, filename):
@@ -291,11 +292,11 @@ class ImagenArtesano(models.Model):
 
 
 class ImagenGaleria(models.Model):
-    # prestador = models.ForeignKey('prestadores.Perfil', on_delete=models.CASCADE, related_name="galeria_imagenes")
+    prestador = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="galeria_imagenes", null=True)
     imagen = models.ImageField(upload_to=galeria_directory_path)
     alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad")
-    # def __str__(self):
-    #     return f"Imagen de {self.prestador.nombre_comercial}"
+    def __str__(self):
+        return f"Imagen de {self.prestador.nombre_comercial}"
 
 
 class Publicacion(models.Model):
@@ -431,7 +432,7 @@ class RutaTuristica(models.Model):
     imagen_principal = models.ImageField(_("Imagen Principal"), upload_to=ruta_turistica_directory_path, help_text="Imagen principal que se mostrará en listados y cabeceras.")
 
     atractivos = models.ManyToManyField(AtractivoTuristico, related_name="rutas", blank=True, verbose_name=_("Atractivos en la Ruta"))
-    # prestadores = models.ManyToManyField('prestadores.Perfil', related_name="rutas", blank=True, verbose_name=_("Prestadores en la Ruta"))
+    prestadores = models.ManyToManyField(ProviderProfile, related_name="rutas", blank=True, verbose_name=_("Prestadores en la Ruta"))
     municipalities = models.ManyToManyField(Municipality, related_name="rutas_turisticas", blank=True, verbose_name=_("Municipios que abarca la Ruta"))
 
     es_publicado = models.BooleanField(_("Publicado"), default=False, help_text="Marcar para que la ruta sea visible en el sitio web público.")
@@ -922,7 +923,7 @@ class Verificacion(models.Model):
     Contiene la información general de la visita y el resultado.
     """
     plantilla_usada = models.ForeignKey(PlantillaVerificacion, on_delete=models.PROTECT, related_name='verificaciones_realizadas')
-    # prestador = models.ForeignKey('prestadores.Perfil', on_delete=models.CASCADE, related_name='verificaciones_recibidas')
+    prestador = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='verificaciones_recibidas', null=True)
     funcionario_evaluador = models.ForeignKey(
         CustomUser,
         on_delete=models.SET_NULL,
@@ -1071,7 +1072,7 @@ class DocumentoVerificacion(models.Model):
         RECHAZADO = "RECHAZADO", _("Rechazado")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # prestador = models.ForeignKey('prestadores.Perfil', on_delete=models.CASCADE, related_name="documentos_verificacion")
+    prestador = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="documentos_verificacion", null=True)
     tipo_documento = models.ForeignKey(TipoDocumentoVerificacion, on_delete=models.PROTECT, related_name="documentos")
     archivo = models.FileField(_("Archivo"), upload_to=documento_verificacion_path)
     estado = models.CharField(_("Estado de Verificación"), max_length=20, choices=Estado.choices, default=Estado.PENDIENTE, db_index=True)

@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from ....permissions import IsPrestadorOwner
+from ..permissions import IsOwner
 from .models import Costo
 from .serializers import CostoSerializer
 
@@ -10,7 +10,7 @@ class CostoViewSet(viewsets.ModelViewSet):
     """
     queryset = Costo.objects.all()
     serializer_class = CostoSerializer
-    permission_classes = [IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         """

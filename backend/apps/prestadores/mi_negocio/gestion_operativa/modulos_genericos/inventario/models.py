@@ -25,3 +25,4 @@ class InventoryItem(TenantAwareModel):
         verbose_name = "Ítem de Inventario"
         verbose_name_plural = "Ítems de Inventario"
         ordering = ['nombre_item']
+        app_label = 'prestadores'

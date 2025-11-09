@@ -5,7 +5,7 @@ from django.db import transaction
 
 from apps.audit.services import AuditLogger
 from apps.audit.models import AuditLog
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from ..models import Document, DocumentVersion, Process, DocumentType
 from ..tasks.processing_tasks import start_file_processing_flow
 
@@ -33,7 +33,7 @@ class DocumentCoordinatorService:
     @classmethod
     @transaction.atomic
     def create_document_and_first_version(
-        cls, *, data: Dict[str, Any], user: Perfil, file_content: bytes, request
+        cls, *, data: Dict[str, Any], user: ProviderProfile, file_content: bytes, request
     ) -> DocumentVersion:
         """
         Crea un Documento "contenedor" y su primera versión de forma atómica.
@@ -86,7 +86,7 @@ class DocumentCoordinatorService:
     @classmethod
     @transaction.atomic
     def create_new_version_for_document(
-        cls, *, document: Document, data: Dict[str, Any], user: Perfil, file_content: bytes, request
+        cls, *, document: Document, data: Dict[str, Any], user: ProviderProfile, file_content: bytes, request
     ) -> DocumentVersion:
         """
         Crea una nueva versión para un documento ya existente de forma atómica.

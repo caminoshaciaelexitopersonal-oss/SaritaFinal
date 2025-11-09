@@ -1,16 +1,16 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from ....permissions import IsPrestadorOwner
-from .models import ProductoServicio
-from .serializers import ProductoServicioSerializer
+from ..permissions import IsOwner
+from .models import Product
+from .serializers import ProductSerializer
 
-class ProductoServicioViewSet(viewsets.ModelViewSet):
+class ProductViewSet(viewsets.ModelViewSet):
     """
     ViewSet para gestionar los productos y servicios de un prestador.
     """
-    queryset = ProductoServicio.objects.all()
-    serializer_class = ProductoServicioSerializer
-    permission_classes = [IsAuthenticated, IsPrestadorOwner]
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         """

@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from ..perfil.models import TenantAwareModel
-from ..productos_servicios.models import Product
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 # Asumimos que existirá un modelo TeamMember en un futuro módulo genérico
 # from ..personal.models import TeamMember
 
@@ -20,6 +20,9 @@ class Skill(TenantAwareModel):
 
     def __str__(self):
         return self.nombre
+
+    class Meta:
+        app_label = 'prestadores'
 
 class TourDetail(models.Model):
     """
@@ -39,6 +42,9 @@ class TourDetail(models.Model):
 
     def __str__(self):
         return f"Detalles de Tour para: {self.product.nombre}"
+
+    class Meta:
+        app_label = 'prestadores'
 
 # class TeamMemberSkill(TenantAwareModel):
 #     """

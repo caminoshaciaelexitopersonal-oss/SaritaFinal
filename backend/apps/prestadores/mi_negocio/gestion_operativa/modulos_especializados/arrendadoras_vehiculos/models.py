@@ -1,7 +1,7 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/arrendadoras_vehiculos/models.py
 from django.db import models
 from django.conf import settings
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class VehiculoDeAlquiler(models.Model):
     """
@@ -22,7 +22,7 @@ class VehiculoDeAlquiler(models.Model):
         ('manual', 'Manual'),
     ]
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='vehiculos_de_alquiler')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='vehiculos_de_alquiler')
     nombre = models.CharField(max_length=100, help_text="Ej: Toyota Corolla 2023")
     placa = models.CharField(max_length=10, unique=True)
     categoria = models.CharField(max_length=20, choices=CATEGORIA_CHOICES, default='compacto')
@@ -35,7 +35,7 @@ class VehiculoDeAlquiler(models.Model):
     # imagen = models.ImageField(upload_to='vehiculos_alquiler/', null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.nombre} ({self.placa}) - {'Disponible' if self.disponible else 'No Disponible'}"

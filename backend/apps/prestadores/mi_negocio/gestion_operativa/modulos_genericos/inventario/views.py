@@ -1,16 +1,16 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from ....permissions import IsPrestadorOwner
-from .models import Inventario
-from .serializers import InventarioSerializer
+from ..permissions import IsOwner
+from .models import InventoryItem
+from .serializers import InventoryItemSerializer
 
-class InventarioViewSet(viewsets.ModelViewSet):
+class InventoryItemViewSet(viewsets.ModelViewSet):
     """
     ViewSet para gestionar el inventario de un prestador.
     """
-    queryset = Inventario.objects.all()
-    serializer_class = InventarioSerializer
-    permission_classes = [IsAuthenticated, IsPrestadorOwner]
+    queryset = InventoryItem.objects.all()
+    serializer_class = InventoryItemSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         """
