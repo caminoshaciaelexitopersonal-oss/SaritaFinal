@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+
 export default function DashboardLayout({
   children,
 }: {
@@ -12,7 +13,13 @@ export default function DashboardLayout({
 }) {
   const { user, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // If we are on the login or register page, don't render the authenticated layout
+  if (pathname.startsWith('/dashboard/login') || pathname.startsWith('/dashboard/registro')) {
+    return <>{children}</>;
+  }
 
   // Bloquear el scroll del body cuando el sidebar móvil está abierto
   useEffect(() => {
