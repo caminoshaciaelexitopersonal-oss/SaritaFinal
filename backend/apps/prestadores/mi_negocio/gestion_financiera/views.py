@@ -1,60 +1,35 @@
-from django.db.models import Sum
 from rest_framework import viewsets, permissions
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from .models import CuentaBancaria, TransaccionBancaria
-# Corregir importaciones para apuntar a la estructura modular interna
-from apps.prestadores.mi_negocio.gestion_comercial.models import FacturaVenta
-from apps.prestadores.mi_negocio.gestion_contable.compras.models import FacturaCompra
 from .serializers import CuentaBancariaSerializer, TransaccionBancariaSerializer
-
-class IsPrestadorOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if hasattr(obj, 'perfil'):
-            return obj.perfil == request.user.perfil_prestador
-        if hasattr(obj, 'cuenta') and hasattr(obj.cuenta, 'perfil'):
-             return obj.cuenta.perfil == request.user.perfil_prestador
-        return False
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
+from django.core.exceptions import ValidationError
 
 class CuentaBancariaViewSet(viewsets.ModelViewSet):
     serializer_class = CuentaBancariaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         return CuentaBancaria.objects.filter(perfil=self.request.user.perfil_prestador)
 
+    def perform_create(self, serializer):
+        serializer.save(perfil=self.request.user.perfil_prestador)
+
+
 class TransaccionBancariaViewSet(viewsets.ModelViewSet):
     serializer_class = TransaccionBancariaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
+        # Asegurar que solo se listen transacciones de cuentas que pertenecen al perfil del usuario
         return TransaccionBancaria.objects.filter(cuenta__perfil=self.request.user.perfil_prestador)
 
-class ReporteIngresosGastosView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    def perform_create(self, serializer):
+        cuenta = serializer.validated_data['cuenta']
 
-    def get(self, request, *args, **kwargs):
-        perfil = request.user.perfil_prestador
+        # Validar que la cuenta bancaria pertenece al perfil del usuario autenticado
+        if cuenta.perfil != self.request.user.perfil_prestador:
+            raise ValidationError("No tiene permiso para realizar transacciones en esta cuenta.")
 
-        # Obtener fechas del query string, con valores por defecto si no se proveen
-        fecha_inicio = request.query_params.get('fecha_inicio', '2000-01-01')
-        fecha_fin = request.query_params.get('fecha_fin', '2999-12-31')
-
-        total_ingresos = FacturaVenta.objects.filter(
-            perfil=perfil,
-            fecha_emision__range=[fecha_inicio, fecha_fin],
-            estado__in=[FacturaVenta.Estado.PAGADA, FacturaVenta.Estado.ENVIADA]
-        ).aggregate(total=Sum('total'))['total'] or 0
-
-        total_gastos = FacturaCompra.objects.filter(
-            perfil=perfil,
-            fecha_emision__range=[fecha_inicio, fecha_fin],
-            estado__in=[FacturaCompra.Estado.PAGADA, FacturaCompra.Estado.POR_PAGAR]
-        ).aggregate(total=Sum('total'))['total'] or 0
-
-        data = {
-            'total_ingresos': total_ingresos,
-            'total_gastos': total_gastos,
-            'neto': total_ingresos - total_gastos
-        }
-        return Response(data)
+        # La lógica de actualización de saldo y validaciones está en el modelo.
+        # Simplemente guardamos la transacción, asignando el usuario actual.
+        serializer.save(creado_por=self.request.user)

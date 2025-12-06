@@ -1,14 +1,12 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CostCenterViewSet, ChartOfAccountViewSet, JournalEntryViewSet, LibroMayorView, BalanceComprobacionView, ReportesFinancierosView
+from .views import ChartOfAccountViewSet, JournalEntryViewSet, CostCenterViewSet
 
 router = DefaultRouter()
-router.register(r'cost-centers', CostCenterViewSet, basename='cost-center')
-router.register(r'chart-of-accounts', ChartOfAccountViewSet, basename='chart-of-account')
-router.register(r'journal-entries', JournalEntryViewSet, basename='journal-entry')
+router.register(r'plan-cuentas', ChartOfAccountViewSet, basename='plan-cuentas')
+router.register(r'centros-costo', CostCenterViewSet, basename='centro-costo')
+router.register(r'asientos-contables', JournalEntryViewSet, basename='asiento-contable')
 
-urlpatterns = router.urls + [
-    path('reportes/libro-mayor/', LibroMayorView.as_view(), name='reporte-libro-mayor'),
-    path('reportes/balance-comprobacion/', BalanceComprobacionView.as_view(), name='reporte-balance-comprobacion'),
-    path('reportes/financieros/', ReportesFinancierosView.as_view(), name='reportes-financieros'),
+urlpatterns = [
+    path('', include(router.urls)),
 ]

@@ -1,13 +1,11 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CuentaBancariaViewSet, TransaccionBancariaViewSet, ReporteIngresosGastosView
+from .views import CuentaBancariaViewSet, TransaccionBancariaViewSet
 
 router = DefaultRouter()
 router.register(r'cuentas-bancarias', CuentaBancariaViewSet, basename='cuenta-bancaria')
-router.register(r'transacciones', TransaccionBancariaViewSet, basename='transaccion-bancaria')
+router.register(r'transacciones-bancarias', TransaccionBancariaViewSet, basename='transaccion-bancaria')
 
-urlpatterns = router.urls
-
-urlpatterns += [
-    path('reporte-ingresos-gastos/', ReporteIngresosGastosView.as_view(), name='reporte-ingresos-gastos'),
+urlpatterns = [
+    path('', include(router.urls)),
 ]

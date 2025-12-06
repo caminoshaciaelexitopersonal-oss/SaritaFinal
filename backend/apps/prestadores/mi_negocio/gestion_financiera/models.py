@@ -3,6 +3,7 @@ from django.conf import settings
 from decimal import Decimal
 from django.core.exceptions import ValidationError
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount
 
 class CuentaBancaria(models.Model):
     class TipoCuenta(models.TextChoices):
@@ -15,6 +16,14 @@ class CuentaBancaria(models.Model):
     tipo_cuenta = models.CharField(max_length=20, choices=TipoCuenta.choices)
     saldo_actual = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
     titular = models.CharField(max_length=255)
+    cuenta_contable = models.ForeignKey(
+        ChartOfAccount,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='cuentas_bancarias_asociadas',
+        limit_choices_to={'allows_transactions': True}
+    )
 
     def __str__(self):
         return f"{self.banco} - {self.numero_cuenta} ({self.titular})"
