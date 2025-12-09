@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.pagination import PageNumberPagination
 from .models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
 from .serializers import CategoriaActivoSerializer, ActivoFijoSerializer, CalculoDepreciacionSerializer
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -47,3 +48,31 @@ class CalculoDepreciacionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return CalculoDepreciacion.objects.filter(activo__perfil=self.request.user.perfil_prestador)
+
+    def perform_create(self, serializer):
+        depreciacion = serializer.save(creado_por=self.request.user)
+        activo = depreciacion.activo
+        perfil = activo.perfil
+
+        # --- Creación del Asiento Contable de la Depreciación ---
+        try:
+            # Estas cuentas deberían ser configurables
+            cuenta_gasto_dep = ChartOfAccount.objects.get(code__startswith='5160', perfil=perfil)
+            cuenta_dep_acum = ChartOfAccount.objects.get(code__startswith='1592', perfil=perfil)
+        except ChartOfAccount.DoesNotExist:
+            # Falla silenciosamente si las cuentas no están configuradas
+            return
+
+        journal_entry = JournalEntry.objects.create(
+            perfil=perfil,
+            entry_date=depreciacion.fecha,
+            description=f"Depreciación de {activo.nombre}",
+            entry_type="DEPRECIACION",
+            user=self.request.user,
+            origin_document=depreciacion
+        )
+
+        # Débito a Gasto por Depreciación
+        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_gasto_dep, debit=depreciacion.monto)
+        # Crédito a Depreciación Acumulada
+        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_dep_acum, credit=depreciacion.monto)

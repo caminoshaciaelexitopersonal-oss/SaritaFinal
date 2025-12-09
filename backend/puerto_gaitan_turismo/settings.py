@@ -67,11 +67,11 @@ INSTALLED_APPS = [
     "apps.prestadores.mi_negocio.gestion_financiera.apps.GestionFinancieraConfig",
 
     # Submódulos de Contabilidad
-    # "apps.prestadores.mi_negocio.gestion_contable.activos_fijos.apps.ActivosFijosConfig",
+    "apps.prestadores.mi_negocio.gestion_contable.activos_fijos.apps.ActivosFijosConfig",
     # "apps.prestadores.mi_negocio.gestion_contable.presupuesto.apps.PresupuestoConfig",
-    # "apps.prestadores.mi_negocio.gestion_contable.compras.apps.ComprasConfig",
+    "apps.prestadores.mi_negocio.gestion_contable.compras.apps.ComprasConfig",
     "apps.prestadores.mi_negocio.gestion_contable.contabilidad.apps.ContabilidadConfig",
-    # "apps.prestadores.mi_negocio.gestion_contable.inventario.apps.InventarioConfig",
+    "apps.prestadores.mi_negocio.gestion_contable.inventario.apps.InventarioConfig",
     # "apps.prestadores.mi_negocio.gestion_contable.nomina.apps.NominaConfig",
     # "apps.prestadores.mi_negocio.gestion_contable.proyectos.apps.ProyectosConfig",
 
