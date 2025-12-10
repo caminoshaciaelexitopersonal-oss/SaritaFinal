@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.db import transaction
 from decimal import Decimal
 
+from rest_framework import serializers
 from .models import FacturaVenta, ReciboCaja, CuentaBancaria
 from .serializers import FacturaVentaSerializer, ReciboCajaSerializer
 from apps.prestadores.mi_negocio.gestion_financiera.models import TransaccionBancaria
@@ -31,9 +32,9 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
                 cuenta_ingresos = ChartOfAccount.objects.get(code__startswith='4135', perfil=perfil)
                 cuenta_cxc = ChartOfAccount.objects.get(code__startswith='1305', perfil=perfil)
             except ChartOfAccount.DoesNotExist:
-                # Si las cuentas no existen, no se puede crear el asiento.
-                # En un entorno de producción, esto debería manejarse con una configuración más explícita.
-                return
+                raise serializers.ValidationError(
+                    "No se encontraron las cuentas contables requeridas para registrar la venta (Ingresos '4135' o Cuentas por Cobrar '1305')."
+                )
 
             journal_entry = JournalEntry.objects.create(
                 perfil=perfil,
@@ -63,9 +64,9 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
                         usuario=self.request.user
                     )
             except Almacen.DoesNotExist:
-                # Si no hay almacén principal, no se crean los movimientos.
-                # Se podría registrar un log o una advertencia.
-                pass
+                raise serializers.ValidationError(
+                    "No se encontró un 'Almacén Principal' para registrar la salida de inventario."
+                )
 
 
     @action(detail=True, methods=['post'], url_path='registrar-pago')

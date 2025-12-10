@@ -1,6 +1,6 @@
 import csv
 from django.http import HttpResponse
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, serializers
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -43,7 +43,9 @@ class FacturaCompraViewSet(viewsets.ModelViewSet):
             cuenta_gasto = ChartOfAccount.objects.get(code__startswith='5105', perfil=perfil) # Asumimos una cuenta de gasto
             cuenta_cxp = ChartOfAccount.objects.get(code__startswith='2105', perfil=perfil) # Cuentas por Pagar
         except ChartOfAccount.DoesNotExist:
-            return
+            raise serializers.ValidationError(
+                "No se encontraron las cuentas contables requeridas para registrar la compra (Gastos '5105' o Cuentas por Pagar '2105')."
+            )
 
         journal_entry = JournalEntry.objects.create(
             perfil=perfil,

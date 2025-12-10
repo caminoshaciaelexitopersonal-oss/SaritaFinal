@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, serializers
 from rest_framework.pagination import PageNumberPagination
 from .models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
 from .serializers import CategoriaActivoSerializer, ActivoFijoSerializer, CalculoDepreciacionSerializer
@@ -60,8 +60,9 @@ class CalculoDepreciacionViewSet(viewsets.ModelViewSet):
             cuenta_gasto_dep = ChartOfAccount.objects.get(code__startswith='5160', perfil=perfil)
             cuenta_dep_acum = ChartOfAccount.objects.get(code__startswith='1592', perfil=perfil)
         except ChartOfAccount.DoesNotExist:
-            # Falla silenciosamente si las cuentas no están configuradas
-            return
+            raise serializers.ValidationError(
+                "No se encontraron las cuentas contables requeridas para la depreciación (Gasto '5160' o Dep. Acumulada '1592')."
+            )
 
         journal_entry = JournalEntry.objects.create(
             perfil=perfil,
