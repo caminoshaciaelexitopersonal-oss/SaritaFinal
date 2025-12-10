@@ -2,31 +2,8 @@
 from django.db import models
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from django.conf import settings
-
-class PaqueteTuristico(models.Model):
-    """
-    Representa un paquete turístico ofrecido por una agencia de viajes.
-    """
-    ESTADO_CHOICES = [
-        ('borrador', 'Borrador'),
-        ('publicado', 'Publicado'),
-        ('archivado', 'Archivado'),
-    ]
-
-    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='paquetes_turisticos')
-    nombre = models.CharField(max_length=200)
-    descripcion = models.TextField()
-    duracion_dias = models.PositiveIntegerField(default=1)
-    precio_por_persona = models.DecimalField(max_digits=10, decimal_places=2)
-    # Lista de IDs de productos/servicios incluidos, gestionados en el frontend.
-    servicios_incluidos = models.JSONField(default=list, blank=True, help_text="Lista de IDs de productos/servicios genéricos incluidos.")
-    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='borrador')
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.nombre} ({self.duracion_dias} días)"
+# Importamos el modelo canonico para evitar duplicidad
+from ..operadores_turisticos.models import PaqueteTuristico
 
 class ReservaPaquete(models.Model):
     """
@@ -59,8 +36,9 @@ class ReservaPaquete(models.Model):
     def save(self, *args, **kwargs):
         # Calcula el costo total al guardar la reserva si no se ha especificado
         if not self.costo_total:
-            self.costo_total = self.paquete.precio_por_persona * self.numero_de_personas
+            # El precio viene del 'producto' base asociado al paquete
+            self.costo_total = self.paquete.producto.base_price * self.numero_de_personas
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Reserva de {self.paquete.nombre} para {self.nombre_cliente_temporal} el {self.fecha_inicio}"
+        return f"Reserva de {self.paquete.producto.nombre} para {self.nombre_cliente_temporal} el {self.fecha_inicio}"

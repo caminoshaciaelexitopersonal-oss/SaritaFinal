@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
 
 from ..perfil.models import TenantAwareModel, CategoriaPrestador as OperationalTag
-from ..reservas.models import CancellationPolicy
+from ..reservas.models import PoliticaCancelacion
 
 class Product(TenantAwareModel):
     """
@@ -23,7 +23,7 @@ class Product(TenantAwareModel):
 
     is_packageable = models.BooleanField(_("Es Empaquetable"), default=False, help_text=_("¿Puede este servicio ser parte de un paquete de agencia?"))
     operational_tags = models.ManyToManyField(OperationalTag, blank=True)
-    cancellation_policy = models.ForeignKey(CancellationPolicy, on_delete=models.SET_NULL, null=True, blank=True)
+    cancellation_policy = models.ForeignKey(PoliticaCancelacion, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.nombre
