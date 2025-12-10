@@ -1,6 +1,6 @@
 import csv
 from django.http import HttpResponse
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, serializers
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -33,6 +33,33 @@ class FacturaCompraViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return FacturaCompra.objects.filter(perfil=self.request.user.perfil_prestador)
+
+    def perform_create(self, serializer):
+        perfil = self.request.user.perfil_prestador
+        factura = serializer.save(perfil=perfil, creado_por=self.request.user)
+
+        # --- Creación del Asiento Contable de la Compra ---
+        try:
+            cuenta_gasto = ChartOfAccount.objects.get(code__startswith='5105', perfil=perfil) # Asumimos una cuenta de gasto
+            cuenta_cxp = ChartOfAccount.objects.get(code__startswith='2105', perfil=perfil) # Cuentas por Pagar
+        except ChartOfAccount.DoesNotExist:
+            raise serializers.ValidationError(
+                "No se encontraron las cuentas contables requeridas para registrar la compra (Gastos '5105' o Cuentas por Pagar '2105')."
+            )
+
+        journal_entry = JournalEntry.objects.create(
+            perfil=perfil,
+            entry_date=factura.fecha_emision,
+            description=f"Compra según Factura No. {factura.numero_factura} de {factura.proveedor.nombre}",
+            entry_type="COMPRA",
+            user=self.request.user,
+            origin_document=factura
+        )
+
+        # Débito a Gasto/Inventario
+        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_gasto, debit=factura.total)
+        # Crédito a Cuentas por Pagar
+        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_cxp, credit=factura.total)
 
     @action(detail=True, methods=['post'], url_path='pagar')
     def pagar_factura(self, request, pk=None):

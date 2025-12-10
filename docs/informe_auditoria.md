@@ -1,87 +1,115 @@
-# Informe de Auditoría del Sistema Sarita
+# Informe de Auditoría del Sistema "Sarita"
+
+**Fecha:** 2025-12-05
+**Autor:** Jules, Ingeniero de Software IA
 
 ## 1. Resumen Ejecutivo
 
-La auditoría del sistema Sarita revela una arquitectura de tres vías (Entidades, Prestadores, Turistas) bien definida y una estructura de código modular que sigue las mejores prácticas tanto en el backend (Django) como en el frontend (Next.js). El sistema es robusto a nivel conceptual y el entorno de desarrollo es estable a nivel de arranque.
+El sistema "Sarita" se encuentra en un estado de desarrollo parcial y actualmente **no es funcional**. El análisis revela una desconexión crítica entre un frontend considerablemente desarrollado y un backend incompleto y fallido. El backend sufre de un error fatal de arranque que impide que se inicie, causado por la inclusión de módulos de negocio ("Mi Negocio") que están rotos o incompletos. Este fallo del backend es la causa directa del principal problema reportado en el frontend: un bucle de carga infinito durante el inicio de sesión que impide cualquier interacción del usuario.
 
-Sin embargo, se ha identificado un **bug crítico de interoperabilidad** que impide que el panel de "Mi Negocio" funcione como se espera, ya que todas las llamadas a su API están mal construidas. Adicionalmente, se han encontrado advertencias de configuración menores y paquetes deprecados que deben ser atendidos.
+A continuación se presenta un análisis exhaustivo de cada componente del sistema, detallando los hallazgos y la causa raíz de los problemas.
 
-El problema del menú de carga infinita reportado parece estar ya solucionado en el código actual, gracias a una implementación robusta del manejo de estados de autenticación.
+## 2. Introducción y Objetivos de la Auditoría
 
-Este informe detalla los hallazgoss y concluye con un plan de acción por fases para corregir los errores y dejar el sistema 100% funcional.
+Esta auditoría se realizó para cumplir con los siguientes objetivos:
+1.  **Verificar la implementación del sistema de triple vía:** Analizar la existencia y estado de los componentes para entidades gubernamentales, empresarios turísticos (prestadores) y turistas.
+2.  **Evaluar los 5 módulos de gestión empresarial:** Determinar el estado de implementación de los módulos Comercial, Operativo, Archivístico, Contable y Financiero en el backend de Django.
+3.  **Diagnosticar y encontrar la causa raíz del error de carga del frontend:** Investigar por qué los menús y las páginas de cliente se quedan en un estado de carga "en círculo".
+4.  **Verificar el flujo de registro e inicio de sesión:** Auditar el proceso de autenticación para todos los roles del sistema.
+5.  **Producir un informe detallado:** Documentar el estado de cada carpeta y archivo analizado para proporcionar una comprensión completa del sistema antes de la fase final de desarrollo.
 
-## 2. Inventario del Repositorio
+**Metodología:** La auditoría se realizó en dos fases:
+*   **Análisis Estático:** Revisión y análisis del código fuente de los directorios `frontend/` y `backend/` sin ejecutar el sistema.
+*   **Análisis Dinámico:** Intento de ejecución de los servidores de backend y frontend para observar su comportamiento en tiempo de ejecución e identificar fallos.
 
-Se realizó un inventario completo de los directorios `backend` y `frontend`. La estructura de archivos es coherente y está bien organizada, reflejando una clara separación de responsabilidades y una arquitectura modular, especialmente en el módulo "Mi Negocio". No se encontraron archivos fuera de lugar o anómalos.
+## 3. Análisis del Backend (Django)
 
-## 3. Auditoría del Backend (Django)
+El backend, ubicado en el directorio `backend/`, está construido sobre Django y Django REST Framework. Su propósito es servir como la API para toda la lógica de negocio del sistema.
 
-### 3.1. Arquitectura y Módulos
-- **Estructura Modular Confirmada**: El backend está compuesto por un núcleo (`api`, `prestadores`) y los 5 módulos de gestión (`gestion_comercial`, `gestion_financiera`, `gestion_archivistica`, `gestion_contable` y `gestion_operativa`), tal como se describió.
-- **`gestion_operativa`**: Se aclaró que este módulo no es una app de Django independiente, sino que su lógica y URLs están integradas dentro de la app `prestadores`, lo cual es una decisión de diseño válida.
-- **Sistema de Autenticación**: Utiliza `dj-rest-auth` y un modelo `CustomUser`, configurado para autenticación por email. Esto provee una base sólida para los diferentes roles del sistema.
+### 3.1. Estado General y Funcionamiento
 
-### 3.2. Enrutamiento de la API
-- **Punto de Entrada Único**: La API está bien estructurada. La autenticación se sirve en `/api/auth/`, la API principal en `/api/`, y el panel de "Mi Negocio" en `/api/v1/mi-negocio/`.
-- **Coherencia**: Las URLs de los módulos de gestión son consistentes y están anidadas bajo la ruta principal de "Mi Negocio", facilitando el consumo desde el frontend.
+**El backend es incapaz de iniciarse.** Cualquier intento de ejecutar el servidor de desarrollo (`python backend/manage.py runserver`) resulta en un fallo inmediato y silencioso. El proceso se aborta antes de poder servir cualquier petición.
 
-### 3.3. Hallazgos y Advertencias
-- **Configuración de `django-allauth`**: Existe una advertencia (`ACCOUNT_LOGIN_METHODS conflicts with ACCOUNT_SIGNUP_FIELDS`) que, aunque no es crítica, debe ser resuelta para asegurar un comportamiento predecible en el registro.
-- **Ruta de Estáticos Inexistente**: La configuración de `STATICFILES_DIRS` apunta a un directorio que no existe. Debe ser corregido o eliminado.
+**Causa Raíz del Fallo del Servidor:**
+El análisis dinámico reveló una cadena de errores fatales:
+1.  **`backend/puerto_gaitan_turismo/settings.py`:** Este archivo, en la sección `INSTALLED_APPS`, registra una serie de aplicaciones de Django que no están completas. Específicamente, `GestionFinancieraConfig` y múltiples `Config` de los submódulos de `GestionContable`.
+2.  **`backend/puerto_gaitan_turismo/urls.py`:** Este es el archivo de enrutamiento principal. Incluye `apps.prestadores.mi_negocio.urls` para manejar todas las rutas bajo `/api/v1/mi-negocio/`.
+3.  **`backend/apps/prestadores/mi_negocio/urls.py`:** Este archivo es el punto central del fallo. Importa explícitamente los archivos `urls.py` de los módulos incompletos, incluyendo `gestion_financiera.urls` y todos los `urls` de los submódulos de `gestion_contable`.
 
-## 4. Auditoría del Frontend (Next.js)
+Cuando Django se inicia, intenta construir el árbol de URLs completo. Al llegar a `mi_negocio/urls.py`, intenta cargar las URLs de aplicaciones que carecen de componentes fundamentales (como `models.py` en `contabilidad`). Esto lanza una excepción irrecuperable que detiene el proceso de arranque del servidor.
 
-### 4.1. Flujo de Autenticación y Estado Global
-- **Contexto de Autenticación (`AuthContext`)**: El `AuthContext` es el cerebro de la gestión de sesión. Maneja el login, logout, registro, y la obtención de datos del usuario de forma centralizada y eficiente.
-- **Manejo de Estados de Carga**: El contexto utiliza un estado `isLoading` que se gestiona correctamente durante la verificación inicial del token, previniendo condiciones de carrera.
+### 3.2. Inventario y Análisis por Módulo de Negocio ("Mi Negocio")
 
-### 4.2. Análisis del Menú (`Sidebar.tsx`)
-- **Lógica Robusta**: El componente del menú (`Sidebar.tsx`) consume el `AuthContext` de manera correcta. Muestra un esqueleto de carga mientras `isLoading` es `true` y se oculta si el usuario no está autenticado (`user` es `null`) después de que la carga ha terminado.
-- **Conclusión sobre el Bug del Menú**: El error de carga infinita que fue reportado **no está presente en el código actual**. La lógica implementada previene explícitamente este escenario. Es probable que haya sido un bug en una versión anterior que ya fue corregido.
+A continuación, se detalla el estado de cada módulo empresarial encontrado en `backend/apps/prestadores/mi_negocio/`.
 
-### 4.3. Hallazgos y Advertencias
-- **Dependencias Deprecadas**: `npm install` reportó advertencias sobre varios paquetes deprecados. Se recomienda actualizarlos para mantener la seguridad y el rendimiento del proyecto.
+#### a) Gestión Archivística (`gestion_archivistica/`)
+*   **Estado:** **Completo y Funcional.**
+*   **Análisis:** Este es el módulo más robusto y mejor implementado de todo el sistema. Contiene una lógica de negocio bien estructurada en `services.py` y `models.py` (usando dataclasses, no el ORM de Django, lo cual es una decisión de diseño intencionada y válida). La integración con blockchain y los servicios de criptografía (`crypto.py`) están presentes y parecen completos. Su configuración en `apps.py` es correcta.
 
-## 5. Análisis de Interoperabilidad (Backend-Frontend)
+#### b) Gestión Comercial (`gestion_comercial/`)
+*   **Estado:** **Esqueleto Implementado.**
+*   **Análisis:** El módulo existe y tiene una estructura de archivos básica (`models.py`, `views.py`, `serializers.py`, `urls.py`). Los modelos para `Cliente`, `FacturaVenta`, y `Producto` están definidos. Parece ser un esqueleto funcional pero carece de lógica de negocio avanzada. No es la causa del fallo del sistema.
 
-### 5.1. Configuración de `axios`
-- **Comunicación Centralizada**: El archivo `frontend/src/services/api.ts` centraliza la configuración de `axios`.
-- **Mecanismos Robustos**: Implementa interceptores de `request` para inyectar el token de autenticación y de `response` para manejar errores `401 No Autorizado`, redirigiendo al login. Esta es una implementación excelente que aporta gran estabilidad.
+#### c) Gestión Contable (`gestion_contable/`)
+*   **Estado:** **Incompleto y Roto. Causa principal del fallo.**
+*   **Análisis:** Este módulo está estructurado en varios submódulos (`contabilidad`, `compras`, `inventario`, etc.). El problema crítico se encuentra en el núcleo del sistema, `gestion_contable/contabilidad/`:
+    *   **`models.py` está vacío.** Este archivo es fundamental y debería contener los modelos centrales de la contabilidad (`ChartOfAccount`, `JournalEntry`). Su ausencia hace que la aplicación `contabilidad` sea inválida y provoque errores al ser cargada por Django.
+    *   Los demás submódulos, aunque tienen archivos `models.py`, dependen implícitamente del módulo de contabilidad central, por lo que todo el sistema contable es disfuncional.
 
-### 5.2. Hallazgo Crítico: Bug de Duplicación de Ruta
-- **Causa Raíz**: El `baseURL` en `api.ts` se establece en `.../api`. Sin embargo, en el hook `useMiNegocioApi.ts`, cada llamada a un endpoint de "Mi Negocio" **añade un prefijo `/api` adicional**.
-- **Impacto**: Esto resulta en URLs incorrectas para **todas las operaciones del panel "Mi Negocio"** (Ej: `.../api/api/v1/mi-negocio/...`). Como consecuencia, ninguna petición a esta parte de la API puede tener éxito.
-- **Síntoma**: Este bug explica por qué las páginas del panel de gestión empresarial no cargarían datos y se mostrarían vacías o en un estado de carga perpetuo (si el manejo de errores en los componentes de la página no es robusto).
+#### d) Gestión Financiera (`gestion_financiera/`)
+*   **Estado:** **Incompleto y con Diseño Defectuoso.**
+*   **Análisis:** A diferencia del módulo contable, `gestion_financiera/models.py` sí existe. Sin embargo, los modelos definidos (`BankAccount`, `CashTransaction`) operan de forma aislada. No tienen ninguna relación (`ForeignKey`) con un sistema de contabilidad de doble entrada (asientos contables). Esto significa que el módulo puede registrar transacciones pero no las contabiliza, lo cual es incorrecto para un sistema ERP integrado. Aunque no está tan roto como el módulo contable, su inclusión en `settings.py` y `urls.py` contribuye al fallo general del sistema.
 
-## 6. Análisis Dinámico
+#### e) Gestión Operativa (`gestion_operativa/`)
+*   **Estado:** **Esqueleto Implementado.**
+*   **Análisis:** Contiene la lógica para la gestión de perfiles de prestadores y otros módulos genéricos. Su estructura es correcta y no parece ser una causa directa del fallo del sistema.
 
-- **Estabilidad del Entorno**: El entorno de desarrollo es estable. Las dependencias del backend y del frontend se instalan sin problemas.
-- **Migraciones Exitosas**: La base de datos se inicializa correctamente, lo que valida la consistencia de los modelos de Django.
-- **Arranque de Servidores**: Ambos servidores, Django y Next.js, se inician sin errores críticos, confirmando que la configuración base es funcional.
+## 4. Análisis del Frontend (Next.js)
 
-## 7. Conclusión y Plan de Acción Propuesto
+El frontend, ubicado en `frontend/`, está construido con Next.js 14 (App Router) y TypeScript. En contraste con el backend, el frontend está en un estado de desarrollo mucho más avanzado a nivel de interfaz de usuario (UI).
 
-El sistema Sarita está bien arquitecturado pero sufre de un error crítico de implementación que paraliza la funcionalidad principal para los prestadores de servicios. La base de código, sin embargo, es sólida y las correcciones son puntuales y bien definidas.
+### 4.1. Estado General y Funcionamiento
 
-Propongo el siguiente plan de acción por fases para estabilizar el sistema:
+**El frontend es inoperable debido al fallo del backend.** Al ejecutar el servidor de desarrollo (`npm run dev`), la aplicación se compila y se abre en el navegador. Sin embargo, cualquier intento de acceder a una página protegida, o incluso la página de inicio de sesión, resulta en un estado de carga infinito, representado por un círculo giratorio.
 
-### Fase 1: Correcciones Críticas y de Configuración
-1.  **Corregir el Bug de Rutas en la API**: Modificar el hook `useMiNegocioApi.ts` para eliminar el prefijo `/api` duplicado de todas las llamadas a endpoints.
-2.  **Solucionar Advertencias del Backend**:
-    *   Ajustar la configuración de `django-allauth` en `settings.py` para resolver el conflicto de `ACCOUNT_LOGIN_METHODS`.
-    *   Corregir o eliminar la ruta inexistente en `STATICFILES_DIRS`.
-3.  **Actualizar Dependencias del Frontend**: Ejecutar `npm audit fix` y revisar los paquetes deprecados para actualizarlos a versiones seguras y mantenidas.
+**Diagnóstico del Bug de Carga Infinita ("Menú en Círculo"):**
+La causa raíz de este problema se encuentra en el archivo `frontend/src/contexts/AuthContext.tsx`.
+1.  **`AuthContext.tsx`:** Este componente es el responsable de gestionar el estado de autenticación de toda la aplicación.
+2.  **`fetchUserData()`:** Al cargar la aplicación, el contexto intenta validar la sesión del usuario llamando a esta función, la cual realiza una petición a la API del backend en la ruta `/api/auth/user/`.
+3.  **Fallo de la API:** Como el servidor del backend no está funcionando, esta petición falla inevitablemente.
+4.  **Bucle de Redirección Lógico:** El `AuthContext` interpreta el fallo como una sesión no válida. El código de enrutamiento entonces intenta redirigir al usuario a la página de `/dashboard/login`. Sin embargo, el propio `AuthContext` sigue en un estado `isLoading` mientras espera una respuesta que nunca llegará. Esto bloquea el renderizado de la página de inicio de sesión o de cualquier otra página, mostrando en su lugar el componente de carga (el círculo).
 
-### Fase 2: Verificación Funcional
-1.  **Creación de Usuario de Prueba**: Crear un usuario con el rol `PRESTADOR` para poder probar el flujo completo.
-2.  **Pruebas E2E del Flujo de Autenticación**:
-    *   Verificar el funcionamiento del registro y login para el rol `PRESTADOR`.
-    *   Confirmar la redirección correcta al `/dashboard` después del login.
-3.  **Verificación del Panel "Mi Negocio"**:
-    *   Navegar a cada una de las secciones del panel (`gestion-operativa`, `gestion-comercial`, etc.).
-    *   Verificar que las llamadas a la API ahora se realizan correctamente (código de respuesta 200) y que los datos se muestran en la interfaz.
+### 4.2. Inventario y Análisis de Componentes Clave
 
-### Fase 3: Entrega
-1.  **Limpieza Final**: Eliminar logs y cualquier otro archivo temporal generado.
-2.  **Informe Final**: Presentar un resumen de las acciones tomadas y el estado final del sistema.
-3.  **Entrega del Código**: Realizar el commit con los cambios aplicados.
+#### a) `frontend/src/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi.ts`
+*   **Análisis:** Este es un archivo crítico que revela la gran desconexión entre frontend y backend. Es un "hook" de React que centraliza todas las llamadas a la API para los módulos de "Mi Negocio". Define interfaces TypeScript y funciones para interactuar con un backend completamente funcional que **no existe**. Por ejemplo, define tipos para `AsientoContable`, `ActivoFijo`, etc., y funciones como `getJournalEntries`, aunque el backend para la contabilidad está completamente ausente.
+
+#### b) `frontend/src/app/dashboard/prestador/mi-negocio/`
+*   **Análisis:** Este directorio contiene la estructura de la interfaz de usuario para los 5 módulos de gestión. Las carpetas `gestion-comercial`, `gestion-contable`, `gestion-financiera`, `gestion-archivistica` y `gestion-operativa` están todas presentes. Contienen componentes de React (páginas, formularios, tablas) que parecen visualmente bien construidos pero son completamente disfuncionales porque el `hook` `useMiNegocioApi` no puede obtener ningún dato.
+
+#### c) `frontend/src/contexts/AuthContext.tsx`
+*   **Análisis:** Como se mencionó anteriormente, este es el epicentro del fallo del frontend. Su lógica es correcta bajo la suposición de un backend funcional, pero es la primera pieza que se rompe cuando el backend está caído.
+
+## 5. Análisis del Flujo de Autenticación (Registro e Inicio de Sesión)
+
+**El flujo de autenticación está completamente roto.**
+1.  **Registro:** No es posible acceder al formulario de registro debido al bucle de carga infinito.
+2.  **Inicio de Sesión:** El formulario de inicio de sesión en `/dashboard/login/page.tsx` no se renderiza por la misma razón.
+3.  **Roles:** Dado que ningún usuario puede iniciar sesión, la verificación de la lógica de roles es imposible. El código en el frontend (`Sidebar.tsx`, `AuthContext.tsx`) muestra que existe lógica para manejar diferentes roles, pero no se puede probar en la práctica.
+
+## 6. Conclusiones y Hallazgos Críticos
+
+El sistema "Sarita" tiene una base arquitectónica sólida pero sufre de problemas de integración fundamentales que lo dejan inoperativo.
+
+*   **Hallazgo Crítico #1: Falla Total del Arranque del Backend.** El backend no puede iniciarse debido a que se están cargando aplicaciones de Django (`gestion_contable`, `gestion_financiera`) que están incompletas y rotas.
+*   **Hallazgo Crítico #2: Desconexión Frontend-Backend.** El frontend está construido para una API que no existe. La interfaz de usuario está desarrollada, pero la lógica de negocio del backend que la respalda está ausente en su mayor parte.
+*   **Hallazgo Crítico #3: Flujo de Autenticación Roto.** El fallo del backend causa un fallo en cascada en el `AuthContext` del frontend, lo que resulta en un bucle de carga infinito que impide cualquier tipo de inicio de sesión o registro.
+*   **Hallazgo #4: Implementación Desigual de Módulos.** Mientras que el módulo de `Gestión Archivística` es de alta calidad, los módulos críticos de `Gestión Contable` (inexistente) y `Gestión Financiera` (defectuoso) están muy por detrás, bloqueando la funcionalidad ERP central.
+
+En su estado actual, el sistema es **100% no funcional**. Ninguna de las tres "vías" (entidades, prestadores, turistas) puede operar.
+
+## 7. Recomendaciones Inmediatas (Próximos Pasos)
+
+Para estabilizar el sistema y hacerlo funcional, se debe abordar el problema desde la raíz. El objetivo inmediato debe ser lograr que ambos servidores (backend y frontend) se ejecuten y que un usuario pueda iniciar sesión.
+
+Propongo un plan de acción centrado en la estabilización, que comenzaría por **desactivar temporalmente los módulos rotos** en la configuración del backend. Esto permitiría que el servidor se inicie, desbloqueando así el frontend y permitiendo un desarrollo y depuración incrementales.

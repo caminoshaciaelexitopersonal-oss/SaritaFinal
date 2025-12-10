@@ -86,31 +86,31 @@ export interface ConceptoNomina {
   tipo: 'DEVENGADO' | 'DEDUCCION';
 }
 
-// --- Tipos de Datos de Contabilidad ---
+// --- Tipos de Datos de Contabilidad (Alineados con el Backend) ---
 export interface ChartOfAccount {
-  id: number;
-  account_number: string;
+  code: string;
   name: string;
-  account_type: 'ASSET' | 'LIABILITY' | 'EQUITY' | 'REVENUE' | 'EXPENSE';
-  is_active: boolean;
-  parent: number | null;
+  nature: 'DEBITO' | 'CREDITO';
+  allows_transactions: boolean;
 }
 
 export interface Transaction {
-  id: number;
-  account_number: string;
-  debit: string; // Decimal is string in JSON
+  id?: number;
+  account: string; // FK al código de ChartOfAccount
+  debit: string;
   credit: string;
-  description: string;
+  cost_center?: number | null;
 }
 
 export interface JournalEntry {
   id: number;
-  date: string;
+  perfil: number;
+  entry_date: string;
   description: string;
-  cost_center: number | null;
+  entry_type: string;
+  user: number;
+  origin_document?: any; // GenericForeignKey
   created_at: string;
-  created_by_username: string;
   transactions: Transaction[];
 }
 
@@ -136,30 +136,27 @@ export interface FacturaVenta {
   estado: string;
   items: ItemFactura[];
 }
-// --- Tipos de Datos Financieros ---
+// --- Tipos de Datos Financieros (Alineados con el Backend) ---
 export interface BankAccount {
   id: number;
-  bank_name: string;
-  account_number: string;
-  account_holder: string;
-  account_type: 'SAVINGS' | 'CHECKING';
-  currency_code: string;
-  balance: string;
-  is_active: boolean;
-  linked_account: number | null;
+  perfil: number;
+  banco: string;
+  numero_cuenta: string;
+  tipo_cuenta: 'AHORROS' | 'CORRIENTE';
+  saldo_actual: string;
+  titular: string;
+  cuenta_contable: string | null; // FK al código de ChartOfAccount
 }
 
 export interface CashTransaction {
   id: number;
-  bank_account_name: string;
-  transaction_type: 'DEPOSIT' | 'WITHDRAWAL' | 'TRANSFER';
-  amount: string;
-  date: string;
-  description: string;
-  reference: string | null;
-  created_at: string;
-  created_by_username: string;
-  journal_entry: number | null;
+  cuenta: number; // FK a CuentaBancaria
+  fecha: string;
+  tipo: 'INGRESO' | 'EGRESO' | 'TRANSFERENCIA';
+  monto: string;
+  descripcion: string;
+  creado_por: number;
+  creado_en: string;
 }
 
 // --- Tipos de Datos de Activos Fijos ---
@@ -274,35 +271,23 @@ export function useMiNegocioApi() {
 
   // --- API de Contabilidad ---
   const getChartOfAccounts = useCallback(async () => {
-    return makeRequest(() => api.get<ChartOfAccount[]>('/v1/mi-negocio/contable/chart-of-accounts/').then(res => res.data));
-  }, [makeRequest]);
-
-  const createChartOfAccount = useCallback(async (accountData: Omit<ChartOfAccount, 'id'>) => {
-    return makeRequest(() => api.post<ChartOfAccount>('/v1/mi-negocio/contable/chart-of-accounts/', accountData).then(res => res.data), "Cuenta creada con éxito.");
-  }, [makeRequest]);
-
-  const updateChartOfAccount = useCallback(async (id: number, accountData: Partial<Omit<ChartOfAccount, 'id'>>) => {
-    return makeRequest(() => api.patch<ChartOfAccount>(`/v1/mi-negocio/contable/chart-of-accounts/${id}/`, accountData).then(res => res.data), "Cuenta actualizada con éxito.");
-  }, [makeRequest]);
-
-  const deleteChartOfAccount = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/v1/mi-negocio/contable/chart-of-accounts/${id}/`), "Cuenta eliminada con éxito.");
+    return makeRequest(() => api.get<ChartOfAccount[]>('/v1/mi-negocio/contable/contabilidad/plan-cuentas/').then(res => res.data));
   }, [makeRequest]);
 
   const getJournalEntries = useCallback(async () => {
-    return makeRequest(() => api.get<JournalEntry[]>('/v1/mi-negocio/contable/journal-entries/').then(res => res.data));
+    return makeRequest(() => api.get<JournalEntry[]>('/v1/mi-negocio/contable/contabilidad/asientos-contables/').then(res => res.data));
   }, [makeRequest]);
 
   const createJournalEntry = useCallback(async (entryData: any) => {
-    return makeRequest(() => api.post<JournalEntry>('/v1/mi-negocio/contable/journal-entries/', entryData).then(res => res.data), "Asiento contable creado.");
+    return makeRequest(() => api.post<JournalEntry>('/v1/mi-negocio/contable/contabilidad/asientos-contables/', entryData).then(res => res.data), "Asiento contable creado.");
   }, [makeRequest]);
 
   const updateJournalEntry = useCallback(async (id: number, entryData: any) => {
-    return makeRequest(() => api.patch<JournalEntry>(`/v1/mi-negocio/contable/journal-entries/${id}/`, entryData).then(res => res.data), "Asiento actualizado.");
+    return makeRequest(() => api.patch<JournalEntry>(`/v1/mi-negocio/contable/contabilidad/asientos-contables/${id}/`, entryData).then(res => res.data), "Asiento actualizado.");
   }, [makeRequest]);
 
   const deleteJournalEntry = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/v1/mi-negocio/contable/journal-entries/${id}/`), "Asiento eliminado.");
+    return makeRequest(() => api.delete(`/v1/mi-negocio/contable/contabilidad/asientos-contables/${id}/`), "Asiento eliminado.");
   }, [makeRequest]);
 
   // --- API de Compras (Proveedores) ---
@@ -411,31 +396,32 @@ export function useMiNegocioApi() {
 
   // --- API Financiera ---
   const getCurrencies = useCallback(async () => {
-    return makeRequest(() => api.get<any[]>('/v1/mi-negocio/contable/currencies/').then(res => res.data));
+    // Nota: Este endpoint puede necesitar ser implementado si es requerido
+    return makeRequest(() => api.get<any[]>('/v1/mi-negocio/contable/contabilidad/currencies/').then(res => res.data));
   }, [makeRequest]);
 
   const getBankAccounts = useCallback(async () => {
-    return makeRequest(() => api.get<BankAccount[]>('/v1/mi-negocio/financiera/bank-accounts/').then(res => res.data));
+    return makeRequest(() => api.get<BankAccount[]>('/v1/mi-negocio/financiera/cuentas-bancarias/').then(res => res.data));
   }, [makeRequest]);
 
   const createBankAccount = useCallback(async (accountData: any) => {
-    return makeRequest(() => api.post<BankAccount>('/v1/mi-negocio/financiera/bank-accounts/', accountData).then(res => res.data), "Cuenta bancaria creada.");
+    return makeRequest(() => api.post<BankAccount>('/v1/mi-negocio/financiera/cuentas-bancarias/', accountData).then(res => res.data), "Cuenta bancaria creada.");
   }, [makeRequest]);
 
   const updateBankAccount = useCallback(async (id: number, accountData: any) => {
-    return makeRequest(() => api.patch<BankAccount>(`/v1/mi-negocio/financiera/bank-accounts/${id}/`, accountData).then(res => res.data), "Cuenta bancaria actualizada.");
+    return makeRequest(() => api.patch<BankAccount>(`/v1/mi-negocio/financiera/cuentas-bancarias/${id}/`, accountData).then(res => res.data), "Cuenta bancaria actualizada.");
   }, [makeRequest]);
 
   const deleteBankAccount = useCallback(async (id: number) => {
-    return makeRequest(() => api.delete(`/v1/mi-negocio/financiera/bank-accounts/${id}/`), "Cuenta bancaria eliminada.");
+    return makeRequest(() => api.delete(`/v1/mi-negocio/financiera/cuentas-bancarias/${id}/`), "Cuenta bancaria eliminada.");
   }, [makeRequest]);
 
   const getCashTransactions = useCallback(async () => {
-    return makeRequest(() => api.get<CashTransaction[]>('/v1/mi-negocio/financiera/cash-transactions/').then(res => res.data));
+    return makeRequest(() => api.get<CashTransaction[]>('/v1/mi-negocio/financiera/transacciones-bancarias/').then(res => res.data));
   }, [makeRequest]);
 
   const createCashTransaction = useCallback(async (transactionData: any) => {
-    return makeRequest(() => api.post<CashTransaction>('/v1/mi-negocio/financiera/cash-transactions/', transactionData).then(res => res.data), "Transacción creada.");
+    return makeRequest(() => api.post<CashTransaction>('/v1/mi-negocio/financiera/transacciones-bancarias/', transactionData).then(res => res.data), "Transacción creada.");
   }, [makeRequest]);
 
   // --- API de Ventas ---
@@ -601,5 +587,18 @@ export function useMiNegocioApi() {
     getPartidas,
     createPartida,
     getEjecuciones,
+  // --- API de Gestión Archivística ---
+  const getArchivisticaDocumentos = useCallback(async () => {
+    return makeRequest(() => api.get<any[]>('/v1/mi-negocio/archivistica/documentos/').then(res => res.data));
+  }, [makeRequest]),
+
+  uploadArchivisticaDocumento: useCallback(async (file: File, metadata: any) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('metadata', JSON.stringify(metadata));
+    return makeRequest(() => api.post('/v1/mi-negocio/archivistica/documentos/upload/', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }).then(res => res.data), "Documento subido con éxito.");
+  }, [makeRequest]),
   };
 }
