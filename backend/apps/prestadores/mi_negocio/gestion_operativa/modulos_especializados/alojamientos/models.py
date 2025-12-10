@@ -1,6 +1,6 @@
 from django.db import models
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from ..productos_servicios.models import Product
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 
 # Tipo de Alojamiento (Hotel, Cabaña, Glamping, etc.)
 class TipoAlojamiento(models.Model):

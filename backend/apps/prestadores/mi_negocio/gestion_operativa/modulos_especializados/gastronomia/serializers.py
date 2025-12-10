@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Restaurante, Menu, CategoriaPlato, Plato, ZonaDelivery
-from ..productos_servicios.serializers import ProductSerializer
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.serializers import ProductSerializer
 
 class ZonaDeliverySerializer(serializers.ModelSerializer):
     class Meta:
