@@ -25,7 +25,7 @@ FIELD_ENCRYPTION_KEY = os.environ.get(
     "pU4Wtwp-25i8a5v9M4wVw2H6jP5a_X-m3Nq8y7bK_cE="
 ).encode()
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "true"
+DEBUG = True
 
 ALLOWED_HOSTS_str = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,.localhost")
 ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_str.split(",")]

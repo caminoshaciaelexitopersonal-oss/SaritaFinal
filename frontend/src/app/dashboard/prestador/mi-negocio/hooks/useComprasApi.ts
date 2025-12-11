@@ -31,31 +31,31 @@ export const useComprasApi = () => {
     const fetcher = (url: string) => api.get(url).then(res => res.data);
 
     // --- Proveedores ---
-    const { data: proveedores, error: proveedoresError, mutate: mutateProveedores } = useSWR('/mi-negocio/compras/proveedores/', fetcher);
+    const { data: proveedores, error: proveedoresError, mutate: mutateProveedores } = useSWR('/v1/mi-negocio/compras/proveedores/', fetcher);
 
     const createProveedor = useCallback(async (data: Omit<Proveedor, 'id'>) => {
-        const response = await api.post('/mi-negocio/compras/proveedores/', data);
+        const response = await api.post('/v1/mi-negocio/compras/proveedores/', data);
         mutateProveedores();
         return response.data;
     }, [api, mutateProveedores]);
 
     const updateProveedor = useCallback(async (id: number, data: Omit<Proveedor, 'id'>) => {
-        const response = await api.put(`/mi-negocio/compras/proveedores/${id}/`, data);
+        const response = await api.put(`/v1/mi-negocio/compras/proveedores/${id}/`, data);
         mutateProveedores();
         return response.data;
     }, [api, mutateProveedores]);
 
     const deleteProveedor = useCallback(async (id: number) => {
-        await api.delete(`/mi-negocio/compras/proveedores/${id}/`);
+        await api.delete(`/v1/mi-negocio/compras/proveedores/${id}/`);
         mutateProveedores();
     }, [api, mutateProveedores]);
 
 
     // --- Facturas de Compra ---
-    const { data: facturasCompra, error: facturasCompraError, mutate: mutateFacturasCompra } = useSWR('/mi-negocio/compras/facturas/', fetcher);
+    const { data: facturasCompra, error: facturasCompraError, mutate: mutateFacturasCompra } = useSWR('/v1/mi-negocio/compras/facturas/', fetcher);
 
     const createFacturaCompra = useCallback(async (data: Omit<FacturaCompra, 'id' | 'proveedor_nombre'>) => {
-        const response = await api.post('/mi-negocio/compras/facturas/', data);
+        const response = await api.post('/v1/mi-negocio/compras/facturas/', data);
         mutateFacturasCompra();
         return response.data;
     }, [api, mutateFacturasCompra]);
@@ -63,7 +63,7 @@ export const useComprasApi = () => {
     // Aquí se podrían agregar update y delete para facturas si la lógica de negocio lo permite
 
     const generarPagoMasivo = useCallback(async (factura_ids: number[]) => {
-        const response = await api.post('/mi-negocio/compras/generar-pago-masivo/', { factura_ids }, {
+        const response = await api.post('/v1/mi-negocio/compras/generar-pago-masivo/', { factura_ids }, {
             responseType: 'blob', // Importante para manejar la descarga de archivos
         });
 

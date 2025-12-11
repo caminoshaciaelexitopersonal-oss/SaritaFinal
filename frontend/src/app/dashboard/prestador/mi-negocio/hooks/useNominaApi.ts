@@ -22,16 +22,16 @@ export const useNominaApi = () => {
     const fetcher = (url: string) => api.get(url).then(res => res.data);
 
     // --- Empleados ---
-    const { data: empleados, error: empleadosError, mutate: mutateEmpleados } = useSWR('/mi-negocio/nomina/empleados/', fetcher);
+    const { data: empleados, error: empleadosError, mutate: mutateEmpleados } = useSWR('/v1/mi-negocio/nomina/empleados/', fetcher);
     const createEmpleado = useCallback(async (data: Omit<Empleado, 'id'>) => {
-        await api.post('/mi-negocio/nomina/empleados/', data);
+        await api.post('/v1/mi-negocio/nomina/empleados/', data);
         mutateEmpleados();
     }, [api, mutateEmpleados]);
 
     // --- Planillas ---
-    const { data: planillas, mutate: mutatePlanillas } = useSWR('/mi-negocio/nomina/planillas/', fetcher);
+    const { data: planillas, mutate: mutatePlanillas } = useSWR('/v1/mi-negocio/nomina/planillas/', fetcher);
     const createPlanilla = useCallback(async (data: any) => { // La data de creación es compleja
-        await api.post('/mi-negocio/nomina/planillas/', data);
+        await api.post('/v1/mi-negocio/nomina/planillas/', data);
         mutatePlanillas();
     }, [api, mutatePlanillas]);
 

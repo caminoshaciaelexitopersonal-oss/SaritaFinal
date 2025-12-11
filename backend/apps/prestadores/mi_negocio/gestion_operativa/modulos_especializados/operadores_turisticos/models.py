@@ -1,6 +1,6 @@
 from django.db import models
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from ..productos_servicios.models import Product
+from ...modulos_genericos.productos_servicios.models import Product
 
 class OperadorTuristico(models.Model):
     perfil = models.OneToOneField(ProviderProfile, on_delete=models.CASCADE, related_name='operador_turistico')
@@ -12,11 +12,11 @@ class OperadorTuristico(models.Model):
         return self.nombre
 
 class PaqueteTuristico(models.Model):
-    operador = models.ForeignKey(OperadorTuristico, on_delete=models.CASCADE, related_name='paquetes')
+    operador = models.ForeignKey(OperadorTuristico, on_delete=models.CASCADE, related_name='paquetes', null=True, blank=True)
     # Reutilizamos Product para nombre, precio base, etc.
-    producto = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='paquete_turistico')
+    producto = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='paquete_turistico', null=True, blank=True)
     duracion_dias = models.PositiveIntegerField()
-    incluye = models.TextField(help_text="Breve descripción de lo que incluye el paquete (ej: Alojamiento, Transporte).")
+    incluye = models.TextField(help_text="Breve descripción de lo que incluye el paquete (ej: Alojamiento, Transporte).", blank=True, null=True)
 
     def __str__(self):
         return self.producto.nombre

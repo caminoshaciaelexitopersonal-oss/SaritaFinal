@@ -1,6 +1,6 @@
 from django.db import models
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from ..productos_servicios.models import Product
+from ...modulos_genericos.productos_servicios.models import Product
 
 class CompaniaTransporte(models.Model):
     perfil = models.OneToOneField(ProviderProfile, on_delete=models.CASCADE, related_name='compania_transporte')

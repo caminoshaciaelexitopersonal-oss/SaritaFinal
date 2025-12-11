@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
-from ..productos_servicios.serializers import ProductSerializer
+from ...modulos_genericos.productos_servicios.serializers import ProductSerializer
 
 class TipoAlojamientoSerializer(serializers.ModelSerializer):
     class Meta:

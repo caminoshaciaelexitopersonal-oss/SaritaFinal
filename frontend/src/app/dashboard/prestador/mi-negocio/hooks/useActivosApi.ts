@@ -27,23 +27,23 @@ export const useActivosApi = () => {
     const fetcher = (url: string) => api.get(url).then(res => res.data);
 
     // --- Categorías de Activos ---
-    const { data: categorias, mutate: mutateCategorias } = useSWR('/mi-negocio/activos/categorias/', fetcher);
+    const { data: categorias, mutate: mutateCategorias } = useSWR('/v1/mi-negocio/activos/categorias/', fetcher);
     const createCategoria = useCallback(async (data: Omit<CategoriaActivo, 'id'>) => {
-        await api.post('/mi-negocio/activos/categorias/', data);
+        await api.post('/v1/mi-negocio/activos/categorias/', data);
         mutateCategorias();
     }, [api, mutateCategorias]);
 
     // --- Activos Fijos ---
-    const { data: activos, error: activosError, mutate: mutateActivos } = useSWR('/mi-negocio/activos/activos-fijos/', fetcher);
+    const { data: activos, error: activosError, mutate: mutateActivos } = useSWR('/v1/mi-negocio/activos/activos-fijos/', fetcher);
     const createActivo = useCallback(async (data: Omit<ActivoFijo, 'id' | 'categoria_nombre' | 'valor_en_libros'>) => {
-        await api.post('/mi-negocio/activos/activos-fijos/', data);
+        await api.post('/v1/mi-negocio/activos/activos-fijos/', data);
         mutateActivos();
     }, [api, mutateActivos]);
 
     // --- Depreciaciones ---
-    const { data: depreciaciones, mutate: mutateDepreciaciones } = useSWR('/mi-negocio/activos/depreciaciones/', fetcher);
+    const { data: depreciaciones, mutate: mutateDepreciaciones } = useSWR('/v1/mi-negocio/activos/depreciaciones/', fetcher);
     const createDepreciacion = useCallback(async (data: Omit<Depreciacion, 'id'>) => {
-        await api.post('/mi-negocio/activos/depreciaciones/', data);
+        await api.post('/v1/mi-negocio/activos/depreciaciones/', data);
         mutateDepreciaciones();
         mutateActivos(); // Revalidar activos para actualizar valor en libros
     }, [api, mutateDepreciaciones, mutateActivos]);

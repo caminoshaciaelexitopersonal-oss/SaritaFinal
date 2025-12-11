@@ -4,7 +4,7 @@ from django.utils.dateparse import parse_date
 from .models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
 from .serializers import TipoAlojamientoSerializer, AlojamientoSerializer, HabitacionSerializer, TarifaSerializer
 from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
-from ..reservas.models import Reserva
+from ...modulos_genericos.reservas.models import Reserva
 
 class TipoAlojamientoViewSet(viewsets.ReadOnlyModelViewSet):
     """
