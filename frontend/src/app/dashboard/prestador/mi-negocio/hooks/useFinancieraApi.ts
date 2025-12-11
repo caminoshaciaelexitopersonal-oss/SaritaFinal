@@ -25,19 +25,19 @@ export const useFinancieraApi = () => {
     const fetcher = (url: string) => api.get(url).then(res => res.data);
 
     // --- Reportes ---
-    const { data: reporteIngresosGastos, error: reporteError } = useSWR('/mi-negocio/financiera/reporte-ingresos-gastos/', fetcher);
+    const { data: reporteIngresosGastos, error: reporteError } = useSWR('/v1/mi-negocio/financiera/reporte-ingresos-gastos/', fetcher);
 
     // --- Cuentas Bancarias ---
-    const { data: cuentas, error: cuentasError, mutate: mutateCuentas } = useSWR('/mi-negocio/contabilidad/tesoreria/cuentas-bancarias/', fetcher);
+    const { data: cuentas, error: cuentasError, mutate: mutateCuentas } = useSWR('/v1/mi-negocio/financiera/cuentas-bancarias/', fetcher);
     const createCuenta = useCallback(async (data: Omit<CuentaBancaria, 'id' | 'saldo_actual'>) => {
-        await api.post('/mi-negocio/contabilidad/tesoreria/cuentas-bancarias/', data);
+        await api.post('/v1/mi-negocio/financiera/cuentas-bancarias/', data);
         mutateCuentas();
     }, [api, mutateCuentas]);
 
     // --- Transacciones Bancarias ---
-    const { data: transacciones, mutate: mutateTransacciones } = useSWR('/mi-negocio/contabilidad/tesoreria/transacciones/', fetcher);
+    const { data: transacciones, mutate: mutateTransacciones } = useSWR('/v1/mi-negocio/financiera/transacciones-bancarias/', fetcher);
     const createTransaccion = useCallback(async (data: Omit<TransaccionBancaria, 'id'>) => {
-        await api.post('/mi-negocio/contabilidad/tesoreria/transacciones/', data);
+        await api.post('/v1/mi-negocio/financiera/transacciones-bancarias/', data);
         mutateTransacciones();
         mutateCuentas(); // Revalidar cuentas para actualizar saldos
     }, [api, mutateTransacciones, mutateCuentas]);

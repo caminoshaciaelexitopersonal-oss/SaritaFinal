@@ -18,7 +18,7 @@ class PerfilSerializer(serializers.ModelSerializer):
         model = ProviderProfile
         fields = [
             'id', 'usuario', 'nombre_comercial', 'provider_type', 'telefono_principal',
-            'email_comercial', 'direccion',
+            'email_comercial', 'direccion', 'categoria',
             'is_verified'
         ]
         read_only_fields = ['usuario', 'is_verified']

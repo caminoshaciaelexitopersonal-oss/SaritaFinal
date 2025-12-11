@@ -26,7 +26,8 @@ class ReservaSerializer(serializers.ModelSerializer):
             'fecha_inicio', 'fecha_fin', 'hora_inicio', 'hora_fin',
             'cantidad_adultos', 'cantidad_ninos', 'costo_base', 'impuestos',
             'costo_total', 'notas_cliente', 'notas_internas',
-            'servicios_adicionales', 'producto_info', 'cliente_info'
+            'servicios_adicionales',
+            'producto_info', 'cliente_info'
         ]
         read_only_fields = ('perfil', 'costo_total')
 

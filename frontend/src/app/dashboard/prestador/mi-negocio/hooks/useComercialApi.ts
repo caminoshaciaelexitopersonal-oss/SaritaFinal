@@ -35,18 +35,18 @@ export const useComercialApi = () => {
     const fetcher = (url: string) => api.get(url).then(res => res.data);
 
     // --- Facturas de Venta ---
-    const { data: facturas, error: facturasError, mutate: mutateFacturas } = useSWR('/mi-negocio/comercial/facturas-venta/', fetcher);
+    const { data: facturas, error: facturasError, mutate: mutateFacturas } = useSWR('/v1/mi-negocio/comercial/facturas-venta/', fetcher);
 
     const createFactura = useCallback(async (data: { cliente_id: number; numero_factura: string; fecha_emision: string; fecha_vencimiento?: string; items: ItemFactura[] }) => {
-        await api.post('/mi-negocio/comercial/facturas-venta/', data);
+        await api.post('/v1/mi-negocio/comercial/facturas-venta/', data);
         mutateFacturas();
     }, [api, mutateFacturas]);
 
     // --- Recibos de Caja ---
-    const { data: recibos, mutate: mutateRecibos } = useSWR('/mi-negocio/comercial/recibos-caja/', fetcher);
+    const { data: recibos, mutate: mutateRecibos } = useSWR('/v1/mi-negocio/comercial/recibos-caja/', fetcher);
 
     const createRecibo = useCallback(async (data: Omit<ReciboCaja, 'id'>) => {
-        await api.post('/mi-negocio/comercial/recibos-caja/', data);
+        await api.post('/v1/mi-negocio/comercial/recibos-caja/', data);
         mutateRecibos();
         mutateFacturas(); // Revalidar facturas para actualizar estado de pago
     }, [api, mutateRecibos, mutateFacturas]);

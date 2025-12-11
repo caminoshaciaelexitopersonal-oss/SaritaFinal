@@ -43,3 +43,12 @@ class Reserva(models.Model):
 
     def __str__(self):
         return f"Reserva #{self.id} para {self.cliente.nombre}"
+
+class ReservaServicioAdicional(models.Model):
+    reserva = models.ForeignKey(Reserva, on_delete=models.CASCADE, related_name='servicios_adicionales')
+    servicio = models.ForeignKey('prestadores.Product', on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField(default=1)
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, help_text="Precio en el momento de la reserva")
+
+    def __str__(self):
+        return f"{self.cantidad} x {self.servicio.nombre} para Reserva #{self.reserva.id}"
