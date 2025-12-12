@@ -18,9 +18,9 @@ from itertools import groupby
 from operator import attrgetter
 from django.db.models.functions import TruncDay
 from django.db.models import Count
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
 from .models import (
     CustomUser,
+    CategoriaPrestador,
     ImagenGaleria,
     ImagenArtesano,
     Publicacion,

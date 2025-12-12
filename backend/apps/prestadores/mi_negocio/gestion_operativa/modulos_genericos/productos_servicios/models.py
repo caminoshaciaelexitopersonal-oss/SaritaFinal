@@ -2,7 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
 
-from ..perfil.models import TenantAwareModel, CategoriaPrestador as OperationalTag
+from ..perfil.models import TenantAwareModel
+from api.models import CategoriaPrestador as OperationalTag
 from ..reservas.models import PoliticaCancelacion
 
 class Product(TenantAwareModel):

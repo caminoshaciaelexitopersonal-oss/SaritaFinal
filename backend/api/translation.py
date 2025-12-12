@@ -8,9 +8,9 @@ HechoHistorico,
 RubroArtesano,
 Artesano,
 Video,
-ConsejoConsultivo
+ConsejoConsultivo,
+CategoriaPrestador
 )
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
 
 @register(Publicacion)
 class PublicacionTranslationOptions(TranslationOptions):
