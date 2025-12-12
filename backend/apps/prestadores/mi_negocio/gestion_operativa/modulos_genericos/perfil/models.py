@@ -1,23 +1,9 @@
 import uuid
 from django.db import models
-from django.conf import settings
 from django.utils import timezone
-from apps.companies.models import Company
+from api.models import BaseModel, ProviderProfile
 
-# --- MODELOS BASE DE ROBUSTEZ ---
-
-class BaseModel(models.Model):
-    """
-    Modelo base abstracto que añade campos de auditoría comunes.
-    """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True, db_index=True)
-
-    class Meta:
-        abstract = True
-        ordering = ['-created_at']
+# --- MODELOS BASE DE ROBUSTEZ (para esta app) ---
 
 from ..permissions import get_current_tenant
 
@@ -41,67 +27,9 @@ class TenantAwareModel(BaseModel):
     """
     Modelo base abstracto para todos los datos que pertenecen a un inquilino.
     """
-    provider = models.ForeignKey('prestadores.ProviderProfile', on_delete=models.CASCADE, related_name="%(class)s_items")
+    provider = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="%(class)s_items")
     objects = TenantManager()
     objects_unfiltered = models.Manager()
 
     class Meta:
         abstract = True
-
-
-# --- MODELOS DE PERFIL Y CATEGORÍA ---
-
-class CategoriaPrestador(BaseModel):
-    nombre = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True, help_text="Versión del nombre amigable para URLs")
-
-    def __str__(self):
-        return self.nombre
-
-    class Meta:
-        verbose_name = "Categoría de Prestador"
-        verbose_name_plural = "Categorías de Prestadores"
-        app_label = 'prestadores'
-
-
-class ProviderProfile(BaseModel):
-    """
-    EL INQUILINO (TENANT).
-    Representa a una empresa prestadora de servicios. No hereda de TenantAwareModel.
-    Refactorizado desde el modelo original 'Perfil'.
-    """
-    class ProviderTypes(models.TextChoices):
-        RESTAURANT = 'RESTAURANT', 'Restaurante'
-        HOTEL = 'HOTEL', 'Hotel'
-        AGENCY = 'AGENCY', 'Agencia de Viajes'
-        GUIDE = 'GUIDE', 'Guía Turístico'
-        TRANSPORT = 'TRANSPORT', 'Transportadora Turística'
-        # Añadimos otros tipos para compatibilidad
-        BAR_DISCO = 'BAR_DISCO', 'Bar o Discoteca'
-        ARTISAN = 'ARTISAN', 'Artesano'
-
-    usuario = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='perfil_prestador'
-    )
-    company = models.ForeignKey(
-        Company,
-        on_delete=models.CASCADE,
-        related_name='perfiles'
-    )
-    nombre_comercial = models.CharField(max_length=255, verbose_name="Nombre Comercial")
-    provider_type = models.CharField(max_length=20, choices=ProviderTypes.choices, default=ProviderTypes.HOTEL)
-
-    # Mantenemos otros campos relevantes del modelo original 'Perfil'
-    telefono_principal = models.CharField(max_length=50, blank=True)
-    email_comercial = models.EmailField(max_length=255, blank=True)
-    direccion = models.CharField(max_length=255, blank=True)
-
-    is_verified = models.BooleanField(default=False, help_text="Verificado por el Super Admin")
-
-    def __str__(self):
-        return self.nombre_comercial
-
-    class Meta:
-        app_label = 'prestadores'

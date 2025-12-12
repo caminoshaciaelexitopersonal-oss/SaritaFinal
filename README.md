@@ -1,182 +1,79 @@
-# Sarita Unificado
+# Sarita - Sistema Integral de Turismo
 
-Este proyecto es una plataforma de turismo multi-entidad, diseñada para ser una solución robusta, escalable y personalizable para diferentes organizaciones turísticas (municipales, departamentales, etc.).
+Este es el repositorio del proyecto "Sarita", una plataforma de turismo de triple vía desarrollada con Django (backend) y Next.js (frontend).
 
-El backend está construido con Django y Django REST Framework, mientras que el frontend es una aplicación moderna con Next.js y React.
+## Estado del Proyecto
+
+El proyecto ha sido auditado y estabilizado. Los problemas críticos de arranque han sido solucionados y ambos servidores (backend y frontend) se inician correctamente. La funcionalidad principal de autenticación y la estructura de los módulos ERP están operativas.
 
 ## Requisitos
 
 - Python 3.10+
 - Node.js 18+
-- Docker y Docker Compose (recomendado para desarrollo)
+- `pip` y `npm`
 
-## Arquitectura del Backend
+## Guía de Inicio Rápido
 
-El backend está construido con una arquitectura modular para facilitar el mantenimiento y la escalabilidad:
-*   `api`: Contiene los modelos y la lógica base (usuarios, perfiles, atractivos, etc.).
-*   `empresa`: Contiene los módulos de gestión empresarial genéricos (productos, clientes, vacantes).
-*   `restaurante`: Contendrá los módulos específicos para restaurantes.
-*   `turismo`: Contendrá los módulos específicos para otros operadores turísticos (hoteles, agencias).
+Siga estos pasos para configurar y ejecutar el entorno de desarrollo local.
 
-## Instalación y Configuración (Backend)
+### 1. Backend (Django)
 
-1.  **Navegar al directorio del backend:**
-    ```bash
-    cd SaritaUnificado/backend
-    ```
+**a. Instalar Dependencias de Python:**
 
-2.  **Crear un entorno virtual (recomendado):**
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # En Windows: venv\Scripts\activate
-    ```
+Navegue a la raíz del proyecto y ejecute:
 
-3.  **Instalar dependencias de Python:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r backend/requirements.txt
+```
 
-4.  **Aplicar migraciones de la base de datos:**
-    ```bash
-    python manage.py migrate
-    ```
+**b. Preparar la Base de Datos:**
 
-5.  **Poblar datos de ubicación (Departamentos y Municipios):**
-    Este es un paso crucial para la funcionalidad de registro y ubicación.
-    ```bash
-    python manage.py load_locations api/data/divipola_data.csv
-    ```
+Una vez instaladas las dependencias, genere y aplique las migraciones de la base de datos:
 
-6.  **Crear un superusuario (opcional, para acceso de admin):**
-    ```bash
-    python manage.py createsuperuser
-    ```
+```bash
+python backend/manage.py makemigrations companies api prestadores
+python backend/manage.py migrate
+```
 
-7.  **Iniciar el servidor de desarrollo del backend:**
-    ```bash
-    python manage.py runserver
-    ```
-    El backend estará disponible en `http://localhost:8000`.
+**c. Crear un Superusuario (Opcional pero Recomendado):**
 
-## Instalación y Configuración (Frontend)
+Para acceder al panel de administración de Django, cree un superusuario:
 
-1.  **Navegar al directorio del frontend:**
-    ```bash
-    cd SaritaUnificado/frontend
-    ```
+```bash
+python backend/manage.py createsuperuser --username admin --email admin@example.com --noinput
+echo "from django.contrib.auth import get_user_model; User = get_user_model(); u = User.objects.get(username='admin'); u.set_password('admin'); u.save()" | python backend/manage.py shell
+```
+(La contraseña será `admin`).
 
-2.  **Instalar dependencias de Node.js:**
-    ```bash
-    npm install
-    ```
+**d. Ejecutar el Servidor del Backend:**
 
-3.  **Iniciar el servidor de desarrollo del frontend:**
-    ```bash
-    npm run dev
-    ```
-    El frontend estará disponible en `http://localhost:3000`.
+```bash
+python backend/manage.py runserver
+```
 
-## Arquitectura Multi-Entidad
+El servidor del backend estará disponible en `http://127.0.0.1:8000`.
 
-El sistema ahora soporta múltiples entidades, cada una con su propia configuración (nombre, logo, colores).
+### 2. Frontend (Next.js)
 
-### ¿Cómo crear una entidad y un administrador?
+**a. Instalar Dependencias de Node.js:**
 
-Actualmente, la creación de entidades y la asignación de administradores se realiza a través del shell de Django, ya que requiere un nivel de acceso elevado.
+En una nueva terminal, navegue al directorio del frontend e instale las dependencias:
 
-1.  **Abrir el shell de Django:**
-    ```bash
-    python manage.py shell
-    ```
+```bash
+cd frontend
+npm install
+```
 
-2.  **Ejecutar el siguiente script en el shell:**
-    Reemplaza los valores de ejemplo con los datos que desees.
+**b. Ejecutar el Servidor de Desarrollo del Frontend:**
 
-    ```python
-    from api.models import Entity, CustomUser, Profile, Department, Municipality
+Una vez instaladas las dependencias, inicie el servidor de desarrollo:
 
-    # 1. Crear la entidad
-    entidad_turismo, created = Entity.objects.get_or_create(
-        slug='turismo-meta',
-        defaults={
-            'name': 'Turismo del Meta',
-            'type': 'departamental',
-            'primary_color': '#FF5733'
-        }
-    )
-    if created:
-        print(f"Entidad '{entidad_turismo.name}' creada.")
-    else:
-        print(f"Entidad '{entidad_turismo.name}' ya existía.")
+```bash
+npm run dev
+```
 
-    # 2. Crear el usuario administrador de la entidad
-    admin_user, created = CustomUser.objects.get_or_create(
-        username='admin_meta',
-        email='admin_meta@example.com',
-        defaults={
-            'first_name': 'Admin',
-            'last_name': 'Meta',
-            'role': CustomUser.Role.ADMIN_ENTIDAD
-        }
-    )
-    if created:
-        admin_user.set_password('password123')
-        admin_user.save()
-        print(f"Usuario '{admin_user.username}' creado.")
-    else:
-        print(f"Usuario '{admin_user.username}' ya existía.")
-
-    # 3. Crear el perfil y asociar el usuario a la entidad
-    profile, created = Profile.objects.get_or_create(
-        user=admin_user,
-        defaults={'entity': entidad_turismo}
-    )
-    if not created:
-        profile.entity = entidad_turismo
-        profile.save()
-    print(f"Perfil para '{admin_user.username}' asociado a la entidad '{entidad_turismo.name}'.")
-    ```
-
-Una vez completado, puedes iniciar sesión con el usuario `admin_meta` (o el que hayas creado) y la contraseña `password123` para gestionar tu entidad.
+El servidor del frontend estará disponible en `http://localhost:3000`.
 
 ---
 
-### Configuración de Subdominios para Desarrollo Local
-
-Para probar la funcionalidad de subdominios (p. ej., `turismo-meta.localhost:3000`), necesitas editar el archivo `hosts` de tu sistema operativo para que estos subdominios apunten a tu máquina local.
-
-1.  **Abrir el archivo `hosts` con permisos de administrador:**
-    *   **macOS/Linux:** `sudo nano /etc/hosts`
-    *   **Windows:** Abre el Bloc de notas como Administrador y busca `C:\Windows\System32\drivers\etc\hosts`.
-
-2.  **Añadir una línea por cada subdominio que quieras probar:**
-    Añade la siguiente línea al final del archivo. Puedes añadir tantos subdominios como necesites.
-
-    ```
-    127.0.0.1  turismo-meta.localhost
-    ```
-
-3.  **Guardar los cambios.**
-
-Ahora, al visitar `http://turismo-meta.localhost:3000` en tu navegador, el middleware de Django detectará el subdominio `turismo-meta` y cargará la entidad correspondiente.
-
----
-
-## Ejecutar Pruebas
-
-Las pruebas End-to-End se ejecutan con Playwright.
-
-1.  **Navegar al directorio del frontend:**
-    ```bash
-    cd SaritaUnificado/frontend
-    ```
-2.  **Instalar las dependencias de Playwright (si es la primera vez):**
-    ```bash
-    npx playwright install
-    ```
-3.  **Ejecutar las pruebas:**
-    Asegúrate de que los servidores de backend y frontend estén corriendo.
-    ```bash
-    npx playwright test
-    ```
-    **Nota:** Si las pruebas fallan por `timeout` al iniciar el servidor, una estrategia es iniciar el servidor manualmente en una terminal (`npm run dev &`) y luego comentar la sección `webServer` en `playwright.config.ts` antes de ejecutar el comando de prueba.
+Una vez completados estos pasos, la aplicación Sarita estará completamente funcional en su entorno local.

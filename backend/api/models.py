@@ -7,6 +7,9 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from .fields import EncryptedTextField
+from django.utils import timezone
+from django.conf import settings
+from apps.companies.models import Company
 
 
 def prestador_directory_path(instance, filename):
@@ -291,7 +294,7 @@ class ImagenArtesano(models.Model):
 
 
 class ImagenGaleria(models.Model):
-    prestador = models.ForeignKey('prestadores.ProviderProfile', on_delete=models.CASCADE, related_name="galeria_imagenes", null=True)
+    prestador = models.ForeignKey('ProviderProfile', on_delete=models.CASCADE, related_name="galeria_imagenes", null=True)
     imagen = models.ImageField(upload_to=galeria_directory_path)
     alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad")
     def __str__(self):
@@ -431,7 +434,7 @@ class RutaTuristica(models.Model):
     imagen_principal = models.ImageField(_("Imagen Principal"), upload_to=ruta_turistica_directory_path, help_text="Imagen principal que se mostrará en listados y cabeceras.")
 
     atractivos = models.ManyToManyField(AtractivoTuristico, related_name="rutas", blank=True, verbose_name=_("Atractivos en la Ruta"))
-    prestadores = models.ManyToManyField('prestadores.ProviderProfile', related_name="rutas", blank=True, verbose_name=_("Prestadores en la Ruta"))
+    prestadores = models.ManyToManyField('ProviderProfile', related_name="rutas", blank=True, verbose_name=_("Prestadores en la Ruta"))
     municipalities = models.ManyToManyField(Municipality, related_name="rutas_turisticas", blank=True, verbose_name=_("Municipios que abarca la Ruta"))
 
     es_publicado = models.BooleanField(_("Publicado"), default=False, help_text="Marcar para que la ruta sea visible en el sitio web público.")
@@ -877,7 +880,7 @@ class PlantillaVerificacion(models.Model):
     nombre = models.CharField(max_length=255, unique=True, help_text="Nombre único para la plantilla, ej: 'Verificación para Guías de Turismo'")
     descripcion = models.TextField(blank=True, help_text="Descripción detallada de la finalidad de esta plantilla.")
     categoria_prestador = models.ForeignKey(
-        'prestadores.CategoriaPrestador',
+        'CategoriaPrestador',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -922,7 +925,7 @@ class Verificacion(models.Model):
     Contiene la información general de la visita y el resultado.
     """
     plantilla_usada = models.ForeignKey(PlantillaVerificacion, on_delete=models.PROTECT, related_name='verificaciones_realizadas')
-    prestador = models.ForeignKey('prestadores.ProviderProfile', on_delete=models.CASCADE, related_name='verificaciones_recibidas', null=True)
+    prestador = models.ForeignKey('ProviderProfile', on_delete=models.CASCADE, related_name='verificaciones_recibidas', null=True)
     funcionario_evaluador = models.ForeignKey(
         CustomUser,
         on_delete=models.SET_NULL,
@@ -1071,7 +1074,7 @@ class DocumentoVerificacion(models.Model):
         RECHAZADO = "RECHAZADO", _("Rechazado")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    prestador = models.ForeignKey('prestadores.ProviderProfile', on_delete=models.CASCADE, related_name="documentos_verificacion", null=True)
+    prestador = models.ForeignKey('ProviderProfile', on_delete=models.CASCADE, related_name="documentos_verificacion", null=True)
     tipo_documento = models.ForeignKey(TipoDocumentoVerificacion, on_delete=models.PROTECT, related_name="documentos")
     archivo = models.FileField(_("Archivo"), upload_to=documento_verificacion_path)
     estado = models.CharField(_("Estado de Verificación"), max_length=20, choices=Estado.choices, default=Estado.PENDIENTE, db_index=True)
@@ -1095,3 +1098,75 @@ class DocumentoVerificacion(models.Model):
         verbose_name = "Documento de Verificación"
         verbose_name_plural = "Documentos de Verificación"
         ordering = ['-fecha_subida']
+
+# --- MODELOS MOVIDOS DESDE PRESTADORES ---
+
+class BaseModel(models.Model):
+    """
+    Modelo base abstracto que añade campos de auditoría comunes.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True, db_index=True)
+
+    class Meta:
+        abstract = True
+        ordering = ['-created_at']
+
+# --- MODELOS DE PERFIL Y CATEGORÍA ---
+
+class CategoriaPrestador(BaseModel):
+    nombre = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True, help_text="Versión del nombre amigable para URLs")
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name = "Categoría de Prestador"
+        verbose_name_plural = "Categorías de Prestadores"
+        app_label = 'api'
+
+
+class ProviderProfile(BaseModel):
+    """
+    EL INQUILINO (TENANT).
+    Representa a una empresa prestadora de servicios. No hereda de TenantAwareModel.
+    Refactorizado desde el modelo original 'Perfil'.
+    """
+    class ProviderTypes(models.TextChoices):
+        RESTAURANT = 'RESTAURANT', 'Restaurante'
+        HOTEL = 'HOTEL', 'Hotel'
+        AGENCY = 'AGENCY', 'Agencia de Viajes'
+        GUIDE = 'GUIDE', 'Guía Turístico'
+        TRANSPORT = 'TRANSPORT', 'Transportadora Turística'
+        # Añadimos otros tipos para compatibilidad
+        BAR_DISCO = 'BAR_DISCO', 'Bar o Discoteca'
+        ARTISAN = 'ARTISAN', 'Artesano'
+
+    usuario = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='perfil_prestador'
+    )
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.CASCADE,
+        related_name='perfiles'
+    )
+    nombre_comercial = models.CharField(max_length=255, verbose_name="Nombre Comercial")
+    provider_type = models.CharField(max_length=20, choices=ProviderTypes.choices, default=ProviderTypes.HOTEL)
+
+    # Mantenemos otros campos relevantes del modelo original 'Perfil'
+    telefono_principal = models.CharField(max_length=50, blank=True)
+    email_comercial = models.EmailField(max_length=255, blank=True)
+    direccion = models.CharField(max_length=255, blank=True)
+
+    is_verified = models.BooleanField(default=False, help_text="Verificado por el Super Admin")
+
+    def __str__(self):
+        return self.nombre_comercial
+
+    class Meta:
+        app_label = 'api'

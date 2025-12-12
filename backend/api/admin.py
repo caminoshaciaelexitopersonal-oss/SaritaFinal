@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
 from .models import (
 CustomUser,
 Publicacion, Video, ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, ScoringRule,
+CategoriaPrestador,
 Artesano, RubroArtesano, ImagenArtesano, Formulario, Pregunta, OpcionRespuesta,
 RespuestaUsuario, PlantillaVerificacion, ItemVerificacion, Verificacion,
 RespuestaItemVerificacion, AsistenciaCapacitacion, SiteConfiguration, MenuItem,

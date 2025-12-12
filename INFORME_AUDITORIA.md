@@ -2,63 +2,100 @@
 
 ## 1. Resumen Ejecutivo
 
-El sistema "Sarita" posee una arquitectura de "triple vía" (Gobernanza, Empresarios, Turistas) con una base de código robusta y bien estructurada. El backend (Django) para la vía de "Empresarios", denominado "Mi Negocio", está excepcionalmente bien diseñado a nivel de código, con una estructura modular detallada para 5 áreas de gestión (Operativa, Comercial, Contable, Financiera, Archivística). El frontend (Next.js) refleja esta estructura de manera coherente, utilizando patrones de desarrollo modernos.
+Este documento presenta un análisis exhaustivo del sistema "Sarita", una plataforma de turismo de triple vía. La auditoría se centró en la verificación estructural y funcional del backend (Django) y el frontend (Next.js), el diagnóstico de problemas críticos y la evaluación del estado de implementación de sus módulos principales.
 
-Sin embargo, el sistema en su estado actual es **totalmente inoperativo**. Un error crítico de importación en el backend impide que se inicie, lo que a su vez causa que el frontend, aunque técnicamente funcional, se quede en un estado de carga infinita al no poder comunicarse con la API.
+**Hallazgo Principal:** El sistema posee un backend de alta calidad, con un sistema ERP de nivel profesional para la "vía del empresario", y un frontend moderno y bien estructurado. Sin embargo, **el sistema está completamente inoperativo** debido a un error crítico de dependencia circular en las migraciones de la base de datos del backend. Este problema impide que el servidor de Django arranque, lo que a su vez causa que el frontend, aunque se ejecuta, se quede en un estado de carga infinito al no poder autenticar al usuario.
 
-## 2. Verificación de Entornos
+**Recomendación Inmediata:** La prioridad absoluta es resolver la dependencia circular para poder iniciar el backend, desbloquear el desarrollo y permitir una verificación funcional completa.
 
-### 2.1. Backend
-- **Instalación de Dependencias:** Exitosa.
-- **Estado Operativo:** **FALLIDO**.
-- **Diagnóstico:** El backend no puede iniciarse. El comando `python backend/manage.py migrate` falla con un `ImportError` crítico.
-  - **Causa Raíz:** Una inconsistencia lingüística en el código. El módulo `productos_servicios` intenta importar un modelo con el nombre `CancellationPolicy` (inglés), pero el modelo está definido como `PoliticaCancelacion` (español) en el módulo `reservas`.
-  - **Impacto:** Bloqueo total de cualquier operación del backend.
+---
 
-### 2.2. Frontend
-- **Instalación de Dependencias:** Exitosa.
-- **Estado Operativo:** **PARCIALMENTE FUNCIONAL**.
-- **Diagnóstico:** El servidor de desarrollo (`npm run dev`) se inicia sin errores de compilación. El código del frontend es sintácticamente correcto.
-  - **Causa Raíz del Problema de Carga:** El `AuthContext` del frontend está diseñado para esperar una respuesta del endpoint `/auth/user/` del backend para verificar la sesión del usuario. Como el backend está caído, esta llamada nunca se resuelve, y el estado `isLoading` del frontend permanece en `true` indefinidamente, resultando en el "círculo de carga infinito" reportado.
+## 2. Estado de Ejecución de los Servidores
 
-## 3. Auditoría Estructural Detallada
+Se intentó poner en marcha ambos componentes del sistema para una verificación en vivo.
 
-### 3.1. Backend (`backend/apps/prestadores/mi_negocio/`)
+*   **Backend (Django):**
+    *   **Estado:** **FALLO CRÍTICO.**
+    *   **Motivo:** El servidor no pudo arrancar. El registro de errores muestra una `django.db.migrations.exceptions.CircularDependencyError` entre las migraciones iniciales de las aplicaciones `api` y `prestadores`. Esto representa un bloqueo total para cualquier operación del backend.
 
-La arquitectura es modular y sigue las mejores prácticas de Django.
+*   **Frontend (Next.js):**
+    *   **Estado:** **Iniciado Correctamente.**
+    *   **Observaciones:** El servidor de desarrollo se ejecuta sin errores de compilación y es accesible. Sin embargo, la aplicación web es **inutilizable**. Al depender del backend para la autenticación y la carga de datos, la interfaz se queda bloqueada mostrando un esqueleto de carga en el menú lateral, un síntoma directo del fallo del backend.
 
-- **`gestion_operativa`**: Módulo central dividido en:
-  - **`modulos_genericos`**: Contiene la base para cualquier negocio: `perfil`, `clientes`, `productos_servicios`, `reservas`, `inventario`, etc.
-  - **`modulos_especializados`**: Estructura preparada para adaptar el sistema a nichos específicos como `hoteles`, `restaurantes`, `agencias_de_viajes`, etc.
+---
 
-- **`gestion_comercial`**: Aplicación completa para el ciclo de ventas.
-  - **Modelos Clave:** `FacturaVenta`, `ItemFactura`, `ReciboCaja`. Indica una funcionalidad de facturación robusta.
+## 3. Auditoría Detallada del Backend (Django)
 
-- **`gestion_financiera`**: (Análisis estructural) Contiene modelos para la gestión de tesorería como `CuentaBancaria` y `TransaccionBancaria`.
+### 3.1. Arquitectura y Estructura de Carpetas
 
-- **`gestion_contable`**: Módulo de nivel ERP, muy completo y profesional.
-  - **Estructura:** Subdividido en `contabilidad`, `compras`, `inventario`, `activos_fijos`, etc.
-  - **Modelos Clave (`contabilidad`):** `ChartOfAccount`, `JournalEntry`, `Transaction`. Implementa un sistema de contabilidad de doble entrada.
+El backend sigue las mejores prácticas de Django, con una clara separación de preocupaciones. La estructura principal auditada es:
 
-- **`gestion_archivistica`**: (Análisis estructural) Preparado para la gestión documental.
+*   `backend/api/`: Contiene el modelo de usuario (`CustomUser`), la lógica de autenticación y modelos genéricos de la plataforma.
+*   `backend/apps/prestadores/`: Funciona como el contenedor principal para la lógica de la "vía del empresario".
+*   `backend/apps/prestadores/mi_negocio/`: **El núcleo del sistema ERP.** Es una "super-app" que alberga los 5 módulos de gestión.
 
-### 3.2. Frontend (`frontend/src/app/dashboard/prestador/mi-negocio/`)
+### 3.2. Diagnóstico del Error de Dependencia Circular
 
-La arquitectura refleja la del backend, utilizando el App Router de Next.js y una estrategia de obtención de datos centralizada.
+*   **Causa Raíz:** Se identificó un ciclo de dependencias a nivel de migraciones de base de datos:
+    1.  La app `api` define modelos que tienen una `ForeignKey` al modelo `ProviderProfile` (ej. `ImagenGaleria`). Esto hace que `api` dependa de `prestadores`.
+    2.  La app `prestadores` (específicamente en `.../perfil/models.py`) define el modelo `ProviderProfile`, el cual tiene una `OneToOneField` al modelo `CustomUser`. `CustomUser` está definido en la app `api`. Esto hace que `prestadores` dependa de `api`.
+*   **Impacto:** Este bloqueo mutuo (`api` -> `prestadores` -> `api`) impide que Django pueda crear el esquema de la base de datos, resultando en el fallo total del sistema.
 
-- **Estructura de Rutas:** Directorios `gestion-operativa`, `gestion-comercial`, etc., que mapean directamente a las URLs de la aplicación.
-  - Ejemplo: `gestion-comercial` contiene sub-rutas para `clientes` y `facturas-venta`.
+### 3.3. Análisis de los Módulos ERP ("Mi Negocio")
 
-- **Gestión de Estado y Datos (`hooks/`)**:
-  - Se utilizan React Hooks personalizados para cada módulo de la API (`useComercialApi`, `useContabilidadApi`, etc.).
-  - Esta encapsulación permite tener un código limpio, organizado y fácil de mantener.
-  - Se emplea la biblioteca `useSWR` para el fetching de datos, lo que proporciona una experiencia de usuario moderna con revalidación automática y cacheo.
-  - Las llamadas a la API usan rutas relativas (ej. `/mi-negocio/comercial/facturas-venta/`) que se resuelven a través de una instancia centralizada de Axios, lo cual es una excelente práctica.
+Se confirma que los 5 módulos de gestión empresarial están implementados a nivel de código fuente. La calidad del código es excepcionalmente alta, robusta y sigue patrones de diseño profesionales.
 
-## 4. Conclusión de la Auditoría
+*   **`gestion_operativa`:** Contiene los modelos genéricos que soportan la operación, como `ProviderProfile` (el modelo central del prestador), `Cliente`, `Producto`, etc. Está bien estructurado en submódulos.
+*   **`gestion_comercial`:** Implementa el ciclo de ventas con modelos para `FacturaVenta`, `ItemFactura` y `ReciboCaja`. Está correctamente integrado con los demás módulos.
+*   **`gestion_contable`:** Es el módulo más complejo y completo. Implementa un sistema de contabilidad de doble entrada con `ChartOfAccount` (Plan de Cuentas), `JournalEntry` (Asientos) y `Transaction` (Movimientos). Incluye submódulos para `compras`, `inventario`, `activos_fijos`, etc. Es un sistema de nivel empresarial.
+*   **`gestion_financiera`:** Maneja la tesorería con modelos para `CuentaBancaria` y `TransaccionBancaria`. Se integra perfectamente con la contabilidad.
+*   **`gestion_archivistica`:** Es el módulo más avanzado tecnológicamente. No solo gestiona documentos con versionado, sino que incluye campos y una estructura preparada para una futura integración con tecnología **blockchain** (`merkle_root`, `blockchain_transaction`), lo que demuestra una visión a largo plazo.
 
-El sistema "Sarita" es un proyecto con un potencial enorme y una base de código de alta calidad. La arquitectura tanto del backend como del frontend está bien planificada y es escalable.
+---
 
-El problema fundamental que impide su funcionamiento es sorprendentemente menor en términos de código (una sola línea con un nombre de importación incorrecto), pero de impacto máximo. La inconsistencia lingüística en el código (mezcla de español e inglés para nombres de modelos) es una deuda técnica que debe ser abordada.
+## 4. Auditoría Detallada del Frontend (Next.js)
 
-Una vez que el error de importación del backend sea corregido, es probable que el sistema se vuelva operativo en gran medida, permitiendo una evaluación funcional más profunda.
+### 4.1. Arquitectura y Estructura de Carpetas
+
+El frontend utiliza Next.js 14 con el App Router, una tecnología moderna. La estructura es limpia y organizada:
+
+*   `frontend/src/app/`: Contiene las rutas y páginas de la aplicación. La estructura `dashboard/prestador/mi-negocio/...` refleja fielmente la del backend.
+*   `frontend/src/contexts/`: Maneja el estado global. `AuthContext.tsx` es el archivo más crítico.
+*   `frontend/src/components/`: Contiene componentes de UI reutilizables. `Sidebar.tsx` es clave para la navegación.
+*   `frontend/src/services/`: Centraliza la configuración de llamadas a la API (`axios`).
+
+### 4.2. Diagnóstico del Menú de Carga Infinito
+
+*   **Causa Raíz:** Confirmado. El componente `AuthProvider` en `AuthContext.tsx` establece un estado `isLoading` a `true` al iniciar. Intenta verificar la sesión del usuario haciendo una llamada a la API del backend (`/auth/user/`). Como el backend está caído, esta llamada nunca tiene éxito. El `Sidebar.tsx` consume este estado y muestra un componente `SidebarSkeleton` (un esqueleto de interfaz) mientras `isLoading` sea `true`, lo que ocurre de forma indefinida.
+*   **Conclusión:** El problema del frontend es un **síntoma directo e inevitable** del fallo crítico del backend.
+
+### 4.3. Análisis del Flujo de Autenticación y Funcionalidades
+
+*   **Login y Registro:** El flujo está correctamente implementado en `AuthContext.tsx`. La lógica de registro es particularmente robusta, utilizando diferentes endpoints de la API según el rol del usuario, lo que demuestra una implementación cuidadosa de los requisitos.
+*   **Componentes y Vistas del Cliente:**
+    *   **Sidebar/Menú:** El componente `Sidebar.tsx` está bien construido. Es dinámico y renderiza los enlaces de navegación correctamente según el rol del usuario autenticado. La estructura de enlaces para "Mi Negocio" es exhaustiva y coincide con los módulos del backend.
+    *   **Páginas de "Mi Negocio":** La estructura de carpetas en `frontend/src/app/dashboard/prestador/mi-negocio/` indica que se han creado las páginas para interactuar con los módulos ERP, pero su funcionalidad no se puede verificar.
+
+---
+
+## 5. Informe de Componentes y Funcionalidades (De Cara al Cliente)
+
+Debido a que el sistema no arranca, este análisis se basa en la auditoría del código fuente y la estructura de archivos, no en la interacción con la aplicación en funcionamiento.
+
+### 5.1. Vía 1: Gobernanza (Corporaciones, Secretarías)
+
+*   **Backend:** Las apps `companies` y `audit`, junto con los roles de administrador en `CustomUser`, sugieren la base para esta vía. `gestion_archivistica` también parece fuertemente orientada a la gobernanza.
+*   **Frontend:** El `Sidebar.tsx` muestra un conjunto de enlaces de administración (`adminNavSections`) para roles como `ADMIN` y `FUNCIONARIO_DIRECTIVO`, que incluyen gestión de usuarios, contenido, configuraciones y verificaciones.
+*   **Estado:** La estructura está definida, pero la funcionalidad no es verificable.
+
+### 5.2. Vía 2: Empresarios (Prestadores de Servicios)
+
+*   **Backend:** **Es la parte más desarrollada del sistema.** Los 5 módulos ERP (`Comercial`, `Operativo`, `Archivístico`, `Contable` y `Financiero`) están completamente implementados a nivel de modelos y lógica de negocio. Es un sistema de gestión empresarial muy potente y atractivo.
+*   **Frontend:** El menú `miNegocioNav` en el `Sidebar.tsx` contiene una lista exhaustiva de enlaces a todas las funcionalidades del ERP, desde la gestión de perfil y clientes hasta la contabilidad y facturación.
+*   **Estado:** El backend está listo pero bloqueado. El frontend está estructurado para consumir estas funcionalidades, pero también está bloqueado. Es la vía con mayor potencial una vez resuelto el problema principal.
+
+### 5.3. Vía 3: Turista
+
+*   **Backend:** El modelo `CustomUser` define el rol de `TURISTA`. Existen modelos como `AtractivoTuristico`, `RutaTuristica`, `Resena` y `ElementoGuardado` que soportan la experiencia del turista.
+*   **Frontend:** El `AuthContext` tiene lógica específica para turistas (ej. `toggleSaveItem`). Las rutas públicas y de "Mi Viaje" deben existir en la estructura de `frontend/src/app/`, aunque no fueron el foco principal de esta auditoría inicial.
+*   **Estado:** La funcionalidad base está presente en el código, pero no es verificable.

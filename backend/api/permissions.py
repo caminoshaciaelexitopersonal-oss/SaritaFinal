@@ -1,6 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
-from .models import CustomUser
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
+from .models import CustomUser, CategoriaPrestador
 
 
 class IsOwnerOrReadOnly(BasePermission):
