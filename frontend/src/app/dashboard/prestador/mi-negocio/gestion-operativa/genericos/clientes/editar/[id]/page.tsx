@@ -16,7 +16,7 @@ type FormValues = {
 };
 
 export default function EditarClientePage() {
-  const { getClientes, updateCliente, isLoading } = useMiNegocioApi();
+  const { getClienteById, updateCliente, isLoading } = useMiNegocioApi();
   const router = useRouter();
   const params = useParams();
   const id = Number(params.id);
@@ -25,18 +25,14 @@ export default function EditarClientePage() {
 
   useEffect(() => {
     const fetchCliente = async () => {
-      const clientes = await getClientes();
-      if (clientes && clientes.results) {
-        const cliente = clientes.results.find(c => c.id === id);
-        if (cliente) {
-          reset(cliente);
-        }
+      if (!id) return;
+      const cliente = await getClienteById(id);
+      if (cliente) {
+        reset(cliente);
       }
     };
-    if (id) {
-      fetchCliente();
-    }
-  }, [id, getClientes, reset]);
+    fetchCliente();
+  }, [id, getClienteById, reset]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const result = await updateCliente(id, data);

@@ -268,6 +268,10 @@ export function useMiNegocioApi() {
     return makeRequest(() => api.delete(`/v1/mi-negocio/operativa/clientes/${id}/`), "Cliente eliminado con éxito.", "Error al eliminar el cliente.");
   }, [makeRequest]);
 
+  const getClienteById = useCallback(async (id: number) => {
+    return makeRequest(() => api.get<Cliente>(`/v1/mi-negocio/operativa/clientes/${id}/`).then(res => res.data), undefined, "No se pudo cargar el cliente.");
+  }, [makeRequest]);
+
   // --- API de Contabilidad ---
   const getChartOfAccounts = useCallback(async () => {
     return makeRequest(() => api.get<ChartOfAccount[]>('/v1/mi-negocio/contable/contabilidad/plan-cuentas/').then(res => res.data));
@@ -521,6 +525,7 @@ export function useMiNegocioApi() {
     createCliente,
     updateCliente,
     deleteCliente,
+    getClienteById,
     // Nuevas funciones
     getChartOfAccounts,
     createChartOfAccount,

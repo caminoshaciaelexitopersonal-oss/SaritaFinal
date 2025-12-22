@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { AlertTriangle } from 'lucide-react';
 
-export default function ProductosServiciosPlaceholderPage() {
+export default function ContabilidadPlaceholderPage() {
   return (
     <Card>
       <CardHeader>
@@ -14,10 +14,10 @@ export default function ProductosServiciosPlaceholderPage() {
       </CardHeader>
       <CardContent>
         <p className="text-gray-600">
-          La funcionalidad para la gestión de Productos y Servicios está planificada y se implementará en una futura fase.
+          La interfaz de usuario para el módulo de Contabilidad General está planificada y se implementará en una futura fase.
         </p>
         <p className="text-gray-600 mt-2">
-          Actualmente, los productos se pueden gestionar indirectamente al crear una factura de venta, pero este módulo proporcionará una interfaz dedicada para el CRUD completo.
+          Aunque el backend contable está activo y registra automáticamente los asientos de las facturas de venta, la UI para visualizar el plan de cuentas, crear asientos manuales y generar reportes aún no ha sido desarrollada.
         </p>
       </CardContent>
     </Card>
