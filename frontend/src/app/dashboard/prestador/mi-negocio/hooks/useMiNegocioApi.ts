@@ -126,15 +126,18 @@ export interface ItemFactura {
 
 export interface FacturaVenta {
   id: number;
-  cliente: number;
-  cliente_nombre?: string;
+  numero_factura: string;
+  cliente_nombre: string;
   fecha_emision: string;
-  fecha_vencimiento: string;
-  subtotal: string;
-  impuestos: string;
   total: string;
   estado: string;
-  items: ItemFactura[];
+  estado_display: string;
+  // Los siguientes campos solo vienen en el detalle, no en la lista
+  cliente?: number;
+  fecha_vencimiento?: string;
+  subtotal?: string;
+  impuestos?: string;
+  items?: ItemFactura[];
 }
 // --- Tipos de Datos Financieros (Alineados con el Backend) ---
 export interface BankAccount {

@@ -51,11 +51,11 @@ export default function GestionComercialPage() {
             <TableBody>
               {facturas.map((factura) => (
                 <TableRow key={factura.id}>
-                  <TableCell>{factura.id}</TableCell>
-                  <TableCell>{factura.cliente_nombre || factura.cliente}</TableCell>
+                  <TableCell>{factura.numero_factura}</TableCell>
+                  <TableCell>{factura.cliente_nombre}</TableCell>
                   <TableCell>{new Date(factura.fecha_emision).toLocaleDateString()}</TableCell>
                   <TableCell>${factura.total}</TableCell>
-                  <TableCell>{factura.estado}</TableCell>
+                  <TableCell>{factura.estado_display}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
