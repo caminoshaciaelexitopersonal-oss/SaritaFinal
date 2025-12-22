@@ -6,7 +6,12 @@ from decimal import Decimal
 
 from rest_framework import serializers
 from .models import FacturaVenta, ReciboCaja, CuentaBancaria
-from .serializers import FacturaVentaSerializer, ReciboCajaSerializer
+from .serializers import (
+    FacturaVentaListSerializer,
+    FacturaVentaDetailSerializer,
+    FacturaVentaWriteSerializer,
+    ReciboCajaSerializer
+)
 from apps.prestadores.mi_negocio.gestion_financiera.models import TransaccionBancaria
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction as ContabTransaction, ChartOfAccount
 from apps.prestadores.mi_negocio.gestion_contable.inventario.models import MovimientoInventario, Almacen
@@ -16,21 +21,27 @@ class IsPrestadorOwner(permissions.BasePermission):
         return obj.perfil == request.user.perfil_prestador
 
 class FacturaVentaViewSet(viewsets.ModelViewSet):
-    serializer_class = FacturaVentaSerializer
     permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return FacturaVentaListSerializer
+        if self.action == 'retrieve':
+            return FacturaVentaDetailSerializer
+        return FacturaVentaWriteSerializer
+
     def get_queryset(self):
-        return FacturaVenta.objects.filter(perfil=self.request.user.perfil_prestador)
+        return FacturaVenta.objects.filter(perfil=self.request.user.perfil_prestador).select_related('cliente')
 
     def perform_create(self, serializer):
         perfil = self.request.user.perfil_prestador
         with transaction.atomic():
-            factura = serializer.save(perfil=perfil)
+            factura = serializer.save(perfil=perfil, creado_por=self.request.user)
 
             # --- Creación del Asiento Contable de la Venta ---
             try:
-                cuenta_ingresos = ChartOfAccount.objects.get(code__startswith='4135', perfil=perfil)
-                cuenta_cxc = ChartOfAccount.objects.get(code__startswith='1305', perfil=perfil)
+                cuenta_ingresos = ChartOfAccount.objects.get(perfil=perfil, code='4135')
+                cuenta_cxc = ChartOfAccount.objects.get(perfil=perfil, code='1305')
             except ChartOfAccount.DoesNotExist:
                 raise serializers.ValidationError(
                     "No se encontraron las cuentas contables requeridas para registrar la venta (Ingresos '4135' o Cuentas por Cobrar '1305')."
