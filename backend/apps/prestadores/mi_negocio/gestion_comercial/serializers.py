@@ -3,21 +3,57 @@ from .models import FacturaVenta, ItemFactura, ReciboCaja
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.serializers import ClienteSerializer
 
 class ItemFacturaSerializer(serializers.ModelSerializer):
+    producto_id = serializers.IntegerField(write_only=True)
+
     class Meta:
         model = ItemFactura
-        fields = ['id', 'producto', 'descripcion', 'cantidad', 'precio_unitario', 'subtotal', 'impuestos']
-        read_only_fields = ('subtotal',)
+        fields = ['id', 'producto', 'producto_id', 'descripcion', 'cantidad', 'precio_unitario', 'subtotal', 'impuestos']
+        read_only_fields = ('subtotal', 'producto',)
 
-class FacturaVentaSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        # Mapear producto_id al campo 'producto' del modelo
+        validated_data['producto_id'] = validated_data.pop('producto_id')
+        return super().create(validated_data)
+
+class FacturaVentaListSerializer(serializers.ModelSerializer):
+    """
+    Serializador BFF para la lista de facturas. Optimizado para lectura.
+    """
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    estado_display = serializers.CharField(source='get_estado_display', read_only=True)
+
+    class Meta:
+        model = FacturaVenta
+        fields = ['id', 'numero_factura', 'cliente_nombre', 'fecha_emision', 'total', 'estado', 'estado_display']
+        read_only_fields = fields
+
+class FacturaVentaDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializador BFF para el detalle de una factura. Optimizado para lectura.
+    """
+    items = ItemFacturaSerializer(many=True, read_only=True)
+    cliente = ClienteSerializer(read_only=True)
+    estado_display = serializers.CharField(source='get_estado_display', read_only=True)
+
+    class Meta:
+        model = FacturaVenta
+        fields = [
+            'id', 'numero_factura', 'cliente', 'fecha_emision', 'fecha_vencimiento',
+            'subtotal', 'impuestos', 'total', 'total_pagado', 'estado', 'estado_display', 'items'
+        ]
+        read_only_fields = fields
+
+
+class FacturaVentaWriteSerializer(serializers.ModelSerializer):
     items = ItemFacturaSerializer(many=True)
     creado_por = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    cliente = ClienteSerializer(read_only=True)
+    # No exponemos 'cliente' para lectura, solo 'cliente_id' para escritura.
     cliente_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = FacturaVenta
         fields = [
-            'id', 'cliente', 'cliente_id', 'numero_factura', 'fecha_emision', 'fecha_vencimiento',
+            'id', 'cliente_id', 'numero_factura', 'fecha_emision', 'fecha_vencimiento',
             'subtotal', 'impuestos', 'total', 'total_pagado', 'estado', 'creado_por', 'items'
         ]
         read_only_fields = ('subtotal', 'impuestos', 'total', 'total_pagado', 'estado')

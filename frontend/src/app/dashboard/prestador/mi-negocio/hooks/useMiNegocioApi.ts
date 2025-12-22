@@ -126,26 +126,27 @@ export interface ItemFactura {
 
 export interface FacturaVenta {
   id: number;
-  cliente: number;
-  cliente_nombre?: string;
+  numero_factura: string;
+  cliente_nombre: string;
   fecha_emision: string;
-  fecha_vencimiento: string;
-  subtotal: string;
-  impuestos: string;
   total: string;
   estado: string;
-  items: ItemFactura[];
+  estado_display: string;
+  // Los siguientes campos solo vienen en el detalle, no en la lista
+  cliente?: number;
+  fecha_vencimiento?: string;
+  subtotal?: string;
+  impuestos?: string;
+  items?: ItemFactura[];
 }
 // --- Tipos de Datos Financieros (Alineados con el Backend) ---
 export interface BankAccount {
   id: number;
-  perfil: number;
-  banco: string;
-  numero_cuenta: string;
-  tipo_cuenta: 'AHORROS' | 'CORRIENTE';
-  saldo_actual: string;
-  titular: string;
-  cuenta_contable: string | null; // FK al código de ChartOfAccount
+  bank_name: string;
+  account_number: string;
+  account_holder: string;
+  account_type: 'SAVINGS' | 'CHECKING';
+  balance: string;
 }
 
 export interface CashTransaction {
@@ -239,13 +240,11 @@ export function useMiNegocioApi() {
  
   // --- API de Perfil ---
   const getPerfil = useCallback(async () => {
-    // Corregido: Se elimina /genericos/ de la ruta
-    return makeRequest(() => api.get<PerfilData>('/v1/mi-negocio/operativa/perfil/me/').then(res => res.data), undefined, "No se pudo cargar el perfil.");
+    return makeRequest(() => api.get<PerfilData>('/v1/mi-negocio/operativa/genericos/perfil/me/').then(res => res.data), undefined, "No se pudo cargar el perfil.");
   }, [makeRequest]);
 
   const updatePerfil = useCallback(async (data: Partial<PerfilData>) => {
-    // Corregido: Se elimina /genericos/ de la ruta
-    return makeRequest(() => api.patch<PerfilData>('/v1/mi-negocio/operativa/perfil/update-me/', data).then(res => res.data), "Perfil actualizado con éxito.", "Error al actualizar el perfil.");
+    return makeRequest(() => api.patch<PerfilData>('/v1/mi-negocio/operativa/genericos/perfil/update-me/', data).then(res => res.data), "Perfil actualizado con éxito.", "Error al actualizar el perfil.");
   }, [makeRequest]);
 
   // --- API de Clientes (CRM) ---
