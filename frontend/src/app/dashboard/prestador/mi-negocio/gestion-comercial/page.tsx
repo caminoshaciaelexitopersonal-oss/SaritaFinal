@@ -1,25 +1,27 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useMiNegocioApi, FacturaVenta } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
+import { useComercialApi } from './hooks/useComercialApi';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import { PlusCircle } from 'lucide-react';
 
 export default function GestionComercialPage() {
-  const { getFacturasVenta, isLoading } = useMiNegocioApi();
-  const [facturas, setFacturas] = useState<FacturaVenta[]>([]);
+  const { facturas, isLoading, isError } = useComercialApi();
 
-  useEffect(() => {
-    const fetchFacturas = async () => {
-      const data = await getFacturasVenta();
-      if (data) {
-        setFacturas(data);
-      }
-    };
-    fetchFacturas();
-  }, [getFacturasVenta]);
+  if (isError) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Error</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p>No se pudieron cargar las facturas. Por favor, intente de nuevo más tarde.</p>
+            </CardContent>
+        </Card>
+    );
+  }
 
   return (
     <Card>

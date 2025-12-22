@@ -31,17 +31,20 @@ class ExchangeRate(models.Model):
         unique_together = ('from_currency', 'to_currency', 'date')
 
 class ChartOfAccount(models.Model):
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="chart_of_accounts")
+
     class Nature(models.TextChoices):
         DEBIT = 'DEBITO', 'Debito'
         CREDIT = 'CREDITO', 'Credito'
 
-    code = models.CharField(max_length=20, unique=True, primary_key=True)
+    code = models.CharField(max_length=20)
     name = models.CharField(max_length=255)
     nature = models.CharField(max_length=10, choices=Nature.choices)
     allows_transactions = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['code']
+        unique_together = ('perfil', 'code')
 
     def __str__(self):
         return f"{self.code} - {self.name}"

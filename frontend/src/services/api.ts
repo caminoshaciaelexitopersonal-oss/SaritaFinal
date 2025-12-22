@@ -837,6 +837,16 @@ export const getPublicHabitaciones = async (hotelId: number): Promise<Habitacion
 
 // --- API de Diagnóstico de Rutas Turísticas ---
 
+export interface FacturaVenta {
+  id: number;
+  numero_factura: string;
+  cliente_nombre: string;
+  fecha_emision: string;
+  total: number;
+  estado: string;
+  estado_display: string;
+}
+
 export interface DiagnosticoRutaTuristica {
     id: number;
     nombre_ruta: string;

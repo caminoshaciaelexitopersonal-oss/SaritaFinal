@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMiNegocioApi, Cliente, ItemFactura } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
+import { useMiNegocioApi, Cliente, ItemFactura, Producto } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -11,16 +11,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from 'react-toastify';
 import { PlusCircle, Trash2 } from 'lucide-react';
 
-// Mock de productos hasta que se implemente la API de inventario
-const mockProductos = [
-  { id: 1, nombre: 'Producto de Prueba 1', precio: '150.00' },
-  { id: 2, nombre: 'Servicio de Consultoría', precio: '500.00' },
-];
-
 export default function NuevaVentaPage() {
-  const { createFacturaVenta, getClientes, isLoading } = useMiNegocioApi();
+  const { createFacturaVenta, getClientes, getProductos, isLoading } = useMiNegocioApi();
   const router = useRouter();
   const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [productos, setProductos] = useState<Producto[]>([]);
   const [selectedCliente, setSelectedCliente] = useState<string>('');
   const [fechaEmision, setFechaEmision] = useState(new Date().toISOString().split('T')[0]);
   const [fechaVencimiento, setFechaVencimiento] = useState(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
@@ -29,12 +24,15 @@ export default function NuevaVentaPage() {
   ]);
 
   useEffect(() => {
-    const fetchClientes = async () => {
-      const data = await getClientes();
-      if (data) setClientes(data.results); // Asumiendo paginación
+    const fetchData = async () => {
+      const clientesData = await getClientes();
+      if (clientesData) setClientes(clientesData.results);
+
+      const productosData = await getProductos();
+      if (productosData) setProductos(productosData.results);
     };
-    fetchClientes();
-  }, [getClientes]);
+    fetchData();
+  }, [getClientes, getProductos]);
 
   const handleItemChange = (index: number, field: keyof ItemFactura, value: any) => {
     const newItems = [...items];
@@ -43,9 +41,9 @@ export default function NuevaVentaPage() {
 
     // Si se cambia el producto, actualizar el precio
     if (field === 'producto') {
-      const productoSeleccionado = mockProductos.find(p => p.id === Number(value));
+      const productoSeleccionado = productos.find(p => p.id === Number(value));
       if (productoSeleccionado) {
-        item.precio_unitario = productoSeleccionado.precio;
+        item.precio_unitario = productoSeleccionado.precio_venta;
       }
     }
 
@@ -138,7 +136,7 @@ export default function NuevaVentaPage() {
                           <SelectValue placeholder="Seleccione un producto" />
                         </SelectTrigger>
                         <SelectContent>
-                          {mockProductos.map(p => (
+                          {productos.map(p => (
                             <SelectItem key={p.id} value={String(p.id)}>{p.nombre}</SelectItem>
                           ))}
                         </SelectContent>
