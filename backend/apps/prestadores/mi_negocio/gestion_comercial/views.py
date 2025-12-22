@@ -36,12 +36,12 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         perfil = self.request.user.perfil_prestador
         with transaction.atomic():
-            factura = serializer.save(perfil=perfil)
+            factura = serializer.save(perfil=perfil, creado_por=self.request.user)
 
             # --- Creación del Asiento Contable de la Venta ---
             try:
-                cuenta_ingresos = ChartOfAccount.objects.get(code__startswith='4135', perfil=perfil)
-                cuenta_cxc = ChartOfAccount.objects.get(code__startswith='1305', perfil=perfil)
+                cuenta_ingresos = ChartOfAccount.objects.get(perfil=perfil, code='4135')
+                cuenta_cxc = ChartOfAccount.objects.get(perfil=perfil, code='1305')
             except ChartOfAccount.DoesNotExist:
                 raise serializers.ValidationError(
                     "No se encontraron las cuentas contables requeridas para registrar la venta (Ingresos '4135' o Cuentas por Cobrar '1305')."
