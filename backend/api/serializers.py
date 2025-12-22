@@ -25,6 +25,7 @@ from .models import (
 from django.db import transaction
 from dj_rest_auth.serializers import LoginSerializer
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 # from apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
 # from apps.turismo.serializers import RutaTuristicaSerializer
 
@@ -1002,13 +1003,30 @@ class UserLLMConfigSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
+class ProviderProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProviderProfile
+        fields = ('id', 'nombre_comercial', 'provider_type', 'is_verified')
+
+
+class ArtesanoForUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Artesano
+        fields = ('id', 'nombre_taller', 'aprobado')
+
+
 class ProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializador polimórfico que puede manejar diferentes tipos de perfiles de usuario.
+    """
+    perfil_prestador = ProviderProfileSerializer(read_only=True, source='user.perfil_prestador')
+    perfil_artesano = ArtesanoForUserSerializer(read_only=True, source='user.perfil_artesano')
+    # Añadir otros perfiles aquí (ej. perfil_turista) si existen
+
     class Meta:
         model = Profile
-        fields = ('department', 'municipality')
+        fields = ('department', 'municipality', 'perfil_prestador', 'perfil_artesano')
 
-
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class CustomUserDetailSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)

@@ -113,7 +113,6 @@ const miNegocioNav: NavSection[] = [
     isSubSection: true,
     links: [
       { href: '/dashboard/prestador/mi-negocio/contabilidad', label: 'Contabilidad General', icon: FiBookOpen },
-      { href: '/dashboard/prestador/mi-negocio/contabilidad/tesoreria', label: 'Tesorería', icon: FiLandmark },
     ],
   },
   { title: 'Gestión de Activos', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/activos', label: 'Ver Módulo', icon: FiArchive }] },

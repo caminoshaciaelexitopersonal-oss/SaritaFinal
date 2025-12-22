@@ -31,13 +31,8 @@ export default function GestionFinancieraPage() {
 
   const fetchCuentas = useCallback(async () => {
     const data = await getBankAccounts();
-    if (data && Array.isArray(data.results)) {
-      setCuentas(data.results);
-    } else if (data && !Array.isArray(data)) {
-      // Si la API devuelve un objeto con 'results'
-      setCuentas((data as any).results || []);
-    } else if (Array.isArray(data)) {
-      setCuentas(data);
+    if (data) {
+      setCuentas(data.results || []);
     }
   }, [getBankAccounts]);
 
@@ -60,7 +55,7 @@ export default function GestionFinancieraPage() {
         bank_name: values.banco,
         account_number: values.numero_cuenta,
         account_holder: values.titular,
-        account_type: values.tipo_cuenta === 'AHORROS' ? 'SAVINGS' : 'CHECKING',
+        account_type: values.tipo_cuenta,
     };
 
     let success;
