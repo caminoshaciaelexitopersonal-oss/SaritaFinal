@@ -8,16 +8,45 @@ class ItemFacturaSerializer(serializers.ModelSerializer):
         fields = ['id', 'producto', 'descripcion', 'cantidad', 'precio_unitario', 'subtotal', 'impuestos']
         read_only_fields = ('subtotal',)
 
-class FacturaVentaSerializer(serializers.ModelSerializer):
+class FacturaVentaListSerializer(serializers.ModelSerializer):
+    """
+    Serializador BFF para la lista de facturas. Optimizado para lectura.
+    """
+    cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
+    estado_display = serializers.CharField(source='get_estado_display', read_only=True)
+
+    class Meta:
+        model = FacturaVenta
+        fields = ['id', 'numero_factura', 'cliente_nombre', 'fecha_emision', 'total', 'estado', 'estado_display']
+        read_only_fields = fields
+
+class FacturaVentaDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializador BFF para el detalle de una factura. Optimizado para lectura.
+    """
+    items = ItemFacturaSerializer(many=True, read_only=True)
+    cliente = ClienteSerializer(read_only=True)
+    estado_display = serializers.CharField(source='get_estado_display', read_only=True)
+
+    class Meta:
+        model = FacturaVenta
+        fields = [
+            'id', 'numero_factura', 'cliente', 'fecha_emision', 'fecha_vencimiento',
+            'subtotal', 'impuestos', 'total', 'total_pagado', 'estado', 'estado_display', 'items'
+        ]
+        read_only_fields = fields
+
+
+class FacturaVentaWriteSerializer(serializers.ModelSerializer):
     items = ItemFacturaSerializer(many=True)
     creado_por = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    cliente = ClienteSerializer(read_only=True)
+    # No exponemos 'cliente' para lectura, solo 'cliente_id' para escritura.
     cliente_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = FacturaVenta
         fields = [
-            'id', 'cliente', 'cliente_id', 'numero_factura', 'fecha_emision', 'fecha_vencimiento',
+            'id', 'cliente_id', 'numero_factura', 'fecha_emision', 'fecha_vencimiento',
             'subtotal', 'impuestos', 'total', 'total_pagado', 'estado', 'creado_por', 'items'
         ]
         read_only_fields = ('subtotal', 'impuestos', 'total', 'total_pagado', 'estado')

@@ -170,53 +170,42 @@ useEffect(() => {
   }
 }, [fetchUserData]);
 
-  const completeLogin = (key: string, userData: User) => {
-    setToken(key);
-    setUser(userData); // Establecer el usuario directamente
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('authToken', key);
-    }
-    setMfaRequired(false);
-    setLoginCredentials(null);
-
-    toast.success(`¡Bienvenido, ${userData.username}!`);
-
-    // Redirección por rol, como se especifica en los requisitos.
-    switch (userData.role) {
-      case 'TURISTA':
-        router.push('/mi-viaje');
-        break;
-      case 'PRESTADOR':
-        router.push('/dashboard');
-        break;
-      case 'ARTESANO':
-        router.push('/dashboard');
-        break;
-      case 'ADMIN':
-        router.push('/dashboard');
-        break;
-      case 'FUNCIONARIO_DIRECTIVO':
-        router.push('/dashboard');
-        break;
-      case 'FUNCIONARIO_PROFESIONAL':
-        router.push('/dashboard');
-        break;
-      default:
-        router.push('/');
-    }
-  };
-
   const login = async (identifier: string, password: string) => {
     try {
       const payload = {
         email: identifier,
         password,
       };
-      const response = await api.post('/auth/login/', payload);
+      const response = await api.post<{ key: string; user: User }>('/auth/login/', payload);
 
       // La respuesta ahora debe contener la clave (token) y el objeto de usuario
-      if (response.data?.key && response.data?.user) {
-        completeLogin(response.data.key, response.data.user);
+      if (response.data && response.data.key && response.data.user) {
+        const { key, user } = response.data;
+        setToken(key);
+        setUser(user);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('authToken', key);
+        }
+        setMfaRequired(false);
+        toast.success(`¡Bienvenido, ${user.username}!`);
+
+        // Redirección centralizada después de un login exitoso
+        // (Asumiendo que esta lógica se quiere mantener aquí)
+        switch (user.role) {
+          case 'TURISTA':
+            router.push('/mi-viaje');
+            break;
+          case 'PRESTADOR':
+          case 'ARTESANO':
+          case 'ADMIN':
+          case 'FUNCIONARIO_DIRECTIVO':
+          case 'FUNCIONARIO_PROFESIONAL':
+            router.push('/dashboard');
+            break;
+          default:
+            router.push('/');
+        }
+
       } else {
         // Lógica de MFA (si aplica) o manejo de errores
         setMfaRequired(true);
