@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import FacturaVenta, ItemFactura, ReciboCaja
+from ..domain.models import FacturaVenta, ItemFactura, ReciboCaja
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.serializers import ClienteSerializer
 
 class ItemFacturaSerializer(serializers.ModelSerializer):
-    producto_id = serializers.IntegerField(write_only=True)
+    producto_id = serializers.UUIDField(write_only=True)
 
     class Meta:
         model = ItemFactura
