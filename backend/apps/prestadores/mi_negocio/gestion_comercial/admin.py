@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FacturaVenta, ItemFactura, ReciboCaja
+from .domain.models import FacturaVenta, ItemFactura, ReciboCaja
 
 class ItemFacturaInline(admin.TabularInline):
     model = ItemFactura
