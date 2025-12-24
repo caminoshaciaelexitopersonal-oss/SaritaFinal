@@ -5,7 +5,7 @@ from django.db import transaction
 from decimal import Decimal
 
 from rest_framework import serializers
-from .models import FacturaVenta, ReciboCaja, CuentaBancaria
+from ..domain.models import FacturaVenta, ReciboCaja
 from .serializers import (
     FacturaVentaListSerializer,
     FacturaVentaDetailSerializer,
@@ -62,22 +62,22 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
             ContabTransaction.objects.create(journal_entry=journal_entry, account=cuenta_ingresos, debit=Decimal('0.00'), credit=factura.total)
 
             # --- Creación de Movimientos de Inventario ---
-            try:
-                # Asumimos un almacén principal. En un sistema real, esto sería seleccionable.
-                almacen_principal = Almacen.objects.get(perfil=perfil, nombre__icontains='principal')
-                for item in factura.items.all():
-                    MovimientoInventario.objects.create(
-                        producto=item.producto,
-                        almacen=almacen_principal,
-                        tipo_movimiento=MovimientoInventario.TipoMovimiento.SALIDA,
-                        cantidad=item.cantidad,
-                        descripcion=f"Venta según Factura No. {factura.numero_factura}",
-                        usuario=self.request.user
-                    )
-            except Almacen.DoesNotExist:
-                raise serializers.ValidationError(
-                    "No se encontró un 'Almacén Principal' para registrar la salida de inventario."
-                )
+            # try:
+            #     # Asumimos un almacén principal. En un sistema real, esto sería seleccionable.
+            #     almacen_principal = Almacen.objects.get(perfil=perfil, nombre__icontains='principal')
+            #     for item in factura.items.all():
+            #         MovimientoInventario.objects.create(
+            #             producto=item.producto,
+            #             almacen=almacen_principal,
+            #             tipo_movimiento=MovimientoInventario.TipoMovimiento.SALIDA,
+            #             cantidad=item.cantidad,
+            #             descripcion=f"Venta según Factura No. {factura.numero_factura}",
+            #             usuario=self.request.user
+            #         )
+            # except Almacen.DoesNotExist:
+            #     raise serializers.ValidationError(
+            #         "No se encontró un 'Almacén Principal' para registrar la salida de inventario."
+            #     )
 
 
     @action(detail=True, methods=['post'], url_path='registrar-pago')
