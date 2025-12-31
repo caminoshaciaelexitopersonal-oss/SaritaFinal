@@ -1,11 +1,14 @@
+import logging
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
+
+logger = logging.getLogger(__name__)
 from rest_framework.response import Response
 from django.db import transaction
 from decimal import Decimal
 
 from rest_framework import serializers
-from .models import FacturaVenta, ReciboCaja, CuentaBancaria
+from ..domain.models import FacturaVenta, ReciboCaja
 from .serializers import (
     FacturaVentaListSerializer,
     FacturaVentaDetailSerializer,
@@ -37,15 +40,22 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
         perfil = self.request.user.perfil_prestador
         with transaction.atomic():
             factura = serializer.save(perfil=perfil, creado_por=self.request.user)
+            logger.info(
+                f"[FACTURACION] Factura Creada: ID={factura.id}, Perfil={perfil.id}, Usuario={self.request.user.id}"
+            )
 
             # --- Creación del Asiento Contable de la Venta ---
             try:
                 cuenta_ingresos = ChartOfAccount.objects.get(perfil=perfil, code='4135')
                 cuenta_cxc = ChartOfAccount.objects.get(perfil=perfil, code='1305')
             except ChartOfAccount.DoesNotExist:
-                raise serializers.ValidationError(
-                    "No se encontraron las cuentas contables requeridas para registrar la venta (Ingresos '4135' o Cuentas por Cobrar '1305')."
+                logger.error(
+                    f"[FACTURACION] Error al crear factura: Cuentas contables no encontradas. Perfil={perfil.id}"
                 )
+                raise serializers.ValidationError({
+                    "error": "CONFIGURACION_CONTABLE_INCOMPLETA",
+                    "detalle": "No se encontraron las cuentas contables requeridas para registrar la venta (Ingresos '4135' o Cuentas por Cobrar '1305'). Asegúrese de que el plan de cuentas esté configurado."
+                })
 
             journal_entry = JournalEntry.objects.create(
                 perfil=perfil,
@@ -62,22 +72,22 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
             ContabTransaction.objects.create(journal_entry=journal_entry, account=cuenta_ingresos, debit=Decimal('0.00'), credit=factura.total)
 
             # --- Creación de Movimientos de Inventario ---
-            try:
-                # Asumimos un almacén principal. En un sistema real, esto sería seleccionable.
-                almacen_principal = Almacen.objects.get(perfil=perfil, nombre__icontains='principal')
-                for item in factura.items.all():
-                    MovimientoInventario.objects.create(
-                        producto=item.producto,
-                        almacen=almacen_principal,
-                        tipo_movimiento=MovimientoInventario.TipoMovimiento.SALIDA,
-                        cantidad=item.cantidad,
-                        descripcion=f"Venta según Factura No. {factura.numero_factura}",
-                        usuario=self.request.user
-                    )
-            except Almacen.DoesNotExist:
-                raise serializers.ValidationError(
-                    "No se encontró un 'Almacén Principal' para registrar la salida de inventario."
-                )
+            # try:
+            #     # Asumimos un almacén principal. En un sistema real, esto sería seleccionable.
+            #     almacen_principal = Almacen.objects.get(perfil=perfil, nombre__icontains='principal')
+            #     for item in factura.items.all():
+            #         MovimientoInventario.objects.create(
+            #             producto=item.producto,
+            #             almacen=almacen_principal,
+            #             tipo_movimiento=MovimientoInventario.TipoMovimiento.SALIDA,
+            #             cantidad=item.cantidad,
+            #             descripcion=f"Venta según Factura No. {factura.numero_factura}",
+            #             usuario=self.request.user
+            #         )
+            # except Almacen.DoesNotExist:
+            #     raise serializers.ValidationError(
+            #         "No se encontró un 'Almacén Principal' para registrar la salida de inventario."
+            #     )
 
 
     @action(detail=True, methods=['post'], url_path='registrar-pago')
@@ -85,6 +95,9 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
     def registrar_pago(self, request, pk=None):
         factura = self.get_object()
         perfil = request.user.perfil_prestador
+        logger.info(
+            f"[FACTURACION] Intento de registro de pago: Factura ID={factura.id}, Perfil={perfil.id}"
+        )
         monto_str = request.data.get('monto')
         cuenta_bancaria_id = request.data.get('cuenta_bancaria_id')
 
