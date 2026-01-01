@@ -19,7 +19,8 @@ class ProductViewSet(viewsets.ModelViewSet):
         """
         try:
             perfil = self.request.user.perfil_prestador
-            return super().get_queryset().filter(perfil=perfil)
+            # CORRECCIÓN: El modelo Product usa 'provider', no 'perfil'.
+            return super().get_queryset().filter(provider=perfil)
         except AttributeError:
             # Si el usuario no tiene un perfil de prestador, no puede ver ningún objeto.
             return self.queryset.model.objects.none()
@@ -29,4 +30,5 @@ class ProductViewSet(viewsets.ModelViewSet):
         Asocia automáticamente el perfil del prestador al nuevo objeto
         al momento de la creación.
         """
-        serializer.save(perfil=self.request.user.perfil_prestador)
+        # CORRECCIÓN: El modelo Product usa 'provider', no 'perfil'.
+        serializer.save(provider=self.request.user.perfil_prestador)

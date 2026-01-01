@@ -34,14 +34,21 @@ class FacturaVentaDetailSerializer(serializers.ModelSerializer):
     items = ItemFacturaSerializer(many=True, read_only=True)
     cliente = ClienteSerializer(read_only=True)
     estado_display = serializers.CharField(source='get_estado_display', read_only=True)
+    tasa_impuesto_aplicada = serializers.SerializerMethodField()
 
     class Meta:
         model = FacturaVenta
         fields = [
             'id', 'numero_factura', 'cliente', 'fecha_emision', 'fecha_vencimiento',
-            'subtotal', 'impuestos', 'total', 'total_pagado', 'estado', 'estado_display', 'items'
+            'subtotal', 'impuestos', 'tasa_impuesto_aplicada', 'total', 'total_pagado',
+            'estado', 'estado_display', 'items'
         ]
         read_only_fields = fields
+
+    def get_tasa_impuesto_aplicada(self, obj):
+        # En una implementación futura, esta tasa podría venir de la configuración del perfil,
+        # de los productos, etc. Por ahora, se explicita la regla de negocio del 19%.
+        return "19.00"
 
 
 class FacturaVentaWriteSerializer(serializers.ModelSerializer):
@@ -84,6 +91,20 @@ class FacturaVentaWriteSerializer(serializers.ModelSerializer):
         # Los campos ahora están definidos explícitamente arriba con read_only=True,
         # por lo que esta tupla ya no es necesaria.
         read_only_fields = ()
+
+    def validate(self, data):
+        """
+        Validación a nivel de objeto para reforzar el contrato.
+        """
+        # CRÍTICO: Rechaza explícitamente cualquier intento de enviar campos calculados.
+        # Un campo read_only=True es ignorado silenciosamente, pero queremos que el contrato falle ruidosamente.
+        campos_prohibidos = ['subtotal', 'impuestos', 'total', 'total_pagado', 'estado']
+        for campo in campos_prohibidos:
+            if campo in self.initial_data:
+                raise serializers.ValidationError({
+                    campo: f"Este campo es calculado por el servidor y no debe ser enviado."
+                })
+        return data
 
     def validate_numero_factura(self, value):
         perfil = self.context['request'].user.perfil_prestador
