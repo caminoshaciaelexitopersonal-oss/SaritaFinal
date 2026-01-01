@@ -38,28 +38,34 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         perfil = self.request.user.perfil_prestador
-        with transaction.atomic():
-            factura = serializer.save(perfil=perfil, creado_por=self.request.user)
-            logger.info(
-                f"[FACTURACION] Factura Creada: ID={factura.id}, Perfil={perfil.id}, Usuario={self.request.user.id}"
-            )
+        log_context = {
+            "user_id": self.request.user.id,
+            "profile_id": perfil.id,
+            "action": "CREATE_INVOICE",
+        }
 
-            # --- Creación del Asiento Contable de la Venta ---
-            try:
-                cuenta_ingresos = ChartOfAccount.objects.get(perfil=perfil, code='4135')
-                cuenta_cxc = ChartOfAccount.objects.get(perfil=perfil, code='1305')
-            except ChartOfAccount.DoesNotExist:
-                logger.error(
-                    f"[FACTURACION] Error al crear factura: Cuentas contables no encontradas. Perfil={perfil.id}"
-                )
-                raise serializers.ValidationError({
-                    "error": "CONFIGURACION_CONTABLE_INCOMPLETA",
-                    "detalle": "No se encontraron las cuentas contables requeridas para registrar la venta (Ingresos '4135' o Cuentas por Cobrar '1305'). Asegúrese de que el plan de cuentas esté configurado."
-                })
+        try:
+            with transaction.atomic():
+                # Primero, intenta obtener las cuentas para fallar rápido si no existen.
+                try:
+                    cuenta_ingresos = ChartOfAccount.objects.get(perfil=perfil, code='4135')
+                    cuenta_cxc = ChartOfAccount.objects.get(perfil=perfil, code='1305')
+                except ChartOfAccount.DoesNotExist:
+                    logger.error(
+                        f"[FACTURACION] Error al crear factura: Cuentas contables no encontradas. Perfil={perfil.id}"
+                    )
+                    raise serializers.ValidationError({
+                        "error": "CONFIGURACION_CONTABLE_INCOMPLETA",
+                        "detalle": "No se encontraron las cuentas contables requeridas para registrar la venta (Ingresos '4135' o Cuentas por Cobrar '1305'). Asegúrese de que el plan de cuentas esté configurado."
+                    })
 
-            journal_entry = JournalEntry.objects.create(
-                perfil=perfil,
-                entry_date=factura.fecha_emision,
+                factura = serializer.save(perfil=perfil, creado_por=self.request.user)
+                log_context['invoice_id'] = factura.id
+
+                # --- Creación del Asiento Contable de la Venta ---
+                journal_entry = JournalEntry.objects.create(
+                    perfil=perfil,
+                    entry_date=factura.fecha_emision,
                 description=f"Venta según Factura No. {factura.numero_factura}",
                 entry_type="VENTA",
                 user=self.request.user,
@@ -88,6 +94,43 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
             #     raise serializers.ValidationError(
             #         "No se encontró un 'Almacén Principal' para registrar la salida de inventario."
             #     )
+
+            logger.info("Creación de factura exitosa.", extra=log_context)
+
+        except serializers.ValidationError as e:
+            # Errores de validación de negocio (ej. cuentas no encontradas)
+            log_context['error'] = str(e.detail)
+            logger.warning("Fallo en la creación de factura (Validación).", extra=log_context)
+            # Re-lanza la excepción para que DRF la maneje y devuelva un 400.
+            raise
+        except Exception as e:
+            # Errores inesperados del sistema
+            log_context['error'] = str(e)
+            logger.error("Fallo crítico en la creación de factura (Excepción).", extra=log_context)
+            # Re-lanza la excepción para que DRF devuelva un 500.
+            raise
+
+    def perform_update(self, serializer):
+        perfil = self.request.user.perfil_prestador
+        log_context = {
+            "user_id": self.request.user.id,
+            "profile_id": perfil.id,
+            "action": "UPDATE_INVOICE",
+            "invoice_id": self.get_object().id,
+        }
+
+        try:
+            with transaction.atomic():
+                super().perform_update(serializer)
+                logger.info("Actualización de factura exitosa.", extra=log_context)
+        except serializers.ValidationError as e:
+            log_context['error'] = str(e.detail)
+            logger.warning("Fallo en la actualización de factura (Validación).", extra=log_context)
+            raise
+        except Exception as e:
+            log_context['error'] = str(e)
+            logger.error("Fallo crítico en la actualización de factura (Excepción).", extra=log_context)
+            raise
 
 
     @action(detail=True, methods=['post'], url_path='registrar-pago')

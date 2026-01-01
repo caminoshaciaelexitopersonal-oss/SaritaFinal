@@ -29,7 +29,11 @@ class FacturaVentaListSerializer(serializers.ModelSerializer):
 
 class FacturaVentaDetailSerializer(serializers.ModelSerializer):
     """
-    Serializador BFF para el detalle de una factura. Optimizado para lectura.
+    CONTRATO DE LECTURA V1 - Detalle de Factura
+
+    Expone una vista completa y enriquecida de una factura. Utilizado para
+    mostrar el detalle de una factura al usuario. Todos los campos son de
+    solo lectura.
     """
     items = ItemFacturaSerializer(many=True, read_only=True)
     cliente = ClienteSerializer(read_only=True)
@@ -52,6 +56,15 @@ class FacturaVentaDetailSerializer(serializers.ModelSerializer):
 
 
 class FacturaVentaWriteSerializer(serializers.ModelSerializer):
+    """
+    CONTRATO DE ESCRITURA V1 - Creación/Actualización de Factura
+
+    Define el contrato estricto para la creación y actualización de facturas.
+    - El cliente envía solo los datos de entrada requeridos.
+    - El servidor calcula subtotales, impuestos, totales y gestiona el estado.
+    - Cualquier intento de enviar campos calculados resultará en un error 400.
+    - No se permite la modificación de facturas en estados finales (PAGADA, ANULADA).
+    """
     items = ItemFacturaSerializer(many=True)
     creado_por = serializers.HiddenField(default=serializers.CurrentUserDefault())
     # No exponemos 'cliente' para lectura, solo 'cliente_id' para escritura.
