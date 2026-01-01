@@ -50,13 +50,40 @@ class FacturaVentaWriteSerializer(serializers.ModelSerializer):
     # No exponemos 'cliente' para lectura, solo 'cliente_id' para escritura.
     cliente_id = serializers.IntegerField(write_only=True)
 
+    # --- INICIO DE CONTRATOS EXPLÍCITOS ---
+    subtotal = serializers.DecimalField(
+        max_digits=12, decimal_places=2, read_only=True,
+        help_text="Campo calculado por el servidor. No enviar."
+    )
+    impuestos = serializers.DecimalField(
+        max_digits=12, decimal_places=2, read_only=True,
+        help_text="Campo calculado por el servidor. No enviar."
+    )
+    total = serializers.DecimalField(
+        max_digits=12, decimal_places=2, read_only=True,
+        help_text="Campo calculado por el servidor. No enviar."
+    )
+    total_pagado = serializers.DecimalField(
+        max_digits=12, decimal_places=2, read_only=True,
+        help_text="Campo calculado por el servidor. No enviar."
+    )
+    estado = serializers.CharField(
+        read_only=True,
+        # El default del modelo ya lo establece, pero aquí lo hacemos explícito en el contrato.
+        default=FacturaVenta.Estado.BORRADOR,
+        help_text="El estado es gestionado por el servidor y el valor inicial siempre es 'Borrador'."
+    )
+    # --- FIN DE CONTRATOS EXPLÍCITOS ---
+
     class Meta:
         model = FacturaVenta
         fields = [
             'id', 'cliente_id', 'numero_factura', 'fecha_emision', 'fecha_vencimiento',
             'subtotal', 'impuestos', 'total', 'total_pagado', 'estado', 'creado_por', 'items'
         ]
-        read_only_fields = ('subtotal', 'impuestos', 'total', 'total_pagado', 'estado')
+        # Los campos ahora están definidos explícitamente arriba con read_only=True,
+        # por lo que esta tupla ya no es necesaria.
+        read_only_fields = ()
 
     def validate_numero_factura(self, value):
         perfil = self.context['request'].user.perfil_prestador

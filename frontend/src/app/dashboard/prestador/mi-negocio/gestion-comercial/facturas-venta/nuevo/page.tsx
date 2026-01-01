@@ -16,15 +16,17 @@ import { useEffect, useState } from 'react';
 import { PlusCircle, Trash2 } from 'lucide-react';
 
 const itemSchema = z.object({
-  producto: z.coerce.number().min(1, 'Seleccione un producto.'),
+  // Contrato Estricto: El ID del producto es un UUID en formato string.
+  producto_id: z.string().uuid({ message: "Debe ser un UUID válido." }),
+  descripcion: z.string().min(1, "La descripción es requerida."),
   cantidad: z.coerce.number().min(1, 'La cantidad debe ser al menos 1.'),
   precio_unitario: z.coerce.number().positive('El precio debe ser positivo.'),
 });
 
 const facturaSchema = z.object({
-  cliente: z.coerce.number().min(1, 'Seleccione un cliente.'),
+  cliente_id: z.coerce.number().min(1, 'Seleccione un cliente.'),
   fecha_emision: z.string().min(1, 'La fecha es requerida.'),
-  fecha_vencimiento: z.string().min(1, 'La fecha es requerida.'),
+  fecha_vencimiento: z.string().optional(),
   items: z.array(itemSchema).min(1, 'Debe haber al menos un ítem en la factura.'),
 });
 
@@ -41,7 +43,7 @@ const NuevaFacturaPage = () => {
     defaultValues: {
       fecha_emision: new Date().toISOString().split('T')[0],
       fecha_vencimiento: new Date().toISOString().split('T')[0],
-      items: [{ producto: 0, cantidad: 1, precio_unitario: 0 }],
+      items: [{ producto_id: '', descripcion: '', cantidad: 1, precio_unitario: 0 }],
     },
   });
 
@@ -62,32 +64,26 @@ const NuevaFacturaPage = () => {
     fetchData();
   }, [getClientes, getProductos]);
 
-  const handleProductChange = (productoId: number, index: number) => {
+  const handleProductChange = (productoId: string, index: number) => {
     const selectedProduct = productos.find(p => p.id === productoId);
     if (selectedProduct) {
       form.setValue(`items.${index}.precio_unitario`, Number(selectedProduct.precio_venta));
+      form.setValue(`items.${index}.descripcion`, selectedProduct.nombre);
     }
   };
 
+  // El frontend ya no calcula totales. Esta es responsabilidad del backend.
   const calculateSubtotal = () => {
     return watchedItems.reduce((acc, item) => acc + (item.cantidad * item.precio_unitario), 0);
   };
-
   const subtotal = calculateSubtotal();
-  const impuestos = subtotal * 0.19; // Asumiendo un 19% de IVA
-  const total = subtotal + impuestos;
 
   const onSubmit = async (data: FacturaFormValues) => {
-    const formattedData = {
-      ...data,
-      items: data.items.map(item => ({
-        ...item,
-        precio_unitario: String(item.precio_unitario),
-      })),
-    };
-    const result = await createFacturaVenta(formattedData);
+    // El backend es la única fuente de la verdad para los cálculos.
+    // El frontend solo envía los datos de entrada.
+    const result = await createFacturaVenta(data);
     if (result) {
-      toast.success('Factura creada con éxito.');
+      toast.success('Factura creada con éxito. Los totales han sido calculados por el servidor.');
       router.push('/dashboard/prestador/mi-negocio/gestion-comercial/facturas-venta');
     }
   };
@@ -100,7 +96,7 @@ const NuevaFacturaPage = () => {
           <Card>
             <CardHeader><CardTitle>Información General</CardTitle></CardHeader>
             <CardContent className="grid md:grid-cols-3 gap-4">
-              <FormField name="cliente" control={form.control} render={({ field }) => (
+              <FormField name="cliente_id" control={form.control} render={({ field }) => (
                 <FormItem>
                   <FormLabel>Cliente</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={String(field.value || '')}>
@@ -126,9 +122,10 @@ const NuevaFacturaPage = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-2/5">Producto/Servicio</TableHead>
+                    <TableHead className="w-2/5">Descripción</TableHead>
                     <TableHead>Cantidad</TableHead>
                     <TableHead>Precio Unitario</TableHead>
-                    <TableHead>Total</TableHead>
+                    <TableHead>Subtotal Ítem</TableHead>
                     <TableHead>Acción</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -136,14 +133,19 @@ const NuevaFacturaPage = () => {
                   {fields.map((field, index) => (
                     <TableRow key={field.id}>
                       <TableCell>
-                        <FormField name={`items.${index}.producto`} control={form.control} render={({ field }) => (
+                        <FormField name={`items.${index}.producto_id`} control={form.control} render={({ field }) => (
                           <FormItem>
-                            <Select onValueChange={(value) => { field.onChange(value); handleProductChange(Number(value), index); }} defaultValue={String(field.value || '')}>
+                            <Select onValueChange={(value) => { field.onChange(value); handleProductChange(value, index); }} defaultValue={field.value || ''}>
                               <FormControl><SelectTrigger><SelectValue placeholder="Seleccione..." /></SelectTrigger></FormControl>
-                              <SelectContent>{productos.map(p => <SelectItem key={p.id} value={String(p.id)}>{p.nombre}</SelectItem>)}</SelectContent>
+                              <SelectContent>{productos.map(p => <SelectItem key={p.id} value={p.id}>{p.nombre}</SelectItem>)}</SelectContent>
                             </Select>
                             <FormMessage />
                           </FormItem>
+                        )} />
+                      </TableCell>
+                      <TableCell>
+                        <FormField name={`items.${index}.descripcion`} control={form.control} render={({ field }) => (
+                            <FormItem><FormControl><Input {...field} /></FormControl></FormItem>
                         )} />
                       </TableCell>
                       <TableCell>
@@ -166,14 +168,13 @@ const NuevaFacturaPage = () => {
                   ))}
                 </TableBody>
               </Table>
-              <Button type="button" variant="outline" size="sm" className="mt-4" onClick={() => append({ producto: 0, cantidad: 1, precio_unitario: 0 })}>
+              <Button type="button" variant="outline" size="sm" className="mt-4" onClick={() => append({ producto_id: '', descripcion: '', cantidad: 1, precio_unitario: 0 })}>
                 <PlusCircle className="h-4 w-4 mr-2" /> Añadir Ítem
               </Button>
             </CardContent>
              <div className="p-6 font-medium text-right space-y-2">
-              <div>Subtotal: ${subtotal.toFixed(2)}</div>
-              <div>Impuestos (19%): ${impuestos.toFixed(2)}</div>
-              <div className="text-xl font-bold">Total: ${total.toFixed(2)}</div>
+              {/* El frontend ya no calcula el total general. Solo muestra el subtotal de la línea de ítems como feedback visual. */}
+              <div className="text-xl font-bold">Subtotal (informativo): ${subtotal.toFixed(2)}</div>
             </div>
           </Card>
 
