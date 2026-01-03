@@ -1,6 +1,7 @@
 # --- Core Django Dependencies ---
 Django==5.2.6
 djangorestframework==3.16.1
+drf-spectacular==0.27.2
 django-cors-headers==4.9.0
 asgiref==3.9.2
 Pillow==11.3.0

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "allauth.mfa",
     "dj_rest_auth",
     "corsheaders",
+    "drf_spectacular",
     "anymail",
     "django_filters",
     "modeltranslation",
@@ -216,6 +217,22 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Sarita API - Mi Negocio',
+    'DESCRIPTION': 'API para los módulos del panel "Mi Negocio"',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # Limitar la generación del esquema a las rutas de mi-negocio
+    'URL_PATTERNS': [
+        r'^/api/v1/mi-negocio/',
+    ],
+    # Excluir explícitamente las rutas de la API pública que tienen problemas
+    'URL_PATTERNS_EXCLUDE': [
+        r'^/api/',
+    ]
 }
 
 # Email con anymail
