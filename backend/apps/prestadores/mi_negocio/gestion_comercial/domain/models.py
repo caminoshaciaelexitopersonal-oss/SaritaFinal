@@ -10,6 +10,7 @@ from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria
 class FacturaVenta(models.Model):
     class Estado(models.TextChoices):
         BORRADOR = 'BORRADOR', 'Borrador'
+        COMERCIAL_CONFIRMADA = 'COMERCIAL_CONFIRMADA', 'Comercial Confirmada'
         ENVIADA = 'ENVIADA', 'Enviada'
         PAGADA = 'PAGADA', 'Pagada'
         VENCIDA = 'VENCIDA', 'Vencida'
@@ -24,7 +25,7 @@ class FacturaVenta(models.Model):
     impuestos = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
     total = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
     total_pagado = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
-    estado = models.CharField(max_length=20, choices=Estado.choices, default=Estado.BORRADOR)
+    estado = models.CharField(max_length=50, choices=Estado.choices, default=Estado.BORRADOR)
     creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
 
     def __str__(self):

@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     # "apps.prestadores.mi_negocio.gestion_contable.proyectos.apps.ProyectosConfig",
 
     # Módulos de "Mi Negocio" - Implementados
+    "apps.prestadores.mi_negocio.facturacion.apps.FacturacionConfig", # Stub para F19
     # Nota: 'mi_negocio' es un módulo paraguas, no una app instalable.
     # Las apps de gestión_operativa ya están contenidas en 'prestadores'.
     "apps.companies.apps.CompaniesConfig",

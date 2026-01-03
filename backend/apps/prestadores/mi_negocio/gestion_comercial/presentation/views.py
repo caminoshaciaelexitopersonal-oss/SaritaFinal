@@ -133,6 +133,41 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
             raise
 
 
+    @action(detail=True, methods=['post'])
+    def confirmar(self, request, pk=None):
+        """
+        Confirma una factura comercial, cambia su estado a COMERCIAL_CONFIRMADA,
+        y emite una señal para notificar al pipeline de facturación.
+        """
+        factura = self.get_object()
+        if factura.estado != FacturaVenta.Estado.BORRADOR:
+            return Response(
+                {"error": "Solo se pueden confirmar facturas en estado 'Borrador'."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        factura.estado = FacturaVenta.Estado.COMERCIAL_CONFIRMADA
+        factura.save()
+
+        # Emitir la señal para el siguiente módulo del pipeline
+        from ..signals import factura_comercial_confirmada
+        factura_comercial_confirmada.send(sender=self.__class__, factura=factura)
+
+        logger.info(
+            "Factura comercial confirmada.",
+            extra={
+                "user_id": request.user.id,
+                "profile_id": factura.perfil.id,
+                "action": "CONFIRM_COMMERCIAL_INVOICE",
+                "invoice_id": factura.id,
+            }
+        )
+
+        return Response(
+            {"status": "Factura confirmada y enviada al pipeline de facturación."},
+            status=status.HTTP_200_OK
+        )
+
     @action(detail=True, methods=['post'], url_path='registrar-pago')
     @transaction.atomic
     def registrar_pago(self, request, pk=None):
