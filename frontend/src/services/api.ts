@@ -501,6 +501,18 @@ export const createHechoHistorico = async (data: FormData): Promise<HechoHistori
   return response.data;
 };
 
+// --- Tipos para "Mi Negocio" ---
+
+export interface FacturaVenta {
+  id: number;
+  numero_factura: string;
+  cliente_nombre: string;
+  fecha_emision: string;
+  total: number;
+  estado: string;
+  estado_display: string;
+}
+
 // --- API de Perfil de Prestador ---
 
 export interface PrestadorProfileData {
