@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    container_name: db_test
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: turismo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  backend:
+    build: .
+    container_name: backend_test
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://admin:admin@db:5432/turismo
+      - DJANGO_SETTINGS_MODULE=puerto_gaitan_turismo.settings
+
+  frontend:
+    image: node:20
+    container_name: frontend_test
+    working_dir: /app/frontend
+    # Instalar dependencias antes de iniciar el servidor de desarrollo
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000/api
+
+volumes:
+  postgres_data: {}

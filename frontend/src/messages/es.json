@@ -1,0 +1,18 @@
+{
+  "Header": {
+    "discover": "Descubre",
+    "directory": "Directorio",
+    "my_trip": "Mi Viaje",
+    "language": "Idioma",
+    "login": "Iniciar Sesión",
+    "register": "Regístrate",
+    "dashboard": "Panel de Control",
+    "logout": "Cerrar Sesión"
+  },
+  "LoginForm": {
+    "title": "Iniciar Sesión",
+    "username_label": "Nombre de Usuario",
+    "password_label": "Contraseña",
+    "submit_button": "Iniciar Sesión"
+  }
+}
