@@ -1,79 +1,98 @@
 from django.db import models
+from django.db.models import Sum
 from django.conf import settings
 from decimal import Decimal
-from django.db.models import Sum
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product as Producto
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria
 
 class FacturaVenta(models.Model):
     class Estado(models.TextChoices):
         BORRADOR = 'BORRADOR', 'Borrador'
-        COMERCIAL_CONFIRMADA = 'COMERCIAL_CONFIRMADA', 'Comercial Confirmada'
-        ENVIADA = 'ENVIADA', 'Enviada'
+        EMITIDA = 'EMITIDA', 'Emitida'
         PAGADA = 'PAGADA', 'Pagada'
-        VENCIDA = 'VENCIDA', 'Vencida'
         ANULADA = 'ANULADA', 'Anulada'
+
+    class EstadoDIAN(models.TextChoices):
+        PENDIENTE_ENVIO = 'PENDIENTE_ENVIO', 'Pendiente de Envío'
+        ENVIADA = 'ENVIADA', 'Enviada'
+        ACEPTADA = 'ACEPTADA', 'Aceptada'
+        RECHAZADA = 'RECHAZADA', 'Rechazada con Errores'
+        CONTINGENCIA = 'CONTINGENCIA', 'Contingencia'
 
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='facturas_venta')
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='facturas')
     numero_factura = models.CharField(max_length=50)
     fecha_emision = models.DateField()
     fecha_vencimiento = models.DateField(null=True, blank=True)
-    subtotal = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
-    impuestos = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
-    total = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
-    total_pagado = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
-    estado = models.CharField(max_length=50, choices=Estado.choices, default=Estado.BORRADOR)
-    creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    subtotal = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    impuestos = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    total_pagado = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    estado = models.CharField(max_length=20, choices=Estado.choices, default=Estado.BORRADOR)
+    creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='facturas_creadas')
+
+    # --- Campos de Facturación Electrónica ---
+    estado_dian = models.CharField(
+        max_length=20,
+        choices=EstadoDIAN.choices,
+        default=EstadoDIAN.PENDIENTE_ENVIO,
+        null=True,
+        blank=True
+    )
+    cufe = models.CharField(max_length=255, null=True, blank=True, help_text="Código Único de Factura Electrónica")
+    track_id_dian = models.CharField(max_length=255, null=True, blank=True, help_text="ID de seguimiento de la DIAN")
+    xml_dian = models.TextField(null=True, blank=True, help_text="XML de la factura electrónica enviada a la DIAN")
+    pdf_dian = models.FileField(upload_to='facturas_electronicas/', null=True, blank=True, help_text="PDF de la representación gráfica de la factura")
+    dian_response_log = models.JSONField(default=dict, null=True, blank=True, help_text="Log de respuestas de la DIAN")
+
+
+    class Meta:
+        unique_together = ('perfil', 'numero_factura')
+        ordering = ['-fecha_emision', '-numero_factura']
 
     def __str__(self):
-        return f"Factura {self.numero_factura} a {self.cliente.nombre}"
+        return f"Factura #{self.numero_factura} - {self.cliente.nombre}"
 
     def recalcular_totales(self):
-        items = self.items.all()
-        self.subtotal = items.aggregate(total=Sum('subtotal'))['total'] or Decimal('0.00')
-        self.impuestos = items.aggregate(total=Sum('impuestos'))['total'] or Decimal('0.00')
+        subtotal = self.items.aggregate(total=Sum('subtotal'))['total'] or Decimal('0.00')
+        self.subtotal = subtotal
+        # Asumimos una tasa de impuestos fija por ahora. Una implementación real sería más compleja.
+        self.impuestos = self.subtotal * Decimal('0.19')
         self.total = self.subtotal + self.impuestos
         self.save()
 
     def actualizar_estado_pago(self):
-        self.total_pagado = self.recibos.aggregate(total=Sum('monto'))['total'] or Decimal('0.00')
+        pagado = self.recibos_caja.aggregate(total=Sum('monto'))['total'] or Decimal('0.00')
+        self.total_pagado = pagado
         if self.total_pagado >= self.total:
             self.estado = self.Estado.PAGADA
-        else:
-            self.estado = self.Estado.ENVIADA
         self.save()
 
 class ItemFactura(models.Model):
     factura = models.ForeignKey(FacturaVenta, on_delete=models.CASCADE, related_name='items')
-    producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True, blank=True)
+    producto = models.ForeignKey(Product, on_delete=models.PROTECT)
     descripcion = models.CharField(max_length=255)
-    cantidad = models.DecimalField(max_digits=10, decimal_places=2)
-    precio_unitario = models.DecimalField(max_digits=18, decimal_places=2)
-    subtotal = models.DecimalField(max_digits=18, decimal_places=2)
-    impuestos = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+    cantidad = models.PositiveIntegerField()
+    precio_unitario = models.DecimalField(max_digits=12, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=12, decimal_places=2)
+    impuestos = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     def save(self, *args, **kwargs):
         self.subtotal = self.cantidad * self.precio_unitario
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.cantidad} x {self.producto.nombre}"
+
 class ReciboCaja(models.Model):
-    class MetodoPago(models.TextChoices):
-        EFECTIVO = 'EFECTIVO', 'Efectivo'
-        TRANSFERENCIA = 'TRANSFERENCIA', 'Transferencia'
-        TARJETA = 'TARJETA', 'Tarjeta'
-        OTRO = 'OTRO', 'Otro'
-
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='recibos_caja')
-    factura = models.ForeignKey(FacturaVenta, on_delete=models.CASCADE, related_name='recibos')
-    cuenta_bancaria = models.ForeignKey(CuentaBancaria, on_delete=models.PROTECT, help_text="Cuenta donde se recibe el pago")
+    factura = models.ForeignKey(FacturaVenta, on_delete=models.CASCADE, related_name='recibos_caja')
+    cuenta_bancaria = models.ForeignKey(CuentaBancaria, on_delete=models.PROTECT)
     fecha_pago = models.DateField()
-    monto = models.DecimalField(max_digits=18, decimal_places=2)
-    metodo_pago = models.CharField(max_length=20, choices=MetodoPago.choices)
+    monto = models.DecimalField(max_digits=12, decimal_places=2)
+    metodo_pago = models.CharField(max_length=50)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.factura.actualizar_estado_pago()
-        # Aquí se podría crear una TransaccionBancaria de INGRESO automáticamente
+    def __str__(self):
+        return f"Recibo de Caja #{self.id} para Factura #{self.factura.numero_factura}"
