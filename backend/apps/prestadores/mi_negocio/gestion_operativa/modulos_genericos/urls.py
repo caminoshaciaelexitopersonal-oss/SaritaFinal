@@ -22,14 +22,14 @@ router.register(r'politicas-cancelacion', PoliticaCancelacionViewSet, basename='
 router.register(r'valoraciones', ValoracionViewSet, basename='valoracion')
 
 # El PerfilViewSet no usa un router estándar porque tiene acciones personalizadas
-perfil_urls = [
-    path('perfil/me/', PerfilViewSet.as_view({'get': 'me'}), name='perfil-me'),
-    path('perfil/update-me/', PerfilViewSet.as_view({'put': 'update_me', 'patch': 'update_me'}), name='perfil-update-me'),
-]
+# perfil_urls = [
+#     path('perfil/me/', PerfilViewSet.as_view({'get': 'me'}), name='perfil-me'),
+#     path('perfil/update-me/', PerfilViewSet.as_view({'put': 'update_me', 'patch': 'update_me'}), name='perfil-update-me'),
+# ]
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('', include(perfil_urls)),
+    # path('', include(perfil_urls)),
     # Módulos especializados
     path('alojamiento/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.alojamientos.urls')),
     path('gastronomia/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.gastronomia.urls')),

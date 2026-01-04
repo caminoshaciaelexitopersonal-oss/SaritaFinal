@@ -8,21 +8,29 @@ from ..reservas.models import PoliticaCancelacion
 
 class Product(TenantAwareModel):
     """
-    Modelo genérico y polimórfico para cualquier 'cosa' vendible o reservable.
-    Adaptado del modelo de referencia `tourism_core`.
+    Modelo genérico para cualquier 'cosa' vendible o reservable.
     """
-    class ProductNature(models.TextChoices):
-        SERVICE = 'SERVICE', _('Servicio (Reservable)')
-        GOOD = 'GOOD', _('Bien Físico (Comprable)')
-        PACKAGE = 'PACKAGE', _('Paquete (Compuesto)')
+    class Tipo(models.TextChoices):
+        PRODUCTO = 'PRODUCTO', _('Producto')
+        SERVICIO = 'SERVICIO', _('Servicio')
 
     nombre = models.CharField(_("Nombre"), max_length=200)
     descripcion = models.TextField(_("Descripción"), blank=True)
-    nature = models.CharField(_("Naturaleza"), max_length=10, choices=ProductNature.choices)
+    tipo = models.CharField(
+        _("Tipo"),
+        max_length=10,
+        choices=Tipo.choices,
+        default=Tipo.PRODUCTO
+    )
+    es_inventariable = models.BooleanField(
+        _("Es Inventariable"),
+        default=False,
+        help_text=_("Marcar si este producto gestiona stock.")
+    )
+    stock = models.PositiveIntegerField(_("Stock Actual"), default=0, help_text=_("La cantidad actual de este producto en inventario."))
     base_price = MoneyField(_("Precio Base"), max_digits=19, decimal_places=2, default_currency='COP')
-    stock = models.PositiveIntegerField(_("Stock/Capacidad"), default=1, help_text=_("Capacidad por evento, o unidades de un bien."))
 
-    is_packageable = models.BooleanField(_("Es Empaquetable"), default=False, help_text=_("¿Puede este servicio ser parte de un paquete de agencia?"))
+    is_packageable = models.BooleanField(_("Es Empaquetable"), default=False, help_text=_("¿Puede este servicio/producto ser parte de un paquete?"))
     operational_tags = models.ManyToManyField(OperationalTag, blank=True)
     cancellation_policy = models.ForeignKey(PoliticaCancelacion, on_delete=models.SET_NULL, null=True, blank=True)
 

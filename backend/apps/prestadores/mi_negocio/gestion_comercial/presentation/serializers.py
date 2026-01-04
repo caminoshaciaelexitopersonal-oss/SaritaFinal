@@ -2,18 +2,17 @@ from rest_framework import serializers
 from ..domain.models import FacturaVenta, ItemFactura, ReciboCaja
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.serializers import ClienteSerializer
 
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+
 class ItemFacturaSerializer(serializers.ModelSerializer):
-    producto_id = serializers.UUIDField(write_only=True)
+    producto_id = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all(), source='producto', write_only=True
+    )
 
     class Meta:
         model = ItemFactura
         fields = ['id', 'producto', 'producto_id', 'descripcion', 'cantidad', 'precio_unitario', 'subtotal', 'impuestos']
         read_only_fields = ('subtotal', 'producto',)
-
-    def create(self, validated_data):
-        # Mapear producto_id al campo 'producto' del modelo
-        validated_data['producto_id'] = validated_data.pop('producto_id')
-        return super().create(validated_data)
 
 class FacturaVentaListSerializer(serializers.ModelSerializer):
     """

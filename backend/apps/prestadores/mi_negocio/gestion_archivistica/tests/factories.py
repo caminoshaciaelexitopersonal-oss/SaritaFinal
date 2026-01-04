@@ -3,9 +3,8 @@ from factory.django import DjangoModelFactory
 import uuid
 
 from apps.companies.models import Company
-from apps.api.models import CustomUser
+from api.models import CustomUser, ProviderProfile
 from ..models import Document, DocumentVersion, Process, DocumentType, ProcessType
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
 
 # --- FÁBRICAS DE ENTIDADES BASE ---
 class CompanyFactory(DjangoModelFactory):
@@ -27,10 +26,11 @@ class UserFactory(DjangoModelFactory):
     username = factory.Faker('user_name')
     email = factory.Faker('email')
     password = factory.PostGenerationMethodCall('set_password', 'defaultpassword')
+    role = CustomUser.Role.PRESTADOR
 
-class PerfilFactory(DjangoModelFactory):
+class ProviderProfileFactory(DjangoModelFactory):
     class Meta:
-        model = Perfil
+        model = ProviderProfile
 
     usuario = factory.SubFactory(UserFactory)
     company = factory.SubFactory(CompanyFactory)

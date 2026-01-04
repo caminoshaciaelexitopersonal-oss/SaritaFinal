@@ -15,7 +15,7 @@ class ContractValidationTests(APITestCase):
         de negocio clave estén correctamente documentadas.
         """
         # Obtener el esquema generado en vivo
-        response = self.client.get(reverse('schema'))
+        response = self.client.get('/api/schema/')
         self.assertEqual(response.status_code, 200)
 
         # Cargar el esquema YAML a un diccionario de Python
