@@ -17,6 +17,7 @@ from .serializers import (
 )
 from apps.prestadores.mi_negocio.gestion_financiera.models import TransaccionBancaria
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction as ContabTransaction, ChartOfAccount
+from apps.prestadores.mi_negocio.gestion_contable.services import FacturaVentaAccountingService
 from apps.prestadores.mi_negocio.gestion_contable.inventario.models import MovimientoInventario, Almacen
 
 class IsPrestadorOwner(permissions.BasePermission):
@@ -46,20 +47,7 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
 
         try:
             with transaction.atomic():
-                # Primero, intenta obtener las cuentas para fallar rápido si no existen.
-                try:
-                    cuenta_ingresos = ChartOfAccount.objects.get(perfil=perfil, code='4135')
-                    cuenta_cxc = ChartOfAccount.objects.get(perfil=perfil, code='1305')
-                except ChartOfAccount.DoesNotExist:
-                    logger.error(
-                        f"[FACTURACION] Error al crear factura: Cuentas contables no encontradas. Perfil={perfil.id}"
-                    )
-                    raise serializers.ValidationError({
-                        "error": "CONFIGURACION_CONTABLE_INCOMPLETA",
-                        "detalle": "No se encontraron las cuentas contables requeridas para registrar la venta (Ingresos '4135' o Cuentas por Cobrar '1305'). Asegúrese de que el plan de cuentas esté configurado."
-                    })
-
-                # --- Validación de Stock (Nueva Lógica) ---
+                # 1. Validación de Stock
                 items_data = serializer.validated_data.get('items', [])
                 for item_data in items_data:
                     producto = item_data.get('producto')
@@ -71,27 +59,14 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
                                 "detalle": f"No hay suficiente stock para el producto '{producto.nombre}'. Stock actual: {producto.stock}, Cantidad solicitada: {cantidad}."
                             })
 
+                # 2. Guardar la factura
                 factura = serializer.save(perfil=perfil, creado_por=self.request.user)
                 log_context['invoice_id'] = factura.id
 
-                # --- Creación del Asiento Contable de la Venta ---
-                journal_entry = JournalEntry.objects.create(
-                    perfil=perfil,
-                    entry_date=factura.fecha_emision,
-                description=f"Venta según Factura No. {factura.numero_factura}",
-                entry_type="VENTA",
-                user=self.request.user
-                # origin_document=factura # Desactivado para evitar errores de ContentType en pruebas
-            )
+                # 3. Registrar el asiento contable usando el servicio
+                FacturaVentaAccountingService.registrar_factura_venta(factura)
 
-            # Débito a Cuentas por Cobrar
-            ContabTransaction.objects.create(journal_entry=journal_entry, account=cuenta_cxc, debit=factura.total, credit=Decimal('0.00'))
-            # Crédito a Ingresos
-            ContabTransaction.objects.create(journal_entry=journal_entry, account=cuenta_ingresos, debit=Decimal('0.00'), credit=factura.total)
-
-            # --- Creación de Movimientos de Inventario (Condicional) ---
-            try:
-                # Asumimos un almacén principal. En un sistema real, esto sería seleccionable.
+                # 4. Crear Movimientos de Inventario (Condicional)
                 almacen_principal = Almacen.objects.get(perfil=perfil, nombre__icontains='principal')
                 for item in factura.items.all():
                     # Solo procesar inventario si el producto es inventariable.
@@ -104,13 +79,6 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
                             descripcion=f"Venta según Factura No. {factura.numero_factura}",
                             usuario=self.request.user
                         )
-            except Almacen.DoesNotExist:
-                # Si no hay almacén principal, no se puede manejar inventario.
-                # Se podría lanzar un error si CUALQUIER producto es inventariable.
-                if any(item.producto and item.producto.es_inventariable for item in factura.items.all()):
-                    raise serializers.ValidationError(
-                        "Se intentó vender un producto inventariable, pero no se encontró un 'Almacén Principal' para registrar la salida de stock."
-                    )
 
             logger.info("Creación de factura exitosa.", extra=log_context)
 
