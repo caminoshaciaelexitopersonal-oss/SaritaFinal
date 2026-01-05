@@ -7,6 +7,54 @@ from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.mo
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria
 
+class OperacionComercial(models.Model):
+    class Estado(models.TextChoices):
+        BORRADOR = 'BORRADOR', 'Borrador'
+        CONFIRMADA = 'CONFIRMADA', 'Confirmada'
+        FACTURADA = 'FACTURADA', 'Facturada'
+        ANULADA = 'ANULADA', 'Anulada'
+
+    class TipoOperacion(models.TextChoices):
+        VENTA = 'VENTA', 'Venta de Productos/Servicios'
+        CONTRATO = 'CONTRATO', 'Contrato'
+        # Otros tipos se pueden añadir aquí
+
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='operaciones_comerciales')
+    cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='operaciones_comerciales')
+    tipo_operacion = models.CharField(max_length=20, choices=TipoOperacion.choices, default=TipoOperacion.VENTA)
+    estado = models.CharField(max_length=20, choices=Estado.choices, default=Estado.BORRADOR)
+
+    subtotal = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    impuestos = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_confirmacion = models.DateTimeField(null=True, blank=True)
+    creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f"Operación #{self.id} para {self.cliente.nombre}"
+
+    def recalcular_totales(self):
+        subtotal = self.items.aggregate(total=Sum('subtotal'))['total'] or Decimal('0.00')
+        self.subtotal = subtotal
+        self.impuestos = self.subtotal * Decimal('0.19') # Lógica de impuestos simplificada
+        self.total = self.subtotal + self.impuestos
+        self.save()
+
+class ItemOperacionComercial(models.Model):
+    operacion = models.ForeignKey(OperacionComercial, on_delete=models.CASCADE, related_name='items')
+    producto = models.ForeignKey(Product, on_delete=models.PROTECT)
+    descripcion = models.CharField(max_length=255)
+    cantidad = models.PositiveIntegerField()
+    precio_unitario = models.DecimalField(max_digits=12, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=12, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        self.subtotal = self.cantidad * self.precio_unitario
+        super().save(*args, **kwargs)
+
+
 class FacturaVenta(models.Model):
     class Estado(models.TextChoices):
         BORRADOR = 'BORRADOR', 'Borrador'
@@ -21,6 +69,7 @@ class FacturaVenta(models.Model):
         RECHAZADA = 'RECHAZADA', 'Rechazada con Errores'
         CONTINGENCIA = 'CONTINGENCIA', 'Contingencia'
 
+    operacion = models.OneToOneField(OperacionComercial, on_delete=models.PROTECT, related_name='factura')
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='facturas_venta')
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='facturas')
     numero_factura = models.CharField(max_length=50)
