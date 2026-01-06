@@ -11,7 +11,7 @@ from .models import Proveedor, FacturaCompra
 from .serializers import ProveedorSerializer, FacturaCompraSerializer
 
 # Modelos de otros módulos para integración
-from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, TransaccionBancaria
+from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, OrdenPago
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
 
 
@@ -77,14 +77,13 @@ class FacturaCompraViewSet(viewsets.ModelViewSet):
         except CuentaBancaria.DoesNotExist:
             return Response({"error": "La cuenta bancaria no existe o no pertenece a su perfil."}, status=status.HTTP_404_NOT_FOUND)
 
-        # 1. Crear la transacción de egreso en el módulo financiero
-        TransaccionBancaria.objects.create(
-            cuenta=cuenta_bancaria,
-            fecha=factura.fecha_emision, # O usar la fecha actual: timezone.now().date()
-            tipo=TransaccionBancaria.TipoTransaccion.EGRESO,
+        # 1. Crear la orden de pago en el módulo financiero
+        OrdenPago.objects.create(
+            perfil=request.user.perfil_prestador,
+            cuenta_bancaria_origen=cuenta_bancaria,
             monto=factura.total,
-            descripcion=f"Pago de Factura #{factura.numero_factura} a {factura.proveedor.nombre}",
-            creado_por=request.user
+            concepto=f"Pago de Factura #{factura.numero_factura} a {factura.proveedor.nombre}",
+            estado=OrdenPago.EstadoPago.PAGADA
         )
 
         # 2. Crear el asiento contable del pago
