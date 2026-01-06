@@ -28,7 +28,19 @@ class OperacionComercialViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def confirmar(self, request, pk=None):
         operacion = self.get_object()
-        # ... (lógica de confirmación existente)
+        if operacion.estado != OperacionComercial.Estado.BORRADOR:
+            return Response(
+                {"error": "Solo se pueden confirmar operaciones en estado 'Borrador'."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            FacturacionService.facturar_operacion_confirmada(operacion)
+        except ValidationError as e:
+            return Response({"error": "Error de validación durante la facturación.", "detalle": e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": "Error inesperado durante la facturación.", "detalle": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         return Response(OperacionComercialSerializer(operacion).data)
 
 

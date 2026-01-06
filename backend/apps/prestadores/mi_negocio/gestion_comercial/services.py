@@ -3,7 +3,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from .domain.models import OperacionComercial, FacturaVenta, ItemFactura
-from apps.prestadores.mi_negocio.gestion_contable.services import FacturaVentaAccountingService
+from apps.prestadores.mi_negocio.gestion_contable.services.facturacion import FacturaVentaAccountingService
 from .dian_services import DianService
 
 class FacturacionService:
