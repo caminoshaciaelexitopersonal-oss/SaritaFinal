@@ -10,14 +10,18 @@ from apps.prestadores.mi_negocio.gestion_comercial.services import FacturacionSe
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount, JournalEntry
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from ..cierres.models import PeriodoContable
+from django.urls import reverse
+from rest_framework.test import APITestCase
 
 User = get_user_model()
 
-class ContabilidadIntegrationTest(TestCase):
+class ContabilidadIntegrationTest(APITestCase):
     def setUp(self):
         self.company = Company.objects.create(name="Test Co", code="TC02")
-        self.user = User.objects.create_user('prestador2@test.com', 'password')
+        self.user = User.objects.create_user('prestador2@test.com', 'password', role='PRESTADOR')
         self.profile = ProviderProfile.objects.create(usuario=self.user, company=self.company)
+        self.client.force_authenticate(user=self.user)
 
         # Crear cuentas contables básicas
         ChartOfAccount.objects.create(perfil=self.profile, code='1305', name='CXC')
@@ -50,3 +54,19 @@ class ContabilidadIntegrationTest(TestCase):
         self.assertGreater(journal_entry.total_debits, 0)
         self.assertEqual(journal_entry.total_debits, journal_entry.total_credits)
         self.assertEqual(journal_entry.total_credits, operacion.total)
+
+    def test_reporte_falla_si_periodo_esta_abierto(self):
+        """Verifica que el endpoint de reporte devuelve un error si el período no está cerrado."""
+        periodo = PeriodoContable.objects.create(
+            perfil=self.profile,
+            nombre="Enero 2024 Abierto",
+            fecha_inicio=datetime.date(2024, 1, 1),
+            fecha_fin=datetime.date(2024, 1, 31),
+            estado=PeriodoContable.Estado.ABIERTO
+        )
+        url = reverse('balance-general') + f'?periodo_id={periodo.id}'
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("debe estar cerrado", response.data['error'])

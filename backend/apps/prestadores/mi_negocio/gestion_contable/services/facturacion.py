@@ -4,7 +4,7 @@ from django.db import transaction
 from django.core.exceptions import ValidationError
 
 from apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta
-from ...contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+from ..contabilidad.models import JournalEntry, Transaction, ChartOfAccount
 
 class FacturaVentaAccountingService:
     @staticmethod
