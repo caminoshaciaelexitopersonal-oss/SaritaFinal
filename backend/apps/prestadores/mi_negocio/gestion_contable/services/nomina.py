@@ -1,7 +1,7 @@
 from decimal import Decimal
 from django.utils import timezone
-from ...contabilidad.models import JournalEntry, Transaction
-from ...contabilidad.services import ChartOfAccountService
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.services import ChartOfAccountService
 from ..nomina.models import Planilla, DetalleLiquidacion
 
 class ContabilidadNominaService:

@@ -5,7 +5,7 @@ from django.db.models import Sum, Q, F
 from decimal import Decimal
 
 from ..cierres.models import PeriodoContable
-from ..contabilidad.models import ChartOfAccount, Transaction
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount, Transaction
 
 class BalanceGeneralView(APIView):
     permission_classes = [permissions.IsAdminUser]

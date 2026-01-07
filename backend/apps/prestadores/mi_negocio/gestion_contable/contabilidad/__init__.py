@@ -1,1 +1,1 @@
-default_app_config = "apps.contabilidad.apps.ContabilidadConfig"
+# Este archivo convierte a contabilidad en un paquete de Python.

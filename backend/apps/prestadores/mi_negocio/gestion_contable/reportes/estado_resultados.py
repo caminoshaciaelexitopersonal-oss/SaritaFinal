@@ -5,7 +5,7 @@ from django.db.models import Sum
 from decimal import Decimal
 
 from ..cierres.models import PeriodoContable
-from ..contabilidad.models import Transaction
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import Transaction
 
 class EstadoResultadosView(APIView):
     permission_classes = [permissions.IsAdminUser]

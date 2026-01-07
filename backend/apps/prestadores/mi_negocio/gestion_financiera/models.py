@@ -1,6 +1,6 @@
 from django.db import models
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from ..gestion_contable.contabilidad.models import ChartOfAccount
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount
 from ..gestion_contable.empresa.models import Tercero
 
 class CuentaBancaria(models.Model):
