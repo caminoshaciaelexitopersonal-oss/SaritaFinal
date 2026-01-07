@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from decimal import Decimal
@@ -14,12 +15,18 @@ class CostCenter(models.Model):
     def __str__(self):
         return f"{self.code} - {self.name}"
 
+    class Meta:
+        app_label = 'contabilidad'
+
 class Currency(models.Model):
     code = models.CharField(max_length=3, primary_key=True)
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.code
+
+    class Meta:
+        app_label = 'contabilidad'
 
 class ExchangeRate(models.Model):
     from_currency = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name="rates_from")
@@ -29,6 +36,7 @@ class ExchangeRate(models.Model):
 
     class Meta:
         unique_together = ('from_currency', 'to_currency', 'date')
+        app_label = 'contabilidad'
 
 class ChartOfAccount(models.Model):
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="chart_of_accounts")
@@ -45,6 +53,7 @@ class ChartOfAccount(models.Model):
     class Meta:
         ordering = ['code']
         unique_together = ('perfil', 'code')
+        app_label = 'contabilidad'
 
     def __str__(self):
         return f"{self.code} - {self.name}"
@@ -62,9 +71,31 @@ class JournalEntry(models.Model):
 
     class Meta:
         ordering = ['-entry_date', '-id']
+        app_label = 'contabilidad'
 
     def __str__(self):
         return f"Asiento #{self.id} del {self.entry_date}"
+
+    def clean(self):
+        """
+        Valida que la suma de débitos sea igual a la suma de créditos (partida doble).
+        Esta validación debe ser llamada explícitamente después de crear el asiento
+        y todas sus transacciones asociadas.
+        """
+        super().clean()
+        # La validación solo tiene sentido si el objeto ya existe en la BD y tiene transacciones.
+        if self.pk:
+            totals = self.transactions.aggregate(
+                total_debit=Sum('debit'),
+                total_credit=Sum('credit')
+            )
+            total_debit = totals.get('total_debit') or Decimal('0.00')
+            total_credit = totals.get('total_credit') or Decimal('0.00')
+
+            if total_debit != total_credit:
+                raise ValidationError(
+                    f"El asiento no cumple con la partida doble. Total Débitos: {total_debit}, Total Créditos: {total_credit}"
+                )
 
 class Transaction(models.Model):
     journal_entry = models.ForeignKey(JournalEntry, on_delete=models.CASCADE, related_name="transactions")
@@ -75,6 +106,7 @@ class Transaction(models.Model):
 
     class Meta:
         ordering = ['id']
+        app_label = 'contabilidad'
 
     def clean(self):
         if self.debit > 0 and self.credit > 0:

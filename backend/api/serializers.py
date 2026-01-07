@@ -160,7 +160,7 @@ class ImagenPaginaInstitucionalSerializer(serializers.ModelSerializer):
 class PaginaInstitucionalSerializer(serializers.ModelSerializer):
     banner_url = serializers.ImageField(source='banner', read_only=True)
     actualizado_por_username = serializers.CharField(source='actualizado_por.username', read_only=True)
-    galeria_imagenes = ImagenPaginaInstitucionalSerializer(many=True, read_only=True, source='galeria_imagenes')
+    galeria_imagenes = ImagenPaginaInstitucionalSerializer(many=True, read_only=True)
 
     class Meta:
         model = PaginaInstitucional
@@ -457,7 +457,7 @@ class ArtesanoSerializer(serializers.ModelSerializer):
         fields = [
             'nombre_taller', 'nombre_artesano', 'descripcion', 'telefono', 'email_contacto',
             'foto_principal', 'foto_url', 'red_social_facebook', 'red_social_instagram', 'red_social_tiktok', 'red_social_whatsapp',
-            'ubicacion_taller', 'aprobado', 'rubro_nombre', 'galeria_imagenes',
+            'direccion', 'latitud', 'longitud', 'aprobado', 'rubro_nombre', 'galeria_imagenes',
             'puntuacion_capacitacion', 'puntuacion_reseñas', 'puntuacion_formularios', 'puntuacion_total'
         ]
         read_only_fields = [

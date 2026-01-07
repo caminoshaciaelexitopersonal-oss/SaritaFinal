@@ -66,6 +66,9 @@ INSTALLED_APPS = [
     # Módulos de "Mi Negocio"
     "apps.prestadores.mi_negocio.gestion_comercial.apps.GestionComercialConfig",
     "apps.prestadores.mi_negocio.gestion_financiera.apps.GestionFinancieraConfig",
+    "apps.prestadores.mi_negocio.gestion_contable.empresa.apps.EmpresaConfig",
+    "apps.prestadores.mi_negocio.gestion_contable.nomina.apps.NominaConfig",
+    "apps.prestadores.mi_negocio.gestion_contable.cierres",
 
     # Submódulos de Contabilidad
     "apps.prestadores.mi_negocio.gestion_contable.activos_fijos.apps.ActivosFijosConfig",

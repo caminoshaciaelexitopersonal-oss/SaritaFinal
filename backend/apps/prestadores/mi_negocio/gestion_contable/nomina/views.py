@@ -4,34 +4,27 @@ from .serializers import EmpleadoSerializer, ContratoSerializer, PlanillaSeriali
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if hasattr(obj, 'perfil'):
-            return obj.perfil == request.user.perfil_prestador
-        if hasattr(obj, 'empleado') and hasattr(obj.empleado, 'perfil'):
-             return obj.empleado.perfil == request.user.perfil_prestador
-        return False
+        return obj.perfil == request.user.perfil_prestador
 
 class EmpleadoViewSet(viewsets.ModelViewSet):
     serializer_class = EmpleadoSerializer
     permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
-
     def get_queryset(self):
         return Empleado.objects.filter(perfil=self.request.user.perfil_prestador)
 
 class ContratoViewSet(viewsets.ModelViewSet):
     serializer_class = ContratoSerializer
     permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
-
     def get_queryset(self):
         return Contrato.objects.filter(empleado__perfil=self.request.user.perfil_prestador)
 
 class PlanillaViewSet(viewsets.ModelViewSet):
     serializer_class = PlanillaSerializer
     permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
-
     def get_queryset(self):
         return Planilla.objects.filter(perfil=self.request.user.perfil_prestador)
 
-class ConceptoNominaViewSet(viewsets.ReadOnlyModelViewSet):
+class ConceptoNominaViewSet(viewsets.ModelViewSet):
     queryset = ConceptoNomina.objects.all()
     serializer_class = ConceptoNominaSerializer
     permission_classes = [permissions.IsAuthenticated]

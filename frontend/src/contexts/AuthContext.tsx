@@ -161,11 +161,21 @@ return userData; // Devolver los datos del usuario para uso inmediato
 }, [logout, loadEntity, clearEntity]);
 
 useEffect(() => {
-  const storedToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-  if (storedToken) {
-    setToken(storedToken);
-    fetchUserData().finally(() => setIsLoading(false));
+  const checkAuth = async () => {
+    // Esta función solo se ejecutará en el lado del cliente.
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      setToken(storedToken);
+      await fetchUserData();
+    }
+    setIsLoading(false);
+  };
+
+  // Asegurarse de que este código solo se ejecute en el navegador.
+  if (typeof window !== 'undefined') {
+    checkAuth();
   } else {
+    // En el servidor, siempre asumimos que no estamos autenticados inicialmente.
     setIsLoading(false);
   }
 }, [fetchUserData]);

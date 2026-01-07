@@ -16,20 +16,20 @@ class ReservaServicioAdicionalSerializer(serializers.ModelSerializer):
 
 class ReservaSerializer(serializers.ModelSerializer):
     servicios_adicionales = ReservaServicioAdicionalSerializer(many=True, required=False)
-    producto_info = ProductSerializer(source='producto', read_only=True)
+    # producto_info = ProductSerializer(source='producto', read_only=True)
     cliente_info = ClienteSerializer(source='cliente', read_only=True)
 
     class Meta:
         model = Reserva
         fields = [
-            'id', 'cliente', 'producto', 'politica_cancelacion', 'estado',
-            'fecha_inicio', 'fecha_fin', 'hora_inicio', 'hora_fin',
-            'cantidad_adultos', 'cantidad_ninos', 'costo_base', 'impuestos',
-            'costo_total', 'notas_cliente', 'notas_internas',
+            'id', 'cliente', 'estado',
+            'fecha_inicio', 'fecha_fin',
+            'precio_total', 'deposito_pagado',
+            'notas',
             'servicios_adicionales',
-            'producto_info', 'cliente_info'
+            'cliente_info'
         ]
-        read_only_fields = ('perfil', 'costo_total')
+        read_only_fields = ('perfil',)
 
     def create(self, validated_data):
         servicios_data = validated_data.pop('servicios_adicionales', [])

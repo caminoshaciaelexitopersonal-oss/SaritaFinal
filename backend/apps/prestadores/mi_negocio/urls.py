@@ -14,7 +14,10 @@ urlpatterns = [
     path('contable/compras/', include('apps.prestadores.mi_negocio.gestion_contable.compras.urls')),
     path('contable/contabilidad/', include('apps.prestadores.mi_negocio.gestion_contable.contabilidad.urls')),
     path('contable/inventario/', include('apps.prestadores.mi_negocio.gestion_contable.inventario.urls')),
-    # path('contable/nomina/', include('apps.prestadores.mi_negocio.gestion_contable.nomina.urls')),
+    path('contable/nomina/', include('apps.prestadores.mi_negocio.gestion_contable.nomina.urls')),
+    path('contable/cierres/', include('apps.prestadores.mi_negocio.gestion_contable.cierres.urls')),
+    path('contable/reportes/', include('apps.prestadores.mi_negocio.gestion_contable.reportes.urls')),
+    path('contable/impuestos/', include('apps.prestadores.mi_negocio.gestion_contable.impuestos.urls')),
     # path('contable/proyectos/', include('apps.prestadores.mi_negocio.gestion_contable.proyectos.urls')),
     # path('contable/presupuesto/', include('apps.prestadores.mi_negocio.gestion_contable.presupuesto.urls')),
 
