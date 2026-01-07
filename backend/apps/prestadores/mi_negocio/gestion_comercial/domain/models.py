@@ -90,6 +90,14 @@ class FacturaVenta(models.Model):
         null=True,
         blank=True
     )
+    documento_archivistico = models.ForeignKey(
+        'gestion_archivistica.Document',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='factura_comercial',
+        help_text="Vínculo al registro maestro en el Sistema de Gestión Archivística."
+    )
     cufe = models.CharField(max_length=255, null=True, blank=True, help_text="Código Único de Factura Electrónica")
     track_id_dian = models.CharField(max_length=255, null=True, blank=True, help_text="ID de seguimiento de la DIAN")
     xml_dian = models.TextField(null=True, blank=True, help_text="XML de la factura electrónica enviada a la DIAN")

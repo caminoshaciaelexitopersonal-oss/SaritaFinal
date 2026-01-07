@@ -28,6 +28,7 @@ class Company(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        app_label = 'companies'
         verbose_name = "Company (Tenant)"
         verbose_name_plural = "Companies (Tenants)"
         ordering = ['name']
