@@ -1,108 +1,119 @@
 # backend/apps/prestadores/mi_negocio/gestion_archivistica/services.py
-import base64
-import hashlib
-from datetime import date
-import logging
+from django.db import models
+from django.contrib.auth import get_user_model
+from typing import Dict, Any, Union
+import io
 
-from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
-from cryptography.fernet import Fernet
-from django.db import transaction
+# Placeholder para el modelo de Company, ajustar según el proyecto real
+# from companies.models import Company
+Company = models.ForeignKey # Temporal
 
-import boto3
-from botocore.exceptions import ClientError
+User = get_user_model()
 
-from .models import Document, DocumentVersion, Process, DocumentType
-from api.models import CustomUser
-from apps.audit.services import AuditLogger
-from .tasks.processing_tasks import start_file_processing_flow
-from .storage_adapters.s3 import S3StorageAdapter
+class ArchivingService:
+    """
+    Punto de entrada centralizado para todas las operaciones de archivado.
+    Esta clase orquesta la creación de documentos, versiones y la
+    gestión de su ciclo de vida.
+    """
 
-# ==========================================================
-# Crypto Service
-# ==========================================================
-class CryptoService:
-    ITERATIONS = 260000
     @staticmethod
-    def calculate_hash(file_content: bytes) -> str:
-        return hashlib.sha256(file_content).hexdigest()
-    @classmethod
-    def derive_company_key(cls, company) -> bytes:
-        if not hasattr(settings, 'GLOBAL_ENCRYPTION_PEPPER'):
-            raise ImproperlyConfigured("GLOBAL_ENCRYPTION_PEPPER must be set in settings.")
-        # La lógica real dependería de cómo el modelo `Company` almacena su `key_salt`.
-        # Esto es un placeholder funcional.
-        # if not hasattr(company, 'encryption_key') or not hasattr(company.encryption_key, 'key_salt'):
-        #      raise ValueError(f"Company '{company.name}' does not have a valid encryption key setup.")
-        # salt = company.encryption_key.key_salt.encode('utf-8')
-        salt = b'a-secure-random-salt-per-company'
-        pepper = settings.GLOBAL_ENCRYPTION_PEPPER.encode('utf-8')
-        password = date.today().isoformat().encode('utf-8')
-        combined_salt = salt + pepper
-        key = hashlib.pbkdf2_hmac('sha256', password, combined_salt, cls.ITERATIONS, dklen=32)
-        return base64.urlsafe_b64encode(key)
-    @staticmethod
-    def encrypt(file_content: bytes, key: bytes) -> bytes:
-        return Fernet(key).encrypt(file_content)
-    @staticmethod
-    def decrypt(encrypted_content: bytes, key: bytes) -> bytes:
-        return Fernet(key).decrypt(encrypted_content)
+    def archive_document(
+        *,
+        perfil_prestador_id: int,
+        user_id: int,
+        process_type_code: str,
+        process_code: str,
+        document_type_code: str,
+        document_content: Union[bytes, io.BytesIO],
+        original_filename: str,
+        document_metadata: Dict[str, Any],
+        requires_blockchain_notarization: bool = False
+    ) -> 'DocumentVersion':
+        """
+        Método principal para archivar un nuevo documento o una nueva versión
+        de un documento existente.
 
-# ==========================================================
-# File Coordinator
-# ==========================================================
-class FileCoordinator:
-    def __init__(self):
-        self.crypto_service = CryptoService()
-        self.storage_adapter = S3StorageAdapter()
-    def upload_and_process(self, file_content: bytes, version: DocumentVersion) -> tuple[str, str]:
-        file_hash = self.crypto_service.calculate_hash(file_content)
-        company = version.document.company
-        encryption_key = self.crypto_service.derive_company_key(company)
-        encrypted_content = self.crypto_service.encrypt(file_content, encryption_key)
-        cloud_filename = f"{company.id}/{version.document.id}/{version.id}.enc"
-        external_id = self.storage_adapter.upload(encrypted_content, cloud_filename)
-        return file_hash, external_id
-    def download_and_decrypt(self, version: DocumentVersion) -> bytes:
-        encrypted_content = self.storage_adapter.download(version.external_file_id)
-        company = version.document.company
-        encryption_key = self.crypto_service.derive_company_key(company)
-        return self.crypto_service.decrypt(encrypted_content, encryption_key)
+        Args:
+            perfil_prestador_id (int): ID del Perfil del Prestador (Tenant).
+            user_id (int): ID del usuario que realiza la acción.
+            process_type_code (str): Código del Tipo de Proceso (e.g., 'CONT').
+            process_code (str): Código del Proceso específico (e.g., 'FACT').
+            document_type_code (str): Código del Tipo de Documento (e.g., 'FV').
+            document_content (Union[bytes, io.BytesIO]): Contenido binario del
+                                                        archivo a archivar (e.g., PDF, JSON).
+            original_filename (str): Nombre del archivo original con extensión (e.g., 'factura-001.pdf').
+            document_metadata (Dict[str, Any]): JSON con metadatos relevantes
+                                               del documento original para indexación y búsqueda.
+            requires_blockchain_notarization (bool): Si es True, el hash del
+                                                     documento será incluido en el
+                                                     siguiente lote de notarización.
 
-# ==========================================================
-# Document Coordinator
-# ==========================================================
-class DocumentCoordinatorService:
+        Returns:
+            DocumentVersion: La instancia de la versión del documento creada.
+
+        Raises:
+            ValidationError: Si los códigos de clasificación no existen o los
+                             parámetros son inválidos.
+        """
+        # --- IMPLEMENTACIÓN FUTURA ---
+        # 1. Validar que perfil_prestador_id y user_id son válidos.
+        # 2. Obtener o crear los objetos ProcessType, Process, DocumentType
+        #    basándose en los códigos y el perfil.
+        # 3. Calcular el hash SHA-256 del `document_content`.
+        # 4. Determinar si es un documento nuevo o una nueva versión.
+        # 5. Crear la instancia de `Document` si es necesario.
+        # 6. Crear la instancia de `DocumentVersion` con el estado inicial.
+        # 7. Disparar un evento/tarea asíncrona (e.g., Celery) para:
+        #    a. Subir el `document_content` a un almacenamiento externo (S3).
+        #    b. Si `requires_blockchain_notarization` es True, añadir el hash
+        #       al lote de notarización pendiente.
+        # 8. Retornar la `DocumentVersion` creada.
+        pass
+
     @staticmethod
-    @transaction.atomic
-    def _get_next_sequence(company, process, doc_type) -> int:
-        last_doc = Document.objects.select_for_update().filter(company=company, process=process, document_type=doc_type).order_by('-sequence').first()
-        return (last_doc.sequence + 1) if last_doc else 1
+    def get_document_status(document_version_id: int) -> Dict[str, Any]:
+        """
+        Consulta el estado de una versión específica de un documento.
+
+        Args:
+            document_version_id (int): El ID de la DocumentVersion a consultar.
+
+        Returns:
+            Dict[str, Any]: Un diccionario con el estado actual, y si aplica,
+                            la información de la transacción en blockchain.
+        """
+        # --- IMPLEMENTACIÓN FUTURA ---
+        # 1. Buscar la DocumentVersion por su ID.
+        # 2. Serializar y devolver su estado y datos relevantes.
+        pass
+
     @staticmethod
-    def _generate_code(process: Process, doc_type: DocumentType, sequence: int) -> str:
-        return f"{process.process_type.code}-{process.code}-{doc_type.code}-{sequence:02d}"
-    @classmethod
-    @transaction.atomic
-    def create_document_and_first_version(cls, *, data, user, file_content, request) -> DocumentVersion:
-        process = data['process']
-        doc_type = data['document_type']
-        company = user.company
-        if not company: raise ValueError("User must have a company.")
-        sequence = cls._get_next_sequence(company, process, doc_type)
-        doc_code = cls._generate_code(process, doc_type, sequence)
-        doc = Document.objects.create(company=company, process=process, document_type=doc_type, sequence=sequence, document_code=doc_code, created_by=user)
-        initial_version = DocumentVersion.objects.create(document=doc, version_number=1, title=data['title'], validity_year=data['validity_year'], uploaded_by=user, original_filename=data['original_filename'], status=DocumentVersion.ProcessingStatus.PENDING_UPLOAD)
-        file_content_b64 = base64.b64encode(file_content).decode('utf-8')
-        start_file_processing_flow.delay(initial_version.id, file_content_b64)
-        AuditLogger.log(user=user, action="DOCUMENT_CREATED", request=request, details={'document_id': str(doc.id)})
-        return initial_version
-    @classmethod
-    @transaction.atomic
-    def create_new_version_for_document(cls, *, document, data, user, file_content, request) -> DocumentVersion:
-        latest_version = document.versions.select_for_update().latest('version_number')
-        new_version_number = latest_version.version_number + 1
-        new_version = DocumentVersion.objects.create(document=document, version_number=new_version_number, title=data['title'], validity_year=data['validity_year'], uploaded_by=user, original_filename=data['original_filename'], status=DocumentVersion.ProcessingStatus.PENDING_UPLOAD)
-        file_content_b64 = base64.b64encode(file_content).decode('utf-8')
-        start_file_processing_flow.delay(new_version.id, file_content_b64)
-        AuditLogger.log(user=user, action="VERSION_UPLOADED", request=request, details={'document_id': str(document.id)})
-        return new_version
+    def retrieve_document(document_version_id: int) -> (str, io.BytesIO):
+        """
+        Recupera el contenido de un archivo desde el almacenamiento externo.
+
+        Args:
+            document_version_id (int): El ID de la DocumentVersion a recuperar.
+
+        Returns:
+            Tuple[str, io.BytesIO]: Una tupla conteniendo el nombre del
+                                    archivo original y un stream de bytes
+                                    con su contenido.
+        """
+        # --- IMPLEMENTACIÓN FUTURA ---
+        # 1. Buscar la DocumentVersion.
+        # 2. Obtener el `external_file_id`.
+        # 3. Descargar el archivo desde el almacenamiento externo (S3).
+        # 4. Retornar el nombre y el contenido.
+        pass
+
+# --- ESTRUCTURAS DE DATOS DE EJEMPLO ---
+
+# DTO (Data Transfer Object) para la metadata.
+# Esto es solo un ejemplo conceptual. En la práctica, sería un simple dict.
+class DocumentMetadataDTO:
+    def __init__(self, source_model: str, source_id: Any, data: Dict[str, Any]):
+        self.source_model = source_model # e.g., 'FacturaVenta'
+        self.source_id = source_id     # e.g., 123
+        self.data = data               # El `model_to_dict` del objeto original
