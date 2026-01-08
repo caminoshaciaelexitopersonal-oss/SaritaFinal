@@ -1,63 +1,73 @@
 # Diseño de Arquitectura Canónica y Grafo de Dependencias
-... (secciones 1, 2 y 3 sin cambios) ...
+
+Este documento define la arquitectura de aplicaciones canónica para el ERP Sarita, con el objetivo de eliminar las dependencias circulares y establecer un orden de carga y migración claro y robusto.
 
 ---
 
-## 4. Orden Canónico Teórico de Migraciones
+## 1. Inventario Lógico de Apps por Capas
 
-Una vez que los modelos hayan sido refactorizados para eliminar las dependencias cruzadas según las estrategias de la sección 3, el siguiente procedimiento de "hard reset" garantizará una reconstrucción limpia y consistente de la base de datos.
+| Capa | App / Módulo | Responsabilidad Principal |
+| :--- | :--- | :--- |
+| **Capa 0** | `django.contrib.*` | Framework base de Django. |
+| **Capa 0** | `allauth`, `rest_framework`, etc. | Librerías de terceros. |
+| --- | --- | --- |
+| **Capa 1** | `companies` | Define el `Company` (Tenant). |
+| **Capa 1** | `api` | Define el `CustomUser` y `ProviderProfile`. |
+| --- | --- | --- |
+| **Capa 2** | `prestadores` | Modelos operativos genéricos (`Product`, `Reserva`). |
+| **Capa 2** | `gestion_contable` (core) | Modelos contables fundamentales. |
+| --- | --- | --- |
+| **Capa 3** | `gestion_financiera` | Lógica de movimientos de dinero. |
+| **Capa 3** | `gestion_comercial` | Lógica del ciclo de ventas. |
+| **Capa 3** | Subdominios (`nomina`, `empresa`) | Módulos de negocio específicos. |
+| --- | --- | --- |
+| **Capa 4** | `gestion_archivistica` | Servicio transversal de archivado. |
+| **Capa 4** | `audit` | Servicio transversal de auditoría. |
 
-### **Paso 1: Preparación del Entorno**
+---
 
-1.  Verificar que el archivo `db.sqlite3` (o la base de datos correspondiente) ha sido eliminado.
-2.  Verificar que **todos** los directorios `migrations/` dentro de las apps del proyecto han sido eliminados.
+## 2. Grafo de Dependencias Final
 
-### **Paso 2: Generación de Migraciones (`makemigrations`)**
+El siguiente grafo define las dependencias a nivel de `ForeignKey` y de importación de modelos, ahora implementado. Una flecha `A --> B` significa "`A` depende de `B`".
 
-El comando `makemigrations` debe ejecutarse en el orden de las capas, desde la más baja a la más alta.
+-   `api` --> `companies`
+-   `prestadores` --> `api`
+-   `gestion_contable` (subdominios) --> `api`
+-   `gestion_financiera` --> `prestadores`, `gestion_contable`, `api`
+-   `gestion_comercial` --> `prestadores`, `api`
+-   **Servicios Transversales (`gestion_archivistica`, `audit`)**: No tienen dependencias `ForeignKey` entrantes de capas inferiores.
 
-1.  **Capa 1 (Núcleo):**
-    ```bash
-    python backend/manage.py makemigrations companies api
-    ```
-    *(Estas pueden generarse juntas ya que no dependen entre sí, solo de la Capa 0)*
+**Visualización del Grafo:**
 
-2.  **Capa 2 (Sistemas Base):**
-    ```bash
-    python backend/manage.py makemigrations prestadores gestion_contable
-    ```
-    *(Se pueden generar juntas, ya que ambas dependen solo de la Capa 1)*
-
-3.  **Capa 3 (Sistemas Derivados y Subdominios):**
-    ```bash
-    python backend/manage.py makemigrations gestion_financiera gestion_comercial nomina empresa ...
-    ```
-    *(Todas las apps restantes que dependen de las capas inferiores)*
-
-4.  **Capa 4 (Servicios Transversales):**
-    ```bash
-    python backend/manage.py makemigrations gestion_archivistica audit
-    ```
-    *(Al no tener `ForeignKey` a otros módulos, estas pueden generarse en cualquier momento, pero por orden lógico se dejan al final.)*
-
-**Alternativa Simplificada:** Si el desacoplamiento es exitoso, un único comando debería ser suficiente para resolver el árbol correctamente:
-```bash
-python backend/manage.py makemigrations
+```
+[ Capa 4: Servicios (audit, gestion_archivistica) ]
+      ^
+      | (Invocados por, sin FK)
+      |
+[ Capa 3: Apps de Negocio (gestion_financiera, gestion_comercial) ]
+      ^
+      | (Dependen de)
+      |
+[ Capa 2: Módulos Base (prestadores, gestion_contable) ]
+      ^
+      | (Dependen de)
+      |
+[ Capa 1: Núcleo (api, companies) ]
 ```
 
-### **Paso 3: Aplicación de Migraciones (`migrate`)**
+Este grafo es **acíclico** y ha sido la base para la reconstrucción exitosa de las migraciones.
 
-De manera similar, el comando `migrate` debe respetar el orden de dependencia.
+---
 
-1.  **Capa 1:**
-    ```bash
-    python backend/manage.py migrate companies
-    python backend/manage.py migrate api
-    ```
+## 3. Estrategias de Ruptura de Ciclos Implementadas
 
-2.  **Resto de las Capas:** Una vez que las capas base están migradas, un `migrate` general debería resolver el resto.
-    ```bash
-    python backend/manage.py migrate
-    ```
+Se implementaron las siguientes estrategias:
+-   **Referencias por ID:** Todas las `ForeignKey` entre módulos core fueron reemplazadas por campos `UUIDField` (ej. `perfil_ref_id`).
+-   **`GenericForeignKey`:** Se utilizó para relaciones polimórficas como el `beneficiario` de una `OrdenPago`.
+-   **Invocación de Servicios:** Las relaciones con servicios transversales como el `ArchivingService` se manejan exclusivamente a través de llamadas de servicio, pasando IDs como parámetros.
 
-Este procedimiento teórico, basado en una arquitectura desacoplada, elimina la ambigüedad y previene los errores de `NodeNotFoundError`.
+---
+
+## 4. Orden Canónico de Migraciones Validado
+
+El procedimiento de "hard reset" y la generación/aplicación de migraciones por capas fue exitoso, validando el diseño arquitectónico.
