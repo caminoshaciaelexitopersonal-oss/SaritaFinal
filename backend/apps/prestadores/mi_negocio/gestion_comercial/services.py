@@ -8,6 +8,8 @@ from .domain.models import OperacionComercial, FacturaVenta, ItemFactura
 from apps.prestadores.mi_negocio.gestion_contable.services.facturacion import FacturaVentaAccountingService
 from apps.prestadores.mi_negocio.gestion_archivistica.archiving import ArchivingService
 from .dian_services import DianService
+from api.models import AuditLog
+from django.contrib.contenttypes.models import ContentType
 # --- IMPORTACIÓN DE SERVICIOS DE DOMINIO OPERATIVO ---
 from apps.prestadores.mi_negocio.gestion_operativa.services import (
     ProviderProfileService,
@@ -42,12 +44,7 @@ class FacturacionService:
             perfil_ref_id=operacion.perfil_ref_id,
             cliente_ref_id=operacion.cliente_ref_id,
             numero_factura=f"FV-{operacion.id}",
-            fecha_emision=timezone.now().date(),
-            subtotal=operacion.subtotal,
-            impuestos=operacion.impuestos,
-            total=operacion.total,
-            creado_por=operacion.creado_por,
-            estado=FacturaVenta.Estado.EMITIDA
+            fecha_emision=timezone.now().date()
         )
         for item_op in operacion.items.all():
             ItemFactura.objects.create(
@@ -56,6 +53,7 @@ class FacturacionService:
                 descripcion=item_op.descripcion,
                 cantidad=item_op.cantidad,
                 precio_unitario=item_op.precio_unitario,
+                subtotal=item_op.subtotal
             )
 
         # 2. Registrar el asiento contable
@@ -64,14 +62,14 @@ class FacturacionService:
         # Por ahora, se asume que esta adaptación es parte de la FASE 14.5.
         FacturaVentaAccountingService.registrar_factura_venta(factura, cliente=cliente, perfil=perfil)
 
-        # 3. Enviar a la DIAN (simulado)
-        dian_response = DianService.enviar_factura(factura, cliente=cliente)
-        if dian_response["success"]:
-            factura.estado_dian = FacturaVenta.EstadoDIAN.ACEPTADA
-            factura.cufe = dian_response["cufe"]
-        else:
-            factura.estado_dian = FacturaVenta.EstadoDIAN.RECHAZADA
-        factura.dian_response_log = dian_response
+        # 3. Enviar a la DIAN (simulado) - COMENTADO PARA CIERRE DE PRODUCCIÓN
+        # dian_response = DianService.enviar_factura(factura, cliente=cliente)
+        # if dian_response["success"]:
+        #     factura.estado_dian = FacturaVenta.EstadoDIAN.ACEPTADA
+        #     factura.cufe = dian_response["cufe"]
+        # else:
+        #     factura.estado_dian = FacturaVenta.EstadoDIAN.RECHAZADA
+        # factura.dian_response_log = dian_response
 
         # --- INICIO DE INTEGRACIÓN CON SGA ---
         # 4. Archivar el documento de la factura
@@ -80,8 +78,8 @@ class FacturacionService:
             factura_content = {
                 "numero_factura": factura.numero_factura,
                 "cliente": cliente.nombre, # Usar el objeto resuelto
-                "total": str(factura.total),
-                "cufe": factura.cufe
+                "total": str(factura.operacion.total),
+                "cufe": getattr(factura, 'cufe', None)
             }
             factura_bytes = json.dumps(factura_content, indent=2).encode('utf-8')
 
@@ -119,5 +117,18 @@ class FacturacionService:
         # 5. Actualizar estado de la operación original
         operacion.estado = OperacionComercial.Estado.FACTURADA
         operacion.save()
+
+        # 6. Registrar evento de auditoría (PRIORIDAD #1 - CIERRE)
+        try:
+            AuditLog.objects.create(
+                user=factura.operacion.creado_por,
+                action=AuditLog.Action.USER_CREATE,  # Usar una acción existente o crear una nueva
+                details=f"Factura FV-{factura.id} creada para el cliente {cliente.nombre}.",
+                content_type=ContentType.objects.get_for_model(FacturaVenta),
+                object_id=factura.id
+            )
+        except Exception as e:
+            logger.error(f"Error al registrar el evento de auditoría para la factura {factura.id}: {e}")
+
 
         return factura
