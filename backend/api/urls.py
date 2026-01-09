@@ -23,7 +23,9 @@ router.register(r'config/menu-items', views.MenuItemViewSet, basename='menu-item
 router.register(r'contenido-municipio', views.ContenidoMunicipioViewSet, basename='contenido-municipio')
 router.register(r'paginas-institucionales', views.PaginaInstitucionalViewSet, basename='pagina-institucional')
 router.register(r'admin/users', views.UserViewSet, basename='user-admin')
-router.register(r'admin/prestadores', views.AdminPrestadorViewSet, basename='admin-prestador')
+# La siguiente línea ha sido comentada porque el ViewSet 'AdminPrestadorViewSet' fue
+# deshabilitado temporalmente en api/views.py para eliminar dependencias a modelos movidos.
+# router.register(r'admin/prestadores', views.AdminPrestadorViewSet, basename='admin-prestador')
 router.register(r'admin/publicaciones', views.AdminPublicacionViewSet, basename='publicacion-admin')
 router.register(r'admin/homepage-components', views.HomePageComponentViewSet, basename='homepage-component')
 router.register(r'admin/audit-logs', views.AuditLogViewSet, basename='audit-log')

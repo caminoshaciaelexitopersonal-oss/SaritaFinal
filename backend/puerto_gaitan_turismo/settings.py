@@ -87,8 +87,8 @@ INSTALLED_APPS = [
     "apps.audit.apps.AuditConfig",
     "apps.prestadores.mi_negocio.gestion_archivistica.apps.GestionArchivisticaConfig",
 ]
- 
- 
+
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",

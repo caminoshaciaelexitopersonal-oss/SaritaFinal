@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
-from .models import CustomUser, CategoriaPrestador
+from .models import CustomUser
 
 
 class IsOwnerOrReadOnly(BasePermission):
@@ -192,13 +192,16 @@ class CanManageAtractivos(BasePermission):
         if view.action == 'create':
             if user.role in [CustomUser.Role.ADMIN, CustomUser.Role.FUNCIONARIO_DIRECTIVO, CustomUser.Role.FUNCIONARIO_PROFESIONAL]:
                 return True
-            if user.role == CustomUser.Role.PRESTADOR:
-                try:
-                    # Usamos el slug que es más confiable que el nombre
-                    guia_categoria = CategoriaPrestador.objects.get(slug='guias-de-turismo')
-                    return user.perfil_prestador.categoria == guia_categoria
-                except (CategoriaPrestador.DoesNotExist, AttributeError):
-                    return False
+            # La lógica de permisos basada en CategoriaPrestador ha sido comentada
+            # porque el modelo fue movido a otro dominio. Esto requerirá una
+            # refactorización futura basada en servicios.
+            # if user.role == CustomUser.Role.PRESTADOR:
+            #     try:
+            #         # Usamos el slug que es más confiable que el nombre
+            #         guia_categoria = CategoriaPrestador.objects.get(slug='guias-de-turismo')
+            #         return user.perfil_prestador.categoria == guia_categoria
+            #     except (CategoriaPrestador.DoesNotExist, AttributeError):
+            #         return False
             return False
 
         # Para otras acciones de escritura (update, partial_update, destroy),

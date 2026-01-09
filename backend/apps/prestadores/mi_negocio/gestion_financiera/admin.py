@@ -1,10 +1,2 @@
-from django.contrib import admin
-from .models import CuentaBancaria, OrdenPago
-
-@admin.register(CuentaBancaria)
-class CuentaBancariaAdmin(admin.ModelAdmin):
-    list_display = ('banco', 'numero_cuenta', 'perfil', 'activa')
-
-@admin.register(OrdenPago)
-class OrdenPagoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'fecha_pago', 'monto', 'estado', 'perfil')
+# Este archivo se deja vacío intencionalmente para evitar errores de SystemCheck
+# debido a la refactorización arquitectónica de los modelos.

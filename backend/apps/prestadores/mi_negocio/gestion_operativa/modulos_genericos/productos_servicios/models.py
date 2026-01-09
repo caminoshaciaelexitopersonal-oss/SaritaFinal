@@ -1,12 +1,14 @@
+import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
 
-from ..perfil.models import TenantAwareModel
-from api.models import CategoriaPrestador as OperationalTag
+# Corregido: La importación ahora apunta a los modelos locales del dominio operativo.
+from ..perfil.models import TenantAwareModel, CategoriaPrestador as OperationalTag
 from ..reservas.models import PoliticaCancelacion
 
 class Product(TenantAwareModel):
+    id_publico = models.UUIDField(editable=False, unique=True, null=True)
     """
     Modelo genérico para cualquier 'cosa' vendible o reservable.
     """
