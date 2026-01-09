@@ -8,9 +8,10 @@ class DianService:
     Simulador del servicio de la DIAN para facturación electrónica.
     """
     @staticmethod
-    def enviar_factura(factura):
+    def enviar_factura(factura, cliente):
         """
         Simula el envío de una factura y devuelve una respuesta estructurada.
+        Ahora recibe el objeto 'cliente' resuelto para un futuro uso.
         """
         # Simula una decisión aleatoria de éxito o fracaso
         # Por ahora, siempre será exitoso para los tests.

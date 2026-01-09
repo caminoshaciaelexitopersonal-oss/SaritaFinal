@@ -20,7 +20,7 @@ from django.db.models.functions import TruncDay
 from django.db.models import Count
 from .models import (
     CustomUser,
-    CategoriaPrestador,
+    # CategoriaPrestador fue movido a gestion_operativa
     ImagenGaleria,
     ImagenArtesano,
     Publicacion,
@@ -402,7 +402,7 @@ class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
 
 from django.db.models import Q
 
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from .serializers import AdminPrestadorSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -424,10 +424,10 @@ class UserViewSet(viewsets.ModelViewSet):
             Q(role__in=allowed_roles_to_view) | Q(pk=user.pk)
         )
 
-class AdminPrestadorViewSet(viewsets.ModelViewSet):
-    queryset = ProviderProfile.objects.all()
-    serializer_class = AdminPrestadorSerializer
-    permission_classes = [IsAdminOrFuncionario]
+# class AdminPrestadorViewSet(viewsets.ModelViewSet):
+#     queryset = ProviderProfile.objects.all()
+#     serializer_class = AdminPrestadorSerializer
+#     permission_classes = [IsAdminOrFuncionario]
 
 class AdminPublicacionViewSet(viewsets.ModelViewSet):
     queryset = Publicacion.objects.all()

@@ -1,4 +1,5 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/reservas/models.py
+import uuid
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -9,6 +10,7 @@ class PoliticaCancelacion(models.Model):
     descripcion = models.TextField()
 
 class Reserva(models.Model):
+    id_publico = models.UUIDField(editable=False, unique=True, null=True)
     class EstadoReserva(models.TextChoices):
         PENDIENTE = 'PENDIENTE', 'Pendiente'
         CONFIRMADA = 'CONFIRMADA', 'Confirmada'

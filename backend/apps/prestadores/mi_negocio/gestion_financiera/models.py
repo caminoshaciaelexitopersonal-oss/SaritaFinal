@@ -24,9 +24,9 @@ class OrdenPago(models.Model):
     perfil_ref_id = models.UUIDField()
     cuenta_bancaria_ref_id = models.UUIDField()
 
-    beneficiario_content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, null=True)
-    beneficiario_object_id = models.CharField(max_length=36, null=True)
-    beneficiario = GenericForeignKey('beneficiario_content_type', 'beneficiario_object_id')
+    # Patrón de beneficiario genérico explícito según la Directriz 14.4
+    beneficiario_id = models.UUIDField(null=True, help_text="ID del beneficiario (Cliente, Proveedor, Empleado, etc.)")
+    tipo_beneficiario = models.CharField(max_length=100, null=True, help_text="Tipo de beneficiario para resolución por servicio.")
 
     fecha_pago = models.DateField()
     monto = models.DecimalField(max_digits=18, decimal_places=2)

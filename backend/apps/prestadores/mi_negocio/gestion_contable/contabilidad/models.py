@@ -5,10 +5,11 @@ from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+
+# Se eliminó la importación directa de ProviderProfile para desacoplar el dominio.
 
 class CostCenter(models.Model):
-    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="cost_centers")
+    perfil_ref_id = models.UUIDField(db_index=True, null=True)
     code = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=255)
 
@@ -39,7 +40,7 @@ class ExchangeRate(models.Model):
         app_label = 'contabilidad'
 
 class ChartOfAccount(models.Model):
-    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="chart_of_accounts")
+    perfil_ref_id = models.UUIDField(db_index=True, null=True)
 
     class Nature(models.TextChoices):
         DEBIT = 'DEBITO', 'Debito'
@@ -52,21 +53,23 @@ class ChartOfAccount(models.Model):
 
     class Meta:
         ordering = ['code']
-        unique_together = ('perfil', 'code')
+        unique_together = ('perfil_ref_id', 'code')
         app_label = 'contabilidad'
 
     def __str__(self):
         return f"{self.code} - {self.name}"
 
 class JournalEntry(models.Model):
-    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="journal_entries")
+    perfil_ref_id = models.UUIDField(db_index=True, null=True)
     entry_date = models.DateField(db_index=True)
     description = models.TextField()
     entry_type = models.CharField(max_length=100)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="journal_entries")
-    content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
-    object_id = models.PositiveIntegerField(null=True, blank=True)
-    origin_document = GenericForeignKey('content_type', 'object_id')
+
+    # Patrón de origen genérico explícito según la Directriz 14.5
+    origen_operativo_id = models.UUIDField(null=True, blank=True, db_index=True)
+    origen_tipo = models.CharField(max_length=100, null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

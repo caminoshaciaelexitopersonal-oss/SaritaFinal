@@ -9,8 +9,8 @@ from ..contabilidad.models import JournalEntry, Transaction, ChartOfAccount
 class FacturaVentaAccountingService:
     @staticmethod
     @transaction.atomic
-    def registrar_factura_venta(factura: FacturaVenta):
-        perfil = factura.perfil
+    def registrar_factura_venta(factura: FacturaVenta, cliente, perfil):
+        # El perfil ahora se pasa como un argumento resuelto para desacoplar el servicio.
         try:
             cuenta_cxc = ChartOfAccount.objects.get(perfil=perfil, code='1305')
             cuenta_ingresos = ChartOfAccount.objects.get(perfil=perfil, code='4135')
