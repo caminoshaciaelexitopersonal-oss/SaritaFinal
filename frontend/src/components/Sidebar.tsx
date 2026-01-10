@@ -200,6 +200,15 @@ export default function Sidebar() {
         { href: '/dashboard/admin/scoring', label: 'Puntuación', icon: FiAward },
       ],
     },
+    {
+      title: "Supervisión 'Mi Negocio'",
+      links: [
+        { href: '/dashboard/admin/mi-negocio/gestion-comercial', label: 'Gestión Comercial', icon: FiShoppingCart },
+        { href: '/dashboard/admin/mi-negocio/gestion-contable', label: 'Gestión Contable', icon: FiBookOpen },
+        { href: '/dashboard/admin/mi-negocio/gestion-financiera', label: 'Gestión Financiera', icon: FiDollarSign },
+        { href: '/dashboard/admin/mi-negocio/gestion-archivistica', label: 'Gestión Archivística', icon: FiArchive },
+      ],
+    },
   ];
 
   return (
