@@ -191,7 +191,7 @@ REST_AUTH = {
     'TOKEN_SERIALIZER': 'api.serializers.CustomTokenSerializer',
 }
 
-ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_LOGIN_METHODS = ['email']
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # 'mandatory' en producción
 ACCOUNT_SIGNUP_FIELDS = ['email', 'password1']

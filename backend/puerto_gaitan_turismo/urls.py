@@ -25,6 +25,9 @@ urlpatterns = [
 
     # Panel "Mi Negocio" para Prestadores
     path("api/v1/mi-negocio/", include("apps.prestadores.mi_negocio.urls")),
+
+    # Panel de Administración para "Mi Negocio"
+    path("api/v1/admin/mi-negocio/", include("apps.admin_panel.urls")),
 ]
 
 # Servir archivos multimedia en modo de desarrollo
