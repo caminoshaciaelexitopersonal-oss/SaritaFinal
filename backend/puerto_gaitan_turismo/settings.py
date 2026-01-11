@@ -86,14 +86,6 @@ INSTALLED_APPS = [
     "apps.companies.apps.CompaniesConfig",
     "apps.audit.apps.AuditConfig",
     "apps.prestadores.mi_negocio.gestion_archivistica.apps.GestionArchivisticaConfig",
-
-    # Admin Panel
-    "apps.admin_panel.apps.AdminPanelConfig",
-    "apps.admin_panel.gestion_archivistica.apps.GestionArchivisticaAdminConfig",
-    "apps.admin_panel.gestion_comercial.apps.GestionComercialAdminConfig",
-    "apps.admin_panel.gestion_contable.apps.GestionContableAdminConfig",
-    "apps.admin_panel.gestion_financiera.apps.GestionFinancieraAdminConfig",
-    "apps.admin_panel.gestion_operativa.apps.GestionOperativaAdminConfig",
 ]
 
 

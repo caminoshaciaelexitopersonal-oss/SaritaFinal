@@ -1,6 +1,8 @@
 from django.apps import AppConfig
+import os
 
-class GestionArchivisticaAdminConfig(AppConfig):
+class GestionArchivisticaConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.admin_panel.gestion_archivistica'
-    label = 'admin_gestion_archivistica'
+    name = 'apps.prestadores.mi_negocio.gestion_archivistica'
+    verbose_name = 'Gestión Archivística'
+    path = os.path.join(os.path.dirname(__file__))
