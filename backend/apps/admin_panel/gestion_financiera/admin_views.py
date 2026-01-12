@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions
-from .models import CuentaBancaria, OrdenPago
+from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, OrdenPago
 from .serializers import CuentaBancariaSerializer, OrdenPagoSerializer
 
 class IsPrestadorOwner(permissions.BasePermission):
