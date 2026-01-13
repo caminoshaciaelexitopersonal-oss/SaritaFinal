@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
 from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, OrdenPago
-from .serializers import CuentaBancariaSerializer, OrdenPagoSerializer
+from apps.prestadores.mi_negocio.gestion_financiera.serializers import CuentaBancariaSerializer, OrdenPagoSerializer
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
