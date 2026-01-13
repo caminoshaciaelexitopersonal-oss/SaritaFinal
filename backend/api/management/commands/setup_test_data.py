@@ -5,7 +5,7 @@ from api.models import (
     CustomUser, RubroArtesano, Artesano,
     RutaTuristica, MenuItem, AtractivoTuristico, Publicacion, ContenidoMunicipio
 )
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
+from apps.prestadores.models import CategoriaPrestador
 
 class Command(BaseCommand):
     help = 'Crea o actualiza datos de prueba para el sistema, incluyendo todo el contenido de la plataforma. Es idempotente.'
