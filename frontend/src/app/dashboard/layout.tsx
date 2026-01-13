@@ -1,71 +1,38 @@
 "use client";
 
+import '../globals.css'; // Importación explícita de los estilos globales
 import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { user, isLoading, isAuthenticated } = useAuth();
-  const router = useRouter();
-  const pathname = usePathname();
+// Componente interno para el layout autenticado
+// Esto asegura que los hooks solo se usen dentro de un contexto autenticado y renderizado
+const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // If we are on the login or register page, don't render the authenticated layout
-  if (pathname.startsWith('/dashboard/login') || pathname.startsWith('/dashboard/registro')) {
-    return <>{children}</>;
-  }
-
-  // Bloquear el scroll del body cuando el sidebar móvil está abierto
+  // Hook para bloquear el scroll del body cuando el sidebar móvil está abierto
   useEffect(() => {
     if (isSidebarOpen) {
       document.body.classList.add('overflow-hidden');
     } else {
       document.body.classList.remove('overflow-hidden');
     }
-
-    // Limpieza al desmontar el componente
+    // Limpieza al desmontar
     return () => {
       document.body.classList.remove('overflow-hidden');
     };
   }, [isSidebarOpen]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-xl text-gray-600">Verificando acceso...</p>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    router.push('/login');
-    return null;
-  }
-
-  if (user?.role === 'TURISTA') {
-    router.push('/mi-viaje');
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-xl text-gray-600">Acceso denegado. Redirigiendo...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* --- Sidebar --- */}
-      {/* Sidebar para Desktop (visible y estático) */}
+      {/* Sidebar para Desktop */}
       <div className="hidden lg:flex lg:flex-shrink-0">
         <Sidebar />
       </div>
 
-      {/* Sidebar para Móvil (Drawer con transición) */}
+      {/* Sidebar para Móvil (Drawer) */}
       <div
         className={`lg:hidden fixed inset-0 z-50 transition-transform transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -73,14 +40,11 @@ export default function DashboardLayout({
         role="dialog"
         aria-modal="true"
       >
-        {/* Overlay oscuro */}
         <div
           className="fixed inset-0 bg-black/60"
           aria-hidden="true"
           onClick={() => setIsSidebarOpen(false)}
         ></div>
-
-        {/* Contenido del Sidebar */}
         <div className="relative bg-white h-full w-64 shadow-xl">
           <Sidebar />
         </div>
@@ -94,4 +58,51 @@ export default function DashboardLayout({
       </div>
     </div>
   );
+};
+
+// Layout principal que maneja la lógica de enrutamiento y autenticación
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Mover todas las comprobaciones condicionales que retornan temprano al principio
+  // sin llamar a hooks después de ellas.
+
+  // Si estamos en páginas públicas, no se necesita el layout autenticado.
+  if (pathname.startsWith('/dashboard/login') || pathname.startsWith('/dashboard/registro')) {
+    return <>{children}</>;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <p className="text-xl text-gray-600">Verificando acceso...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    // Redirige al login si no está autenticado y no está en una página pública
+    // Esta lógica asume que todas las rutas bajo /dashboard son protegidas.
+    router.push('/login');
+    return null; // O un componente de carga mientras redirige
+  }
+
+  if (user?.role === 'TURISTA') {
+    router.push('/mi-viaje');
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <p className="text-xl text-gray-600">Acceso denegado. Redirigiendo...</p>
+      </div>
+    );
+  }
+
+  // Si todas las comprobaciones pasan, renderiza el layout autenticado.
+  // Todos los hooks (useState, useEffect) están ahora dentro de este componente.
+  return <AuthenticatedLayout>{children}</AuthenticatedLayout>;
 }
