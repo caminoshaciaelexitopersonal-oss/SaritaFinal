@@ -18,6 +18,9 @@ from itertools import groupby
 from operator import attrgetter
 from django.db.models.functions import TruncDay
 from django.db.models import Count
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from .models import (
     CustomUser,
     # CategoriaPrestador fue movido a gestion_operativa
@@ -401,9 +404,23 @@ class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
 from django.db.models import Q
+from dj_rest_auth.views import UserDetailsView
 
 # from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from .serializers import AdminPrestadorSerializer
+
+class CustomUserDetailsView(UserDetailsView):
+    """
+    Sobrescribe la UserDetailsView de dj-rest-auth para optimizar la consulta
+    del usuario y sus perfiles asociados.
+    """
+    def get_queryset(self):
+        # Utiliza select_related para traer los perfiles en una sola consulta
+        return CustomUser.objects.select_related(
+            'profile',
+            'perfil_prestador',
+            'perfil_artesano'
+        )
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = AdminUserSerializer
@@ -411,16 +428,18 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.role == CustomUser.Role.ADMIN:
-            return CustomUser.objects.all()
+        queryset = CustomUser.objects.all().order_by('pk') # Añadir ordenamiento
 
+        if user.role == CustomUser.Role.ADMIN:
+            return queryset
+
+        # La prueba especifica que un funcionario solo ve prestadores y turistas.
         allowed_roles_to_view = [
             CustomUser.Role.PRESTADOR,
-            CustomUser.Role.ARTESANO,
             CustomUser.Role.TURISTA,
         ]
         # Un funcionario puede ver los roles permitidos Y a sí mismo
-        return CustomUser.objects.filter(
+        return queryset.filter(
             Q(role__in=allowed_roles_to_view) | Q(pk=user.pk)
         )
 
@@ -588,9 +607,11 @@ class RespuestaUsuarioViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 class PublicacionListView(generics.ListAPIView):
-    queryset = Publicacion.objects.filter(estado='PUBLICADO')
     serializer_class = PublicacionListSerializer
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Publicacion.objects.filter(estado='PUBLICADO')
 
 class PublicacionDetailView(generics.RetrieveAPIView):
     queryset = Publicacion.objects.all()
@@ -670,9 +691,21 @@ class AdminUsuarioListView(generics.ListAPIView):
     permission_classes = [IsAdminOrFuncionario]
 
 class RubroArtesanoListView(generics.ListAPIView):
-    queryset = RubroArtesano.objects.all()
+    queryset = RubroArtesano.objects.all().order_by('nombre')
     serializer_class = RubroArtesanoSerializer
     permission_classes = [AllowAny]
+
+    def list(self, request, *args, **kwargs):
+        cache_key = 'rubros_artesanos_list'
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            return Response(cached_data)
+
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+        cache.set(cache_key, data, 60 * 60) # Cache por 1 hora
+        return Response(data)
 
 class ArtesanoPublicListView(generics.ListAPIView):
     queryset = Artesano.objects.all()
