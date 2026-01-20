@@ -2,6 +2,9 @@
 from django.db import transaction
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from api.models import CustomUser
+from apps.admin_plataforma.models import Plan, Suscripcion
+from decimal import Decimal
+from datetime import date, timedelta
 
 class GestionPlataformaService:
     """
@@ -66,7 +69,38 @@ class GestionPlataformaService:
 
         return {"status": "success", "message": "Cliente creado (simulado)."}
 
+    @transaction.atomic
+    def crear_plan(self, nombre: str, precio: Decimal, frecuencia: str, **kwargs) -> Plan:
+        """Crea un nuevo plan de suscripción."""
+        plan = Plan.objects.create(
+            nombre=nombre,
+            precio=precio,
+            frecuencia=frecuencia,
+            **kwargs
+        )
+        return plan
+
+    @transaction.atomic
+    def asignar_suscripcion(self, cliente_profile: ProviderProfile, plan: Plan, fecha_inicio: date) -> Suscripcion:
+        """Asigna una suscripción de un plan a un cliente."""
+        # Lógica para calcular la fecha de fin basada en la frecuencia del plan
+        if plan.frecuencia == Plan.Frecuencia.MENSUAL:
+            fecha_fin = fecha_inicio + timedelta(days=30)
+        elif plan.frecuencia == Plan.Frecuencia.SEMESTRAL:
+            fecha_fin = fecha_inicio + timedelta(days=180)
+        elif plan.frecuencia == Plan.Frecuencia.ANUAL:
+            fecha_fin = fecha_inicio + timedelta(days=365)
+        else:
+            raise ValueError("Frecuencia de plan no válida.")
+
+        suscripcion = Suscripcion.objects.create(
+            cliente=cliente_profile,
+            plan=plan,
+            fecha_inicio=fecha_inicio,
+            fecha_fin=fecha_fin,
+            is_active=True
+        )
+        return suscripcion
+
     # --- Futuros métodos del servicio ---
-    # def vender_plan_a_cliente(self, cliente_id, plan_id): ...
-    # def generar_factura_para_cliente(self, cliente_id, monto): ...
-    # def registrar_gasto_operativo(self, descripcion, monto): ...
+    # def generar_factura_para_suscripcion(self, suscripcion_id): ...

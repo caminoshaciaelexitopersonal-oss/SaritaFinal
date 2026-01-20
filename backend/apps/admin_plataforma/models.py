@@ -26,6 +26,9 @@ class Plan(models.Model):
     def __str__(self):
         return f"{self.nombre} ({self.get_frecuencia_display()}) - ${self.precio}"
 
+    class Meta:
+        app_label = 'admin_plataforma'
+
 class Suscripcion(models.Model):
     """
     Representa la suscripción de un cliente a un plan específico.
@@ -48,3 +51,4 @@ class Suscripcion(models.Model):
     class Meta:
         verbose_name_plural = "Suscripciones"
         ordering = ['-fecha_inicio']
+        app_label = 'admin_plataforma'

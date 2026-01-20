@@ -183,6 +183,12 @@ export default function Sidebar() {
 
   const adminNavSections: NavSection[] = [
     {
+      title: 'Plataforma Sarita',
+      links: [
+        { href: '/dashboard/admin_plataforma/planes', label: 'Planes', icon: FiDollarSign },
+      ],
+    },
+    {
       title: 'Gestión de Contenido',
       links: [
         { href: '/dashboard/publicaciones', label: 'Publicaciones', icon: FiFileText },
@@ -201,7 +207,7 @@ export default function Sidebar() {
       ],
     },
     {
-      title: "Supervisión 'Mi Negocio'",
+      title: "Supervisión 'Mi Negocio' (Legacy)",
       links: [
         { href: '/dashboard/admin/mi-negocio/gestion-comercial', label: 'Gestión Comercial', icon: FiShoppingCart },
         { href: '/dashboard/admin/mi-negocio/gestion-contable', label: 'Gestión Contable', icon: FiBookOpen },
