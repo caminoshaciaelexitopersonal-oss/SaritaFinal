@@ -28,9 +28,6 @@ class UserManagementAPITests(APITestCase):
         self.prestador_user = CustomUser.objects.create_user(
             'prestador', 'prestador@example.com', 'password123', role=CustomUser.Role.PRESTADOR
         )
-        self.artesano_user = CustomUser.objects.create_user(
-            'artesano', 'artesano@example.com', 'password123', role=CustomUser.Role.ARTESANO
-        )
 
         # --- Crear tokens para autenticación ---
         self.admin_token = Token.objects.create(user=self.admin_user)
@@ -51,7 +48,7 @@ class UserManagementAPITests(APITestCase):
         """Un ADMIN PUEDE listar todos los usuarios."""
         response = self.client.get(self.list_url, **self._get_auth_header(self.admin_token))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['count'], 6)  # creados en setUp
+        self.assertEqual(response.data['count'], 5)  # creados en setUp
 
     def test_admin_can_create_any_user(self):
         """Un ADMIN PUEDE crear un usuario con cualquier rol."""

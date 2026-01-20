@@ -93,7 +93,6 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
-    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -107,7 +106,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-    "django.middleware.cache.FetchFromCacheMiddleware",
 ]
 
 ROOT_URLCONF = "puerto_gaitan_turismo.urls"
@@ -226,6 +224,14 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    }
 }
 
 SPECTACULAR_SETTINGS = {
@@ -287,14 +293,6 @@ GLOBAL_ENCRYPTION_PEPPER = os.environ.get("GLOBAL_ENCRYPTION_PEPPER")
 # --- AWS ---
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME")
-
-# --- Configuración de Caché ---
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": "unique-snowflake",
-    }
-}
 
 # --- Configuración de Logging ---
 LOGGING = {

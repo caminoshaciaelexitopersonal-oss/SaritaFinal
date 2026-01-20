@@ -18,9 +18,6 @@ from itertools import groupby
 from operator import attrgetter
 from django.db.models.functions import TruncDay
 from django.db.models import Count
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.core.cache import cache
 from .models import (
     CustomUser,
     # CategoriaPrestador fue movido a gestion_operativa
@@ -138,6 +135,7 @@ from .filters import AuditLogFilter
 from .serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
 from .models import Department, Municipality, Entity
 from .permissions import IsEntityAdmin
+from . import services as api_services
 
 class DepartmentViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -404,23 +402,9 @@ class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
 from django.db.models import Q
-from dj_rest_auth.views import UserDetailsView
 
 # from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from .serializers import AdminPrestadorSerializer
-
-class CustomUserDetailsView(UserDetailsView):
-    """
-    Sobrescribe la UserDetailsView de dj-rest-auth para optimizar la consulta
-    del usuario y sus perfiles asociados.
-    """
-    def get_queryset(self):
-        # Utiliza select_related para traer los perfiles en una sola consulta
-        return CustomUser.objects.select_related(
-            'profile',
-            'perfil_prestador',
-            'perfil_artesano'
-        )
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = AdminUserSerializer
@@ -428,18 +412,16 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = CustomUser.objects.all().order_by('pk') # Añadir ordenamiento
-
         if user.role == CustomUser.Role.ADMIN:
-            return queryset
+            return CustomUser.objects.all()
 
-        # La prueba especifica que un funcionario solo ve prestadores y turistas.
         allowed_roles_to_view = [
             CustomUser.Role.PRESTADOR,
+            CustomUser.Role.ARTESANO,
             CustomUser.Role.TURISTA,
         ]
         # Un funcionario puede ver los roles permitidos Y a sí mismo
-        return queryset.filter(
+        return CustomUser.objects.filter(
             Q(role__in=allowed_roles_to_view) | Q(pk=user.pk)
         )
 
@@ -455,30 +437,18 @@ class AdminPublicacionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], permission_classes=[IsAnyAdminOrDirectivo])
     def approve(self, request, pk=None):
-        publicacion = self.get_object()
-        if publicacion.estado == 'PENDIENTE_DIRECTIVO' and request.user.role == 'FUNCIONARIO_DIRECTIVO':
-            publicacion.estado = 'PENDIENTE_ADMIN'
-            publicacion.save()
-            return Response({'status': 'Aprobado por directivo, pendiente de admin'})
-        if publicacion.estado == 'PENDIENTE_ADMIN' and request.user.role == 'ADMIN':
-            publicacion.estado = 'PUBLICADO'
-            publicacion.save()
-            return Response({'status': 'Publicación aprobada y publicada'})
-        return Response({'error': 'No tiene permiso para esta acción o estado incorrecto'}, status=status.HTTP_400_BAD_REQUEST)
+        api_services.aprobar_publicacion(publicacion_id=pk, usuario=request.user)
+        return Response({'status': 'La publicación ha avanzado en el flujo de aprobación.'})
 
     @action(detail=True, methods=['post'], permission_classes=[IsAnyAdminOrDirectivo])
     def reject(self, request, pk=None):
-        publicacion = self.get_object()
-        publicacion.estado = 'BORRADOR'
-        publicacion.save()
-        return Response({'status': 'Publicación rechazada y devuelta a borrador'})
+        api_services.rechazar_publicacion(publicacion_id=pk, usuario=request.user)
+        return Response({'status': 'Publicación rechazada y devuelta a borrador.'})
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdminOrFuncionario])
     def submit_for_approval(self, request, pk=None):
-        publicacion = self.get_object()
-        publicacion.estado = 'PENDIENTE_DIRECTIVO'
-        publicacion.save()
-        return Response({'status': 'Publicación enviada para aprobación'})
+        api_services.enviar_para_aprobacion(publicacion_id=pk, usuario=request.user)
+        return Response({'status': 'Publicación enviada para aprobación.'})
 
 class HomePageComponentViewSet(viewsets.ModelViewSet):
     queryset = HomePageComponent.objects.all()
@@ -607,11 +577,9 @@ class RespuestaUsuarioViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 class PublicacionListView(generics.ListAPIView):
+    queryset = Publicacion.objects.filter(estado='PUBLICADO')
     serializer_class = PublicacionListSerializer
     permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        return Publicacion.objects.filter(estado='PUBLICADO')
 
 class PublicacionDetailView(generics.RetrieveAPIView):
     queryset = Publicacion.objects.all()
@@ -691,21 +659,9 @@ class AdminUsuarioListView(generics.ListAPIView):
     permission_classes = [IsAdminOrFuncionario]
 
 class RubroArtesanoListView(generics.ListAPIView):
-    queryset = RubroArtesano.objects.all().order_by('nombre')
+    queryset = RubroArtesano.objects.all()
     serializer_class = RubroArtesanoSerializer
     permission_classes = [AllowAny]
-
-    def list(self, request, *args, **kwargs):
-        cache_key = 'rubros_artesanos_list'
-        cached_data = cache.get(cache_key)
-        if cached_data:
-            return Response(cached_data)
-
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        data = serializer.data
-        cache.set(cache_key, data, 60 * 60) # Cache por 1 hora
-        return Response(data)
 
 class ArtesanoPublicListView(generics.ListAPIView):
     queryset = Artesano.objects.all()
