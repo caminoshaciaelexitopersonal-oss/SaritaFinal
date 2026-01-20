@@ -32,7 +32,7 @@ class GestionPlataformaService:
         )
 
         profile, created = ProviderProfile.objects.get_or_create(
-            user=sarita_user,
+            usuario=sarita_user,
             defaults={
                 'nombre_negocio': 'Plataforma Sarita',
                 'descripcion': 'Perfil empresarial para la gestión de la plataforma Sarita.',

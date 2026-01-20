@@ -10,7 +10,7 @@ class CategoriaActivo(models.Model):
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='categorias_activos', null=True, blank=True)
 
     owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
-    owner_object_id = models.PositiveIntegerField(null=True, blank=True)
+    owner_object_id = models.UUIDField(null=True, blank=True)
     owner = GenericForeignKey('owner_content_type', 'owner_object_id')
 
     nombre = models.CharField(max_length=100)
@@ -18,6 +18,9 @@ class CategoriaActivo(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    class Meta:
+        app_label = 'activos_fijos'
 
 class ActivoFijo(models.Model):
     class MetodoDepreciacion(models.TextChoices):
@@ -27,7 +30,7 @@ class ActivoFijo(models.Model):
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='activos_fijos', null=True, blank=True)
 
     owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
-    owner_object_id = models.PositiveIntegerField(null=True, blank=True)
+    owner_object_id = models.UUIDField(null=True, blank=True)
     owner = GenericForeignKey('owner_content_type', 'owner_object_id')
 
     nombre = models.CharField(max_length=255)
@@ -47,6 +50,9 @@ class ActivoFijo(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    class Meta:
+        app_label = 'activos_fijos'
 
 class CalculoDepreciacion(models.Model):
     activo = models.ForeignKey(ActivoFijo, on_delete=models.CASCADE, related_name='calculos_depreciacion')
