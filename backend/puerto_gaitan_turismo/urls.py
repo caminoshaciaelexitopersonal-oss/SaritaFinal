@@ -16,8 +16,8 @@ urlpatterns = [
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
     # path("admin/", admin.site.urls),
-    # La autenticación de la API es manejada por dj-rest-auth
-    path('api/auth/', include('dj_rest_auth.urls')),
+    # La autenticación de la API es manejada por dj-rest-auth, con nuestra vista de detalles de usuario personalizada.
+    path('api/auth/', include('api.auth_urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
 
     # Rutas de la API de la aplicación principal

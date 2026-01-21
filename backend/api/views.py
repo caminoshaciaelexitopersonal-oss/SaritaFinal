@@ -402,9 +402,23 @@ class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
 from django.db.models import Q
+from dj_rest_auth.views import UserDetailsView
 
 # from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from .serializers import AdminPrestadorSerializer
+
+class CustomUserDetailsView(UserDetailsView):
+    """
+    Sobrescribe la UserDetailsView de dj-rest-auth para optimizar la consulta
+    del usuario y sus perfiles asociados.
+    """
+    def get_queryset(self):
+        # Utiliza select_related para traer los perfiles en una sola consulta
+        return CustomUser.objects.select_related(
+            'profile',
+            'perfil_prestador',
+            'perfil_artesano'
+        )
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = AdminUserSerializer
