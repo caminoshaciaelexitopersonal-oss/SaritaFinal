@@ -135,6 +135,7 @@ from .filters import AuditLogFilter
 from .serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
 from .models import Department, Municipality, Entity
 from .permissions import IsEntityAdmin
+from . import services as api_services
 
 class DepartmentViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -398,12 +399,30 @@ class ContenidoMunicipioViewSet(viewsets.ModelViewSet):
 class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
     queryset = PaginaInstitucional.objects.all()
     serializer_class = PaginaInstitucionalSerializer
-    permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [IsAdminOrFuncionario()]
+        return [AllowAny()]
 
 from django.db.models import Q
+from dj_rest_auth.views import UserDetailsView
 
 # from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from .serializers import AdminPrestadorSerializer
+
+class CustomUserDetailsView(UserDetailsView):
+    """
+    Sobrescribe la UserDetailsView de dj-rest-auth para optimizar la consulta
+    del usuario y sus perfiles asociados.
+    """
+    def get_queryset(self):
+        # Utiliza select_related para traer los perfiles en una sola consulta
+        return CustomUser.objects.select_related(
+            'profile',
+            'perfil_prestador',
+            'perfil_artesano'
+        )
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = AdminUserSerializer
@@ -436,35 +455,27 @@ class AdminPublicacionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], permission_classes=[IsAnyAdminOrDirectivo])
     def approve(self, request, pk=None):
-        publicacion = self.get_object()
-        if publicacion.estado == 'PENDIENTE_DIRECTIVO' and request.user.role == 'FUNCIONARIO_DIRECTIVO':
-            publicacion.estado = 'PENDIENTE_ADMIN'
-            publicacion.save()
-            return Response({'status': 'Aprobado por directivo, pendiente de admin'})
-        if publicacion.estado == 'PENDIENTE_ADMIN' and request.user.role == 'ADMIN':
-            publicacion.estado = 'PUBLICADO'
-            publicacion.save()
-            return Response({'status': 'Publicación aprobada y publicada'})
-        return Response({'error': 'No tiene permiso para esta acción o estado incorrecto'}, status=status.HTTP_400_BAD_REQUEST)
+        api_services.aprobar_publicacion(publicacion_id=pk, usuario=request.user)
+        return Response({'status': 'La publicación ha avanzado en el flujo de aprobación.'})
 
     @action(detail=True, methods=['post'], permission_classes=[IsAnyAdminOrDirectivo])
     def reject(self, request, pk=None):
-        publicacion = self.get_object()
-        publicacion.estado = 'BORRADOR'
-        publicacion.save()
-        return Response({'status': 'Publicación rechazada y devuelta a borrador'})
+        api_services.rechazar_publicacion(publicacion_id=pk, usuario=request.user)
+        return Response({'status': 'Publicación rechazada y devuelta a borrador.'})
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdminOrFuncionario])
     def submit_for_approval(self, request, pk=None):
-        publicacion = self.get_object()
-        publicacion.estado = 'PENDIENTE_DIRECTIVO'
-        publicacion.save()
-        return Response({'status': 'Publicación enviada para aprobación'})
+        api_services.enviar_para_aprobacion(publicacion_id=pk, usuario=request.user)
+        return Response({'status': 'Publicación enviada para aprobación.'})
 
 class HomePageComponentViewSet(viewsets.ModelViewSet):
     queryset = HomePageComponent.objects.all()
     serializer_class = HomePageComponentSerializer
-    permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [IsAdmin()]
+        return [AllowAny()]
 
 class AuditLogViewSet(viewsets.ModelViewSet):
     queryset = AuditLog.objects.all()
@@ -663,7 +674,19 @@ class AnalyticsDataView(views.APIView):
     permission_classes = [IsAdminOrFuncionario]
 
     def get(self, request, *args, **kwargs):
-        return Response({"message": "Datos de analítica."})
+        total_usuarios = CustomUser.objects.count()
+        total_publicaciones = Publicacion.objects.count()
+        total_prestadores = Publicacion.objects.filter(role=CustomUser.Role.PRESTADOR).count()
+
+        data = {
+            "total_usuarios": total_usuarios,
+            "total_publicaciones": total_publicaciones,
+            "total_prestadores": total_prestadores,
+            # Placeholder for future metrics
+            "conversion_rate": "N/A",
+            "ctr_cta": "N/A",
+        }
+        return Response(data)
 class AdminUsuarioListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UsuarioListSerializer

@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from .models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
+from apps.common.serializers.polymorphic_owner import PolymorphicOwnerSerializerMixin
 
-class CategoriaActivoSerializer(serializers.ModelSerializer):
+class CategoriaActivoSerializer(PolymorphicOwnerSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = CategoriaActivo
-        fields = ['id', 'nombre', 'descripcion']
+        fields = ['id', 'nombre', 'descripcion', 'owner', 'owner_details']
 
-class ActivoFijoSerializer(serializers.ModelSerializer):
+class ActivoFijoSerializer(PolymorphicOwnerSerializerMixin, serializers.ModelSerializer):
     categoria_nombre = serializers.CharField(source='categoria.nombre', read_only=True)
 
     class Meta:
@@ -14,7 +15,7 @@ class ActivoFijoSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'nombre', 'categoria', 'categoria_nombre', 'descripcion', 'fecha_adquisicion',
             'costo_adquisicion', 'valor_residual', 'vida_util_meses', 'metodo_depreciacion',
-            'depreciacion_acumulada', 'valor_en_libros'
+            'depreciacion_acumulada', 'valor_en_libros', 'owner', 'owner_details'
         ]
         read_only_fields = ('depreciacion_acumulada', 'valor_en_libros')
 
