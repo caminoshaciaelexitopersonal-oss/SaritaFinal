@@ -399,7 +399,11 @@ class ContenidoMunicipioViewSet(viewsets.ModelViewSet):
 class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
     queryset = PaginaInstitucional.objects.all()
     serializer_class = PaginaInstitucionalSerializer
-    permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [IsAdminOrFuncionario()]
+        return [AllowAny()]
 
 from django.db.models import Q
 from dj_rest_auth.views import UserDetailsView
@@ -467,7 +471,11 @@ class AdminPublicacionViewSet(viewsets.ModelViewSet):
 class HomePageComponentViewSet(viewsets.ModelViewSet):
     queryset = HomePageComponent.objects.all()
     serializer_class = HomePageComponentSerializer
-    permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [IsAdmin()]
+        return [AllowAny()]
 
 class AuditLogViewSet(viewsets.ModelViewSet):
     queryset = AuditLog.objects.all()
@@ -666,7 +674,19 @@ class AnalyticsDataView(views.APIView):
     permission_classes = [IsAdminOrFuncionario]
 
     def get(self, request, *args, **kwargs):
-        return Response({"message": "Datos de analítica."})
+        total_usuarios = CustomUser.objects.count()
+        total_publicaciones = Publicacion.objects.count()
+        total_prestadores = Publicacion.objects.filter(role=CustomUser.Role.PRESTADOR).count()
+
+        data = {
+            "total_usuarios": total_usuarios,
+            "total_publicaciones": total_publicaciones,
+            "total_prestadores": total_prestadores,
+            # Placeholder for future metrics
+            "conversion_rate": "N/A",
+            "ctr_cta": "N/A",
+        }
+        return Response(data)
 class AdminUsuarioListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UsuarioListSerializer
