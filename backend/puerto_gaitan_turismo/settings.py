@@ -92,6 +92,9 @@ INSTALLED_APPS = [
  
     "apps.web_funnel.apps.WebFunnelConfig",
  
+    "apps.downloads.apps.DownloadsConfig",
+    "apps.cart.apps.CartConfig",
+    "apps.payments.apps.PaymentsConfig",
 ]
 
 

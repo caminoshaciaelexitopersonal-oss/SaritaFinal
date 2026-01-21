@@ -26,11 +26,20 @@ urlpatterns = [
     # Panel "Mi Negocio" para Prestadores
     path("api/v1/mi-negocio/", include("apps.prestadores.mi_negocio.urls")),
 
-    # Panel de Administración para "Mi Negocio"
-    path("api/v1/admin/mi-negocio/", include("apps.admin_panel.urls")),
-
     # Nueva API para el panel de administración de la plataforma
     path('api/admin/plataforma/', include('apps.admin_plataforma.urls')),
+
+    # APIs para la gobernanza del contenido web (Funnel y páginas públicas)
+    path('api/web/', include('apps.web_funnel.urls')),
+
+    # APIs para la página de descargas
+    path('api/downloads/', include('apps.downloads.urls')),
+
+    # API para el carro de compras
+    path('api/cart/', include('apps.cart.urls')),
+
+    # API para pagos
+    path('api/payments/', include('apps.payments.urls')),
 ]
 
 # Servir archivos multimedia en modo de desarrollo

@@ -5,7 +5,7 @@ import {
   FiChevronDown, FiChevronRight, FiBox, FiStar, FiAward, FiMap, FiTruck,
   FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive,
   FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
-  FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare
+  FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare, FiMonitor, FiDownload
 } from 'react-icons/fi';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -104,7 +104,6 @@ const miNegocioNav: NavSection[] = [
     links: [
       { href: '/dashboard/prestador/mi-negocio/comercial', label: 'Facturación de Ventas', icon: FiDollarSign },
       { href: '/dashboard/prestador/mi-negocio/compras', label: 'Proveedores y Compras', icon: FiShoppingCart },
-      { href: '/dashboard/prestador/mi-negocio/proyectos', label: 'Análisis de Proyectos', icon: FiBriefcase },
     ],
   },
   { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Ver Módulo', icon: FiArchive }] },
@@ -177,7 +176,9 @@ export default function Sidebar() {
   const [isMiNegocioOpen, setIsMiNegocioOpen] = useState(true);
 
   if (isLoading) return <SidebarSkeleton />;
-  if (!user) return null; // O un mensaje de "No autenticado" o redirección
+  // Si la carga ha terminado y no hay usuario, retorna un componente vacío
+  // que mantiene el espacio en el layout para evitar el parpadeo (flicker).
+  if (!user) return <aside className="w-64 flex-shrink-0 bg-white border-r border-gray-200" />;
 
   const prestadorCategoria = user.perfil_prestador?.categoria?.nombre;
 
@@ -186,6 +187,8 @@ export default function Sidebar() {
       title: 'Plataforma Sarita',
       links: [
         { href: '/dashboard/admin_plataforma/planes', label: 'Planes', icon: FiDollarSign },
+        { href: '/dashboard/admin_plataforma/web-content', label: 'Gestión Web', icon: FiMonitor },
+        { href: '/dashboard/admin_plataforma/downloads', label: 'Descargas', icon: FiDownload },
       ],
     },
     {
@@ -204,15 +207,6 @@ export default function Sidebar() {
         { href: '/dashboard/admin/formularios', label: 'Formularios', icon: FiClipboard },
         { href: '/dashboard/admin/verificacion', label: 'Verificaciones', icon: FiCheckSquare },
         { href: '/dashboard/admin/scoring', label: 'Puntuación', icon: FiAward },
-      ],
-    },
-    {
-      title: "Supervisión 'Mi Negocio' (Legacy)",
-      links: [
-        { href: '/dashboard/admin/mi-negocio/gestion-comercial', label: 'Gestión Comercial', icon: FiShoppingCart },
-        { href: '/dashboard/admin/mi-negocio/gestion-contable', label: 'Gestión Contable', icon: FiBookOpen },
-        { href: '/dashboard/admin/mi-negocio/gestion-financiera', label: 'Gestión Financiera', icon: FiDollarSign },
-        { href: '/dashboard/admin/mi-negocio/gestion-archivistica', label: 'Gestión Archivística', icon: FiArchive },
       ],
     },
   ];
