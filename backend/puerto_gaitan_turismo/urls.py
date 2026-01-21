@@ -26,9 +26,6 @@ urlpatterns = [
     # Panel "Mi Negocio" para Prestadores
     path("api/v1/mi-negocio/", include("apps.prestadores.mi_negocio.urls")),
 
-    # Panel de Administración para "Mi Negocio"
-    path("api/v1/admin/mi-negocio/", include("apps.admin_panel.urls")),
-
     # Nueva API para el panel de administración de la plataforma
     path('api/admin/plataforma/', include('apps.admin_plataforma.urls')),
 ]
