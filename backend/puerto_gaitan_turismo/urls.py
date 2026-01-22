@@ -32,8 +32,8 @@ urlpatterns = [
     # APIs para la gobernanza del contenido web (Funnel y páginas públicas)
     path('api/web/', include('apps.web_funnel.urls')),
 
-    # APIs para la página de descargas
-    path('api/downloads/', include('apps.downloads.urls')),
+    # APIs para la página de descargas (Deshabilitado)
+    # path('api/downloads/', include('apps.downloads.urls')),
 
     # API para el carro de compras
     path('api/cart/', include('apps.cart.urls')),

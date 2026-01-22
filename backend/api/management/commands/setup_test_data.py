@@ -6,6 +6,7 @@ from api.models import (
     RutaTuristica, MenuItem, AtractivoTuristico, Publicacion, ContenidoMunicipio
 )
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
+from apps.web_funnel.models import WebPage # Importar WebPage
 
 class Command(BaseCommand):
     help = 'Crea o actualiza datos de prueba para el sistema, incluyendo todo el contenido de la plataforma. Es idempotente.'
@@ -21,8 +22,20 @@ class Command(BaseCommand):
         self._create_publicaciones(admin_user)
         self._create_contenido_municipio()
         self._create_menu()
+        self._create_web_pages() # Añadir llamada a la nueva función
 
         self.stdout.write(self.style.SUCCESS('\n¡Proceso de carga masiva de contenido completado!'))
+
+    def _create_web_pages(self):
+        self.stdout.write(self.style.HTTP_INFO('\n--- Creando Páginas Web Públicas (Web Funnel) ---'))
+        WebPage.objects.get_or_create(
+            slug='inicio',
+            defaults={
+                'title': 'Página de Inicio de Sarita',
+                'is_published': True
+            }
+        )
+        self.stdout.write(self.style.SUCCESS("Página de prueba 'inicio' creada."))
 
     def _create_menu(self):
         self.stdout.write(self.style.HTTP_INFO('\n--- Reestructurando el Menú Principal ---'))

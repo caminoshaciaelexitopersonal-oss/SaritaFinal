@@ -66,42 +66,56 @@ function RenderContentBlock({ block }: { block: ContentBlock }) {
 }
 
 
+import Header from '@/components/Header'; // Importar el Header
+
 // La página principal
 export default async function HomePage() {
     const pageData = await getPageData('inicio');
 
-    if (!pageData) {
-        // En lugar de un 404, mostramos un estado predeterminado elegante
-        // para que el sitio no se rompa si el CMS no está configurado.
+    // El contenido principal se renderizará de forma diferente si los datos están presentes o no.
+    const MainContent = () => {
+        if (!pageData) {
+            // Estado predeterminado elegante si el CMS no está configurado.
+            return (
+                <div className="flex flex-col items-center justify-center flex-grow text-center">
+                    <h1 className="text-4xl font-bold">Bienvenido a Sarita</h1>
+                    <p className="mt-4 text-lg text-gray-600">
+                        El contenido de esta página se gestiona desde el panel de administración.
+                    </p>
+                    <p className="mt-2 text-sm text-gray-500">
+                        (No se encontró una página con el slug "inicio" o la API no está disponible)
+                    </p>
+                </div>
+            );
+        }
+
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen text-center">
-                <h1 className="text-4xl font-bold">Bienvenido a Sarita</h1>
-                <p className="mt-4 text-lg text-gray-600">
-                    El contenido de esta página se gestiona desde el panel de administración.
-                </p>
-                <p className="mt-2 text-sm text-gray-500">
-                    (No se encontró una página con el slug "inicio")
-                </p>
+            <div className="container mx-auto px-4 py-8">
+                <h1 className="text-4xl font-bold text-center mb-12">{pageData.title}</h1>
+                {pageData.sections.sort((a, b) => a.order - b.order).map(section => (
+                    <Card key={section.id} className="mb-8">
+                        <CardHeader>
+                            <CardTitle>{section.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {section.content_blocks.sort((a, b) => a.order - b.order).map(block => (
+                                <RenderContentBlock key={block.id} block={block} />
+                            ))}
+                        </CardContent>
+                    </Card>
+                ))}
             </div>
         );
-    }
+    };
 
+    // Renderizar siempre la estructura principal de la página (Header, main)
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-4xl font-bold text-center mb-12">{pageData.title}</h1>
-
-            {pageData.sections.sort((a, b) => a.order - b.order).map(section => (
-                <Card key={section.id} className="mb-8">
-                    <CardHeader>
-                        <CardTitle>{section.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        {section.content_blocks.sort((a, b) => a.order - b.order).map(block => (
-                            <RenderContentBlock key={block.id} block={block} />
-                        ))}
-                    </CardContent>
-                </Card>
-            ))}
+        <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow flex flex-col">
+                <MainContent />
+            </main>
+            {/* Aquí podría ir un componente Footer en el futuro */}
         </div>
     );
 }
