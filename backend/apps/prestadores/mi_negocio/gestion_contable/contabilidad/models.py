@@ -1,116 +1,109 @@
+# backend/apps/prestadores/mi_negocio/gestion_contable/models.py
+import uuid
 from django.db import models
-from django.db.models import Sum
 from django.conf import settings
-from django.core.exceptions import ValidationError
-from decimal import Decimal
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
 
-# Se eliminó la importación directa de ProviderProfile para desacoplar el dominio.
-
-class CostCenter(models.Model):
-    perfil_ref_id = models.UUIDField(db_index=True, null=True)
-    code = models.CharField(max_length=20, unique=True)
-    name = models.CharField(max_length=255)
+class PlanDeCuentas(TenantAwareModel):
+    """
+    El catálogo de cuentas contables para un prestador (inquilino).
+    Cada prestador tendrá su propio plan de cuentas.
+    """
+    nombre = models.CharField(max_length=255, unique=True)
+    descripcion = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.code} - {self.name}"
+        return f"Plan de Cuentas: {self.nombre} para {self.provider.nombre_comercial}"
 
     class Meta:
-        app_label = 'contabilidad'
+        verbose_name = "Plan de Cuentas"
+        verbose_name_plural = "Planes de Cuentas"
+        unique_together = ('provider', 'nombre')
 
-class Currency(models.Model):
-    code = models.CharField(max_length=3, primary_key=True)
-    name = models.CharField(max_length=100)
+
+class Cuenta(TenantAwareModel):
+    """
+    Una cuenta contable específica dentro de un Plan de Cuentas.
+    Las cuentas están anidadas para crear una jerarquía (ej. Activos -> Activos Corrientes -> Caja).
+    """
+    class TipoCuenta(models.TextChoices):
+        ACTIVO = 'ACTIVO', 'Activo'
+        PASIVO = 'PASIVO', 'Pasivo'
+        PATRIMONIO = 'PATRIMONIO', 'Patrimonio'
+        INGRESOS = 'INGRESOS', 'Ingresos'
+        GASTOS = 'GASTOS', 'Gastos'
+        COSTOS = 'COSTOS', 'Costos'
+
+    plan_de_cuentas = models.ForeignKey(PlanDeCuentas, on_delete=models.CASCADE, related_name='cuentas')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    nombre = models.CharField(max_length=255)
+    codigo = models.CharField(max_length=20)
+    tipo = models.CharField(max_length=20, choices=TipoCuenta.choices)
+    descripcion = models.TextField(blank=True)
+    saldo_inicial = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return self.code
+        return f"{self.codigo} - {self.nombre}"
 
     class Meta:
-        app_label = 'contabilidad'
+        verbose_name = "Cuenta Contable"
+        verbose_name_plural = "Cuentas Contables"
+        unique_together = ('plan_de_cuentas', 'codigo')
+        ordering = ['codigo']
 
-class ExchangeRate(models.Model):
-    from_currency = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name="rates_from")
-    to_currency = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name="rates_to")
-    rate = models.DecimalField(max_digits=18, decimal_places=8)
-    date = models.DateField()
 
-    class Meta:
-        unique_together = ('from_currency', 'to_currency', 'date')
-        app_label = 'contabilidad'
-
-class ChartOfAccount(models.Model):
-    perfil_ref_id = models.UUIDField(db_index=True, null=True)
-
-    class Nature(models.TextChoices):
-        DEBIT = 'DEBITO', 'Debito'
-        CREDIT = 'CREDITO', 'Credito'
-
-    code = models.CharField(max_length=20)
-    name = models.CharField(max_length=255)
-    nature = models.CharField(max_length=10, choices=Nature.choices)
-    allows_transactions = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ['code']
-        unique_together = ('perfil_ref_id', 'code')
-        app_label = 'contabilidad'
+class PeriodoContable(TenantAwareModel):
+    """
+    Define un período fiscal (ej. Enero 2024) para registrar transacciones.
+    """
+    nombre = models.CharField(max_length=100)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    cerrado = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.code} - {self.name}"
-
-class JournalEntry(models.Model):
-    perfil_ref_id = models.UUIDField(db_index=True, null=True)
-    entry_date = models.DateField(db_index=True)
-    description = models.TextField()
-    entry_type = models.CharField(max_length=100)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="journal_entries")
-
-    # Patrón de origen genérico explícito según la Directriz 14.5
-    origen_operativo_id = models.UUIDField(null=True, blank=True, db_index=True)
-    origen_tipo = models.CharField(max_length=100, null=True, blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
+        return self.nombre
 
     class Meta:
-        ordering = ['-entry_date', '-id']
-        app_label = 'contabilidad'
+        verbose_name = "Período Contable"
+        verbose_name_plural = "Períodos Contables"
+        unique_together = ('provider', 'fecha_inicio', 'fecha_fin')
+
+
+class AsientoContable(TenantAwareModel):
+    """
+    Un asiento en el libro diario. Es la unidad fundamental de registro contable.
+    Agrupa un conjunto de transacciones de débito y crédito que deben balancearse.
+    """
+    periodo = models.ForeignKey(PeriodoContable, on_delete=models.PROTECT, related_name='asientos')
+    fecha = models.DateField()
+    descripcion = models.CharField(max_length=255)
+    creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f"Asiento #{self.id} del {self.entry_date}"
-
-    def clean(self):
-        """
-        Valida que la suma de débitos sea igual a la suma de créditos (partida doble).
-        Esta validación debe ser llamada explícitamente después de crear el asiento
-        y todas sus transacciones asociadas.
-        """
-        super().clean()
-        # La validación solo tiene sentido si el objeto ya existe en la BD y tiene transacciones.
-        if self.pk:
-            totals = self.transactions.aggregate(
-                total_debit=Sum('debit'),
-                total_credit=Sum('credit')
-            )
-            total_debit = totals.get('total_debit') or Decimal('0.00')
-            total_credit = totals.get('total_credit') or Decimal('0.00')
-
-            if total_debit != total_credit:
-                raise ValidationError(
-                    f"El asiento no cumple con la partida doble. Total Débitos: {total_debit}, Total Créditos: {total_credit}"
-                )
-
-class Transaction(models.Model):
-    journal_entry = models.ForeignKey(JournalEntry, on_delete=models.CASCADE, related_name="transactions")
-    account = models.ForeignKey(ChartOfAccount, on_delete=models.PROTECT)
-    debit = models.DecimalField(max_digits=18, decimal_places=2, default=Decimal('0.00'))
-    credit = models.DecimalField(max_digits=18, decimal_places=2, default=Decimal('0.00'))
-    cost_center = models.ForeignKey(CostCenter, on_delete=models.PROTECT, null=True, blank=True)
+        return f"Asiento #{self.id} del {self.fecha}"
 
     class Meta:
-        ordering = ['id']
-        app_label = 'contabilidad'
+        verbose_name = "Asiento Contable"
+        verbose_name_plural = "Asientos Contables"
+        ordering = ['-fecha']
 
-    def clean(self):
-        if self.debit > 0 and self.credit > 0:
-            raise ValidationError("Una transacción no puede tener un valor de débito y crédito a la vez.")
+
+class Transaccion(models.Model):
+    """
+    Una línea individual dentro de un Asiento Contable.
+    Representa un movimiento de débito o crédito a una cuenta específica.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    asiento = models.ForeignKey(AsientoContable, on_delete=models.CASCADE, related_name='transacciones')
+    cuenta = models.ForeignKey(Cuenta, on_delete=models.PROTECT, related_name='transacciones')
+    debito = models.DecimalField(max_digits=18, decimal_places=2, default=0.00, help_text="Monto que entra o aumenta (Debe).")
+    credito = models.DecimalField(max_digits=18, decimal_places=2, default=0.00, help_text="Monto que sale o disminuye (Haber).")
+    descripcion = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"Transacción en {self.cuenta.nombre} por {'Débito' if self.debito > 0 else 'Crédito'} de {self.debito or self.credito}"
+
+    class Meta:
+        verbose_name = "Transacción Contable"
+        verbose_name_plural = "Transacciones Contables"
