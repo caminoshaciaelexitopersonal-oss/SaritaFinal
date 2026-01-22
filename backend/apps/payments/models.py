@@ -2,7 +2,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from apps.cart.models import Cart
+from apps.orders.models import Order
 
 class Payment(models.Model):
     """
@@ -16,11 +16,10 @@ class Payment(models.Model):
         ('CANCELLED', 'Cancelado'),
     ]
 
-    cart = models.ForeignKey(
-        Cart,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='payments'
+    order = models.OneToOneField(
+        Order,
+        on_delete=models.CASCADE,
+        related_name='payment'
     )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

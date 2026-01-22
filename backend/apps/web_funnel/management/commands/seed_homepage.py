@@ -55,3 +55,30 @@ class Command(BaseCommand):
         )
 
         self.stdout.write(self.style.SUCCESS(f'Página "{home_page.title}" creada exitosamente.'))
+
+        # --- Crear Página de Consideración (MOFU) ---
+        WebPage.objects.filter(slug='consideracion').delete()
+        mofu_page = WebPage.objects.create(
+            title='¿Por qué Sarita es la elección correcta?',
+            slug='consideracion',
+            is_published=True
+        )
+        mofu_section = Section.objects.create(
+            web_page=mofu_page,
+            title='Testimonios de Clientes',
+            order=1
+        )
+        ContentBlock.objects.create(
+            section=mofu_section,
+            content_type='text',
+            content='"Desde que usamos Sarita, nuestra eficiencia operativa ha aumentado en un 40%. La gestión de reservas y la comunicación con los turistas nunca ha sido tan fácil."\n- Hotel Paraíso',
+            order=1
+        )
+        ContentBlock.objects.create(
+            section=mofu_section,
+            content_type='button',
+            content='Ver todos los planes',
+            link='/decision',
+            order=2
+        )
+        self.stdout.write(self.style.SUCCESS(f'Página "{mofu_page.title}" creada exitosamente.'))

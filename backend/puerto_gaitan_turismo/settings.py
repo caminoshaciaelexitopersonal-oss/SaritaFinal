@@ -94,6 +94,7 @@ INSTALLED_APPS = [
  
     "apps.downloads.apps.DownloadsConfig",
     "apps.cart.apps.CartConfig",
+    "apps.orders.apps.OrdersConfig",
     "apps.payments.apps.PaymentsConfig",
 ]
 

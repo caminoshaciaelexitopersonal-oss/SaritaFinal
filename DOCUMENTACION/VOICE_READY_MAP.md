@@ -35,6 +35,11 @@ Esta arquitectura permite que un controlador de voz (como SADI) y un controlador
     -   **Comando SADI (Ejemplo):** "Cuál es el estado del pago 123?"
     -   **Estado:** `LISTO`.
 
+### Módulo: Órdenes (`apps.orders.services.OrderService`)
+-   **`create_order_from_cart(cart)`**
+    -   **Comando SADI (Ejemplo):** "Crea una orden desde mi carro."
+    -   **Estado:** `LISTO`.
+
 ### Módulo: Gestión de Planes (CRUD vía API)
 -   **Acciones:** Crear, editar, activar/desactivar planes.
 -   **Flujo SADI:** Un comando de voz como "Crea un nuevo plan mensual para prestadores a 99 dólares" se traduciría en una llamada `POST` a la API `/api/admin/plataforma/planes/`.

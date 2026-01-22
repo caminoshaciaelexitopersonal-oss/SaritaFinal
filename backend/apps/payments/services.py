@@ -1,69 +1,63 @@
 
 from decimal import Decimal
+from apps.orders.services import OrderService
 from .models import Payment
 from apps.cart.models import Cart
+from apps.admin_plataforma.models import Suscripcion
+from datetime import timedelta
 
 class PaymentService:
-    """
-    Servicio para manejar la lógica de pagos de forma agnóstica al proveedor.
-    """
-
     @staticmethod
     def initiate_payment(cart: Cart, provider: str) -> Payment:
-        """
-        Inicia un proceso de pago para un carro de compras.
-        Crea un registro de Pago en la base de datos con estado 'INIT'.
-        """
-        total_price = sum(item.total_price for item in cart.items.all())
-
+        order = OrderService.create_order_from_cart(cart)
         payment = Payment.objects.create(
-            cart=cart,
+            order=order,
             user=cart.user,
-            amount=total_price,
+            amount=order.total_amount,
             provider=provider,
             status='INIT'
         )
-
-        # Lógica futura:
-        # 1. Llamar a la API del proveedor de pago (ej. Wompi, Stripe).
-        # 2. Obtener una URL de pago o un ID de transacción.
-        # 3. Guardar el ID de transacción y actualizar el estado a 'PENDING'.
-        # 4. Devolver el objeto Payment con la información necesaria.
-
-        print(f"Iniciando pago para el carro {cart.id} por ${total_price} con {provider}")
-
         return payment
 
     @staticmethod
-    def confirm_payment(transaction_id: str, status: str):
-        """
-        Confirma el resultado de un pago basado en un webhook o callback del proveedor.
-        """
+    def confirm_payment(transaction_id: str):
         try:
             payment = Payment.objects.get(transaction_id=transaction_id)
+            if payment.status == 'PAID':
+                return
 
-            if status.upper() == 'PAID':
-                payment.status = 'PAID'
-                # Lógica futura:
-                # - Crear la suscripción para el usuario.
-                # - Vaciar el carro de compras.
-                # - Enviar email de confirmación.
-            elif status.upper() in ['FAILED', 'CANCELLED']:
-                payment.status = status.upper()
-
+            payment.status = 'PAID'
             payment.save()
-            print(f"Pago {payment.id} actualizado a estado {payment.status}")
-            return payment
+
+            # Crear suscripción
+            order = payment.order
+            for item in order.items.all():
+                # Asumimos que la frecuencia determina la duración
+                duration_days = 365 if item.plan.frecuencia == 'ANUAL' else 182 if item.plan.frecuencia == 'SEMESTRAL' else 30
+                end_date = timedelta(days=duration_days * item.quantity)
+
+                # Buscamos el perfil del prestador asociado al usuario
+                # NOTA: Esto asume que el user tiene un perfil de prestador.
+                # Se necesita una lógica más robusta para diferentes tipos de usuarios.
+                client_profile = getattr(order.user, 'perfil_prestador', None)
+                if client_profile:
+                    Suscripcion.objects.create(
+                        cliente=client_profile,
+                        plan=item.plan,
+                        fecha_inicio=payment.updated_at.date(),
+                        fecha_fin=payment.updated_at.date() + end_date,
+                        is_active=True
+                    )
+
+            # Vaciar carro
+            cart = Cart.objects.get(user=order.user)
+            cart.items.all().delete()
 
         except Payment.DoesNotExist:
-            print(f"Error: No se encontró un pago con transaction_id {transaction_id}")
-            return None
+            raise ValueError(f"No se encontró un pago con transaction_id {transaction_id}")
 
     @staticmethod
     def get_payment_status(payment_id: int):
-        """
-        Verifica el estado de un pago en nuestro sistema.
-        """
         try:
             payment = Payment.objects.get(id=payment_id)
             return payment.status
