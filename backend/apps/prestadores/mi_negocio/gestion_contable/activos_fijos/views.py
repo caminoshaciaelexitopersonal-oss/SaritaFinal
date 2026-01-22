@@ -3,7 +3,7 @@ from rest_framework.pagination import PageNumberPagination
 from .models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
 from .serializers import CategoriaActivoSerializer, ActivoFijoSerializer, CalculoDepreciacionSerializer
 from .permissions import CanAssignOwnerPermission
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta
 
 class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -75,28 +75,26 @@ class CalculoDepreciacionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         depreciacion = serializer.save(creado_por=self.request.user)
         activo = depreciacion.activo
-        perfil = activo.perfil
+        provider = activo.owner # Asumiendo que el activo tiene un 'owner'
 
         # --- Creación del Asiento Contable de la Depreciación ---
         try:
             # Estas cuentas deberían ser configurables
-            cuenta_gasto_dep = ChartOfAccount.objects.get(code__startswith='5160', perfil=perfil)
-            cuenta_dep_acum = ChartOfAccount.objects.get(code__startswith='1592', perfil=perfil)
-        except ChartOfAccount.DoesNotExist:
+            cuenta_gasto_dep = Cuenta.objects.get(codigo__startswith='5160', provider=provider)
+            cuenta_dep_acum = Cuenta.objects.get(codigo__startswith='1592', provider=provider)
+        except Cuenta.DoesNotExist:
             raise serializers.ValidationError(
                 "No se encontraron las cuentas contables requeridas para la depreciación (Gasto '5160' o Dep. Acumulada '1592')."
             )
 
-        journal_entry = JournalEntry.objects.create(
-            perfil=perfil,
-            entry_date=depreciacion.fecha,
-            description=f"Depreciación de {activo.nombre}",
-            entry_type="DEPRECIACION",
-            user=self.request.user,
-            origin_document=depreciacion
+        asiento = AsientoContable.objects.create(
+            provider=provider,
+            fecha=depreciacion.fecha,
+            descripcion=f"Depreciación de {activo.nombre}",
+            creado_por=self.request.user,
         )
 
         # Débito a Gasto por Depreciación
-        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_gasto_dep, debit=depreciacion.monto)
+        Transaccion.objects.create(asiento=asiento, cuenta=cuenta_gasto_dep, debito=depreciacion.monto)
         # Crédito a Depreciación Acumulada
-        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_dep_acum, credit=depreciacion.monto)
+        Transaccion.objects.create(asiento=asiento, cuenta=cuenta_dep_acum, credito=depreciacion.monto)
