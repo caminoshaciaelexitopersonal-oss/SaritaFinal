@@ -61,7 +61,7 @@ const Header: React.FC<HeaderProps> = ({
       setHeaderError(null);
       try {
         const [menuResponse, configResponse] = await Promise.all([
-          api.get('config/menu-items/'),
+          api.get('/menu/'), // CORREGIDO: Apuntar al endpoint de menú correcto
           api.get('config/site-config/')
         ]);
         const menuData = menuResponse.data.results || menuResponse.data || [];
