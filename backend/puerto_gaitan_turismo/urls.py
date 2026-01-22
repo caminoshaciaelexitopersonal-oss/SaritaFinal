@@ -40,6 +40,9 @@ urlpatterns = [
 
     # API para pagos
     path('api/payments/', include('apps.payments.urls')),
+
+    # API para el Agente SADI
+    path('api/sadi/', include('apps.sadi_agent.urls')),
 ]
 
 # Servir archivos multimedia en modo de desarrollo

@@ -1,6 +1,6 @@
 # Acta de Cierre de la Fase C: Sincronización Funcional y Gobernabilidad
 
-**Fecha:** 21 de enero de 2026
+**Fecha:** 2026-01-22
 
 **Autor:** Jules, Ingeniero IA / Implementación Técnica
 

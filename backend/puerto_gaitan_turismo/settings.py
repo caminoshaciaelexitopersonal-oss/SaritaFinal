@@ -89,6 +89,7 @@ INSTALLED_APPS = [
 
     # App para el panel de administración de la plataforma
     "apps.admin_plataforma.apps.AdminPlataformaConfig",
+    "apps.sadi_agent.apps.SadiAgentConfig",
  
     "apps.web_funnel.apps.WebFunnelConfig",
  

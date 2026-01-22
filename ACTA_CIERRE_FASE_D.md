@@ -1,6 +1,6 @@
 # Acta de Cierre de la Fase D: Construcción de la Plataforma Web Comercial
 
-**Fecha:** 21 de enero de 2026
+**Fecha:** 2026-01-22
 
 **Autor:** Jules, Ingeniero IA / Implementación Técnica
 
