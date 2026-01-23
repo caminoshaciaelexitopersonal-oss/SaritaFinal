@@ -1,8 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import OpportunityViewSet
+from .views import ClienteViewSet, OpportunityViewSet
 
 router = DefaultRouter()
+router.register(r'clientes', ClienteViewSet, basename='cliente')
 router.register(r'opportunities', OpportunityViewSet, basename='opportunity')
 
 urlpatterns = [

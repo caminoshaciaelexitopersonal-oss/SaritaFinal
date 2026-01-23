@@ -1,9 +1,21 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import action
-from .models import Opportunity
-from .serializers import OpportunitySerializer
+from rest_framework import viewsets, permissions
+from .models import Cliente, Opportunity
+from .serializers import ClienteSerializer, OpportunitySerializer
+
+class IsPrestadorOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.perfil == request.user.perfil_prestador
+
+class ClienteViewSet(viewsets.ModelViewSet):
+    serializer_class = ClienteSerializer
+    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+
+    def get_queryset(self):
+        # Filtra los clientes para que solo sean los del prestador logueado
+        return Cliente.objects.filter(perfil=self.request.user.perfil_prestador)
 
 class OpportunityViewSet(viewsets.ModelViewSet):
     queryset = Opportunity.objects.all()
