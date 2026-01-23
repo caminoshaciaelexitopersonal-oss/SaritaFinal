@@ -5,7 +5,7 @@ from rest_framework import status
 from django.contrib.contenttypes.models import ContentType
 from api.models import CustomUser
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from .models import CategoriaActivo, ActivoFijo
+from apps.prestadores.mi_negocio.gestion_contable.activos_fijos.models import CategoriaActivo, ActivoFijo
 
 class ActivosFijosAPITestCase(TestCase):
     def setUp(self):

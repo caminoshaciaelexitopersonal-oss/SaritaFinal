@@ -1,254 +1,40 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useAuth } from '@/contexts/AuthContext';
-import { useEntity } from '@/contexts/EntityContext';
-import api from '@/services/api';
-import { FiMenu, FiX, FiBell } from 'react-icons/fi';
-import { usePathname } from 'next/navigation';
-
-// Interfaces de datos
-interface NavLink {
-  id: number;
-  nombre: string;
-  url: string;
-  parent: number | null;
-  children: NavLink[];
-}
-
-interface SiteConfig {
-  logo_url: string;
-  nombre_entidad_principal: string;
-  nombre_entidad_secundaria: string;
-  nombre_secretaria: string;
-}
+// frontend/src/components/Header.tsx
+import React from 'react';
+import { Menu, Bell, User } from 'lucide-react';
 
 interface HeaderProps {
-  isSidebarOpen?: boolean;
-  setIsSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (isOpen: boolean) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({
-  isSidebarOpen: isSidebarOpenProp,
-  setIsSidebarOpen: setIsSidebarOpenProp,
-}) => {
-  const { user, logout, isLoading: isAuthLoading } = useAuth();
-  const { entity } = useEntity();
-  const [navItems, setNavItems] = useState<NavLink[]>([]);
-  const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
-  const [isHeaderLoading, setIsHeaderLoading] = useState(true);
-  const [headerError, setHeaderError] = useState<string | null>(null);
-  const pathname = usePathname();
-
-  // Estado local para el menú, usado si no se pasan las props
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Determinar qué estado y función usar
-  const isMenuActuallyOpen = isSidebarOpenProp !== undefined ? isSidebarOpenProp : isMenuOpen;
-  const toggleMenu = () => {
-    if (setIsSidebarOpenProp) {
-      setIsSidebarOpenProp(!isSidebarOpenProp);
-    } else {
-      setIsMenuOpen(!isMenuOpen);
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsHeaderLoading(true);
-      setHeaderError(null);
-      try {
-        const [menuResponse, configResponse] = await Promise.all([
-          api.get('config/menu-items/'),
-          api.get('config/site-config/')
-        ]);
-        const menuData = menuResponse.data.results || menuResponse.data || [];
-        setNavItems(menuData);
-        setSiteConfig(configResponse.data);
-      } catch (error) {
-        console.error("Error fetching header data:", error);
-        setHeaderError("No se pudo cargar el menú.");
-      } finally {
-        setIsHeaderLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  // Cerrar el menú al cambiar de ruta
-  useEffect(() => {
-    if (pathname) {
-      if (setIsSidebarOpenProp) {
-        setIsSidebarOpenProp(false);
-      } else {
-        setIsMenuOpen(false);
-      }
-    }
-  }, [pathname, setIsSidebarOpenProp]);
-
-  const renderNavLinks = (items: NavLink[], isMobile: boolean = false) => {
-    const baseClasses = "block text-gray-700 hover:bg-gray-100 rounded-md font-medium";
-    const mobileClasses = `${baseClasses} px-3 py-2 text-base`;
-    const desktopClasses = `${baseClasses} px-3 py-2 text-sm`;
-
-    return items.map((item) => (
-      <Link key={item.id} href={item.url} className={isMobile ? mobileClasses : desktopClasses}>
-        {item.nombre}
-      </Link>
-    ));
-  };
-
-  const staticLinks = [
-    { id: 99, nombre: 'Empleo', url: '/empleo', parent: null, children: [] }
-  ];
-
-  const headerStyle = {
-    backgroundColor: entity?.primary_color || '#ffffff',
-  };
-
+const Header: React.FC<HeaderProps> = ({ isSidebarOpen, setIsSidebarOpen }) => {
   return (
-    <header className="shadow-md sticky top-0 z-50" style={headerStyle}>
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+    <header className="bg-white shadow-sm">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Botón para menú móvil */}
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="lg:hidden text-gray-500 hover:text-gray-700"
+            aria-label="Abrir menú"
+          >
+            <Menu className="h-6 w-6" />
+          </button>
 
-          {/* Sección Izquierda: Logo e Identificación Institucional */}
-          <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0">
-              {(entity?.logo || siteConfig?.logo_url) ? (
-                <Image src={entity?.logo || siteConfig!.logo_url} alt="Logo Institucional" width={60} height={60} className="h-14 w-auto" />
-              ) : (
-                <div className="w-14 h-14 bg-gray-200 rounded-full animate-pulse"></div>
-              )}
-            </Link>
-            <div className="hidden md:block ml-4">
-              <h2 className="text-sm font-bold text-gray-800">{entity?.name || `${siteConfig?.nombre_entidad_principal} ${siteConfig?.nombre_entidad_secundaria}`}</h2>
-              <p className="text-xs text-gray-600">{siteConfig?.nombre_secretaria}</p>
-              <p className="text-xs font-light text-gray-500">Promoviendo las rutas turísticas</p>
-            </div>
-          </div>
+          {/* Espaciador para centrar el título o dejarlo vacío */}
+          <div className="flex-1"></div>
 
-          {/* Sección Derecha: Navegación y Acciones de Usuario */}
-          <div className="flex items-center">
-            {/* Navegación para Escritorio */}
-            <nav className="hidden lg:flex lg:space-x-4 mr-6">
-              {isHeaderLoading ? (
-                // Skeleton loader para los items del menú
-                <>
-                  <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
-                  <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
-                  <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
-                </>
-              ) : headerError ? (
-                <span className="text-sm text-red-500">{headerError}</span>
-              ) : (
-                <>
-                  {renderNavLinks(navItems)}
-                  {renderNavLinks(staticLinks)}
-                </>
-              )}
-            </nav>
-
-            {/* Acciones de Usuario para Escritorio */}
-            <div className="hidden md:flex items-center space-x-2">
-              <button className="p-2 rounded-full hover:bg-gray-100 text-gray-600">
-                <FiBell size={20} />
-              </button>
-              {!isAuthLoading && (
-                <>
-                  {user ? (
-                    <>
-                      <Link href="/dashboard" className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
-                        Dashboard
-                      </Link>
-                      <button
-                        onClick={logout}
-                        className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
-                      >
-                        Cerrar Sesión
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Link href="/login" className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                        Ingresar
-                      </Link>
-                      <Link href="/registro" className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50">
-                        Registrarse
-                      </Link>
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/* Botón de Menú Móvil */}
-            <div className="lg:hidden flex items-center">
-              <button
-                onClick={toggleMenu}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none"
-              >
-                {isMenuActuallyOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
-              </button>
-            </div>
+          {/* Iconos de la derecha */}
+          <div className="flex items-center space-x-4">
+            <button className="text-gray-500 hover:text-gray-700">
+              <Bell className="h-6 w-6" />
+            </button>
+            <button className="text-gray-500 hover:text-gray-700">
+              <User className="h-6 w-6" />
+            </button>
           </div>
         </div>
       </div>
-
-      {/* Menú desplegable para Móvil y Tablet */}
-      {isMenuActuallyOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-white shadow-lg">
-          <nav className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {isHeaderLoading ? (
-                <div className="px-3 py-2 text-base text-gray-500">Cargando...</div>
-            ) : headerError ? (
-                <div className="px-3 py-2 text-base text-red-500">{headerError}</div>
-            ) : (
-              <>
-                {renderNavLinks(navItems, true)}
-                {renderNavLinks(staticLinks, true)}
-              </>
-            )}
-          </nav>
-          <div className="px-4 py-3 border-t border-gray-200">
-            <div className="flex items-center mb-3">
-              <button className="p-2 rounded-full hover:bg-gray-100 text-gray-600">
-                <FiBell size={20} />
-              </button>
-              <span className="ml-2 text-sm text-gray-700">Notificaciones</span>
-            </div>
-             <div className="space-y-2">
-                 {!isAuthLoading && (
-                  <>
-                    {user ? (
-                      <>
-                        <Link href="/dashboard" className="block w-full text-left px-4 py-2 text-base font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
-                          Dashboard
-                        </Link>
-                        <button
-                          onClick={logout}
-                          className="block w-full text-left px-4 py-2 text-base font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
-                        >
-                          Cerrar Sesión
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <Link href="/login" className="block w-full text-center px-4 py-2 text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                          Ingresar
-                        </Link>
-                        <Link href="/registro" className="block w-full text-center px-4 py-2 text-base font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50">
-                          Registrarse
-                        </Link>
-                      </>
-                    )}
-                  </>
-                )}
-             </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 };
