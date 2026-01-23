@@ -7,7 +7,9 @@ interface HeaderProps {
   setIsSidebarOpen: (isOpen: boolean) => void;
 }
 
+ 
 const Header: React.FC<HeaderProps> = ({ isSidebarOpen, setIsSidebarOpen }) => {
+ 
   return (
     <header className="bg-white shadow-sm">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">

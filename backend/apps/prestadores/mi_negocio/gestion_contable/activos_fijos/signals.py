@@ -4,41 +4,43 @@ from django.dispatch import receiver
 from decimal import Decimal
 
 from .models import CalculoDepreciacion
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta
 
 @receiver(post_save, sender=CalculoDepreciacion)
 def crear_asiento_contable_depreciacion(sender, instance, created, **kwargs):
     if created:
-        perfil = instance.activo.perfil
+        provider = instance.activo.provider
 
         try:
             # Estos códigos de cuenta son estándar, pero deberían ser configurables en un sistema real
-            cuenta_gasto_dep = ChartOfAccount.objects.get(perfil=perfil, code='5160') # Gasto - Depreciaciones
-            cuenta_dep_acum = ChartOfAccount.objects.get(perfil=perfil, code='1592') # Activo (Crédito) - Depreciación Acumulada
-        except ChartOfAccount.DoesNotExist:
+            cuenta_gasto_dep = Cuenta.objects.get(provider=provider, codigo='5160') # Gasto - Depreciaciones
+            cuenta_dep_acum = Cuenta.objects.get(provider=provider, codigo='1592') # Activo (Crédito) - Depreciación Acumulada
+        except Cuenta.DoesNotExist:
+            # Considerar logging aquí en un sistema real
             return
 
-        journal_entry = JournalEntry.objects.create(
-            perfil=perfil,
-            entry_date=instance.fecha,
-            description=f"Depreciación de {instance.activo.nombre} para el periodo.",
-            entry_type="DEPRECIACION",
-            user=instance.creado_por,
-            origin_document=instance
+        asiento = AsientoContable.objects.create(
+            provider=provider,
+            fecha=instance.fecha,
+            descripcion=f"Depreciación de {instance.activo.nombre} para el periodo.",
+            # El campo 'periodo' necesitaría lógica adicional para ser asignado.
+            # Lo omitimos por ahora para simplificar, pero en un sistema real
+            # se buscaría el periodo contable abierto que corresponda a la fecha.
+            creado_por=instance.creado_por,
         )
 
         # Débito al gasto de depreciación
-        Transaction.objects.create(
-            journal_entry=journal_entry,
-            account=cuenta_gasto_dep,
-            debit=instance.monto,
-            credit=Decimal('0.00')
+        Transaccion.objects.create(
+            asiento=asiento,
+            cuenta=cuenta_gasto_dep,
+            debito=instance.monto,
+            credito=Decimal('0.00')
         )
 
         # Crédito a la depreciación acumulada
-        Transaction.objects.create(
-            journal_entry=journal_entry,
-            account=cuenta_dep_acum,
-            debit=Decimal('0.00'),
-            credit=instance.monto
+        Transaccion.objects.create(
+            asiento=asiento,
+            cuenta=cuenta_dep_acum,
+            debito=Decimal('0.00'),
+            credito=instance.monto
         )
