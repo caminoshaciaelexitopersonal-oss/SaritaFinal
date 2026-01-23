@@ -1,6 +1,23 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+class MediaAsset(models.Model):
+    """
+    Representa un archivo multimedia (imagen, video, etc.) que puede ser utilizado
+    en varios bloques de contenido.
+    """
+    nombre = models.CharField(_("Nombre"), max_length=200, help_text=_("Un nombre descriptivo para el archivo."))
+    archivo = models.FileField(_("Archivo"), upload_to='web_funnel_media/')
+    tipo = models.CharField(_("Tipo de archivo"), max_length=50, blank=True, help_text=_("Ej: 'image/jpeg', 'video/mp4'"))
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name = _("Activo Multimedia")
+        verbose_name_plural = _("Activos Multimedia")
+
 class WebPage(models.Model):
     """
     Representa una página web estática dentro del funnel.
