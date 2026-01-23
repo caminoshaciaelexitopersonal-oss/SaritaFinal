@@ -93,7 +93,9 @@ INSTALLED_APPS = [
  
     "apps.web_funnel.apps.WebFunnelConfig",
  
-    # "apps.downloads.apps.DownloadsConfig", # Módulo deshabilitado
+ 
+    "apps.downloads.apps.DownloadsConfig",
+ 
     "apps.cart.apps.CartConfig",
     "apps.orders.apps.OrdersConfig",
     "apps.payments.apps.PaymentsConfig",
