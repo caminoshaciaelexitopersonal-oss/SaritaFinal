@@ -36,6 +36,7 @@ urlpatterns = [
     # APIs para la página de descargas
     path('api/downloads/', include('apps.downloads.urls')),
  
+ 
 
     # API para el carro de compras
     path('api/cart/', include('apps.cart.urls')),
