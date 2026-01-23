@@ -1,80 +1,88 @@
+# backend/apps/prestadores/mi_negocio/gestion_contable/serializers.py
 from rest_framework import serializers
-from .models import ChartOfAccount, JournalEntry, Transaction, CostCenter
+from .models import (
+    PlanDeCuentas,
+    Cuenta,
+    PeriodoContable,
+    AsientoContable,
+    Transaccion,
+)
 
-class ChartOfAccountSerializer(serializers.ModelSerializer):
+class TransaccionSerializer(serializers.ModelSerializer):
+    """
+    Serializador para una transacción individual.
+    """
     class Meta:
-        model = ChartOfAccount
-        fields = ['code', 'name', 'nature', 'allows_transactions']
-
-class CostCenterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CostCenter
-        fields = ['id', 'perfil', 'code', 'name']
-        read_only_fields = ('perfil',)
-
-class TransactionSerializer(serializers.ModelSerializer):
-    account_details = ChartOfAccountSerializer(source='account', read_only=True)
-
-    class Meta:
-        model = Transaction
-        fields = ['id', 'account', 'debit', 'credit', 'cost_center', 'account_details']
+        model = Transaccion
+        fields = ['id', 'cuenta', 'debito', 'credito', 'descripcion']
 
 
-class JournalEntrySerializer(serializers.ModelSerializer):
-    transactions = TransactionSerializer(many=True)
-    perfil = serializers.PrimaryKeyRelatedField(read_only=True) # El perfil se tomará del usuario autenticado
+class AsientoContableSerializer(serializers.ModelSerializer):
+    """
+    Serializador para un asiento contable.
+    Incluye transacciones anidadas para proporcionar una vista completa.
+    """
+    transacciones = TransaccionSerializer(many=True)
+    creado_por = serializers.StringRelatedField()
 
     class Meta:
-        model = JournalEntry
+        model = AsientoContable
         fields = [
             'id',
-            'perfil',
-            'entry_date',
-            'description',
-            'entry_type',
-            'user',
-            'origin_document',
-            'created_at',
-            'transactions'
+            'periodo',
+            'fecha',
+            'descripcion',
+            'creado_por',
+            'transacciones',
         ]
-        read_only_fields = ('user', 'perfil') # Estos campos se gestionarán internamente
 
-    def validate(self, data):
-        # La validación se aplica tanto a la creación como a la actualización
-        transactions = data.get('transactions')
-        if not transactions:
-            raise serializers.ValidationError("Un asiento contable debe tener al menos una transacción.")
 
-        total_debit = sum(item.get('debit', 0) for item in transactions)
-        total_credit = sum(item.get('credit', 0) for item in transactions)
+class CuentaSerializer(serializers.ModelSerializer):
+    """
+    Serializador para una cuenta contable.
+    Utiliza recursión para mostrar las sub-cuentas anidadas.
+    """
+    children = serializers.SerializerMethodField()
 
-        if total_debit != total_credit:
-            raise serializers.ValidationError(f"El asiento está desbalanceado. Débitos: {total_debit}, Créditos: {total_credit}")
+    class Meta:
+        model = Cuenta
+        fields = [
+            'id',
+            'nombre',
+            'codigo',
+            'tipo',
+            'descripcion',
+            'saldo_inicial',
+            'parent',
+            'children',
+        ]
 
-        if total_debit == 0 and total_credit == 0:
-            raise serializers.ValidationError("El asiento contable no puede tener un valor total de cero.")
+    def get_children(self, obj):
+        """ Retorna los hijos de la cuenta de forma recursiva. """
+        return CuentaSerializer(obj.children.all(), many=True).data
 
-        return data
 
-    def create(self, validated_data):
-        transactions_data = validated_data.pop('transactions')
-        journal_entry = JournalEntry.objects.create(**validated_data)
-        for transaction_data in transactions_data:
-            Transaction.objects.create(journal_entry=journal_entry, **transaction_data)
-        return journal_entry
+class PlanDeCuentasSerializer(serializers.ModelSerializer):
+    """
+    Serializador para el Plan de Cuentas.
+    Muestra las cuentas de nivel superior (aquellas sin padre).
+    """
+    cuentas = serializers.SerializerMethodField()
 
-    def update(self, instance, validated_data):
-        transactions_data = validated_data.pop('transactions', None)
+    class Meta:
+        model = PlanDeCuentas
+        fields = ['id', 'nombre', 'descripcion', 'provider', 'cuentas']
 
-        instance.entry_date = validated_data.get('entry_date', instance.entry_date)
-        instance.description = validated_data.get('description', instance.description)
-        instance.entry_type = validated_data.get('entry_type', instance.entry_type)
-        instance.save()
+    def get_cuentas(self, obj):
+        """ Filtra para obtener solo las cuentas raíz. """
+        cuentas_raiz = obj.cuentas.filter(parent__isnull=True)
+        return CuentaSerializer(cuentas_raiz, many=True).data
 
-        if transactions_data is not None:
-            # Eliminar transacciones antiguas y crear las nuevas
-            instance.transactions.all().delete()
-            for transaction_data in transactions_data:
-                Transaction.objects.create(journal_entry=instance, **transaction_data)
 
-        return instance
+class PeriodoContableSerializer(serializers.ModelSerializer):
+    """
+    Serializador para el Período Contable.
+    """
+    class Meta:
+        model = PeriodoContable
+        fields = ['id', 'nombre', 'fecha_inicio', 'fecha_fin', 'cerrado', 'provider']

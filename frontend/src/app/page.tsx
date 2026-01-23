@@ -1,3 +1,4 @@
+ 
 // frontend/src/app/page.tsx
 export default function HomePage() {
   return (
@@ -10,4 +11,5 @@ export default function HomePage() {
       </div>
     </div>
   );
+ 
 }
