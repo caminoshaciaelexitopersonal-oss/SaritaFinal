@@ -60,6 +60,7 @@ opciones_router.register(r'opciones', views.OpcionRespuestaViewSet, basename='pr
 urlpatterns = [
     # --- Configuración del Sitio (Acceso Público/Restringido) ---
     path('config/site-config/', views.SiteConfigurationView.as_view(), name='site-configuration'),
+    path('config/dashboard-menu/', views.DashboardMenuView.as_view(), name='dashboard-menu'),
 
     # --- Vistas de Entidad ---
     path('entities/current/', views.CurrentEntityView.as_view(), name='current-entity'),

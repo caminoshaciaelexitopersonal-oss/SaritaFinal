@@ -1029,11 +1029,59 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class CustomUserDetailSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer(read_only=True)
+    perfil_prestador = serializers.SerializerMethodField()
+    perfil_artesano = serializers.SerializerMethodField()
+    department = serializers.SerializerMethodField()
+    municipality = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
-        fields = ('pk', 'username', 'email', 'role', 'profile')
+        fields = ('pk', 'username', 'email', 'role', 'perfil_prestador', 'perfil_artesano', 'department', 'municipality')
+
+    def get_perfil_prestador(self, obj):
+        """Safely gets the prestador profile data if it exists."""
+        if obj.role == 'PRESTADOR' and hasattr(obj, 'perfil_prestador'):
+            try:
+                profile = getattr(obj, 'perfil_prestador')
+                if profile:
+                    return ProviderProfileSerializer(profile, context=self.context).data
+            except ProviderProfile.DoesNotExist:
+                pass
+        return None
+
+    def get_perfil_artesano(self, obj):
+        """Safely gets the artesano profile data if it exists."""
+        if obj.role == 'ARTESANO' and hasattr(obj, 'perfil_artesano'):
+            try:
+                profile = getattr(obj, 'perfil_artesano')
+                if profile:
+                    return ArtesanoForUserSerializer(profile, context=self.context).data
+            except Artesano.DoesNotExist:
+                pass
+        return None
+
+    def _get_main_profile(self, obj):
+        """Helper to safely get the main profile object."""
+        if hasattr(obj, 'profile'):
+            try:
+                return getattr(obj, 'profile')
+            except Profile.DoesNotExist:
+                pass
+        return None
+
+    def get_department(self, obj):
+        """Safely gets the department data from the main profile."""
+        profile = self._get_main_profile(obj)
+        if profile and profile.department:
+            return DepartmentSerializer(profile.department).data
+        return None
+
+    def get_municipality(self, obj):
+        """Safely gets the municipality data from the main profile."""
+        profile = self._get_main_profile(obj)
+        if profile and profile.municipality:
+            return MunicipalitySerializer(profile.municipality).data
+        return None
 
 class AdminPrestadorSerializer(serializers.ModelSerializer):
     usuario_username = serializers.CharField(source='usuario.username', read_only=True)

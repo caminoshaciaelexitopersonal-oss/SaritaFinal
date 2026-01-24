@@ -13,7 +13,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 urlpatterns = [
     # OpenAPI Schema
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/swagger-ui/', SpectacularAPIView.as_view(url_name='schema'), name='swagger-ui'),
 
     # path("admin/", admin.site.urls),
     # La autenticación de la API es manejada por dj-rest-auth, con nuestra vista de detalles de usuario personalizada.
@@ -34,7 +34,7 @@ urlpatterns = [
 
  
     # APIs para la página de descargas
-    path('api/downloads/', include('apps.downloads.urls')),
+    # path('api/downloads/', include('apps.downloads.urls')),
  
  
 

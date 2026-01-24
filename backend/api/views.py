@@ -747,3 +747,48 @@ class PlaceholderView(views.APIView):
 
     def get(self, request, *args, **kwargs):
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class DashboardMenuView(views.APIView):
+    """
+    Devuelve la estructura del menú del dashboard según el rol del usuario.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        menu = []
+
+        if user.role == 'PRESTADOR':
+            menu = [
+                {"title": "Inicio", "href": "/dashboard"},
+                {
+                    "title": "Mi Negocio",
+                    "children": [
+                        {"title": "Gestión Operativa", "href": "/dashboard/prestador/mi-negocio/gestion-operativa/genericos/perfil"},
+                        {"title": "Gestión Comercial", "href": "/dashboard/prestador/mi-negocio/comercial"},
+                        {"title": "Gestión Archivística", "href": "/dashboard/prestador/mi-negocio/gestion-archivistica"},
+                        {"title": "Gestión Contable", "href": "/dashboard/prestador/mi-negocio/contabilidad"},
+                        {"title": "Análisis Financiero", "href": "/dashboard/prestador/mi-negocio/financiera"},
+                    ]
+                }
+            ]
+        elif user.role in ['ADMIN', 'FUNCIONARIO_DIRECTIVO']:
+            menu = [
+                {"title": "Inicio", "href": "/dashboard"},
+                {
+                    "title": "Plataforma Sarita",
+                    "children": [
+                        {"title": "Planes", "href": "/dashboard/admin_plataforma/planes"},
+                        {"title": "Gestión Web", "href": "/dashboard/admin_plataforma/web-content"},
+                    ]
+                },
+                {
+                    "title": "Administración",
+                    "children": [
+                        {"title": "Usuarios", "href": "/dashboard/admin/users"},
+                        {"title": "Config. del Sitio", "href": "/dashboard/admin/site-config"},
+                    ]
+                }
+            ]
+
+        return Response(menu)
