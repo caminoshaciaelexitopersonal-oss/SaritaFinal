@@ -68,7 +68,7 @@ INSTALLED_APPS = [
     "apps.prestadores.mi_negocio.gestion_financiera.apps.GestionFinancieraConfig",
     "apps.prestadores.mi_negocio.gestion_contable.empresa.apps.EmpresaConfig",
     "apps.prestadores.mi_negocio.gestion_contable.nomina.apps.NominaConfig",
-    "apps.prestadores.mi_negocio.gestion_contable.cierres",
+    "apps.prestadores.mi_negocio.gestion_contable.cierres.apps.CierresConfig",
 
     # Submódulos de Contabilidad
     "apps.prestadores.mi_negocio.gestion_contable.activos_fijos.apps.ActivosFijosConfig",
@@ -90,11 +90,12 @@ INSTALLED_APPS = [
     # App para el panel de administración de la plataforma
     "apps.admin_plataforma.apps.AdminPlataformaConfig",
     "apps.sadi_agent.apps.SadiAgentConfig",
+    "apps.sarita_agents.apps.SaritaAgentsConfig",
  
     "apps.web_funnel.apps.WebFunnelConfig",
  
  
-    "apps.downloads.apps.DownloadsConfig",
+    # "apps.downloads.apps.DownloadsConfig",
  
     "apps.cart.apps.CartConfig",
     "apps.orders.apps.OrdersConfig",
