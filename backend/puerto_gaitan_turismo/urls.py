@@ -38,6 +38,9 @@ urlpatterns = [
 
     # API para el Agente SADI
     path('api/sadi/', include('apps.sadi_agent.urls')),
+
+    # API para el motor de agentes SARITA
+    path('api/sarita/', include('apps.sarita_agents.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

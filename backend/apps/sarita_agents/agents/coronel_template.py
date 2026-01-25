@@ -1,6 +1,8 @@
 # backend/apps/sarita_agents/agents/coronel_template.py
-
+import logging
 from apps.sarita_agents.models import Mision
+
+logger = logging.getLogger(__name__)
 
 class CoronelTemplate:
     """
@@ -11,21 +13,22 @@ class CoronelTemplate:
         self.general = general
         self.domain = domain
         self.capitanes = self._get_capitanes()
-        print(f"CORONEL ({self.domain}): Inicializado. Capitanes listos.")
+        logger.info(f"CORONEL ({self.domain}): Inicializado. Capitanes listos.")
 
     def handle_mission(self, mision: Mision):
         """
         Recibe una misión del General, la descompone y la asigna a un Capitán.
         """
-        print(f"CORONEL ({self.domain}): Misión {mision.id} recibida.")
+        logger.info(f"CORONEL ({self.domain}): Misión {mision.id} recibida.")
 
         # Lógica de enrutamiento para seleccionar el capitán adecuado.
         capitan_asignado = self._select_capitan(mision.directiva_original)
 
         if not capitan_asignado:
+            logger.error(f"CORONEL ({self.domain}): No se pudo asignar un Capitán para la misión {mision.id}.")
             return self._report_error("No se pudo asignar un Capitán para esta misión.")
 
-        print(f"CORONEL ({self.domain}): Asignando orden de misión {mision.id} al Capitán '{capitan_asignado.__class__.__name__}'.")
+        logger.info(f"CORONEL ({self.domain}): Asignando orden de misión {mision.id} al Capitán '{capitan_asignado.__class__.__name__}'.")
         report = capitan_asignado.handle_order(mision)
 
         return self._package_report(report)

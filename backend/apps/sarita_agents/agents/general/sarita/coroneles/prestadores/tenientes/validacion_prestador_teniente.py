@@ -1,5 +1,8 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/tenientes/validacion_prestador_teniente.py
+import logging
 from apps.sarita_agents.agents.teniente_template import TenienteTemplate
+
+logger = logging.getLogger(__name__)
 
 class TenienteValidacionPrestador(TenienteTemplate):
     """
@@ -9,7 +12,7 @@ class TenienteValidacionPrestador(TenienteTemplate):
         """
         Realiza una validación simple de los datos del prestador.
         """
-        print(f"TENIENTE (ValidacionPrestador): Validando datos -> {parametros}")
+        logger.info(f"TENIENTE (ValidacionPrestador): Validando datos -> {parametros}")
 
         nombre = parametros.get("nombre")
         email = parametros.get("email")
@@ -20,5 +23,5 @@ class TenienteValidacionPrestador(TenienteTemplate):
         if "@" not in email:
             raise ValueError("El formato del 'email' no es válido.")
 
-        print(f"TENIENTE (ValidacionPrestador): Los datos básicos son válidos.")
+        logger.info(f"TENIENTE (ValidacionPrestador): Los datos básicos son válidos.")
         return {"status": "SUCCESS", "message": "Datos básicos validados correctamente."}

@@ -1,6 +1,9 @@
 # backend/apps/sarita_agents/agents/teniente_template.py
 
+import logging
 from apps.sarita_agents.models import TareaDelegada, RegistroDeEjecucion
+
+logger = logging.getLogger(__name__)
 
 class TenienteTemplate:
     """
@@ -12,7 +15,7 @@ class TenienteTemplate:
         Ejecuta una tarea, registrando el proceso en la BD.
         """
         teniente_name = self.__class__.__name__
-        print(f"TENIENTE ({teniente_name}): Ejecutando tarea {tarea.id} - {tarea.descripcion_tarea}")
+        logger.info(f"TENIENTE ({teniente_name}): Ejecutando tarea {tarea.id} - {tarea.descripcion_tarea}")
 
         tarea.estado = 'EN_PROGRESO'
         tarea.save()
@@ -30,14 +33,14 @@ class TenienteTemplate:
             log.exitoso = True
             log.resultado = resultado
 
-            print(f"TENIENTE ({teniente_name}): Tarea {tarea.id} completada con éxito.")
+            logger.info(f"TENIENTE ({teniente_name}): Tarea {tarea.id} completada con éxito.")
             return {"status": "SUCCESS", "result": resultado}
 
         except Exception as e:
             tarea.estado = 'FALLIDA'
             log.salida_log = str(e)
 
-            print(f"TENIENTE ({teniente_name}): Tarea {tarea.id} falló - {e}")
+            logger.error(f"TENIENTE ({teniente_name}): Tarea {tarea.id} falló - {e}", exc_info=True)
             return {"status": "ERROR", "message": str(e)}
 
         finally:

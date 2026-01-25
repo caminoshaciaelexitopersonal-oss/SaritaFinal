@@ -1,6 +1,9 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/tenientes/persistencia_prestador_teniente.py
+import logging
 from apps.sarita_agents.agents.teniente_template import TenienteTemplate
 from apps.sarita_agents.models import Prestador
+
+logger = logging.getLogger(__name__)
 
 class TenientePersistenciaPrestador(TenienteTemplate):
     """
@@ -10,7 +13,7 @@ class TenientePersistenciaPrestador(TenienteTemplate):
         """
         Crea un nuevo registro de Prestador en la base de datos.
         """
-        print(f"TENIENTE (PersistenciaPrestador): Creando registro para -> {parametros}")
+        logger.info(f"TENIENTE (PersistenciaPrestador): Creando registro para -> {parametros}")
 
         nombre = parametros.get("nombre")
         email = parametros.get("email")
@@ -24,7 +27,7 @@ class TenientePersistenciaPrestador(TenienteTemplate):
                 activo=True # Activamos el prestador como parte del proceso.
             )
 
-            print(f"TENIENTE (PersistenciaPrestador): Prestador creado con ID {prestador.id}")
+            logger.info(f"TENIENTE (PersistenciaPrestador): Prestador creado con ID {prestador.id}")
             return {
                 "status": "SUCCESS",
                 "message": "Prestador creado exitosamente.",

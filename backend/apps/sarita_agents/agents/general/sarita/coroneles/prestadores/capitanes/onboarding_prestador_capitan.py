@@ -1,8 +1,11 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/onboarding_prestador_capitan.py
+import logging
 from apps.sarita_agents.agents.capitan_template import CapitanTemplate
 from ..tenientes.validacion_prestador_teniente import TenienteValidacionPrestador
 from ..tenientes.persistencia_prestador_teniente import TenientePersistenciaPrestador
 from apps.sarita_agents.models import Mision, PlanTáctico
+
+logger = logging.getLogger(__name__)
 
 class CapitanOnboardingPrestador(CapitanTemplate):
     """
@@ -14,7 +17,7 @@ class CapitanOnboardingPrestador(CapitanTemplate):
         Crea el plan táctico para registrar un nuevo prestador.
         El plan consiste en dos pasos: validar los datos y luego persistirlos.
         """
-        print(f"CAPITÁN (OnboardingPrestador): Creando plan para misión {mision.id}")
+        logger.info(f"CAPITÁN (OnboardingPrestador): Creando plan para misión {mision.id}")
 
         datos_prestador = mision.directiva_original.get("mission", {}).get("datos", {})
 
