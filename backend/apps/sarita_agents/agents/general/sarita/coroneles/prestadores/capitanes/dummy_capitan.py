@@ -1,25 +1,39 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/dummy_capitan.py
-from typing import Dict, Any
+from .....capitan_template import CapitanTemplate
+from ...tenientes.dummy_teniente import DummyTeniente
+from ......models import Mision, PlanTáctico
 
-class DummyCapitan:
+class DummyCapitan(CapitanTemplate):
     """
-    Un capitán de marcador de posición para probar el flujo de delegación.
+    Un capitán de marcador de posición que se integra con la capa de persistencia.
     """
-    def __init__(self, coronel):
-        self.coronel = coronel
-        print(f"CAPITÁN (DummyCapitan): Inicializado.")
 
-    def handle_order(self, order: Dict[str, Any]) -> Dict[str, Any]:
+    def plan(self, mision: Mision) -> PlanTáctico:
         """
-        Simula el manejo de una orden.
+        Crea un plan táctico simulado y lo persiste.
         """
-        print(f"CAPITÁN (DummyCapitan): Orden recibida -> {order}")
+        print(f"DUMMY CAPITÁN: Creando plan para misión {mision.id}")
 
-        report = {
-            "captain": self.__class__.__name__,
-            "order_id": order.get('id', 'N/A'),
-            "status": "SIMULATED_SUCCESS",
-            "details": "La orden fue recibida y procesada por el capitán dummy."
+        pasos = {
+            "paso_1": {
+                "descripcion": "Ejecutar tarea simulada 1",
+                "teniente": "dummy",
+                "parametros": {"param1": "valor1"}
+            }
         }
 
-        return report
+        plan_tactico = PlanTáctico.objects.create(
+            mision=mision,
+            capitan_responsable=self.__class__.__name__,
+            pasos_del_plan=pasos
+        )
+
+        return plan_tactico
+
+    def _get_tenientes(self) -> dict:
+        """
+        Carga el roster de Tenientes para este Capitán.
+        """
+        return {
+            "dummy": DummyTeniente()
+        }
