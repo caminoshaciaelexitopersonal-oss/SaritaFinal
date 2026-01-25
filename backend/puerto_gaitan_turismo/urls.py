@@ -15,7 +15,6 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
-    # path("admin/", admin.site.urls),
     # La autenticación de la API es manejada por dj-rest-auth, con nuestra vista de detalles de usuario personalizada.
     path('api/auth/', include('api.auth_urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
@@ -51,3 +50,5 @@ urlpatterns = [
 # Servir archivos multimedia en modo de desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Activar el admin solo en modo DEBUG
+    urlpatterns.append(path("admin/", admin.site.urls))
