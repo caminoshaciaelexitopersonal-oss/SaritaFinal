@@ -34,7 +34,7 @@ urlpatterns = [
 
  
     # APIs para la página de descargas
-    path('api/downloads/', include('apps.downloads.urls')),
+    # path('api/downloads/', include('apps.downloads.urls')),
  
  
 

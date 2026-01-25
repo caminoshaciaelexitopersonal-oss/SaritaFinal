@@ -94,7 +94,7 @@ INSTALLED_APPS = [
     "apps.web_funnel.apps.WebFunnelConfig",
  
  
-    "apps.downloads.apps.DownloadsConfig",
+    # "apps.downloads.apps.DownloadsConfig",
  
     "apps.cart.apps.CartConfig",
     "apps.orders.apps.OrdersConfig",
@@ -303,6 +303,10 @@ GLOBAL_ENCRYPTION_PEPPER = os.environ.get("GLOBAL_ENCRYPTION_PEPPER")
 # --- AWS ---
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME")
+
+# --- SADI Agent ---
+SADI_AGENT_LLM_MODEL = os.environ.get("SADI_AGENT_LLM_MODEL", "gpt-4-turbo")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
 # --- Configuración de Logging ---
 LOGGING = {
