@@ -21,15 +21,8 @@ router.register(r'reservas', ReservaViewSet, basename='reserva')
 router.register(r'politicas-cancelacion', PoliticaCancelacionViewSet, basename='politica-cancelacion')
 router.register(r'valoraciones', ValoracionViewSet, basename='valoracion')
 
-# El PerfilViewSet no usa un router estándar porque tiene acciones personalizadas
-# perfil_urls = [
-#     path('perfil/me/', PerfilViewSet.as_view({'get': 'me'}), name='perfil-me'),
-#     path('perfil/update-me/', PerfilViewSet.as_view({'put': 'update_me', 'patch': 'update_me'}), name='perfil-update-me'),
-# ]
-
 urlpatterns = [
     path('', include(router.urls)),
-    # path('', include(perfil_urls)),
     # Módulos especializados
     path('alojamiento/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.alojamientos.urls')),
     path('gastronomia/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.gastronomia.urls')),
@@ -40,7 +33,6 @@ urlpatterns = [
     path('operadores-turisticos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.operadores_turisticos.urls')),
     path('eventos-y-marketing/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.eventos.urls')),
     path('transporte/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.urls')),
-    # path('agencias-viajes/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias_de_viajes.urls')),
     path('arrendadora-vehiculos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.arrendadoras_vehiculos.urls')),
     path('sitios-turisticos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.sitios_turisticos.urls')),
 ]

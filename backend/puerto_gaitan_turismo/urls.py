@@ -15,8 +15,6 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
-    # path("admin/", admin.site.urls),
-    # La autenticación de la API es manejada por dj-rest-auth, con nuestra vista de detalles de usuario personalizada.
     path('api/auth/', include('api.auth_urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
 
@@ -31,13 +29,13 @@ urlpatterns = [
 
     # APIs para la gobernanza del contenido web (Funnel y páginas públicas)
     path('api/web/', include('apps.web_funnel.urls')),
+ 
 
  
     # APIs para la página de descargas
     # path('api/downloads/', include('apps.downloads.urls')),
  
  
-
     # API para el carro de compras
     path('api/cart/', include('apps.cart.urls')),
 
@@ -48,6 +46,9 @@ urlpatterns = [
     path('api/sadi/', include('apps.sadi_agent.urls')),
 ]
 
-# Servir archivos multimedia en modo de desarrollo
+# Servir archivos multimedia y la URL del admin en modo de desarrollo
 if settings.DEBUG:
+    urlpatterns += [
+        path('admin/', admin.site.urls),
+    ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

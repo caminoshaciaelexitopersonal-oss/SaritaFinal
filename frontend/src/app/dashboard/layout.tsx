@@ -86,10 +86,9 @@ export default function DashboardLayout({
     );
   }
 
-  if (!isAuthenticated) {
-    // Redirige al login si no está autenticado y no está en una página pública
-    // Esta lógica asume que todas las rutas bajo /dashboard son protegidas.
-    router.push('/login');
+  if (!isAuthenticated && !pathname.startsWith('/dashboard/login') && !pathname.startsWith('/dashboard/registro')) {
+    // Redirige al login si no está autenticado y no está ya en una página pública del dashboard
+    router.push('/dashboard/login');
     return null; // O un componente de carga mientras redirige
   }
 
