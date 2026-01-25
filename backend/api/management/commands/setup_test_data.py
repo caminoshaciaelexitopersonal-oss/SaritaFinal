@@ -137,6 +137,7 @@ class Command(BaseCommand):
 
         test_users = {
             'admin_test': {'role': CustomUser.Role.ADMIN, 'is_staff': True, 'is_superuser': True},
+            'sadi': {'role': CustomUser.Role.ADMIN, 'is_staff': True, 'is_superuser': True},
             'turista_test': {'role': CustomUser.Role.TURISTA},
             'prestador_test': {'role': CustomUser.Role.PRESTADOR},
             'artesano_test': {'role': CustomUser.Role.ARTESANO},

@@ -3,27 +3,48 @@ import re
 import time
 import requests
 import logging
+from pathlib import Path
+from .voice_providers import SpeechToTextProvider, TextToSpeechProvider
 
 logger = logging.getLogger(__name__)
 
 class VoiceOrchestrator:
     """
     Punto de entrada para los comandos de voz.
-    Transcribe, interpreta, invoca la API de SARITA y genera una respuesta hablada.
+    Orquesta la transcripción, interpretación, ejecución de la misión y respuesta hablada.
     """
-    def __init__(self, api_token: str, api_base_url: str = "http://127.0.0.1:8000/api/sarita"):
+    def __init__(self, api_token: str, stt_provider: SpeechToTextProvider, tts_provider: TextToSpeechProvider, api_base_url: str = "http://127.0.0.1:8000/api/sarita"):
         self.api_token = api_token
+        self.stt_provider = stt_provider
+        self.tts_provider = tts_provider
         self.api_base_url = api_base_url
         self.headers = {
             "Authorization": f"Token {self.api_token}",
             "Content-Type": "application/json",
         }
 
-    def handle_voice_command(self, text: str) -> str:
+    def handle_audio_command(self, audio_path: Path, output_audio_path: Path) -> (str, Path):
         """
-        Flujo principal para manejar un comando de voz de extremo a extremo.
+        Flujo principal para manejar un comando de voz desde un archivo de audio.
         """
-        logger.info(f"VOICE ORCHESTRATOR: Comando recibido -> '{text}'")
+        logger.info(f"VOICE ORCHESTRATOR: Procesando comando de audio desde -> '{audio_path}'")
+
+        # 1. Transcribir audio a texto
+        transcribed_text = self.stt_provider.transcribe(audio_path)
+
+        # 2. Procesar el texto para obtener una respuesta
+        text_response = self.handle_text_command(transcribed_text)
+
+        # 3. Convertir la respuesta de texto a audio
+        self.tts_provider.speak(text_response, output_audio_path)
+
+        return text_response, output_audio_path
+
+    def handle_text_command(self, text: str) -> str:
+        """
+        Flujo principal para manejar un comando basado en texto (simulado o post-transcripción).
+        """
+        logger.info(f"VOICE ORCHESTRATOR: Procesando comando de texto -> '{text}'")
 
         try:
             # 1. Interpretar intención y generar directiva
@@ -54,31 +75,53 @@ class VoiceOrchestrator:
     def _translate_intent_to_directive(self, text: str) -> dict:
         """
         Simula un LLM para traducir texto a una directiva SARITA estructurada.
-        Utiliza reglas simples para la misión de onboarding de prestadores.
+        Maneja múltiples patrones y casos de ambigüedad.
         """
         logger.debug(f"Traduciendo intent del texto: '{text}'")
+        text_lower = text.lower()
 
-        # Patrón para registrar un nuevo prestador
-        pattern = r"registrar un nuevo prestador.*se llama '(.*)'.*NIT es ([\d\.\-]+)"
-        match = re.search(pattern, text, re.IGNORECASE)
-
-        if match:
-            nombre = match.group(1)
-            nit = match.group(2)
-            logger.info(f"Intención 'onboard_prestador' reconocida. Nombre: {nombre}, NIT: {nit}")
-
-            directive = {
-                "mision": "onboard_prestador",
-                "objetivo": f"Registrar al prestador '{nombre}' con NIT {nit} en el sistema.",
+        # Caso 1: Registrar hotel con nombre y correo (nuevo)
+        pattern_hotel = r"registra un hotel llamado '(.*?)' con correo ([\w\.\-]+@[\w\.\-]+)"
+        match_hotel = re.search(pattern_hotel, text_lower)
+        if match_hotel:
+            nombre = match_hotel.group(1)
+            correo = match_hotel.group(2)
+            logger.info(f"Intención 'onboard_prestador' (Hotel) reconocida. Nombre: {nombre}, Correo: {correo}")
+            return {
+                "domain": "prestadores",
+                "mission": "onboard_prestador",
+                "objetivo": f"Registrar al prestador tipo hotel '{nombre}' con correo {correo}.",
                 "parametros": {
-                    "nombre_comercial": nombre,
+                    "nombre_comercial": nombre.title(),
+                    "email": correo,
+                    "tipo_prestador": "hotel"
+                }
+            }
+
+        # Caso 2: Registrar prestador con nombre y NIT (compatibilidad)
+        pattern_prestador = r"llama '(.*?)'.*NIT es ([\d\.\-]+)"
+        match_prestador = re.search(pattern_prestador, text_lower, re.IGNORECASE)
+        if match_prestador:
+            nombre = match_prestador.group(1)
+            nit = match_prestador.group(2)
+            logger.info(f"Intención 'onboard_prestador' (Genérico) reconocida. Nombre: {nombre}, NIT: {nit}")
+            return {
+                "mision": "onboard_prestador",
+                "objetivo": f"Registrar al prestador '{nombre}' con NIT {nit}.",
+                "parametros": {
+                    "nombre_comercial": nombre.title(),
                     "nit": nit
                 }
             }
-            return directive
 
+        # Caso 3: Ambigüedad
+        if text_lower.strip() in ["registra un hotel", "registrar un hotel"]:
+            logger.warning(f"Comando ambiguo detectado: '{text}'")
+            raise ValueError("Comando incompleto. Por favor, especifique el nombre y el correo electrónico del hotel.")
+
+        # Si ningún patrón coincide
         logger.warning(f"No se pudo reconocer una intención válida en el comando: '{text}'")
-        raise ValueError("No se pudo interpretar el comando de voz. Por favor, intente de nuevo.")
+        raise ValueError("No se pudo interpretar el comando de voz. Por favor, sea más específico.")
 
     def _invoke_sarita_api(self, directive: dict) -> str:
         """
