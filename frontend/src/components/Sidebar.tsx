@@ -81,7 +81,6 @@ const miNegocioNav: NavSection[] = [
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/documentos', label: 'Documentos', icon: FiAward },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/galeria', label: 'Galería', icon: FiImage },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/estadisticas', label: 'Estadísticas', icon: FiBarChart2 },
-      { href: '/dashboard/prestador/mi-negocio/inventario', label: 'Inventario', icon: FiArchive },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/costos', label: 'Costos', icon: FiTrendingDown },
     ],
   },
@@ -103,20 +102,10 @@ const miNegocioNav: NavSection[] = [
     isSubSection: true,
     links: [
       { href: '/dashboard/prestador/mi-negocio/comercial', label: 'Facturación de Ventas', icon: FiDollarSign },
-      { href: '/dashboard/prestador/mi-negocio/compras', label: 'Proveedores y Compras', icon: FiShoppingCart },
     ],
   },
   { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Ver Módulo', icon: FiArchive }] },
-  {
-    title: 'Gestión Contable',
-    isSubSection: true,
-    links: [
-      { href: '/dashboard/prestador/mi-negocio/contabilidad', label: 'Contabilidad General', icon: FiBookOpen },
-    ],
-  },
-  { title: 'Gestión de Activos', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/activos', label: 'Ver Módulo', icon: FiArchive }] },
   { title: 'Análisis Financiero', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/financiera', label: 'Ver Módulo', icon: FiTrendingDown }] },
-  { title: 'Gestión de Nómina', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/nomina', label: 'Ver Módulo', icon: FiUsers }] },
 ];
 
 // --- Sección Colapsable ---
