@@ -162,22 +162,31 @@ return userData; // Devolver los datos del usuario para uso inmediato
 
 useEffect(() => {
   const checkAuth = async () => {
-    // Esta función solo se ejecutará en el lado del cliente.
     const storedToken = localStorage.getItem('authToken');
     if (storedToken) {
       setToken(storedToken);
-      await fetchUserData();
+      try {
+        await fetchUserData();
+      } catch (error) {
+        // El error ya es manejado dentro de fetchUserData (que llama a logout),
+        // pero lo atrapamos aquí para prevenir cualquier error no controlado.
+        console.error("Fallo al autenticar con el token almacenado:", error);
+      }
     }
-    setIsLoading(false);
   };
 
-  // Asegurarse de que este código solo se ejecute en el navegador.
-  if (typeof window !== 'undefined') {
-    checkAuth();
-  } else {
-    // En el servidor, siempre asumimos que no estamos autenticados inicialmente.
-    setIsLoading(false);
-  }
+  const initialize = async () => {
+    try {
+      if (typeof window !== 'undefined') {
+        await checkAuth();
+      }
+    } finally {
+      // Nos aseguramos de que el estado de carga se desactive siempre.
+      setIsLoading(false);
+    }
+  };
+
+  initialize();
 }, [fetchUserData]);
 
   const login = async (identifier: string, password: string) => {
