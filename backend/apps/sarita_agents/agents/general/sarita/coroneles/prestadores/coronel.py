@@ -2,7 +2,9 @@
 
 from .....coronel_template import CoronelTemplate
 # Importar los capitanes específicos de este dominio.
+ 
 from .capitanes.onboarding_prestador_capitan import CapitanOnboardingPrestador
+ 
 
 class PrestadoresCoronel(CoronelTemplate):
     """
@@ -17,6 +19,7 @@ class PrestadoresCoronel(CoronelTemplate):
         Carga y devuelve el roster de Capitanes bajo el mando de este Coronel.
         """
         return {
+ 
             "onboarding": CapitanOnboardingPrestador(coronel=self),
         }
 
@@ -31,4 +34,5 @@ class PrestadoresCoronel(CoronelTemplate):
         if mission_type == "ONBOARDING_PRESTADOR":
             return self.capitanes.get("onboarding")
 
-        return None # No se encontró capitán para esta misión
+        return None # No se encontró capitán para esta misión 
+ 

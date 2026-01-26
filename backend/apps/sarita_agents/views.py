@@ -1,3 +1,4 @@
+ 
 # backend/apps/sarita_agents/views.py
 from django.db import transaction
 from rest_framework.views import APIView
@@ -57,3 +58,4 @@ class MissionStatusView(APIView):
                 {"error": "Misión no encontrada."},
                 status=status.HTTP_404_NOT_FOUND
             )
+ 

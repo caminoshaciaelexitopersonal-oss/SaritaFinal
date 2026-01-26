@@ -1,6 +1,7 @@
 # backend/apps/sarita_agents/orchestrator.py
 
 import logging
+ 
 from django.utils import timezone
 from .models import Mision
 from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
@@ -9,7 +10,9 @@ from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoro
 # from .agents.general.sarita.coroneles.clientes_turistas.coronel import ClientesTuristasCoronel
 # from .agents.general.sarita.coroneles.gubernamental.coronel import GubernamentalCoronel
 
+ 
 logger = logging.getLogger(__name__)
+ 
 
 class SaritaOrchestrator:
     """
@@ -27,6 +30,7 @@ class SaritaOrchestrator:
             # "clientes_turistas": ClientesTuristasCoronel(general=self),
             # "gubernamental": GubernamentalCoronel(general=self),
         }
+ 
         logger.info("GENERAL SARITA: Orquestador inicializado. Coroneles listos para recibir órdenes.")
 
     def start_mission(self, directive: dict, idempotency_key=None):
@@ -61,11 +65,13 @@ class SaritaOrchestrator:
         domain = mision.dominio
         coronel = self.coroneles.get(domain)
 
+ 
         if not coronel:
             mision.estado = 'FALLIDA'
             mision.resultado_final = {"error": f"No se encontró un Coronel para el dominio '{domain}'."}
             mision.timestamp_fin = timezone.now()
             mision.save()
+ 
             logger.error(f"Misión {mision.id} falló: No se encontró Coronel para el dominio '{domain}'.")
             return
 
@@ -76,6 +82,7 @@ class SaritaOrchestrator:
 
     def _report_error(self, message: str):
         logger.error(f"GENERAL SARITA: Error en la directiva -> {message}")
+ 
         return {
             "status": "REJECTED",
             "message": message,

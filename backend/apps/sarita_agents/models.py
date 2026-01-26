@@ -5,9 +5,11 @@ from django.db import models
 class Mision(models.Model):
     """
     Registro de más alto nivel. Representa la directiva original del General.
+ 
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     idempotency_key = models.UUIDField(unique=True, null=True, blank=True, help_text="Clave única para prevenir duplicados.")
+ 
     directiva_original = models.JSONField(help_text="La directiva JSON original recibida por el orquestador.")
     dominio = models.CharField(max_length=100, help_text="Dominio de negocio objetivo (ej. 'prestadores').")
     estado = models.CharField(max_length=50, default='PENDIENTE', choices=[
@@ -15,7 +17,9 @@ class Mision(models.Model):
         ('EN_PROGRESO', 'En Progreso'),
         ('COMPLETADA', 'Completada'),
         ('FALLIDA', 'Fallida'),
+ 
         ('COMPLETADA_PARCIALMENTE', 'Completada Parcialmente'),
+ 
     ])
     resultado_final = models.JSONField(null=True, blank=True, help_text="El informe final consolidado de la misión.")
     timestamp_inicio = models.DateTimeField(auto_now_add=True)
@@ -37,7 +41,9 @@ class PlanTáctico(models.Model):
         ('EN_EJECUCION', 'En Ejecución'),
         ('COMPLETADO', 'Completado'),
         ('FALLIDO', 'Fallido'),
+ 
         ('COMPLETADO_PARCIALMENTE', 'Completado Parcialmente'),
+ 
     ])
     timestamp_creacion = models.DateTimeField(auto_now_add=True)
 
@@ -55,9 +61,11 @@ class TareaDelegada(models.Model):
     parametros = models.JSONField(default=dict)
     estado = models.CharField(max_length=50, default='PENDIENTE', choices=[
         ('PENDIENTE', 'Pendiente'),
+ 
         ('EN_COLA', 'En Cola'),
         ('EN_PROGRESO', 'En Progreso'),
         ('REINTENTANDO', 'Reintentando'),
+ 
         ('COMPLETADA', 'Completada'),
         ('FALLIDA', 'Fallida'),
     ])
@@ -79,6 +87,7 @@ class RegistroDeEjecucion(models.Model):
 
     def __str__(self):
         return f"Log de Tarea {self.tarea_delegada_id} @ {self.timestamp}"
+ 
 
 # --- Modelos de Dominio (Ejemplo para Fase U) ---
 
@@ -95,3 +104,4 @@ class Prestador(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.email})"
+ 

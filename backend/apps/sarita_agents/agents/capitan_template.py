@@ -1,10 +1,12 @@
 # backend/apps/sarita_agents/agents/capitan_template.py
+ 
 import logging
 from celery import group, chord
 from apps.sarita_agents.models import Mision, PlanTáctico, TareaDelegada
 from ..tasks import ejecutar_tarea_teniente, consolidar_plan_tactico
 
 logger = logging.getLogger(__name__)
+ 
 
 class CapitanTemplate:
     """
@@ -14,12 +16,15 @@ class CapitanTemplate:
     def __init__(self, coronel):
         self.coronel = coronel
         self.tenientes = self._get_tenientes()
+ 
         logger.info(f"CAPITÁN ({self.__class__.__name__}): Inicializado. Tenientes listos.")
+ 
 
     def handle_order(self, mision: Mision):
         """
         Recibe una orden (misión) del Coronel, la procesa y gestiona su ejecución.
         """
+ 
         logger.info(f"CAPITÁN ({self.__class__.__name__}): Orden recibida para misión {mision.id}")
 
         plan = self.plan(mision)
@@ -32,6 +37,7 @@ class CapitanTemplate:
             "status": "PROCESSING",
             "message": f"El plan {plan.id} ha sido encolado para ejecución asíncrona."
         }
+ 
 
     def plan(self, mision: Mision) -> PlanTáctico:
         """
@@ -40,6 +46,7 @@ class CapitanTemplate:
         """
         raise NotImplementedError("El método plan() debe ser implementado por cada Capitán.")
 
+ 
     def delegate(self, plan: PlanTáctico):
         """
         Crea un grupo de tareas de tenientes y las ejecuta en un chord.
@@ -51,10 +58,12 @@ class CapitanTemplate:
 
         header = []
         for _, tarea_info in plan.pasos_del_plan.items():
+ 
             tarea = TareaDelegada.objects.create(
                 plan_tactico=plan,
                 teniente_asignado=tarea_info.get("teniente", "default"),
                 descripcion_tarea=tarea_info.get("descripcion", "N/A"),
+ 
                 parametros=tarea_info.get("parametros", {}),
                 estado='EN_COLA'
             )
@@ -66,6 +75,7 @@ class CapitanTemplate:
         chord(group(header))(callback)
 
         logger.info(f"Chord para el plan {plan.id} ha sido encolado.")
+ 
 
     def _get_tenientes(self) -> dict:
         """

@@ -1,6 +1,9 @@
+import uuid
 from django.conf import settings
 from django.db import models
+ 
 from api.models import CustomUser
+ 
 
 # --- Modelos de Seguridad Voice-First ---
 
@@ -8,6 +11,7 @@ class VoicePermission(models.Model):
     """
     Define los permisos para ejecutar acciones de voz, basado en rol y dominio.
     """
+ 
     role = models.CharField(
         max_length=50,
         choices=CustomUser.Role.choices,
@@ -76,6 +80,7 @@ class Example(models.Model):
     intent = models.ForeignKey(Intent, on_delete=models.CASCADE, related_name='examples')
     text = models.TextField(unique=True, help_text="Texto del comando de ejemplo.")
     language = models.CharField(max_length=10, default='es', help_text="Idioma del ejemplo (ej. 'es', 'en').")
+ 
 
     def __str__(self):
         return f"Ejemplo para '{self.intent.name}': '{self.text}'"
@@ -110,9 +115,11 @@ class VoiceInteractionLog(models.Model):
     text_response = models.TextField(blank=True)
 
     class Meta:
+ 
         verbose_name = "Registro de Interacción por Voz"
         verbose_name_plural = "Registros de Interacción por Voz"
         ordering = ['-timestamp_start']
 
     def __str__(self):
         return f"Interacción de {self.user} a las {self.timestamp_start.strftime('%Y-%m-%d %H:%M')}"
+ 
