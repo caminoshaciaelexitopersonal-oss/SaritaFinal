@@ -189,32 +189,6 @@ useEffect(() => {
   initialize();
 }, [fetchUserData]);
 
-  const completeLogin = (key: string, user: User) => {
-    setToken(key);
-    setUser(user);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('authToken', key);
-    }
-    setMfaRequired(false);
-    toast.success(`¡Bienvenido, ${user.username}!`);
-
-    // Redirección centralizada
-    switch (user.role) {
-      case 'TURISTA':
-        router.push('/mi-viaje');
-        break;
-      case 'PRESTADOR':
-      case 'ARTESANO':
-      case 'ADMIN':
-      case 'FUNCIONARIO_DIRECTIVO':
-      case 'FUNCIONARIO_PROFESIONAL':
-        router.push('/dashboard');
-        break;
-      default:
-        router.push('/');
-    }
-  };
-
   const login = async (identifier: string, password: string) => {
     try {
       const payload = {
@@ -223,10 +197,36 @@ useEffect(() => {
       };
       const response = await api.post<{ key: string; user: User }>('/auth/login/', payload);
 
+      // La respuesta ahora debe contener la clave (token) y el objeto de usuario
       if (response.data && response.data.key && response.data.user) {
-        completeLogin(response.data.key, response.data.user);
+        const { key, user } = response.data;
+        setToken(key);
+        setUser(user);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('authToken', key);
+        }
+        setMfaRequired(false);
+        toast.success(`¡Bienvenido, ${user.username}!`);
+
+        // Redirección centralizada después de un login exitoso
+        // (Asumiendo que esta lógica se quiere mantener aquí)
+        switch (user.role) {
+          case 'TURISTA':
+            router.push('/mi-viaje');
+            break;
+          case 'PRESTADOR':
+          case 'ARTESANO':
+          case 'ADMIN':
+          case 'FUNCIONARIO_DIRECTIVO':
+          case 'FUNCIONARIO_PROFESIONAL':
+            router.push('/dashboard');
+            break;
+          default:
+            router.push('/');
+        }
+
       } else {
-        // Lógica de MFA o manejo de errores
+        // Lógica de MFA (si aplica) o manejo de errores
         setMfaRequired(true);
         setLoginCredentials({ identifier, password });
       }
