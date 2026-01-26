@@ -1,8 +1,11 @@
+# Las URLs de SADI han sido migradas a la arquitectura de Sarita Agents.
+# Este archivo se mantiene por ahora, pero su contenido será redefinido
+# o eliminado en futuras fases.
+
 from django.urls import path
-from .views import SadiCommandView
 
 app_name = 'sadi_agent'
 
 urlpatterns = [
-    path('command/', SadiCommandView.as_view(), name='sadi_command'),
+    # Las rutas se definirán aquí en el futuro si es necesario.
 ]

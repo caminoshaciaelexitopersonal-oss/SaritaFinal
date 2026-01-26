@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class SpeechToTextProvider(abc.ABC):
     """Interfaz abstracta para proveedores de Speech-to-Text."""
     @abc.abstractmethod
-    def transcribe(self, audio_path: Path) -> str:
+    def transcribe(self, audio_path: Path) -> Tuple[str, str]:
         pass
 
 class TextToSpeechProvider(abc.ABC):
@@ -29,19 +29,25 @@ class WhisperProvider(SpeechToTextProvider):
             raise ValueError("No se encontró la clave de API de OpenAI. Por favor, establezca la variable de entorno OPENAI_API_KEY.")
         self.client = OpenAI(api_key=self.api_key)
 
-    def transcribe(self, audio_path: Path) -> str:
+    def transcribe(self, audio_path: Path) -> Tuple[str, str]:
         logger.info(f"Transcribiendo archivo de audio: {audio_path}")
         if not audio_path.exists():
             raise FileNotFoundError(f"El archivo de audio no se encontró en la ruta: {audio_path}")
 
         try:
             with open(audio_path, "rb") as audio_file:
-                transcription = self.client.audio.transcriptions.create(
+                # Usamos 'verbose_json' para obtener metadatos, incluyendo el idioma.
+                response = self.client.audio.transcriptions.create(
                     model="whisper-1",
-                    file=audio_file
+                    file=audio_file,
+                    response_format="verbose_json"
                 )
-            logger.info(f"Transcripción exitosa. Texto: '{transcription.text}'")
-            return transcription.text
+
+            transcribed_text = response.text
+            detected_language = response.language
+
+            logger.info(f"Transcripción exitosa. Idioma detectado: '{detected_language}'. Texto: '{transcribed_text}'")
+            return transcribed_text, detected_language
         except Exception as e:
             logger.error(f"Error durante la transcripción con Whisper: {e}", exc_info=True)
             raise

@@ -1,127 +1,115 @@
 # backend/apps/sadi_agent/voice_orchestrator.py
-import re
 import time
-import requests
 import logging
+import hashlib
+import requests
 from pathlib import Path
+from django.utils import timezone
+from api.models import CustomUser
 from .voice_providers import SpeechToTextProvider, TextToSpeechProvider
+from .semantic_engine import SemanticEngine
+from .translation_service import TranslationService
+from .security import VoiceSecurity
+from .models import VoiceInteractionLog
 
 logger = logging.getLogger(__name__)
 
 class VoiceOrchestrator:
     """
-    Punto de entrada para los comandos de voz.
-    Orquesta la transcripción, interpretación, ejecución de la misión y respuesta hablada.
+    Orquesta el flujo completo de una interacción de voz, aplicando seguridad,
+    semántica y auditoría.
     """
-    def __init__(self, api_token: str, stt_provider: SpeechToTextProvider, tts_provider: TextToSpeechProvider, api_base_url: str = "http://127.0.0.1:8000/api/sarita"):
-        self.api_token = api_token
+    def __init__(self, stt_provider: SpeechToTextProvider, tts_provider: TextToSpeechProvider,
+                 semantic_engine: SemanticEngine, translation_service: TranslationService,
+                 security_service: VoiceSecurity, api_base_url: str = "http://127.0.0.1:8000/api/sarita"):
         self.stt_provider = stt_provider
         self.tts_provider = tts_provider
+        self.semantic_engine = semantic_engine
+        self.translation_service = translation_service
+        self.security_service = security_service
         self.api_base_url = api_base_url
-        self.headers = {
-            "Authorization": f"Token {self.api_token}",
-            "Content-Type": "application/json",
-        }
 
-    def handle_audio_command(self, audio_path: Path, output_audio_path: Path) -> (str, Path):
+    def handle_audio_command(self, user: CustomUser, api_token: str, audio_path: Path, output_audio_path: Path) -> (str, Path):
         """
-        Flujo principal para manejar un comando de voz desde un archivo de audio.
+        Flujo principal de la Fase Z para manejar un comando de voz desde audio.
         """
-        logger.info(f"VOICE ORCHESTRATOR: Procesando comando de audio desde -> '{audio_path}'")
-
-        # 1. Transcribir audio a texto
-        transcribed_text = self.stt_provider.transcribe(audio_path)
-
-        # 2. Procesar el texto para obtener una respuesta
-        text_response = self.handle_text_command(transcribed_text)
-
-        # 3. Convertir la respuesta de texto a audio
-        self.tts_provider.speak(text_response, output_audio_path)
-
-        return text_response, output_audio_path
-
-    def handle_text_command(self, text: str) -> str:
-        """
-        Flujo principal para manejar un comando basado en texto (simulado o post-transcripción).
-        """
-        logger.info(f"VOICE ORCHESTRATOR: Procesando comando de texto -> '{text}'")
+        log = VoiceInteractionLog.objects.create(user=user)
+        text_response = "Lo siento, ha ocurrido un error inesperado."
 
         try:
-            # 1. Interpretar intención y generar directiva
-            directive = self._translate_intent_to_directive(text)
-            logger.info(f"Directiva generada: {directive}")
+            # 1. Transcripción y Detección de Idioma
+            log.audio_hash = self._calculate_hash(audio_path)
+            transcribed_text, detected_language = self.stt_provider.transcribe(audio_path)
+            log.transcribed_text = transcribed_text
+            log.detected_language = detected_language
+            log.save()
 
-            # 2. Invocar la API de SARITA para iniciar la misión
-            mission_id = self._invoke_sarita_api(directive)
-            logger.info(f"Misión {mission_id} iniciada a través de la API.")
+            # 2. Normalización a Idioma Base
+            normalized_text = self.translation_service.normalize_to_base_language(transcribed_text, detected_language)
+            log.normalized_text = normalized_text
+            log.save()
 
-            # 3. Monitorear el estado de la misión (polling)
-            final_mission_status = self._poll_mission_status(mission_id)
-            logger.info(f"Misión {mission_id} finalizada con estado: {final_mission_status['estado']}")
+            # 3. Interpretación Semántica
+            intent, entities = self.semantic_engine.interpret(normalized_text)
+            if not intent:
+                raise ValueError("No se pudo interpretar la intención del comando.")
+            log.detected_intent = intent
+            log.extracted_entities = entities
+            log.save()
 
-            # 4. Generar respuesta hablada
-            spoken_response = self._generate_spoken_response(final_mission_status)
-            logger.info(f"Respuesta generada: {spoken_response}")
+            # 4. Verificación de Permisos
+            log.permission_checked = True
+            is_authorized = self.security_service.is_authorized(user, intent)
+            if not is_authorized:
+                log.permission_granted = False
+                log.final_status = "REJECTED"
+                log.save()
+                raise PermissionError("No tienes permiso para realizar esta acción.")
+            log.permission_granted = True
+            log.save()
 
-            return spoken_response
+            # 5. Ejecución de la Misión
+            directive = self._build_directive(intent, entities)
+            mission_id = self._invoke_sarita_api(directive, api_token)
+            log.mission_id = mission_id
+            log.save()
 
-        except ValueError as e:
-            logger.error(f"Error de validación o interpretación: {e}")
-            return f"Error: {e}"
+            final_mission_status = self._poll_mission_status(mission_id, api_token)
+            text_response = self._generate_spoken_response(final_mission_status)
+            log.final_status = final_mission_status.get("estado", "UNKNOWN")
+
+        except (ValueError, PermissionError) as e:
+            text_response = f"Error: {e}"
+            log.final_status = "REJECTED"
         except Exception as e:
             logger.error(f"Error inesperado en el flujo de voz: {e}", exc_info=True)
-            return "Lo siento, ha ocurrido un error inesperado."
+            text_response = "Lo siento, ha ocurrido un error inesperado."
+            log.final_status = "FAILED"
 
-    def _translate_intent_to_directive(self, text: str) -> dict:
-        """
-        Simula un LLM para traducir texto a una directiva SARITA estructurada.
-        Maneja múltiples patrones y casos de ambigüedad.
-        """
-        logger.debug(f"Traduciendo intent del texto: '{text}'")
-        text_lower = text.lower()
+        # 6. Traducción y Síntesis de Voz de la Respuesta
+        final_response_text = self.translation_service.translate_response(text_response, detected_language)
+        log.text_response = final_response_text
+        self.tts_provider.speak(final_response_text, output_audio_path)
 
-        # Caso 1: Registrar hotel con nombre y correo (nuevo)
-        pattern_hotel = r"registra un hotel llamado '(.*?)' con correo ([\w\.\-]+@[\w\.\-]+)"
-        match_hotel = re.search(pattern_hotel, text_lower)
-        if match_hotel:
-            nombre = match_hotel.group(1)
-            correo = match_hotel.group(2)
-            logger.info(f"Intención 'onboard_prestador' (Hotel) reconocida. Nombre: {nombre}, Correo: {correo}")
-            return {
-                "domain": "prestadores",
-                "mission": "onboard_prestador",
-                "objetivo": f"Registrar al prestador tipo hotel '{nombre}' con correo {correo}.",
-                "parametros": {
-                    "nombre_comercial": nombre.title(),
-                    "email": correo,
-                    "tipo_prestador": "hotel"
-                }
-            }
+        log.timestamp_end = timezone.now()
+        log.save()
 
-        # Caso 2: Registrar prestador con nombre y NIT (compatibilidad)
-        pattern_prestador = r"llama '(.*?)'.*NIT es ([\d\.\-]+)"
-        match_prestador = re.search(pattern_prestador, text_lower, re.IGNORECASE)
-        if match_prestador:
-            nombre = match_prestador.group(1)
-            nit = match_prestador.group(2)
-            logger.info(f"Intención 'onboard_prestador' (Genérico) reconocida. Nombre: {nombre}, NIT: {nit}")
-            return {
-                "mision": "onboard_prestador",
-                "objetivo": f"Registrar al prestador '{nombre}' con NIT {nit}.",
-                "parametros": {
-                    "nombre_comercial": nombre.title(),
-                    "nit": nit
-                }
-            }
+        return final_response_text, output_audio_path
 
-        # Caso 3: Ambigüedad
-        if text_lower.strip() in ["registra un hotel", "registrar un hotel"]:
-            logger.warning(f"Comando ambiguo detectado: '{text}'")
-            raise ValueError("Comando incompleto. Por favor, especifique el nombre y el correo electrónico del hotel.")
+    def _build_directive(self, intent, entities):
+        return {
+            "domain": intent.domain.name,
+            "mission": intent.name,
+            "objetivo": f"Ejecutar la intención {intent.name} con los parámetros {entities}",
+            "parametros": entities,
+        }
 
-        # Si ningún patrón coincide
-        logger.warning(f"No se pudo reconocer una intención válida en el comando: '{text}'")
-        raise ValueError("No se pudo interpretar el comando de voz. Por favor, sea más específico.")
+    def _calculate_hash(self, file_path: Path) -> str:
+        sha256 = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha256.update(byte_block)
+        return sha256.hexdigest()
 
     def _invoke_sarita_api(self, directive: dict) -> str:
         """

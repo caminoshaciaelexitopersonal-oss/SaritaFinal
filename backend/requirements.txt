@@ -124,6 +124,7 @@ Jinja2==3.1.6
 drf-nested-routers==0.95.0
 django-modeltranslation==0.19.1
 openpyxl==3.1.2
+googletrans-py==4.0.0-rc1
 
 # --- Producción / Despliegue ---
 gunicorn==22.0.0
