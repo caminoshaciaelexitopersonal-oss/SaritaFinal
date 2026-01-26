@@ -13,6 +13,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
+  redis:
+    image: redis:7
+    container_name: redis_test
+    ports:
+      - "6379:6379"
+
   backend:
     build: .
     container_name: backend_test
@@ -23,8 +29,11 @@ services:
       - .:/app
     depends_on:
       - db
+      - redis
     environment:
       - DATABASE_URL=postgres://admin:admin@db:5432/turismo
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - DJANGO_SETTINGS_MODULE=puerto_gaitan_turismo.settings
 
   frontend:
@@ -41,6 +50,20 @@ services:
       - backend
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:8000/api
+
+  celery-worker:
+    build: .
+    container_name: celery_worker_test
+    command: celery -A puerto_gaitan_turismo worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - backend
+      - redis
+    environment:
+      - DATABASE_URL=postgres://admin:admin@db:5432/turismo
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
 
 volumes:
   postgres_data: {}

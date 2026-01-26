@@ -1,6 +1,12 @@
 # backend/apps/sarita_agents/agents/capitan_template.py
+ 
+import logging
+from celery import group, chord
+from apps.sarita_agents.models import Mision, PlanTáctico, TareaDelegada
+from ..tasks import ejecutar_tarea_teniente, consolidar_plan_tactico
 
-from ...models import Mision, PlanTáctico, TareaDelegada
+logger = logging.getLogger(__name__)
+ 
 
 class CapitanTemplate:
     """
@@ -10,19 +16,28 @@ class CapitanTemplate:
     def __init__(self, coronel):
         self.coronel = coronel
         self.tenientes = self._get_tenientes()
-        print(f"CAPITÁN ({self.__class__.__name__}): Inicializado. Tenientes listos.")
+ 
+        logger.info(f"CAPITÁN ({self.__class__.__name__}): Inicializado. Tenientes listos.")
+ 
 
     def handle_order(self, mision: Mision):
         """
         Recibe una orden (misión) del Coronel, la procesa y gestiona su ejecución.
         """
-        print(f"CAPITÁN ({self.__class__.__name__}): Orden recibida para misión {mision.id}")
+ 
+        logger.info(f"CAPITÁN ({self.__class__.__name__}): Orden recibida para misión {mision.id}")
 
         plan = self.plan(mision)
-        delegation_results = self.delegate(plan)
-        report = self.report(delegation_results)
+        # El método delegate ahora es asíncrono y no devuelve resultados directamente.
+        self.delegate(plan)
 
-        return report
+        # El reporte se genera y envía de forma asíncrona por la tarea de consolidación.
+        # Devolvemos un reporte intermedio.
+        return {
+            "status": "PROCESSING",
+            "message": f"El plan {plan.id} ha sido encolado para ejecución asíncrona."
+        }
+ 
 
     def plan(self, mision: Mision) -> PlanTáctico:
         """
@@ -31,43 +46,36 @@ class CapitanTemplate:
         """
         raise NotImplementedError("El método plan() debe ser implementado por cada Capitán.")
 
-    def delegate(self, plan: PlanTáctico) -> dict:
+ 
+    def delegate(self, plan: PlanTáctico):
         """
-        Delega la ejecución de los pasos del plan a los Tenientes.
+        Crea un grupo de tareas de tenientes y las ejecuta en un chord.
+        El callback del chord se encargará de la consolidación.
         """
-        print(f"CAPITÁN ({self.__class__.__name__}): Delegando tareas del plan {plan.id}...")
-        results = {}
-        for paso, tarea_info in plan.pasos_del_plan.items():
+        logger.info(f"CAPITÁN ({self.__class__.__name__}): Construyendo chord para el plan {plan.id}...")
+        plan.estado = 'EN_EJECUCION'
+        plan.save()
 
-            # 1. Crear la TareaDelegada en la BD
+        header = []
+        for _, tarea_info in plan.pasos_del_plan.items():
+ 
             tarea = TareaDelegada.objects.create(
                 plan_tactico=plan,
                 teniente_asignado=tarea_info.get("teniente", "default"),
                 descripcion_tarea=tarea_info.get("descripcion", "N/A"),
-                parametros=tarea_info.get("parametros", {})
+ 
+                parametros=tarea_info.get("parametros", {}),
+                estado='EN_COLA'
             )
+            header.append(ejecutar_tarea_teniente.s(tarea_id=str(tarea.id)))
 
-            # 2. Asignar y ejecutar
-            teniente = self.tenientes.get(tarea.teniente_asignado)
-            if teniente:
-                print(f"  - Delegando tarea {tarea.id} a Teniente '{tarea.teniente_asignado}'")
-                resultado = teniente.execute_task(tarea)
-                results[paso] = resultado
-            else:
-                results[paso] = {"error": f"Teniente '{tarea.teniente_asignado}' no encontrado."}
+        callback = consolidar_plan_tactico.s(plan_id=str(plan.id))
 
-        return results
+        # Crear y ejecutar el chord
+        chord(group(header))(callback)
 
-    def report(self, delegation_results: dict) -> dict:
-        """
-        Prepara el informe final para el Coronel.
-        """
-        print(f"CAPITÁN ({self.__class__.__name__}): Preparando informe final.")
-        return {
-            "captain": self.__class__.__name__,
-            "status": "COMPLETED",
-            "details": delegation_results
-        }
+        logger.info(f"Chord para el plan {plan.id} ha sido encolado.")
+ 
 
     def _get_tenientes(self) -> dict:
         """

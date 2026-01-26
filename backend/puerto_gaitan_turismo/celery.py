@@ -1,18 +1,26 @@
+ 
+# backend/puerto_gaitan_turismo/celery.py
 import os
 from celery import Celery
 
-# Set the default Django settings module for the 'celery' program.
+# Establecer el módulo de configuración de Django para el proceso de Celery.
+ 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'puerto_gaitan_turismo.settings')
 
 app = Celery('puerto_gaitan_turismo')
 
-# Using a string here means the worker doesn't have to serialize
-# the configuration object to child processes.
-# - namespace='CELERY' means all celery-related configuration keys
-#   should have a `CELERY_` prefix.
+ 
+# Usar una cadena aquí significa que el worker no necesita serializar
+# el objeto de configuración. El namespace='CELERY' significa que
+# todas las claves de configuración de Celery deben tener un prefijo `CELERY_`.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-# Load task modules from all registered Django app configs.
+# Si las variables de entorno no están definidas, usa Redis local por defecto.
+app.conf.broker_url = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+app.conf.result_backend = os.environ.get('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+
+# Cargar automáticamente los módulos de tareas de todas las aplicaciones registradas.
+ 
 app.autodiscover_tasks()
 
 @app.task(bind=True)

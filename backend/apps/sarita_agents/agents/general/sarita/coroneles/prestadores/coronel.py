@@ -2,7 +2,9 @@
 
 from .....coronel_template import CoronelTemplate
 # Importar los capitanes específicos de este dominio.
-from .capitanes.dummy_capitan import DummyCapitan
+ 
+from .capitanes.onboarding_prestador_capitan import CapitanOnboardingPrestador
+ 
 
 class PrestadoresCoronel(CoronelTemplate):
     """
@@ -17,5 +19,20 @@ class PrestadoresCoronel(CoronelTemplate):
         Carga y devuelve el roster de Capitanes bajo el mando de este Coronel.
         """
         return {
-            "dummy": DummyCapitan(coronel=self),
+ 
+            "onboarding": CapitanOnboardingPrestador(coronel=self),
         }
+
+    def _select_capitan(self, directiva: dict):
+        """
+        Lógica para seleccionar el Capitán más adecuado para la misión.
+        Para la Fase U, asumimos que cualquier misión de 'prestadores' es para onboarding.
+        """
+        mission_info = directiva.get("mission", {})
+        mission_type = mission_info.get("type")
+
+        if mission_type == "ONBOARDING_PRESTADOR":
+            return self.capitanes.get("onboarding")
+
+        return None # No se encontró capitán para esta misión 
+ 
