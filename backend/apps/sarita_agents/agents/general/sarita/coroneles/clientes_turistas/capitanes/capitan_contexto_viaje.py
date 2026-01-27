@@ -3,32 +3,32 @@ from typing import Dict, Any
 
 class CapitanContextoViaje(CapitanTemplate):
     """
-    Misión: Mantener un estado persistente y coherente del viaje actual del
-    turista, incluyendo destinos, fechas, reservas hechas y preferencias
-    contextuales para personalizar las interacciones.
+    Misión: Mantener y comprender el contexto completo del viaje de un turista,
+    incluyendo fechas, destinos, compañeros de viaje, y preferencias,
+    para anticipar necesidades y ofrecer asistencia proactiva.
     """
 
     def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
         super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN CapitanContextoViaje: Inicializado para Misión ID {self.mision_id}.")
+        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Inicializado para Misión ID {self.mision_id}.")
 
     def plan(self):
         """
         El corazón del Capitán. Aquí es donde defines el plan táctico.
-        Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
         """
-        self.logger.info(f"CAPITÁN CapitanContextoViaje: Planificando la misión.")
+        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Planificando la misión.")
 
-        # 1. Crear el Plan Táctico
         plan_tactico = self.get_or_create_plan_tactico(
-            nombre="Plan de Ejecución para CapitanContextoViaje",
-            descripcion=f"Este plan detalla los pasos para cumplir el objetivo: {self.objective}"
+            nombre=f"Plan de Contexto de Viaje",
+            descripcion=f"Gestionar contexto para el objetivo: {self.objective}"
         )
 
-        # 2. Definir y Delegar Tareas (EJEMPLO - DEBE SER IMPLEMENTADO)
-        # self.delegar_tarea(plan_tactico=plan_tactico, nombre_teniente="...", descripcion="...", parametros_especificos={...})
+        self.delegar_tarea(
+            plan_tactico=plan_tactico,
+            nombre_teniente="contexto_viaje",
+            descripcion="Analizar y actualizar el contexto del viaje del turista.",
+            parametros_especificos=self.parametros
+        )
 
-        # 3. Lanzar la Ejecución del Plan
         self.lanzar_ejecucion_plan()
-
-        self.logger.info(f"CAPITÁN CapitanContextoViaje: Planificación completada y tareas delegadas.")
+        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Planificación completada y tarea delegada a 'contexto_viaje'.")
