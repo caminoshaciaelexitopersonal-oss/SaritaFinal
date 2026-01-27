@@ -1,7 +1,7 @@
 import requests
 import asyncio
 import os
-from backend.tool import Tool
+from .tool import Tool
 
 # --- Tool Implementations ---
 

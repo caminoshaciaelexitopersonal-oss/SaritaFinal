@@ -1,9 +1,9 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/coronel.py
 
-from backend....coronel_template import CoronelTemplate
+from .....coronel_template import CoronelTemplate
 # Importar los capitanes específicos de este dominio.
  
-from backend.capitanes.onboarding_prestador_capitan import CapitanOnboardingPrestador
+from .capitanes.onboarding_prestador_capitan import CapitanOnboardingPrestador
  
 
 class PrestadoresCoronel(CoronelTemplate):

@@ -1,9 +1,9 @@
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.pagination import PageNumberPagination
-from backend.models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
-from backend.serializers import CategoriaActivoSerializer, ActivoFijoSerializer, CalculoDepreciacionSerializer
-from backend.permissions import CanAssignOwnerPermission
-from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta
+from .models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
+from .serializers import CategoriaActivoSerializer, ActivoFijoSerializer, CalculoDepreciacionSerializer
+from .permissions import CanAssignOwnerPermission
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta
 
 class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):

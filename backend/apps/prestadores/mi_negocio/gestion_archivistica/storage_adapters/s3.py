@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
-from backend.base import BaseStorageAdapter
+from .base import BaseStorageAdapter
 
 logger = logging.getLogger(__name__)
 

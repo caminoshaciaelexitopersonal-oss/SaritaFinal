@@ -1,6 +1,6 @@
 # backend/apps/sarita_agents/serializers.py
 from rest_framework import serializers
-from backend.models import Mision, PlanTáctico, TareaDelegada, RegistroDeEjecucion
+from .models import Mision, PlanTáctico, TareaDelegada, RegistroDeEjecucion
 
 class RegistroDeEjecucionSerializer(serializers.ModelSerializer):
     class Meta:

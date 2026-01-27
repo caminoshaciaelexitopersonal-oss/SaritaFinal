@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from backend.api.models import CustomUser
+from api.models import CustomUser
 from rest_framework.authtoken.models import Token
 
 

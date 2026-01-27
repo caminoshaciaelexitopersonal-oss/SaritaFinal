@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from backend. import views
+from . import views
 
 router = DefaultRouter()
 router.register(r'publicaciones', views.AdminPublicacionViewSet, basename='admin-publicaciones')

@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
-from backend.models import Horario, ExcepcionHorario
-from backend.serializers import HorarioSerializer, ExcepcionHorarioSerializer
-from backend.apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from .models import Horario, ExcepcionHorario
+from .serializers import HorarioSerializer, ExcepcionHorarioSerializer
+from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
 
 class HorarioViewSet(viewsets.ModelViewSet):
     serializer_class = HorarioSerializer

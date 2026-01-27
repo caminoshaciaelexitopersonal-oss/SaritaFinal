@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
 from decimal import Decimal
 import datetime
 
-from backend.models import PlanDeCuentas, Cuenta, PeriodoContable, AsientoContable
-from backend.services import ContabilidadService, ContabilidadValidationError
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from .models import PlanDeCuentas, Cuenta, PeriodoContable, AsientoContable
+from .services import ContabilidadService, ContabilidadValidationError
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 User = get_user_model()
 

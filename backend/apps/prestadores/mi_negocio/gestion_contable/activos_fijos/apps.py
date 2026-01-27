@@ -5,4 +5,4 @@ class ActivosFijosConfig(AppConfig):
     name = 'apps.prestadores.mi_negocio.gestion_contable.activos_fijos'
 
     def ready(self):
-        import backend.apps.prestadores.mi_negocio.gestion_contable.activos_fijos.signals
+        import apps.prestadores.mi_negocio.gestion_contable.activos_fijos.signals

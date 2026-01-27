@@ -8,6 +8,6 @@ class AutomationConfig(AppConfig):
 
     def ready(self):
         # Importar y registrar los suscriptores cuando la app esté lista
-        from backend. import subscribers
+        from . import subscribers
         subscribers.register_subscribers()
  

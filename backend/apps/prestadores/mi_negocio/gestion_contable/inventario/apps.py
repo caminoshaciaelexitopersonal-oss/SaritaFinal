@@ -5,4 +5,4 @@ class InventarioConfig(AppConfig):
     name = 'apps.prestadores.mi_negocio.gestion_contable.inventario'
 
     def ready(self):
-        import backend.apps.prestadores.mi_negocio.gestion_contable.inventario.signals
+        import apps.prestadores.mi_negocio.gestion_contable.inventario.signals

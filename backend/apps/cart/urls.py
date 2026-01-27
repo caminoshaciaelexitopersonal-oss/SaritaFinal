@@ -1,7 +1,7 @@
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from backend.views import CartViewSet
+from .views import CartViewSet
 
 router = DefaultRouter()
 router.register(r'', CartViewSet, basename='cart')

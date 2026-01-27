@@ -5,8 +5,8 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from decimal import Decimal
 
-from backend.models import MovimientoInventario
-from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta
+from .models import MovimientoInventario
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta
 
 @receiver(post_save, sender=MovimientoInventario)
 def actualizar_stock_y_contabilidad_on_save(sender, instance, created, **kwargs):

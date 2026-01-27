@@ -1,6 +1,6 @@
 # backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/admin.py
 from django.contrib import admin
-from backend.models import (
+from .models import (
     PlanDeCuentas,
     Cuenta,
     PeriodoContable,

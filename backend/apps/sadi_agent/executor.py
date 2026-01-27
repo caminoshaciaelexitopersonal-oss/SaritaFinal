@@ -1,7 +1,7 @@
 from typing import List, Dict, Any
-from backend.tool import Tool
-from backend.state import State
-from backend.logger import Logger
+from .tool import Tool
+from .state import State
+from .logger import Logger
 import json
 import inspect
 

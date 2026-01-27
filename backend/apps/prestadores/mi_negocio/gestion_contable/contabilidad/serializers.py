@@ -1,6 +1,6 @@
 # backend/apps/prestadores/mi_negocio/gestion_contable/serializers.py
 from rest_framework import serializers
-from backend.models import (
+from .models import (
     PlanDeCuentas,
     Cuenta,
     PeriodoContable,

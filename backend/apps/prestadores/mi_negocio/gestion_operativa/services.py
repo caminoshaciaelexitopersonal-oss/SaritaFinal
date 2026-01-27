@@ -1,8 +1,8 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/services.py
-from backend.modulos_genericos.clientes.models import Cliente
-from backend.modulos_genericos.perfil.models import ProviderProfile
-from backend.modulos_genericos.productos_servicios.models import Product
-from backend.modulos_genericos.reservas.models import Reserva
+from .modulos_genericos.clientes.models import Cliente
+from .modulos_genericos.perfil.models import ProviderProfile
+from .modulos_genericos.productos_servicios.models import Product
+from .modulos_genericos.reservas.models import Reserva
 
 class ClienteService:
     @staticmethod

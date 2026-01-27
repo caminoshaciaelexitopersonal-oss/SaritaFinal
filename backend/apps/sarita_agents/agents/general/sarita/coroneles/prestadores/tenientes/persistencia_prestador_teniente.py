@@ -1,7 +1,7 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/tenientes/persistencia_prestador_teniente.py
 import logging
-from backend.apps.sarita_agents.agents.teniente_template import TenienteTemplate
-from backend.apps.sarita_agents.models import Prestador
+from apps.sarita_agents.agents.teniente_template import TenienteTemplate
+from apps.sarita_agents.models import Prestador
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ class TenientePersistenciaPrestador(TenienteTemplate):
         """
         logger.info(f"TENIENTE (PersistenciaPrestador): Creando registro para -> {parametros}")
 
-        nombre = parametros.get("nombre_comercial")
+        nombre = parametros.get("nombre")
         email = parametros.get("email")
 
         # Se asume que los datos ya fueron validados por el teniente anterior.

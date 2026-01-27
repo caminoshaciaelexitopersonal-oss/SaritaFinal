@@ -2,7 +2,7 @@
 import uuid
 from django.db import models
 from infrastructure.models import Tenant, User
-from backend.models import Funnel, FunnelVersion
+from .models import Funnel, FunnelVersion
 
 class Lead(models.Model):
     """

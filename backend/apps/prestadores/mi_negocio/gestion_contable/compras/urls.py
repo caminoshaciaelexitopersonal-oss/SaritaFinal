@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from backend.views import ProveedorViewSet, FacturaCompraViewSet, GenerarPagoMasivoProveedoresView
+from .views import ProveedorViewSet, FacturaCompraViewSet, GenerarPagoMasivoProveedoresView
 
 router = DefaultRouter()
 router.register(r'proveedores', ProveedorViewSet, basename='proveedor')

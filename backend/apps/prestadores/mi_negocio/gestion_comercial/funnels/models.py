@@ -7,35 +7,23 @@ class CadenaTurismo(models.Model):
     nombre = models.CharField(max_length=255)
     color_primario = models.CharField(max_length=7)
     color_secundario = models.CharField(max_length=7)
-    class Meta:
-        app_label = 'funnels'
-
     def __str__(self): return self.nombre
 
 class Categoria(models.Model):
     cadena = models.ForeignKey(CadenaTurismo, on_delete=models.CASCADE, related_name='categorias')
     nombre = models.CharField(max_length=255)
     icon = models.CharField(max_length=50, blank=True)
-    class Meta:
-        app_label = 'funnels'
-
     def __str__(self): return self.nombre
 
 class Subcategoria(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='subcategorias')
     nombre = models.CharField(max_length=255)
-    class Meta:
-        app_label = 'funnels'
-
     def __str__(self): return self.nombre
 
 class LandingPage(models.Model):
     subcategoria = models.ForeignKey(Subcategoria, on_delete=models.CASCADE, related_name='landing_pages')
     nombre = models.CharField(max_length=255)
     publicada = models.BooleanField(default=False)
-    class Meta:
-        app_label = 'funnels'
-
     def __str__(self): return self.nombre
 
 class Funnel(models.Model):
@@ -46,9 +34,6 @@ class Funnel(models.Model):
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='draft')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    class Meta:
-        app_label = 'funnels'
-
     def __str__(self): return self.name
 
 class FunnelVersion(models.Model):
@@ -76,9 +61,6 @@ class FunnelPublication(models.Model):
     public_url_slug = models.SlugField(unique=True, default=uuid.uuid4)
     published_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
-    class Meta:
-        app_label = 'funnels'
-
     def __str__(self): return f"Publication of {self.funnel.name} v{self.version.version_number} at /{self.public_url_slug}"
 
 class LeadCapture(models.Model):
@@ -87,9 +69,6 @@ class LeadCapture(models.Model):
     page = models.ForeignKey(FunnelPage, on_delete=models.CASCADE, related_name='leads')
     form_data = models.JSONField(default=dict)
     captured_at = models.DateTimeField(auto_now_add=True)
-    class Meta:
-        app_label = 'funnels'
-
     def __str__(self): return f"Lead captured in {self.funnel.name} at {self.captured_at}"
 
 class FunnelEvent(models.Model):
@@ -99,10 +78,7 @@ class FunnelEvent(models.Model):
     event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
     metadata_json = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
-    class Meta:
-        app_label = 'funnels'
-
     def __str__(self): return f"Event '{self.event_type}' on {self.funnel.name}"
 
 # Importar los modelos de runtime al final para evitar importaciones circulares.
-from backend.runtime_models import Lead, LeadState, LeadEvent
+from .runtime_models import Lead, LeadState, LeadEvent

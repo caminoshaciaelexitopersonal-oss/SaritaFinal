@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 
 class Amenity(TenantAwareModel):
     """

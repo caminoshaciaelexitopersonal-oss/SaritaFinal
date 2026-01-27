@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from backend.domain.models import OperacionComercial, ItemOperacionComercial, FacturaVenta, ItemFactura, ReciboCaja
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.serializers import ClienteSerializer
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from ..domain.models import OperacionComercial, ItemOperacionComercial, FacturaVenta, ItemFactura, ReciboCaja
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.serializers import ClienteSerializer
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 
 class ItemOperacionComercialSerializer(serializers.ModelSerializer):
     producto_id = serializers.PrimaryKeyRelatedField(

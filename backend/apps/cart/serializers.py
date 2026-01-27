@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
-from backend.models import Cart, CartItem
-from backend.apps.admin_plataforma.serializers import PlanSerializer
+from .models import Cart, CartItem
+from apps.admin_plataforma.serializers import PlanSerializer
 
 class CartItemSerializer(serializers.ModelSerializer):
     plan = PlanSerializer(read_only=True)

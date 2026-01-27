@@ -3,7 +3,7 @@ from dj_rest_auth.views import (
     LoginView, LogoutView, PasswordChangeView, PasswordResetConfirmView,
     PasswordResetView,
 )
-from backend.views import CustomUserDetailsView
+from .views import CustomUserDetailsView
 
 urlpatterns = [
     # URLs que estamos sobrescribiendo

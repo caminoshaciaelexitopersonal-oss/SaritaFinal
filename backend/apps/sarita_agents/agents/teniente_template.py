@@ -2,7 +2,7 @@
 
  
 import logging
-from backend.apps.sarita_agents.models import TareaDelegada, RegistroDeEjecucion
+from apps.sarita_agents.models import TareaDelegada, RegistroDeEjecucion
 
 logger = logging.getLogger(__name__)
  

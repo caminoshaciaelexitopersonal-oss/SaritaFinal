@@ -3,8 +3,8 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from backend.factories import PerfilFactory, DocumentFactory, ProcessFactory, DocumentTypeFactory
-from backend.models import Document, DocumentVersion
+from .factories import PerfilFactory, DocumentFactory, ProcessFactory, DocumentTypeFactory
+from ..models import Document, DocumentVersion
 
 # Todas las pruebas en este archivo necesitan acceso a la base de datos.
 pytestmark = pytest.mark.django_db

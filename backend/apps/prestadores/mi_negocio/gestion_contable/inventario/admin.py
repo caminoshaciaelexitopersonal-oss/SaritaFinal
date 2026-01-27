@@ -1,5 +1,5 @@
 from django.contrib import admin
-from backend.models import Almacen, MovimientoInventario
+from .models import Almacen, MovimientoInventario
 
 @admin.register(Almacen)
 class AlmacenAdmin(admin.ModelAdmin):

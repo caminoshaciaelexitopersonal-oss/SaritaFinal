@@ -7,8 +7,8 @@ from typing import Dict, Any, Union
 import io
 import hashlib
 
-from backend.models import ProcessType, Process, DocumentType, Document, DocumentVersion
-from backend.apps.companies.models import Company
+from .models import ProcessType, Process, DocumentType, Document, DocumentVersion
+from apps.companies.models import Company
 
 User = get_user_model()
 

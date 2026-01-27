@@ -3,12 +3,12 @@
 import logging
  
 from django.utils import timezone
-from backend.models import Mision
-from backend.agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
+from .models import Mision
+from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
 # Import other Colonels as they are created
-# from backend.agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
-# from backend.agents.general.sarita.coroneles.clientes_turistas.coronel import ClientesTuristasCoronel
-# from backend.agents.general.sarita.coroneles.gubernamental.coronel import GubernamentalCoronel
+# from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
+# from .agents.general.sarita.coroneles.clientes_turistas.coronel import ClientesTuristasCoronel
+# from .agents.general.sarita.coroneles.gubernamental.coronel import GubernamentalCoronel
 
  
 logger = logging.getLogger(__name__)

@@ -2,7 +2,7 @@
 import uuid
 from django.db import models
 from django.conf import settings
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
 
 class PlanDeCuentas(TenantAwareModel):
     """
@@ -99,10 +99,7 @@ class Transaccion(models.Model):
     cuenta = models.ForeignKey(Cuenta, on_delete=models.PROTECT, related_name='transacciones')
     debito = models.DecimalField(max_digits=18, decimal_places=2, default=0.00, help_text="Monto que entra o aumenta (Debe).")
     credito = models.DecimalField(max_digits=18, decimal_places=2, default=0.00, help_text="Monto que sale o disminuye (Haber).")
-    descripcion = models.CharField(max_length=255, blank=True
-    class Meta:
-        app_label = 'contabilidad'
-)
+    descripcion = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return f"Transacción en {self.cuenta.nombre} por {'Débito' if self.debito > 0 else 'Crédito'} de {self.debito or self.credito}"

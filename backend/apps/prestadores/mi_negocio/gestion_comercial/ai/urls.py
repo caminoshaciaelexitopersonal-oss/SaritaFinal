@@ -1,5 +1,5 @@
 from django.urls import path
-from backend.views import TextGenerationView, ChatCompletionView
+from .views import TextGenerationView, ChatCompletionView
 
 urlpatterns = [
     path('text', TextGenerationView.as_view(), name='ai_text_generation'),

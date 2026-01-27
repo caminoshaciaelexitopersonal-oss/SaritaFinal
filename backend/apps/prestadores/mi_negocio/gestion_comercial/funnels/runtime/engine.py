@@ -1,7 +1,7 @@
 # funnels/runtime/engine.py
 from django.db import transaction
-from backend.events import FunnelEventType, is_event_supported
-from backend.executor import execute_form_submit, find_start_page_id
+from .events import FunnelEventType, is_event_supported
+from .executor import execute_form_submit, find_start_page_id
 from funnels.models import FunnelPublication, FunnelVersion, Lead, LeadState, LeadEvent
 
 @transaction.atomic

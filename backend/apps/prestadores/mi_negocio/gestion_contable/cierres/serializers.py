@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import PeriodoContable
+from .models import PeriodoContable
 
 class PeriodoContableSerializer(serializers.ModelSerializer):
     class Meta:

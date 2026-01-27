@@ -1,10 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 # Asumimos que existirá un modelo TeamMember en un futuro módulo genérico
-# from backend.personal.models import TeamMember
+# from ..personal.models import TeamMember
 
 class Skill(TenantAwareModel):
     """
@@ -38,10 +38,7 @@ class TourDetail(models.Model):
         blank=True,
         help_text=_("Competencias requeridas para que un guía pueda realizar este tour.")
     )
-    # Otros campos: duration_hours, difficulty_level, meeting_point, etc
-    class Meta:
-        app_label = 'guias'
-.
+    # Otros campos: duration_hours, difficulty_level, meeting_point, etc.
 
     def __str__(self):
         return f"Detalles de Tour para: {self.product.nombre}"

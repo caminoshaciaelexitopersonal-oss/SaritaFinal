@@ -6,10 +6,10 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
-from backend.fields import EncryptedTextField
+from .fields import EncryptedTextField
 from django.utils import timezone
 from django.conf import settings
-from backend.apps.companies.models import Company
+from apps.companies.models import Company
 
 
 def prestador_directory_path(instance, filename):
@@ -52,26 +52,14 @@ class Entity(models.Model):
     primary_color = models.CharField(max_length=7, default="#0070f3")
     settings = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True
-    class Meta:
-        app_label = 'api'
-)
-
-    class Meta:
-        app_label = 'api'
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
 class Department(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200
-    class Meta:
-        app_label = 'api'
-)
-
-    class Meta:
-        app_label = 'api'
+    name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
@@ -79,13 +67,7 @@ class Department(models.Model):
 class Municipality(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE
-    class Meta:
-        app_label = 'api'
-)
-
-    class Meta:
-        app_label = 'api'
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -146,13 +128,7 @@ class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     entity = models.ForeignKey(Entity, on_delete=models.SET_NULL, null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
-    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True
-    class Meta:
-        app_label = 'api'
-)
-
-    class Meta:
-        app_label = 'api'
+    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"Profile for {self.user.username}"
@@ -166,10 +142,7 @@ class UserLLMConfig(models.Model):
         SYSTEM_DEFAULT = "SYSTEM_DEFAULT", _("Usar Configuración del Sistema")
         GROQ = "GROQ", _("Groq Personalizado")
         PHI3_LOCAL = "PHI3_LOCAL", _("Modelo Local Phi-3 Mini")
-        PHI4_LOCAL = "PHI4_LOCAL", _("Modelo Local Phi-4"
-    class Meta:
-        app_label = 'api'
-)
+        PHI4_LOCAL = "PHI4_LOCAL", _("Modelo Local Phi-4")
 
     user = models.OneToOneField(
         CustomUser,
@@ -197,7 +170,6 @@ class UserLLMConfig(models.Model):
         return f"Configuración LLM para {self.user.username}"
 
     class Meta:
-        app_label = 'api'
         verbose_name = "Configuración LLM de Usuario"
         verbose_name_plural = "Configuraciones LLM de Usuarios"
 
@@ -211,7 +183,6 @@ class RubroArtesano(models.Model):
     class Meta:
         verbose_name = "Rubro de Artesano"
         verbose_name_plural = "Rubros de Artesanos"
-        app_label = 'api'
 
 
 class Artesano(models.Model):
@@ -227,10 +198,7 @@ class Artesano(models.Model):
     red_social_facebook = models.URLField(blank=True, null=True)
     red_social_instagram = models.URLField(blank=True, null=True)
     red_social_tiktok = models.URLField(blank=True, null=True)
-    red_social_whatsapp = models.CharField(max_length=20, blank=True, null=True, help_text="Número de WhatsApp con código de país"
-    class Meta:
-        app_label = 'api'
-)
+    red_social_whatsapp = models.CharField(max_length=20, blank=True, null=True, help_text="Número de WhatsApp con código de país")
 
     # --- Campos de Ubicación Estructurados ---
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Departamento"))
@@ -273,17 +241,13 @@ class Artesano(models.Model):
     class Meta:
         verbose_name = "Artesano"
         verbose_name_plural = "Artesanos"
-        app_label = 'api'
 
 
 class PerfilAdministrador(models.Model):
     usuario = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="perfil_administrador")
     cargo = models.CharField(_("Cargo"), max_length=150, blank=True, null=True)
     dependencia_asignada = models.CharField(_("Dependencia Asignada"), max_length=150, blank=True, null=True)
-    nivel_acceso = models.CharField(_("Nivel de Acceso"), max_length=150, blank=True, null=True
-    class Meta:
-        app_label = 'api'
-)
+    nivel_acceso = models.CharField(_("Nivel de Acceso"), max_length=150, blank=True, null=True)
 
     def __str__(self):
         return f"Perfil de Administrador para {self.usuario.username}"
@@ -291,17 +255,13 @@ class PerfilAdministrador(models.Model):
     class Meta:
         verbose_name = "Perfil de Administrador"
         verbose_name_plural = "Perfiles de Administradores"
-        app_label = 'api'
 
 
 class PerfilFuncionarioDirectivo(models.Model):
     usuario = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="perfil_funcionario_directivo")
     dependencia = models.CharField(_("Dependencia"), max_length=150, blank=True, null=True)
     nivel_direccion = models.CharField(_("Nivel de Dirección"), max_length=150, blank=True, null=True)
-    area_funcional = models.CharField(_("Área Funcional"), max_length=150, blank=True, null=True
-    class Meta:
-        app_label = 'api'
-)
+    area_funcional = models.CharField(_("Área Funcional"), max_length=150, blank=True, null=True)
 
     def __str__(self):
         return f"Perfil de Funcionario Directivo para {self.usuario.username}"
@@ -309,17 +269,13 @@ class PerfilFuncionarioDirectivo(models.Model):
     class Meta:
         verbose_name = "Perfil de Funcionario Directivo"
         verbose_name_plural = "Perfiles de Funcionarios Directivos"
-        app_label = 'api'
 
 
 class PerfilFuncionarioProfesional(models.Model):
     usuario = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="perfil_funcionario_profesional")
     dependencia = models.CharField(_("Dependencia"), max_length=150, blank=True, null=True)
     profesion = models.CharField(_("Profesión"), max_length=150, blank=True, null=True)
-    area_asignada = models.CharField(_("Área Asignada"), max_length=150, blank=True, null=True
-    class Meta:
-        app_label = 'api'
-)
+    area_asignada = models.CharField(_("Área Asignada"), max_length=150, blank=True, null=True)
 
     def __str__(self):
         return f"Perfil de Funcionario Profesional para {self.usuario.username}"
@@ -327,20 +283,12 @@ class PerfilFuncionarioProfesional(models.Model):
     class Meta:
         verbose_name = "Perfil de Funcionario Profesional"
         verbose_name_plural = "Perfiles de Funcionarios Profesionales"
-        app_label = 'api'
 
 
 class ImagenArtesano(models.Model):
     artesano = models.ForeignKey(Artesano, on_delete=models.CASCADE, related_name="galeria_imagenes")
     imagen = models.ImageField(upload_to=galeria_artesano_directory_path)
-    alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad"
-    class Meta:
-        app_label = 'api'
-)
-
-    class Meta:
-        app_label = 'api'
-
+    alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad")
     def __str__(self):
         return f"Imagen de {self.artesano.nombre_taller}"
 
@@ -349,14 +297,7 @@ class ImagenGaleria(models.Model):
     # FK a ProviderProfile eliminada y reemplazada por referencia UUID
     prestador_ref_id = models.UUIDField(null=True, blank=True, db_index=True)
     imagen = models.ImageField(upload_to=galeria_directory_path)
-    alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad"
-    class Meta:
-        app_label = 'api'
-)
-
-    class Meta:
-        app_label = 'api'
-
+    alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad")
     def __str__(self):
         return f"Imagen de {self.prestador.nombre_comercial}"
 
@@ -366,10 +307,7 @@ class Publicacion(models.Model):
         EVENTO = "EVENTO", _("Evento")
         NOTICIA = "NOTICIA", _("Noticia")
         BLOG = "BLOG", _("Blog")
-        CAPACITACION = "CAPACITACION", _("Capacitación"
-    class Meta:
-        app_label = 'api'
-)
+        CAPACITACION = "CAPACITACION", _("Capacitación")
 
     class Status(models.TextChoices):
         BORRADOR = "BORRADOR", _("Borrador")
@@ -414,7 +352,6 @@ class Publicacion(models.Model):
         verbose_name = "Publicación"
         verbose_name_plural = "Publicaciones"
         ordering = ['-fecha_publicacion']
-        app_label = 'api'
 
 
 class Video(models.Model):
@@ -422,14 +359,7 @@ class Video(models.Model):
     descripcion = models.TextField(blank=True)
     url_youtube = models.URLField()
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
-    es_publicado = models.BooleanField(default=False, help_text="Marcar para que el video sea visible en el sitio web público."
-    class Meta:
-        app_label = 'api'
-)
-
-    class Meta:
-        app_label = 'api'
-
+    es_publicado = models.BooleanField(default=False, help_text="Marcar para que el video sea visible en el sitio web público.")
     def __str__(self):
         return self.titulo
 
@@ -446,7 +376,6 @@ class ConsejoConsultivo(models.Model):
         verbose_name = "Publicación del Consejo Consultivo"
         verbose_name_plural = "Publicaciones del Consejo Consultivo"
         ordering = ['-fecha_publicacion']
-        app_label = 'api'
 
 
 class AtractivoTuristico(models.Model):
@@ -458,10 +387,7 @@ class AtractivoTuristico(models.Model):
     nombre = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=220, unique=True, help_text="Versión del nombre amigable para URLs")
     descripcion = models.TextField()
-    como_llegar = models.TextField(help_text="Instrucciones sobre cómo llegar al atractivo."
-    class Meta:
-        app_label = 'api'
-)
+    como_llegar = models.TextField(help_text="Instrucciones sobre cómo llegar al atractivo.")
 
     # --- Campos de Ubicación Estructurados ---
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Departamento"))
@@ -489,20 +415,12 @@ class AtractivoTuristico(models.Model):
         verbose_name = "Atractivo Turístico"
         verbose_name_plural = "Atractivos Turísticos"
         ordering = ['nombre']
-        app_label = 'api'
 
 
 class ImagenAtractivo(models.Model):
     atractivo = models.ForeignKey(AtractivoTuristico, on_delete=models.CASCADE, related_name="imagenes")
     imagen = models.ImageField(upload_to=atractivo_directory_path)
-    alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad y SEO"
-    class Meta:
-        app_label = 'api'
-)
-
-    class Meta:
-        app_label = 'api'
-
+    alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad y SEO")
     def __str__(self):
         return f"Imagen de {self.atractivo.nombre}"
 
@@ -514,10 +432,7 @@ class RutaTuristica(models.Model):
     nombre = models.CharField(_("Nombre de la Ruta"), max_length=200, unique=True)
     slug = models.SlugField(_("Slug"), max_length=220, unique=True, help_text="Versión del nombre amigable para URLs")
     descripcion = models.TextField(_("Descripción de la Ruta"))
-    imagen_principal = models.ImageField(_("Imagen Principal"), upload_to=ruta_turistica_directory_path, help_text="Imagen principal que se mostrará en listados y cabeceras."
-    class Meta:
-        app_label = 'api'
-)
+    imagen_principal = models.ImageField(_("Imagen Principal"), upload_to=ruta_turistica_directory_path, help_text="Imagen principal que se mostrará en listados y cabeceras.")
 
     atractivos = models.ManyToManyField(AtractivoTuristico, related_name="rutas", blank=True, verbose_name=_("Atractivos en la Ruta"))
     # El campo 'prestadores' (ManyToManyField a ProviderProfile) ha sido eliminado
@@ -537,18 +452,11 @@ class RutaTuristica(models.Model):
         verbose_name = "Ruta Turística"
         verbose_name_plural = "Rutas Turísticas"
         ordering = ['nombre']
-        app_label = 'api'
 
 class ImagenRutaTuristica(models.Model):
     ruta = models.ForeignKey(RutaTuristica, on_delete=models.CASCADE, related_name="imagenes")
     imagen = models.ImageField(upload_to=ruta_turistica_directory_path)
-    alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad y SEO"
-    class Meta:
-        app_label = 'api'
-)
-
-    class Meta:
-        app_label = 'api'
+    alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad y SEO")
 
     def __str__(self):
         return f"Imagen de {self.ruta.nombre}"
@@ -565,7 +473,6 @@ class ElementoGuardado(models.Model):
     class Meta:
         unique_together = ('usuario', 'content_type', 'object_id')
         ordering = ['-fecha_guardado']
-        app_label = 'api'
 
 
 def pagina_institucional_banner_path(instance, filename):
@@ -592,7 +499,6 @@ class PaginaInstitucional(models.Model):
         verbose_name = "Página Institucional"
         verbose_name_plural = "Páginas Institucionales"
         ordering = ['nombre']
-        app_label = 'api'
 
 
 def pagina_institucional_galeria_path(instance, filename):
@@ -603,16 +509,12 @@ class ImagenPaginaInstitucional(models.Model):
     pagina = models.ForeignKey(PaginaInstitucional, on_delete=models.CASCADE, related_name="galeria_imagenes")
     imagen = models.ImageField(_("Imagen de Galería"), upload_to=pagina_institucional_galeria_path)
     alt_text = models.CharField(max_length=255, blank=True, help_text="Texto alternativo para accesibilidad y SEO")
-    orden = models.PositiveIntegerField(default=0, help_text="Orden de la imagen en el slider."
-    class Meta:
-        app_label = 'api'
-)
+    orden = models.PositiveIntegerField(default=0, help_text="Orden de la imagen en el slider.")
 
     class Meta:
         verbose_name = "Imagen de Página Institucional"
         verbose_name_plural = "Imágenes de Página Institucional"
         ordering = ['orden']
-        app_label = 'api'
 
     def __str__(self):
         return f"Imagen para {self.pagina.nombre}"
@@ -643,7 +545,6 @@ class ContenidoMunicipio(models.Model):
         verbose_name = "Contenido del Municipio"
         verbose_name_plural = "Contenidos del Municipio"
         ordering = ['orden', 'titulo']
-        app_label = 'api'
 
 
 class AgentTask(models.Model):
@@ -665,7 +566,6 @@ class AgentTask(models.Model):
         verbose_name = "Tarea de Agente"
         verbose_name_plural = "Tareas de Agentes"
         ordering = ['-created_at']
-        app_label = 'api'
 
 class AuditLog(models.Model):
     class Action(models.TextChoices):
@@ -696,7 +596,6 @@ class AuditLog(models.Model):
         verbose_name = "Registro de Auditoría"
         verbose_name_plural = "Registros de Auditoría"
         ordering = ['-timestamp']
-        app_label = 'api'
 
 
 class HomePageComponent(models.Model):
@@ -719,7 +618,6 @@ class HomePageComponent(models.Model):
         verbose_name = "Componente de Página de Inicio"
         verbose_name_plural = "Componentes de Página de Inicio"
         ordering = ['order']
-        app_label = 'api'
 
 
 class SiteConfiguration(models.Model):
@@ -727,10 +625,7 @@ class SiteConfiguration(models.Model):
     nombre_entidad_secundaria = models.CharField(_("Nombre de la Entidad Secundaria"), max_length=100, default='Puerto Gaitán', help_text="Segunda línea del nombre de la entidad (ej. 'Puerto Gaitán')")
     nombre_secretaria = models.CharField(_("Nombre de la Secretaría"), max_length=150, blank=True, default="Secretaría de Turismo y Desarrollo Económico")
     nombre_direccion = models.CharField(_("Nombre de la Dirección"), max_length=150, blank=True, default="Dirección de Turismo")
-    logo = models.FileField(_("Logo del Sitio"), upload_to=site_config_directory_path, blank=True, null=True, help_text="Logo principal que aparece en la cabecera. Preferiblemente en formato SVG."
-    class Meta:
-        app_label = 'api'
-)
+    logo = models.FileField(_("Logo del Sitio"), upload_to=site_config_directory_path, blank=True, null=True, help_text="Logo principal que aparece en la cabecera. Preferiblemente en formato SVG.")
 
     direccion = models.CharField(_("Dirección"), max_length=255, blank=True)
     horario_atencion = models.CharField(_("Horario de Atención"), max_length=255, blank=True)
@@ -768,7 +663,6 @@ class SiteConfiguration(models.Model):
     class Meta:
         verbose_name = "Configuración del Sitio"
         verbose_name_plural = "Configuración del Sitio"
-        app_label = 'api'
 
 
 class MenuItem(models.Model):
@@ -784,7 +678,6 @@ class MenuItem(models.Model):
         verbose_name = "Elemento de Menú"
         verbose_name_plural = "Elementos de Menú"
         ordering = ['orden']
-        app_label = 'api'
 
 
 def hecho_historico_directory_path(instance, filename):
@@ -804,7 +697,6 @@ class HechoHistorico(models.Model):
         verbose_name = "Hecho Histórico"
         verbose_name_plural = "Hechos Históricos"
         ordering = ['ano']
-        app_label = 'api'
 
 
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -826,7 +718,6 @@ class Resena(models.Model):
         verbose_name_plural = "Reseñas y Calificaciones"
         ordering = ['-fecha_creacion']
         unique_together = ('usuario', 'content_type', 'object_id')
-        app_label = 'api'
 
 
 class Sugerencia(models.Model):
@@ -856,7 +747,6 @@ class Sugerencia(models.Model):
         verbose_name = "Sugerencia o Felicitación"
         verbose_name_plural = "Sugerencias y Felicitaciones"
         ordering = ['-fecha_envio']
-        app_label = 'api'
 # --------------------- Modelos de Formularios Dinámicos ---------------------
 
 class Formulario(models.Model):
@@ -867,10 +757,7 @@ class Formulario(models.Model):
     # nombre/título del formulario
     nombre = models.CharField(max_length=255)
     titulo = models.CharField(max_length=255, blank=True, help_text="Campo opcional: título amigable. Si está vacío, se usará 'nombre'.")
-    descripcion = models.TextField(blank=True
-    class Meta:
-        app_label = 'api'
-)
+    descripcion = models.TextField(blank=True)
 
     # Asociación genérica para vincular el formulario a cualquier modelo
     # (CategoriaPrestador, AtractivoTuristico, Artesano, etc.)
@@ -911,7 +798,6 @@ class Formulario(models.Model):
         verbose_name = "Formulario Dinámico"
         verbose_name_plural = "Formularios Dinámicos"
         unique_together = ('nombre', 'content_type', 'object_id')
-        app_label = 'api'
 
 
 class Pregunta(models.Model):
@@ -927,10 +813,7 @@ class Pregunta(models.Model):
         SELECCION_MULTIPLE = 'SELECCION_MULTIPLE', 'Selección Múltiple'
         CHECKBOX = 'CHECKBOX', 'Casilla de Verificación (Sí/No)'
         EMAIL = 'EMAIL', 'Correo Electrónico'
-        URL = 'URL', 'Enlace (URL)
-    class Meta:
-        app_label = 'api'
-'
+        URL = 'URL', 'Enlace (URL)'
 
     formulario = models.ForeignKey(Formulario, on_delete=models.CASCADE, related_name='preguntas')
     texto_pregunta = models.CharField(max_length=500)
@@ -947,7 +830,6 @@ class Pregunta(models.Model):
         verbose_name = "Pregunta de Formulario"
         verbose_name_plural = "Preguntas de Formulario"
         ordering = ['orden']
-        app_label = 'api'
 
 
 class OpcionRespuesta(models.Model):
@@ -957,10 +839,7 @@ class OpcionRespuesta(models.Model):
     pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE, related_name='opciones')
     texto_opcion = models.CharField(max_length=255)
     orden = models.PositiveIntegerField(default=0, help_text="Orden de la opción en la pregunta")
-    valor_interno = models.CharField(max_length=255, blank=True, help_text="Valor interno (opcional) para almacenamiento"
-    class Meta:
-        app_label = 'api'
-)
+    valor_interno = models.CharField(max_length=255, blank=True, help_text="Valor interno (opcional) para almacenamiento")
 
     def __str__(self):
         return self.texto_opcion
@@ -969,7 +848,6 @@ class OpcionRespuesta(models.Model):
         verbose_name = "Opción de Respuesta"
         verbose_name_plural = "Opciones de Respuesta"
         ordering = ['orden']
-        app_label = 'api'
 
 
 class RespuestaUsuario(models.Model):
@@ -978,10 +856,7 @@ class RespuestaUsuario(models.Model):
     Este modelo es genérico y se vincula directamente con el CustomUser.
     """
     usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='respuestas_formulario')
-    pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE, related_name='respuestas'
-    class Meta:
-        app_label = 'api'
-)
+    pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE, related_name='respuestas')
 
     # Campo unificado para la respuesta, utilizando JSON para flexibilidad.
     # Para respuestas simples (texto, número), se puede guardar como {"value": "respuesta"}.
@@ -997,7 +872,6 @@ class RespuestaUsuario(models.Model):
         verbose_name = "Respuesta de Usuario a Formulario"
         verbose_name_plural = "Respuestas de Usuarios a Formularios"
         unique_together = ('usuario', 'pregunta')
-        app_label = 'api'
 
 
 # --------------------- Módulo de Verificación de Cumplimiento ---------------------
@@ -1013,10 +887,7 @@ class PlantillaVerificacion(models.Model):
     categoria_prestador_ref_id = models.UUIDField(null=True, blank=True, db_index=True)
     creado_por = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='plantillas_creadas')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now=True
-    class Meta:
-        app_label = 'api'
-)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.nombre
@@ -1025,7 +896,6 @@ class PlantillaVerificacion(models.Model):
         verbose_name = "Plantilla de Verificación"
         verbose_name_plural = "Plantillas de Verificación"
         ordering = ['nombre']
-        app_label = 'api'
 
 class ItemVerificacion(models.Model):
     """
@@ -1036,10 +906,7 @@ class ItemVerificacion(models.Model):
     texto_requisito = models.CharField(max_length=500, help_text="El texto del requisito a verificar.")
     puntaje = models.PositiveIntegerField(default=1, help_text="Puntos que otorga este ítem si se cumple.")
     orden = models.PositiveIntegerField(default=0, help_text="Orden del ítem en la plantilla.")
-    es_obligatorio = models.BooleanField(default=True, help_text="Indica si este ítem es fundamental para la evaluación."
-    class Meta:
-        app_label = 'api'
-)
+    es_obligatorio = models.BooleanField(default=True, help_text="Indica si este ítem es fundamental para la evaluación.")
 
     def __str__(self):
         return f"{self.texto_requisito} ({self.puntaje} pts)"
@@ -1048,7 +915,6 @@ class ItemVerificacion(models.Model):
         verbose_name = "Ítem de Verificación"
         verbose_name_plural = "Ítems de Verificación"
         ordering = ['orden']
-        app_label = 'api'
 
 
 class Verificacion(models.Model):
@@ -1071,10 +937,7 @@ class Verificacion(models.Model):
     observaciones_generales = models.TextField(blank=True, help_text="Observaciones y comentarios del funcionario evaluador.")
     recomendaciones = models.TextField(blank=True, help_text="Recomendaciones para el prestador de servicios.")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now=True
-    class Meta:
-        app_label = 'api'
-)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Verificación a {self.prestador.nombre_comercial} el {self.fecha_visita}"
@@ -1083,7 +946,6 @@ class Verificacion(models.Model):
         verbose_name = "Verificación de Cumplimiento"
         verbose_name_plural = "Verificaciones de Cumplimiento"
         ordering = ['-fecha_visita']
-        app_label = 'api'
 
 class RespuestaItemVerificacion(models.Model):
     """
@@ -1092,10 +954,7 @@ class RespuestaItemVerificacion(models.Model):
     verificacion = models.ForeignKey(Verificacion, on_delete=models.CASCADE, related_name='respuestas_items')
     item_original = models.ForeignKey(ItemVerificacion, on_delete=models.PROTECT, related_name='respuestas_dadas')
     cumple = models.BooleanField(default=False, help_text="Marcar si el prestador cumple con este requisito.")
-    justificacion = models.CharField(max_length=255, blank=True, help_text="Justificación o número de soporte si es necesario (ej. N° de resolución)."
-    class Meta:
-        app_label = 'api'
-)
+    justificacion = models.CharField(max_length=255, blank=True, help_text="Justificación o número de soporte si es necesario (ej. N° de resolución).")
 
     def __str__(self):
         return f"Respuesta a '{self.item_original.texto_requisito}' para {self.verificacion.prestador.nombre_comercial}"
@@ -1104,7 +963,6 @@ class RespuestaItemVerificacion(models.Model):
         verbose_name = "Respuesta a Ítem de Verificación"
         verbose_name_plural = "Respuestas a Ítems de Verificación"
         unique_together = ('verificacion', 'item_original')
-        app_label = 'api'
 
  # --------------------- Módulo de Capacitaciones ---------------------
 
@@ -1124,10 +982,7 @@ class AsistenciaCapacitacion(models.Model):
         related_name='asistencias_capacitaciones',
         limit_choices_to={'role__in': [CustomUser.Role.PRESTADOR, CustomUser.Role.ARTESANO]}
     )
-    fecha_asistencia = models.DateTimeField(auto_now_add=True
-    class Meta:
-        app_label = 'api'
-)
+    fecha_asistencia = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Asistencia de {self.usuario.username} a {self.capacitacion.titulo}"
@@ -1136,7 +991,6 @@ class AsistenciaCapacitacion(models.Model):
         verbose_name = "Asistencia a Capacitación"
         verbose_name_plural = "Asistencias a Capacitaciones"
         unique_together = ('capacitacion', 'usuario')
-        app_label = 'api'
 
 # --------------------- Módulo de Puntuación ---------------------
 
@@ -1147,10 +1001,7 @@ class ScoringRule(models.Model):
     """
     puntos_asistencia_capacitacion = models.PositiveIntegerField(default=10, help_text="Puntos otorgados por cada asistencia a una capacitación.")
     puntos_por_estrella_reseña = models.PositiveIntegerField(default=2, help_text="Puntos a multiplicar por cada estrella en una reseña aprobada (ej. 5 estrellas = 5 * 2 = 10 puntos).")
-    puntos_completar_formulario = models.PositiveIntegerField(default=5, help_text="Puntos otorgados por cada formulario de caracterización completado."
-    class Meta:
-        app_label = 'api'
-)
+    puntos_completar_formulario = models.PositiveIntegerField(default=5, help_text="Puntos otorgados por cada formulario de caracterización completado.")
 
     def __str__(self):
         return "Reglas de Puntuación del Sistema"
@@ -1167,7 +1018,6 @@ class ScoringRule(models.Model):
     class Meta:
         verbose_name = "Reglas de Puntuación"
         verbose_name_plural = "Reglas de Puntuación"
-        app_label = 'api'
 
 
 # --------------------- Módulo de Notificaciones ---------------------
@@ -1179,10 +1029,7 @@ class Notificacion(models.Model):
     usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notificaciones', help_text="El usuario que recibe la notificación.")
     mensaje = models.CharField(max_length=255, help_text="El texto de la notificación.")
     leido = models.BooleanField(default=False, db_index=True, help_text="Indica si el usuario ha leído la notificación.")
-    fecha_creacion = models.DateTimeField(auto_now_add=True
-    class Meta:
-        app_label = 'api'
-)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     # Enlace opcional para redirigir al usuario al hacer clic
     url = models.CharField(max_length=500, blank=True, null=True, help_text="URL a la que se redirige al hacer clic.")
@@ -1199,7 +1046,6 @@ class Notificacion(models.Model):
         verbose_name = "Notificación"
         verbose_name_plural = "Notificaciones"
         ordering = ['-fecha_creacion']
-        app_label = 'api'
 
 
 
@@ -1211,10 +1057,7 @@ class TipoDocumentoVerificacion(models.Model):
     nombre = models.CharField(_("Nombre del Documento"), max_length=255, unique=True, help_text="Ej: RNT, Cámara de Comercio, etc.")
     descripcion = models.TextField(_("Descripción"), blank=True, help_text="Explicación breve del documento.")
     requerido = models.BooleanField(_("Requerido"), default=True, help_text="Indica si es obligatorio para la verificación del prestador.")
-    activo = models.BooleanField(_("Activo"), default=True, help_text="Permite activar/desactivar tipos de documentos sin tocar el código."
-    class Meta:
-        app_label = 'api'
-)
+    activo = models.BooleanField(_("Activo"), default=True, help_text="Permite activar/desactivar tipos de documentos sin tocar el código.")
 
     def __str__(self):
         return self.nombre
@@ -1222,16 +1065,12 @@ class TipoDocumentoVerificacion(models.Model):
     class Meta:
         verbose_name = "Tipo de Documento de Verificación"
         verbose_name_plural = "Tipos de Documentos de Verificación"
-        app_label = 'api'
 
 class DocumentoVerificacion(models.Model):
     class Estado(models.TextChoices):
         PENDIENTE = "PENDIENTE", _("Pendiente de Verificación")
         APROBADO = "APROBADO", _("Aprobado")
-        RECHAZADO = "RECHAZADO", _("Rechazado"
-    class Meta:
-        app_label = 'api'
-)
+        RECHAZADO = "RECHAZADO", _("Rechazado")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # FK a ProviderProfile eliminada y reemplazada por referencia UUID
@@ -1259,7 +1098,6 @@ class DocumentoVerificacion(models.Model):
         verbose_name = "Documento de Verificación"
         verbose_name_plural = "Documentos de Verificación"
         ordering = ['-fecha_subida']
-        app_label = 'api'
 
 # --- MODELOS MOVIDOS A gestion_operativa ---
 # Las definiciones de BaseModel, CategoriaPrestador y ProviderProfile

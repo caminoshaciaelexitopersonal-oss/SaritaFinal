@@ -3,9 +3,9 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.utils import timezone
-from backend.api.models import CustomUser
-from backend.apps.admin_plataforma.models import Plan
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from api.models import CustomUser
+from apps.admin_plataforma.models import Plan
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from django.contrib.contenttypes.models import ContentType
 
 class AdminPlataformaAPITestCase(TestCase):

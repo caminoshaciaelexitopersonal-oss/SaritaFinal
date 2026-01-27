@@ -5,9 +5,9 @@ from celery import shared_task, chain
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 
-from backend.models import DocumentVersion
-from backend.services.crypto_service import CryptoService
-from backend.services.file_service import StorageCoordinator
+from ..models import DocumentVersion
+from ..services.crypto_service import CryptoService
+from ..services.file_service import StorageCoordinator
 
 logger = logging.getLogger(__name__)
 

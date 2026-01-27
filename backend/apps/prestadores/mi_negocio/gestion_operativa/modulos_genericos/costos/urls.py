@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from backend.views import CostoViewSet
+from .views import CostoViewSet
 
 router = DefaultRouter()
 router.register(r'costos', CostoViewSet, basename='costo')

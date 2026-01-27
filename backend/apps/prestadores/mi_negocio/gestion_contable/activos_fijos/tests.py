@@ -3,9 +3,9 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.contrib.contenttypes.models import ContentType
-from backend.api.models import CustomUser
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from backend.apps.prestadores.mi_negocio.gestion_contable.activos_fijos.models import CategoriaActivo, ActivoFijo
+from api.models import CustomUser
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.prestadores.mi_negocio.gestion_contable.activos_fijos.models import CategoriaActivo, ActivoFijo
 
 class ActivosFijosAPITestCase(TestCase):
     def setUp(self):

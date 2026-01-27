@@ -7,10 +7,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 class PoliticaCancelacion(models.Model):
     perfil_ref_id = models.UUIDField()
     nombre = models.CharField(max_length=100)
-    descripcion = models.TextField(
-    class Meta:
-        app_label = 'reservas'
-)
+    descripcion = models.TextField()
 
 class Reserva(models.Model):
     id_publico = models.UUIDField(editable=False, unique=True, null=True)
@@ -18,10 +15,7 @@ class Reserva(models.Model):
         PENDIENTE = 'PENDIENTE', 'Pendiente'
         CONFIRMADA = 'CONFIRMADA', 'Confirmada'
         CANCELADA = 'CANCELADA', 'Cancelada'
-        COMPLETADA = 'COMPLETADA', 'Completada
-    class Meta:
-        app_label = 'reservas'
-'
+        COMPLETADA = 'COMPLETADA', 'Completada'
 
     perfil_ref_id = models.UUIDField()
     cliente_ref_id = models.UUIDField()
@@ -43,5 +37,3 @@ class ReservaServicioAdicional(models.Model):
     servicio_ref_id = models.UUIDField()
     cantidad = models.PositiveIntegerField(default=1)
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-    class Meta:
-        app_label = 'reservas'

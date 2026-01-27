@@ -5,4 +5,4 @@ class PresupuestoConfig(AppConfig):
     name = 'apps.prestadores.mi_negocio.gestion_contable.presupuesto'
 
     def ready(self):
-        import backend.apps.prestadores.mi_negocio.gestion_contable.presupuesto.signals
+        import apps.prestadores.mi_negocio.gestion_contable.presupuesto.signals

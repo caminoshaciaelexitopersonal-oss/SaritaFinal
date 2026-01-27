@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from backend.views import (
+from .views import (
     AlmacenViewSet,
     MovimientoInventarioViewSet
 )

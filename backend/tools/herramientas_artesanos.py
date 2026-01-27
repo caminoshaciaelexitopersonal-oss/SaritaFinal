@@ -1,6 +1,6 @@
 # from langchain_core.tools import tool
 from typing import List, Dict, Optional
-from backend.api.models import (
+from api.models import (
     CustomUser,
     RubroArtesano,
     Artesano,

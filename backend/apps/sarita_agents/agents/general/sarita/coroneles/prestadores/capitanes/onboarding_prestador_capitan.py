@@ -1,9 +1,9 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/onboarding_prestador_capitan.py
 import logging
-from backend.apps.sarita_agents.agents.capitan_template import CapitanTemplate
-from backend.tenientes.validacion_prestador_teniente import TenienteValidacionPrestador
-from backend.tenientes.persistencia_prestador_teniente import TenientePersistenciaPrestador
-from backend.apps.sarita_agents.models import Mision, PlanTáctico
+from apps.sarita_agents.agents.capitan_template import CapitanTemplate
+from ..tenientes.validacion_prestador_teniente import TenienteValidacionPrestador
+from ..tenientes.persistencia_prestador_teniente import TenientePersistenciaPrestador
+from apps.sarita_agents.models import Mision, PlanTáctico
 
 logger = logging.getLogger(__name__)
 

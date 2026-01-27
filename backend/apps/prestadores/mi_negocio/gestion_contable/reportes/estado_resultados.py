@@ -4,8 +4,8 @@ from rest_framework import permissions
 from django.db.models import Sum
 from decimal import Decimal
 
-from backend.cierres.models import PeriodoContable
-from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import Transaction
+from ..cierres.models import PeriodoContable
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import Transaction
 
 class EstadoResultadosView(APIView):
     permission_classes = [permissions.IsAdminUser]

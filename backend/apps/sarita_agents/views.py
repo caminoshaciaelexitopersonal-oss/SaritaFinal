@@ -5,10 +5,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from backend.models import Mision
-from backend.serializers import MisionSerializer, DirectiveSerializer
-from backend.orchestrator import sarita_orchestrator
-from backend.tasks import ejecutar_mision_completa
+from .models import Mision
+from .serializers import MisionSerializer, DirectiveSerializer
+from .orchestrator import sarita_orchestrator
+from .tasks import ejecutar_mision_completa
 
 class DirectiveView(APIView):
     """

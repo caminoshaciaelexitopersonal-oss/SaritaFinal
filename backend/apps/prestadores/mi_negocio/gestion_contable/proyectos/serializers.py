@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import Proyecto, IngresoProyecto, CostoProyecto
+from .models import Proyecto, IngresoProyecto, CostoProyecto
 
 class IngresoProyectoSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,9 +1,9 @@
 from typing import List
-from backend.planner import Planner
-from backend.executor import Executor
-from backend.tool import Tool
-from backend.state import State
-from backend.logger import Logger
+from .planner import Planner
+from .executor import Executor
+from .tool import Tool
+from .state import State
+from .logger import Logger
 
 class Agent:
     """

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import Horario, ExcepcionHorario
+from .models import Horario, ExcepcionHorario
 
 class HorarioSerializer(serializers.ModelSerializer):
     class Meta:

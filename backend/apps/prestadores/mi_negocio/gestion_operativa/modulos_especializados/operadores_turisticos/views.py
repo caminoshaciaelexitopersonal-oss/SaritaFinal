@@ -1,11 +1,11 @@
 from rest_framework import viewsets, permissions, serializers
-from backend.models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
-from backend.serializers import (
+from .models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
+from .serializers import (
     OperadorTuristicoSerializer,
     PaqueteTuristicoSerializer,
     ItinerarioDiaSerializer,
 )
-from backend.apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
 
 class OperadorTuristicoViewSet(viewsets.ModelViewSet):
     """

@@ -2,8 +2,8 @@ import hashlib
 from datetime import date
 from cryptography.fernet import Fernet
 
-from backend.apps.companies.models import Company
-from backend.apps.companies.services.key_derivation_service import KeyDerivationService
+from apps.companies.models import Company
+from apps.companies.services.key_derivation_service import KeyDerivationService
 
 class CryptoService:
     """

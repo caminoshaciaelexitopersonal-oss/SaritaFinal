@@ -1,6 +1,6 @@
 # Este archivo contendrá la lógica de negocio para el cálculo de nómina y la integración contable.
 from decimal import Decimal
-from backend.models import Contrato, Planilla
+from .models import Contrato, Planilla
 
 class CalculoNominaService:
     """
@@ -67,9 +67,9 @@ class CalculoNominaService:
             "aporte_sena": aporte_sena.quantize(Decimal('0.01')),
         }
 
-from backend.contabilidad.models import JournalEntry, Transaction
-from backend.contabilidad.services import ChartOfAccountService
-from backend.models import DetalleLiquidacion
+from ..contabilidad.models import JournalEntry, Transaction
+from ..contabilidad.services import ChartOfAccountService
+from .models import DetalleLiquidacion
 from django.utils import timezone
 
 class ContabilidadNominaService:

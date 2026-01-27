@@ -6,14 +6,14 @@ from django.test import TestCase
 from unittest.mock import patch
 from django.db.models import Sum
 
-from backend.api.models import CustomUser, ProviderProfile
-from backend.apps.companies.models import Company
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
-from backend.apps.prestadores.mi_negocio.gestion_comercial.domain.models import OperacionComercial, FacturaVenta
-from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount, JournalEntry, Transaction
-from backend.apps.prestadores.mi_negocio.gestion_comercial.services import FacturacionService
-from backend.apps.prestadores.mi_negocio.gestion_contable.services import FacturaVentaAccountingService
+from api.models import CustomUser, ProviderProfile
+from apps.companies.models import Company
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from apps.prestadores.mi_negocio.gestion_comercial.domain.models import OperacionComercial, FacturaVenta
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount, JournalEntry, Transaction
+from apps.prestadores.mi_negocio.gestion_comercial.services import FacturacionService
+from apps.prestadores.mi_negocio.gestion_contable.services import FacturaVentaAccountingService
 
 @pytest.mark.django_db
 class ServiceIntegrationTests(TestCase):

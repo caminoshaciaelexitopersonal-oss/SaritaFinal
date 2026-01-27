@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from backend.perfil.models import TenantAwareModel
+from ..perfil.models import TenantAwareModel
 
 class InventoryItem(TenantAwareModel):
     """

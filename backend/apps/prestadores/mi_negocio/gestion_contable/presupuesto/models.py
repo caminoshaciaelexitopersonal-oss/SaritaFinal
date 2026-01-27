@@ -1,7 +1,7 @@
 # from django.db import models
 # from django.conf import settings
-# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-# from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount
+# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+# from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount
 #
 # class Presupuesto(models.Model):
 #     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='presupuestos')
@@ -44,5 +44,3 @@
 #
 #     def __str__(self):
 #         return f"Ejecución de {self.monto} en {self.fecha} para {self.partida}"
-    class Meta:
-        app_label = 'presupuesto'

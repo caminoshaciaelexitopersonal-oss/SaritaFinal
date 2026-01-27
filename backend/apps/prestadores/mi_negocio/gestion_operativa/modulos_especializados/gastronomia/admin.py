@@ -1,5 +1,5 @@
 from django.contrib import admin
-from backend.models import Restaurante, Menu, CategoriaPlato, Plato, ZonaDelivery
+from .models import Restaurante, Menu, CategoriaPlato, Plato, ZonaDelivery
 
 @admin.register(Restaurante)
 class RestauranteAdmin(admin.ModelAdmin):

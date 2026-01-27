@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from backend.api.models import Video
+from api.models import Video
 
 class Command(BaseCommand):
     help = 'Carga los videos de ejemplo a la base de datos'

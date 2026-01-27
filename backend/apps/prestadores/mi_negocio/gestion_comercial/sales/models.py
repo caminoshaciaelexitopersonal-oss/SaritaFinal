@@ -10,10 +10,7 @@ class Opportunity(models.Model):
     value = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='opportunities'
-    class Meta:
-        app_label = 'sales'
-)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='opportunities')
 
     def __str__(self):
         return self.name
@@ -23,10 +20,7 @@ class StageHistory(models.Model):
     from_stage = models.CharField(max_length=50)
     to_stage = models.CharField(max_length=50)
     timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True
-    class Meta:
-        app_label = 'sales'
-)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.opportunity.name}: {self.from_stage} -> {self.to_stage}"

@@ -2,8 +2,8 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from backend.models import Workflow, AgentPersona
-from backend.serializers import WorkflowDetailSerializer, WorkflowCreateSerializer, AgentPersonaSerializer
+from .models import Workflow, AgentPersona
+from .serializers import WorkflowDetailSerializer, WorkflowCreateSerializer, AgentPersonaSerializer
 import logging
 
 logger = logging.getLogger(__name__)

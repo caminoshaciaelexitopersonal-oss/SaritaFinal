@@ -1,13 +1,13 @@
 from rest_framework import viewsets, permissions, serializers
-from backend.models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
-from backend.serializers import (
+from .models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
+from .serializers import (
     CompaniaTransporteSerializer,
     TipoVehiculoSerializer,
     VehiculoSerializer,
     RutaSerializer,
     HorarioRutaSerializer,
 )
-from backend.apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
 
 class TipoVehiculoViewSet(viewsets.ReadOnlyModelViewSet):
     """

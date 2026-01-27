@@ -3,8 +3,8 @@
 # from django.dispatch import receiver
 # from decimal import Decimal
 #
-# from backend.models import Planilla
-# from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+# from .models import Planilla
+# from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
 #
 # @receiver(post_save, sender=Planilla)
 # def crear_asiento_contable_planilla(sender, instance, created, **kwargs):

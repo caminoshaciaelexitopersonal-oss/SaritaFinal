@@ -3,8 +3,8 @@ from decimal import Decimal
 from django.db import transaction
 from django.core.exceptions import ValidationError
 
-from backend.apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta
-from backend.contabilidad.models import AsientoContable, Transaccion, Cuenta
+from apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta
+from ..contabilidad.models import AsientoContable, Transaccion, Cuenta
 
 class FacturaVentaAccountingService:
     @staticmethod

@@ -6,14 +6,14 @@ from pathlib import Path
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
-from backend.apps.sadi_agent.voice_orchestrator import VoiceOrchestrator
-from backend.apps.sadi_agent.voice_providers import WhisperProvider, OpenAITTSProvider
-from backend.apps.sadi_agent.semantic_engine import SemanticEngine
-from backend.apps.sadi_agent.translation_service import TranslationService
-from backend.apps.sadi_agent.security import VoiceSecurity
-from backend.apps.sadi_agent.semantic_engine import SemanticEngine
-from backend.apps.sadi_agent.translation_service import TranslationService
-from backend.apps.sadi_agent.security import VoiceSecurity
+from apps.sadi_agent.voice_orchestrator import VoiceOrchestrator
+from apps.sadi_agent.voice_providers import WhisperProvider, OpenAITTSProvider
+from apps.sadi_agent.semantic_engine import SemanticEngine
+from apps.sadi_agent.translation_service import TranslationService
+from apps.sadi_agent.security import VoiceSecurity
+from apps.sadi_agent.semantic_engine import SemanticEngine
+from apps.sadi_agent.translation_service import TranslationService
+from apps.sadi_agent.security import VoiceSecurity
 
 # Configurar un logger simple para la salida del comando
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

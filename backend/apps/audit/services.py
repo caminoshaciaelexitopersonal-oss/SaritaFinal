@@ -1,6 +1,6 @@
 from typing import Optional, Dict, Any
-from backend.models import AuditLog
-from backend.api.models import CustomUser
+from .models import AuditLog
+from api.models import CustomUser
 
 def get_ip_from_request(request) -> Optional[str]:
     if not request:

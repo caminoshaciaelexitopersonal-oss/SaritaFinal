@@ -4,12 +4,12 @@ from django.db import transaction
 from django.utils import timezone
 import json
 
-from backend.domain.models import OperacionComercial, FacturaVenta, ItemFactura
-from backend.apps.prestadores.mi_negocio.gestion_contable.services.facturacion import FacturaVentaAccountingService
-from backend.apps.prestadores.mi_negocio.gestion_archivistica.archiving import ArchivingService
-from backend.dian_services import DianService
+from .domain.models import OperacionComercial, FacturaVenta, ItemFactura
+from apps.prestadores.mi_negocio.gestion_contable.services.facturacion import FacturaVentaAccountingService
+from apps.prestadores.mi_negocio.gestion_archivistica.archiving import ArchivingService
+from .dian_services import DianService
 # --- IMPORTACIÓN DE SERVICIOS DE DOMINIO OPERATIVO ---
-from backend.apps.prestadores.mi_negocio.gestion_operativa.services import (
+from apps.prestadores.mi_negocio.gestion_operativa.services import (
     ProviderProfileService,
     ClienteService,
     ProductoService,

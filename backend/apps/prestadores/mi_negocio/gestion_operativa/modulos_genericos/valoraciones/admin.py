@@ -1,5 +1,5 @@
 from django.contrib import admin
-from backend.models import Valoracion
+from .models import Valoracion
 
 @admin.register(Valoracion)
 class ValoracionAdmin(admin.ModelAdmin):

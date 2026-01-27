@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from backend.services.ai_manager.ai_manager import ai_manager
-from backend.services.sanitizers import sanitize_plain_text
+from .services.ai_manager.ai_manager import ai_manager
+from .services.sanitizers import sanitize_plain_text
 from infrastructure.models import AIInteraction, Tenant
 
 class ChatCompletionView(APIView):

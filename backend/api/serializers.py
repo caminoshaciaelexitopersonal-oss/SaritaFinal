@@ -1,7 +1,7 @@
 # from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
-# from backend.apps.prestadores.models import CategoriaPrestador
-from backend.api.models import (
+# from apps.prestadores.models import CategoriaPrestador
+from .models import (
     CustomUser, ImagenGaleria, ImagenArtesano, Publicacion,
     ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, RutaTuristica, ImagenRutaTuristica, ElementoGuardado, ContentType,
     Video, ContenidoMunicipio, AgentTask, SiteConfiguration, MenuItem,
@@ -25,9 +25,9 @@ from backend.api.models import (
 from django.db import transaction
 from dj_rest_auth.serializers import LoginSerializer
 from dj_rest_auth.registration.serializers import RegisterSerializer
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-# from backend.apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
-# from backend.apps.turismo.serializers import RutaTuristicaSerializer
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+# from apps.prestadores.mi_negocio.serializers.productos import ProductoSerializer
+# from apps.turismo.serializers import RutaTuristicaSerializer
 
 class EntitySerializer(serializers.ModelSerializer):
     class Meta:

@@ -2,10 +2,10 @@
 from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.models import Payment
-from backend.serializers import PaymentSerializer, InitiatePaymentSerializer
-from backend.services import PaymentService
-from backend.apps.cart.models import Cart
+from .models import Payment
+from .serializers import PaymentSerializer, InitiatePaymentSerializer
+from .services import PaymentService
+from apps.cart.models import Cart
 
 class PaymentViewSet(viewsets.GenericViewSet):
     queryset = Payment.objects.all()

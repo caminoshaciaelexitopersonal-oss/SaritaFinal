@@ -2,8 +2,8 @@
  
 import logging
 from celery import group, chord
-from backend.apps.sarita_agents.models import Mision, PlanTáctico, TareaDelegada
-from backend.tasks import ejecutar_tarea_teniente, consolidar_plan_tactico
+from apps.sarita_agents.models import Mision, PlanTáctico, TareaDelegada
+from ..tasks import ejecutar_tarea_teniente, consolidar_plan_tactico
 
 logger = logging.getLogger(__name__)
  

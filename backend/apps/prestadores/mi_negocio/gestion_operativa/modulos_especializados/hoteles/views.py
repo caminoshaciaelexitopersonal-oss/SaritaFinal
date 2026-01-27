@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 
-from backend.models import Amenity, RoomType, Room
-from backend.serializers import AmenitySerializer, RoomTypeSerializer, RoomSerializer
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel # Para permisos
+from .models import Amenity, RoomType, Room
+from .serializers import AmenitySerializer, RoomTypeSerializer, RoomSerializer
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel # Para permisos
 
 class HotelFeatureViewSet(viewsets.ModelViewSet):
     """

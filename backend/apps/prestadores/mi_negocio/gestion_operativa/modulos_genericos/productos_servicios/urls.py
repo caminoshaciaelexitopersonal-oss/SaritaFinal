@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from backend.views import ProductViewSet
+from .views import ProductViewSet
 
 router = DefaultRouter()
 router.register(r'productos', ProductViewSet, basename='producto')

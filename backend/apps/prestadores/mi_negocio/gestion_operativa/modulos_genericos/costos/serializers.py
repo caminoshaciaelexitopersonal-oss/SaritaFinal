@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import Costo
+from .models import Costo
 
 class CostoSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import Opportunity
+from .models import Opportunity
 
 class OpportunitySerializer(serializers.ModelSerializer):
     class Meta:

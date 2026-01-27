@@ -1,6 +1,6 @@
 
 from django.core.management.base import BaseCommand
-from backend.apps.web_funnel.models import WebPage, Section, ContentBlock
+from apps.web_funnel.models import WebPage, Section, ContentBlock
 
 class Command(BaseCommand):
     help = 'Crea una página de inicio de ejemplo para el embudo de ventas dinámico.'

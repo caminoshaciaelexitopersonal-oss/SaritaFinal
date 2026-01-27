@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
 from infrastructure.models import Tenant
-from backend.models import Funnel, FunnelVersion, FunnelPublication, Lead, LeadEvent, LeadState
+from .models import Funnel, FunnelVersion, FunnelPublication, Lead, LeadEvent, LeadState
 
 User = get_user_model()
 

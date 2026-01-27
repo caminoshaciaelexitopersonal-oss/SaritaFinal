@@ -5,4 +5,4 @@ class GestionComercialConfig(AppConfig):
     name = 'apps.prestadores.mi_negocio.gestion_comercial'
 
     def ready(self):
-        import backend.apps.prestadores.mi_negocio.gestion_comercial.signals
+        import apps.prestadores.mi_negocio.gestion_comercial.signals

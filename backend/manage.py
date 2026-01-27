@@ -3,14 +3,17 @@
 import os
 import sys
 
+
+import pathlib
+
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.config.settings")
+    # Añadir el directorio 'backend' al sys.path
+    # Esto permite que las apps en 'backend/apps' sean importables como 'apps.mi_app'
+    BASE_DIR = pathlib.Path(__file__).resolve().parent
+    sys.path.insert(0, str(BASE_DIR))
 
-    # 🔥 ASEGURA PYTHONPATH
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    sys.path.insert(0, BASE_DIR)
-
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "puerto_gaitan_turismo.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

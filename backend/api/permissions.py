@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
-from backend.api.models import CustomUser
+from .models import CustomUser
 
 
 class IsOwnerOrReadOnly(BasePermission):

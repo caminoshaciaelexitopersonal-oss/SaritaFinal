@@ -1,9 +1,9 @@
 
 from decimal import Decimal
-from backend.apps.orders.services import OrderService
-from backend.models import Payment
-from backend.apps.cart.models import Cart
-from backend.apps.admin_plataforma.models import Suscripcion
+from apps.orders.services import OrderService
+from .models import Payment
+from apps.cart.models import Cart
+from apps.admin_plataforma.models import Suscripcion
 from datetime import timedelta
 
 class PaymentService:

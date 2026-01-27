@@ -1,6 +1,6 @@
 import logging
 from django.dispatch import receiver
-from backend.apps.prestadores.mi_negocio.gestion_comercial.signals import factura_comercial_confirmada
+from apps.prestadores.mi_negocio.gestion_comercial.signals import factura_comercial_confirmada
 
 logger = logging.getLogger(__name__)
 

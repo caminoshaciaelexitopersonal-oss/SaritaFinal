@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from backend.models import OrganizadorEvento, Evento, Promocion
-from backend..modulos_genericos.productos_servicios.serializers import ProductSerializer
-from backend..modulos_genericos.productos_servicios.models import Product
+from .models import OrganizadorEvento, Evento, Promocion
+from ...modulos_genericos.productos_servicios.serializers import ProductSerializer
+from ...modulos_genericos.productos_servicios.models import Product
 
 class EventoSerializer(serializers.ModelSerializer):
     producto = ProductSerializer()

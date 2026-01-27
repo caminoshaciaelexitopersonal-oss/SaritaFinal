@@ -1,6 +1,6 @@
 # from django.urls import path, include
 # from rest_framework.routers import DefaultRouter
-# from backend.views import InventarioViewSet, CostoViewSet
+# from .views import InventarioViewSet, CostoViewSet
 
 # router = DefaultRouter()
 # router.register(r'inventarios', InventarioViewSet)

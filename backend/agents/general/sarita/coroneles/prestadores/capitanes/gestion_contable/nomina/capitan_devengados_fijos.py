@@ -1,4 +1,4 @@
-from backend.capitan_base import CapitanNominaBase
+from .capitan_base import CapitanNominaBase
 
 class CapitanDevengadosFijos(CapitanNominaBase):
     """

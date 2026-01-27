@@ -1,7 +1,7 @@
 
 from django.db import models
 from django.conf import settings
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class Plan(models.Model):
     """
@@ -9,10 +9,7 @@ class Plan(models.Model):
     """
     class TipoUsuario(models.TextChoices):
         GOBIERNO = 'GOBIERNO', 'Gobierno'
-        PRESTADOR = 'PRESTADOR', 'Prestador
-    class Meta:
-        app_label = 'admin_plataforma'
-'
+        PRESTADOR = 'PRESTADOR', 'Prestador'
 
     class Frecuencia(models.TextChoices):
         MENSUAL = 'MENSUAL', 'Mensual'
@@ -46,10 +43,7 @@ class Suscripcion(models.Model):
     fecha_fin = models.DateField()
     is_active = models.BooleanField(default=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now=True
-    class Meta:
-        app_label = 'admin_plataforma'
-)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Suscripción de {self.cliente.nombre_negocio} a {self.plan.nombre}"

@@ -18,7 +18,7 @@ from itertools import groupby
 from operator import attrgetter
 from django.db.models.functions import TruncDay
 from django.db.models import Count
-from backend.api.models import (
+from .models import (
     CustomUser,
     # CategoriaPrestador fue movido a gestion_operativa
     ImagenGaleria,
@@ -56,7 +56,7 @@ from backend.api.models import (
     TipoDocumentoVerificacion,
     DocumentoVerificacion
 )
-from backend.serializers import (
+from .serializers import (
     GaleriaItemSerializer,
     PaginaInstitucionalSerializer,
     ScoringRuleSerializer,
@@ -119,7 +119,7 @@ from backend.serializers import (
 )
 from django.utils import timezone
 from datetime import timedelta
-from backend.permissions import (
+from .permissions import (
     IsTurista,
     IsAdminOrFuncionario,
     IsAdmin,
@@ -129,13 +129,13 @@ from backend.permissions import (
     CanManageAtractivos,
     IsPrestadorOwner
 )
-# from backend.apps.turismo.models import Reserva
-# from backend.apps.prestadores.mi_negocio.modelos.clientes import Cliente
-from backend.filters import AuditLogFilter
-from backend.serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
-from backend.api.models import Department, Municipality, Entity
-from backend.permissions import IsEntityAdmin
-from backend. import services as api_services
+# from apps.turismo.models import Reserva
+# from apps.prestadores.mi_negocio.modelos.clientes import Cliente
+from .filters import AuditLogFilter
+from .serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
+from .models import Department, Municipality, Entity
+from .permissions import IsEntityAdmin
+from . import services as api_services
 
 class DepartmentViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -408,8 +408,8 @@ class PaginaInstitucionalViewSet(viewsets.ModelViewSet):
 from django.db.models import Q
 from dj_rest_auth.views import UserDetailsView
 
-# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from backend.serializers import AdminPrestadorSerializer
+# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from .serializers import AdminPrestadorSerializer
 
 class CustomUserDetailsView(UserDetailsView):
     """

@@ -1,4 +1,4 @@
-from backend.capitan_base import CapitanComercialBase
+from .capitan_base import CapitanComercialBase
 
 class CapitanProduccionYAutomatizacionAudiovisual(CapitanComercialBase):
     """

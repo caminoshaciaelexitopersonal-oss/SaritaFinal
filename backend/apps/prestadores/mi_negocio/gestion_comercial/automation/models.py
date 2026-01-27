@@ -9,10 +9,7 @@ class AgentPersona(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='agent_personas')
     name = models.CharField(max_length=255, unique=True)
     role_description = models.TextField(help_text="Descripción del rol, ej. 'Asistente de ventas experto en moda'")
-    tone = models.CharField(max_length=100, help_text="Ej. 'Amigable y servicial', 'Profesional y directo'"
-    class Meta:
-        app_label = 'automation'
-)
+    tone = models.CharField(max_length=100, help_text="Ej. 'Amigable y servicial', 'Profesional y directo'")
 
     # El prompt base que define el comportamiento del agente
     base_prompt = models.TextField(help_text="El prompt de sistema que guía a la IA.")
@@ -31,22 +28,14 @@ class Workflow(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='workflows')
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True
-    class Meta:
-        app_label = 'automation'
-)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class Node(models.Model):
     workflow = models.ForeignKey(Workflow, on_delete=models.CASCADE, related_name='nodes')
     node_type = models.CharField(max_length=100) # ej. 'trigger', 'action'
-    config_json = models.JSONField(default=dict
-    class Meta:
-        app_label = 'automation'
-)
+    config_json = models.JSONField(default=dict)
 
 class Edge(models.Model):
     workflow = models.ForeignKey(Workflow, on_delete=models.CASCADE, related_name='edges')
     source_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='outgoing_edges')
     target_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='incoming_edges')
-    class Meta:
-        app_label = 'automation'

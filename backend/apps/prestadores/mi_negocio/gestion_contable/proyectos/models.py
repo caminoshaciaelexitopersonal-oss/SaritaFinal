@@ -1,19 +1,16 @@
 from django.db import models
 from django.db.models import Sum
 from decimal import Decimal
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from backend.apps.prestadores.mi_negocio.gestion_comercial.models import FacturaVenta
-from backend.apps.prestadores.mi_negocio.gestion_contable.compras.models import FacturaCompra
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.prestadores.mi_negocio.gestion_comercial.models import FacturaVenta
+from apps.prestadores.mi_negocio.gestion_contable.compras.models import FacturaCompra
 
 class Proyecto(models.Model):
     class Estado(models.TextChoices):
         PLANIFICACION = 'PLANIFICACION', 'Planificación'
         EN_CURSO = 'EN_CURSO', 'En Curso'
         COMPLETADO = 'COMPLETADO', 'Completado'
-        CANCELADO = 'CANCELADO', 'Cancelado
-    class Meta:
-        app_label = 'proyectos'
-'
+        CANCELADO = 'CANCELADO', 'Cancelado'
 
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='proyectos')
     nombre = models.CharField(max_length=255)
@@ -40,10 +37,7 @@ class IngresoProyecto(models.Model):
     factura = models.OneToOneField(FacturaVenta, on_delete=models.SET_NULL, null=True, blank=True)
     descripcion = models.CharField(max_length=255)
     monto = models.DecimalField(max_digits=18, decimal_places=2)
-    fecha = models.DateField(
-    class Meta:
-        app_label = 'proyectos'
-)
+    fecha = models.DateField()
 
     def __str__(self):
         return f"Ingreso de {self.monto} para {self.proyecto.nombre}"
@@ -53,10 +47,7 @@ class CostoProyecto(models.Model):
     factura_compra = models.OneToOneField(FacturaCompra, on_delete=models.SET_NULL, null=True, blank=True)
     descripcion = models.CharField(max_length=255)
     monto = models.DecimalField(max_digits=18, decimal_places=2)
-    fecha = models.DateField(
-    class Meta:
-        app_label = 'proyectos'
-)
+    fecha = models.DateField()
 
     def __str__(self):
         return f"Costo de {self.monto} para {self.proyecto.nombre}"

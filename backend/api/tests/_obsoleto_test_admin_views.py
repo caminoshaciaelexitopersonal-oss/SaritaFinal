@@ -1,8 +1,8 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from backend.api.models import CustomUser, ContenidoMunicipio
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador, Perfil
+from api.models import CustomUser, ContenidoMunicipio
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador, Perfil
 from rest_framework.authtoken.models import Token
 
 class AdminAPITests(APITestCase):

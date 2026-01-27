@@ -1,7 +1,7 @@
-from backend.storage_adapters.s3 import S3StorageAdapter
-from backend.storage_adapters.base import BaseStorageAdapter
-from backend.models import DocumentVersion
-from backend.crypto_service import CryptoService
+from ..storage_adapters.s3 import S3StorageAdapter
+from ..storage_adapters.base import BaseStorageAdapter
+from ..models import DocumentVersion
+from .crypto_service import CryptoService
 
 class StorageCoordinator:
     """

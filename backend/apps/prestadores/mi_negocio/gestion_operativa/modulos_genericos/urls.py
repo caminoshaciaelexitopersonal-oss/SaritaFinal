@@ -1,14 +1,14 @@
 # SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from backend.perfil.views import PerfilViewSet
-from backend.clientes.views import ClienteViewSet
-from backend.productos_servicios.views import ProductViewSet
-from backend.inventario.views import InventoryItemViewSet
-from backend.costos.views import CostoViewSet
-from backend.horarios.views import HorarioViewSet, ExcepcionHorarioViewSet
-from backend.reservas.views import ReservaViewSet, PoliticaCancelacionViewSet
-from backend.valoraciones.views import ValoracionViewSet
+from .perfil.views import PerfilViewSet
+from .clientes.views import ClienteViewSet
+from .productos_servicios.views import ProductViewSet
+from .inventario.views import InventoryItemViewSet
+from .costos.views import CostoViewSet
+from .horarios.views import HorarioViewSet, ExcepcionHorarioViewSet
+from .reservas.views import ReservaViewSet, PoliticaCancelacionViewSet
+from .valoraciones.views import ValoracionViewSet
 
 router = DefaultRouter()
 router.register(r'clientes', ClienteViewSet, basename='cliente')

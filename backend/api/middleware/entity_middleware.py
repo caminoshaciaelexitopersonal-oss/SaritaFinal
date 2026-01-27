@@ -1,4 +1,4 @@
-from backend.api.models import Entity
+from ..models import Entity
 
 class EntityMiddleware:
     def __init__(self, get_response):

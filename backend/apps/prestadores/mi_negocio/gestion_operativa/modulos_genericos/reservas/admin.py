@@ -1,5 +1,5 @@
 from django.contrib import admin
-from backend.models import Reserva, PoliticaCancelacion, ReservaServicioAdicional
+from .models import Reserva, PoliticaCancelacion, ReservaServicioAdicional
 
 @admin.register(PoliticaCancelacion)
 class PoliticaCancelacionAdmin(admin.ModelAdmin):

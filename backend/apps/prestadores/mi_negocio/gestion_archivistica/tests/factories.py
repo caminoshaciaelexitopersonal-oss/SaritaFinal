@@ -2,9 +2,9 @@ import factory
 from factory.django import DjangoModelFactory
 import uuid
 
-from backend.apps.companies.models import Company
-from backend.api.models import CustomUser, ProviderProfile
-from backend.models import Document, DocumentVersion, Process, DocumentType, ProcessType
+from apps.companies.models import Company
+from api.models import CustomUser, ProviderProfile
+from ..models import Document, DocumentVersion, Process, DocumentType, ProcessType
 
 # --- FÁBRICAS DE ENTIDADES BASE ---
 class CompanyFactory(DjangoModelFactory):

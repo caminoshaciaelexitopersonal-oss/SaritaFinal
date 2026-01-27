@@ -5,8 +5,8 @@ from pathlib import Path
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
-from backend.apps.sadi_agent.voice_orchestrator import VoiceOrchestrator
-from backend.apps.sadi_agent.voice_providers import SpeechToTextProvider, TextToSpeechProvider
+from apps.sadi_agent.voice_orchestrator import VoiceOrchestrator
+from apps.sadi_agent.voice_providers import SpeechToTextProvider, TextToSpeechProvider
 
 # --- Proveedores Dummy para Pruebas Basadas en Texto ---
 

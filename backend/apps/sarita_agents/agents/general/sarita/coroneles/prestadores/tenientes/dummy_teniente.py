@@ -1,5 +1,5 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/tenientes/dummy_teniente.py
-from backend....teniente_template import TenienteTemplate
+from .....teniente_template import TenienteTemplate
 
 class DummyTeniente(TenienteTemplate):
     """

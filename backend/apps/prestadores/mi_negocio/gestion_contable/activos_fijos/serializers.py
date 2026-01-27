@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from backend.models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
-from backend.apps.common.serializers.polymorphic_owner import PolymorphicOwnerSerializerMixin
+from .models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
+from apps.common.serializers.polymorphic_owner import PolymorphicOwnerSerializerMixin
 
 class CategoriaActivoSerializer(PolymorphicOwnerSerializerMixin, serializers.ModelSerializer):
     class Meta:

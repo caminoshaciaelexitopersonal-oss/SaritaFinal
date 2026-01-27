@@ -1,4 +1,4 @@
-from backend.capitan_base import CapitanArchivisticaBase
+from .capitan_base import CapitanArchivisticaBase
 
 class CapitanSeguridadDocumental(CapitanArchivisticaBase):
     """

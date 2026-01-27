@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
  
-from backend.views import AdminPrestadorViewSet
+from .views import AdminPrestadorViewSet
 
 # Router para las vistas de administración (fuera de 'Mi Negocio')
 admin_router = DefaultRouter()

@@ -1,8 +1,8 @@
 
 from rest_framework import serializers
-from backend.apps.admin_plataforma.models import Plan, Suscripcion
-from backend.apps.common.serializers.polymorphic_owner import PolymorphicOwnerSerializerMixin
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from .models import Plan, Suscripcion
+from apps.common.serializers.polymorphic_owner import PolymorphicOwnerSerializerMixin
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:

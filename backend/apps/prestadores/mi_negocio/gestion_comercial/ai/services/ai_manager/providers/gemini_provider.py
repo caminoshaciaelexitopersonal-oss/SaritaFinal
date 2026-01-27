@@ -1,6 +1,6 @@
 # ai/services/ai_manager/providers/gemini_provider.py
 import google.generativeai as genai
-from backend.ai_base_provider import AIBaseProvider
+from ..ai_base_provider import AIBaseProvider
 from typing import Optional, Literal
 
 class GeminiProvider(AIBaseProvider):

@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from backend. import views
+from . import views
 
 router = DefaultRouter()
 router.register(r'skills', views.SkillViewSet, basename='skill')

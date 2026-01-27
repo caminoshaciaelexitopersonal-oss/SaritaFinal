@@ -3,7 +3,7 @@ import urllib.request
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
-from backend.api.models import AtractivoTuristico, ImagenAtractivo, CustomUser
+from api.models import AtractivoTuristico, ImagenAtractivo, CustomUser
 
 class Command(BaseCommand):
     help = 'Carga los atractivos turísticos iniciales a la base de datos, incluyendo imágenes de ejemplo.'

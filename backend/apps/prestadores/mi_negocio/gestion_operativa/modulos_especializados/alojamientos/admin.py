@@ -1,5 +1,5 @@
 from django.contrib import admin
-from backend.models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
+from .models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
 
 @admin.register(TipoAlojamiento)
 class TipoAlojamientoAdmin(admin.ModelAdmin):

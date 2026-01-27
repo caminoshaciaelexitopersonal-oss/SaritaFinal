@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
-from backend.models import Almacen, MovimientoInventario
-from backend.serializers import (
+from .models import Almacen, MovimientoInventario
+from .serializers import (
     AlmacenSerializer,
     MovimientoInventarioSerializer
 )

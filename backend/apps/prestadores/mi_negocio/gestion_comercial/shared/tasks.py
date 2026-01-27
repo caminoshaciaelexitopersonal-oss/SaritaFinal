@@ -2,8 +2,8 @@ import logging
 from celery import shared_task
 from django.utils import timezone
 from django.db import transaction
-from backend.models import DomainEvent
-from backend.subscribers import get_subscribers_for_event
+from .models import DomainEvent
+from .subscribers import get_subscribers_for_event
 
 logger = logging.getLogger(__name__)
 

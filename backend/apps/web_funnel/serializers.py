@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from backend.models import WebPage, Section, ContentBlock, MediaAsset
+from .models import WebPage, Section, ContentBlock, MediaAsset
 
 class MediaAssetSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,8 +1,8 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/sitios_turisticos/views.py
 from rest_framework import viewsets, permissions
-from backend.models import SitioTuristico, ActividadEnSitio
-from backend.serializers import SitioTuristicoSerializer, ActividadEnSitioSerializer
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
+from .models import SitioTuristico, ActividadEnSitio
+from .serializers import SitioTuristicoSerializer, ActividadEnSitioSerializer
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
 
 class SitioTuristicoViewSet(viewsets.ModelViewSet):
     """

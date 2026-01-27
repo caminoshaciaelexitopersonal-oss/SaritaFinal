@@ -2,12 +2,12 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from backend.models import Skill, TourDetail
-from backend.serializers import SkillSerializer
+from .models import Skill, TourDetail
+from .serializers import SkillSerializer
 # Asumimos que TeamMember y su serializer existirán
-# from backend.personal.models import TeamMember
-# from backend.personal.serializers import TeamMemberSerializer
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.views import ProductViewSet
+# from ..personal.models import TeamMember
+# from ..personal.serializers import TeamMemberSerializer
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.views import ProductViewSet
 
 class SkillViewSet(viewsets.ModelViewSet):
     queryset = Skill.objects.all()

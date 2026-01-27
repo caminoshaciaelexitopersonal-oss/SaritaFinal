@@ -13,10 +13,7 @@ class Campaign(models.Model):
         ('sending', 'Enviando'),
         ('sent', 'Enviada'),
         ('archived', 'Archivada'),
-
-    class Meta:
-        app_label = 'marketing'
-]
+    ]
 
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='campaigns')
     name = models.CharField(max_length=255)
@@ -41,10 +38,7 @@ class CampaignChannel(models.Model):
         ('whatsapp', 'WhatsApp'),
         ('facebook', 'Facebook'),
         ('instagram', 'Instagram'),
-
-    class Meta:
-        app_label = 'marketing'
-]
+    ]
 
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name='channels')
     channel_type = models.CharField(max_length=20, choices=CHANNEL_CHOICES)
@@ -65,10 +59,7 @@ class MarketingContent(models.Model):
     campaign = models.OneToOneField(Campaign, on_delete=models.CASCADE, related_name='content')
     subject = models.CharField(max_length=255, blank=True, help_text="Asunto para emails")
     body_text = models.TextField(blank=True, help_text="Contenido principal en texto plano o Markdown")
-    body_html = models.TextField(blank=True, help_text="Contenido HTML para emails"
-    class Meta:
-        app_label = 'marketing'
-)
+    body_html = models.TextField(blank=True, help_text="Contenido HTML para emails")
 
     # Podríamos añadir campos para imágenes, videos, etc.
     # main_image_url = models.URLField(blank=True)

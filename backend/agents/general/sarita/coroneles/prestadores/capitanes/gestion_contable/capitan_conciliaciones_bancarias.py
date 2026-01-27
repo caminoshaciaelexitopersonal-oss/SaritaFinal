@@ -1,4 +1,4 @@
-from backend.capitan_base import CapitanContableBase
+from .capitan_base import CapitanContableBase
 
 class CapitanConciliacionesBancarias(CapitanContableBase):
     """

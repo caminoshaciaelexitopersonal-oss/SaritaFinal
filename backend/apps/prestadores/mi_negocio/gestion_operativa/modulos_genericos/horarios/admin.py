@@ -1,5 +1,5 @@
 from django.contrib import admin
-from backend.models import Horario, ExcepcionHorario
+from .models import Horario, ExcepcionHorario
 
 @admin.register(Horario)
 class HorarioAdmin(admin.ModelAdmin):

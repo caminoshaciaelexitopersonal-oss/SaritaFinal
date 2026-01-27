@@ -1,7 +1,7 @@
 # backend/apps/prestadores/mi_negocio/gestion_contable/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from backend.views import (
+from .views import (
     PlanDeCuentasViewSet,
     CuentaViewSet,
     PeriodoContableViewSet,

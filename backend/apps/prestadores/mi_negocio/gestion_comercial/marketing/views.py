@@ -6,9 +6,9 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from ai.services.ai_manager.ai_manager import ai_manager
 from ai.services.sanitizers import sanitize_plain_text
-from backend.models import Campaign
-from backend.serializers import CampaignSerializer
-from backend.services import validate_social_post
+from .models import Campaign
+from .serializers import CampaignSerializer
+from .services import validate_social_post
 
 class CampaignViewSet(viewsets.ModelViewSet):
     """

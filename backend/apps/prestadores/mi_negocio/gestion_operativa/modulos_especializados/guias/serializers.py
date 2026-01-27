@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import Skill, TourDetail
+from .models import Skill, TourDetail
 
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:

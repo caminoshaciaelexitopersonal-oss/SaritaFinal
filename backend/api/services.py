@@ -1,4 +1,4 @@
-from backend.api.models import Publicacion, CustomUser
+from .models import Publicacion, CustomUser
 from rest_framework.exceptions import PermissionDenied, ValidationError
 
 def aprobar_publicacion(publicacion_id: int, usuario: CustomUser) -> Publicacion:

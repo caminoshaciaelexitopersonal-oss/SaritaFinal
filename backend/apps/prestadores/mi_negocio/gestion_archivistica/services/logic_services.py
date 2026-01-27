@@ -3,11 +3,11 @@ from typing import Dict, Any
 
 from django.db import transaction
 
-from backend.apps.audit.services import AuditLogger
-from backend.apps.audit.models import AuditLog
-from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from backend.models import Document, DocumentVersion, Process, DocumentType
-from backend.tasks.processing_tasks import start_file_processing_flow
+from apps.audit.services import AuditLogger
+from apps.audit.models import AuditLog
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from ..models import Document, DocumentVersion, Process, DocumentType
+from ..tasks.processing_tasks import start_file_processing_flow
 
 class DocumentCoordinatorService:
     """

@@ -1,8 +1,8 @@
 # from decimal import Decimal
 # from django.utils import timezone
-# from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction
-# from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.services import ChartOfAccountService
-# from backend.nomina.models import Planilla, DetalleLiquidacion
+# from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction
+# from apps.prestadores.mi_negocio.gestion_contable.contabilidad.services import ChartOfAccountService
+# from ..nomina.models import Planilla, DetalleLiquidacion
 #
 # class ContabilidadNominaService:
 #     def __init__(self, planilla: Planilla):

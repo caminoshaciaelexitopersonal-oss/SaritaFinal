@@ -6,4 +6,4 @@ class FacturacionConfig(AppConfig):
 
     def ready(self):
         # Importar las señales para que los receptores se conecten.
-        import backend.apps.prestadores.mi_negocio.facturacion.signals
+        import apps.prestadores.mi_negocio.facturacion.signals

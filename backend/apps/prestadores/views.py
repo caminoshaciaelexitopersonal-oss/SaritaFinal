@@ -3,10 +3,10 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
  
-from backend.models import Perfil
+from .models import Perfil
  
-from backend.api.serializers import AdminPrestadorSerializer
-from backend.api.permissions import IsAdminOrFuncionario
+from api.serializers import AdminPrestadorSerializer
+from api.permissions import IsAdminOrFuncionario
 
 class AdminPrestadorViewSet(viewsets.ModelViewSet):
     queryset = Perfil.objects.all()

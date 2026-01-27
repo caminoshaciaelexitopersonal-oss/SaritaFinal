@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from backend.models import Document, DocumentVersion, Process, ProcessType, DocumentType
-from backend.api.models import CustomUser
-from backend.apps.companies.models import Company
+from .models import Document, DocumentVersion, Process, ProcessType, DocumentType
+from api.models import CustomUser
+from apps.companies.models import Company
 
 # ==========================================================
 # Serializers Anidados (para lectura)

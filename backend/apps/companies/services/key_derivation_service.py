@@ -5,7 +5,7 @@ from datetime import date
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 
-from backend.models import Company
+from ..models import Company
 
 class KeyDerivationService:
     """

@@ -2,8 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from backend.models import KitchenStation, RestaurantTable
-from backend.serializers import KitchenStationSerializer, RestaurantTableSerializer
+from .models import KitchenStation, RestaurantTable
+from .serializers import KitchenStationSerializer, RestaurantTableSerializer
 
 class KitchenStationViewSet(viewsets.ModelViewSet):
     queryset = KitchenStation.objects.all()

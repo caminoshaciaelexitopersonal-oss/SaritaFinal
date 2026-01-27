@@ -1,4 +1,4 @@
-from backend.capitan_base import CapitanFinancieraBase
+from .capitan_base import CapitanFinancieraBase
 
 class CapitanRatiosYFormulasFinancieras(CapitanFinancieraBase):
     """

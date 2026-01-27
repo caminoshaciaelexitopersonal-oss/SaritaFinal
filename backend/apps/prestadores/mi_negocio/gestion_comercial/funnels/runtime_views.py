@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 
-from backend.runtime.engine import process_event
-from backend.runtime_models import Lead, LeadState
+from .runtime.engine import process_event
+from .runtime_models import Lead, LeadState
 
 class FunnelEventView(APIView):
     """

@@ -1,7 +1,7 @@
 from celery import shared_task
-from backend.models import AgentExecution
-from backend.agent import Agent
-from backend.tool_registry import get_tools
+from .models import AgentExecution
+from .agent import Agent
+from .tool_registry import get_tools
 import asyncio
 
 @shared_task(bind=True)

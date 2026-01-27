@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import Vehicle #, MaintenanceOrder
+from .models import Vehicle #, MaintenanceOrder
 
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:

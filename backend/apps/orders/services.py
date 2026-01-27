@@ -1,7 +1,7 @@
 
 from django.db import transaction
-from backend.apps.cart.models import Cart
-from backend.models import Order, OrderItem
+from apps.cart.models import Cart
+from .models import Order, OrderItem
 
 class OrderService:
     @staticmethod

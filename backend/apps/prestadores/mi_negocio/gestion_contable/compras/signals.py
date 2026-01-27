@@ -3,8 +3,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from decimal import Decimal
 
-from backend.models import FacturaCompra
-from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta
+from .models import FacturaCompra
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta
 
 @receiver(post_save, sender=FacturaCompra)
 def crear_asiento_contable_factura_compra(sender, instance, created, **kwargs):

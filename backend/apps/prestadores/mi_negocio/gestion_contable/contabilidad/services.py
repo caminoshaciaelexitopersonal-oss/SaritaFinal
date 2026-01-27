@@ -1,7 +1,7 @@
 # backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/services.py
 from decimal import Decimal
 from django.db import transaction
-from backend.models import AsientoContable, Transaccion, Cuenta
+from .models import AsientoContable, Transaccion, Cuenta
 
 class ContabilidadValidationError(Exception):
     """Excepción personalizada para errores de validación contable."""
