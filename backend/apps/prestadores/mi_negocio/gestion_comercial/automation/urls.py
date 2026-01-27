@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import WorkflowViewSet, AgentPersonaViewSet
+from backend.views import WorkflowViewSet, AgentPersonaViewSet
 
 router = DefaultRouter()
 router.register(r'workflows', WorkflowViewSet, basename='workflow')

@@ -1,7 +1,7 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/sitios_turisticos/models.py
 from django.db import models
 from django.conf import settings
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class SitioTuristico(models.Model):
     """
@@ -16,7 +16,10 @@ class SitioTuristico(models.Model):
         ('mirador', 'Mirador'),
         ('finca_agroturistica', 'Finca Agroturística'),
         ('otro', 'Otro'),
-    ]
+
+    class Meta:
+        app_label = 'sitios_turisticos'
+]
 
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='sitios_turisticos')
     nombre = models.CharField(max_length=150)
@@ -53,7 +56,10 @@ class ActividadEnSitio(models.Model):
     descripcion = models.TextField()
     duracion_estimada_minutos = models.PositiveIntegerField(null=True, blank=True)
     precio_adicional = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, help_text="Costo adicional a la entrada del sitio.")
-    requiere_reserva = models.BooleanField(default=False)
+    requiere_reserva = models.BooleanField(default=False
+    class Meta:
+        app_label = 'sitios_turisticos'
+)
 
     def __str__(self):
         return f"{self.nombre} en {self.sitio.nombre}"

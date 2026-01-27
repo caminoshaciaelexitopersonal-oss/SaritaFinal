@@ -5,12 +5,12 @@ import hashlib
 import requests
 from pathlib import Path
 from django.utils import timezone
-from api.models import CustomUser
-from .voice_providers import SpeechToTextProvider, TextToSpeechProvider
-from .semantic_engine import SemanticEngine
-from .translation_service import TranslationService
-from .security import VoiceSecurity
-from .models import VoiceInteractionLog
+from backend.api.models import CustomUser
+from backend.voice_providers import SpeechToTextProvider, TextToSpeechProvider
+from backend.semantic_engine import SemanticEngine
+from backend.translation_service import TranslationService
+from backend.security import VoiceSecurity
+from backend.models import VoiceInteractionLog
 
 logger = logging.getLogger(__name__)
 

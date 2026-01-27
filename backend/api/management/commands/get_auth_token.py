@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from api.models import CustomUser
+from backend.api.models import CustomUser
 from rest_framework.authtoken.models import Token
 
 class Command(BaseCommand):

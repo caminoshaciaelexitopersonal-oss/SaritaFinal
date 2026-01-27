@@ -1,4 +1,4 @@
-from .capitan_base import CapitanContableBase
+from backend.capitan_base import CapitanContableBase
 
 class CapitanFacturacion(CapitanContableBase):
     """

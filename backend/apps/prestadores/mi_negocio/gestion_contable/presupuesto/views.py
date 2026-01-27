@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from rest_framework.pagination import PageNumberPagination
-from .models import Presupuesto, PartidaPresupuestal, EjecucionPresupuestal
-from .serializers import PresupuestoSerializer, PartidaPresupuestalSerializer, EjecucionPresupuestalSerializer
+from backend.models import Presupuesto, PartidaPresupuestal, EjecucionPresupuestal
+from backend.serializers import PresupuestoSerializer, PartidaPresupuestalSerializer, EjecucionPresupuestalSerializer
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):

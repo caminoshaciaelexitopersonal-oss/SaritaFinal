@@ -9,7 +9,10 @@ class MediaAsset(models.Model):
     nombre = models.CharField(_("Nombre"), max_length=200, help_text=_("Un nombre descriptivo para el archivo."))
     archivo = models.FileField(_("Archivo"), upload_to='web_funnel_media/')
     tipo = models.CharField(_("Tipo de archivo"), max_length=50, blank=True, help_text=_("Ej: 'image/jpeg', 'video/mp4'"))
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True
+    class Meta:
+        app_label = 'web_funnel'
+)
 
     def __str__(self):
         return self.nombre
@@ -26,7 +29,10 @@ class WebPage(models.Model):
     slug = models.SlugField(_("Slug"), max_length=200, unique=True, help_text=_("La URL amigable de la página (ej. 'pagina-de-ventas')."))
     is_published = models.BooleanField(_("Está Publicada"), default=False, help_text=_("Indica si la página es visible públicamente."))
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True
+    class Meta:
+        app_label = 'web_funnel'
+)
 
     def __str__(self):
         return self.title
@@ -44,7 +50,10 @@ class Section(models.Model):
     title = models.CharField(_("Título de la Sección"), max_length=200)
     order = models.PositiveIntegerField(_("Orden"), default=0, help_text=_("El orden de la sección dentro de la página."))
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True
+    class Meta:
+        app_label = 'web_funnel'
+)
 
     def __str__(self):
         return f"{self.title} ({self.web_page.title})"
@@ -75,7 +84,10 @@ class ContentBlock(models.Model):
     link = models.URLField(_("Enlace"), blank=True, null=True, help_text=_("URL para imágenes, videos o botones."))
     order = models.PositiveIntegerField(_("Orden"), default=0, help_text=_("El orden del bloque dentro de la sección."))
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True
+    class Meta:
+        app_label = 'web_funnel'
+)
 
     def __str__(self):
         return f"{self.get_content_type_display()} - {self.section.title}"

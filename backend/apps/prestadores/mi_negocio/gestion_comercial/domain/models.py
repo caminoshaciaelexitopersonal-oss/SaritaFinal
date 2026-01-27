@@ -9,7 +9,10 @@ class OperacionComercial(models.Model):
         BORRADOR = 'BORRADOR', 'Borrador'
         CONFIRMADA = 'CONFIRMADA', 'Confirmada'
         FACTURADA = 'FACTURADA', 'Facturada'
-        ANULADA = 'ANULADA', 'Anulada'
+        ANULADA = 'ANULADA', 'Anulada
+    class Meta:
+        app_label = 'domain'
+'
 
     class TipoOperacion(models.TextChoices):
         VENTA = 'VENTA', 'Venta de Productos/Servicios'
@@ -33,7 +36,10 @@ class ItemOperacionComercial(models.Model):
     descripcion = models.CharField(max_length=255)
     cantidad = models.PositiveIntegerField()
     precio_unitario = models.DecimalField(max_digits=12, decimal_places=2)
-    subtotal = models.DecimalField(max_digits=12, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=12, decimal_places=2
+    class Meta:
+        app_label = 'domain'
+)
 
 class FacturaVenta(models.Model):
     # ... (estados sin cambios) ...
@@ -43,7 +49,10 @@ class FacturaVenta(models.Model):
     numero_factura = models.CharField(max_length=50)
     fecha_emision = models.DateField()
     # ... (otros campos) ...
-    documento_archivistico_ref_id = models.UUIDField(null=True, blank=True)
+    documento_archivistico_ref_id = models.UUIDField(null=True, blank=True
+    class Meta:
+        app_label = 'domain'
+)
 
 class ItemFactura(models.Model):
     factura = models.ForeignKey(FacturaVenta, on_delete=models.CASCADE, related_name='items')
@@ -52,7 +61,10 @@ class ItemFactura(models.Model):
     cantidad = models.PositiveIntegerField()
     precio_unitario = models.DecimalField(max_digits=12, decimal_places=2)
     subtotal = models.DecimalField(max_digits=12, decimal_places=2)
-    impuestos = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    impuestos = models.DecimalField(max_digits=12, decimal_places=2, default=0
+    class Meta:
+        app_label = 'domain'
+)
 
 class ReciboCaja(models.Model):
     perfil_ref_id = models.UUIDField()
@@ -61,3 +73,5 @@ class ReciboCaja(models.Model):
     fecha_pago = models.DateField()
     monto = models.DecimalField(max_digits=12, decimal_places=2)
     metodo_pago = models.CharField(max_length=50)
+    class Meta:
+        app_label = 'domain'

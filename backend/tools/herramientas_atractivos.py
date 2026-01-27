@@ -1,6 +1,6 @@
 # from langchain_core.tools import tool
 from typing import List, Dict, Optional
-from api.models import AtractivoTuristico, ImagenAtractivo, CustomUser
+from backend.api.models import AtractivoTuristico, ImagenAtractivo, CustomUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.text import slugify
 

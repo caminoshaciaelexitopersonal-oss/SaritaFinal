@@ -2,12 +2,12 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from decimal import Decimal
 
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from apps.company.models import Company
-from apps.prestadores.mi_negocio.gestion_comercial.domain.models import OperacionComercial, ItemOperacionComercial
-from apps.prestadores.mi_negocio.gestion_comercial.services import FacturacionService
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.apps.company.models import Company
+from backend.apps.prestadores.mi_negocio.gestion_comercial.domain.models import OperacionComercial, ItemOperacionComercial
+from backend.apps.prestadores.mi_negocio.gestion_comercial.services import FacturacionService
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
 
 User = get_user_model()
 

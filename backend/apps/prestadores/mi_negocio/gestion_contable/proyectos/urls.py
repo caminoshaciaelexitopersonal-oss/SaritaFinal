@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from .views import ProyectoViewSet, IngresoProyectoViewSet, CostoProyectoViewSet
+from backend.views import ProyectoViewSet, IngresoProyectoViewSet, CostoProyectoViewSet
 
 router = DefaultRouter()
 router.register(r'proyectos', ProyectoViewSet, basename='proyecto')

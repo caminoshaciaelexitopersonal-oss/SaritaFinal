@@ -2,7 +2,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from apps.admin_plataforma.models import Plan
+from backend.apps.admin_plataforma.models import Plan
 
 class Cart(models.Model):
     """
@@ -21,7 +21,10 @@ class Cart(models.Model):
         help_text=_("Clave de sesión para usuarios invitados.")
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True
+    class Meta:
+        app_label = 'cart'
+)
 
     def __str__(self):
         if self.user:
@@ -47,7 +50,10 @@ class CartItem(models.Model):
         on_delete=models.CASCADE,
         related_name='cart_items'
     )
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField(default=1
+    class Meta:
+        app_label = 'cart'
+)
 
     def __str__(self):
         return f"{self.quantity} x {self.plan.nombre} en {self.cart}"

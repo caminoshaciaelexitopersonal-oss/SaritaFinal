@@ -1,6 +1,6 @@
 import csv
 from django.core.management.base import BaseCommand
-from api.models import Department, Municipality
+from backend.api.models import Department, Municipality
 from django.db import IntegrityError
 
 class Command(BaseCommand):

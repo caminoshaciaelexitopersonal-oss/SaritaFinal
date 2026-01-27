@@ -1,5 +1,5 @@
 import logging
-from .base import BaseStorageAdapter
+from backend.base import BaseStorageAdapter
 
 logger = logging.getLogger(__name__)
 

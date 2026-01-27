@@ -1,6 +1,6 @@
 # backend/apps/sarita_agents/urls.py
 from django.urls import path
-from . import views
+from backend. import views
 
 urlpatterns = [
     path('directive/', views.DirectiveView.as_view(), name='sarita_directive'),

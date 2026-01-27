@@ -2,8 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
-from .models import Opportunity
-from .serializers import OpportunitySerializer
+from backend.models import Opportunity
+from backend.serializers import OpportunitySerializer
 
 class OpportunityViewSet(viewsets.ModelViewSet):
     queryset = Opportunity.objects.all()

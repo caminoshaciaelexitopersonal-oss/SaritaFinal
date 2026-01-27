@@ -1,15 +1,18 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from ..productos_servicios.models import Product
-from api.models import CustomUser # El usuario turista
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.productos_servicios.models import Product
+from backend.api.models import CustomUser # El usuario turista
 
 class Valoracion(models.Model):
     producto = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='valoraciones')
     # El perfil del prestador que recibe la valoración
     perfil_prestador = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='valoraciones_recibidas')
     # El turista que escribe la valoración
-    turista = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='valoraciones_emitidas')
+    turista = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='valoraciones_emitidas'
+    class Meta:
+        app_label = 'valoraciones'
+)
 
     puntuacion = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)]

@@ -2,7 +2,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from apps.orders.models import Order
+from backend.apps.orders.models import Order
 
 class Payment(models.Model):
     """
@@ -14,7 +14,10 @@ class Payment(models.Model):
         ('PAID', 'Pagado'),
         ('FAILED', 'Fallido'),
         ('CANCELLED', 'Cancelado'),
-    ]
+
+    class Meta:
+        app_label = 'payments'
+]
 
     order = models.OneToOneField(
         Order,

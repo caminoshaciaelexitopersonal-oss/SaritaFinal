@@ -2,9 +2,9 @@
 from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Cart
-from .serializers import CartSerializer
-from .services import CartService
+from backend.models import Cart
+from backend.serializers import CartSerializer
+from backend.services import CartService
 
 class CartViewSet(viewsets.GenericViewSet):
     """

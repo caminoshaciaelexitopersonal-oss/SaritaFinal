@@ -1,4 +1,4 @@
-from .capitan_base import CapitanSGSSTBase
+from backend.capitan_base import CapitanSGSSTBase
 
 class CapitanSaludOcupacional(CapitanSGSSTBase):
     """

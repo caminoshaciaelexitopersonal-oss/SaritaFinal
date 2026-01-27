@@ -21,7 +21,7 @@ class TenantMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        from .perfil.models import ProviderProfile # Lazy import
+        from backend.perfil.models import ProviderProfile # Lazy import
 
         _thread_locals.tenant = None
         tenant = None

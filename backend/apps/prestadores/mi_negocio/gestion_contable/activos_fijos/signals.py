@@ -3,8 +3,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from decimal import Decimal
 
-from .models import CalculoDepreciacion
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta
+from backend.models import CalculoDepreciacion
+from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta
 
 @receiver(post_save, sender=CalculoDepreciacion)
 def crear_asiento_contable_depreciacion(sender, instance, created, **kwargs):

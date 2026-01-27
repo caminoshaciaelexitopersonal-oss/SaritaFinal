@@ -1,6 +1,6 @@
 # funnels/runtime_urls.py
 from django.urls import path
-from .runtime_views import FunnelEventView, LeadDetailView
+from backend.runtime_views import FunnelEventView, LeadDetailView
 
 urlpatterns = [
     path('events/', FunnelEventView.as_view(), name='runtime-event'),

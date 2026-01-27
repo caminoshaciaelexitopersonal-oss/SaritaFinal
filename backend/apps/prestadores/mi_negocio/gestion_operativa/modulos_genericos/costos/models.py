@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class Costo(models.Model):
     """
@@ -10,7 +10,10 @@ class Costo(models.Model):
     concepto = models.CharField(_("Concepto del Costo"), max_length=255)
     monto = models.DecimalField(_("Monto"), max_digits=12, decimal_places=2)
     fecha = models.DateField(_("Fecha del Costo"))
-    es_recurrente = models.BooleanField(_("¿Es Recurrente?"), default=False)
+    es_recurrente = models.BooleanField(_("¿Es Recurrente?"), default=False
+    class Meta:
+        app_label = 'costos'
+)
 
     class Tipo(models.TextChoices):
         FIJO = 'FIJO', _('Fijo')

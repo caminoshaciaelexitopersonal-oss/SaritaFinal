@@ -25,7 +25,10 @@ class Company(models.Model):
         help_text="Indica si la suscripción de la compañía está activa. Desmarcar para suspender el acceso."
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True
+    class Meta:
+        app_label = 'companies'
+)
 
     class Meta:
         app_label = 'companies'
@@ -55,7 +58,10 @@ class CompanyEncryptionKey(models.Model):
         unique=True,
         help_text="Sal criptográfica única generada para la derivación de claves."
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True
+    class Meta:
+        app_label = 'companies'
+)
 
     def __str__(self):
         return f"Encryption Key for {self.company.name}"

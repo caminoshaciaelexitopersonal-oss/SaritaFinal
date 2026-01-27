@@ -1,7 +1,7 @@
 import datetime
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
-from api.models import Publicacion, CustomUser
+from backend.api.models import Publicacion, CustomUser
 
 class Command(BaseCommand):
     help = 'Carga los artículos de Blog y Noticias de ejemplo a la base de datos'

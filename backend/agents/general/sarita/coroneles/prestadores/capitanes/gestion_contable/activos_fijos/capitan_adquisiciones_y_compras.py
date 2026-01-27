@@ -1,4 +1,4 @@
-from .capitan_base import CapitanActivosFijosBase
+from backend.capitan_base import CapitanActivosFijosBase
 
 class CapitanAdquisicionesYCompras(CapitanActivosFijosBase):
     """

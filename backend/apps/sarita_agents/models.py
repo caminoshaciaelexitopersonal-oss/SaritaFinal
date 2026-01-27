@@ -5,11 +5,9 @@ from django.db import models
 class Mision(models.Model):
     """
     Registro de más alto nivel. Representa la directiva original del General.
- 
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     idempotency_key = models.UUIDField(unique=True, null=True, blank=True, help_text="Clave única para prevenir duplicados.")
- 
     directiva_original = models.JSONField(help_text="La directiva JSON original recibida por el orquestador.")
     dominio = models.CharField(max_length=100, help_text="Dominio de negocio objetivo (ej. 'prestadores').")
     estado = models.CharField(max_length=50, default='PENDIENTE', choices=[
@@ -17,13 +15,17 @@ class Mision(models.Model):
         ('EN_PROGRESO', 'En Progreso'),
         ('COMPLETADA', 'Completada'),
         ('FALLIDA', 'Fallida'),
- 
         ('COMPLETADA_PARCIALMENTE', 'Completada Parcialmente'),
- 
     ])
     resultado_final = models.JSONField(null=True, blank=True, help_text="El informe final consolidado de la misión.")
     timestamp_inicio = models.DateTimeField(auto_now_add=True)
-    timestamp_fin = models.DateTimeField(null=True, blank=True)
+    timestamp_fin = models.DateTimeField(null=True, blank=True
+    class Meta:
+        app_label = 'sarita_agents'
+)
+
+    class Meta:
+        app_label = 'sarita_agents'
 
     def __str__(self):
         return f"Misión {self.id} ({self.dominio}) - {self.estado}"
@@ -41,11 +43,12 @@ class PlanTáctico(models.Model):
         ('EN_EJECUCION', 'En Ejecución'),
         ('COMPLETADO', 'Completado'),
         ('FALLIDO', 'Fallido'),
- 
         ('COMPLETADO_PARCIALMENTE', 'Completado Parcialmente'),
- 
     ])
     timestamp_creacion = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'sarita_agents'
 
     def __str__(self):
         return f"Plan {self.id} para Misión {self.mision_id}"
@@ -61,15 +64,19 @@ class TareaDelegada(models.Model):
     parametros = models.JSONField(default=dict)
     estado = models.CharField(max_length=50, default='PENDIENTE', choices=[
         ('PENDIENTE', 'Pendiente'),
- 
         ('EN_COLA', 'En Cola'),
         ('EN_PROGRESO', 'En Progreso'),
         ('REINTENTANDO', 'Reintentando'),
- 
         ('COMPLETADA', 'Completada'),
         ('FALLIDA', 'Fallida'),
     ])
-    timestamp_creacion = models.DateTimeField(auto_now_add=True)
+    timestamp_creacion = models.DateTimeField(auto_now_add=True
+    class Meta:
+        app_label = 'sarita_agents'
+)
+
+    class Meta:
+        app_label = 'sarita_agents'
 
     def __str__(self):
         return f"Tarea {self.id} ({self.estado})"
@@ -83,7 +90,13 @@ class RegistroDeEjecucion(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     exitoso = models.BooleanField()
     salida_log = models.TextField(null=True, blank=True, help_text="Salida estándar o log de la ejecución.")
-    resultado = models.JSONField(null=True, blank=True, help_text="El resultado estructurado de la ejecución.")
+    resultado = models.JSONField(null=True, blank=True, help_text="El resultado estructurado de la ejecución."
+    class Meta:
+        app_label = 'sarita_agents'
+)
+
+    class Meta:
+        app_label = 'sarita_agents'
 
     def __str__(self):
         return f"Log de Tarea {self.tarea_delegada_id} @ {self.timestamp}"
@@ -100,8 +113,13 @@ class Prestador(models.Model):
     nombre = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     activo = models.BooleanField(default=False)
-    timestamp_creacion = models.DateTimeField(auto_now_add=True)
+    timestamp_creacion = models.DateTimeField(auto_now_add=True
+    class Meta:
+        app_label = 'sarita_agents'
+)
+
+    class Meta:
+        app_label = 'sarita_agents'
 
     def __str__(self):
         return f"{self.nombre} ({self.email})"
- 

@@ -2,8 +2,8 @@
 import logging
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from api.models import CustomUser
-from apps.sadi_agent.models import SemanticDomain, Intent, Example, VoicePermission
+from backend.api.models import CustomUser
+from backend.apps.sadi_agent.models import SemanticDomain, Intent, Example, VoicePermission
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 

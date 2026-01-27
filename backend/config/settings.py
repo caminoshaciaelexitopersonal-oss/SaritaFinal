@@ -59,47 +59,30 @@ INSTALLED_APPS = [
     "anymail",
     "django_filters",
     "modeltranslation",
-    # Mis Apps
-    "api.apps.ApiConfig",
-    "apps.prestadores.apps.PrestadoresConfig",
 
-    # Módulos de "Mi Negocio"
-    "apps.prestadores.mi_negocio.gestion_comercial.apps.GestionComercialConfig",
-    "apps.prestadores.mi_negocio.gestion_financiera.apps.GestionFinancieraConfig",
-    "apps.prestadores.mi_negocio.gestion_contable.empresa.apps.EmpresaConfig",
-    "apps.prestadores.mi_negocio.gestion_contable.nomina.apps.NominaConfig",
-    "apps.prestadores.mi_negocio.gestion_contable.cierres.apps.CierresConfig",
-
-    # Submódulos de Contabilidad
-    "apps.prestadores.mi_negocio.gestion_contable.activos_fijos.apps.ActivosFijosConfig",
-    # "apps.prestadores.mi_negocio.gestion_contable.presupuesto.apps.PresupuestoConfig",
-    "apps.prestadores.mi_negocio.gestion_contable.compras.apps.ComprasConfig",
-    "apps.prestadores.mi_negocio.gestion_contable.contabilidad.apps.ContabilidadConfig",
-    "apps.prestadores.mi_negocio.gestion_contable.inventario.apps.InventarioConfig",
-    # "apps.prestadores.mi_negocio.gestion_contable.nomina.apps.NominaConfig",
-    # "apps.prestadores.mi_negocio.gestion_contable.proyectos.apps.ProyectosConfig",
-
-    # Módulos de "Mi Negocio" - Implementados
-    "apps.prestadores.mi_negocio.facturacion.apps.FacturacionConfig", # Stub para F19
-    # Nota: 'mi_negocio' es un módulo paraguas, no una app instalable.
-    # Las apps de gestión_operativa ya están contenidas en 'prestadores'.
-    "apps.companies.apps.CompaniesConfig",
-    "apps.audit.apps.AuditConfig",
-    "apps.prestadores.mi_negocio.gestion_archivistica.apps.GestionArchivisticaConfig",
-
-    # App para el panel de administración de la plataforma
-    "apps.admin_plataforma.apps.AdminPlataformaConfig",
-    "apps.sadi_agent.apps.SadiAgentConfig",
-    "apps.sarita_agents.apps.SaritaAgentsConfig",
- 
-    "apps.web_funnel.apps.WebFunnelConfig",
- 
- 
-    # "apps.downloads.apps.DownloadsConfig",
- 
-    "apps.cart.apps.CartConfig",
-    "apps.orders.apps.OrdersConfig",
-    "apps.payments.apps.PaymentsConfig",
+    # Apps locales (FORMA CANÓNICA)
+    "backend.api",
+    "backend.apps.prestadores",
+    "backend.apps.prestadores.mi_negocio.gestion_comercial",
+    "backend.apps.prestadores.mi_negocio.gestion_financiera",
+    "backend.apps.prestadores.mi_negocio.gestion_contable.empresa",
+    "backend.apps.prestadores.mi_negocio.gestion_contable.nomina",
+    "backend.apps.prestadores.mi_negocio.gestion_contable.cierres",
+    "backend.apps.prestadores.mi_negocio.gestion_contable.activos_fijos",
+    "backend.apps.prestadores.mi_negocio.gestion_contable.compras",
+    "backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad",
+    "backend.apps.prestadores.mi_negocio.gestion_contable.inventario",
+    "backend.apps.prestadores.mi_negocio.facturacion",
+    "backend.apps.companies",
+    "backend.apps.audit",
+    "backend.apps.prestadores.mi_negocio.gestion_archivistica",
+    "backend.apps.admin_plataforma",
+    "backend.apps.sadi_agent",
+    "backend.apps.sarita_agents",
+    "backend.apps.web_funnel",
+    "backend.apps.cart",
+    "backend.apps.orders",
+    "backend.apps.payments",
 ]
 
 
@@ -108,18 +91,18 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-    "api.middleware.entity_middleware.EntityMiddleware",
+    "backend.api.middleware.entity_middleware.EntityMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions.TenantMiddleware",
+    "backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions.TenantMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
 
-ROOT_URLCONF = "puerto_gaitan_turismo.urls"
+ROOT_URLCONF = "backend.config.urls"
 
 TEMPLATES = [
     {
@@ -136,7 +119,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "puerto_gaitan_turismo.wsgi.application"
+WSGI_APPLICATION = "backend.config.wsgi.application"
 
 # Database
 # ------------------------------------------------------------------------

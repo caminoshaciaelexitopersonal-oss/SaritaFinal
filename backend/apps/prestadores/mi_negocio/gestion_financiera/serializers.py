@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CuentaBancaria, OrdenPago
+from backend.models import CuentaBancaria, OrdenPago
 
 class CuentaBancariaSerializer(serializers.ModelSerializer):
     class Meta:

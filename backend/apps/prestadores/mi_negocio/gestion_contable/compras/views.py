@@ -7,12 +7,12 @@
 # from decimal import Decimal
 #
 # # Modelos locales
-# from .models import Proveedor, FacturaCompra
-# from .serializers import ProveedorSerializer, FacturaCompraSerializer
+# from backend.models import Proveedor, FacturaCompra
+# from backend.serializers import ProveedorSerializer, FacturaCompraSerializer
 #
 # # Modelos de otros módulos para integración
-# from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, OrdenPago
-# from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+# from backend.apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, OrdenPago
+# from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
 #
 #
 # class IsPrestadorOwner(permissions.BasePermission):

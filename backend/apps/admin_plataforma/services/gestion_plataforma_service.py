@@ -1,8 +1,8 @@
 
 from django.db import transaction
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from api.models import CustomUser
-from apps.admin_plataforma.models import Plan, Suscripcion
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.api.models import CustomUser
+from backend.apps.admin_plataforma.models import Plan, Suscripcion
 from decimal import Decimal
 from datetime import date, timedelta
 

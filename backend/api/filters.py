@@ -1,5 +1,5 @@
 import django_filters
-from .models import AuditLog, CustomUser
+from backend.api.models import AuditLog, CustomUser
 
 class AuditLogFilter(django_filters.FilterSet):
     """

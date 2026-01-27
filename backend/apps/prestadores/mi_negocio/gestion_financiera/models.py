@@ -2,8 +2,8 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-# from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount
+# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+# from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount
 
 class CuentaBancaria(models.Model):
     perfil_ref_id = models.UUIDField()
@@ -13,13 +13,19 @@ class CuentaBancaria(models.Model):
     saldo_inicial = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
     saldo_actual = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
     cuenta_contable_ref_id = models.UUIDField(null=True)
-    activa = models.BooleanField(default=True)
+    activa = models.BooleanField(default=True
+    class Meta:
+        app_label = 'gestion_financiera'
+)
 
 class OrdenPago(models.Model):
     class EstadoPago(models.TextChoices):
         PENDIENTE = 'PENDIENTE', 'Pendiente'
         PAGADA = 'PAGADA', 'Pagada'
-        CANCELADA = 'CANCELADA', 'Cancelada'
+        CANCELADA = 'CANCELADA', 'Cancelada
+    class Meta:
+        app_label = 'gestion_financiera'
+'
 
     perfil_ref_id = models.UUIDField()
     cuenta_bancaria_ref_id = models.UUIDField()

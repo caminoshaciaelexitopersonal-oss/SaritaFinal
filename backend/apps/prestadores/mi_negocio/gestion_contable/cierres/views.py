@@ -1,9 +1,9 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import PeriodoContable
-from .serializers import PeriodoContableSerializer
-from .services import CierreContableService
+from backend.models import PeriodoContable
+from backend.serializers import PeriodoContableSerializer
+from backend.services import CierreContableService
 
 class PeriodoContableViewSet(viewsets.ModelViewSet):
     serializer_class = PeriodoContableSerializer

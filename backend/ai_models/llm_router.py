@@ -6,8 +6,8 @@ from typing import List, Dict, Optional, Any
 from asgiref.sync import sync_to_async
 
 # --- Importaciones de Django y del proyecto ---
-from api.models import SiteConfiguration, CustomUser, UserLLMConfig
-from .local_llm_service import invoke_local_llm
+from backend.api.models import SiteConfiguration, CustomUser, UserLLMConfig
+from backend.local_llm_service import invoke_local_llm
 
 # Cargar variables de entorno
 load_dotenv()

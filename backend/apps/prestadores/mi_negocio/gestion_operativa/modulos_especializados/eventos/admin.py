@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import OrganizadorEvento, Evento, Promocion
+from backend.models import OrganizadorEvento, Evento, Promocion
 
 @admin.register(OrganizadorEvento)
 class OrganizadorEventoAdmin(admin.ModelAdmin):

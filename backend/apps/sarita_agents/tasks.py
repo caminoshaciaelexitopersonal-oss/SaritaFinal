@@ -1,9 +1,9 @@
 # backend/apps/sarita_agents/tasks.py
 import logging
 from celery import shared_task
-from .models import TareaDelegada
-from .agents.general.sarita.coroneles.prestadores.tenientes.validacion_prestador_teniente import TenienteValidacionPrestador
-from .agents.general.sarita.coroneles.prestadores.tenientes.persistencia_prestador_teniente import TenientePersistenciaPrestador
+from backend.models import TareaDelegada
+from backend.agents.general.sarita.coroneles.prestadores.tenientes.validacion_prestador_teniente import TenienteValidacionPrestador
+from backend.agents.general.sarita.coroneles.prestadores.tenientes.persistencia_prestador_teniente import TenientePersistenciaPrestador
 
 # --- Mapeo de Tenientes ---
 # Este registro centralizado permite instanciar al teniente correcto a partir de un string.
@@ -53,7 +53,7 @@ def ejecutar_mision_completa(self, mision_id: str):
     Tarea de Celery para ejecutar una misión completa a través del orquestador.
     Esto permite que la API responda inmediatamente.
     """
-    from .orchestrator import sarita_orchestrator
+    from backend.orchestrator import sarita_orchestrator
 
     try:
         sarita_orchestrator.execute_mission(mision_id)
@@ -67,7 +67,7 @@ def consolidar_plan_tactico(resultados, plan_id: str):
     Se ejecuta cuando todas las tareas de un plan han terminado.
     Consolida los resultados y reporta hacia arriba.
     """
-    from .models import PlanTáctico
+    from backend.models import PlanTáctico
 
     plan = PlanTáctico.objects.get(id=plan_id)
 
@@ -99,7 +99,7 @@ def finalizar_mision(mision_id: str, reporte_final: dict):
     """
     Último paso. Guarda el reporte final y marca la misión como completada.
     """
-    from .models import Mision
+    from backend.models import Mision
     from django.utils import timezone
 
     mision = Mision.objects.get(id=mision_id)

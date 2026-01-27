@@ -2,9 +2,9 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import PaqueteTuristico, ReservaPaquete
-from .serializers import PaqueteTuristicoSerializer, ReservaPaqueteSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
+from backend.models import PaqueteTuristico, ReservaPaquete
+from backend.serializers import PaqueteTuristicoSerializer, ReservaPaqueteSerializer
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
 
 class PaqueteTuristicoViewSet(viewsets.ModelViewSet):
     """

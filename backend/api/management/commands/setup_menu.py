@@ -1,7 +1,7 @@
 import os
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from api.models import MenuItem
+from backend.api.models import MenuItem
 
 os.environ.pop('HTTP_PROXY', None)
 os.environ.pop('HTTPS_PROXY', None)

@@ -1,4 +1,4 @@
-from .capitan_base import CapitanNominaBase
+from backend.capitan_base import CapitanNominaBase
 
 class CapitanLiquidacionSeguridadSocialPILA(CapitanNominaBase):
     """

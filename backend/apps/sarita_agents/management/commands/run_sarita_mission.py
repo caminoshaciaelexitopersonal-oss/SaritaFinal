@@ -1,7 +1,7 @@
 # backend/apps/sarita_agents/management/commands/run_sarita_mission.py
 import json
 from django.core.management.base import BaseCommand, CommandError
-from apps.sarita_agents.orchestrator import sarita_orchestrator
+from backend.apps.sarita_agents.orchestrator import sarita_orchestrator
 
 class Command(BaseCommand):
     help = 'Ejecuta una misión SARITA directamente a través del orquestador.'

@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework_nested import routers
 
-from apps.prestadores.mi_negocio.views import productos as productos_views, clientes as clientes_views
+from backend.apps.prestadores.mi_negocio.views import productos as productos_views, clientes as clientes_views
 
 # Este archivo se poblará a medida que se refactoricen las vistas.
 

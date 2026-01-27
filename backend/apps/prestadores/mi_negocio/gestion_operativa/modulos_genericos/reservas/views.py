@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
-from .models import Reserva, PoliticaCancelacion
-from .serializers import ReservaSerializer, PoliticaCancelacionSerializer
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from backend.models import Reserva, PoliticaCancelacion
+from backend.serializers import ReservaSerializer, PoliticaCancelacionSerializer
+from backend.apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
 
 class ReservaViewSet(viewsets.ModelViewSet):
     serializer_class = ReservaSerializer

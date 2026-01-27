@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Valoracion
-from api.serializers import CustomUserSerializer # Para mostrar info del turista
+from backend.models import Valoracion
+from backend.api.serializers import CustomUserSerializer # Para mostrar info del turista
 
 class ValoracionSerializer(serializers.ModelSerializer):
     # Mostramos info del turista de forma anidada y de solo lectura

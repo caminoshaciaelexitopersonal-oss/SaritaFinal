@@ -1,5 +1,5 @@
 from django.urls import path, include
-from api.views import PlaceholderView
+from backend.api.views import PlaceholderView
 
 app_name = 'mi_negocio'
 

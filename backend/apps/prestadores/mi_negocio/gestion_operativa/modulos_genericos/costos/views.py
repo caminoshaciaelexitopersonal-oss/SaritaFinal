@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from ..permissions import IsOwner
-from .models import Costo
-from .serializers import CostoSerializer
+from backend.permissions import IsOwner
+from backend.models import Costo
+from backend.serializers import CostoSerializer
 
 class CostoViewSet(viewsets.ModelViewSet):
     """

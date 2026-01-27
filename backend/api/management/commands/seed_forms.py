@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from api.models import Formulario, Pregunta, OpcionRespuesta, PlantillaVerificacion, ItemVerificacion
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.models import CategoriaPrestador
+from backend.api.models import Formulario, Pregunta, OpcionRespuesta, PlantillaVerificacion, ItemVerificacion
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.models import CategoriaPrestador
 
 class Command(BaseCommand):
     help = 'Crea los formularios de caracterización y las plantillas de verificación iniciales'

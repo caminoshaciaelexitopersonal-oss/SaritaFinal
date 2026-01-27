@@ -1,16 +1,16 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from api.models import CustomUser
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador, Perfil
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import ProductoServicio
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.models import Costo
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.models import Inventario
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.rat.models import RegistroActividadTuristica
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.soporte.models import TicketSoporte
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.configuracion.models import ConfiguracionPrestador
+from backend.api.models import CustomUser
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador, Perfil
+# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import ProductoServicio
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva
+# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.models import Costo
+# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.models import Inventario
+# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.rat.models import RegistroActividadTuristica
+# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.soporte.models import TicketSoporte
+# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.configuracion.models import ConfiguracionPrestador
 from rest_framework.authtoken.models import Token
 import datetime
 

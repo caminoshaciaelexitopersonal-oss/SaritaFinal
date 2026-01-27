@@ -1,5 +1,5 @@
 # ai/services/ai_manager/providers/dummy_provider.py
-from ..ai_base_provider import AIBaseProvider
+from backend.ai_base_provider import AIBaseProvider
 from typing import List, Optional
 
 class DummyProvider(AIBaseProvider):

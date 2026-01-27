@@ -1,9 +1,9 @@
 # SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/clientes/views.py
 from rest_framework import viewsets, permissions
 from rest_framework.pagination import PageNumberPagination
-from .models import Cliente
-from .serializers import ClienteSerializer
-from ....permissions import IsPrestadorOwner
+from backend.models import Cliente
+from backend.serializers import ClienteSerializer
+from backend...permissions import IsPrestadorOwner
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10

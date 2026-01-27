@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Proveedor, FacturaCompra
+from backend.models import Proveedor, FacturaCompra
 
 @admin.register(Proveedor)
 class ProveedorAdmin(admin.ModelAdmin):

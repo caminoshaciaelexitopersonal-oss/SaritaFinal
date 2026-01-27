@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import KitchenStation, RestaurantTable
+from backend.models import KitchenStation, RestaurantTable
 
 class KitchenStationSerializer(serializers.ModelSerializer):
     class Meta:

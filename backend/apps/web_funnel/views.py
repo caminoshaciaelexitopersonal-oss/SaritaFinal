@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
-from .models import WebPage, Section, ContentBlock, MediaAsset
-from .serializers import (
+from backend.models import WebPage, Section, ContentBlock, MediaAsset
+from backend.serializers import (
     WebPageSerializer, WebPageDetailSerializer, SectionSerializer,
     ContentBlockSerializer, MediaAssetSerializer
 )

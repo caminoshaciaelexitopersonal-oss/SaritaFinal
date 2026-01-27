@@ -1,6 +1,6 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/agencias_de_viajes/models.py
 from django.db import models
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from django.conf import settings
 
 class PaqueteTuristico(models.Model):
@@ -11,7 +11,10 @@ class PaqueteTuristico(models.Model):
         ('borrador', 'Borrador'),
         ('publicado', 'Publicado'),
         ('archivado', 'Archivado'),
-    ]
+
+    class Meta:
+        app_label = 'agencias_de_viajes'
+]
 
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='paquetes_turisticos')
     nombre = models.CharField(max_length=200)
@@ -38,7 +41,10 @@ class ReservaPaquete(models.Model):
         ('pagada', 'Pagada'),
         ('cancelada', 'Cancelada'),
         ('completada', 'Completada'),
-    ]
+
+    class Meta:
+        app_label = 'agencias_de_viajes'
+]
 
     paquete = models.ForeignKey(PaqueteTuristico, on_delete=models.CASCADE, related_name='reservas')
     # Podría enlazarse con el modelo Cliente si existe y es relevante.

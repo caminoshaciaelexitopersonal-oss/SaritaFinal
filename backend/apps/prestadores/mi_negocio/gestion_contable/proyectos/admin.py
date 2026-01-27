@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Proyecto, IngresoProyecto, CostoProyecto
+from backend.models import Proyecto, IngresoProyecto, CostoProyecto
 
 class IngresoProyectoInline(admin.TabularInline):
     model = IngresoProyecto

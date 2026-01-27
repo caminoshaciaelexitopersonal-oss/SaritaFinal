@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
-from api.models import (
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from backend.api.models import (
     CustomUser,
     Artesano,
     Publicacion,

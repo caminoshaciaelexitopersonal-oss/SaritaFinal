@@ -1,6 +1,6 @@
 # ai/services/ai_manager/providers/ollama_provider.py
 import requests
-from ..ai_base_provider import AIBaseProvider
+from backend.ai_base_provider import AIBaseProvider
 from typing import Optional, Literal
 
 class OllamaProvider(AIBaseProvider):

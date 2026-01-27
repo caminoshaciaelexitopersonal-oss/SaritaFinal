@@ -1,5 +1,5 @@
 # from rest_framework import serializers
-# from .models import Inventario, Costo
+# from backend.models import Inventario, Costo
 
 # class InventarioSerializer(serializers.ModelSerializer):
 #     class Meta:

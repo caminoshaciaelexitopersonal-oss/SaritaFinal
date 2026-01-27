@@ -1,7 +1,7 @@
 # backend/apps/sadi_agent/security.py
 import logging
-from api.models import CustomUser
-from .models import VoicePermission, Intent
+from backend.api.models import CustomUser
+from backend.models import VoicePermission, Intent
 
 logger = logging.getLogger(__name__)
 

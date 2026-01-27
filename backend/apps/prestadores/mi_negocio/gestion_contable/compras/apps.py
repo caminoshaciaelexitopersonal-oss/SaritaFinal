@@ -5,4 +5,4 @@ class ComprasConfig(AppConfig):
     name = 'apps.prestadores.mi_negocio.gestion_contable.compras'
 
     def ready(self):
-        import apps.prestadores.mi_negocio.gestion_contable.compras.signals
+        import backend.apps.prestadores.mi_negocio.gestion_contable.compras.signals

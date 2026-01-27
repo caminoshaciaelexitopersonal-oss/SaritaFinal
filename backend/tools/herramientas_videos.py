@@ -1,6 +1,6 @@
 # from langchain_core.tools import tool
 from typing import List, Dict
-from api.models import Video
+from backend.api.models import Video
 
 
 @tool

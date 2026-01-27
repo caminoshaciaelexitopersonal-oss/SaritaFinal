@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
-from .models import Proyecto, IngresoProyecto, CostoProyecto
-from .serializers import ProyectoSerializer, IngresoProyectoSerializer, CostoProyectoSerializer
+from backend.models import Proyecto, IngresoProyecto, CostoProyecto
+from backend.serializers import ProyectoSerializer, IngresoProyectoSerializer, CostoProyectoSerializer
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):

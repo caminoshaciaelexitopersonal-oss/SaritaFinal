@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from .views import CategoriaActivoViewSet, ActivoFijoViewSet, CalculoDepreciacionViewSet
+from backend.views import CategoriaActivoViewSet, ActivoFijoViewSet, CalculoDepreciacionViewSet
 
 router = DefaultRouter()
 router.register(r'categorias', CategoriaActivoViewSet, basename='categoria-activo')

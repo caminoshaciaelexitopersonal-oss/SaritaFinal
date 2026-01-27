@@ -1,7 +1,7 @@
 # backend/apps/sarita_agents/agents/coronel_template.py
  
 import logging
-from apps.sarita_agents.models import Mision
+from backend.apps.sarita_agents.models import Mision
 
 logger = logging.getLogger(__name__)
  

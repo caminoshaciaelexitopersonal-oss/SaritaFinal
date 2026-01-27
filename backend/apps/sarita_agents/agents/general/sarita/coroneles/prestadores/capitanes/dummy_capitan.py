@@ -1,7 +1,7 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/dummy_capitan.py
-from .....capitan_template import CapitanTemplate
-from ...tenientes.dummy_teniente import DummyTeniente
-from ......models import Mision, PlanTáctico
+from backend....capitan_template import CapitanTemplate
+from backend..tenientes.dummy_teniente import DummyTeniente
+from backend.....models import Mision, PlanTáctico
 
 class DummyCapitan(CapitanTemplate):
     """

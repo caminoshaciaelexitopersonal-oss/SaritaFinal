@@ -1,7 +1,7 @@
 # SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/perfil/serializers.py
 from rest_framework import serializers
 # Se corrige la importación para que apunte a los modelos locales del dominio.
-from .models import ProviderProfile, CategoriaPrestador
+from backend.models import ProviderProfile, CategoriaPrestador
 
 class CategoriaPrestadorSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,12 +1,12 @@
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils.text import slugify
-from api.models import (
+from backend.api.models import (
     CustomUser, RubroArtesano, Artesano,
     RutaTuristica, MenuItem, AtractivoTuristico, Publicacion, ContenidoMunicipio
 )
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
-from apps.web_funnel.models import WebPage # Importar WebPage
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
+from backend.apps.web_funnel.models import WebPage # Importar WebPage
 
 class Command(BaseCommand):
     help = 'Crea o actualiza datos de prueba para el sistema, incluyendo todo el contenido de la plataforma. Es idempotente.'

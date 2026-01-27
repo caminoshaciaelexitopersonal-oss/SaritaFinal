@@ -1,10 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
 # Asumimos TeamMember y Reservation de módulos genéricos futuros
-# from ..personal.models import TeamMember
-# from ..reservas.models import Reservation
+# from backend.personal.models import TeamMember
+# from backend.reservas.models import Reservation
 
 class Vehicle(TenantAwareModel):
     """

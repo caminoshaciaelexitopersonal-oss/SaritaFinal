@@ -1,6 +1,6 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/tenientes/validacion_prestador_teniente.py
 import logging
-from apps.sarita_agents.agents.teniente_template import TenienteTemplate
+from backend.apps.sarita_agents.agents.teniente_template import TenienteTemplate
 
 logger = logging.getLogger(__name__)
 
@@ -14,11 +14,11 @@ class TenienteValidacionPrestador(TenienteTemplate):
         """
         logger.info(f"TENIENTE (ValidacionPrestador): Validando datos -> {parametros}")
 
-        nombre = parametros.get("nombre")
+        nombre = parametros.get('nombre_comercial')
         email = parametros.get("email")
 
         if not nombre or not email:
-            raise ValueError("El 'nombre' y el 'email' del prestador son campos obligatorios.")
+            raise ValueError("El 'nombre_comercial' y el 'email' del prestador son campos obligatorios.")
 
         if "@" not in email:
             raise ValueError("El formato del 'email' no es válido.")

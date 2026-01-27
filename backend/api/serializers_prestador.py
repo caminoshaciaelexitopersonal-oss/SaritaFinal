@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ServicioTuristico, Booking, Factura
+from backend.api.models import ServicioTuristico, Booking, Factura
 
 class ServicioTuristicoSerializer(serializers.ModelSerializer):
     class Meta:

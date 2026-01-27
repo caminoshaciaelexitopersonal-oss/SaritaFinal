@@ -1,10 +1,13 @@
 from django.db import models
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class PeriodoContable(models.Model):
     class Estado(models.TextChoices):
         ABIERTO = 'ABIERTO', 'Abierto'
-        CERRADO = 'CERRADO', 'Cerrado'
+        CERRADO = 'CERRADO', 'Cerrado
+    class Meta:
+        app_label = 'cierres'
+'
 
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='periodos_contables')
     nombre = models.CharField(max_length=100) # Ej. "Enero 2024"

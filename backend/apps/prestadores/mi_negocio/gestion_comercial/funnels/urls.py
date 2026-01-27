@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import FunnelViewSet, PublicFunnelView, LeadCaptureView, FunnelEventView
+from backend.views import FunnelViewSet, PublicFunnelView, LeadCaptureView, FunnelEventView
 
 router = DefaultRouter()
 router.register(r'', FunnelViewSet, basename='funnel')

@@ -2,10 +2,10 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
-from .models import Valoracion
-from .serializers import ValoracionSerializer, RespuestaPrestadorSerializer
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
-from api.permissions import IsTurista
+from backend.models import Valoracion
+from backend.serializers import ValoracionSerializer, RespuestaPrestadorSerializer
+from backend.apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from backend.api.permissions import IsTurista
 
 class ValoracionViewSet(viewsets.ModelViewSet):
     """

@@ -1,12 +1,12 @@
 # backend/apps/prestadores/mi_negocio/gestion_contable/views.py
 from rest_framework import viewsets, permissions
-from .models import (
+from backend.models import (
     PlanDeCuentas,
     Cuenta,
     PeriodoContable,
     AsientoContable,
 )
-from .serializers import (
+from backend.serializers import (
     PlanDeCuentasSerializer,
     CuentaSerializer,
     PeriodoContableSerializer,
@@ -66,19 +66,19 @@ class PeriodoContableViewSet(BaseTenantViewSet):
 
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from .models import (
+from backend.models import (
     PlanDeCuentas,
     Cuenta,
     PeriodoContable,
     AsientoContable,
 )
-from .serializers import (
+from backend.serializers import (
     PlanDeCuentasSerializer,
     CuentaSerializer,
     PeriodoContableSerializer,
     AsientoContableSerializer,
 )
-from .services import ContabilidadService, ContabilidadValidationError
+from backend.services import ContabilidadService, ContabilidadValidationError
 
 
 class AsientoContableViewSet(BaseTenantViewSet):

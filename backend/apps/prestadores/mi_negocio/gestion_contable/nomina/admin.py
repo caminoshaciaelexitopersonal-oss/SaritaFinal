@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Empleado, Contrato, Planilla, DetalleLiquidacion, ConceptoNomina
+from backend.models import Empleado, Contrato, Planilla, DetalleLiquidacion, ConceptoNomina
 
 @admin.register(Empleado)
 class EmpleadoAdmin(admin.ModelAdmin):

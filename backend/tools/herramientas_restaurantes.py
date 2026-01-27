@@ -1,5 +1,5 @@
 from typing import List
-from .herramientas_prestador import get_prestador_soldiers
+from backend.herramientas_prestador import get_prestador_soldiers
 
 def get_restaurantes_soldiers() -> List:
     """

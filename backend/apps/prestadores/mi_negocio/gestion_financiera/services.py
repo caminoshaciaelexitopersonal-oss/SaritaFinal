@@ -3,10 +3,10 @@ from decimal import Decimal
 from django.utils import timezone
 from django.db import transaction
 
-from .models import OrdenPago
+from backend.models import OrdenPago
 # --- IMPORTACIONES DE SERVICIOS DE DOMINIO ---
-from ..gestion_operativa.services import ProviderProfileService
-from ..gestion_archivistica.archiving import ArchivingService
+from backend.gestion_operativa.services import ProviderProfileService
+from backend.gestion_archivistica.archiving import ArchivingService
 # Nota: Se asumirá la existencia de servicios para CuentaBancaria, Empleado, etc.
 # o se resolverán de la manera apropiada en su respectiva fase.
 

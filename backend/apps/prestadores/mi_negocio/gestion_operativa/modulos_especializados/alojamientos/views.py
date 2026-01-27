@@ -1,10 +1,10 @@
 from rest_framework import viewsets, permissions, views, status
 from rest_framework.response import Response
 from django.utils.dateparse import parse_date
-from .models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
-from .serializers import TipoAlojamientoSerializer, AlojamientoSerializer, HabitacionSerializer, TarifaSerializer
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
-from ...modulos_genericos.reservas.models import Reserva
+from backend.models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
+from backend.serializers import TipoAlojamientoSerializer, AlojamientoSerializer, HabitacionSerializer, TarifaSerializer
+from backend.apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from backend..modulos_genericos.reservas.models import Reserva
 
 class TipoAlojamientoViewSet(viewsets.ReadOnlyModelViewSet):
     """

@@ -6,12 +6,18 @@ from simple_history.models import HistoricalRecords
 class Tenant(models.Model):
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        app_label = 'infrastructure'
+
     def __str__(self):
         return self.name
 
 class Role(models.Model):
     name = models.CharField(max_length=100)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='roles')
+    class Meta:
+        app_label = 'infrastructure'
+
     def __str__(self):
         return f"{self.name} ({self.tenant.name})"
 
@@ -50,12 +56,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Categoria(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='categorias')
     nombre = models.CharField(max_length=255)
+    class Meta:
+        app_label = 'infrastructure'
+
     def __str__(self):
         return self.nombre
 
 class Subcategoria(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='subcategorias')
     nombre = models.CharField(max_length=255)
+    class Meta:
+        app_label = 'infrastructure'
+
     def __str__(self):
         return f"{self.categoria.nombre} > {self.nombre}"
 
@@ -63,6 +75,9 @@ class LandingPage(models.Model):
     subcategoria = models.ForeignKey(Subcategoria, on_delete=models.CASCADE, related_name='landing_pages')
     slug = models.SlugField(unique=True)
     estado = models.CharField(max_length=10, choices=[('borrador', 'Borrador'), ('publicado', 'Publicado')], default='borrador')
+    class Meta:
+        app_label = 'infrastructure'
+
     def __str__(self):
         return self.slug
 
@@ -72,6 +87,9 @@ class Embudo(models.Model):
     orden = models.PositiveIntegerField(default=0)
     activo = models.BooleanField(default=True)
     history = HistoricalRecords()
+    class Meta:
+        app_label = 'infrastructure'
+
     def __str__(self):
         return self.nombre
 
@@ -107,7 +125,10 @@ class AIInteraction(models.Model):
     errores = models.TextField(blank=True)
     costo_estimado = models.DecimalField(max_digits=10, decimal_places=6, default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
-    history = HistoricalRecords()
+    history = HistoricalRecords(
+    class Meta:
+        app_label = 'infrastructure'
+)
 
     def __str__(self):
         return f"Interaction {self.id} by {self.user.username if self.user else 'System'}"
@@ -118,7 +139,10 @@ class ContentAsset(models.Model):
     asset_type = models.CharField(max_length=50, choices=[('text', 'Text'), ('image', 'Image'), ('video', 'Video')])
     content = models.TextField() # Para texto o URLs
     # campaign = models.ForeignKey('Campaign', on_delete=models.SET_NULL, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True
+    class Meta:
+        app_label = 'infrastructure'
+)
 
     def __str__(self):
         return f"{self.asset_type.capitalize()} Asset {self.id}"
@@ -131,7 +155,10 @@ class AsyncTask(models.Model):
     result_url = models.URLField(blank=True, null=True)
     error_message = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True
+    class Meta:
+        app_label = 'infrastructure'
+)
 
     def __str__(self):
         return f"Task {self.id} ({self.task_type}) - {self.status}"

@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
-from ...modulos_genericos.productos_servicios.serializers import ProductSerializer
+from backend.models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
+from backend..modulos_genericos.productos_servicios.serializers import ProductSerializer
 
 class TipoVehiculoSerializer(serializers.ModelSerializer):
     class Meta:

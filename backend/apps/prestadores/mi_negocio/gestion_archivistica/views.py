@@ -5,10 +5,10 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 
-from .models import Document, DocumentVersion, Process, ProcessType, DocumentType
-from .services.logic_services import DocumentCoordinatorService
-from .services.file_service import FileCoordinator
-from .serializers import (
+from backend.models import Document, DocumentVersion, Process, ProcessType, DocumentType
+from backend.services.logic_services import DocumentCoordinatorService
+from backend.services.file_service import FileCoordinator
+from backend.serializers import (
     DocumentListSerializer, DocumentDetailSerializer, DocumentCreateSerializer,
     DocumentVersionCreateSerializer, DocumentVersionSerializer,
     ProcessTypeSerializer, ProcessSerializer, DocumentTypeSerializer

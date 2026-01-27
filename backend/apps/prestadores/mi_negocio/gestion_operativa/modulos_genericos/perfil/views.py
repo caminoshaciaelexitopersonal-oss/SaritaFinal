@@ -3,8 +3,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from .models import ProviderProfile
-from .serializers import PerfilSerializer, PerfilUpdateSerializer
+from backend.models import ProviderProfile
+from backend.serializers import PerfilSerializer, PerfilUpdateSerializer
 
 class PerfilViewSet(viewsets.GenericViewSet):
     """

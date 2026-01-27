@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from ..permissions import IsOwner
-from .models import Product
-from .serializers import ProductSerializer
+from backend.permissions import IsOwner
+from backend.models import Product
+from backend.serializers import ProductSerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
     """

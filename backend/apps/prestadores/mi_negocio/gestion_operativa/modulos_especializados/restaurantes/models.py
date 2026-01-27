@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 
 class KitchenStation(TenantAwareModel):
     """
@@ -33,7 +33,10 @@ class MenuItemDetail(models.Model):
         blank=True,
         help_text=_("Estación de cocina responsable de preparar este plato.")
     )
-    # Otros campos como: is_vegetarian, allergens, etc.
+    # Otros campos como: is_vegetarian, allergens, etc
+    class Meta:
+        app_label = 'restaurantes'
+.
 
     def __str__(self):
         return f"Detalles de Menú para: {self.product.nombre}"

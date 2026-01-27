@@ -1,7 +1,7 @@
 from django.db.models import Sum, Q
 from decimal import Decimal
-from .models import PeriodoContable
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry
+from backend.models import PeriodoContable
+from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry
 
 class CierreContableService:
     def __init__(self, periodo: PeriodoContable):

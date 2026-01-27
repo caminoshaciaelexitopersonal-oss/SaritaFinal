@@ -1,7 +1,7 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/arrendadoras_vehiculos/models.py
 from django.db import models
 from django.conf import settings
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class VehiculoDeAlquiler(models.Model):
     """
@@ -20,7 +20,10 @@ class VehiculoDeAlquiler(models.Model):
     TRANSMISION_CHOICES = [
         ('automatica', 'Automática'),
         ('manual', 'Manual'),
-    ]
+
+    class Meta:
+        app_label = 'arrendadoras_vehiculos'
+]
 
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='vehiculos_de_alquiler')
     nombre = models.CharField(max_length=100, help_text="Ej: Toyota Corolla 2023")
@@ -49,7 +52,10 @@ class Alquiler(models.Model):
         ('activo', 'Activo'), # El cliente ya recogió el vehículo
         ('finalizado', 'Finalizado'),
         ('cancelado', 'Cancelado'),
-    ]
+
+    class Meta:
+        app_label = 'arrendadoras_vehiculos'
+]
 
     vehiculo = models.ForeignKey(VehiculoDeAlquiler, on_delete=models.PROTECT, related_name='alquileres')
     # cliente = models.ForeignKey('gestion_comercial.Cliente', on_delete=models.SET_NULL, null=True, blank=True)

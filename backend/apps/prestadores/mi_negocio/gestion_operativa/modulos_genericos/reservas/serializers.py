@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Reserva, PoliticaCancelacion, ReservaServicioAdicional
-from ..productos_servicios.serializers import ProductSerializer
-from ..clientes.serializers import ClienteSerializer
+from backend.models import Reserva, PoliticaCancelacion, ReservaServicioAdicional
+from backend.productos_servicios.serializers import ProductSerializer
+from backend.clientes.serializers import ClienteSerializer
 
 class PoliticaCancelacionSerializer(serializers.ModelSerializer):
     class Meta:

@@ -2,14 +2,17 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from decimal import Decimal
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 # Apuntar al modelo de Producto unificado en gestion_operativa
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product as ProductoUnificado
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product as ProductoUnificado
 
 class Almacen(models.Model):
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='almacenes')
     nombre = models.CharField(max_length=100)
-    ubicacion = models.CharField(max_length=255, blank=True)
+    ubicacion = models.CharField(max_length=255, blank=True
+    class Meta:
+        app_label = 'inventario'
+)
 
     def __str__(self):
         return self.nombre
@@ -19,7 +22,10 @@ class MovimientoInventario(models.Model):
         ENTRADA = 'ENTRADA', 'Entrada'
         SALIDA = 'SALIDA', 'Salida'
         AJUSTE_POSITIVO = 'AJUSTE_POSITIVO', 'Ajuste Positivo'
-        AJUSTE_NEGATIVO = 'AJUSTE_NEGATIVO', 'Ajuste Negativo'
+        AJUSTE_NEGATIVO = 'AJUSTE_NEGATIVO', 'Ajuste Negativo
+    class Meta:
+        app_label = 'inventario'
+'
 
     # Se cambia la FK para apuntar al modelo de producto unificado
     producto = models.ForeignKey(ProductoUnificado, on_delete=models.CASCADE, related_name='movimientos_inventario')

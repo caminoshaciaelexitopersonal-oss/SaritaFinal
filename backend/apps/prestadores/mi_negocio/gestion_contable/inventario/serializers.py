@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Almacen, MovimientoInventario
+from backend.models import Almacen, MovimientoInventario
 
 class AlmacenSerializer(serializers.ModelSerializer):
     class Meta:

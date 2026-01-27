@@ -2,7 +2,7 @@
 import logging
 import re
 from typing import Tuple, Dict, Optional
-from .models import Intent, Example
+from backend.models import Intent, Example
 
 logger = logging.getLogger(__name__)
 

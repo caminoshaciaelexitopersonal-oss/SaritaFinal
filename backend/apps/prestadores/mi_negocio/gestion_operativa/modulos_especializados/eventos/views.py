@@ -1,12 +1,12 @@
 from rest_framework import viewsets, permissions, serializers
-from .models import OrganizadorEvento, Evento, Promocion
-from .serializers import (
+from backend.models import OrganizadorEvento, Evento, Promocion
+from backend.serializers import (
     OrganizadorEventoSerializer,
     EventoSerializer,
     PromocionSerializer,
 )
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
-from ...modulos_genericos.productos_servicios.models import Product
+from backend.apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from backend..modulos_genericos.productos_servicios.models import Product
 
 class OrganizadorEventoViewSet(viewsets.ModelViewSet):
     """

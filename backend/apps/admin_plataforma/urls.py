@@ -8,7 +8,7 @@ app_name = 'admin_plataforma'
 # futuro: router.register(r'planes', PlanesViewSet, basename='planes')
 
  
-from .views import SaritaProfileView, PlanViewSet, SuscripcionViewSet
+from backend.apps.admin_plataforma.views import SaritaProfileView, PlanViewSet, SuscripcionViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()

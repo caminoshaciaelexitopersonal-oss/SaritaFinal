@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
-from ...modulos_genericos.productos_servicios.serializers import ProductSerializer
+from backend.models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
+from backend..modulos_genericos.productos_servicios.serializers import ProductSerializer
 
 class ItinerarioDiaSerializer(serializers.ModelSerializer):
     class Meta:

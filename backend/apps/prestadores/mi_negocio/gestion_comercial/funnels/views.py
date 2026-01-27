@@ -1,12 +1,12 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .models import Funnel, FunnelVersion, FunnelPage, FunnelPublication
-from .serializers import FunnelSerializer, FunnelVersionSerializer
+from backend.models import Funnel, FunnelVersion, FunnelPage, FunnelPublication
+from backend.serializers import FunnelSerializer, FunnelVersionSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db import transaction
 from rest_framework.views import APIView
-from .models import LeadCapture, FunnelEvent
+from backend.models import LeadCapture, FunnelEvent
  
 from shared.services import event_dispatcher
  

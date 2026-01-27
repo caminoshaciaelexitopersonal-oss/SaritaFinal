@@ -1,6 +1,6 @@
 # from langchain_core.tools import tool
 from typing import List, Dict, Optional
-from api.models import Publicacion, CustomUser
+from backend.api.models import Publicacion, CustomUser
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.text import slugify
 from datetime import datetime

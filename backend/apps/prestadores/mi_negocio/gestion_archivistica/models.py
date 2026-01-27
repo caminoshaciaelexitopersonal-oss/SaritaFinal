@@ -8,7 +8,10 @@ class ProcessType(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='archivistica_process_types')
     name = models.CharField(max_length=100)
-    code = models.CharField(max_length=10)
+    code = models.CharField(max_length=10
+    class Meta:
+        app_label = 'gestion_archivistica'
+)
 
     def __str__(self):
         return self.name
@@ -21,7 +24,10 @@ class Process(models.Model):
     company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='archivistica_processes')
     process_type = models.ForeignKey(ProcessType, on_delete=models.PROTECT, related_name='processes')
     name = models.CharField(max_length=100)
-    code = models.CharField(max_length=10)
+    code = models.CharField(max_length=10
+    class Meta:
+        app_label = 'gestion_archivistica'
+)
 
     def __str__(self):
         return self.name
@@ -33,7 +39,10 @@ class DocumentType(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='archivistica_document_types')
     name = models.CharField(max_length=100)
-    code = models.CharField(max_length=10)
+    code = models.CharField(max_length=10
+    class Meta:
+        app_label = 'gestion_archivistica'
+)
 
     def __str__(self):
         return self.name
@@ -49,7 +58,10 @@ class Document(models.Model):
     sequence = models.PositiveIntegerField()
     document_code = models.CharField(max_length=50, unique=True)
     created_by = models.ForeignKey('api.CustomUser', on_delete=models.SET_NULL, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True
+    class Meta:
+        app_label = 'gestion_archivistica'
+)
 
     class Meta:
         unique_together = ('company', 'process', 'document_type', 'sequence')
@@ -64,7 +76,10 @@ class DocumentVersion(models.Model):
         PENDING_CONFIRMATION = 'PENDING_CONFIRMATION', 'Pendiente de Confirmación'
         IN_BATCH = 'IN_BATCH', 'En Lote para Notarización'
         VERIFIED = 'VERIFIED', 'Verificado'
-        COMPROMISED = 'COMPROMISED', 'Comprometido'
+        COMPROMISED = 'COMPROMISED', 'Comprometido
+    class Meta:
+        app_label = 'gestion_archivistica'
+'
 
     document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='versions')
     version_number = models.PositiveIntegerField()

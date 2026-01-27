@@ -4,8 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
 
 # Corregido: La importación ahora apunta a los modelos locales del dominio operativo.
-from ..perfil.models import TenantAwareModel, CategoriaPrestador as OperationalTag
-from ..reservas.models import PoliticaCancelacion
+from backend.perfil.models import TenantAwareModel, CategoriaPrestador as OperationalTag
+from backend.reservas.models import PoliticaCancelacion
 
 class Product(TenantAwareModel):
     id_publico = models.UUIDField(editable=False, unique=True, null=True)

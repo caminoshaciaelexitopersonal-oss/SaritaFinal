@@ -1,7 +1,7 @@
 # main_config/urls.py
 from django.contrib import admin
 from django.urls import path, include
-from .views import healthcheck
+from backend.views import healthcheck
 
 urlpatterns = [
     path('health/', healthcheck),

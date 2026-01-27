@@ -3,14 +3,14 @@ from django.contrib.auth import get_user_model
 from decimal import Decimal
 import datetime
 
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from apps.company.models import Company, CompanyEncryptionKey
-from apps.prestadores.mi_negocio.gestion_comercial.domain.models import OperacionComercial, ItemOperacionComercial
-from apps.prestadores.mi_negocio.gestion_comercial.services import FacturacionService
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount, JournalEntry
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
-from ..cierres.models import PeriodoContable
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.apps.company.models import Company, CompanyEncryptionKey
+from backend.apps.prestadores.mi_negocio.gestion_comercial.domain.models import OperacionComercial, ItemOperacionComercial
+from backend.apps.prestadores.mi_negocio.gestion_comercial.services import FacturacionService
+from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount, JournalEntry
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from backend.cierres.models import PeriodoContable
 from django.urls import reverse
 from rest_framework.test import APITestCase
 

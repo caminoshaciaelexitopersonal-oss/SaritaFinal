@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Vehicle #, MaintenanceOrder
-from .serializers import VehicleSerializer #, MaintenanceOrderSerializer
+from backend.models import Vehicle #, MaintenanceOrder
+from backend.serializers import VehicleSerializer #, MaintenanceOrderSerializer
 
 class VehicleViewSet(viewsets.ModelViewSet):
     queryset = Vehicle.objects.all()

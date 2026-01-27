@@ -1,4 +1,4 @@
-from ..capitan_base import CapitanOperativaBase
+from backend.capitan_base import CapitanOperativaBase
 
 class CapitanSGSSTBase(CapitanOperativaBase):
     """

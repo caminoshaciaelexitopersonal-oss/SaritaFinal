@@ -1,12 +1,15 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from ...modulos_genericos.productos_servicios.models import Product
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend..modulos_genericos.productos_servicios.models import Product
 
 class OrganizadorEvento(models.Model):
     perfil = models.OneToOneField(ProviderProfile, on_delete=models.CASCADE, related_name='organizador_eventos')
     nombre = models.CharField(max_length=200)
-    descripcion = models.TextField()
+    descripcion = models.TextField(
+    class Meta:
+        app_label = 'eventos'
+)
 
     def __str__(self):
         return self.nombre
@@ -18,7 +21,10 @@ class Evento(models.Model):
     fecha_inicio = models.DateTimeField()
     fecha_fin = models.DateTimeField()
     ubicacion = models.CharField(max_length=255)
-    capacidad = models.PositiveIntegerField(blank=True, null=True)
+    capacidad = models.PositiveIntegerField(blank=True, null=True
+    class Meta:
+        app_label = 'eventos'
+)
 
     def __str__(self):
         return self.producto.nombre
@@ -42,7 +48,10 @@ class Promocion(models.Model):
     )
     # Una promoción puede aplicar a múltiples productos/servicios del proveedor
     productos_aplicables = models.ManyToManyField(Product, related_name='promociones')
-    activa = models.BooleanField(default=True)
+    activa = models.BooleanField(default=True
+    class Meta:
+        app_label = 'eventos'
+)
 
     def __str__(self):
         return self.nombre

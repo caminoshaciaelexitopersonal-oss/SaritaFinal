@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Amenity, RoomType, Room
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from backend.models import Amenity, RoomType, Room
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 
 class AmenitySerializer(serializers.ModelSerializer):
     class Meta:

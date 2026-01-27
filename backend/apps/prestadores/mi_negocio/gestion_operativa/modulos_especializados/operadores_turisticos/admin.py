@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
+from backend.models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
 
 class ItinerarioDiaInline(admin.TabularInline):
     model = ItinerarioDia

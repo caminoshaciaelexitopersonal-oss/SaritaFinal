@@ -2,10 +2,10 @@
 import os
 from dotenv import load_dotenv
 from typing import List, Optional
-from .providers.gemini_provider import GeminiProvider
-from .providers.ollama_provider import OllamaProvider
-from .providers.dummy_provider import DummyProvider
-from .ai_base_provider import AIBaseProvider
+from backend.providers.gemini_provider import GeminiProvider
+from backend.providers.ollama_provider import OllamaProvider
+from backend.providers.dummy_provider import DummyProvider
+from backend.ai_base_provider import AIBaseProvider
 
 load_dotenv()
 

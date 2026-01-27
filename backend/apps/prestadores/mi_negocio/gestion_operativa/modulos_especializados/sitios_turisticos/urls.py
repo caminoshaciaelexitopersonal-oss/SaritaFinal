@@ -1,7 +1,7 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/sitios_turisticos/urls.py
 from django.urls import path, include
 from rest_framework_nested import routers
-from .views import SitioTuristicoViewSet, ActividadEnSitioViewSet
+from backend.views import SitioTuristicoViewSet, ActividadEnSitioViewSet
 
 # Router principal para los Sitios Turísticos
 router = routers.DefaultRouter()

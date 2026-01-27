@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Empleado, Contrato, Planilla, NovedadNomina, ConceptoNomina
+from backend.models import Empleado, Contrato, Planilla, NovedadNomina, ConceptoNomina
 
 class ContratoSerializer(serializers.ModelSerializer):
     class Meta:

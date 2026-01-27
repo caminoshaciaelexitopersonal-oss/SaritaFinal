@@ -1,7 +1,7 @@
 import datetime
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
-from api.models import Publicacion, CustomUser
+from backend.api.models import Publicacion, CustomUser
 
 class Command(BaseCommand):
     help = 'Carga los eventos, festivales y celebraciones iniciales a la base de datos'

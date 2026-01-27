@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Funnel, FunnelVersion
+from backend.models import Funnel, FunnelVersion
 
 class FunnelVersionSerializer(serializers.ModelSerializer):
     class Meta:

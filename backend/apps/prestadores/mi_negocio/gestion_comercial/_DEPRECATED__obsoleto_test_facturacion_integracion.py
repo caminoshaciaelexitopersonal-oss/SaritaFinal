@@ -3,12 +3,12 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from api.models import CustomUser, ProviderProfile
-from apps.companies.models import Company
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
-from apps.prestadores.mi_negocio.gestion_contable.inventario.models import Almacen, MovimientoInventario
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount
+from backend.api.models import CustomUser, ProviderProfile
+from backend.apps.companies.models import Company
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from backend.apps.prestadores.mi_negocio.gestion_contable.inventario.models import Almacen, MovimientoInventario
+from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount
 
 @pytest.mark.django_db
 class FacturacionIntegracionTests(APITestCase):

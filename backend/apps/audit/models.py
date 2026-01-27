@@ -9,7 +9,10 @@ class AuditLog(models.Model):
         VERSION_UPLOADED = 'VERSION_UPLOADED', 'Subió nueva versión'
         VERSION_DOWNLOADED = 'VERSION_DOWNLOADED', 'Descargó versión'
         VERSION_DELETED = 'VERSION_DELETED', 'Eliminó versión'
-        VERSION_VERIFIED = 'VERSION_VERIFIED', 'Verificó integridad de versión'
+        VERSION_VERIFIED = 'VERSION_VERIFIED', 'Verificó integridad de versión
+    class Meta:
+        app_label = 'audit'
+'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey('api.CustomUser', on_delete=models.SET_NULL, null=True, blank=True)

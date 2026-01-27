@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import (
+from backend.views import (
     RestauranteViewSet,
     MenuViewSet,
     CategoriaPlatoViewSet,

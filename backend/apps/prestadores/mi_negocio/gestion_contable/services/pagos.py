@@ -1,8 +1,8 @@
 # # Este servicio contendrá la lógica contable para los pagos.
 # from django.utils import timezone
-# from apps.prestadores.mi_negocio.gestion_contable.contabilidad.services import ChartOfAccountService
-# from ...gestion_financiera.models import OrdenPago
-# from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction
+# from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.services import ChartOfAccountService
+# from backend..gestion_financiera.models import OrdenPago
+# from backend.apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction
 #
 # class ContabilidadPagoService:
 #     @staticmethod

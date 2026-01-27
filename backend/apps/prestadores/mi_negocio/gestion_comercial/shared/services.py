@@ -1,4 +1,4 @@
-from .models import DomainEvent
+from backend.models import DomainEvent
 
 class EventDispatcher:
     @staticmethod

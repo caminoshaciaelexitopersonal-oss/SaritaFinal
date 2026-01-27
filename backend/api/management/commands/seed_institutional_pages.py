@@ -2,7 +2,7 @@ import os
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 import urllib.request
-from api.models import PaginaInstitucional, CustomUser
+from backend.api.models import PaginaInstitucional, CustomUser
 
 class Command(BaseCommand):
     """

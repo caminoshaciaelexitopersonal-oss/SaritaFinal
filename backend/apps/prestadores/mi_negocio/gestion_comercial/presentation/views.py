@@ -7,13 +7,13 @@ from django.db import transaction
 from decimal import Decimal
 from django.core.exceptions import ValidationError
 
-from .serializers import (
+from backend.serializers import (
     FacturaVentaListSerializer,
     FacturaVentaDetailSerializer,
     OperacionComercialSerializer
 )
-from ..domain.models import OperacionComercial, FacturaVenta
-from ..services import FacturacionService
+from backend.domain.models import OperacionComercial, FacturaVenta
+from backend.services import FacturacionService
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):

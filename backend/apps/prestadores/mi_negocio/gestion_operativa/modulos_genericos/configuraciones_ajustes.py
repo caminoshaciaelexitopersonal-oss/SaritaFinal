@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .perfil.models import Perfil
+from backend.perfil.models import Perfil
 
 class ConfiguracionPrestador(models.Model):
     """

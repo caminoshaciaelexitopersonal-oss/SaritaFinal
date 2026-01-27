@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from . import views
+from backend. import views
 
 # ==============================================================================
 # El DefaultRouter de DRF genera automáticamente las URLs estándar para los ViewSets.

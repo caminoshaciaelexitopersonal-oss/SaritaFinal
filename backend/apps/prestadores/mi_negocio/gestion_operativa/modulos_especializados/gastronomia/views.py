@@ -1,13 +1,13 @@
 from rest_framework import viewsets, permissions, serializers
-from .models import Restaurante, Menu, CategoriaPlato, Plato, ZonaDelivery
-from .serializers import (
+from backend.models import Restaurante, Menu, CategoriaPlato, Plato, ZonaDelivery
+from backend.serializers import (
     RestauranteSerializer,
     MenuSerializer,
     CategoriaPlatoSerializer,
     PlatoSerializer,
     ZonaDeliverySerializer
 )
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from backend.apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
 
 class RestauranteViewSet(viewsets.ModelViewSet):
     """

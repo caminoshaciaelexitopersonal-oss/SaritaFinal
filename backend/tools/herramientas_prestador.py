@@ -1,14 +1,14 @@
 # from langchain_core.tools import tool
 # from typing import List, Dict, Optional
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.models.perfil import Perfil as PrestadorServicio
-# from api.models import (
+# from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.models.perfil import Perfil as PrestadorServicio
+# from backend.api.models import (
 #     CustomUser,
 #     CategoriaPrestador,
 #     ImagenGaleria,
 #     TipoDocumentoVerificacion,
 #     DocumentoVerificacion
 # )
-# from apps.turismo.models import Hotel
+# from backend.apps.turismo.models import Hotel
 from django.core.exceptions import ObjectDoesNotExist
 # from django.db import IntegrityError
 # from django.utils.text import slugify

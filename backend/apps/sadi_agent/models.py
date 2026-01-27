@@ -2,7 +2,7 @@ import uuid
 from django.conf import settings
 from django.db import models
  
-from api.models import CustomUser
+from backend.api.models import CustomUser
  
 
 # --- Modelos de Seguridad Voice-First ---
@@ -24,7 +24,10 @@ class VoicePermission(models.Model):
     action = models.CharField(
         max_length=100,
         help_text="La acción específica dentro del dominio (ej. 'crear', 'consultar')."
-    )
+
+    class Meta:
+        app_label = 'sadi_agent'
+)
 
     class Meta:
         verbose_name = "Permiso de Voz"
@@ -41,7 +44,10 @@ class SemanticDomain(models.Model):
     Define un dominio semántico, como 'prestadores' o 'gubernamental'.
     """
     name = models.CharField(max_length=100, unique=True, help_text="Nombre del dominio.")
-    description = models.TextField(blank=True, help_text="Descripción del dominio.")
+    description = models.TextField(blank=True, help_text="Descripción del dominio."
+    class Meta:
+        app_label = 'sadi_agent'
+)
 
     def __str__(self):
         return self.name
@@ -52,7 +58,10 @@ class Intent(models.Model):
     """
     domain = models.ForeignKey(SemanticDomain, on_delete=models.CASCADE, related_name='intents')
     name = models.CharField(max_length=100, help_text="Nombre de la intención.")
-    description = models.TextField(blank=True, help_text="Descripción de la intención.")
+    description = models.TextField(blank=True, help_text="Descripción de la intención."
+    class Meta:
+        app_label = 'sadi_agent'
+)
 
     class Meta:
         unique_together = ('domain', 'name')
@@ -65,7 +74,10 @@ class Entity(models.Model):
     Define una entidad que puede ser extraída de un comando, como 'nombre' o 'email'.
     """
     domain = models.ForeignKey(SemanticDomain, on_delete=models.CASCADE, related_name='entities')
-    name = models.CharField(max_length=100, help_text="Nombre de la entidad.")
+    name = models.CharField(max_length=100, help_text="Nombre de la entidad."
+    class Meta:
+        app_label = 'sadi_agent'
+)
 
     class Meta:
         unique_together = ('domain', 'name')
@@ -80,6 +92,9 @@ class Example(models.Model):
     intent = models.ForeignKey(Intent, on_delete=models.CASCADE, related_name='examples')
     text = models.TextField(unique=True, help_text="Texto del comando de ejemplo.")
     language = models.CharField(max_length=10, default='es', help_text="Idioma del ejemplo (ej. 'es', 'en').")
+
+    class Meta:
+        app_label = 'sadi_agent'
  
 
     def __str__(self):
@@ -93,7 +108,10 @@ class VoiceInteractionLog(models.Model):
     """
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='voice_interactions')
     timestamp_start = models.DateTimeField(auto_now_add=True)
-    timestamp_end = models.DateTimeField(null=True, blank=True)
+    timestamp_end = models.DateTimeField(null=True, blank=True
+    class Meta:
+        app_label = 'sadi_agent'
+)
 
     # Datos de entrada
     audio_hash = models.CharField(max_length=64, blank=True, help_text="SHA-256 hash del archivo de audio de entrada.")

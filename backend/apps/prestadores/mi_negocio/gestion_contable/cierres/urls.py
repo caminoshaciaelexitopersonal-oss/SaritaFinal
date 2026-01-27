@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PeriodoContableViewSet
+from backend.views import PeriodoContableViewSet
 
 router = DefaultRouter()
 router.register(r'periodos', PeriodoContableViewSet, basename='periodo-contable')

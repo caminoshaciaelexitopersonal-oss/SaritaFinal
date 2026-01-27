@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import AgentExecution
-from api.serializers import CustomUserDetailSerializer
+from backend.models import AgentExecution
+from backend.api.serializers import CustomUserDetailSerializer
 
 class AgentExecutionCreateSerializer(serializers.ModelSerializer):
     """

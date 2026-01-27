@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
+from backend.models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
 
 @admin.register(CompaniaTransporte)
 class CompaniaTransporteAdmin(admin.ModelAdmin):

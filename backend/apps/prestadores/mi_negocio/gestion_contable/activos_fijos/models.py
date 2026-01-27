@@ -2,12 +2,15 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from decimal import Decimal
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 class CategoriaActivo(models.Model):
-    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='categorias_activos', null=True, blank=True)
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='categorias_activos', null=True, blank=True
+    class Meta:
+        app_label = 'activos_fijos'
+)
 
     owner_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     owner_object_id = models.UUIDField(null=True, blank=True)
@@ -25,7 +28,10 @@ class CategoriaActivo(models.Model):
 class ActivoFijo(models.Model):
     class MetodoDepreciacion(models.TextChoices):
         LINEA_RECTA = 'LINEA_RECTA', 'Línea Recta'
-        # Se pueden añadir otros métodos en el futuro
+        # Se pueden añadir otros métodos en el futur
+    class Meta:
+        app_label = 'activos_fijos'
+o
 
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='activos_fijos', null=True, blank=True)
 
@@ -59,7 +65,10 @@ class CalculoDepreciacion(models.Model):
     fecha = models.DateField()
     monto = models.DecimalField(max_digits=18, decimal_places=2)
     creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    creado_en = models.DateTimeField(auto_now_add=True)
+    creado_en = models.DateTimeField(auto_now_add=True
+    class Meta:
+        app_label = 'activos_fijos'
+)
 
     def __str__(self):
         return f"Depreciación de {self.activo.nombre} en {self.fecha} por {self.monto}"

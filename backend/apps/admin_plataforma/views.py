@@ -3,10 +3,10 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
-from .services.gestion_plataforma_service import GestionPlataformaService
-from .models import Plan, Suscripcion
-from .serializers import PlanSerializer, SuscripcionSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.serializers import PerfilSerializer
+from backend.apps.admin_plataforma.services.gestion_plataforma_service import GestionPlataformaService
+from backend.apps.admin_plataforma.models import Plan, Suscripcion
+from backend.apps.admin_plataforma.serializers import PlanSerializer, SuscripcionSerializer
+from backend.apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.serializers import PerfilSerializer
 
 class SaritaProfileView(APIView):
     """
