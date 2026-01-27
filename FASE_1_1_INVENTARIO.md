@@ -48,6 +48,10 @@ Tras la migración de los agentes desde la arquitectura legada (`backend/agents`
         - `gestion_operativa`: 25+ Capitanes (e.g., `capitan_logistica`, `capitan_operacion_hoteles`)
     - `administrador_general`: 5 Capitanes (e.g., `capitan_auditoria_global`, `capitan_seguridad_accesos`)
     - `clientes_turistas`: 6 Capitanes (e.g., `capitan_busqueda_servicios`, `capitan_reservas_turista`)
+    - `gubernamental`:
+        - `departamental`: 3 Capitanes (e.g., `capitan_planificacion_regional`)
+        - `municipal`: 3 Capitanes (e.g., `capitan_turismo_local`)
+        - `nacional`: 3 Capitanes (e.g., `capitan_politicas_nacionales`)
 - **Tenientes:**
     - La estructura de Tenientes preexistente (`validacion_prestador_teniente`, `persistencia_prestador_teniente`) sigue siendo la base para la ejecución de tareas atómicas. La implementación de los Tenientes específicos para cada nuevo Capitán es el siguiente paso lógico del desarrollo.
 
