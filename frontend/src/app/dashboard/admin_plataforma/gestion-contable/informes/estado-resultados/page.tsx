@@ -2,7 +2,7 @@
 'use client';
 import { useState } from 'react';
 import { useMiNegocioApi, EstadoResultadosData } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
-import DateRangePicker from '../components/DateRangePicker';
+import DateRangePicker from '../../components/DateRangePicker';
 export default function EstadoResultadosPage() {
   const { getEstadoResultados, isLoading } = useMiNegocioApi();
   const [data, setData] = useState<EstadoResultadosData | null>(null);

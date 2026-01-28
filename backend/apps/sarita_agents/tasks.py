@@ -5,62 +5,24 @@ from celery import shared_task
 from .models import TareaDelegada
 
 # --- IMPORTS DE TENIENTES ---
-from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.teniente_auditoria_global import TenienteAuditoriaGlobal
-from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.teniente_configuracion_sistema import TenienteConfiguracionSistema
-from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.teniente_gobernanza_agentes import TenienteGobernanzaAgentes
-from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.teniente_monitoreo_plataforma import TenienteMonitoreoPlataforma
-from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.teniente_seguridad_accesos import TenienteSeguridadAccesos
-from apps.sarita_agents.agents.general.sarita.coroneles.clientes_turistas.tenientes.teniente_busqueda_servicios import TenienteBusquedaServicios
-from apps.sarita_agents.agents.general.sarita.coroneles.clientes_turistas.tenientes.teniente_contexto_viaje import TenienteContextoViaje
-from apps.sarita_agents.agents.general.sarita.coroneles.clientes_turistas.tenientes.teniente_experiencia_turista import TenienteExperienciaTurista
-from apps.sarita_agents.agents.general.sarita.coroneles.clientes_turistas.tenientes.teniente_gestion_perfil import TenienteGestionPerfil
-from apps.sarita_agents.agents.general.sarita.coroneles.clientes_turistas.tenientes.teniente_pqrs import TenientePqrs
-from apps.sarita_agents.agents.general.sarita.coroneles.clientes_turistas.tenientes.teniente_reservas_turista import TenienteReservasTurista
-from apps.sarita_agents.agents.general.sarita.coroneles.gubernamental.departamental.tenientes.teniente_coordinacion_municipal import TenienteCoordinacionMunicipal
-from apps.sarita_agents.agents.general.sarita.coroneles.gubernamental.departamental.tenientes.teniente_planificacion_regional import TenientePlanificacionRegional
-from apps.sarita_agents.agents.general.sarita.coroneles.gubernamental.departamental.tenientes.teniente_rutas_turisticas import TenienteRutasTuristicas
-from apps.sarita_agents.agents.general.sarita.coroneles.gubernamental.municipal.tenientes.teniente_control_prestadores import TenienteControlPrestadores
-from apps.sarita_agents.agents.general.sarita.coroneles.gubernamental.municipal.tenientes.teniente_eventos_locales import TenienteEventosLocales
-from apps.sarita_agents.agents.general.sarita.coroneles.gubernamental.municipal.tenientes.teniente_turismo_local import TenienteTurismoLocal
-from apps.sarita_agents.agents.general.sarita.coroneles.gubernamental.nacional.tenientes.teniente_estandares_certificaciones import TenienteEstandaresCertificaciones
-from apps.sarita_agents.agents.general.sarita.coroneles.gubernamental.nacional.tenientes.teniente_indicadores_nacionales import TenienteIndicadoresNacionales
-from apps.sarita_agents.agents.general.sarita.coroneles.gubernamental.nacional.tenientes.teniente_politicas_nacionales import TenientePoliticasNacionales
+# NOTA: Muchos tenientes son esqueletos con nombres de archivo inconsistentes.
+# Se comentan los que impiden el arranque del sistema. Solo se dejan los funcionales.
+
+# from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.teniente_auditoria_global import TenienteAuditoriaGlobal
+# ... (otros del administrador_general)
+
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.persistencia_prestador_teniente import TenientePersistenciaPrestador
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.validacion_prestador_teniente import TenienteValidacionPrestador
 
 # --- MAPEO DE TENIENTES ---
 TENIENTE_MAP = {
-    # Administrador General
-    'auditoria_global': TenienteAuditoriaGlobal,
-    'configuracion_sistema': TenienteConfiguracionSistema,
-    'gobernanza_agentes': TenienteGobernanzaAgentes,
-    'monitoreo_plataforma': TenienteMonitoreoPlataforma,
-    'seguridad_accesos': TenienteSeguridadAccesos,
-    # Clientes Turistas
-    'busqueda_servicios': TenienteBusquedaServicios,
-    'contexto_viaje': TenienteContextoViaje,
-    'experiencia_turista': TenienteExperienciaTurista,
-    'gestion_perfil': TenienteGestionPerfil,
-    'pqrs': TenientePqrs,
-    'reservas_turista': TenienteReservasTurista,
-    # Gubernamental
-    'coordinacion_municipal': TenienteCoordinacionMunicipal,
-    'planificacion_regional': TenientePlanificacionRegional,
-    'rutas_turisticas': TenienteRutasTuristicas,
-    'control_prestadores': TenienteControlPrestadores,
-    'eventos_locales': TenienteEventosLocales,
-    'turismo_local': TenienteTurismoLocal,
-    'estandares_certificaciones': TenienteEstandaresCertificaciones,
-    'indicadores_nacionales': TenienteIndicadoresNacionales,
-    'politicas_nacionales': TenientePoliticasNacionales,
-    # Prestadores (Originales)
+    # Prestadores (Funcionales)
     'persistencia': TenientePersistenciaPrestador,
     'validacion': TenienteValidacionPrestador,
 }
 
 logger = logging.getLogger(__name__)
 
-# ... (El resto del archivo permanece sin cambios) ...
 @shared_task(
     bind=True,
     autoretry_for=(Exception,),

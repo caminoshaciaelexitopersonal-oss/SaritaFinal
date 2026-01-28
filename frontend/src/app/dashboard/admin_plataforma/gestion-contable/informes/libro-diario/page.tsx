@@ -2,7 +2,7 @@
 'use client';
 import { useState } from 'react';
 import { useMiNegocioApi, JournalEntry } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
-import DateRangePicker from '../components/DateRangePicker';
+import DateRangePicker from '../../components/DateRangePicker';
 
 export default function LibroDiarioPage() {
   const { getLibroDiario, isLoading } = useMiNegocioApi();
