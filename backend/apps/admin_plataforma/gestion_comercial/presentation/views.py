@@ -1,6 +1,8 @@
 import logging
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
+from api.permissions import IsSuperAdmin
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 
 logger = logging.getLogger(__name__)
 from rest_framework.response import Response
@@ -19,12 +21,8 @@ from apps.prestadores.mi_negocio.gestion_financiera.models import TransaccionBan
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction as ContabTransaction, ChartOfAccount
 from apps.prestadores.mi_negocio.gestion_contable.inventario.models import MovimientoInventario, Almacen
 
-class IsPrestadorOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        return obj.perfil == request.user.perfil_prestador
-
-class FacturaVentaViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+class FacturaVentaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -34,7 +32,7 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
         return FacturaVentaWriteSerializer
 
     def get_queryset(self):
-        return FacturaVenta.objects.filter(perfil=self.request.user.perfil_prestador).select_related('cliente')
+        return super().get_queryset().select_related('cliente')
 
     def perform_create(self, serializer):
         perfil = self.request.user.perfil_prestador
@@ -233,9 +231,9 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
 
         return Response({"status": "Pago registrado con éxito"}, status=status.HTTP_200_OK)
 
-class ReciboCajaViewSet(viewsets.ModelViewSet):
+class ReciboCajaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = ReciboCajaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
-        return ReciboCaja.objects.filter(perfil=self.request.user.perfil_prestador)
+        return super().get_queryset()

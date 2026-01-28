@@ -2,7 +2,7 @@
 'use client';
 import { useState } from 'react';
 import { useMiNegocioApi, LibroMayorEntry } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
-import DateRangePicker from '../components/DateRangePicker';
+import DateRangePicker from '../../components/DateRangePicker';
 export default function LibroMayorPage() {
   const { getLibroMayor, isLoading } = useMiNegocioApi();
   const [data, setData] = useState<LibroMayorEntry[]>([]);

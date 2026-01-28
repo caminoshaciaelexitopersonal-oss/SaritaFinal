@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 from django.utils import timezone
-from api.models import BaseModel, ProviderProfile
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import BaseModel, ProviderProfile
 
 # --- MODELOS BASE DE ROBUSTEZ (para esta app) ---
 
