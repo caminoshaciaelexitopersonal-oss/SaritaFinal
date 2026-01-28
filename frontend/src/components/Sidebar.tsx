@@ -173,6 +173,16 @@ export default function Sidebar() {
 
   const adminNavSections: NavSection[] = [
     {
+      title: 'ERP SISTÉMICO',
+      links: [
+        { href: '/dashboard/admin_plataforma/gestion-comercial', label: 'Gestión Comercial', icon: FiDollarSign },
+        { href: '/dashboard/admin_plataforma/operativa', label: 'Gestión Operativa', icon: FiGrid },
+        { href: '/dashboard/admin_plataforma/contable', label: 'Gestión Contable', icon: FiBookOpen },
+        { href: '/dashboard/admin_plataforma/financiera', label: 'Gestión Financiera', icon: FiTrendingDown },
+        { href: '/dashboard/admin_plataforma/archivistica', label: 'Gestión Archivística', icon: FiArchive },
+      ],
+    },
+    {
       title: 'Plataforma Sarita',
       links: [
         { href: '/dashboard/admin_plataforma/planes', label: 'Planes', icon: FiDollarSign },

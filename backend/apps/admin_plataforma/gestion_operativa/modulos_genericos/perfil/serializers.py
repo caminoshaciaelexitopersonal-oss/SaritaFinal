@@ -1,6 +1,6 @@
 # SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/perfil/serializers.py
 from rest_framework import serializers
-from api.models import ProviderProfile, CategoriaPrestador
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile, CategoriaPrestador
 
 class CategoriaPrestadorSerializer(serializers.ModelSerializer):
     class Meta:
