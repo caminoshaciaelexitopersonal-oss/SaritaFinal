@@ -1,0 +1,1 @@
+from apps.sarita_agents.agents.capitan_template import CapitanTemplate

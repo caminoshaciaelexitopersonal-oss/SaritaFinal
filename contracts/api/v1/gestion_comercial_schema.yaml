@@ -1,0 +1,585 @@
+openapi: 3.0.3
+info:
+  title: Sarita API - Mi Negocio
+  version: 1.0.0
+  description: API para los módulos del panel "Mi Negocio"
+paths:
+  /api/v1/mi-negocio/comercial/facturas-venta/:
+    get:
+      operationId: v1_mi_negocio_comercial_facturas_venta_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Un número de página dentro del conjunto de resultados paginado.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFacturaVentaListList'
+          description: ''
+    post:
+      operationId: v1_mi_negocio_comercial_facturas_venta_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacturaVentaWrite'
+          description: ''
+  /api/v1/mi-negocio/comercial/facturas-venta/{id}/:
+    get:
+      operationId: v1_mi_negocio_comercial_facturas_venta_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacturaVentaDetail'
+          description: ''
+    put:
+      operationId: v1_mi_negocio_comercial_facturas_venta_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacturaVentaWrite'
+          description: ''
+    patch:
+      operationId: v1_mi_negocio_comercial_facturas_venta_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedFacturaVentaWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedFacturaVentaWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedFacturaVentaWrite'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacturaVentaWrite'
+          description: ''
+    delete:
+      operationId: v1_mi_negocio_comercial_facturas_venta_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/mi-negocio/comercial/facturas-venta/{id}/confirmar/:
+    post:
+      operationId: v1_mi_negocio_comercial_facturas_venta_confirmar_create
+      description: |-
+        Confirma una factura comercial, cambia su estado a COMERCIAL_CONFIRMADA,
+        y emite una señal para notificar al pipeline de facturación.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacturaVentaWrite'
+          description: ''
+  /api/v1/mi-negocio/comercial/facturas-venta/{id}/registrar-pago/:
+    post:
+      operationId: v1_mi_negocio_comercial_facturas_venta_registrar_pago_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FacturaVentaWrite'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacturaVentaWrite'
+          description: ''
+components:
+  schemas:
+    Cliente:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        telefono:
+          type: string
+          nullable: true
+          maxLength: 20
+      required:
+      - email
+      - id
+      - nombre
+    EstadoEnum:
+      enum:
+      - BORRADOR
+      - COMERCIAL_CONFIRMADA
+      - ENVIADA
+      - PAGADA
+      - VENCIDA
+      - ANULADA
+      type: string
+      description: |-
+        * `BORRADOR` - Borrador
+        * `COMERCIAL_CONFIRMADA` - Comercial Confirmada
+        * `ENVIADA` - Enviada
+        * `PAGADA` - Pagada
+        * `VENCIDA` - Vencida
+        * `ANULADA` - Anulada
+    FacturaVentaDetail:
+      type: object
+      description: |-
+        CONTRATO DE LECTURA V1 - Detalle de Factura
+
+        Expone una vista completa y enriquecida de una factura. Utilizado para
+        mostrar el detalle de una factura al usuario. Todos los campos son de
+        solo lectura.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        numero_factura:
+          type: string
+          readOnly: true
+        cliente:
+          allOf:
+          - $ref: '#/components/schemas/Cliente'
+          readOnly: true
+        fecha_emision:
+          type: string
+          format: date
+          readOnly: true
+        fecha_vencimiento:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,2})?$
+          readOnly: true
+        impuestos:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,2})?$
+          readOnly: true
+        tasa_impuesto_aplicada:
+          type: string
+          readOnly: true
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,2})?$
+          readOnly: true
+        total_pagado:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,2})?$
+          readOnly: true
+        estado:
+          allOf:
+          - $ref: '#/components/schemas/EstadoEnum'
+          readOnly: true
+        estado_display:
+          type: string
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemFactura'
+          readOnly: true
+      required:
+      - cliente
+      - estado
+      - estado_display
+      - fecha_emision
+      - fecha_vencimiento
+      - id
+      - impuestos
+      - items
+      - numero_factura
+      - subtotal
+      - tasa_impuesto_aplicada
+      - total
+      - total_pagado
+    FacturaVentaList:
+      type: object
+      description: Serializador BFF para la lista de facturas. Optimizado para lectura.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        numero_factura:
+          type: string
+          readOnly: true
+        cliente_nombre:
+          type: string
+          readOnly: true
+        fecha_emision:
+          type: string
+          format: date
+          readOnly: true
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,2})?$
+          readOnly: true
+        estado:
+          allOf:
+          - $ref: '#/components/schemas/EstadoEnum'
+          readOnly: true
+        estado_display:
+          type: string
+          readOnly: true
+      required:
+      - cliente_nombre
+      - estado
+      - estado_display
+      - fecha_emision
+      - id
+      - numero_factura
+      - total
+    FacturaVentaWrite:
+      type: object
+      description: |-
+        CONTRATO DE ESCRITURA V1 - Creación/Actualización de Factura
+
+        Define el contrato estricto para la creación y actualización de facturas.
+        - El cliente envía solo los datos de entrada requeridos.
+        - El servidor calcula subtotales, impuestos, totales y gestiona el estado.
+        - Cualquier intento de enviar campos calculados resultará en un error 400.
+        - No se permite la modificación de facturas en estados finales (PAGADA, ANULADA).
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cliente_id:
+          type: integer
+          writeOnly: true
+        numero_factura:
+          type: string
+          maxLength: 50
+        fecha_emision:
+          type: string
+          format: date
+        fecha_vencimiento:
+          type: string
+          format: date
+          nullable: true
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Campo calculado por el servidor. No enviar.
+        impuestos:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Campo calculado por el servidor. No enviar.
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Campo calculado por el servidor. No enviar.
+        total_pagado:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Campo calculado por el servidor. No enviar.
+        estado:
+          type: string
+          readOnly: true
+          default: BORRADOR
+          description: El estado es gestionado por el servidor y el valor inicial
+            siempre es 'Borrador'.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemFactura'
+      required:
+      - cliente_id
+      - estado
+      - fecha_emision
+      - id
+      - impuestos
+      - items
+      - numero_factura
+      - subtotal
+      - total
+      - total_pagado
+    ItemFactura:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        producto:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        producto_id:
+          type: string
+          format: uuid
+          writeOnly: true
+        descripcion:
+          type: string
+          maxLength: 255
+        cantidad:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        precio_unitario:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,2})?$
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,2})?$
+          readOnly: true
+        impuestos:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,2})?$
+      required:
+      - cantidad
+      - descripcion
+      - id
+      - precio_unitario
+      - producto
+      - producto_id
+      - subtotal
+    PaginatedFacturaVentaListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacturaVentaList'
+    PatchedFacturaVentaWrite:
+      type: object
+      description: |-
+        CONTRATO DE ESCRITURA V1 - Creación/Actualización de Factura
+
+        Define el contrato estricto para la creación y actualización de facturas.
+        - El cliente envía solo los datos de entrada requeridos.
+        - El servidor calcula subtotales, impuestos, totales y gestiona el estado.
+        - Cualquier intento de enviar campos calculados resultará en un error 400.
+        - No se permite la modificación de facturas en estados finales (PAGADA, ANULADA).
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cliente_id:
+          type: integer
+          writeOnly: true
+        numero_factura:
+          type: string
+          maxLength: 50
+        fecha_emision:
+          type: string
+          format: date
+        fecha_vencimiento:
+          type: string
+          format: date
+          nullable: true
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Campo calculado por el servidor. No enviar.
+        impuestos:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Campo calculado por el servidor. No enviar.
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Campo calculado por el servidor. No enviar.
+        total_pagado:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Campo calculado por el servidor. No enviar.
+        estado:
+          type: string
+          readOnly: true
+          default: BORRADOR
+          description: El estado es gestionado por el servidor y el valor inicial
+            siempre es 'Borrador'.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemFactura'
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

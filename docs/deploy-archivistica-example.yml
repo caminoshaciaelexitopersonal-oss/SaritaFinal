@@ -1,0 +1,121 @@
+# .github/workflows/deploy-archivistica.yml
+# ==============================================================================
+# Pipeline de CI/CD para el Sistema DocFlow (Adaptado para Sarita - Gestión Archivística)
+# ==============================================================================
+name: CI/CD - Deploy Sarita Archivistica to AWS ECS
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-push-images:
+    name: 1. Build and Push Docker Images
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }}
+    outputs:
+      backend_image_uri: ${{ steps.build-backend.outputs.image }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # AQUÍ IRÍAN LAS PRUEBAS
+      - name: Run Backend Tests
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pytest apps/prestadores/mi_negocio/gestion_archivistica/tests/
+
+      - name: Define ECR Repository and Image Tag
+        id: image-vars
+        run: |
+          echo "ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Build, tag, and push Backend image to Amazon ECR
+        id: build-backend
+        run: |
+          ECR_REPOSITORY="sarita-backend" # Repositorio único para el backend
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f backend/Dockerfile ./backend
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        env:
+          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+
+  deploy:
+    name: 2. Deploy to Amazon ECS
+    needs: build-and-push-images
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set Environment-Specific Variables
+        # Se asumen nombres de servicios existentes, más los nuevos para Celery
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "CLUSTER_NAME=sarita-cluster-prod" >> $GITHUB_ENV
+            echo "BACKEND_SERVICE=sarita-backend-service-prod" >> $GITHUB_ENV
+            echo "CELERY_WORKER_SERVICE=sarita-celery-worker-prod" >> $GITHUB_ENV # NUEVO
+            echo "CELERY_BEAT_SERVICE=sarita-celery-beat-prod" >> $GITHUB_ENV   # NUEVO
+            # ... otras variables
+          else
+            echo "CLUSTER_NAME=sarita-cluster-staging" >> $GITHUB_ENV
+            echo "BACKEND_SERVICE=sarita-backend-service-staging" >> $GITHUB_ENV
+            echo "CELERY_WORKER_SERVICE=sarita-celery-worker-staging" >> $GITHUB_ENV # NUEVO
+            echo "CELERY_BEAT_SERVICE=sarita-celery-beat-staging" >> $GITHUB_ENV   # NUEVO
+            # ... otras variables
+          fi
+
+      - name: Run Django DB Migrations
+        uses: aws-actions/amazon-ecs-run-task@v1
+        with:
+          cluster: ${{ env.CLUSTER_NAME }}
+          task-definition: ${{ env.BACKEND_TASK_DEF }} # Tarea de migración
+          override-container:
+            - name: "sarita-backend-container" # Nombre del container
+              command: ["python", "manage.py", "migrate", "--noinput"]
+          wait-for-task-stopping: true
+
+      # ... (Pasos para descargar y rellenar las definiciones de tarea)
+
+      - name: Deploy new task definitions to Amazon ECS
+        run: |
+          # Desplegar Backend
+          aws ecs update-service --cluster ${{ env.CLUSTER_NAME }} --service ${{ env.BACKEND_SERVICE }} --task-definition ...
+
+          # NUEVO: Desplegar Celery Worker
+          aws ecs update-service --cluster ${{ env.CLUSTER_NAME }} --service ${{ env.CELERY_WORKER_SERVICE }} --task-definition ...
+
+          # NUEVO: Desplegar Celery Beat
+          aws ecs update-service --cluster ${{ env.CLUSTER_NAME }} --service ${{ env.CELERY_BEAT_SERVICE }} --task-definition ...
+
+      - name: Wait for service stability
+        run: |
+          aws ecs wait services-stable --cluster ${{ env.CLUSTER_NAME }} --services ${{ env.BACKEND_SERVICE }} ${{ env.CELERY_WORKER_SERVICE }} ${{ env.CELERY_BEAT_SERVICE }}
