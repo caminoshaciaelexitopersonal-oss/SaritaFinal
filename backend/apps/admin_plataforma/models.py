@@ -48,10 +48,40 @@ class GovernanceAuditLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     success = models.BooleanField(default=True)
     error_message = models.TextField(null=True, blank=True)
+    es_intervencion_soberana = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'admin_plataforma'
         ordering = ['-timestamp']
+
+class GovernancePolicy(models.Model):
+    """
+    Define reglas globales de gobernanza que condicionan la operación del sistema.
+    Permite al Super Admin establecer bloqueos, umbrales y requisitos transversales.
+    """
+    TYPE_CHOICES = [
+        ('BLOCK', 'Bloqueo Total'),
+        ('THRESHOLD', 'Umbral de Alerta/Bloqueo'),
+        ('REQUIRE_VERIFICATION', 'Requiere Verificación Manual'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    type = models.CharField(max_length=50, choices=TYPE_CHOICES)
+    domain = models.CharField(max_length=100, default='global', help_text="Dominio afectado (global, comercial, etc.)")
+    affected_intentions = models.JSONField(default=list, help_text="Lista de intenciones que responden a esta política.")
+    config = models.JSONField(default=dict, help_text="Configuración dinámica (ej: {'limit': 1000})")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+        verbose_name = "Política de Gobernanza"
+        verbose_name_plural = "Políticas de Gobernanza"
+
+    def __str__(self):
+        return f"{self.name} ({self.get_type_display()})"
 
 class Suscripcion(models.Model):
     """
