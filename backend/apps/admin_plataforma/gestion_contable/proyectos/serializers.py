@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Proyecto, IngresoProyecto, CostoProyecto
+from apps.admin_plataforma.gestion_contable.proyectos.models import Proyecto, IngresoProyecto, CostoProyecto
 
 class IngresoProyectoSerializer(serializers.ModelSerializer):
     class Meta:

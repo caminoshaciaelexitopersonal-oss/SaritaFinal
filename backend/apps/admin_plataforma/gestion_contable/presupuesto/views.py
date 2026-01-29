@@ -1,7 +1,9 @@
 from rest_framework import viewsets, permissions
 from rest_framework.pagination import PageNumberPagination
-from .models import Presupuesto, PartidaPresupuestal, EjecucionPresupuestal
+from apps.admin_plataforma.gestion_contable.presupuesto.models import Presupuesto, PartidaPresupuestal, EjecucionPresupuestal
 from .serializers import PresupuestoSerializer, PartidaPresupuestalSerializer, EjecucionPresupuestalSerializer
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -18,9 +20,9 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 100
 
-class PresupuestoViewSet(viewsets.ModelViewSet):
+class PresupuestoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = PresupuestoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
@@ -29,9 +31,9 @@ class PresupuestoViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(perfil=self.request.user.perfil_prestador)
 
-class PartidaPresupuestalViewSet(viewsets.ModelViewSet):
+class PartidaPresupuestalViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = PartidaPresupuestalSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
@@ -39,7 +41,7 @@ class PartidaPresupuestalViewSet(viewsets.ModelViewSet):
 
 class EjecucionPresupuestalViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = EjecucionPresupuestalSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):

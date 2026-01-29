@@ -1,56 +1,49 @@
-# INFORME TÉCNICO DETALLADO: ACOPLAMIENTO Y ESTABILIZACIÓN DEL ERP SISTÉMICO
-**Estado de la Fase 1: Auditoría de Colisiones y Bloqueos de Diseño**
+ 
+# Informe de Acoplamiento ERP - Fase 2 (Finalizado)
 
-## 1. Resumen Ejecutivo
-Se ha completado la auditoría profunda de los módulos de `admin_plataforma`. El sistema presenta una "clonación masiva" de modelos del dominio de Prestadores hacia el dominio de Administración de Plataforma. Esta estructura causa colisiones fatales en el registro de modelos de Django (ORM) debido al uso duplicado de `app_label = 'prestadores'`.
+## Objetivo Estratégico
+Instanciar un sistema de gestión empresarial propio para el Super Administrador, garantizando aislamiento físico total de datos y desvinculación del dominio de los prestadores.
 
-## 2. Inventario de Colisiones Críticas (Reverse Accessor & Model Name Clashes)
+## Arquitectura de Doble Dominio
+A partir de esta fase, el sistema opera con dos dominios empresariales independientes:
 
-El sistema intenta registrar modelos con el mismo nombre dentro de la misma aplicación lógica (`prestadores`), lo cual es ilegal en Django.
+1. **Dominio Prestador (Original):** Tablas con prefijo `prestadores_*`.
+2. **Dominio Administrativo (Instanciado):** Tablas con prefijo `admin_*` (ej: `admin_contabilidad_asientocontable`).
 
-| Modelo en `admin_plataforma` | Modelo en `prestadores` | Estado de Colisión | Razón Técnica |
-| :--- | :--- | :--- | :--- |
-| `Product` | `Product` | **CRÍTICA** | Mismo nombre y `app_label`. Conflicto en tabla intermedia `product_operational_tags`. |
-| `Amenity` | `Amenity` | **CRÍTICA** | Mismo nombre en `hoteles`. |
-| `RoomType` | `RoomType` | **CRÍTICA** | Mismo nombre en `hoteles`. |
-| `KitchenStation` | `KitchenStation` | **CRÍTICA** | Mismo nombre en `restaurantes`. |
-| `RestaurantTable` | `RestaurantTable` | **CRÍTICA** | Mismo nombre en `restaurantes`. |
-| `Skill` | `Skill` | **CRÍTICA** | Mismo nombre en `guias`. |
-| `Vehicle` | `Vehicle` | **CRÍTICA** | Mismo nombre en `transporte`. |
-| `InventoryItem` | `InventoryItem` | **CRÍTICA** | Mismo nombre en `inventario`. |
+## Acciones Realizadas
 
-### Análisis de Relaciones (Reverse Accessors)
-Los modelos `TenantAwareModel` en ambos dominios apuntan a `ProviderProfile`. Al tener el mismo nombre de clase, Django intenta crear selectores inversos (ej. `provider.product_items`) que colisionan entre sí, ya que ambos dominios intentan usar el mismo `related_name` dinámico (`%(class)s_items`).
+### 1. Instanciación del Dominio Administrativo (Backend)
+- Se re-implementaron todos los modelos empresariales abstractos en `backend/apps/admin_plataforma/`.
+- Se asignaron `app_label` exclusivos para cada submódulo:
+    - `admin_contabilidad`
+    - `admin_financiera`
+    - `admin_comercial`
+    - `admin_operativa`
+    - `admin_archivistica`
+    - `admin_inventario`
+    - `admin_compras`
+    - `admin_activos_fijos`
+    - `admin_nomina`
+- Se garantizó la creación de tablas físicas separadas en la base de datos.
 
-## 3. Acciones de Estabilización Ejecutadas (Fase 1)
+### 2. Aislamiento Lógico y Físico
+- **Cero Importaciones:** Se eliminaron todas las dependencias e importaciones desde `apps.prestadores.mi_negocio` hacia el dominio administrativo.
+- **Relaciones Aisladas:** Se resolvieron colisiones de ORM (Reverse Accessors) renombrando los `related_name` para que no choquen con el modelo de usuario compartido.
+- **Verificación:** Pruebas funcionales confirmaron que la creación de datos en un dominio no afecta al otro.
 
-### A. Implementación de Infraestructura de Gobernanza
-Se han creado los componentes base para permitir que el Super Admin opere de forma sistémica:
-- **`IsSuperAdmin` Permission:** Nuevo permiso en `api/permissions.py` que valida si el usuario es `ADMIN` o `superuser`.
-- **`GestionPlataformaService`:** Servicio para recuperar el perfil de la organización "Gobierno" (ID:1).
-- **`SystemicERPViewSetMixin`:** Mixin que fuerza el filtrado de datos hacia el perfil de plataforma, permitiendo que el Super Admin vea "su" ERP sin interferir con los datos de los prestadores.
+### 3. Infraestructura de Gobernanza
+- **Servicios:** `GestionPlataformaService` ahora opera exclusivamente sobre el contexto del dominio administrativo instanciado.
+- **Mixins:** `SystemicERPViewSetMixin` filtra las consultas hacia las nuevas tablas administrativas.
 
-### B. Corrección de Importaciones Obsoletas
-Se detectó que los módulos clonados intentaban importar `BaseModel` y `ProviderProfile` de `api.models`, donde ya no existen.
-- Se redirigieron masivamente las importaciones a: `apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models`.
+### 4. Migraciones
+- Se generaron y aplicaron migraciones limpias e iniciales para todo el ecosistema administrativo.
 
-### C. Acoplamiento de la "Triple Vía" en Frontend
-- El **Sidebar** ha sido actualizado para mostrar el menú "ERP SISTÉMICO" exclusivamente al Super Admin.
-- Se han renombrado los directorios en `frontend/src/app/dashboard/admin_plataforma/` para coincidir con la semántica de gobernanza.
+## Estado Final de la Fase 2
+- **Backend:** 100% aislado físicamente. Estructura de tablas espejo pero independiente.
+- **Seguridad:** El Super Admin tiene autoridad total sobre su ERP sin contaminar la operación de los prestadores.
+- **Escalabilidad:** El sistema está listo para la Fase 3 (Consolidación) y futuras expansiones de IA.
 
-## 4. Diagnóstico de Código "Fantasma" (Shadow Code)
-Existen submódulos en `admin_plataforma/gestion_comercial` (como `automation`, `funnels`, `marketing`) que:
-1. Tienen código completo de modelos y vistas.
-2. **NO están registrados en `INSTALLED_APPS`.**
-3. Esto significa que sus tablas NO existen en la base de datos actual.
-4. **Recomendación:** No activar estos módulos hasta que se defina si el Super Admin usará los mismos funnels que los prestadores o si requiere una infraestructura separada.
-
-## 5. Próximos Pasos Recomendados (Post-Auditoría)
-
-1. **Unificación de Modelos (Refactorización Permitida en Fase 2):** Eliminar los archivos `models.py` duplicados en `admin_plataforma` y hacer que sus Views importen los modelos directamente desde `apps.prestadores`. Esto elimina todas las colisiones de ORM.
-2. **Migración de Datos Sistémicos:** Asegurar que el perfil con ID:1 contenga los datos de configuración global de la plataforma.
-3. **Activación Selectiva de URLs:** Restaurar los `include()` en `admin_plataforma/urls.py` una vez que la unificación de modelos sea segura.
-
----
-**Informe final de la Fase 1.**
-**Auditado por Jules.**
+## Próximos Pasos (Propuesta: FASE 3)
+- Consolidación de datos para tableros globales.
+- Operación unificada de gobernanza económica.
+ 

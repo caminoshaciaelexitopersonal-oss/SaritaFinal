@@ -2,8 +2,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from .models import PartidaPresupuestal, EjecucionPresupuestal
-from apps.prestadores.mi_negocio.gestion_contable.compras.models import FacturaCompra
-from apps.prestadores.mi_negocio.gestion_contable.nomina.models import Planilla
+from apps.admin_plataforma.gestion_contable.compras.models import FacturaCompra
+from apps.admin_plataforma.gestion_contable.nomina.models import Planilla
 
 @receiver(post_save, sender=FacturaCompra)
 def registrar_ejecucion_compra(sender, instance, created, **kwargs):

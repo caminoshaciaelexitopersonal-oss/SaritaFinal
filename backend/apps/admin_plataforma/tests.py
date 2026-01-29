@@ -5,7 +5,7 @@ from rest_framework import status
 from django.utils import timezone
 from api.models import CustomUser
 from apps.admin_plataforma.models import Plan
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from django.contrib.contenttypes.models import ContentType
 
 class AdminPlataformaAPITestCase(TestCase):

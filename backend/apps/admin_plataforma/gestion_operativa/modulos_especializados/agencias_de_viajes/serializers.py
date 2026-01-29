@@ -1,6 +1,6 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/agencias_de_viajes/serializers.py
 from rest_framework import serializers
-from .models import PaqueteTuristico, ReservaPaquete
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.agencias_de_viajes.models import PaqueteTuristico, ReservaPaquete
 
 class PaqueteTuristicoSerializer(serializers.ModelSerializer):
     class Meta:

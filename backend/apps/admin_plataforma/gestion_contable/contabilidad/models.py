@@ -1,81 +1,63 @@
+import uuid
 from django.db import models
 from django.conf import settings
-from django.core.exceptions import ValidationError
-from decimal import Decimal
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
 
-class CostCenter(models.Model):
-    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="cost_centers")
-    code = models.CharField(max_length=20, unique=True)
-    name = models.CharField(max_length=255)
+class PlanDeCuentas(TenantAwareModel):
+    nombre = models.CharField(max_length=255)
+    descripcion = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.code} - {self.name}"
-
-class Currency(models.Model):
-    code = models.CharField(max_length=3, primary_key=True)
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.code
-
-class ExchangeRate(models.Model):
-    from_currency = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name="rates_from")
-    to_currency = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name="rates_to")
-    rate = models.DecimalField(max_digits=18, decimal_places=8)
-    date = models.DateField()
+        return f"[ADMIN] Plan: {self.nombre}"
 
     class Meta:
-        unique_together = ('from_currency', 'to_currency', 'date')
+        verbose_name = "Plan de Cuentas (Admin)"
+        app_label = 'admin_contabilidad'
 
-class ChartOfAccount(models.Model):
-    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="chart_of_accounts")
+class Cuenta(TenantAwareModel):
+    class TipoCuenta(models.TextChoices):
+        ACTIVO = 'ACTIVO', 'Activo'
+        PASIVO = 'PASIVO', 'Pasivo'
+        PATRIMONIO = 'PATRIMONIO', 'Patrimonio'
+        INGRESOS = 'INGRESOS', 'Ingresos'
+        GASTOS = 'GASTOS', 'Gastos'
+        COSTOS = 'COSTOS', 'Costos'
 
-    class Nature(models.TextChoices):
-        DEBIT = 'DEBITO', 'Debito'
-        CREDIT = 'CREDITO', 'Credito'
-
-    code = models.CharField(max_length=20)
-    name = models.CharField(max_length=255)
-    nature = models.CharField(max_length=10, choices=Nature.choices)
-    allows_transactions = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ['code']
-        unique_together = ('perfil', 'code')
-
-    def __str__(self):
-        return f"{self.code} - {self.name}"
-
-class JournalEntry(models.Model):
-    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="journal_entries")
-    entry_date = models.DateField(db_index=True)
-    description = models.TextField()
-    entry_type = models.CharField(max_length=100)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="journal_entries")
-    content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
-    object_id = models.PositiveIntegerField(null=True, blank=True)
-    origin_document = GenericForeignKey('content_type', 'object_id')
-    created_at = models.DateTimeField(auto_now_add=True)
+    plan_de_cuentas = models.ForeignKey(PlanDeCuentas, on_delete=models.CASCADE, related_name='admin_cuentas')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='admin_children')
+    nombre = models.CharField(max_length=255)
+    codigo = models.CharField(max_length=20)
+    tipo = models.CharField(max_length=20, choices=TipoCuenta.choices)
+    saldo_inicial = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
 
     class Meta:
-        ordering = ['-entry_date', '-id']
+        app_label = 'admin_contabilidad'
+        unique_together = ('plan_de_cuentas', 'codigo')
 
-    def __str__(self):
-        return f"Asiento #{self.id} del {self.entry_date}"
-
-class Transaction(models.Model):
-    journal_entry = models.ForeignKey(JournalEntry, on_delete=models.CASCADE, related_name="transactions")
-    account = models.ForeignKey(ChartOfAccount, on_delete=models.PROTECT)
-    debit = models.DecimalField(max_digits=18, decimal_places=2, default=Decimal('0.00'))
-    credit = models.DecimalField(max_digits=18, decimal_places=2, default=Decimal('0.00'))
-    cost_center = models.ForeignKey(CostCenter, on_delete=models.PROTECT, null=True, blank=True)
+class PeriodoContable(TenantAwareModel):
+    nombre = models.CharField(max_length=100)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    cerrado = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['id']
+        app_label = 'admin_contabilidad'
 
-    def clean(self):
-        if self.debit > 0 and self.credit > 0:
-            raise ValidationError("Una transacción no puede tener un valor de débito y crédito a la vez.")
+class AsientoContable(TenantAwareModel):
+    periodo = models.ForeignKey(PeriodoContable, on_delete=models.PROTECT, related_name='admin_asientos')
+    fecha = models.DateField()
+    descripcion = models.CharField(max_length=255)
+    creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='admin_asientos_creados')
+
+    class Meta:
+        app_label = 'admin_contabilidad'
+
+class Transaccion(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    asiento = models.ForeignKey(AsientoContable, on_delete=models.CASCADE, related_name='admin_transacciones')
+    cuenta = models.ForeignKey(Cuenta, on_delete=models.PROTECT, related_name='admin_transacciones')
+    debito = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+    credito = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+
+    class Meta:
+        app_label = 'admin_contabilidad'

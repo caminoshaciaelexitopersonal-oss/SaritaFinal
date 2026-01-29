@@ -2,16 +2,18 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import PaqueteTuristico, ReservaPaquete
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.agencias_de_viajes.models import PaqueteTuristico, ReservaPaquete
 from .serializers import PaqueteTuristicoSerializer, ReservaPaqueteSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.permissions import IsOwner
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
-class PaqueteTuristicoViewSet(viewsets.ModelViewSet):
+class PaqueteTuristicoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar paquetes turísticos.
     """
     serializer_class = PaqueteTuristicoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         # Filtra los paquetes para que solo el prestador logueado pueda ver y gestionar los suyos
@@ -46,12 +48,12 @@ class PaqueteTuristicoViewSet(viewsets.ModelViewSet):
         return Response({'status': 'El paquete ya estaba archivado'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ReservaPaqueteViewSet(viewsets.ModelViewSet):
+class ReservaPaqueteViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar las reservas de paquetes turísticos.
     """
     serializer_class = ReservaPaqueteSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         # Un prestador solo puede ver las reservas de sus propios paquetes.

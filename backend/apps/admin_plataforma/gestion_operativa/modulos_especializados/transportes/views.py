@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions, serializers
-from .models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.transportes.models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
 from .serializers import (
     CompaniaTransporteSerializer,
     TipoVehiculoSerializer,
@@ -7,7 +7,9 @@ from .serializers import (
     RutaSerializer,
     HorarioRutaSerializer,
 )
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from apps.admin_plataforma.permissions import IsPrestadorOwner
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
 class TipoVehiculoViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -17,12 +19,12 @@ class TipoVehiculoViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TipoVehiculoSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class CompaniaTransporteViewSet(viewsets.ModelViewSet):
+class CompaniaTransporteViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para que un proveedor gestione su Compañía de Transporte.
     """
     serializer_class = CompaniaTransporteSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return CompaniaTransporte.objects.filter(perfil=self.request.user.perfil_prestador)
@@ -32,12 +34,12 @@ class CompaniaTransporteViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError("El perfil ya tiene una compañía de transporte asociada.")
         serializer.save(perfil=self.request.user.perfil_prestador)
 
-class VehiculoViewSet(viewsets.ModelViewSet):
+class VehiculoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar los vehículos de una Compañía de Transporte.
     """
     serializer_class = VehiculoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         try:
@@ -53,12 +55,12 @@ class VehiculoViewSet(viewsets.ModelViewSet):
         except CompaniaTransporte.DoesNotExist:
             raise serializers.ValidationError("Debe crear una compañía de transporte antes de añadir vehículos.")
 
-class RutaViewSet(viewsets.ModelViewSet):
+class RutaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar las rutas de una Compañía de Transporte.
     """
     serializer_class = RutaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         try:
@@ -74,12 +76,12 @@ class RutaViewSet(viewsets.ModelViewSet):
         except CompaniaTransporte.DoesNotExist:
             raise serializers.ValidationError("Debe crear una compañía de transporte antes de añadir rutas.")
 
-class HorarioRutaViewSet(viewsets.ModelViewSet):
+class HorarioRutaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar los horarios de una Ruta.
     """
     serializer_class = HorarioRutaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         try:

@@ -1,5 +1,5 @@
 # from rest_framework import serializers
-# from .models import Inventario, Costo
+# from apps.admin_plataforma.gestion_contable.empresa.models import Inventario, Costo
 
 # class InventarioSerializer(serializers.ModelSerializer):
 #     class Meta:

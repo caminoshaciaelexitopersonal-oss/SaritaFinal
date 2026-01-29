@@ -6,11 +6,13 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from ai.services.ai_manager.ai_manager import ai_manager
 from ai.services.sanitizers import sanitize_plain_text
-from .models import Campaign
+from apps.admin_plataforma.gestion_comercial.marketing.models import Campaign
 from .serializers import CampaignSerializer
 from .services import validate_social_post
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
-class CampaignViewSet(viewsets.ModelViewSet):
+class CampaignViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar Campañas de Marketing.
     """

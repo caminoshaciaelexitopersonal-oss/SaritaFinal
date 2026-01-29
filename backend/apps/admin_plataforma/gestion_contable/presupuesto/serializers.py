@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Presupuesto, PartidaPresupuestal, EjecucionPresupuestal
+from apps.admin_plataforma.gestion_contable.presupuesto.models import Presupuesto, PartidaPresupuestal, EjecucionPresupuestal
 
 class PresupuestoSerializer(serializers.ModelSerializer):
     class Meta:

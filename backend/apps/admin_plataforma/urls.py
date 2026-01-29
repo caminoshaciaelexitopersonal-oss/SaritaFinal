@@ -11,14 +11,15 @@ router.register(r'suscripciones', SuscripcionViewSet, basename='suscripcion')
 urlpatterns = [
     path('profile/', SaritaProfileView.as_view(), name='sarita-profile'),
 
-    # BLOQUEO TÉCNICO - FASE 1:
-    # Las siguientes rutas están comentadas para evitar el RuntimeError de colisión de modelos.
-    # Los modelos en gestion_operativa/gestion_comercial en admin_plataforma tienen el mismo
-    # app_label que en prestadores, lo que impide que Django registre ambos simultáneamente.
-    # Ref: INFORME_ACOPLAMIENTO_ERP.md
-
-    # path('operativa/', include('apps.admin_plataforma.gestion_operativa.modulos_genericos.urls')),
-    # path('comercial/', include('apps.admin_plataforma.gestion_comercial.urls')),
+ 
+    # ERP SISTÉMICO - ACOPLAMIENTO FUNCIONAL TOTAL FASE 1
+    # Todos los módulos ahora importan de apps.prestadores y usan SystemicERPViewSetMixin
+    path('operativa/', include('apps.admin_plataforma.gestion_operativa.modulos_genericos.urls')),
+    path('comercial/', include('apps.admin_plataforma.gestion_comercial.urls')),
+    path('archivistica/', include('apps.admin_plataforma.gestion_archivistica.urls')),
+    path('financiera/', include('apps.admin_plataforma.gestion_financiera.urls')),
+    path('contabilidad/', include('apps.admin_plataforma.gestion_contable.contabilidad.urls')),
+ 
 
     path('', include(router.urls)),
 ]

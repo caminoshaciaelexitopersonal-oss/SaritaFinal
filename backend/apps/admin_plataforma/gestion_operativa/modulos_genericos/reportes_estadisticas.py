@@ -1,10 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .perfil.models import Perfil
+from .perfil.models import ProviderProfile
 
 class Reporte(models.Model):
     """
-    Modelo para guardar reportes generados o personalizados por el prestador.
+    Modelo para guardar reportes generados o personalizados por el administrador.
     """
     class TipoReporte(models.TextChoices):
         VENTAS = 'VENTAS', _('Ventas')
@@ -12,7 +12,7 @@ class Reporte(models.Model):
         CLIENTES = 'CLIENTES', _('Clientes')
         PERSONALIZADO = 'PERSONALIZADO', _('Personalizado')
 
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='reportes')
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='admin_reportes')
     nombre_reporte = models.CharField(_("Nombre del Reporte"), max_length=255)
     tipo_reporte = models.CharField(
         _("Tipo de Reporte"),
@@ -29,9 +29,10 @@ class Reporte(models.Model):
     fecha_generacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.nombre_reporte} ({self.fecha_inicio} - {self.fecha_fin})"
+        return f"[ADMIN] {self.nombre_reporte} ({self.fecha_inicio} - {self.fecha_fin})"
 
     class Meta:
-        verbose_name = "Reporte / Estadística"
-        verbose_name_plural = "Reportes y Estadísticas"
+        app_label = 'admin_operativa'
+        verbose_name = "Reporte / Estadística (Admin)"
+        verbose_name_plural = "Reportes y Estadísticas (Admin)"
         ordering = ['-fecha_generacion']

@@ -1,24 +1,25 @@
 from rest_framework import viewsets, permissions
-from .models import Horario, ExcepcionHorario
+from api.permissions import IsSuperAdmin
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.horarios.models import Horario, ExcepcionHorario
 from .serializers import HorarioSerializer, ExcepcionHorarioSerializer
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
 
-class HorarioViewSet(viewsets.ModelViewSet):
+class HorarioViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = Horario.objects.all()
     serializer_class = HorarioSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
-
-    def get_queryset(self):
-        return Horario.objects.filter(perfil=self.request.user.perfil_prestador)
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):
-        serializer.save(perfil=self.request.user.perfil_prestador)
+        from apps.admin_plataforma.services.gestion_plataforma_service import GestionPlataformaService
+        perfil_gobierno = GestionPlataformaService.get_perfil_gobierno()
+        serializer.save(perfil=perfil_gobierno)
 
-class ExcepcionHorarioViewSet(viewsets.ModelViewSet):
+class ExcepcionHorarioViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = ExcepcionHorario.objects.all()
     serializer_class = ExcepcionHorarioSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
-
-    def get_queryset(self):
-        return ExcepcionHorario.objects.filter(perfil=self.request.user.perfil_prestador)
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):
-        serializer.save(perfil=self.request.user.perfil_prestador)
+        from apps.admin_plataforma.services.gestion_plataforma_service import GestionPlataformaService
+        perfil_gobierno = GestionPlataformaService.get_perfil_gobierno()
+        serializer.save(perfil=perfil_gobierno)
