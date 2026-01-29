@@ -1,3 +1,4 @@
+ 
 # Informe de Acoplamiento ERP - Fase 2 (Finalizado)
 
 ## Objetivo Estratégico
@@ -45,3 +46,4 @@ A partir de esta fase, el sistema opera con dos dominios empresariales independi
 ## Próximos Pasos (Propuesta: FASE 3)
 - Consolidación de datos para tableros globales.
 - Operación unificada de gobernanza económica.
+ 

@@ -19,11 +19,14 @@ class GestionPlataformaService:
         self.admin_user = admin_user
 
     @staticmethod
+ 
     def get_perfil_gobierno_context() -> ProviderProfile:
+ 
         """
         Retorna el perfil de la organización que actúa como Gobierno/Plataforma
         dentro del dominio administrativo instanciado.
         """
+ 
         # Obtenemos el usuario administrador (podría haber varios, usamos el primero staff/superuser con email de plataforma o genérico)
         admin_user = CustomUser.objects.filter(is_superuser=True).first()
         if not admin_user:
@@ -31,11 +34,14 @@ class GestionPlataformaService:
 
         if not admin_user:
             raise ValueError("No se encontró un usuario administrador para el contexto de plataforma.")
+ 
 
         profile, created = ProviderProfile.objects.get_or_create(
             usuario=admin_user,
             defaults={
+ 
                 'nombre_negocio': 'Plataforma Sarita (Gobernanza)',
+ 
             }
         )
         return profile

@@ -2,7 +2,9 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
+ 
 from ..perfil.models import TenantAwareModel, CategoriaPrestador as OperationalTag
+ 
 
 class Product(TenantAwareModel):
     id_publico = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)

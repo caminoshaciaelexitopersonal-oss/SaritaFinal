@@ -32,9 +32,11 @@ class FacturaVentaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
         return FacturaVentaWriteSerializer
 
     def get_queryset(self):
+ 
         # El modelo FacturaVenta no tiene relación directa 'cliente' en algunos esquemas
         # pero el Mixin filtrará por perfil_ref_id
         return super().get_queryset()
+ 
 
     def perform_create(self, serializer):
         from apps.admin_plataforma.services.gestion_plataforma_service import GestionPlataformaService
