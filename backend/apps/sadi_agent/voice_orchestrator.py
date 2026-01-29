@@ -81,6 +81,9 @@ class VoiceOrchestrator:
             if intent.name.startswith("STRATEGY_"):
                 text_response = self._handle_strategy_voice_command(kernel, intent, entities)
                 log.final_status = "COMPLETADA"
+            elif intent.name.startswith("OPTIMIZATION_"):
+                text_response = self._handle_optimization_voice_command(kernel, intent, entities)
+                log.final_status = "COMPLETADA"
             else:
                 # Flujo estándar de Misión de Agentes
                 directive = self._build_directive(intent, entities)
@@ -188,6 +191,41 @@ class VoiceOrchestrator:
                 raise ConnectionError(f"Error al consultar el estado de la misión: {response.status_code}")
 
         raise TimeoutError(f"La misión {mission_id} no finalizó en el tiempo esperado.")
+
+    def _handle_optimization_voice_command(self, kernel: GovernanceKernel, intent, entities) -> str:
+        """Maneja comandos de voz específicos para la optimización de Fase 6."""
+        from apps.ecosystem_optimization.models import OptimizationProposal
+        from apps.ecosystem_optimization.services.governance_optimizer import GovernanceOptimizer
+
+        proposal_id = entities.get("proposal_id") or entities.get("id")
+        optimizer = GovernanceOptimizer(user=kernel.user)
+
+        if intent.name == "OPTIMIZATION_EXPLAIN":
+            proposal = None
+            if proposal_id:
+                proposal = OptimizationProposal.objects.filter(id=proposal_id).first()
+            else:
+                proposal = OptimizationProposal.objects.filter(status=OptimizationProposal.Status.PROPOSED).first()
+
+            if not proposal:
+                return "El ecosistema está operando de forma óptima. No hay mejoras sugeridas por el momento."
+
+            return f"He detectado un patrón en el dominio {proposal.domain}: {proposal.hallazgo}. Propongo: {proposal.propuesta_ajuste}. ¿Deseas aplicar esta optimización?"
+
+        if intent.name == "OPTIMIZATION_APPROVE":
+            if not proposal_id:
+                proposal = OptimizationProposal.objects.filter(status=OptimizationProposal.Status.PROPOSED).first()
+                if not proposal: return "No hay optimizaciones pendientes."
+                proposal_id = proposal.id
+
+            try:
+                optimizer.approve_optimization(proposal_id, "Aprobado por voz.")
+                optimizer.execute_optimization(proposal_id)
+                return "Optimización aplicada correctamente. He ajustado los parámetros del sistema según lo acordado."
+            except Exception as e:
+                return f"Error al aplicar la optimización: {str(e)}"
+
+        return "Comando de optimización no reconocido."
 
     def _handle_strategy_voice_command(self, kernel: GovernanceKernel, intent, entities) -> str:
         """Maneja comandos de voz específicos para la inteligencia de decisión de Fase 5."""

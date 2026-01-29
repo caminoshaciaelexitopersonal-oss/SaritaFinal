@@ -9,11 +9,14 @@ class CapitanDecisorBase(abc.ABC):
     """
     Base para todos los Agentes Decisores de SARITA.
     Analizan datos y proponen acciones estratégicas.
+    Evolución Fase 6: Ahora incorporan feedback histórico.
     """
     domain = None
 
     def __init__(self, agent_id: str):
         self.agent_id = agent_id
+        from apps.ecosystem_optimization.services.performance_tracker import PerformanceTracker
+        self.tracker = PerformanceTracker()
 
     @abc.abstractmethod
     def analyze_and_propose(self, data: Dict[str, Any]) -> StrategyProposal:
@@ -23,7 +26,16 @@ class CapitanDecisorBase(abc.ABC):
         pass
 
     def _create_proposal(self, **kwargs) -> StrategyProposal:
-        """Helper para persistir la propuesta."""
+        """Helper para persistir la propuesta con refinamiento evolutivo."""
+
+        # Evolución Fase 6: Si la confianza es muy alta, promocionamos automáticamente el nivel de decisión
+        trust = self.tracker.get_super_admin_trust_index(self.domain)
+        decision_level = kwargs.get('decision_level', StrategyProposal.DecisionLevel.LEVEL_3)
+
+        if trust > 0.95 and decision_level == StrategyProposal.DecisionLevel.LEVEL_2:
+            logger.info(f"EVOLUCIÓN: Promocionando propuesta de {self.domain} a Nivel 1 por alta confianza.")
+            kwargs['decision_level'] = StrategyProposal.DecisionLevel.LEVEL_1
+
         return StrategyProposal.objects.create(
             domain=self.domain,
             agent_id=self.agent_id,

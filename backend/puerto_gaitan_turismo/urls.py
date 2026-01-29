@@ -50,6 +50,9 @@ urlpatterns = [
 
     # API para Inteligencia de Decisión
     path('api/admin/intelligence/', include('apps.decision_intelligence.urls')),
+
+    # API para Optimización del Ecosistema
+    path('api/admin/optimization/', include('apps.ecosystem_optimization.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo
