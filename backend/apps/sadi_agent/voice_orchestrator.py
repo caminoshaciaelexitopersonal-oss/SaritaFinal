@@ -49,12 +49,14 @@ class VoiceOrchestrator:
             log.normalized_text = normalized_text
             log.save()
 
-            # 3. Interpretación Semántica
-            intent, entities = self.semantic_engine.interpret(normalized_text)
+            # 3. Interpretación Semántica (Intent Engine)
+            intent, entities, structured_order = self.semantic_engine.interpret(normalized_text)
             if not intent:
                 raise ValueError("No se pudo interpretar la intención del comando.")
             log.detected_intent = intent
             log.extracted_entities = entities
+            # Almacenamos la orden estructurada para el flujo de agentes
+            self.current_order = structured_order
             log.save()
 
             # 4. Verificación de Soberanía y Autoridad (Kernel)
@@ -75,7 +77,7 @@ class VoiceOrchestrator:
 
             log.save()
 
-            # 5. Ejecución de la Misión (Delegación a Agentes)
+            # 5. Ejecución de la Misión (Voice-to-Agents Router)
             directive = self._build_directive(intent, entities)
             mission_id = self._invoke_sarita_api(directive, api_token)
             log.mission_id = mission_id
@@ -104,11 +106,22 @@ class VoiceOrchestrator:
         return final_response_text, output_audio_path
 
     def _build_directive(self, intent, entities):
+        """
+        Traductor Voz-a-Agentes: Mapea la orden estructurada a una directiva de misión.
+        """
+        order = self.current_order
         return {
-            "domain": intent.domain.name,
-            "mission": intent.name,
-            "objetivo": f"Ejecutar la intención {intent.name} con los parámetros {entities}",
-            "parametros": entities,
+            "domain": order.get("domain_name", intent.domain.name),
+            "mission": {
+                "type": order.get("intent_name", intent.name),
+                "action": order.get("accion"),
+                "entity": order.get("entidad")
+            },
+            "parameters": order.get("parameters", entities),
+            "voice_context": {
+                "original_text": order.get("original_text"),
+                "actor": order.get("actor", "super_admin")
+            }
         }
 
     def _calculate_hash(self, file_path: Path) -> str:
@@ -173,16 +186,32 @@ class VoiceOrchestrator:
 
     def _generate_spoken_response(self, mission_status: dict) -> str:
         """
-        Genera una respuesta en lenguaje natural basada en el estado final de la misión.
+        Voice Feedback Loop: Utiliza el LLM para generar una respuesta natural
+        basada en el resultado técnico del agente.
         """
-        estado = mission_status.get("estado")
-        reporte_final = mission_status.get("reporte_final", "No hay un reporte detallado.")
+        if not self.semantic_engine.llm:
+            # Fallback a respuesta estática si no hay LLM
+            estado = mission_status.get("estado")
+            if estado == "COMPLETADA": return "Operación finalizada correctamente."
+            return f"La operación terminó con estado: {estado}"
 
-        if estado == "COMPLETADA":
-            return f"Misión completada con éxito. {reporte_final}"
-        elif estado == "FALLIDA":
-            return f"La misión ha fallado. Razón: {reporte_final}"
-        elif estado == "CANCELADA":
-            return "La misión fue cancelada."
-        else:
-            return f"La misión terminó en un estado inesperado: {estado}. Por favor, revise los registros."
+        prompt = f"""
+        Como SARITA, genera una respuesta verbal breve y profesional para el Super Administrador.
+
+        RESULTADO TÉCNICO DE LA MISIÓN:
+        {json.dumps(mission_status, indent=2)}
+
+        REGLAS:
+        1. Sé concisa y directa.
+        2. Confirma si la acción fue exitosa o explica el error.
+        3. Usa un tono de asistente ejecutivo.
+        4. No menciones IDs técnicos ni JSON.
+        """
+
+        try:
+            from langchain_core.messages import SystemMessage
+            response = self.semantic_engine.llm.invoke([SystemMessage(content=prompt)])
+            return response.content
+        except Exception as e:
+            logger.error(f"Error generando respuesta verbal con LLM: {e}")
+            return "Operación procesada. Revise el panel para más detalles."

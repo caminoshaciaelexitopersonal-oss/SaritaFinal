@@ -27,3 +27,19 @@ class AdminTenientePersistenciaFinanciera(TenienteTemplate):
     def perform_action(self, parametros: dict) -> dict:
         logger.info(f"ADMIN TENIENTE (Persistencia Financiera): Persistiendo en admin_financiera con parámetros -> {parametros}")
         return {"status": "SUCCESS", "message": "Movimiento financiero registrado en el ERP administrativo."}
+
+class AdminTenientePersistenciaOperativa(TenienteTemplate):
+    """
+    Teniente responsable de persistir datos operativos en el ERP del Super Admin (admin_operativa).
+    """
+    def perform_action(self, parametros: dict) -> dict:
+        logger.info(f"ADMIN TENIENTE (Persistencia Operativa): Persistiendo en admin_operativa con parámetros -> {parametros}")
+        return {"status": "SUCCESS", "message": "Acción operativa registrada en el ERP administrativo."}
+
+class AdminTenientePersistenciaArchivistica(TenienteTemplate):
+    """
+    Teniente responsable de persistir datos archivísticos en el ERP del Super Admin (admin_archivistica).
+    """
+    def perform_action(self, parametros: dict) -> dict:
+        logger.info(f"ADMIN TENIENTE (Persistencia Archivística): Persistiendo en admin_archivistica con parámetros -> {parametros}")
+        return {"status": "SUCCESS", "message": "Gestión documental registrada en el ERP administrativo."}

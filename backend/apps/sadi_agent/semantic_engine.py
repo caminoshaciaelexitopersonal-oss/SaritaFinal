@@ -28,34 +28,56 @@ class SemanticEngine:
                 temperature=0
             )
 
-    def interpret(self, text: str) -> Tuple[Optional[Intent], Dict]:
+    def interpret(self, text: str) -> Tuple[Optional[Intent], Dict, Dict]:
         """
         Interpreta el texto usando un LLM para encontrar la intención y extraer entidades.
+        Devuelve (Objeto Intent, Parámetros, Orden Completa JSON).
         """
         logger.info(f"INTERPRETANDO (LLM): '{text}'")
 
         if not self.api_key:
-            return self._mock_interpret(text)
+            intent, params = self._mock_interpret(text)
+            return intent, params, {}
 
         # Obtener catálogo de intenciones disponibles para el prompt
         intents_catalog = self._get_intents_catalog()
 
         system_prompt = f"""
-        Eres el Motor Semántico de SARITA. Tu tarea es convertir comandos de voz en lenguaje natural
-        a directivas estructuradas JSON.
+        Eres el Motor de Intenciones de SARITA (Intent Engine). Tu tarea es convertir comandos de voz en lenguaje natural
+        a órdenes estructuradas JSON para el Super Administrador.
 
-        INTENCIONES DISPONIBLES:
+        CATÁLOGO DE INTENCIONES SISTÉMICAS:
         {json.dumps(intents_catalog, indent=2)}
 
-        REGLAS:
-        1. Identifica la intención que mejor se ajuste al comando.
-        2. Extrae los parámetros necesarios según la intención.
-        3. Devuelve ÚNICAMENTE un objeto JSON con las llaves: "intent_name", "domain_name", "parameters".
-        4. Si no reconoces la intención, devuelve {{"error": "UNKNOWN_INTENT"}}.
+        REGLAS DE INTERPRETACIÓN:
+        1. Identifica el DOMINIO (comercial, contable, operativo, financiero, archivistico).
+        2. Determina el TIPO DE ACCIÓN (consultar, crear, modificar, aprobar, eliminar).
+        3. Identifica la ENTIDAD afectada (plan, usuario, operacion, asiento, etc.).
+        4. Extrae todos los PARÁMETROS necesarios del contexto verbal.
+        5. Devuelve ÚNICAMENTE un objeto JSON con la siguiente estructura:
+           {{
+             "actor": "super_admin",
+             "domain_name": "nombre_del_dominio",
+             "intent_name": "NOMBRE_DE_LA_INTENCION",
+             "accion": "tipo_de_accion",
+             "entidad": "nombre_de_la_entidad",
+             "parameters": {{ "llave": "valor" }}
+           }}
+        6. Si el comando es ambiguo o no reconocido, devuelve {{"error": "UNKNOWN_INTENT"}}.
 
         EJEMPLO:
-        Entrada: "Sarita, registra al hotel 'Mirador' con el correo mirador@mail.com"
-        Salida: {{"intent_name": "ONBOARDING_PRESTADOR", "domain_name": "prestadores", "parameters": {{"nombre_comercial": "Mirador", "email": "mirador@mail.com"}}}}
+        Entrada: "Sarita, crea un nuevo comprobante contable por dos millones y medio por concepto de pago a proveedor"
+        Salida: {{
+          "actor": "super_admin",
+          "domain_name": "contable",
+          "intent_name": "ERP_CREATE_VOUCHER",
+          "accion": "crear",
+          "entidad": "comprobante",
+          "parameters": {{
+            "valor": 2500000,
+            "concepto": "pago proveedor"
+          }}
+        }}
         """
 
         try:
@@ -82,11 +104,11 @@ class SemanticEngine:
                 return None, {}
 
             logger.info(f"INTENCIÓN DETECTADA: {intent.name}")
-            return intent, result.get("parameters", {})
+            return intent, result.get("parameters", {}), result
 
         except Exception as e:
             logger.error(f"Error en interpretación LLM: {e}", exc_info=True)
-            return None, {}
+            return None, {}, {}
 
     def _get_intents_catalog(self) -> list:
         """Genera una lista de diccionarios con las intenciones y sus descripciones."""

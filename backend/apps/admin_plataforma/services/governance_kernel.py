@@ -260,6 +260,43 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.DELEGATED
 ))
 
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="ERP_CREATE_VOUCHER",
+    domain="contable",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.OPERATIONAL,
+    required_params=["valor", "concepto"]
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="ERP_VIEW_SALES_STATS",
+    domain="comercial",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="ERP_VIEW_CASH_FLOW",
+    domain="financiero",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="ERP_MANAGE_RESOURCES",
+    domain="operativo",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="ERP_SEARCH_DOCUMENT",
+    domain="archivistico",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.OPERATIONAL,
+    required_params=["query"]
+))
+
 # Dominio: Decision Intelligence (Nuevas intenciones propuestas por IA)
 GovernanceKernel.register_intention(GovernanceIntention(
     name="PLATFORM_UPDATE_PLAN",

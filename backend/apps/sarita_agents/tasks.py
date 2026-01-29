@@ -17,7 +17,9 @@ from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.te
 from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.operativos.tenientes_persistencia import (
     AdminTenientePersistenciaComercial,
     AdminTenientePersistenciaContable,
-    AdminTenientePersistenciaFinanciera
+    AdminTenientePersistenciaFinanciera,
+    AdminTenientePersistenciaOperativa,
+    AdminTenientePersistenciaArchivistica
 )
 
 # --- MAPEO DE TENIENTES ---
@@ -31,6 +33,8 @@ TENIENTE_MAP = {
     'admin_persistencia_comercial': AdminTenientePersistenciaComercial,
     'admin_persistencia_contable': AdminTenientePersistenciaContable,
     'admin_persistencia_financiera': AdminTenientePersistenciaFinanciera,
+    'admin_persistencia_operativa': AdminTenientePersistenciaOperativa,
+    'admin_persistencia_archivistica': AdminTenientePersistenciaArchivistica,
 }
 
 logger = logging.getLogger(__name__)
