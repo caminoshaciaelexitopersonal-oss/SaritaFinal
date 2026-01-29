@@ -1,6 +1,7 @@
 # backend/apps/sadi_agent/voice_providers.py
 import os
 import abc
+from typing import Tuple
 from openai import OpenAI
 import logging
 from pathlib import Path

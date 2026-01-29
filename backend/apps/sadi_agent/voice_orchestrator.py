@@ -9,8 +9,8 @@ from api.models import CustomUser
 from .voice_providers import SpeechToTextProvider, TextToSpeechProvider
 from .semantic_engine import SemanticEngine
 from .translation_service import TranslationService
-from .security import VoiceSecurity
 from .models import VoiceInteractionLog
+from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
 
 logger = logging.getLogger(__name__)
 
@@ -21,12 +21,11 @@ class VoiceOrchestrator:
     """
     def __init__(self, stt_provider: SpeechToTextProvider, tts_provider: TextToSpeechProvider,
                  semantic_engine: SemanticEngine, translation_service: TranslationService,
-                 security_service: VoiceSecurity, api_base_url: str = "http://127.0.0.1:8000/api/sarita"):
+                 api_base_url: str = "http://127.0.0.1:8000/api/sarita"):
         self.stt_provider = stt_provider
         self.tts_provider = tts_provider
         self.semantic_engine = semantic_engine
         self.translation_service = translation_service
-        self.security_service = security_service
         self.api_base_url = api_base_url
 
     def handle_audio_command(self, user: CustomUser, api_token: str, audio_path: Path, output_audio_path: Path) -> (str, Path):
@@ -35,6 +34,7 @@ class VoiceOrchestrator:
         """
         log = VoiceInteractionLog.objects.create(user=user)
         text_response = "Lo siento, ha ocurrido un error inesperado."
+        detected_language = "es" # Default
 
         try:
             # 1. Transcripción y Detección de Idioma
@@ -57,18 +57,25 @@ class VoiceOrchestrator:
             log.extracted_entities = entities
             log.save()
 
-            # 4. Verificación de Permisos
+            # 4. Verificación de Soberanía y Autoridad (Kernel)
             log.permission_checked = True
-            is_authorized = self.security_service.is_authorized(user, intent)
-            if not is_authorized:
+            kernel = GovernanceKernel(user=user)
+
+            # El Kernel valida contrato, autoridad y políticas globales
+            # Si falla, lanza excepción que atrapamos abajo
+            try:
+                kernel._validate_authority(kernel._registry[intent.name])
+                kernel._evaluate_policies(kernel._registry[intent.name], entities)
+                log.permission_granted = True
+            except Exception as e:
                 log.permission_granted = False
                 log.final_status = "REJECTED"
                 log.save()
-                raise PermissionError("No tienes permiso para realizar esta acción.")
-            log.permission_granted = True
+                raise PermissionError(f"Gobernanza bloqueó la acción: {str(e)}")
+
             log.save()
 
-            # 5. Ejecución de la Misión
+            # 5. Ejecución de la Misión (Delegación a Agentes)
             directive = self._build_directive(intent, entities)
             mission_id = self._invoke_sarita_api(directive, api_token)
             log.mission_id = mission_id
@@ -111,14 +118,21 @@ class VoiceOrchestrator:
                 sha256.update(byte_block)
         return sha256.hexdigest()
 
-    def _invoke_sarita_api(self, directive: dict) -> str:
+    def _get_headers(self, token: str):
+        return {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json"
+        }
+
+    def _invoke_sarita_api(self, directive: dict, api_token: str) -> str:
         """
         Envía la directiva al endpoint de la API de SARITA.
         """
         url = f"{self.api_base_url}/directive/"
+        headers = self._get_headers(api_token)
         logger.debug(f"Invocando API de SARITA en {url} con directiva: {directive}")
 
-        response = requests.post(url, json=directive, headers=self.headers)
+        response = requests.post(url, json=directive, headers=headers)
 
         if response.status_code == 202:
             mission_id = response.json().get("mission_id")
@@ -128,17 +142,18 @@ class VoiceOrchestrator:
             logger.error(f"Error al invocar la API de SARITA. Status: {response.status_code}, Body: {response.text}")
             raise ConnectionError(f"La API de SARITA devolvió un error: {response.status_code}")
 
-    def _poll_mission_status(self, mission_id: str) -> dict:
+    def _poll_mission_status(self, mission_id: str, api_token: str) -> dict:
         """
         Consulta el estado de la misión hasta que se complete o falle.
         """
         url = f"{self.api_base_url}/missions/{mission_id}/"
+        headers = self._get_headers(api_token)
         max_retries = 30
         poll_interval = 2
 
         for i in range(max_retries):
             logger.debug(f"Polling para misión {mission_id}, intento {i+1}/{max_retries}")
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=headers)
 
             if response.status_code == 200:
                 status_data = response.json()

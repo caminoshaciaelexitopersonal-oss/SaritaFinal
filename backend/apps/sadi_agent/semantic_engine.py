@@ -1,94 +1,108 @@
 # backend/apps/sadi_agent/semantic_engine.py
 import logging
-import re
+import json
+import os
 from typing import Tuple, Dict, Optional
-from .models import Intent, Example
+from django.conf import settings
+from .models import Intent, SemanticDomain
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import SystemMessage, HumanMessage
 
 logger = logging.getLogger(__name__)
 
 class SemanticEngine:
     """
-    Motor para interpretar la intención y extraer entidades del texto.
+    Motor Semántico basado en LLM para interpretar intenciones y extraer parámetros.
+    Reemplaza al motor antiguo basado en Regex.
     """
+
+    def __init__(self, model_name: str = "gpt-4o"):
+        self.api_key = os.environ.get("OPENAI_API_KEY")
+        if not self.api_key:
+             logger.warning("OPENAI_API_KEY no configurada. El motor semántico operará en modo degradado/mock.")
+             self.llm = None
+        else:
+            self.llm = ChatOpenAI(
+                model=model_name,
+                openai_api_key=self.api_key,
+                temperature=0
+            )
 
     def interpret(self, text: str) -> Tuple[Optional[Intent], Dict]:
         """
-        Interpreta el texto para encontrar la intención y extraer entidades.
-
-        Returns:
-            Una tupla de (Intent, dict_de_entidades) o (None, {}) si no se encuentra.
+        Interpreta el texto usando un LLM para encontrar la intención y extraer entidades.
         """
-        logger.debug(f"Interpretando texto: '{text}'")
+        logger.info(f"INTERPRETANDO (LLM): '{text}'")
 
-        # 1. Encontrar la intención basada en los ejemplos
-        # Usamos una coincidencia simple por ahora. En una versión avanzada,
-        # se podría usar búsqueda de texto completo, embeddings o un modelo de NLU.
+        if not self.api_key:
+            return self._mock_interpret(text)
 
-        # Normalizamos el texto de entrada para una coincidencia más robusta
-        normalized_text = self._normalize_text(text)
+        # Obtener catálogo de intenciones disponibles para el prompt
+        intents_catalog = self._get_intents_catalog()
 
-        matched_intent = None
-        # Iteramos sobre los ejemplos para encontrar una coincidencia
-        for example in Example.objects.all():
-            normalized_example = self._normalize_text(example.text)
-            # Simplificamos: si el texto del ejemplo está en el comando del usuario
-            # (ignorando mayúsculas/minúsculas y puntuación), asumimos una coincidencia.
-            # Esto es un placeholder; la lógica real sería más compleja.
+        system_prompt = f"""
+        Eres el Motor Semántico de SARITA. Tu tarea es convertir comandos de voz en lenguaje natural
+        a directivas estructuradas JSON.
 
-            # Para esta fase, usaremos un método de coincidencia de palabras clave.
-            if self._keywords_match(normalized_example, normalized_text):
-                matched_intent = example.intent
-                break
+        INTENCIONES DISPONIBLES:
+        {json.dumps(intents_catalog, indent=2)}
 
-        if not matched_intent:
-            logger.warning(f"No se pudo encontrar una intención para el texto: '{text}'")
+        REGLAS:
+        1. Identifica la intención que mejor se ajuste al comando.
+        2. Extrae los parámetros necesarios según la intención.
+        3. Devuelve ÚNICAMENTE un objeto JSON con las llaves: "intent_name", "domain_name", "parameters".
+        4. Si no reconoces la intención, devuelve {{"error": "UNKNOWN_INTENT"}}.
+
+        EJEMPLO:
+        Entrada: "Sarita, registra al hotel 'Mirador' con el correo mirador@mail.com"
+        Salida: {{"intent_name": "ONBOARDING_PRESTADOR", "domain_name": "prestadores", "parameters": {{"nombre_comercial": "Mirador", "email": "mirador@mail.com"}}}}
+        """
+
+        try:
+            messages = [
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=text)
+            ]
+
+            response = self.llm.invoke(messages)
+            result = json.loads(response.content)
+
+            if "error" in result:
+                logger.warning(f"LLM no pudo interpretar el comando: {result['error']}")
+                return None, {}
+
+            # Buscar el objeto Intent en la base de datos
+            intent = Intent.objects.filter(
+                name=result["intent_name"],
+                domain__name=result["domain_name"]
+            ).first()
+
+            if not intent:
+                logger.error(f"LLM sugirió intención '{result['intent_name']}' pero no existe en BD.")
+                return None, {}
+
+            logger.info(f"INTENCIÓN DETECTADA: {intent.name}")
+            return intent, result.get("parameters", {})
+
+        except Exception as e:
+            logger.error(f"Error en interpretación LLM: {e}", exc_info=True)
             return None, {}
 
-        logger.info(f"Intención encontrada: '{matched_intent.name}'")
+    def _get_intents_catalog(self) -> list:
+        """Genera una lista de diccionarios con las intenciones y sus descripciones."""
+        catalog = []
+        for intent in Intent.objects.select_related('domain').all():
+            catalog.append({
+                "intent": intent.name,
+                "domain": intent.domain.name,
+                "description": intent.description
+            })
+        return catalog
 
-        # 2. Extraer entidades basadas en la intención
-        entities = self._extract_entities(text, matched_intent)
-
-        return matched_intent, entities
-
-    def _normalize_text(self, text: str) -> str:
-        """
-        Convierte el texto a minúsculas y elimina caracteres no alfanuméricos
-        para facilitar la comparación.
-        """
-        return re.sub(r'[^\w\s]', '', text.lower())
-
-    def _keywords_match(self, example_text: str, user_text: str) -> bool:
-        """
-        Comprueba si las palabras clave del ejemplo están en el texto del usuario.
-        """
-        # Un enfoque simple: si las palabras clave "registra", "hotel", "correo" están presentes.
-        # Esto debe ser específico para la intención.
-        keywords = ["registra", "hotel", "correo", "dar", "alta", "proveedor", "email"]
-        return all(keyword in user_text for keyword in self._get_keywords(example_text, keywords))
-
-    def _get_keywords(self, text:str, keywords: list) -> list:
-        """
-        Extrae las palabras clave relevantes de un texto.
-        """
-        return [word for word in text.split() if word in keywords]
-
-
-    def _extract_entities(self, text: str, intent: Intent) -> Dict:
-        """
-        Extrae entidades del texto usando regex, basado en la intención.
-        """
-        entities = {}
-        if intent.name == 'ONBOARDING_PRESTADOR':
-            # Regex para el nombre (lo que está entre comillas)
-            name_match = re.search(r"'(.*?)'", text, re.IGNORECASE)
-            if name_match:
-                entities['nombre_comercial'] = name_match.group(1).title()
-
-            # Regex para el correo electrónico
-            email_match = re.search(r'[\w\.\-]+@[\w\.\-]+', text, re.IGNORECASE)
-            if email_match:
-                entities['email'] = email_match.group(0)
-
-        logger.info(f"Entidades extraídas: {entities}")
-        return entities
+    def _mock_interpret(self, text: str) -> Tuple[Optional[Intent], Dict]:
+        """Fallback para cuando no hay API Key o para pruebas rápidas."""
+        text_lower = text.lower()
+        if "registra" in text_lower or "alta" in text_lower:
+            intent = Intent.objects.filter(name='ONBOARDING_PRESTADOR').first()
+            return intent, {"nombre_comercial": "Prestador Mock", "email": "mock@sarita.com"}
+        return None, {}

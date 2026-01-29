@@ -1,34 +1,39 @@
+# backend/apps/sarita_agents/agents/general/sarita/coroneles/administrador_general/capitanes/capitan_auditoria_global.py
+import logging
 from apps.sarita_agents.agents.capitan_template import CapitanTemplate
-from typing import Dict, Any
+from ..tenientes.tenienteauditoria_global import TenienteAuditoriaGlobal
+from apps.sarita_agents.models import Mision, PlanTáctico
+
+logger = logging.getLogger(__name__)
 
 class CapitanAuditoriaGlobal(CapitanTemplate):
     """
-    Misión: Ejecutar auditorías transversales y programadas sobre todos los
-    dominios y procesos del sistema para identificar anomalías, brechas de
-    seguridad, ineficiencias o desviaciones de las políticas establecidas.
+    Capitán responsable de la auditoría global del sistema.
     """
 
-    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
-        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Inicializado para Misión ID {self.mision_id}.")
+    def plan(self, mision: Mision) -> PlanTáctico:
+        logger.info(f"CAPITÁN (AuditoriaGlobal): Planificando misión {mision.id}")
 
-    def plan(self):
-        """
-        El corazón del Capitán. Aquí es donde defines el plan táctico.
-        """
-        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Planificando la misión.")
+        parametros = mision.directiva_original.get("parameters", {})
 
-        plan_tactico = self.get_or_create_plan_tactico(
-            nombre=f"Plan de Auditoría Global",
-            descripcion=f"Ejecutar auditoría para el objetivo: {self.objective}"
+        pasos = {
+            "auditoria_general": {
+                "descripcion": "Ejecutar revisión de logs y estados sistémicos.",
+                "teniente": "auditoria_global",
+                "parametros": parametros
+            }
+        }
+
+        plan_tactico = PlanTáctico.objects.create(
+            mision=mision,
+            capitan_responsable=self.__class__.__name__,
+            pasos_del_plan=pasos,
+            estado='PLANIFICADO'
         )
 
-        self.delegar_tarea(
-            plan_tactico=plan_tactico,
-            nombre_teniente="auditoria_global",
-            descripcion="Realizar la auditoría completa del sistema.",
-            parametros_especificos=self.parametros
-        )
+        return plan_tactico
 
-        self.lanzar_ejecucion_plan()
-        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Planificación completada y tarea delegada a 'auditoria_global'.")
+    def _get_tenientes(self) -> dict:
+        return {
+            "auditoria_global": TenienteAuditoriaGlobal()
+        }

@@ -13,12 +13,15 @@ from .models import TareaDelegada
 
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.persistencia_prestador_teniente import TenientePersistenciaPrestador
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.validacion_prestador_teniente import TenienteValidacionPrestador
+from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.tenienteauditoria_global import TenienteAuditoriaGlobal
 
 # --- MAPEO DE TENIENTES ---
 TENIENTE_MAP = {
     # Prestadores (Funcionales)
     'persistencia': TenientePersistenciaPrestador,
     'validacion': TenienteValidacionPrestador,
+    # Administración General
+    'auditoria_global': TenienteAuditoriaGlobal,
 }
 
 logger = logging.getLogger(__name__)

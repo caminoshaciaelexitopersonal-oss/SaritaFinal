@@ -229,3 +229,18 @@ GovernanceKernel.register_intention(GovernanceIntention(
     required_role=CustomUser.Role.ADMIN,
     min_authority=AuthorityLevel.DELEGATED
 ))
+
+# Dominio: Inteligencia Operativa
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="ONBOARDING_PRESTADOR",
+    domain="prestadores",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="AUDITORIA_GLOBAL",
+    domain="administrador_general",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
