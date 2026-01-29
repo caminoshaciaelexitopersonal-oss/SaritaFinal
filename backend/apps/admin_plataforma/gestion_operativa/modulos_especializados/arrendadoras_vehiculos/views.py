@@ -3,16 +3,18 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.utils import timezone
-from .models import VehiculoDeAlquiler, Alquiler
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.arrendadoras_vehiculos.models import VehiculoDeAlquiler, Alquiler
 from .serializers import VehiculoDeAlquilerSerializer, AlquilerSerializer
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
-class VehiculoDeAlquilerViewSet(viewsets.ModelViewSet):
+class VehiculoDeAlquilerViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar la flota de vehículos de alquiler.
     """
     serializer_class = VehiculoDeAlquilerSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return VehiculoDeAlquiler.objects.filter(perfil=self.request.user.perfil_prestador)
@@ -38,12 +40,12 @@ class VehiculoDeAlquilerViewSet(viewsets.ModelViewSet):
             return Response({'status': 'Vehículo marcado como disponible.'})
         return Response({'status': 'El vehículo ya estaba disponible.'}, status=status.HTTP_400_BAD_REQUEST)
 
-class AlquilerViewSet(viewsets.ModelViewSet):
+class AlquilerViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar los alquileres de vehículos.
     """
     serializer_class = AlquilerSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         # Un prestador solo ve los alquileres de su propia flota.

@@ -1,6 +1,6 @@
 # marketing/serializers.py
 from rest_framework import serializers
-from .models import Campaign, CampaignChannel, MarketingContent
+from apps.prestadores.mi_negocio.gestion_comercial.marketing.models import Campaign, CampaignChannel, MarketingContent
 
 class MarketingContentSerializer(serializers.ModelSerializer):
     class Meta:

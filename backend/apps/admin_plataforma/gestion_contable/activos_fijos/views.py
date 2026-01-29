@@ -1,8 +1,10 @@
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.pagination import PageNumberPagination
-from .models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
+from apps.prestadores.mi_negocio.gestion_contable.activos_fijos.models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
 from .serializers import CategoriaActivoSerializer, ActivoFijoSerializer, CalculoDepreciacionSerializer
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -18,9 +20,9 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 100
 
-class CategoriaActivoViewSet(viewsets.ModelViewSet):
+class CategoriaActivoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = CategoriaActivoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
@@ -29,9 +31,9 @@ class CategoriaActivoViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(perfil=self.request.user.perfil_prestador)
 
-class ActivoFijoViewSet(viewsets.ModelViewSet):
+class ActivoFijoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = ActivoFijoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
@@ -40,9 +42,9 @@ class ActivoFijoViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(perfil=self.request.user.perfil_prestador)
 
-class CalculoDepreciacionViewSet(viewsets.ModelViewSet):
+class CalculoDepreciacionViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = CalculoDepreciacionSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
     pagination_class = StandardResultsSetPagination
     http_method_names = ['get', 'post', 'head', 'options'] # Solo permitir crear y listar
 

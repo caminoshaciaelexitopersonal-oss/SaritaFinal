@@ -70,6 +70,18 @@ class IsAdmin(BasePermission):
         )
 
 
+class IsSuperAdmin(BasePermission):
+    """
+    Permiso exclusivo para el Super Administrador de la plataforma.
+    """
+    def has_permission(self, request, view):
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and (request.user.role == CustomUser.Role.ADMIN or request.user.is_superuser)
+        )
+
+
 class IsAdminOrFuncionarioForUserManagement(BasePermission):
     """
     Permiso personalizado para la gestión de usuarios.

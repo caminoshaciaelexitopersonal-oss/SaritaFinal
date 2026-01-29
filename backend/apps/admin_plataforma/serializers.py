@@ -1,7 +1,6 @@
 
 from rest_framework import serializers
 from .models import Plan, Suscripcion
-from apps.common.serializers.polymorphic_owner import PolymorphicOwnerSerializerMixin
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class PlanSerializer(serializers.ModelSerializer):

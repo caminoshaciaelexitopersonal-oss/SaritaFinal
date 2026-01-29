@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Funnel, FunnelVersion
+from apps.prestadores.mi_negocio.gestion_comercial.funnels.models import Funnel, FunnelVersion
 
 class FunnelVersionSerializer(serializers.ModelSerializer):
     class Meta:

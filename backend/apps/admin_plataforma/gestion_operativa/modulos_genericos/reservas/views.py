@@ -1,36 +1,28 @@
 from rest_framework import viewsets, permissions
-from .models import Reserva, PoliticaCancelacion
+from api.permissions import IsSuperAdmin
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva, PoliticaCancelacion
 from .serializers import ReservaSerializer, PoliticaCancelacionSerializer
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
 
-class ReservaViewSet(viewsets.ModelViewSet):
+class ReservaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    """
+    ViewSet para que el Super Admin gestione reservas sistémicas.
+    """
+    queryset = Reserva.objects.all()
     serializer_class = ReservaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
-
-    def get_queryset(self):
-        """
-        El proveedor solo puede ver sus propias reservas.
-        """
-        return Reserva.objects.filter(perfil=self.request.user.perfil_prestador)
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):
-        """
-        Asigna el perfil del proveedor automáticamente al crear una reserva.
-        """
-        serializer.save(perfil=self.request.user.perfil_prestador)
+        from apps.admin_plataforma.services.gestion_plataforma_service import GestionPlataformaService
+        perfil_gobierno = GestionPlataformaService.get_perfil_gobierno()
+        serializer.save(provider=perfil_gobierno)
 
-class PoliticaCancelacionViewSet(viewsets.ModelViewSet):
+class PoliticaCancelacionViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = PoliticaCancelacion.objects.all()
     serializer_class = PoliticaCancelacionSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
-
-    def get_queryset(self):
-        """
-        El proveedor solo puede ver sus propias políticas de cancelación.
-        """
-        return PoliticaCancelacion.objects.filter(perfil=self.request.user.perfil_prestador)
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):
-        """
-        Asigna el perfil del proveedor automáticamente al crear una política.
-        """
-        serializer.save(perfil=self.request.user.perfil_prestador)
+        from apps.admin_plataforma.services.gestion_plataforma_service import GestionPlataformaService
+        perfil_gobierno = GestionPlataformaService.get_perfil_gobierno()
+        serializer.save(provider=perfil_gobierno)

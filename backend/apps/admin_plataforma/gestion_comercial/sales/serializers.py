@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Opportunity
+from apps.prestadores.mi_negocio.gestion_comercial.sales.models import Opportunity
 
 class OpportunitySerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Skill, TourDetail
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.models import Skill, TourDetail
 
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:

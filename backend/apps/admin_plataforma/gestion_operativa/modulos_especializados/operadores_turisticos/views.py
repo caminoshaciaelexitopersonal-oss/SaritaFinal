@@ -1,18 +1,20 @@
 from rest_framework import viewsets, permissions, serializers
-from .models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.operadores_turisticos.models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
 from .serializers import (
     OperadorTuristicoSerializer,
     PaqueteTuristicoSerializer,
     ItinerarioDiaSerializer,
 )
 from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
-class OperadorTuristicoViewSet(viewsets.ModelViewSet):
+class OperadorTuristicoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para que un proveedor gestione su Operador Turístico.
     """
     serializer_class = OperadorTuristicoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return OperadorTuristico.objects.filter(perfil=self.request.user.perfil_prestador)
@@ -22,12 +24,12 @@ class OperadorTuristicoViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError("El perfil ya tiene un operador turístico asociado.")
         serializer.save(perfil=self.request.user.perfil_prestador)
 
-class PaqueteTuristicoViewSet(viewsets.ModelViewSet):
+class PaqueteTuristicoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar los Paquetes Turísticos de un Operador.
     """
     serializer_class = PaqueteTuristicoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         try:
@@ -43,12 +45,12 @@ class PaqueteTuristicoViewSet(viewsets.ModelViewSet):
         except OperadorTuristico.DoesNotExist:
             raise serializers.ValidationError("Debe crear un operador turístico antes de añadir paquetes.")
 
-class ItinerarioDiaViewSet(viewsets.ModelViewSet):
+class ItinerarioDiaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar el itinerario de un Paquete Turístico.
     """
     serializer_class = ItinerarioDiaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         try:

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transportes.models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
 from ...modulos_genericos.productos_servicios.serializers import ProductSerializer
 
 class TipoVehiculoSerializer(serializers.ModelSerializer):

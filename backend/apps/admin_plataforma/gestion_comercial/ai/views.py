@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from .services.ai_manager.ai_manager import ai_manager
 from .services.sanitizers import sanitize_plain_text
 from infrastructure.models import AIInteraction, Tenant
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
 class ChatCompletionView(APIView):
     """

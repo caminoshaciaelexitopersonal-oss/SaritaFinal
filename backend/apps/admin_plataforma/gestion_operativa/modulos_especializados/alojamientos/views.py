@@ -1,10 +1,12 @@
 from rest_framework import viewsets, permissions, views, status
 from rest_framework.response import Response
 from django.utils.dateparse import parse_date
-from .models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.alojamientos.models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
 from .serializers import TipoAlojamientoSerializer, AlojamientoSerializer, HabitacionSerializer, TarifaSerializer
 from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
 from ...modulos_genericos.reservas.models import Reserva
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
 class TipoAlojamientoViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -14,12 +16,12 @@ class TipoAlojamientoViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TipoAlojamientoSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class AlojamientoViewSet(viewsets.ModelViewSet):
+class AlojamientoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para que un proveedor gestione su Alojamiento.
     """
     serializer_class = AlojamientoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return Alojamiento.objects.filter(perfil=self.request.user.perfil_prestador)
@@ -30,12 +32,12 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError("El perfil ya tiene un alojamiento asociado.")
         serializer.save(perfil=self.request.user.perfil_prestador)
 
-class HabitacionViewSet(viewsets.ModelViewSet):
+class HabitacionViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar las habitaciones de un Alojamiento.
     """
     serializer_class = HabitacionSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         # El usuario solo puede ver habitaciones de su propio alojamiento
@@ -45,12 +47,12 @@ class HabitacionViewSet(viewsets.ModelViewSet):
         except Alojamiento.DoesNotExist:
             return Habitacion.objects.none()
 
-class TarifaViewSet(viewsets.ModelViewSet):
+class TarifaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar las tarifas de una Habitación.
     """
     serializer_class = TarifaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         # Filtra tarifas de habitaciones que pertenecen al alojamiento del usuario
@@ -65,7 +67,7 @@ class CalendarioDisponibilidadView(views.APIView):
     Vista para obtener la disponibilidad de todas las habitaciones de un alojamiento
     en un rango de fechas.
     """
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get(self, request, *args, **kwargs):
         start_date_str = request.query_params.get('start_date')

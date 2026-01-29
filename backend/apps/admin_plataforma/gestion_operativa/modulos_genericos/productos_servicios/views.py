@@ -1,34 +1,18 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from ..permissions import IsOwner
-from .models import Product
+from rest_framework import viewsets, permissions
+from api.permissions import IsSuperAdmin
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 from .serializers import ProductSerializer
 
-class ProductViewSet(viewsets.ModelViewSet):
+class ProductViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
-    ViewSet para gestionar los productos y servicios de un prestador.
+    ViewSet para que el Super Admin gestione los productos/servicios sistémicos.
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
-
-    def get_queryset(self):
-        """
-        Filtra el queryset para devolver solo los objetos que pertenecen
-        al perfil del prestador del usuario autenticado.
-        """
-        try:
-            perfil = self.request.user.perfil_prestador
-            # CORRECCIÓN: El modelo Product usa 'provider', no 'perfil'.
-            return super().get_queryset().filter(provider=perfil)
-        except AttributeError:
-            # Si el usuario no tiene un perfil de prestador, no puede ver ningún objeto.
-            return self.queryset.model.objects.none()
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):
-        """
-        Asocia automáticamente el perfil del prestador al nuevo objeto
-        al momento de la creación.
-        """
-        # CORRECCIÓN: El modelo Product usa 'provider', no 'perfil'.
-        serializer.save(provider=self.request.user.perfil_prestador)
+        from apps.admin_plataforma.services.gestion_plataforma_service import GestionPlataformaService
+        perfil_gobierno = GestionPlataformaService.get_perfil_gobierno()
+        serializer.save(provider=perfil_gobierno)

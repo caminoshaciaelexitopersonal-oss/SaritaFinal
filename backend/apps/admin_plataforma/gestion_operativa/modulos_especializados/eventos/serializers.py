@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import OrganizadorEvento, Evento, Promocion
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.eventos.models import OrganizadorEvento, Evento, Promocion
 from ...modulos_genericos.productos_servicios.serializers import ProductSerializer
 from ...modulos_genericos.productos_servicios.models import Product
 

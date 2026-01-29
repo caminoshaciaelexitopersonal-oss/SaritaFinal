@@ -1,15 +1,17 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/sitios_turisticos/views.py
 from rest_framework import viewsets, permissions
-from .models import SitioTuristico, ActividadEnSitio
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.sitios_turisticos.models import SitioTuristico, ActividadEnSitio
 from .serializers import SitioTuristicoSerializer, ActividadEnSitioSerializer
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
-class SitioTuristicoViewSet(viewsets.ModelViewSet):
+class SitioTuristicoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar los Sitios Turísticos de un prestador.
     """
     serializer_class = SitioTuristicoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return SitioTuristico.objects.filter(perfil=self.request.user.perfil_prestador)
@@ -17,14 +19,14 @@ class SitioTuristicoViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(perfil=self.request.user.perfil_prestador)
 
-class ActividadEnSitioViewSet(viewsets.ModelViewSet):
+class ActividadEnSitioViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar las actividades dentro de un Sitio Turístico.
     La URL estará anidada bajo un sitio turístico específico para la creación y listado.
     Ej: /api/v1/mi-negocio/operativa/.../sitios-turisticos/{sitio_pk}/actividades/
     """
     serializer_class = ActividadEnSitioSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         """

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Proveedor, FacturaCompra
+from apps.prestadores.mi_negocio.gestion_contable.compras.models import Proveedor, FacturaCompra
 
 class ProveedorSerializer(serializers.ModelSerializer):
     class Meta:

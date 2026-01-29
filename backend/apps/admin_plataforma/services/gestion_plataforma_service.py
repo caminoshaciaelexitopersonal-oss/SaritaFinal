@@ -17,6 +17,19 @@ class GestionPlataformaService:
             raise PermissionError("El usuario no tiene permisos de administrador.")
         self.admin_user = admin_user
 
+    @staticmethod
+    def get_perfil_gobierno() -> ProviderProfile:
+        """
+        Retorna el perfil de la organización que actúa como Gobierno/Plataforma.
+        """
+        # Intentamos obtener por el usuario sistémico
+        profile = ProviderProfile.objects.filter(usuario__username='sarita_plataforma').first()
+        if profile:
+            return profile
+
+        # Fallback al primer perfil creado (usualmente el admin en desarrollo) o ID:1
+        return ProviderProfile.objects.filter(id=1).first() or ProviderProfile.objects.first()
+
     def get_sarita_profile(self) -> ProviderProfile:
         """
         Recupera o crea el perfil empresarial para la plataforma Sarita.
@@ -24,12 +37,11 @@ class GestionPlataformaService:
         de la plataforma (facturación, contabilidad, etc.).
         """
         # Se asume que existe un usuario específico para la plataforma.
-        # Por simplicidad, podríamos usar el propio superusuario admin o un usuario dedicado.
         sarita_user, _ = CustomUser.objects.get_or_create(
             username='sarita_plataforma',
             defaults={
                 'email': 'sarita@plataforma.com',
-                'role': 'ADMIN',
+                'role': CustomUser.Role.ADMIN,
                 'is_staff': True,
             }
         )
@@ -37,9 +49,8 @@ class GestionPlataformaService:
         profile, created = ProviderProfile.objects.get_or_create(
             usuario=sarita_user,
             defaults={
-                'nombre_negocio': 'Plataforma Sarita',
-                'descripcion': 'Perfil empresarial para la gestión de la plataforma Sarita.',
-                'email_contacto': 'sarita@plataforma.com',
+                'nombre_comercial': 'Plataforma Sarita',
+                'email_comercial': 'sarita@plataforma.com',
             }
         )
         return profile

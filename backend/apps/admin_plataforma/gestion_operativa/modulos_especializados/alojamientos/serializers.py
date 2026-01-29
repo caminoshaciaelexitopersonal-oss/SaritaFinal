@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.alojamientos.models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
 from ...modulos_genericos.productos_servicios.serializers import ProductSerializer
 
 class TipoAlojamientoSerializer(serializers.ModelSerializer):

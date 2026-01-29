@@ -1,14 +1,16 @@
 from rest_framework import viewsets
-from .models import Vehicle #, MaintenanceOrder
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.models import Vehicle #, MaintenanceOrder
 from .serializers import VehicleSerializer #, MaintenanceOrderSerializer
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
-class VehicleViewSet(viewsets.ModelViewSet):
+class VehicleViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
     filterset_fields = ['status', 'tipo_vehiculo']
     search_fields = ['nombre', 'placa']
 
-# class MaintenanceOrderViewSet(viewsets.ModelViewSet):
+# class MaintenanceOrderViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
 #     queryset = MaintenanceOrder.objects.all()
 #     serializer_class = MaintenanceOrderSerializer
 #     filterset_fields = ['vehicle', 'maintenance_type']

@@ -1,8 +1,8 @@
-# SaritaUnificado/backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/clientes/serializers.py
 from rest_framework import serializers
-from .models import Cliente
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
 
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
-        fields = ['id', 'nombre', 'email', 'telefono']
+        fields = '__all__'
+        read_only_fields = ['provider']

@@ -64,7 +64,7 @@ export default function HotelManagementPage() {
                                 <RoomList roomTypeId={rt.id} />
                             </div>
                         )}
-                    </li>
+                    </div>
                 ))}
                 {roomTypes?.length === 0 && (
                     <Alert type="info" title="Sin Configuración">

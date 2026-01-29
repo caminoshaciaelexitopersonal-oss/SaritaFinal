@@ -2,13 +2,15 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Workflow, AgentPersona
+from apps.prestadores.mi_negocio.gestion_comercial.automation.models import Workflow, AgentPersona
 from .serializers import WorkflowDetailSerializer, WorkflowCreateSerializer, AgentPersonaSerializer
 import logging
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
 logger = logging.getLogger(__name__)
 
-class AgentPersonaViewSet(viewsets.ModelViewSet):
+class AgentPersonaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = AgentPersona.objects.all()
     serializer_class = AgentPersonaSerializer
     permission_classes = [IsAuthenticated]
@@ -19,7 +21,7 @@ class AgentPersonaViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(tenant=self.request.user.tenant)
 
-class WorkflowViewSet(viewsets.ModelViewSet):
+class WorkflowViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Workflow.objects.all()
     permission_classes = [IsAuthenticated]
 

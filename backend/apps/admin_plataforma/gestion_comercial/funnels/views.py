@@ -1,14 +1,16 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .models import Funnel, FunnelVersion, FunnelPage, FunnelPublication
+from apps.prestadores.mi_negocio.gestion_comercial.funnels.models import Funnel, FunnelVersion, FunnelPage, FunnelPublication
 from .serializers import FunnelSerializer, FunnelVersionSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db import transaction
 from rest_framework.views import APIView
-from .models import LeadCapture, FunnelEvent
+from apps.prestadores.mi_negocio.gestion_comercial.funnels.models import LeadCapture, FunnelEvent
  
 from shared.services import event_dispatcher
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
  
 
 
@@ -89,7 +91,7 @@ class PublicFunnelView(APIView):
             return Response({"error": "Funnel no encontrado o no está publicado."}, status=404)
 
 
-class FunnelViewSet(viewsets.ModelViewSet):
+class FunnelViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Funnel.objects.all().prefetch_related('versions')
     serializer_class = FunnelSerializer
     permission_classes = [IsAuthenticated]

@@ -7,12 +7,14 @@ from rest_framework.response import Response
 from decimal import Decimal
 
 # Modelos locales
-from .models import Proveedor, FacturaCompra
+from apps.prestadores.mi_negocio.gestion_contable.compras.models import Proveedor, FacturaCompra
 from .serializers import ProveedorSerializer, FacturaCompraSerializer
 
 # Modelos de otros módulos para integración
 from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, TransaccionBancaria
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
 
 class IsPrestadorOwner(permissions.BasePermission):
@@ -20,16 +22,16 @@ class IsPrestadorOwner(permissions.BasePermission):
         # Para Proveedor y FacturaCompra, el perfil está directamente en el objeto.
         return obj.perfil == request.user.perfil_prestador
 
-class ProveedorViewSet(viewsets.ModelViewSet):
+class ProveedorViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = ProveedorSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return Proveedor.objects.filter(perfil=self.request.user.perfil_prestador)
 
-class FacturaCompraViewSet(viewsets.ModelViewSet):
+class FacturaCompraViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = FacturaCompraSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return FacturaCompra.objects.filter(perfil=self.request.user.perfil_prestador)
