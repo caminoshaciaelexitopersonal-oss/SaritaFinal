@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from .services.gestion_plataforma_service import GestionPlataformaService
+from .services.governance_kernel import GovernanceKernel
 from .models import Plan, Suscripcion
 from .serializers import PlanSerializer, SuscripcionSerializer
 from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.serializers import PerfilSerializer
@@ -32,6 +33,14 @@ class PlanViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Plan.objects.all()
     serializer_class = PlanSerializer
     permission_classes = [IsAdminUser]
+
+    def perform_create(self, serializer):
+        # Delegar toda decisión al núcleo de orquestación
+        kernel = GovernanceKernel(user=self.request.user)
+        kernel.resolve_and_execute(
+            intention_name="PLATFORM_CREATE_PLAN",
+            parameters=serializer.validated_data
+        )
 
 class SuscripcionViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """

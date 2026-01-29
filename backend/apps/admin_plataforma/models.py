@@ -1,4 +1,5 @@
 
+import uuid
 from django.db import models
 from django.conf import settings
 from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
@@ -28,6 +29,29 @@ class Plan(models.Model):
 
     class Meta:
         app_label = 'admin_plataforma'
+
+class GovernanceAuditLog(models.Model):
+    """
+    Registro unificado de auditoría para el núcleo de gobernanza.
+    Almacena cada intención procesada por el kernel.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="governance_logs"
+    )
+    intencion = models.CharField(max_length=255, db_index=True)
+    parametros = models.JSONField(default=dict)
+    resultado = models.JSONField(default=dict)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    success = models.BooleanField(default=True)
+    error_message = models.TextField(null=True, blank=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+        ordering = ['-timestamp']
 
 class Suscripcion(models.Model):
     """
