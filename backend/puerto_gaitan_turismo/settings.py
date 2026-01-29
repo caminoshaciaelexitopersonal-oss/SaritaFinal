@@ -103,7 +103,7 @@ INSTALLED_APPS = [
     "apps.sarita_agents.apps.SaritaAgentsConfig",
 
     "apps.web_funnel.apps.WebFunnelConfig",
-
+    "apps.decision_intelligence.apps.DecisionIntelligenceConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
 

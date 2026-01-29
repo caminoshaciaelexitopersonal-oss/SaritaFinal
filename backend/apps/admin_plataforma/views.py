@@ -37,10 +37,12 @@ class PlanViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Delegar toda decisión al núcleo de orquestación
         kernel = GovernanceKernel(user=self.request.user)
-        kernel.resolve_and_execute(
+        result = kernel.resolve_and_execute(
             intention_name="PLATFORM_CREATE_PLAN",
             parameters=serializer.validated_data
         )
+        # Asignar la instancia creada al serializer para que la respuesta sea correcta
+        serializer.instance = result.get("instance")
 
 class SuscripcionViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """

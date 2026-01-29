@@ -47,6 +47,9 @@ urlpatterns = [
 
     # API para el motor de agentes SARITA
     path('api/sarita/', include('apps.sarita_agents.urls')),
+
+    # API para Inteligencia de Decisión
+    path('api/admin/intelligence/', include('apps.decision_intelligence.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

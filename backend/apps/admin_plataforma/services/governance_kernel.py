@@ -39,7 +39,7 @@ class GovernanceKernel:
     def __init__(self, user: CustomUser):
         self.user = user
 
-    def resolve_and_execute(self, intention_name: str, parameters: Dict[str, Any]) -> Dict[str, Any]:
+    def resolve_and_execute(self, intention_name: str, parameters: Dict[str, Any], bypass_policy: bool = False) -> Dict[str, Any]:
         """
         Punto de entrada único para ejecutar intenciones.
         """
@@ -57,7 +57,8 @@ class GovernanceKernel:
         self._validate_authority(intention)
 
         # 4. Evaluar Políticas Globales (Motor de Políticas)
-        self._evaluate_policies(intention, parameters)
+        if not bypass_policy:
+            self._evaluate_policies(intention, parameters)
 
         # 5. Coordinar y Ejecutar
         try:
@@ -105,6 +106,35 @@ class GovernanceKernel:
         if self.user.role in [CustomUser.Role.ADMIN, CustomUser.Role.FUNCIONARIO_DIRECTIVO]:
             return AuthorityLevel.DELEGATED
         return AuthorityLevel.OPERATIONAL
+
+    def execute_strategic_proposal(self, proposal_id: str) -> Dict[str, Any]:
+        """
+        Valida y ejecuta una propuesta estratégica aprobada.
+        """
+        from apps.decision_intelligence.models import StrategyProposal, DecisionMatrix
+        proposal = StrategyProposal.objects.get(id=proposal_id)
+
+        if proposal.status != StrategyProposal.Status.APPROVED:
+             raise ValueError(f"La propuesta {proposal_id} no está en estado APROBADA.")
+
+        # Verificar si el nivel de riesgo permite ejecución por este usuario
+        matrix = DecisionMatrix.objects.filter(risk_level=proposal.nivel_riesgo).first()
+        if matrix and matrix.requires_approval and not self.user.is_superuser:
+             raise PermissionError(f"El riesgo {proposal.nivel_riesgo} requiere autorización de la Autoridad Soberana.")
+
+        logger.info(f"KERNEL: Ejecutando propuesta estratégica {proposal.id} ({proposal.domain})")
+
+        action = proposal.accion_sugerida
+        result = self.resolve_and_execute(
+            intention_name=action["intention"],
+            parameters=action["parameters"],
+            bypass_policy=True # Las propuestas aprobadas ya fueron evaluadas
+        )
+
+        proposal.status = StrategyProposal.Status.EXECUTED
+        proposal.save()
+
+        return result
 
     def _evaluate_policies(self, intention: GovernanceIntention, parameters: Dict[str, Any]):
         """
@@ -171,7 +201,7 @@ class GovernanceKernel:
                 frecuencia=parameters["frecuencia"],
                 descripcion=parameters.get("descripcion", "")
             )
-            return {"status": "SUCCESS", "id": plan.id, "message": f"Plan '{plan.nombre}' creado."}
+            return {"status": "SUCCESS", "id": plan.id, "message": f"Plan '{plan.nombre}' creado.", "instance": plan}
 
         # Futuras intenciones se mapean aquí
         return {"status": "SUCCESS", "message": f"Intención '{intention.name}' procesada correctamente."}
@@ -228,6 +258,35 @@ GovernanceKernel.register_intention(GovernanceIntention(
     domain="contable",
     required_role=CustomUser.Role.ADMIN,
     min_authority=AuthorityLevel.DELEGATED
+))
+
+# Dominio: Decision Intelligence (Nuevas intenciones propuestas por IA)
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PLATFORM_UPDATE_PLAN",
+    domain="plataforma",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PLATFORM_OPTIMIZE_RESOURCES",
+    domain="plataforma",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PLATFORM_UPDATE_WEB_CMS",
+    domain="plataforma",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PLATFORM_UPDATE_LEGAL",
+    domain="plataforma",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN
 ))
 
 # Dominio: Inteligencia Operativa
