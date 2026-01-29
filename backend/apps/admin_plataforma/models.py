@@ -1,7 +1,7 @@
 
 from django.db import models
 from django.conf import settings
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class Plan(models.Model):
     """

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CategoriaProducto, Almacen, Producto, MovimientoInventario
+from apps.admin_plataforma.gestion_contable.inventario.models import CategoriaProducto, Almacen, Producto, MovimientoInventario
 
 class CategoriaProductoSerializer(serializers.ModelSerializer):
     class Meta:

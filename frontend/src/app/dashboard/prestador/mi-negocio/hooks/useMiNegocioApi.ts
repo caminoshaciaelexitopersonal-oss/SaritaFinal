@@ -513,6 +513,20 @@ export function useMiNegocioApi() {
       return makeRequest(() => api.get<PaginatedResponse<EjecucionPresupuestal>>(`/v1/mi-negocio/contable/presupuesto/ejecuciones/?${params.toString()}`).then(res => res.data));
   }, [makeRequest]);
 
+  // --- API de Gestión Archivística ---
+  const getArchivisticaDocumentos = useCallback(async () => {
+    return makeRequest(() => api.get<any[]>('/v1/mi-negocio/archivistica/documentos/').then(res => res.data));
+  }, [makeRequest]);
+
+  const uploadArchivisticaDocumento = useCallback(async (file: File, metadata: any) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('metadata', JSON.stringify(metadata));
+    return makeRequest(() => api.post('/v1/mi-negocio/archivistica/documentos/upload/', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }).then(res => res.data), "Documento subido con éxito.");
+  }, [makeRequest]);
+
 
   return {
     isLoading,
@@ -591,18 +605,7 @@ export function useMiNegocioApi() {
     getPartidas,
     createPartida,
     getEjecuciones,
-  // --- API de Gestión Archivística ---
-  const getArchivisticaDocumentos = useCallback(async () => {
-    return makeRequest(() => api.get<any[]>('/v1/mi-negocio/archivistica/documentos/').then(res => res.data));
-  }, [makeRequest]),
-
-  uploadArchivisticaDocumento: useCallback(async (file: File, metadata: any) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('metadata', JSON.stringify(metadata));
-    return makeRequest(() => api.post('/v1/mi-negocio/archivistica/documentos/upload/', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }).then(res => res.data), "Documento subido con éxito.");
-  }, [makeRequest]),
+    getArchivisticaDocumentos,
+    uploadArchivisticaDocumento,
   };
 }

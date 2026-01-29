@@ -2,14 +2,16 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import Skill, TourDetail
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.guias.models import Skill, TourDetail
 from .serializers import SkillSerializer
 # Asumimos que TeamMember y su serializer existirán
 # from ..personal.models import TeamMember
 # from ..personal.serializers import TeamMemberSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.views import ProductViewSet
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.productos_servicios.views import ProductViewSet
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
-class SkillViewSet(viewsets.ModelViewSet):
+class SkillViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
 

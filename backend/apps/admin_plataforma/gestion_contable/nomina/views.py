@@ -1,6 +1,8 @@
 from rest_framework import viewsets, permissions
-from .models import Empleado, Contrato, Planilla, ConceptoNomina
+from apps.admin_plataforma.gestion_contable.nomina.models import Empleado, Contrato, Planilla, ConceptoNomina
 from .serializers import EmpleadoSerializer, ContratoSerializer, PlanillaSerializer, ConceptoNominaSerializer
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -10,23 +12,23 @@ class IsPrestadorOwner(permissions.BasePermission):
              return obj.empleado.perfil == request.user.perfil_prestador
         return False
 
-class EmpleadoViewSet(viewsets.ModelViewSet):
+class EmpleadoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = EmpleadoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return Empleado.objects.filter(perfil=self.request.user.perfil_prestador)
 
-class ContratoViewSet(viewsets.ModelViewSet):
+class ContratoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = ContratoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return Contrato.objects.filter(empleado__perfil=self.request.user.perfil_prestador)
 
-class PlanillaViewSet(viewsets.ModelViewSet):
+class PlanillaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     serializer_class = PlanillaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return Planilla.objects.filter(perfil=self.request.user.perfil_prestador)

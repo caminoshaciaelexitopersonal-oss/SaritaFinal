@@ -1,19 +1,21 @@
 from rest_framework import viewsets, permissions, serializers
-from .models import OrganizadorEvento, Evento, Promocion
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.eventos.models import OrganizadorEvento, Evento, Promocion
 from .serializers import (
     OrganizadorEventoSerializer,
     EventoSerializer,
     PromocionSerializer,
 )
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from apps.admin_plataforma.permissions import IsPrestadorOwner
 from ...modulos_genericos.productos_servicios.models import Product
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
-class OrganizadorEventoViewSet(viewsets.ModelViewSet):
+class OrganizadorEventoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para que un proveedor gestione su perfil de Organizador de Eventos.
     """
     serializer_class = OrganizadorEventoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return OrganizadorEvento.objects.filter(perfil=self.request.user.perfil_prestador)
@@ -23,12 +25,12 @@ class OrganizadorEventoViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError("El perfil ya tiene un organizador de eventos asociado.")
         serializer.save(perfil=self.request.user.perfil_prestador)
 
-class EventoViewSet(viewsets.ModelViewSet):
+class EventoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar los Eventos de un Organizador.
     """
     serializer_class = EventoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         try:
@@ -44,12 +46,12 @@ class EventoViewSet(viewsets.ModelViewSet):
         except OrganizadorEvento.DoesNotExist:
             raise serializers.ValidationError("Debe crear un perfil de organizador de eventos antes de añadir eventos.")
 
-class PromocionViewSet(viewsets.ModelViewSet):
+class PromocionViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar las Promociones de un Proveedor.
     """
     serializer_class = PromocionSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return Promocion.objects.filter(perfil=self.request.user.perfil_prestador)

@@ -1,5 +1,7 @@
 from django.apps import AppConfig
 
-class ContabilidadConfig(AppConfig):
+class AdminContabilidadConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.prestadores.mi_negocio.gestion_contable.contabilidad'
+    name = 'apps.admin_plataforma.gestion_contable.contabilidad'
+    label = 'admin_contabilidad'
+    verbose_name = 'Administración Contabilidad'

@@ -1,61 +1,41 @@
 from django.db import models
-from django.conf import settings
-from decimal import Decimal
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 class Empleado(models.Model):
-    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='empleados')
-    nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100)
-    identificacion = models.CharField(max_length=20, unique=True)
-    fecha_nacimiento = models.DateField()
-    direccion = models.CharField(max_length=255)
-    telefono = models.CharField(max_length=20)
-    email = models.EmailField(unique=True)
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='admin_empleados')
+    nombre = models.CharField(max_length=200)
+    documento = models.CharField(max_length=20, unique=True)
 
-    def __str__(self):
-        return f"{self.nombre} {self.apellido}"
+    class Meta:
+        app_label = 'admin_nomina'
 
 class Contrato(models.Model):
-    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, related_name='contratos')
+    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, related_name='admin_contratos')
     fecha_inicio = models.DateField()
-    fecha_fin = models.DateField(null=True, blank=True)
-    salario = models.DecimalField(max_digits=18, decimal_places=2)
-    cargo = models.CharField(max_length=100)
-    activo = models.BooleanField(default=True)
+    salario_base = models.DecimalField(max_digits=18, decimal_places=2)
 
-    def __str__(self):
-        return f"Contrato de {self.empleado} - {self.cargo}"
+    class Meta:
+        app_label = 'admin_nomina'
 
 class ConceptoNomina(models.Model):
-    class TipoConcepto(models.TextChoices):
-        DEVENGADO = 'DEVENGADO', 'Devengado'
-        DEDUCCION = 'DEDUCCION', 'Deducción'
+    nombre = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=20)
 
-    codigo = models.CharField(max_length=10, unique=True)
-    descripcion = models.CharField(max_length=255)
-    tipo = models.CharField(max_length=20, choices=TipoConcepto.choices)
-
-    def __str__(self):
-        return self.descripcion
+    class Meta:
+        app_label = 'admin_nomina'
 
 class Planilla(models.Model):
-    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='planillas')
-    periodo_inicio = models.DateField()
-    periodo_fin = models.DateField()
-    total_devengado = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
-    total_deduccion = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
-    total_neto = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+    perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='admin_planillas')
+    mes = models.IntegerField()
+    anio = models.IntegerField()
 
-    def __str__(self):
-        return f"Planilla {self.periodo_inicio} a {self.periodo_fin}"
+    class Meta:
+        app_label = 'admin_nomina'
 
 class NovedadNomina(models.Model):
-    planilla = models.ForeignKey(Planilla, on_delete=models.CASCADE, related_name='novedades')
-    empleado = models.ForeignKey(Empleado, on_delete=models.PROTECT)
-    concepto = models.ForeignKey(ConceptoNomina, on_delete=models.PROTECT)
+    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, related_name='admin_novedades')
+    concepto = models.ForeignKey(ConceptoNomina, on_delete=models.CASCADE)
     valor = models.DecimalField(max_digits=18, decimal_places=2)
-    descripcion = models.TextField(blank=True)
 
-    def __str__(self):
-        return f"{self.concepto} - {self.empleado}: {self.valor}"
+    class Meta:
+        app_label = 'admin_nomina'

@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions, serializers
-from .models import Restaurante, Menu, CategoriaPlato, Plato, ZonaDelivery
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.gastronomia.models import Restaurante, Menu, CategoriaPlato, Plato, ZonaDelivery
 from .serializers import (
     RestauranteSerializer,
     MenuSerializer,
@@ -7,14 +7,16 @@ from .serializers import (
     PlatoSerializer,
     ZonaDeliverySerializer
 )
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from apps.admin_plataforma.permissions import IsPrestadorOwner
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
-class RestauranteViewSet(viewsets.ModelViewSet):
+class RestauranteViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para que un proveedor gestione su Restaurante.
     """
     serializer_class = RestauranteSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         return Restaurante.objects.filter(perfil=self.request.user.perfil_prestador)
@@ -24,12 +26,12 @@ class RestauranteViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError("El perfil ya tiene un restaurante asociado.")
         serializer.save(perfil=self.request.user.perfil_prestador)
 
-class MenuViewSet(viewsets.ModelViewSet):
+class MenuViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar los menús de un Restaurante.
     """
     serializer_class = MenuSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         try:
@@ -45,12 +47,12 @@ class MenuViewSet(viewsets.ModelViewSet):
         except Restaurante.DoesNotExist:
             raise serializers.ValidationError("Debe crear un restaurante antes de añadir menús.")
 
-class CategoriaPlatoViewSet(viewsets.ModelViewSet):
+class CategoriaPlatoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar las categorías de un Menú.
     """
     serializer_class = CategoriaPlatoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         try:
@@ -59,12 +61,12 @@ class CategoriaPlatoViewSet(viewsets.ModelViewSet):
         except Restaurante.DoesNotExist:
             return CategoriaPlato.objects.none()
 
-class PlatoViewSet(viewsets.ModelViewSet):
+class PlatoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar los platos de una Categoría.
     """
     serializer_class = PlatoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         try:
@@ -73,12 +75,12 @@ class PlatoViewSet(viewsets.ModelViewSet):
         except Restaurante.DoesNotExist:
             return Plato.objects.none()
 
-class ZonaDeliveryViewSet(viewsets.ModelViewSet):
+class ZonaDeliveryViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para gestionar las zonas de delivery de un Restaurante.
     """
     serializer_class = ZonaDeliverySerializer
-    permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):
         try:

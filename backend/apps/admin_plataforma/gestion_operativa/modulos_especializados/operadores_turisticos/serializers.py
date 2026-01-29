@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.operadores_turisticos.models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
 from ...modulos_genericos.productos_servicios.serializers import ProductSerializer
 
 class ItinerarioDiaSerializer(serializers.ModelSerializer):

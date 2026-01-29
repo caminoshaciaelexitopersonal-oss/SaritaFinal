@@ -6,7 +6,9 @@ from rest_framework.permissions import IsAdminUser
 from .services.gestion_plataforma_service import GestionPlataformaService
 from .models import Plan, Suscripcion
 from .serializers import PlanSerializer, SuscripcionSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.serializers import PerfilSerializer
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.serializers import PerfilSerializer
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from api.permissions import IsSuperAdmin
 
 class SaritaProfileView(APIView):
     """
@@ -23,7 +25,7 @@ class SaritaProfileView(APIView):
         serializer = PerfilSerializer(sarita_profile)
         return Response(serializer.data)
 
-class PlanViewSet(viewsets.ModelViewSet):
+class PlanViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para la gestión de Planes de suscripción por parte de los administradores.
     """
@@ -31,7 +33,7 @@ class PlanViewSet(viewsets.ModelViewSet):
     serializer_class = PlanSerializer
     permission_classes = [IsAdminUser]
 
-class SuscripcionViewSet(viewsets.ModelViewSet):
+class SuscripcionViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para la gestión de Suscripciones de clientes a planes.
     """

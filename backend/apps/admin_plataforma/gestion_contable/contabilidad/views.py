@@ -1,48 +1,35 @@
 from rest_framework import viewsets, permissions
-from .models import ChartOfAccount, JournalEntry, CostCenter
-from .serializers import ChartOfAccountSerializer, JournalEntrySerializer, CostCenterSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
+from api.permissions import IsSuperAdmin
+from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
+from apps.admin_plataforma.gestion_contable.contabilidad.models import (
+    PlanDeCuentas, Cuenta, PeriodoContable, AsientoContable, Transaccion
+)
+from .serializers import (
+    PlanDeCuentasSerializer, CuentaSerializer,
+    PeriodoContableSerializer, AsientoContableSerializer
+)
 
-class ChartOfAccountViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint para el Plan de Cuentas. Es de solo lectura ya que
-    generalmente es gestionado por administradores del sistema.
-    """
-    queryset = ChartOfAccount.objects.all()
-    serializer_class = ChartOfAccountSerializer
-    permission_classes = [permissions.IsAuthenticated] # Solo usuarios autenticados pueden ver el plan
-    http_method_names = ['get'] # Solo permitir peticiones GET
-
-class CostCenterViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint para Centros de Costo.
-    """
-    serializer_class = CostCenterSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
-
-    def get_queryset(self):
-        # Filtrar por el perfil del usuario autenticado
-        return CostCenter.objects.filter(perfil=self.request.user.perfil_prestador)
+class PlanDeCuentasViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = PlanDeCuentas.objects.all()
+    serializer_class = PlanDeCuentasSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):
-        # Asignar automáticamente el perfil del usuario al crear
-        serializer.save(perfil=self.request.user.perfil_prestador)
+        from apps.admin_plataforma.services.gestion_plataforma_service import GestionPlataformaService
+        perfil_gobierno = GestionPlataformaService.get_perfil_gobierno()
+        serializer.save(provider=perfil_gobierno)
 
+class CuentaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = Cuenta.objects.all()
+    serializer_class = CuentaSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
-class JournalEntryViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint para Asientos Contables.
-    """
-    serializer_class = JournalEntrySerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+class PeriodoContableViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = PeriodoContable.objects.all()
+    serializer_class = PeriodoContableSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
-    def get_queryset(self):
-        # Filtrar por el perfil del usuario autenticado
-        return JournalEntry.objects.filter(perfil=self.request.user.perfil_prestador)
-
-    def perform_create(self, serializer):
-        # Asignar automáticamente el perfil y el usuario al crear
-        serializer.save(
-            perfil=self.request.user.perfil_prestador,
-            user=self.request.user
-        )
+class AsientoContableViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = AsientoContable.objects.all()
+    serializer_class = AsientoContableSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]

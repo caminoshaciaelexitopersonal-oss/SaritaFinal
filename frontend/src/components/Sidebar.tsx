@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import {
   FiChevronDown, FiChevronRight, FiBox, FiStar, FiAward, FiMap, FiTruck,
   FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive,
-  FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
+  FiTrendingDown, FiTrendingUp, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
   FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare, FiMonitor, FiDownload
 } from 'react-icons/fi';
 import React, { useState, useEffect } from 'react';
@@ -172,6 +172,24 @@ export default function Sidebar() {
   const prestadorCategoria = user.perfil_prestador?.categoria?.nombre;
 
   const adminNavSections: NavSection[] = [
+    {
+      title: 'GOBIERNO ESTRATÉGICO',
+      links: [
+        { href: '/dashboard/admin_plataforma/gobierno-estrategico', label: 'Dashboard Global', icon: FiBarChart2 },
+        { href: '/dashboard/admin_plataforma/gobierno-estrategico/analisis', label: 'Análisis Comparativo', icon: FiTrendingUp },
+        { href: '/dashboard/admin_plataforma/gobierno-estrategico/auditoria', label: 'Auditoría de Sistema', icon: FiShield },
+      ],
+    },
+    {
+      title: 'ERP SISTÉMICO',
+      links: [
+        { href: '/dashboard/admin_plataforma/gestion-comercial', label: 'Gestión Comercial', icon: FiDollarSign },
+        { href: '/dashboard/admin_plataforma/operativa', label: 'Gestión Operativa', icon: FiGrid },
+        { href: '/dashboard/admin_plataforma/contable', label: 'Gestión Contable', icon: FiBookOpen },
+        { href: '/dashboard/admin_plataforma/financiera', label: 'Gestión Financiera', icon: FiTrendingDown },
+        { href: '/dashboard/admin_plataforma/archivistica', label: 'Gestión Archivística', icon: FiArchive },
+      ],
+    },
     {
       title: 'Plataforma Sarita',
       links: [

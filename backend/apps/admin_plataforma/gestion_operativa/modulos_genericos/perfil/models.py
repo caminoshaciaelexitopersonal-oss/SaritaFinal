@@ -1,35 +1,50 @@
-import uuid
 from django.db import models
-from django.utils import timezone
-from api.models import BaseModel, ProviderProfile
+from django.conf import settings
 
-# --- MODELOS BASE DE ROBUSTEZ (para esta app) ---
+class BaseModel(models.Model):
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
 
-from ..permissions import get_current_tenant
+    class Meta:
+        abstract = True
 
-class TenantQuerySet(models.QuerySet):
-    def for_tenant(self, tenant):
-        return self.filter(provider=tenant)
+class CategoriaPrestador(BaseModel):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField(blank=True)
 
-class TenantManager(models.Manager):
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        app_label = 'admin_operativa'
+        verbose_name = "Categoría de Operación (Admin)"
+
+class ProviderProfile(BaseModel):
     """
-    Manager que AUTOMÁTICAMENTE filtra cada consulta por el inquilino activo.
+    Perfil de la Organización para el ERP del Super Admin.
+    Representa a la 'Plataforma Sarita' como entidad operativa.
     """
-    def get_queryset(self):
-        queryset = TenantQuerySet(self.model, using=self._db)
-        tenant = get_current_tenant()
-        if tenant:
-            return queryset.for_tenant(tenant)
-        # Principio de fallo seguro: si no hay inquilino, no devolver nada.
-        return queryset.none()
+    usuario = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='admin_perfil_context'
+    )
+    nombre_negocio = models.CharField(max_length=255, default="Plataforma Sarita")
+    nit = models.CharField(max_length=20, blank=True)
+
+    def __str__(self):
+        return self.nombre_negocio
+
+    class Meta:
+        app_label = 'admin_operativa'
+        verbose_name = "Perfil de Plataforma"
 
 class TenantAwareModel(BaseModel):
-    """
-    Modelo base abstracto para todos los datos que pertenecen a un inquilino.
-    """
-    provider = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="%(class)s_items")
-    objects = TenantManager()
-    objects_unfiltered = models.Manager()
+    organization = models.ForeignKey(
+        ProviderProfile,
+        on_delete=models.CASCADE,
+        related_name='%(app_label)s_%(class)s_records'
+    )
 
     class Meta:
         abstract = True

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
+from apps.admin_plataforma.gestion_contable.activos_fijos.models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
 
 class CategoriaActivoSerializer(serializers.ModelSerializer):
     class Meta:

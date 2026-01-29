@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class ValoracionesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.valoraciones'
+    name = 'apps.admin_plataforma.gestion_operativa.modulos_genericos.valoraciones'

@@ -1,8 +1,7 @@
 from django.apps import AppConfig
 
-class GestionComercialConfig(AppConfig):
+class AdminGestionComercialConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.prestadores.mi_negocio.gestion_comercial'
-
-    def ready(self):
-        import apps.prestadores.mi_negocio.gestion_comercial.signals
+    name = 'apps.admin_plataforma.gestion_comercial'
+    label = 'admin_comercial'
+    verbose_name = 'Administración Comercial'
