@@ -4,8 +4,10 @@ from typing import Dict, Any, List
 from ..models import StrategyProposal
 from ..agents.capitanes_decisores import (
     CapitanDecisorFinanciero, CapitanDecisorOperativo,
-    CapitanDecisorComercial, CapitanDecisorNormativo
+    CapitanDecisorComercial, CapitanDecisorNormativo,
+    CapitanDecisorContable, CapitanDecisorArchivistico
 )
+from apps.admin_plataforma.services.observer import SystemicObserver
 from apps.sadi_agent.semantic_engine import SemanticEngine # Reusar el motor LLM
 from langchain_core.messages import SystemMessage, HumanMessage
 
@@ -17,11 +19,14 @@ class StrategicAnalysisService:
     """
     def __init__(self):
         self.semantic_engine = SemanticEngine() # Acceso al LLM
+        self.observer = SystemicObserver()
         self.agents = {
             "financiero": CapitanDecisorFinanciero(agent_id="IA_FIN_01"),
             "operativo": CapitanDecisorOperativo(agent_id="IA_OPS_01"),
             "comercial": CapitanDecisorComercial(agent_id="IA_COM_01"),
             "normativo": CapitanDecisorNormativo(agent_id="IA_LAW_01"),
+            "contable": CapitanDecisorContable(agent_id="IA_ACC_01"),
+            "archivistico": CapitanDecisorArchivistico(agent_id="IA_ARC_01"),
         }
 
     def run_full_audit(self) -> List[StrategyProposal]:
@@ -29,12 +34,16 @@ class StrategicAnalysisService:
         Ejecuta un ciclo de análisis estratégico sobre todos los dominios.
         """
         proposals = []
-        for name, agent in self.agents.items():
-            # En una implementación real, aquí se obtendrían métricas de BD
-            raw_data = self._gather_domain_data(name)
+        # 1. Capa de Observación Sistémica
+        metrics = self.observer.collect_all_metrics()
 
-            # El agente procesa los datos (puede ser determinístico o vía LLM)
-            proposal = agent.analyze_and_propose(raw_data)
+        for name, agent in self.agents.items():
+            # 2. Núcleo de Decisión Estratégica
+            # Pasamos los datos específicos del dominio al agente
+            domain_data = metrics.get(name, {})
+
+            # El agente procesa los datos y aplica reglas/heurísticas
+            proposal = agent.analyze_and_propose(domain_data)
 
             # Enriquecemos la propuesta usando el LLM para validar coherencia
             self._enrich_with_llm(proposal)
@@ -43,9 +52,6 @@ class StrategicAnalysisService:
 
         return proposals
 
-    def _gather_domain_data(self, domain: str) -> Dict[str, Any]:
-        """Recolecta métricas reales del sistema (Placeholder)."""
-        return {"status": "nominal", "last_24h_events": 150}
 
     def _enrich_with_llm(self, proposal: StrategyProposal):
         """Usa el LLM para refinar la explicación técnica de la propuesta."""

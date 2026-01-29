@@ -77,15 +77,20 @@ class VoiceOrchestrator:
 
             log.save()
 
-            # 5. Ejecución de la Misión (Voice-to-Agents Router)
-            directive = self._build_directive(intent, entities)
-            mission_id = self._invoke_sarita_api(directive, api_token)
-            log.mission_id = mission_id
-            log.save()
+            # 5. Ejecución Especial o Misión de Agentes
+            if intent.name.startswith("STRATEGY_"):
+                text_response = self._handle_strategy_voice_command(kernel, intent, entities)
+                log.final_status = "COMPLETADA"
+            else:
+                # Flujo estándar de Misión de Agentes
+                directive = self._build_directive(intent, entities)
+                mission_id = self._invoke_sarita_api(directive, api_token)
+                log.mission_id = mission_id
+                log.save()
 
-            final_mission_status = self._poll_mission_status(mission_id, api_token)
-            text_response = self._generate_spoken_response(final_mission_status)
-            log.final_status = final_mission_status.get("estado", "UNKNOWN")
+                final_mission_status = self._poll_mission_status(mission_id, api_token)
+                text_response = self._generate_spoken_response(final_mission_status)
+                log.final_status = final_mission_status.get("estado", "UNKNOWN")
 
         except (ValueError, PermissionError) as e:
             text_response = f"Error: {e}"
@@ -183,6 +188,48 @@ class VoiceOrchestrator:
                 raise ConnectionError(f"Error al consultar el estado de la misión: {response.status_code}")
 
         raise TimeoutError(f"La misión {mission_id} no finalizó en el tiempo esperado.")
+
+    def _handle_strategy_voice_command(self, kernel: GovernanceKernel, intent, entities) -> str:
+        """Maneja comandos de voz específicos para la inteligencia de decisión de Fase 5."""
+        from apps.decision_intelligence.models import StrategyProposal
+
+        proposal_id = entities.get("proposal_id") or entities.get("id")
+
+        if intent.name == "STRATEGY_EXPLAIN":
+            # Si no hay ID, explicamos la más urgente
+            proposal = None
+            if proposal_id:
+                proposal = StrategyProposal.objects.filter(id=proposal_id).first()
+            else:
+                proposal = StrategyProposal.objects.filter(status=StrategyProposal.Status.PENDING).order_by('-nivel_urgencia').first()
+
+            if not proposal:
+                return "No encontré ninguna propuesta estratégica pendiente de revisión."
+
+            return f"Propuesta de dominio {proposal.domain}. {proposal.contexto_detectado}. Impacto estimado: {proposal.impacto_estimado}. ¿Deseas que la ejecute?"
+
+        if intent.name == "STRATEGY_APPROVE":
+            if not proposal_id:
+                proposal = StrategyProposal.objects.filter(status=StrategyProposal.Status.PENDING).order_by('-nivel_urgencia').first()
+                if not proposal: return "No hay propuestas pendientes para aprobar."
+                proposal_id = proposal.id
+
+            try:
+                proposal = StrategyProposal.objects.get(id=proposal_id)
+                proposal.status = StrategyProposal.Status.APPROVED
+                proposal.save()
+
+                result = kernel.execute_strategic_proposal(proposal_id)
+                return f"Propuesta aprobada y ejecutada correctamente. {result.get('message', '')}"
+            except Exception as e:
+                return f"No se pudo ejecutar la propuesta: {str(e)}"
+
+        if intent.name == "STRATEGY_REJECT":
+            if not proposal_id: return "Por favor, especifica qué propuesta deseas rechazar."
+            StrategyProposal.objects.filter(id=proposal_id).update(status=StrategyProposal.Status.REJECTED)
+            return "Propuesta rechazada y archivada."
+
+        return "Comando de estrategia no reconocido."
 
     def _generate_spoken_response(self, mission_status: dict) -> str:
         """

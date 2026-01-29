@@ -26,6 +26,11 @@ class StrategyProposal(models.Model):
         MEDIUM = 'MEDIUM', 'Medio Riesgo'
         HIGH = 'HIGH', 'Alto Riesgo'
 
+    class DecisionLevel(models.IntegerChoices):
+        LEVEL_1 = 1, 'Automática (Riesgo Bajo, Reversible)'
+        LEVEL_2 = 2, 'Supervisada (Riesgo Medio, Espera Confirmación)'
+        LEVEL_3 = 3, 'Estratégica (Alto Impacto, Recomendación)'
+
     class UrgencyLevel(models.TextChoices):
         LOW = 'LOW', 'Baja'
         MEDIUM = 'MEDIUM', 'Media'
@@ -46,6 +51,7 @@ class StrategyProposal(models.Model):
     nivel_confianza = models.FloatField(default=0.0, help_text="Probabilidad de éxito estimada por la IA (0-1).")
     nivel_urgencia = models.CharField(max_length=20, choices=UrgencyLevel.choices, default=UrgencyLevel.LOW)
     nivel_riesgo = models.CharField(max_length=20, choices=RiskLevel.choices, default=RiskLevel.LOW)
+    decision_level = models.IntegerField(choices=DecisionLevel.choices, default=DecisionLevel.LEVEL_3)
 
     # --- Trazabilidad ---
     agent_id = models.CharField(max_length=255, help_text="Identificador del agente que generó la propuesta.")

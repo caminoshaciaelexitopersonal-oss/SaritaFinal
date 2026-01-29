@@ -35,20 +35,23 @@ class CapitanDecisorFinanciero(CapitanDecisorBase):
 
     def analyze_and_propose(self, data: Dict[str, Any]) -> StrategyProposal:
         logger.info(f"AGENTE FINANCIERO ({self.agent_id}): Analizando salud económica...")
-        # Lógica de análisis simulada para la fase inicial
-        # En el futuro, esto consultará el ERP Sistémico
+
+        # Heurística de Riesgo: Si el unpaid_dues > 1000 y cash_flow bajo
+        unpaid = data.get("unpaid_dues", 0)
+
         return self._create_proposal(
-            contexto_detectado="Incremento en la tasa de cancelación de suscripciones detectado en los últimos 30 días (15%).",
-            riesgo_actual="Pérdida proyectada de $5,000 USD en ingresos recurrentes trimestrales.",
-            oportunidad_detectada="Fidelización de usuarios en riesgo mediante ajustes en planes semestrales.",
+            contexto_detectado=f"Detectada deuda pendiente de ${unpaid}. Riesgo de liquidez moderado.",
+            riesgo_actual="Afectación del flujo de caja operativo para el próximo trimestre.",
+            oportunidad_detectada="Optimización de cobranza automatizada.",
             accion_sugerida={
-                "intention": "PLATFORM_UPDATE_PLAN",
-                "parameters": {"descuento_retencion": 0.20, "target_segment": "at_risk"}
+                "intention": "ERP_VIEW_CASH_FLOW",
+                "parameters": {"mode": "recovery", "target": "high_debt"}
             },
-            impacto_estimado="Reducción del churn en un 5% y recuperación de $2,000 USD.",
+            impacto_estimado="Recuperación proyectada del 30% de cartera vencida.",
             nivel_confianza=0.85,
             nivel_urgencia=StrategyProposal.UrgencyLevel.HIGH,
-            nivel_riesgo=StrategyProposal.RiskLevel.MEDIUM
+            nivel_riesgo=StrategyProposal.RiskLevel.MEDIUM,
+            decision_level=StrategyProposal.DecisionLevel.LEVEL_2
         )
 
 class CapitanDecisorOperativo(CapitanDecisorBase):
@@ -56,18 +59,38 @@ class CapitanDecisorOperativo(CapitanDecisorBase):
 
     def analyze_and_propose(self, data: Dict[str, Any]) -> StrategyProposal:
         logger.info(f"AGENTE OPERATIVO ({self.agent_id}): Analizando desempeño...")
+
+        error_rate = data.get("error_rate_1h", 0)
+
+        if error_rate > 10:
+             return self._create_proposal(
+                contexto_detectado=f"Pico de errores detectado ({error_rate} errores/hora).",
+                riesgo_actual="Inestabilidad de servicios críticos para prestadores.",
+                oportunidad_detectada="Autoreparación de servicios y limpieza de caché.",
+                accion_sugerida={
+                    "intention": "ERP_MANAGE_RESOURCES",
+                    "parameters": {"action": "restart_subsystem", "target": "auth"}
+                },
+                impacto_estimado="Estabilización del 100% de la tasa de error.",
+                nivel_confianza=0.95,
+                nivel_urgencia=StrategyProposal.UrgencyLevel.CRITICAL,
+                nivel_riesgo=StrategyProposal.RiskLevel.LOW,
+                decision_level=StrategyProposal.DecisionLevel.LEVEL_1 # Automática
+            )
+
         return self._create_proposal(
-            contexto_detectado="Saturación de procesamiento de documentos en el módulo de archivística (90% capacidad).",
-            riesgo_actual="Retraso en la verificación de nuevos prestadores (Onboarding).",
-            oportunidad_detectada="Optimización de carga asíncrona y escalado de workers Celery.",
+            contexto_detectado="Carga del sistema nominal.",
+            riesgo_actual="N/A",
+            oportunidad_detectada="Mantenimiento preventivo de rutina.",
             accion_sugerida={
-                "intention": "PLATFORM_OPTIMIZE_RESOURCES",
-                "parameters": {"worker_boost": 2, "priority": "high"}
+                "intention": "ERP_MANAGE_RESOURCES",
+                "parameters": {"action": "cleanup_logs"}
             },
-            impacto_estimado="Reducción de tiempo de espera de 48h a 12h.",
-            nivel_confianza=0.92,
-            nivel_urgencia=StrategyProposal.UrgencyLevel.MEDIUM,
-            nivel_riesgo=StrategyProposal.RiskLevel.LOW
+            impacto_estimado="Liberación de espacio en disco.",
+            nivel_confianza=0.99,
+            nivel_urgencia=StrategyProposal.UrgencyLevel.LOW,
+            nivel_riesgo=StrategyProposal.RiskLevel.LOW,
+            decision_level=StrategyProposal.DecisionLevel.LEVEL_1
         )
 
 class CapitanDecisorComercial(CapitanDecisorBase):
@@ -86,7 +109,8 @@ class CapitanDecisorComercial(CapitanDecisorBase):
             impacto_estimado="Incremento proyectado del 10% en conversiones.",
             nivel_confianza=0.78,
             nivel_urgencia=StrategyProposal.UrgencyLevel.HIGH,
-            nivel_riesgo=StrategyProposal.RiskLevel.LOW
+            nivel_riesgo=StrategyProposal.RiskLevel.LOW,
+            decision_level=StrategyProposal.DecisionLevel.LEVEL_3
         )
 
 class CapitanDecisorNormativo(CapitanDecisorBase):
@@ -105,5 +129,53 @@ class CapitanDecisorNormativo(CapitanDecisorBase):
             impacto_estimado="Cumplimiento del 100% del marco legal vigente.",
             nivel_confianza=1.0,
             nivel_urgencia=StrategyProposal.UrgencyLevel.CRITICAL,
-            nivel_riesgo=StrategyProposal.RiskLevel.HIGH
+            nivel_riesgo=StrategyProposal.RiskLevel.HIGH,
+            decision_level=StrategyProposal.DecisionLevel.LEVEL_3 # Estratégica
+        )
+
+class CapitanDecisorContable(CapitanDecisorBase):
+    domain = StrategyProposal.Domain.SISTEMICO # Usamos sistémico para contabilidad global
+
+    def analyze_and_propose(self, data: Dict[str, Any]) -> StrategyProposal:
+        logger.info(f"AGENTE CONTABLE ({self.agent_id}): Auditando balances...")
+        pending = data.get("pending_invoices", 0)
+        return self._create_proposal(
+            contexto_detectado=f"Existen {pending} facturas sistémicas pendientes de conciliación.",
+            riesgo_actual="Descuadre en el cierre contable mensual.",
+            oportunidad_detectada="Automatización de conciliación bancaria vs ERP.",
+            accion_sugerida={
+                "intention": "ERP_GENERATE_BALANCE",
+                "parameters": {"auto_reconcile": True}
+            },
+            impacto_estimado="Cierre contable en tiempo récord con 0 errores.",
+            nivel_confianza=0.90,
+            nivel_urgencia=StrategyProposal.UrgencyLevel.MEDIUM,
+            nivel_riesgo=StrategyProposal.RiskLevel.LOW,
+            decision_level=StrategyProposal.DecisionLevel.LEVEL_2
+        )
+
+class CapitanDecisorArchivistico(CapitanDecisorBase):
+    domain = StrategyProposal.Domain.SISTEMICO
+
+    def analyze_and_propose(self, data: Dict[str, Any]) -> StrategyProposal:
+        logger.info(f"AGENTE ARCHIVÍSTICO ({self.agent_id}): Revisando integridad documental...")
+        storage = data.get("storage_usage", 0)
+
+        level = StrategyProposal.DecisionLevel.LEVEL_2
+        if storage > 0.90:
+            level = StrategyProposal.DecisionLevel.LEVEL_3 # Crítico, requiere decisión estratégica de expansión
+
+        return self._create_proposal(
+            contexto_detectado=f"Uso de almacenamiento al {int(storage*100)}%.",
+            riesgo_actual="Pérdida de capacidad de carga de documentos de prestadores.",
+            oportunidad_detectada="Migración a almacenamiento en frío para documentos antiguos.",
+            accion_sugerida={
+                "intention": "ERP_SEARCH_DOCUMENT",
+                "parameters": {"action": "archive_old", "threshold_days": 365}
+            },
+            impacto_estimado="Liberación del 20% de espacio inmediato.",
+            nivel_confianza=0.98,
+            nivel_urgencia=StrategyProposal.UrgencyLevel.HIGH,
+            nivel_riesgo=StrategyProposal.RiskLevel.LOW,
+            decision_level=level
         )
