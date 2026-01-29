@@ -1,8 +1,7 @@
 from django.apps import AppConfig
 
-class NominaConfig(AppConfig):
+class AdminNominaConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.prestadores.mi_negocio.gestion_contable.nomina'
-
-    def ready(self):
-        import apps.prestadores.mi_negocio.gestion_contable.nomina.signals
+    name = 'apps.admin_plataforma.gestion_contable.nomina'
+    label = 'admin_nomina'
+    verbose_name = 'Administración Nómina'

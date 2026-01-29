@@ -1,8 +1,8 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/sitios_turisticos/views.py
 from rest_framework import viewsets, permissions
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.sitios_turisticos.models import SitioTuristico, ActividadEnSitio
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.sitios_turisticos.models import SitioTuristico, ActividadEnSitio
 from .serializers import SitioTuristicoSerializer, ActividadEnSitioSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.permissions import IsOwner
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

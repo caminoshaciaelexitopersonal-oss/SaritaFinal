@@ -1,11 +1,11 @@
 from rest_framework import viewsets, permissions, serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.operadores_turisticos.models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.operadores_turisticos.models import OperadorTuristico, PaqueteTuristico, ItinerarioDia
 from .serializers import (
     OperadorTuristicoSerializer,
     PaqueteTuristicoSerializer,
     ItinerarioDiaSerializer,
 )
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from apps.admin_plataforma.permissions import IsPrestadorOwner
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

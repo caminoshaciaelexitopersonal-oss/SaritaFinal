@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.services.gestion_plataforma_service import GestionPlataformaService
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from .serializers import PerfilSerializer, PerfilUpdateSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 

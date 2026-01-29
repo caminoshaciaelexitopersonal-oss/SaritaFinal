@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.utils import timezone
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.valoraciones.models import Valoracion
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.valoraciones.models import Valoracion
 from .serializers import ValoracionSerializer, RespuestaPrestadorSerializer
 
 class ValoracionViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):

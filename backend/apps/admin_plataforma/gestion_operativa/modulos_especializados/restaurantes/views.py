@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.restaurantes.models import KitchenStation, RestaurantTable
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.restaurantes.models import KitchenStation, RestaurantTable
 from .serializers import KitchenStationSerializer, RestaurantTableSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin

@@ -7,9 +7,9 @@ from decimal import Decimal
 # Importaciones de modelos necesarios para crear datos de prueba
 from django.contrib.auth import get_user_model
 from api.models import ProviderProfile, Company
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
-from apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta, ItemFactura
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.clientes.models import Cliente
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta, ItemFactura
 
 User = get_user_model()
 

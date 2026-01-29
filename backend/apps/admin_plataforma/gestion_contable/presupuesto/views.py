@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
 from rest_framework.pagination import PageNumberPagination
-from apps.prestadores.mi_negocio.gestion_contable.presupuesto.models import Presupuesto, PartidaPresupuestal, EjecucionPresupuestal
+from apps.admin_plataforma.gestion_contable.presupuesto.models import Presupuesto, PartidaPresupuestal, EjecucionPresupuestal
 from .serializers import PresupuestoSerializer, PartidaPresupuestalSerializer, EjecucionPresupuestalSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin

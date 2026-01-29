@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.restaurantes.models import KitchenStation, RestaurantTable
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.restaurantes.models import KitchenStation, RestaurantTable
 
 class KitchenStationSerializer(serializers.ModelSerializer):
     class Meta:

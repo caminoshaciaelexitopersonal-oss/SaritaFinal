@@ -89,6 +89,16 @@ INSTALLED_APPS = [
 
     # App para el panel de administración de la plataforma
     "apps.admin_plataforma.apps.AdminPlataformaConfig",
+    "apps.admin_plataforma.gestion_comercial.apps.AdminGestionComercialConfig",
+    "apps.admin_plataforma.gestion_financiera.apps.AdminGestionFinancieraConfig",
+    "apps.admin_plataforma.gestion_archivistica.apps.AdminGestionArchivisticaConfig",
+    "apps.admin_plataforma.gestion_contable.contabilidad.apps.AdminContabilidadConfig",
+    "apps.admin_plataforma.gestion_contable.inventario.apps.AdminInventarioConfig",
+    "apps.admin_plataforma.gestion_contable.compras.apps.AdminComprasConfig",
+    "apps.admin_plataforma.gestion_contable.activos_fijos.apps.AdminActivosFijosConfig",
+    "apps.admin_plataforma.gestion_contable.nomina.apps.AdminNominaConfig",
+    "apps.admin_plataforma.gestion_operativa.apps.AdminGestionOperativaConfig",
+
     "apps.sadi_agent.apps.SadiAgentConfig",
     "apps.sarita_agents.apps.SaritaAgentsConfig",
 

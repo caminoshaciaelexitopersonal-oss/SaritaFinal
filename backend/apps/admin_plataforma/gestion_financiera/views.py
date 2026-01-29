@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
-from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, OrdenPago
+from apps.admin_plataforma.gestion_financiera.models import CuentaBancaria, OrdenPago
 from .serializers import CuentaBancariaSerializer
 
 class CuentaBancariaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):

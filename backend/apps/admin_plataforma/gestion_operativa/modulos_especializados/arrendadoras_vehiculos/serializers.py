@@ -1,6 +1,6 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/arrendadoras_vehiculos/serializers.py
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.arrendadoras_vehiculos.models import VehiculoDeAlquiler, Alquiler
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.arrendadoras_vehiculos.models import VehiculoDeAlquiler, Alquiler
 from django.utils import timezone
 
 class VehiculoDeAlquilerSerializer(serializers.ModelSerializer):

@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 class ProyectosConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.prestadores.mi_negocio.gestion_contable.proyectos'
+    name = 'apps.admin_plataforma.gestion_contable.proyectos'

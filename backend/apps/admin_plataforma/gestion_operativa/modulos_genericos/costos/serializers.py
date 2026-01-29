@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.models import Costo
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.costos.models import Costo
 
 class CostoSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,40 +1,47 @@
-# Informe de Acoplamiento ERP - Fase 1 (Finalizado)
+# Informe de Acoplamiento ERP - Fase 2 (Finalizado)
 
-## Objetivo
-Lograr el acoplamiento funcional del ERP para el Super Admin (Gobernanza) utilizando el dominio canónico de los prestadores sin duplicidad de modelos.
+## Objetivo Estratégico
+Instanciar un sistema de gestión empresarial propio para el Super Administrador, garantizando aislamiento físico total de datos y desvinculación del dominio de los prestadores.
 
-## Naturaleza del ERP Sistémico
-Es fundamental aclarar la naturaleza de este acoplamiento:
-- **No es un negocio turístico:** El ERP del Super Admin no representa una operación comercial turística (hotel, restaurante, etc.).
-- **Contexto de Gobernanza:** Su uso es exclusivamente para la gobernanza, supervisión y control sistémico de la plataforma.
-- **Aislamiento Lógico:** El aislamiento de datos no se basa en modelos separados, sino en una arquitectura de multi-tenancy lógica donde el Super Admin actúa sobre el "Root Tenant" (Plataforma Sarita) mediante permisos específicos y mixins de filtrado sistémico.
+## Arquitectura de Doble Dominio
+A partir de esta fase, el sistema opera con dos dominios empresariales independientes:
+
+1. **Dominio Prestador (Original):** Tablas con prefijo `prestadores_*`.
+2. **Dominio Administrativo (Instanciado):** Tablas con prefijo `admin_*` (ej: `admin_contabilidad_asientocontable`).
 
 ## Acciones Realizadas
 
-### 1. Eliminación de Duplicidad (ORM)
-- Se vaciaron los archivos `models.py` redundantes en `backend/apps/admin_plataforma/`.
-- El sistema ahora utiliza exclusivamente los modelos de `backend/apps/prestadores/mi_negocio/`.
+### 1. Instanciación del Dominio Administrativo (Backend)
+- Se re-implementaron todos los modelos empresariales abstractos en `backend/apps/admin_plataforma/`.
+- Se asignaron `app_label` exclusivos para cada submódulo:
+    - `admin_contabilidad`
+    - `admin_financiera`
+    - `admin_comercial`
+    - `admin_operativa`
+    - `admin_archivistica`
+    - `admin_inventario`
+    - `admin_compras`
+    - `admin_activos_fijos`
+    - `admin_nomina`
+- Se garantizó la creación de tablas físicas separadas en la base de datos.
 
-### 2. Infraestructura de Gobernanza (Backend)
-- **Permisos:** Implementado `IsSuperAdmin` para restringir acceso.
-- **Mixin Sistémico:** Implementado `SystemicERPViewSetMixin` que filtra automáticamente por la "Plataforma Sarita" (Root Organization).
-- **Servicios:** `GestionPlataformaService` asegura la existencia y recuperación del perfil sistémico raíz.
+### 2. Aislamiento Lógico y Físico
+- **Cero Importaciones:** Se eliminaron todas las dependencias e importaciones desde `apps.prestadores.mi_negocio` hacia el dominio administrativo.
+- **Relaciones Aisladas:** Se resolvieron colisiones de ORM (Reverse Accessors) renombrando los `related_name` para que no choquen con el modelo de usuario compartido.
+- **Verificación:** Pruebas funcionales confirmaron que la creación de datos en un dominio no afecta al otro.
 
-### 3. Alineación del Frontend
-- **UI:** Sidebar actualizado con la sección "ERP SISTÉMICO".
-- **API Hooks:** Refactorizado `useMiNegocioApi.ts` para apuntar a los endpoints de administración (`/api/admin/plataforma/`).
+### 3. Infraestructura de Gobernanza
+- **Servicios:** `GestionPlataformaService` ahora opera exclusivamente sobre el contexto del dominio administrativo instanciado.
+- **Mixins:** `SystemicERPViewSetMixin` filtra las consultas hacia las nuevas tablas administrativas.
 
-### 4. Verificación Técnica
-- **Aislamiento:** Confirmado mediante script que los datos del Super Admin no se mezclan con los de los prestadores normales.
-- **Integridad:** `manage.py check` pasa sin colisiones de modelos.
-- **Smoke Test:** Los endpoints de Gestión Comercial, Contable, Financiera, Operativa y Archivística responden correctamente.
+### 4. Migraciones
+- Se generaron y aplicaron migraciones limpias e iniciales para todo el ecosistema administrativo.
 
-## Estado Final
-- **Backend:** 100% Acoplado y Estable.
-- **Frontend:** Estructura lista y enganchada a la API sistémica.
-- **Gobernanza:** El Super Admin ahora tiene un ERP funcional para gestionar la plataforma como un "Root Tenant".
+## Estado Final de la Fase 2
+- **Backend:** 100% aislado físicamente. Estructura de tablas espejo pero independiente.
+- **Seguridad:** El Super Admin tiene autoridad total sobre su ERP sin contaminar la operación de los prestadores.
+- **Escalabilidad:** El sistema está listo para la Fase 3 (Consolidación) y futuras expansiones de IA.
 
-## Próximos Pasos (Oficial: FASE 2)
-- Consolidación de permisos.
-- Control económico global.
-- Autoridad total y gobernanza real del sistema.
+## Próximos Pasos (Propuesta: FASE 3)
+- Consolidación de datos para tableros globales.
+- Operación unificada de gobernanza económica.

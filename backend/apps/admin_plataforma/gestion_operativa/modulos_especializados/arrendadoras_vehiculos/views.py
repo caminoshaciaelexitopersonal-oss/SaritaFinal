@@ -3,9 +3,9 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.utils import timezone
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.arrendadoras_vehiculos.models import VehiculoDeAlquiler, Alquiler
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.arrendadoras_vehiculos.models import VehiculoDeAlquiler, Alquiler
 from .serializers import VehiculoDeAlquilerSerializer, AlquilerSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.permissions import IsOwner
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

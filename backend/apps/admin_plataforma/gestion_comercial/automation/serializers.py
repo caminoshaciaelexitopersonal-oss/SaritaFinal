@@ -1,6 +1,6 @@
 # automation/serializers.py
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_comercial.automation.models import AgentPersona, Workflow, Node, Edge
+from apps.admin_plataforma.gestion_comercial.automation.models import AgentPersona, Workflow, Node, Edge
 
 class AgentPersonaSerializer(serializers.ModelSerializer):
     class Meta:

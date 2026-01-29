@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.clientes.models import Cliente
 from .serializers import ClienteSerializer
 
 class ClienteViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):

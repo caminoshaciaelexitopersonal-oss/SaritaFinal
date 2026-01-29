@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions
-from apps.prestadores.mi_negocio.gestion_contable.inventario.models import CategoriaProducto, Almacen, Producto, MovimientoInventario
+from apps.admin_plataforma.gestion_contable.inventario.models import CategoriaProducto, Almacen, Producto, MovimientoInventario
 from .serializers import (
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin

@@ -7,12 +7,12 @@ from rest_framework.response import Response
 from decimal import Decimal
 
 # Modelos locales
-from apps.prestadores.mi_negocio.gestion_contable.compras.models import Proveedor, FacturaCompra
+from apps.admin_plataforma.gestion_contable.compras.models import Proveedor, FacturaCompra
 from .serializers import ProveedorSerializer, FacturaCompraSerializer
 
 # Modelos de otros módulos para integración
-from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, TransaccionBancaria
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+from apps.admin_plataforma.gestion_financiera.models import CuentaBancaria, TransaccionBancaria
+from apps.admin_plataforma.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

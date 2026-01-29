@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from decimal import Decimal
 
 from .models import FacturaCompra
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+from apps.admin_plataforma.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
 
 @receiver(post_save, sender=FacturaCompra)
 def crear_asiento_contable_factura_compra(sender, instance, created, **kwargs):

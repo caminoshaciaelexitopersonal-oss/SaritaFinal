@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.hoteles.models import Amenity, RoomType, Room
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.hoteles.models import Amenity, RoomType, Room
 
 class AmenitySerializer(serializers.ModelSerializer):
     class Meta:

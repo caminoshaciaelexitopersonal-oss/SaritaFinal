@@ -11,7 +11,7 @@ from decimal import Decimal
 
 from rest_framework import serializers
 # IMPORTAR DESDE PRESTADORES (CANÓNICO)
-from apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta, ReciboCaja
+from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta, ReciboCaja
 from .serializers import (
     FacturaVentaListSerializer,
     FacturaVentaDetailSerializer,
@@ -19,7 +19,7 @@ from .serializers import (
     ReciboCajaSerializer
 )
 # Modelos financieros actualizados
-from apps.prestadores.mi_negocio.gestion_financiera.models import CuentaBancaria, OrdenPago
+from apps.admin_plataforma.gestion_financiera.models import CuentaBancaria, OrdenPago
 
 class FacturaVentaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]

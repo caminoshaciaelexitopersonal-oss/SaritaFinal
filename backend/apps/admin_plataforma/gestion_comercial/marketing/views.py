@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from ai.services.ai_manager.ai_manager import ai_manager
 from ai.services.sanitizers import sanitize_plain_text
-from apps.prestadores.mi_negocio.gestion_comercial.marketing.models import Campaign
+from apps.admin_plataforma.gestion_comercial.marketing.models import Campaign
 from .serializers import CampaignSerializer
 from .services import validate_social_post
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin

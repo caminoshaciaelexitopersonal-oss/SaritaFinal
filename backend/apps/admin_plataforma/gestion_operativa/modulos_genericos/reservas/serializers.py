@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva, PoliticaCancelacion, ReservaServicioAdicional
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.reservas.models import Reserva, PoliticaCancelacion, ReservaServicioAdicional
 
 class ReservaSerializer(serializers.ModelSerializer):
     class Meta:

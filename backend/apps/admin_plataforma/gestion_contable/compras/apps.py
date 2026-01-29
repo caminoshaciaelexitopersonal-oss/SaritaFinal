@@ -1,8 +1,7 @@
 from django.apps import AppConfig
 
-class ComprasConfig(AppConfig):
+class AdminComprasConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.prestadores.mi_negocio.gestion_contable.compras'
-
-    def ready(self):
-        import apps.prestadores.mi_negocio.gestion_contable.compras.signals
+    name = 'apps.admin_plataforma.gestion_contable.compras'
+    label = 'admin_compras'
+    verbose_name = 'Administración Compras'

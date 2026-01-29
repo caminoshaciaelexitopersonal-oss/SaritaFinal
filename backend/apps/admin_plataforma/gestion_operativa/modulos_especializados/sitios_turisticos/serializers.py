@@ -1,6 +1,6 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/sitios_turisticos/serializers.py
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.sitios_turisticos.models import SitioTuristico, ActividadEnSitio
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.sitios_turisticos.models import SitioTuristico, ActividadEnSitio
 
 class ActividadEnSitioSerializer(serializers.ModelSerializer):
     class Meta:

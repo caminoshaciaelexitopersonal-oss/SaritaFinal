@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.valoraciones.models import Valoracion
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.valoraciones.models import Valoracion
 
 class ValoracionSerializer(serializers.ModelSerializer):
     class Meta:

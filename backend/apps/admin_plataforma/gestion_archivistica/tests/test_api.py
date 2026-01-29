@@ -56,7 +56,7 @@ class TestDocumentAPI:
         Prueba el flujo feliz de creación de un documento.
         Usa 'mocker' para simular la tarea de Celery y evitar su ejecución real.
         """
-        mock_task = mocker.patch('apps.prestadores.mi_negocio.gestion_archivistica.services.logic_services.start_file_processing_flow.delay')
+        mock_task = mocker.patch('apps.admin_plataforma.gestion_archivistica.services.logic_services.start_file_processing_flow.delay')
 
         process = ProcessFactory(company=self.perfil.company)
         doc_type = DocumentTypeFactory(company=self.perfil.company)

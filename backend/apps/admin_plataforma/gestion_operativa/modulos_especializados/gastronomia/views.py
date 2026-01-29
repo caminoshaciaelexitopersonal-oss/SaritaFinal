@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions, serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.gastronomia.models import Restaurante, Menu, CategoriaPlato, Plato, ZonaDelivery
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.gastronomia.models import Restaurante, Menu, CategoriaPlato, Plato, ZonaDelivery
 from .serializers import (
     RestauranteSerializer,
     MenuSerializer,
@@ -7,7 +7,7 @@ from .serializers import (
     PlatoSerializer,
     ZonaDeliverySerializer
 )
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from apps.admin_plataforma.permissions import IsPrestadorOwner
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

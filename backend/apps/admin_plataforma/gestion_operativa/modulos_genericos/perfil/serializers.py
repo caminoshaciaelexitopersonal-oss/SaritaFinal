@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile, CategoriaPrestador
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile, CategoriaPrestador
 
 class CategoriaPrestadorSerializer(serializers.ModelSerializer):
     class Meta:

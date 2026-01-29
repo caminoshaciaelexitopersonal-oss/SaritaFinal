@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions
-from apps.prestadores.mi_negocio.gestion_contable.nomina.models import Empleado, Contrato, Planilla, ConceptoNomina
+from apps.admin_plataforma.gestion_contable.nomina.models import Empleado, Contrato, Planilla, ConceptoNomina
 from .serializers import EmpleadoSerializer, ContratoSerializer, PlanillaSerializer, ConceptoNominaSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin

@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.models import Costo
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.costos.models import Costo
 from .serializers import CostoSerializer
 
 class CostoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):

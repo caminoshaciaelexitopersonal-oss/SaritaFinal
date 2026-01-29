@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_archivistica.models import Document, DocumentVersion, Process, ProcessType, DocumentType
+from apps.admin_plataforma.gestion_archivistica.models import Document, DocumentVersion, Process, ProcessType, DocumentType
 
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:

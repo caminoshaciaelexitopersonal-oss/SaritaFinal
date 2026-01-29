@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAdminUser
 from .services.gestion_plataforma_service import GestionPlataformaService
 from .models import Plan, Suscripcion
 from .serializers import PlanSerializer, SuscripcionSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.serializers import PerfilSerializer
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.serializers import PerfilSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

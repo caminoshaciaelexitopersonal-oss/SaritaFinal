@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions
-from apps.prestadores.mi_negocio.gestion_contable.proyectos.models import Proyecto, IngresoProyecto, CostoProyecto
+from apps.admin_plataforma.gestion_contable.proyectos.models import Proyecto, IngresoProyecto, CostoProyecto
 from .serializers import ProyectoSerializer, IngresoProyectoSerializer, CostoProyectoSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin

@@ -1,12 +1,12 @@
 from rest_framework import viewsets, permissions, serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.eventos.models import OrganizadorEvento, Evento, Promocion
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.eventos.models import OrganizadorEvento, Evento, Promocion
 from .serializers import (
     OrganizadorEventoSerializer,
     EventoSerializer,
     PromocionSerializer,
 )
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
-from ...modulos_genericos.productos_servicios.models import Product
+from apps.admin_plataforma.permissions import IsPrestadorOwner
+from .apps.admin_plataforma.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

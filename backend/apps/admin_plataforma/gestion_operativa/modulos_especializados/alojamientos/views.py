@@ -1,10 +1,10 @@
 from rest_framework import viewsets, permissions, views, status
 from rest_framework.response import Response
 from django.utils.dateparse import parse_date
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.alojamientos.models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.alojamientos.models import TipoAlojamiento, Alojamiento, Habitacion, Tarifa
 from .serializers import TipoAlojamientoSerializer, AlojamientoSerializer, HabitacionSerializer, TarifaSerializer
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
-from ...modulos_genericos.reservas.models import Reserva
+from apps.admin_plataforma.permissions import IsPrestadorOwner
+from .apps.admin_plataforma.gestion_operativa.modulos_genericos.reservas.models import Reserva
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import (
+from apps.admin_plataforma.gestion_contable.contabilidad.models import (
     PlanDeCuentas, Cuenta, PeriodoContable, AsientoContable, Transaccion
 )
 

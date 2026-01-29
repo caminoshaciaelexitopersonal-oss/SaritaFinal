@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions, serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transportes.models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.transportes.models import CompaniaTransporte, TipoVehiculo, Vehiculo, Ruta, HorarioRuta
 from .serializers import (
     CompaniaTransporteSerializer,
     TipoVehiculoSerializer,
@@ -7,7 +7,7 @@ from .serializers import (
     RutaSerializer,
     HorarioRutaSerializer,
 )
-from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
+from apps.admin_plataforma.permissions import IsPrestadorOwner
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

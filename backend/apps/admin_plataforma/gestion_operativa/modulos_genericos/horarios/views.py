@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.horarios.models import Horario, ExcepcionHorario
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.horarios.models import Horario, ExcepcionHorario
 from .serializers import HorarioSerializer, ExcepcionHorarioSerializer
 
 class HorarioViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):

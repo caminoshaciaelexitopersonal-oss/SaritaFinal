@@ -2,7 +2,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from apps.prestadores.mi_negocio.gestion_comercial.automation.models import Workflow, AgentPersona
+from apps.admin_plataforma.gestion_comercial.automation.models import Workflow, AgentPersona
 from .serializers import WorkflowDetailSerializer, WorkflowCreateSerializer, AgentPersonaSerializer
 import logging
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin

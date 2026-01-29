@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import (
+from apps.admin_plataforma.gestion_contable.contabilidad.models import (
     PlanDeCuentas, Cuenta, PeriodoContable, AsientoContable, Transaccion
 )
 from .serializers import (

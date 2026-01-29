@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.models import Vehicle #, MaintenanceOrder
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.transporte.models import Vehicle #, MaintenanceOrder
 from .serializers import VehicleSerializer #, MaintenanceOrderSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin

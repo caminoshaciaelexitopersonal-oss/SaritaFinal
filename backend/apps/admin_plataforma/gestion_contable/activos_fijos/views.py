@@ -1,8 +1,8 @@
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.pagination import PageNumberPagination
-from apps.prestadores.mi_negocio.gestion_contable.activos_fijos.models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
+from apps.admin_plataforma.gestion_contable.activos_fijos.models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
 from .serializers import CategoriaActivoSerializer, ActivoFijoSerializer, CalculoDepreciacionSerializer
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+from apps.admin_plataforma.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

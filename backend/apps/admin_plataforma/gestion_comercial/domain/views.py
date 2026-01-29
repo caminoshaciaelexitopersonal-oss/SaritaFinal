@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
-from apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta
-from apps.prestadores.mi_negocio.gestion_comercial.presentation.serializers import FacturaVentaListSerializer
+from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta
+from apps.admin_plataforma.gestion_comercial.presentation.serializers import FacturaVentaListSerializer
 from api.permissions import IsSuperAdmin
 
 class FacturaVentaSystemicViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):

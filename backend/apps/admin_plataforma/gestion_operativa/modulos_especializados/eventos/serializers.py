@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.eventos.models import OrganizadorEvento, Evento, Promocion
-from ...modulos_genericos.productos_servicios.serializers import ProductSerializer
-from ...modulos_genericos.productos_servicios.models import Product
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.eventos.models import OrganizadorEvento, Evento, Promocion
+from .apps.admin_plataforma.gestion_operativa.modulos_genericos.productos_servicios.serializers import ProductSerializer
+from .apps.admin_plataforma.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 
 class EventoSerializer(serializers.ModelSerializer):
     producto = ProductSerializer()

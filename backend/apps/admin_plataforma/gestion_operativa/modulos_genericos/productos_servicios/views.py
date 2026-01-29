@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from .models import Product
 from .serializers import ProductSerializer
 
 class ProductViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
@@ -14,5 +14,5 @@ class ProductViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         from apps.admin_plataforma.services.gestion_plataforma_service import GestionPlataformaService
-        perfil_gobierno = GestionPlataformaService.get_perfil_gobierno()
-        serializer.save(provider=perfil_gobierno)
+        perfil_gobierno = GestionPlataformaService.get_perfil_gobierno_context()
+        serializer.save(organization=perfil_gobierno)

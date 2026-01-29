@@ -1,7 +1,7 @@
 from rest_framework import serializers
 # IMPORTAR DESDE PRESTADORES (CANÓNICO)
-from apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta, ItemFactura, ReciboCaja
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.serializers import ClienteSerializer
+from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta, ItemFactura, ReciboCaja
+from apps.admin_plataforma.gestion_operativa.modulos_genericos.clientes.serializers import ClienteSerializer
 
 class ItemFacturaSerializer(serializers.ModelSerializer):
     producto_ref_id = serializers.UUIDField(write_only=True)

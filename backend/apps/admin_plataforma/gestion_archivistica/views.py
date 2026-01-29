@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
-from apps.prestadores.mi_negocio.gestion_archivistica.models import Document, DocumentVersion, Process, ProcessType, DocumentType
+from apps.admin_plataforma.gestion_archivistica.models import Document, DocumentVersion, Process, ProcessType, DocumentType
 from .serializers import DocumentSerializer, ProcessSerializer
 
 class DocumentViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):

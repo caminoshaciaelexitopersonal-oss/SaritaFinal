@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
-from apps.prestadores.mi_negocio.gestion_comercial.sales.models import Opportunity
+from apps.admin_plataforma.gestion_comercial.sales.models import Opportunity
 from .serializers import OpportunitySerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin

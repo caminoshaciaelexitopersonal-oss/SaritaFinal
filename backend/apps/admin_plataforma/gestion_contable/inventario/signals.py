@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from decimal import Decimal
 
 from .models import MovimientoInventario
-from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+from apps.admin_plataforma.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
 
 @receiver(post_save, sender=MovimientoInventario)
 def crear_asiento_contable_movimiento_inventario(sender, instance, created, **kwargs):

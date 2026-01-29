@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.prestadores.mi_negocio.gestion_contable.nomina.models import Empleado, Contrato, Planilla, NovedadNomina, ConceptoNomina
+from apps.admin_plataforma.gestion_contable.nomina.models import Empleado, Contrato, Planilla, NovedadNomina, ConceptoNomina
 
 class ContratoSerializer(serializers.ModelSerializer):
     class Meta:

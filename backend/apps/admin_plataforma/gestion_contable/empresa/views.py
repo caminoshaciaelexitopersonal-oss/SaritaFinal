@@ -1,7 +1,7 @@
 # from rest_framework import viewsets
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
-# from apps.prestadores.mi_negocio.gestion_contable.empresa.models import Inventario, Costo
+# from apps.admin_plataforma.gestion_contable.empresa.models import Inventario, Costo
 # from .serializers import InventarioSerializer, CostoSerializer
 
 # class InventarioViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):

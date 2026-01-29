@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.hoteles.models import Amenity, RoomType, Room
+from apps.admin_plataforma.gestion_operativa.modulos_especializados.hoteles.models import Amenity, RoomType, Room
 from .serializers import AmenitySerializer, RoomTypeSerializer, RoomSerializer
 
 class HotelFeatureViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
