@@ -5,7 +5,8 @@ import {
   FiChevronDown, FiChevronRight, FiBox, FiStar, FiAward, FiMap, FiTruck,
   FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive,
   FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
-  FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare, FiMonitor, FiDownload
+  FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare, FiMonitor, FiDownload,
+  FiActivity
 } from 'react-icons/fi';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -185,6 +186,9 @@ export default function Sidebar() {
     {
       title: 'Plataforma Sarita',
       links: [
+        { href: '/dashboard/admin_plataforma/inteligencia', label: 'Inteligencia IA', icon: FiActivity },
+        { href: '/dashboard/admin_plataforma/optimizacion', label: 'Ecosistema IA', icon: FiSettings },
+        { href: '/dashboard/admin_plataforma/rentabilidad', label: 'Rentabilidad IA', icon: FiTrendingDown },
         { href: '/dashboard/admin_plataforma/planes', label: 'Planes', icon: FiDollarSign },
         { href: '/dashboard/admin_plataforma/web-content', label: 'Gestión Web', icon: FiMonitor },
         { href: '/dashboard/admin_plataforma/downloads', label: 'Descargas', icon: FiDownload },

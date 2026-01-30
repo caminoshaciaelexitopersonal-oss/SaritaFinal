@@ -44,9 +44,19 @@ urlpatterns = [
 
     # API para el Agente SADI
     path('api/sadi/', include('apps.sadi_agent.urls')),
+    path('api/voice/marketing/', include('apps.sadi_agent.urls')), # Alias para Phase 4-M
 
     # API para el motor de agentes SARITA
     path('api/sarita/', include('apps.sarita_agents.urls')),
+
+    # API para Inteligencia de Decisión
+    path('api/admin/intelligence/', include('apps.decision_intelligence.urls')),
+
+    # API para Optimización del Ecosistema
+    path('api/admin/optimization/', include('apps.ecosystem_optimization.urls')),
+
+    # API para Finanzas Sistémicas
+    path('api/admin/finanzas/', include('apps.finanzas.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

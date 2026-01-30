@@ -13,12 +13,69 @@ from .models import TareaDelegada
 
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.persistencia_prestador_teniente import TenientePersistenciaPrestador
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.validacion_prestador_teniente import TenienteValidacionPrestador
+from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.tenienteauditoria_global import TenienteAuditoriaGlobal
+from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.operativos.tenientes_persistencia import (
+    AdminTenientePersistenciaComercial,
+    AdminTenientePersistenciaContable,
+    AdminTenientePersistenciaFinanciera,
+    AdminTenientePersistenciaOperativa,
+    AdminTenientePersistenciaArchivistica
+)
+from apps.sarita_agents.marketing.tenientes_marketing import (
+    TenienteCalificacion, TenienteDolor, TenienteOferta, TenienteObjeciones, TenienteCierre
+)
+from apps.sarita_agents.agents.teniente_template import TenienteTemplate
+
+# --- TENIENTES FINANCIEROS (Phase 4-F) ---
+class TenienteCACCalculator(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        session_id = parametros.get("session_id")
+        from apps.sarita_agents.finanzas.capitan_cac import CapitanCAC
+        cap = CapitanCAC(coronel=None)
+        cac = cap.calculate_cac(session_id)
+        return {"cac": cac, "session_id": session_id}
+
+class TenienteLTVCalculator(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        user_type = parametros.get("user_type", "prestador")
+        plan_value = parametros.get("plan_value", 50.0)
+        from apps.sarita_agents.finanzas.capitan_ltv import CapitanLTV
+        cap = CapitanLTV(coronel=None)
+        ltv = cap.estimate_ltv(user_type, plan_value)
+        return {"ltv": ltv, "user_type": user_type}
+
+class TenienteROICalculator(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        cac = parametros.get("cac", 1.0)
+        ltv = parametros.get("ltv", 10.0)
+        from apps.sarita_agents.finanzas.capitan_roi import CapitanROI
+        cap = CapitanROI(coronel=None)
+        roi = cap.evaluate_roi(cac, ltv)
+        return {"roi": roi, "profitable": roi > 0}
 
 # --- MAPEO DE TENIENTES ---
 TENIENTE_MAP = {
     # Prestadores (Funcionales)
     'persistencia': TenientePersistenciaPrestador,
     'validacion': TenienteValidacionPrestador,
+    # Administración General
+    'auditoria_global': TenienteAuditoriaGlobal,
+    # Operativos Super Admin (ERP Administrativo)
+    'admin_persistencia_comercial': AdminTenientePersistenciaComercial,
+    'admin_persistencia_contable': AdminTenientePersistenciaContable,
+    'admin_persistencia_financiera': AdminTenientePersistenciaFinanciera,
+    'admin_persistencia_operativa': AdminTenientePersistenciaOperativa,
+    'admin_persistencia_archivistica': AdminTenientePersistenciaArchivistica,
+    # Marketing & Ventas (Phase 4-M)
+    'marketing_calificacion': TenienteCalificacion,
+    'marketing_dolor': TenienteDolor,
+    'marketing_oferta': TenienteOferta,
+    'marketing_objeciones': TenienteObjeciones,
+    'marketing_cierre': TenienteCierre,
+    # Finanzas (Phase 4-F)
+    'cac_calculator': TenienteCACCalculator,
+    'ltv_calculator': TenienteLTVCalculator,
+    'roi_calculator': TenienteROICalculator,
 }
 
 logger = logging.getLogger(__name__)

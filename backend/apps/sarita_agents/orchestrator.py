@@ -5,8 +5,9 @@ import logging
 from django.utils import timezone
 from .models import Mision
 from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
-# Import other Colonels as they are created
-# from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
+from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
+from .marketing.coronel_marketing import CoronelMarketing
+from .finanzas.coronel_finanzas import CoronelFinanzas
 # from .agents.general.sarita.coroneles.clientes_turistas.coronel import ClientesTuristasCoronel
 # from .agents.general.sarita.coroneles.gubernamental.coronel import GubernamentalCoronel
 
@@ -26,7 +27,9 @@ class SaritaOrchestrator:
         # El 'domain' es la clave para la delegación.
         self.coroneles = {
             "prestadores": PrestadoresCoronel(general=self),
-            # "administrador_general": AdministradorGeneralCoronel(general=self),
+            "administrador_general": AdministradorGeneralCoronel(general=self),
+            "marketing": CoronelMarketing(general=self, domain="marketing"),
+            "finanzas": CoronelFinanzas(general=self, domain="finanzas"),
             # "clientes_turistas": ClientesTuristasCoronel(general=self),
             # "gubernamental": GubernamentalCoronel(general=self),
         }
