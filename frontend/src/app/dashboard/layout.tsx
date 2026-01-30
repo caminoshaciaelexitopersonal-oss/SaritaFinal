@@ -78,10 +78,49 @@ export default function DashboardLayout({
     return <>{children}</>;
   }
 
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isLoading) {
+      timer = setTimeout(() => {
+        setShowError(true);
+      }, 8000); // 8 segundos para mostrar fallback de error
+    }
+    return () => clearTimeout(timer);
+  }, [isLoading]);
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-xl text-gray-600">Verificando acceso...</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 text-center">
+        {!showError ? (
+          <>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+            <p className="text-xl text-gray-600 font-medium">Verificando acceso...</p>
+          </>
+        ) : (
+          <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full">
+            <h2 className="text-2xl font-bold text-red-600 mb-4">La verificación está tardando más de lo esperado</h2>
+            <p className="text-gray-600 mb-6">Es posible que haya un problema de conexión o sesión expirada.</p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => window.location.reload()}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Reintentar
+              </button>
+              <button
+                onClick={() => {
+                   localStorage.removeItem('authToken');
+                   window.location.href = '/dashboard/login';
+                }}
+                className="text-blue-600 hover:underline"
+              >
+                Volver a iniciar sesión
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

@@ -102,11 +102,11 @@ const miNegocioNav: NavSection[] = [
     title: 'Gestión Comercial',
     isSubSection: true,
     links: [
-      { href: '/dashboard/prestador/mi-negocio/comercial', label: 'Facturación de Ventas', icon: FiDollarSign },
+      { href: '/dashboard/prestador/mi-negocio/gestion-comercial', label: 'Facturación de Ventas', icon: FiDollarSign },
     ],
   },
   { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Ver Módulo', icon: FiArchive }] },
-  { title: 'Análisis Financiero', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/financiera', label: 'Ver Módulo', icon: FiTrendingDown }] },
+  { title: 'Análisis Financiero', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-financiera', label: 'Ver Módulo', icon: FiTrendingDown }] },
 ];
 
 // --- Sección Colapsable ---
@@ -176,11 +176,11 @@ export default function Sidebar() {
     {
       title: 'ERP SISTÉMICO',
       links: [
-        { href: '/dashboard/admin_plataforma/gestion-comercial', label: 'Gestión Comercial', icon: FiDollarSign },
-        { href: '/dashboard/admin_plataforma/operativa', label: 'Gestión Operativa', icon: FiGrid },
-        { href: '/dashboard/admin_plataforma/contable', label: 'Gestión Contable', icon: FiBookOpen },
-        { href: '/dashboard/admin_plataforma/financiera', label: 'Gestión Financiera', icon: FiTrendingDown },
-        { href: '/dashboard/admin_plataforma/archivistica', label: 'Gestión Archivística', icon: FiArchive },
+        { href: '/dashboard/admin_plataforma/gestion_comercial', label: 'Gestión Comercial', icon: FiDollarSign },
+        { href: '/dashboard/admin_plataforma/gestion-operativa', label: 'Gestión Operativa', icon: FiGrid },
+        { href: '/dashboard/admin_plataforma/gestion-contable', label: 'Gestión Contable', icon: FiBookOpen },
+        { href: '/dashboard/admin_plataforma/gestion-financiera', label: 'Gestión Financiera', icon: FiTrendingDown },
+        { href: '/dashboard/admin_plataforma/gestion-archivistica', label: 'Gestión Archivística', icon: FiArchive },
       ],
     },
     {

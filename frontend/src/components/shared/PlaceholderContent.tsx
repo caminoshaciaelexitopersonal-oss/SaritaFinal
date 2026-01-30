@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { FiHardHat } from 'react-icons/fi';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { FiActivity } from 'react-icons/fi';
 
 interface PlaceholderContentProps {
   title: string;
