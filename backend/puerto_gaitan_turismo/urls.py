@@ -54,6 +54,9 @@ urlpatterns = [
 
     # API para Optimización del Ecosistema
     path('api/admin/optimization/', include('apps.ecosystem_optimization.urls')),
+
+    # API para Finanzas Sistémicas
+    path('api/admin/finanzas/', include('apps.finanzas.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

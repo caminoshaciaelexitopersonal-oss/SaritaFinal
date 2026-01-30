@@ -188,6 +188,7 @@ export default function Sidebar() {
       links: [
         { href: '/dashboard/admin_plataforma/inteligencia', label: 'Inteligencia IA', icon: FiActivity },
         { href: '/dashboard/admin_plataforma/optimizacion', label: 'Ecosistema IA', icon: FiSettings },
+        { href: '/dashboard/admin_plataforma/rentabilidad', label: 'Rentabilidad IA', icon: FiTrendingDown },
         { href: '/dashboard/admin_plataforma/planes', label: 'Planes', icon: FiDollarSign },
         { href: '/dashboard/admin_plataforma/web-content', label: 'Gestión Web', icon: FiMonitor },
         { href: '/dashboard/admin_plataforma/downloads', label: 'Descargas', icon: FiDownload },

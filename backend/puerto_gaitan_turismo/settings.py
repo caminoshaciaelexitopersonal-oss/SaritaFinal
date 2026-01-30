@@ -105,6 +105,7 @@ INSTALLED_APPS = [
     "apps.web_funnel.apps.WebFunnelConfig",
     "apps.decision_intelligence.apps.DecisionIntelligenceConfig",
     "apps.ecosystem_optimization.apps.EcosystemOptimizationConfig",
+    "apps.finanzas.apps.FinanzasConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
 

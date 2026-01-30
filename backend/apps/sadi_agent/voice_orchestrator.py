@@ -11,6 +11,7 @@ from .semantic_engine import SemanticEngine
 from .translation_service import TranslationService
 from .models import VoiceInteractionLog
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
+from apps.finanzas.events import FinancialEventManager, VOICE_SESSION_STARTED, VOICE_MINUTE_CONSUMED
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +34,10 @@ class VoiceOrchestrator:
         Flujo principal de la Fase Z para manejar un comando de voz desde audio.
         """
         log = VoiceInteractionLog.objects.create(user=user)
+        session_id = str(log.id)
+
+        # Emisión de Evento Financiero (Phase 4-F)
+        FinancialEventManager.emit_event(VOICE_SESSION_STARTED, session_id, value=0.0)
         text_response = "Lo siento, ha ocurrido un error inesperado."
         detected_language = "es" # Default
 
@@ -40,6 +45,9 @@ class VoiceOrchestrator:
             # 1. Transcripción y Detección de Idioma
             log.audio_hash = self._calculate_hash(audio_path)
             transcribed_text, detected_language = self.stt_provider.transcribe(audio_path)
+
+            # Cargo por uso de IA (Phase 4-F)
+            FinancialEventManager.emit_event(VOICE_MINUTE_CONSUMED, session_id, value=0.05)
             log.transcribed_text = transcribed_text
             log.detected_language = detected_language
             log.save()
@@ -198,6 +206,31 @@ class VoiceOrchestrator:
     def _handle_marketing_voice_command(self, kernel: GovernanceKernel, intent, entities) -> str:
         """Maneja el flujo conversacional del embudo de ventas (Fase 4-M)."""
         text = self.current_order.get("original_text", "")
+        session_id = str(entities.get("session_id", "default"))
+
+        from apps.sarita_agents.finanzas.capitan_cac import CapitanCAC
+        from apps.sarita_agents.finanzas.capitan_ltv import CapitanLTV
+        from apps.sarita_agents.finanzas.capitan_roi import CapitanROI
+        from apps.finanzas.events import FinancialEventManager, OBJECTION_DETECTED
+
+        # Phase 4-F: Análisis de Rentabilidad en Tiempo Real
+        cac_cap = CapitanCAC(coronel=None)
+        ltv_cap = CapitanLTV(coronel=None)
+        roi_cap = CapitanROI(coronel=None)
+
+        cac = cac_cap.calculate_cac(session_id)
+        # Estimación conservadora inicial
+        ltv = ltv_cap.estimate_ltv(user_type='prestador', plan_value=20.0)
+        roi = roi_cap.evaluate_roi(cac, ltv)
+
+        # Regla Crítica: No vender si CAC > LTV
+        if cac > ltv:
+            logger.warning(f"MARKETING: CAC ({cac}) excede LTV ({ltv}). Abortando venta proactiva.")
+            return "Entiendo tu interés, pero en este momento estamos priorizando perfiles con mayor impacto sistémico. ¿Deseas explorar nuestra documentación?"
+
+        # Retroalimentación: Si ROI es bajo, exploración corta
+        if roi < 2.0:
+            logger.info(f"MARKETING: ROI bajo ({roi}). Aplicando exploración guiada corta.")
 
         # Activar el sistema de agentes de marketing
         directive = {
