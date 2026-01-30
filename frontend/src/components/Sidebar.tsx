@@ -6,7 +6,7 @@ import {
   FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive,
   FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
   FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare, FiMonitor, FiDownload,
-  FiActivity
+  FiActivity, FiZap
 } from 'react-icons/fi';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -29,15 +29,15 @@ interface NavSection {
 
 // --- Componentes de UI ---
 const SidebarSkeleton = () => (
-  <div className="p-4 animate-pulse">
-    <div className="h-8 bg-gray-200 rounded-md w-3/4 mb-6"></div>
-    <div className="space-y-4">
+  <div className="p-6 animate-pulse bg-white dark:bg-black h-full">
+    <div className="h-10 bg-slate-100 dark:bg-brand-deep rounded-xl w-3/4 mb-10"></div>
+    <div className="space-y-6">
       {[...Array(4)].map((_, i) => (
         <div key={i}>
-          <div className="h-6 bg-gray-200 rounded-md w-1/2 mb-3"></div>
-          <div className="space-y-2 pl-4">
-            <div className="h-5 bg-gray-200 rounded-md w-5/6"></div>
-            <div className="h-5 bg-gray-200 rounded-md w-4/6"></div>
+          <div className="h-6 bg-slate-50 dark:bg-brand-deep rounded-lg w-1/2 mb-4"></div>
+          <div className="space-y-3 pl-4">
+            <div className="h-5 bg-slate-50 dark:bg-brand-deep rounded-lg w-5/6"></div>
+            <div className="h-5 bg-slate-50 dark:bg-brand-deep rounded-lg w-4/6"></div>
           </div>
         </div>
       ))}
@@ -55,14 +55,14 @@ const SidebarLink = ({ link, isSubSection }: { link: NavLink, isSubSection?: boo
   return (
     <Link href={link.href} passHref>
       <div
-        className={`w-full flex items-center pr-4 py-2.5 text-sm font-medium rounded-lg transition-colors text-left cursor-pointer ${paddingClass} ${
+        className={`w-full flex items-center pr-4 py-3 text-sm font-bold rounded-xl transition-all duration-300 text-left cursor-pointer group mb-1 ${paddingClass} ${
           isActive
-            ? 'bg-blue-100 text-blue-700'
-            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+            ? 'bg-brand/10 text-brand dark:bg-brand/20 dark:text-brand-light shadow-sm'
+            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-brand-deep/50 hover:text-slate-900 dark:hover:text-white'
         }`}
       >
-        {Icon && <Icon className="mr-3 h-5 w-5 flex-shrink-0" />}
-        <span className="truncate">{link.label}</span>
+        {Icon && <Icon className={`mr-3 h-5 w-5 flex-shrink-0 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />}
+        <span className="truncate tracking-tight">{link.label}</span>
       </div>
     </Link>
   );
@@ -86,7 +86,7 @@ const miNegocioNav: NavSection[] = [
     ],
   },
   {
-    title: 'Módulos Especializados',
+    title: 'Módulos Pro',
     isSubSection: true,
     links: [
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/hoteles/habitaciones', label: 'Habitaciones', icon: FiBriefcase, prestadorCategoria: 'hotel' },
@@ -105,8 +105,9 @@ const miNegocioNav: NavSection[] = [
       { href: '/dashboard/prestador/mi-negocio/gestion-comercial', label: 'Facturación de Ventas', icon: FiDollarSign },
     ],
   },
-  { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Ver Módulo', icon: FiArchive }] },
-  { title: 'Análisis Financiero', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-financiera', label: 'Ver Módulo', icon: FiTrendingDown }] },
+  { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Archivo Digital', icon: FiArchive }] },
+  { title: 'Análisis Financiero', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-financiera', label: 'Tesorería', icon: FiTrendingDown }] },
+  { title: 'Gestión Contable', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-contable', label: 'Libros Contables', icon: FiBookOpen }] },
 ];
 
 // --- Sección Colapsable ---
@@ -141,16 +142,16 @@ const CollapsibleNavSection = ({
   const paddingClass = section.isSubSection ? 'pl-8' : 'px-4';
 
   return (
-    <div>
+    <div className="mb-2">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center justify-between w-full py-2.5 text-sm font-medium text-left rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${paddingClass}`}
+        className={`flex items-center justify-between w-full py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 rounded-lg transition-colors focus:outline-none ${paddingClass}`}
       >
-        <span className="font-semibold">{section.title}</span>
-        {isOpen ? <FiChevronDown className="h-5 w-5" /> : <FiChevronRight className="h-5 w-5" />}
+        <span>{section.title}</span>
+        {isOpen ? <FiChevronDown className="h-3 w-3" /> : <FiChevronRight className="h-3 w-3" />}
       </button>
       {isOpen && (
-        <div className="mt-2 space-y-1">
+        <div className="mt-1 space-y-px">
           {filteredLinks.map((link) => (
             <SidebarLink key={link.href} link={link} isSubSection={section.isSubSection} />
           ))}
@@ -166,15 +167,13 @@ export default function Sidebar() {
   const [isMiNegocioOpen, setIsMiNegocioOpen] = useState(true);
 
   if (isLoading) return <SidebarSkeleton />;
-  // Si la carga ha terminado y no hay usuario, retorna un componente vacío
-  // que mantiene el espacio en el layout para evitar el parpadeo (flicker).
-  if (!user) return <aside className="w-64 flex-shrink-0 bg-white border-r border-gray-200" />;
+  if (!user) return <aside className="w-72 flex-shrink-0 bg-white dark:bg-black border-r border-slate-100 dark:border-white/5 h-full" />;
 
   const prestadorCategoria = user.perfil_prestador?.categoria?.nombre;
 
   const adminNavSections: NavSection[] = [
     {
-      title: 'ERP SISTÉMICO',
+      title: 'ERP Sistémico',
       links: [
         { href: '/dashboard/admin_plataforma/gestion_comercial', label: 'Gestión Comercial', icon: FiDollarSign },
         { href: '/dashboard/admin_plataforma/gestion-operativa', label: 'Gestión Operativa', icon: FiGrid },
@@ -184,58 +183,71 @@ export default function Sidebar() {
       ],
     },
     {
-      title: 'Plataforma Sarita',
+      title: 'Gobernanza IA',
       links: [
-        { href: '/dashboard/admin_plataforma/inteligencia', label: 'Inteligencia IA', icon: FiActivity },
-        { href: '/dashboard/admin_plataforma/optimizacion', label: 'Ecosistema IA', icon: FiSettings },
-        { href: '/dashboard/admin_plataforma/rentabilidad', label: 'Rentabilidad IA', icon: FiTrendingDown },
-        { href: '/dashboard/admin_plataforma/planes', label: 'Planes', icon: FiDollarSign },
-        { href: '/dashboard/admin_plataforma/web-content', label: 'Gestión Web', icon: FiMonitor },
-        { href: '/dashboard/admin_plataforma/downloads', label: 'Descargas', icon: FiDownload },
+        { href: '/dashboard/admin_plataforma/inteligencia', label: 'Inteligencia de Decisión', icon: FiActivity },
+        { href: '/dashboard/admin_plataforma/optimizacion', label: 'Optimización Ecosistema', icon: FiZap },
+        { href: '/dashboard/admin_plataforma/rentabilidad', label: 'Análisis de Rentabilidad', icon: FiTrendingUp },
+        { href: '/dashboard/admin_plataforma/planes', label: 'Gestión de Planes', icon: FiShield },
+        { href: '/dashboard/admin_plataforma/web-content', label: 'Gobernanza Web', icon: FiMonitor },
       ],
     },
     {
-      title: 'Gestión de Contenido',
+      title: 'Contenido y Territorio',
       links: [
         { href: '/dashboard/publicaciones', label: 'Publicaciones', icon: FiFileText },
-        { href: '/dashboard/atractivos', label: 'Atractivos', icon: FiMapPin },
-        { href: '/dashboard/rutas', label: 'Rutas Turísticas', icon: FiMapPin },
+        { href: '/dashboard/atractivos', label: 'Atractivos Turísticos', icon: FiMapPin },
+        { href: '/dashboard/rutas', label: 'Rutas Estratégicas', icon: FiMap },
       ],
     },
     {
-      title: 'Administración',
+      title: 'Administración Core',
       links: [
-        { href: '/dashboard/admin/users', label: 'Usuarios', icon: FiUsers },
-        { href: '/dashboard/admin/site-config', label: 'Config. del Sitio', icon: FiSettings },
-        { href: '/dashboard/admin/formularios', label: 'Formularios', icon: FiClipboard },
-        { href: '/dashboard/admin/verificacion', label: 'Verificaciones', icon: FiCheckSquare },
-        { href: '/dashboard/admin/scoring', label: 'Puntuación', icon: FiAward },
+        { href: '/dashboard/admin/users', label: 'Control de Usuarios', icon: FiUsers },
+        { href: '/dashboard/admin/site-config', label: 'Configuración Global', icon: FiSettings },
+        { href: '/dashboard/admin/verificacion', label: 'Centro de Verificación', icon: FiCheckSquare },
+        { href: '/dashboard/admin/scoring', label: 'Reglas de Puntuación', icon: FiAward },
       ],
     },
   ];
 
   return (
-    <aside className="w-64 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-4 border-b">
-        <h2 className="text-xl font-bold text-gray-800 truncate">SITYC</h2>
-        <p className="text-sm text-gray-500 truncate" title={user.email}>
-          {user.username}
-        </p>
+    <aside className="w-72 flex-shrink-0 bg-white dark:bg-black border-r border-slate-100 dark:border-white/5 flex flex-col h-full transition-colors">
+      <div className="p-8 pb-10">
+        <div className="flex items-center gap-3 mb-8">
+           <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center text-white shadow-xl shadow-brand/20">
+              <FiShield size={24} />
+           </div>
+           <div>
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">SARITA</h2>
+              <p className="text-[9px] font-black text-brand uppercase tracking-[0.3em]">Sovereign ERP</p>
+           </div>
+        </div>
+
+        <div className="bg-slate-50 dark:bg-brand-deep/30 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
+           <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-brand/10 dark:bg-brand/20 flex items-center justify-center text-brand">
+                 <FiUser size={16} />
+              </div>
+              <div className="flex-1 min-w-0">
+                 <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.username}</p>
+                 <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{user.email}</p>
+              </div>
+           </div>
+        </div>
       </div>
-      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-        <SidebarLink link={{ href: '/dashboard', label: 'Inicio', icon: FiHome }} />
+
+      <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar pb-10">
+        <SidebarLink link={{ href: '/dashboard', label: 'Dashboard Central', icon: FiHome }} />
 
         {user.role === 'PRESTADOR' && (
-          <div>
-            <button
-              onClick={() => setIsMiNegocioOpen(!isMiNegocioOpen)}
-              className="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-left rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <span className="font-semibold text-lg">Mi Negocio</span>
-              {isMiNegocioOpen ? <FiChevronDown className="h-5 w-5" /> : <FiChevronRight className="h-5 w-5" />}
-            </button>
+          <div className="mt-8">
+            <div className="px-4 mb-4 flex items-center justify-between group cursor-pointer" onClick={() => setIsMiNegocioOpen(!isMiNegocioOpen)}>
+               <span className="text-xs font-black text-slate-900 dark:text-white tracking-widest uppercase">Mi Negocio</span>
+               {isMiNegocioOpen ? <FiChevronDown size={14} className="text-slate-400" /> : <FiChevronRight size={14} className="text-slate-400" />}
+            </div>
             {isMiNegocioOpen && (
-              <div className="mt-2 space-y-1">
+              <div className="space-y-px">
                 {miNegocioNav.map((section) => (
                   <CollapsibleNavSection
                     key={section.title}
@@ -254,6 +266,16 @@ export default function Sidebar() {
             <CollapsibleNavSection key={section.title} section={section} userRole={user.role} />
           ))}
       </nav>
+
+      <div className="p-6 border-t border-slate-50 dark:border-white/5">
+         <div className="bg-indigo-600 rounded-2xl p-6 text-white relative overflow-hidden group cursor-pointer">
+            <div className="absolute -right-4 -bottom-4 opacity-20 group-hover:scale-125 transition-transform duration-700">
+               <FiZap size={60} />
+            </div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-indigo-200 mb-1">Status</p>
+            <p className="text-xs font-bold leading-tight">Agentes de Inteligencia activos en red.</p>
+         </div>
+      </div>
     </aside>
   );
 }

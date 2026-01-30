@@ -171,7 +171,7 @@ const IntegrationsTab: React.FC = () => (
                 <GooglePlayIcon className="w-12 h-12 mx-auto mb-2"/>
                  <h4 className="font-bold">Google Play Console</h4>
                 <p className="text-sm text-muted-foreground mb-3">Sincroniza datos de tu app Android.</p>
-                 <button className="w-full bg-muted py-2 rounded-md font-semibold">Próximamente</button>
+                 <button className="w-full bg-brand text-white py-2 rounded-md font-semibold">Vincular Nodo</button>
             </div>
         </div>
     </div>

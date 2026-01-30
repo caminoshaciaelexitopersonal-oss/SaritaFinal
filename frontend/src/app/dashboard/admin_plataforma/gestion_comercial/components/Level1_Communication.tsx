@@ -172,8 +172,8 @@ const Level1_Communication: React.FC<Level1Props> = ({ authToken }) => {
                 <button className="flex items-center space-x-2 py-2 px-4 font-medium border-b-2 border-primary text-foreground">
                     <MegaphoneIcon className="w-5 h-5" /><span>Campañas</span>
                 </button>
-                 <button className="flex items-center space-x-2 py-2 px-4 font-medium text-muted-foreground hover:text-foreground">
-                    <AnalyticsIcon className="w-5 h-5" /><span>Analíticas (Próximamente)</span>
+                 <button className="flex items-center space-x-2 py-2 px-4 font-medium text-muted-foreground hover:text-brand transition-colors">
+                    <AnalyticsIcon className="w-5 h-5" /><span>Analíticas IA</span>
                 </button>
             </div>
             
