@@ -21,7 +21,7 @@ from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.te
     AdminTenientePersistenciaOperativa,
     AdminTenientePersistenciaArchivistica
 )
-from apps.sarita_agents.agents.marketing.tenientes_marketing import (
+from apps.sarita_agents.marketing.tenientes_marketing import (
     TenienteCalificacion, TenienteDolor, TenienteOferta, TenienteObjeciones, TenienteCierre
 )
 

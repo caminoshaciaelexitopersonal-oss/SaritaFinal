@@ -1,6 +1,6 @@
 # backend/apps/sarita_agents/agents/marketing/capitan_embudo.py
 import logging
-from ..capitan_template import CapitanTemplate
+from apps.sarita_agents.agents.capitan_template import CapitanTemplate
 from apps.sarita_agents.models import Mision, PlanTáctico
 
 logger = logging.getLogger(__name__)

@@ -1,6 +1,6 @@
 # backend/apps/sarita_agents/agents/marketing/tenientes_marketing.py
 import logging
-from ..teniente_template import TenienteTemplate
+from apps.sarita_agents.agents.teniente_template import TenienteTemplate
 from api.models import CustomUser
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 

@@ -6,7 +6,7 @@ from django.utils import timezone
 from .models import Mision
 from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
 from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
-from .agents.marketing.coronel_marketing import CoronelMarketing
+from .marketing.coronel_marketing import CoronelMarketing
 # from .agents.general.sarita.coroneles.clientes_turistas.coronel import ClientesTuristasCoronel
 # from .agents.general.sarita.coroneles.gubernamental.coronel import GubernamentalCoronel
 

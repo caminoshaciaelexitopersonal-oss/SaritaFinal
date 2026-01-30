@@ -1,6 +1,6 @@
 # backend/apps/sarita_agents/agents/marketing/coronel_marketing.py
 import logging
-from ..coronel_template import CoronelTemplate
+from apps.sarita_agents.agents.coronel_template import CoronelTemplate
 from .capitan_embudo import CapitanEmbudo
 
 logger = logging.getLogger(__name__)
