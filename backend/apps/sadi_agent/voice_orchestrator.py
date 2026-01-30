@@ -84,6 +84,9 @@ class VoiceOrchestrator:
             elif intent.name.startswith("OPTIMIZATION_"):
                 text_response = self._handle_optimization_voice_command(kernel, intent, entities)
                 log.final_status = "COMPLETADA"
+            elif intent.domain.name == "marketing":
+                text_response = self._handle_marketing_voice_command(kernel, intent, entities)
+                log.final_status = "COMPLETADA"
             else:
                 # Flujo estándar de Misión de Agentes
                 directive = self._build_directive(intent, entities)
@@ -191,6 +194,44 @@ class VoiceOrchestrator:
                 raise ConnectionError(f"Error al consultar el estado de la misión: {response.status_code}")
 
         raise TimeoutError(f"La misión {mission_id} no finalizó en el tiempo esperado.")
+
+    def _handle_marketing_voice_command(self, kernel: GovernanceKernel, intent, entities) -> str:
+        """Maneja el flujo conversacional del embudo de ventas (Fase 4-M)."""
+        text = self.current_order.get("original_text", "")
+
+        # Activar el sistema de agentes de marketing
+        directive = {
+            "domain": "marketing",
+            "mission": {
+                "type": "CONVERSATIONAL_FUNNEL",
+                "action": "guide_prospect",
+                "entity": "lead"
+            },
+            "parameters": entities,
+            "voice_context": {
+                "original_text": text,
+                "actor": "prospect"
+            }
+        }
+
+        # Iniciamos la misión asíncrona
+        mision = sarita_orchestrator.start_mission(directive)
+        sarita_orchestrator.execute_mission(mision.id)
+
+        # Generamos respuesta verbal inmediata basada en la intención
+        if intent.name == "explorar_plataforma":
+            return "Bienvenido a SARITA. Soy tu asistente comercial. ¿Te interesa vender servicios turísticos o buscas una solución para gobierno?"
+
+        if intent.name == "quiero_vender_turismo":
+            return "Excelente. Sarita evita que pierdas dinero por desorden y te organiza las ventas. ¿Trabajas solo o tienes un equipo?"
+
+        if intent.name == "soy_gobierno":
+            return "Entendido. Ofrecemos una plataforma integral para secretarías y direcciones de turismo. ¿Deseas ver cómo automatizamos inventarios?"
+
+        if intent.name == "quiero_precio":
+            return "Nuestros planes se adaptan a tu tamaño. Primero cuéntame, ¿cuántos servicios gestionas actualmente?"
+
+        return "Entiendo tu interés. Permíteme guiarte para encontrar la mejor solución en Sarita."
 
     def _handle_optimization_voice_command(self, kernel: GovernanceKernel, intent, entities) -> str:
         """Maneja comandos de voz específicos para la optimización de Fase 6."""

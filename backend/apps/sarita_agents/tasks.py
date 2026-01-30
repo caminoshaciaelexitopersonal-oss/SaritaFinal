@@ -21,6 +21,9 @@ from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.te
     AdminTenientePersistenciaOperativa,
     AdminTenientePersistenciaArchivistica
 )
+from apps.sarita_agents.agents.marketing.tenientes_marketing import (
+    TenienteCalificacion, TenienteDolor, TenienteOferta, TenienteObjeciones, TenienteCierre
+)
 
 # --- MAPEO DE TENIENTES ---
 TENIENTE_MAP = {
@@ -35,6 +38,12 @@ TENIENTE_MAP = {
     'admin_persistencia_financiera': AdminTenientePersistenciaFinanciera,
     'admin_persistencia_operativa': AdminTenientePersistenciaOperativa,
     'admin_persistencia_archivistica': AdminTenientePersistenciaArchivistica,
+    # Marketing & Ventas (Phase 4-M)
+    'marketing_calificacion': TenienteCalificacion,
+    'marketing_dolor': TenienteDolor,
+    'marketing_oferta': TenienteOferta,
+    'marketing_objeciones': TenienteObjeciones,
+    'marketing_cierre': TenienteCierre,
 }
 
 logger = logging.getLogger(__name__)

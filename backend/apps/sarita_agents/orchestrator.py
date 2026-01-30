@@ -6,6 +6,7 @@ from django.utils import timezone
 from .models import Mision
 from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
 from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
+from .agents.marketing.coronel_marketing import CoronelMarketing
 # from .agents.general.sarita.coroneles.clientes_turistas.coronel import ClientesTuristasCoronel
 # from .agents.general.sarita.coroneles.gubernamental.coronel import GubernamentalCoronel
 
@@ -26,6 +27,7 @@ class SaritaOrchestrator:
         self.coroneles = {
             "prestadores": PrestadoresCoronel(general=self),
             "administrador_general": AdministradorGeneralCoronel(general=self),
+            "marketing": CoronelMarketing(general=self, domain="marketing"),
             # "clientes_turistas": ClientesTuristasCoronel(general=self),
             # "gubernamental": GubernamentalCoronel(general=self),
         }

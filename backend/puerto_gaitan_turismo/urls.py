@@ -44,6 +44,7 @@ urlpatterns = [
 
     # API para el Agente SADI
     path('api/sadi/', include('apps.sadi_agent.urls')),
+    path('api/voice/marketing/', include('apps.sadi_agent.urls')), # Alias para Phase 4-M
 
     # API para el motor de agentes SARITA
     path('api/sarita/', include('apps.sarita_agents.urls')),
