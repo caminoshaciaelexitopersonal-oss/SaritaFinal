@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { EntityProvider } from '@/contexts/EntityContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { MSWProvider } from '@/components/MSWProvider';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,9 +15,10 @@ type Props = {
 export function Providers({ children }: Props) {
   return (
     <ThemeProvider>
-      <EntityProvider>
-        <AuthProvider>
-          {children}
+      <MSWProvider>
+        <EntityProvider>
+          <AuthProvider>
+            {children}
           <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -29,8 +31,9 @@ export function Providers({ children }: Props) {
           pauseOnHover
           theme="light"
         />
-        </AuthProvider>
-      </EntityProvider>
+          </AuthProvider>
+        </EntityProvider>
+      </MSWProvider>
     </ThemeProvider>
   );
 }

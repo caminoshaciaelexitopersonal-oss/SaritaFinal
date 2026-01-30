@@ -63,5 +63,10 @@
   },
   "overrides": {
     "@playwright/test": "^1.55.1"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

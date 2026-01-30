@@ -83,6 +83,7 @@ const miNegocioNav: NavSection[] = [
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/galeria', label: 'Galería', icon: FiImage },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/estadisticas', label: 'Estadísticas', icon: FiBarChart2 },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/costos', label: 'Costos', icon: FiTrendingDown },
+      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/sst', label: 'Seguridad y Salud (SST)', icon: FiShield },
     ],
   },
   {

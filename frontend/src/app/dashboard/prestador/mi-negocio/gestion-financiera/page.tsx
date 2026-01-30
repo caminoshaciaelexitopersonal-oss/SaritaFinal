@@ -104,6 +104,22 @@ export default function GestionFinancieraPage() {
         </Card>
       </div>
 
+      {/* Ratios Financieros */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+         {[
+           { label: 'Liquidez Corriente', val: '2.4', status: 'HEALTHY' },
+           { label: 'Margen Bruto', val: '45%', status: 'HEALTHY' },
+           { label: 'Prueba Ácida', val: '1.8', status: 'HEALTHY' },
+           { label: 'Endeudamiento', val: '12%', status: 'LOW' },
+         ].map((ratio, i) => (
+           <Card key={i} className="border-none shadow-sm bg-white dark:bg-brand-deep/10 p-6 text-center">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{ratio.label}</p>
+              <h4 className="text-xl font-black text-slate-900 dark:text-white">{ratio.val}</h4>
+              <Badge variant="outline" className="mt-3 text-[8px] border-emerald-100 text-emerald-600 bg-emerald-50 dark:bg-emerald-900/10 uppercase font-black">{ratio.status}</Badge>
+           </Card>
+         ))}
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Cuentas Bancarias */}
         <Card className="border-none shadow-sm overflow-hidden">
