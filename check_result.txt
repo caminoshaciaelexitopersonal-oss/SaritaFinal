@@ -1,0 +1,49 @@
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:228: UserWarning: app_settings.USERNAME_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['username']['required']
+  required=allauth_account_settings.USERNAME_REQUIRED,
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:230: UserWarning: app_settings.EMAIL_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['email']['required']
+  email = serializers.EmailField(required=allauth_account_settings.EMAIL_REQUIRED)
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:288: UserWarning: app_settings.EMAIL_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['email']['required']
+  email = serializers.EmailField(required=allauth_account_settings.EMAIL_REQUIRED)
+KERNEL: Intención 'PLATFORM_CREATE_PLAN' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_SUSPEND_USER' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'ERP_CONFIRM_SALE' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ERP_GENERATE_BALANCE' registrada en el dominio 'contable'.
+KERNEL: Intención 'ERP_CREATE_VOUCHER' registrada en el dominio 'contable'.
+KERNEL: Intención 'ERP_VIEW_SALES_STATS' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ERP_VIEW_CASH_FLOW' registrada en el dominio 'financiero'.
+KERNEL: Intención 'ERP_MANAGE_RESOURCES' registrada en el dominio 'operativo'.
+KERNEL: Intención 'ERP_SEARCH_DOCUMENT' registrada en el dominio 'archivistico'.
+KERNEL: Intención 'PLATFORM_UPDATE_PLAN' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_OPTIMIZE_RESOURCES' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_UPDATE_WEB_CMS' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_UPDATE_LEGAL' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'ONBOARDING_PRESTADOR' registrada en el dominio 'prestadores'.
+KERNEL: Intención 'AUDITORIA_GLOBAL' registrada en el dominio 'administrador_general'.
+CAPITÁN (CapitanOnboardingPrestador): Inicializado. Tenientes listos.
+CORONEL (prestadores): Inicializado. Capitanes listos.
+CAPITÁN (CapitanAuditoriaGlobal): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanVentas): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanContabilidad): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanOperativo): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanArchivistico): Inicializado. Tenientes listos.
+CORONEL (administrador_general): Inicializado. Capitanes listos.
+CAPITÁN (CapitanEmbudo): Inicializado. Tenientes listos.
+CORONEL (marketing): Inicializado. Capitanes listos.
+CAPITÁN (CapitanCAC): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLTV): Inicializado. Tenientes listos.
+CAPITÁN (CapitanROI): Inicializado. Tenientes listos.
+CORONEL (finanzas): Inicializado. Capitanes listos.
+GENERAL SARITA: Orquestador inicializado. Coroneles listos para recibir órdenes.
+System check identified some issues:
+
+WARNINGS:
+?: (account.W001) ACCOUNT_LOGIN_METHODS conflicts with ACCOUNT_SIGNUP_FIELDS
+?: (staticfiles.W004) The directory '/app/backend/static' in the STATICFILES_DIRS setting does not exist.
+?: (urls.W005) URL namespace 'sadi_agent' isn't unique. You may not be able to reverse all URLs in this namespace
+
+System check identified 3 issues (0 silenced).
+DEBUG: Antes de importar api.signals
+DEBUG: Antes de importar api.signals
+DEBUG: Después de importar api.signals
+DEBUG: Después de importar api.signals
