@@ -46,6 +46,7 @@ export const SUPERADMIN_CONFIG: RoleUIConfig = {
         { href: '/dashboard/admin_plataforma/rentabilidad', label: 'Análisis de Rentabilidad', icon: FiTrendingUp, intent: 'open.rentabilidad' },
         { href: '/dashboard/admin_plataforma/planes', label: 'Gestión de Planes', icon: FiShield, intent: 'open.planes' },
         { href: '/dashboard/admin_plataforma/web-content', label: 'Gobernanza Web', icon: FiMonitor, intent: 'open.web_governance' },
+        { href: '/dashboard/admin_plataforma/auditoria-voz', label: 'Auditoría de Voz', icon: FiMic, intent: 'open.voice_audit' },
       ]
     }
   ],

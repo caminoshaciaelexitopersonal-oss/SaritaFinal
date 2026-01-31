@@ -6,11 +6,15 @@ import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
+import { SADIVoiceLayer } from '@/ui/components/feedback/SADIVoiceLayer';
+import { VoiceConfirmation } from '@/ui/components/feedback/VoiceConfirmation';
+import { useSADI } from '@/hooks/useSADI';
 
 // Componente interno para el layout autenticado
 // Esto asegura que los hooks solo se usen dentro de un contexto autenticado y renderizado
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { state, responseMessage, processAudio, confirmationData, confirmAction, cancelAction } = useSADI();
 
   // Hook para bloquear el scroll del body cuando el sidebar móvil está abierto
   useEffect(() => {
@@ -55,6 +59,20 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
         <main className="flex-1 relative z-0 focus:outline-none p-4 sm:p-6 lg:p-8">
           {children}
         </main>
+
+        {/* Orquestador de Voz SADI */}
+        <SADIVoiceLayer
+          state={state}
+          responseMessage={responseMessage}
+          onAudioReady={processAudio}
+        />
+
+        <VoiceConfirmation
+          isOpen={state === 'confirming'}
+          message={confirmationData?.message || ""}
+          onConfirm={confirmAction}
+          onCancel={cancelAction}
+        />
       </div>
     </div>
   );

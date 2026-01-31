@@ -13,18 +13,22 @@ export default function SimulationPage() {
 
   const addLog = (msg: string) => setLogs(prev => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev]);
 
+  const { state, responseMessage, sendTextIntent } = useSADI();
+
   const runStep = async (stepId: number) => {
     switch(stepId) {
       case 1:
         addLog("Iniciando creación de Empresa...");
         await new Promise(r => setTimeout(r, 1000));
         addLog("✅ Empresa 'Sarita Tour Operador' creada con éxito.");
+        await sendTextIntent("Crear perfil para operador turístico integral");
         setStep(1);
         break;
       case 2:
         addLog("Contratando empleados y configurando nómina...");
         await new Promise(r => setTimeout(r, 1000));
         addLog("✅ 5 Empleados registrados. Planilla de seguridad social activa.");
+        await sendTextIntent("Registrar nómina de marzo");
         setStep(2);
         break;
       case 3:
@@ -37,6 +41,7 @@ export default function SimulationPage() {
         addLog("Ejecutando campañas de marketing y ventas...");
         await new Promise(r => setTimeout(r, 1000));
         addLog("✅ Venta realizada. Factura #FE-1001 emitida. Inversión: $200. Ingreso: $680.");
+        await sendTextIntent("Generar reporte de ventas del día");
         setStep(4);
         break;
       case 5:
