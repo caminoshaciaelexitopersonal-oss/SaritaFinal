@@ -34,22 +34,22 @@ export default function SimulationPage() {
         setStep(3);
         break;
       case 4:
-        addLog("Simulando venta y generación de factura...");
+        addLog("Ejecutando campañas de marketing y ventas...");
         await new Promise(r => setTimeout(r, 1000));
-        addLog("✅ Venta realizada. Factura #FE-1001 emitida. Asiento contable generado.");
+        addLog("✅ Venta realizada. Factura #FE-1001 emitida. Inversión: $200. Ingreso: $680.");
         setStep(4);
         break;
       case 5:
-        addLog("Cerrando periodo contable...");
+        addLog("Cerrando periodo contable y calculando métricas...");
         await new Promise(r => setTimeout(r, 1500));
-        addLog("✅ Periodo Q1-2025 cerrado. Balances consolidados.");
+        addLog("✅ Periodo Q1-2025 cerrado. CAC: $40. LTV Proyectado: $1,200.");
         setStep(5);
         break;
       case 6:
-        addLog("Generando estados financieros finales...");
+        addLog("Generando estados financieros e inteligencia analítica...");
         await new Promise(r => setTimeout(r, 1000));
-        addLog("📈 Generado Balance General y P&L. ROI: 3.4x");
-        toast.success("Simulación Empresarial Completada");
+        addLog("📈 ROI: 3.4x. Relación LTV/CAC: 30.0 (Escalabilidad Crítica).");
+        toast.success("Simulación Analítica Completada");
         setStep(6);
         break;
     }
@@ -95,9 +95,10 @@ export default function SimulationPage() {
 
         {/* Live Logs & Results */}
         <div className="lg:col-span-2 space-y-8">
-           <div className="grid grid-cols-2 gap-6">
-              <KPICard label="Estado Simulación" value={step === 6 ? "COMPLETADO" : `PASO ${step}/6`} icon={FiActivity} />
-              <KPICard label="Integridad de Datos" value="100%" trend={{ value: 'Auditado', type: 'up' }} icon={FiShield} />
+           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <KPICard label="Estado Simulación" value={step === 6 ? "COMPLETADO" : `PASO ${step}/6`} icon={FiActivity} className="md:col-span-2" />
+              <KPICard label="ROI Proyectado" value={step >= 6 ? "3.4x" : "--"} trend={{ value: 'Real', type: 'up' }} icon={FiZap} />
+              <KPICard label="LTV / CAC" value={step >= 6 ? "30.0" : "--"} statusColor="emerald-500" icon={FiTrendingUp} />
            </div>
 
            <div className="bg-black text-green-400 p-8 rounded-[2rem] font-mono text-sm h-96 overflow-y-auto custom-scrollbar border border-green-900/30">
