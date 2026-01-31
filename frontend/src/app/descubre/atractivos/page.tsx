@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
@@ -123,8 +123,8 @@ function AtractivosContent() {
 
 export default function AtractivosPage() {
   return (
-    <React.Suspense fallback={<div className="py-20 text-center">Cargando filtros...</div>}>
+    <Suspense fallback={<div className="py-20 text-center">Cargando filtros...</div>}>
       <AtractivosContent />
-    </React.Suspense>
+    </Suspense>
   );
 }
