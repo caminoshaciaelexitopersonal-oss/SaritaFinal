@@ -1,6 +1,8 @@
 'use client';
 
 import React from 'react';
+import useSWR from 'swr';
+import { getStatistics } from '@/services/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import {
   FiShield,
@@ -16,6 +18,8 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 
 export default function AdminPlataformaPage() {
+  const { data: stats, isLoading } = useSWR('admin-statistics', getStatistics);
+
   const systemicAlerts = [
     { title: 'CAC Elevado detectado', domain: 'Marketing', severity: 'HIGH', msg: 'El costo de adquisición en el nodo Meta superó el LTV proyectado.' },
     { title: 'Nueva propuesta de optimización', domain: 'Finanzas', severity: 'MEDIUM', msg: 'SADI propone ajuste de tasas de comisión para prestadores nivel Oro.' },
@@ -23,10 +27,10 @@ export default function AdminPlataformaPage() {
   ];
 
   const mainKpis = [
-    { label: 'Ingresos Totales Ecosistema', value: '$124,500.00', trend: '+12%', icon: FiGlobe, color: 'text-blue-600' },
-    { label: 'Prestadores Verificados', value: '42', trend: '+5', icon: FiUsers, color: 'text-indigo-600' },
-    { label: 'ROI Sistémico Promedio', value: '3.4x', trend: '+0.2', icon: FiTrendingUp, color: 'text-emerald-600' },
-    { label: 'Índice de Confianza IA', value: '98.2%', trend: 'Estable', icon: FiZap, color: 'text-amber-600' },
+    { label: 'Ingresos Totales Ecosistema', value: stats?.ingresos_totales || '$124,500.00', trend: stats?.ingresos_trend || '+12%', icon: FiGlobe, color: 'text-blue-600' },
+    { label: 'Prestadores Verificados', value: stats?.total_prestadores || '42', trend: stats?.prestadores_new || '+5', icon: FiUsers, color: 'text-indigo-600' },
+    { label: 'ROI Sistémico Promedio', value: stats?.roi_promedio || '3.4x', trend: stats?.roi_trend || '+0.2', icon: FiTrendingUp, color: 'text-emerald-600' },
+    { label: 'Índice de Confianza IA', value: stats?.trust_index || '98.2%', trend: 'Estable', icon: FiZap, color: 'text-amber-600' },
   ];
 
   return (
