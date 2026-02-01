@@ -1,25 +1,25 @@
 'use client';
 
 import useSWR from 'swr';
-import api from '@/services/api';
+import { adminEndpoints } from '@/services/endpoints/admin';
 
-const fetcher = (url: string) => api.get(url).then(res => res.data);
+const fetcher = (fn: () => Promise<any>) => fn().then(res => res.data);
 
 export function useIntelligenceApi() {
-  const { data, error, isLoading, mutate } = useSWR('/admin/intelligence/proposals/', fetcher);
+  const { data, error, isLoading, mutate } = useSWR('admin_proposals', () => adminEndpoints.getIntelligenceProposals().then(res => res.data));
 
   const runAnalysis = async () => {
-    await api.post('/admin/intelligence/proposals/run_analysis/');
+    await adminEndpoints.runAnalysis();
     mutate();
   };
 
   const approveProposal = async (id: string) => {
-    await api.post(`/admin/intelligence/proposals/${id}/approve/`);
+    await adminEndpoints.approveProposal(id);
     mutate();
   };
 
   const executeProposal = async (id: string) => {
-    await api.post(`/admin/intelligence/proposals/${id}/execute/`);
+    await adminEndpoints.executeProposal(id);
     mutate();
   };
 

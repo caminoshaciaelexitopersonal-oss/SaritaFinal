@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
@@ -25,7 +25,7 @@ const CategoriaInfo = {
   TODOS: { nombre: 'Todos', color: 'bg-gray-500' }
 };
 
-export default function AtractivosPage() {
+function AtractivosContent() {
   const [atractivos, setAtractivos] = useState<Atractivo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -118,5 +118,13 @@ export default function AtractivosPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AtractivosPage() {
+  return (
+    <Suspense fallback={<div className="py-20 text-center">Cargando filtros...</div>}>
+      <AtractivosContent />
+    </Suspense>
   );
 }

@@ -1,1 +1,106 @@
-export default function Page() { return <h1>Módulo en Desarrollo</h1>; }
+'use client';
+
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import {
+  FiTruck,
+  FiPlus,
+  FiClock,
+  FiCheckCircle,
+  FiMapPin,
+  FiActivity,
+  FiShield
+} from 'react-icons/fi';
+import { Badge } from '@/components/ui/Badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+
+export default function TransportePage() {
+  const vehicles = [
+    { plate: 'XYZ-123', model: 'Van Mercedes Sprinter', capacity: '12 Pax', status: 'IN_TRANSIT', driver: 'Carlos Ruiz' },
+    { plate: 'ABC-456', model: 'Bus Hino', capacity: '40 Pax', status: 'AVAILABLE', driver: 'Luis Mora' },
+  ];
+
+  return (
+    <div className="space-y-10 animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight uppercase italic">Gestión de Flota y Logística</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 text-lg">Control de vehículos, rutas de transporte y asignación de conductores.</p>
+        </div>
+        <Button className="bg-brand text-white font-black px-8 py-6 rounded-2xl shadow-xl shadow-brand/20">
+           <FiPlus className="mr-2" /> Vincular Vehículo
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+         <Card className="border-none shadow-sm bg-white dark:bg-brand-deep/20 p-8">
+            <div className="flex justify-between items-start mb-6">
+               <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl">
+                  <FiTruck size={28} />
+               </div>
+            </div>
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mb-2">Flota Activa</p>
+            <h3 className="text-4xl font-black text-slate-900 dark:text-white">05 Unidades</h3>
+         </Card>
+
+         <Card className="border-none shadow-sm bg-white dark:bg-brand-deep/20 p-8">
+            <div className="flex justify-between items-start mb-6">
+               <div className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl">
+                  <FiCheckCircle size={28} />
+               </div>
+            </div>
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mb-2">Disponibilidad</p>
+            <h3 className="text-4xl font-black text-slate-900 dark:text-white">80%</h3>
+         </Card>
+
+         <Card className="border-none shadow-xl bg-slate-900 text-white p-8 overflow-hidden relative group">
+            <div className="absolute right-0 bottom-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-700">
+               <FiShield size={120} />
+            </div>
+            <p className="text-brand-light font-black uppercase tracking-widest text-[10px] mb-4">Seguros y RTM</p>
+            <h3 className="text-2xl font-black leading-tight italic">Toda la flota cuenta con pólizas vigentes.</h3>
+         </Card>
+      </div>
+
+      <Card className="border-none shadow-sm bg-white dark:bg-brand-deep/10 overflow-hidden">
+         <CardHeader className="p-8 border-b border-slate-50 dark:border-white/5 flex flex-row items-center justify-between">
+            <CardTitle className="text-xl font-bold flex items-center gap-3 italic text-brand">
+               <FiActivity /> Monitor de Operaciones
+            </CardTitle>
+         </CardHeader>
+         <CardContent className="p-0">
+            <Table>
+               <TableHeader className="bg-slate-50 dark:bg-black/40">
+                  <TableRow>
+                     <TableHead className="font-bold text-[10px] uppercase tracking-widest px-8">Placa / Modelo</TableHead>
+                     <TableHead className="font-bold text-[10px] uppercase tracking-widest">Capacidad</TableHead>
+                     <TableHead className="font-bold text-[10px] uppercase tracking-widest">Conductor</TableHead>
+                     <TableHead className="font-bold text-[10px] uppercase tracking-widest text-center px-8">Estado</TableHead>
+                  </TableRow>
+               </TableHeader>
+               <TableBody>
+                  {vehicles.map((v, i) => (
+                    <TableRow key={i} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-slate-50 dark:border-white/5">
+                       <TableCell className="px-8 py-6">
+                          <div>
+                             <p className="font-black text-slate-900 dark:text-white mb-1 uppercase tracking-tighter">{v.plate}</p>
+                             <p className="text-[10px] text-slate-400 font-bold">{v.model}</p>
+                          </div>
+                       </TableCell>
+                       <TableCell className="font-bold text-slate-500">{v.capacity}</TableCell>
+                       <TableCell className="font-bold text-slate-700 dark:text-slate-200">{v.driver}</TableCell>
+                       <TableCell className="text-center px-8">
+                          <Badge className={v.status === 'AVAILABLE' ? 'bg-emerald-100 text-emerald-700' : 'bg-indigo-100 text-indigo-700'}>
+                             {v.status === 'AVAILABLE' ? 'DISPONIBLE' : 'EN RUTA'}
+                          </Badge>
+                       </TableCell>
+                    </TableRow>
+                  ))}
+               </TableBody>
+            </Table>
+         </CardContent>
+      </Card>
+    </div>
+  );
+}
