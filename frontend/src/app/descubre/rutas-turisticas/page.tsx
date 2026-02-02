@@ -9,7 +9,7 @@ import { FiMap } from 'react-icons/fi';
 // Componente para la tarjeta de una ruta turística
 function RutaCard({ ruta }: { ruta: RutaTuristica }) {
   return (
-    <Link href={`/rutas-turisticas/${ruta.slug}`} passHref>
+    <Link href={`/descubre/rutas-turisticas/${ruta.slug}`} passHref>
       <div className="border rounded-lg shadow-md hover:shadow-xl transition-shadow flex flex-col h-full cursor-pointer group">
         <div className="relative w-full h-48 overflow-hidden">
           <Image

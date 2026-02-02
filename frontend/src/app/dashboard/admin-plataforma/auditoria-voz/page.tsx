@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { voiceEndpoints } from '@/services/endpoints/voice';
 import { DataTable } from '@/ui/components/data/DataTable';
 import { FiMic, FiZap, FiCheckCircle, FiXCircle, FiPlay } from 'react-icons/fi';
-import { Badge } from '@/ui/components/core/Badge';
-import { Button } from '@/ui/components/core/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 
 export default function VoiceAuditLogPage() {
   const [logs, setLogs] = useState([]);

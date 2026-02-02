@@ -94,7 +94,7 @@ export const deleteAdminPublicacion = async (id: number) => api.delete(`/admin/p
 export const getSiteConfig = async () => api.get('/config/site-config/').then(res => res.data);
 export const updateSiteConfig = async (data: any) => api.patch('/config/site-config/', data);
 
-export const getStatistics = async () => api.get('/admin/statistics/detailed/').then(res => res.data);
+export const getStatistics = async () => api.get('/dashboard/analytics/').then(res => res.data);
 
 export const getUsers = async () => api.get('/admin/users/').then(res => res.data);
 export const createUser = async (data: any) => api.post('/admin/users/', data);
