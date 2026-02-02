@@ -71,7 +71,7 @@ Se ha verificado la jerarquía militar completa en `backend/apps/sarita_agents/`
 *   **Capitanes (Nivel Táctico):** Clases como `CapitanOnboardingPrestador` y `CapitanEmbudo`. Generan `PlanTáctico` (modelo Django persistente) para cada misión.
 *   **Tenientes (Nivel Operativo):** Ubicados en submódulos especializados (Comercial, Contable, etc.). Ejecutan `TareaDelegada` y registran logs en `RegistroDeEjecucion`.
 
-**Estado Real:** La infraestructura es 100% funcional y persistente. Los agentes no son simples scripts, sino procesos orquestados con estados (`EN_COLA`, `EN_PROGRESO`, `COMPLETADA`) y trazabilidad total.
+**Estado Real:** La infraestructura es 100% funcional y persistente. Se ha detectado una jerarquía de archivos masiva que cubre dominios Gubernamentales (Nacional, Departamental, Municipal), de Clientes/Turistas y de Prestadores. Cada sub-módulo (Contable, Financiero, Operativo, etc.) tiene su propio set de Capitanes y Tenientes especializados, siguiendo un patrón de diseño basado en `CapitanTemplate` y `TenienteTemplate`. Los agentes no son simples scripts, sino procesos orquestados con estados (`EN_COLA`, `EN_PROGRESO`, `COMPLETADA`) y trazabilidad total.
 
 ---
 

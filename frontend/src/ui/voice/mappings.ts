@@ -7,7 +7,7 @@ export const VOICE_INTENTS = {
   },
   'open.comercial': {
     action: 'NAVIGATE',
-    path: '/dashboard/admin_plataforma/gestion_comercial',
+    path: '/dashboard/admin-plataforma/gestion-comercial',
     label: 'Gestión Comercial'
   },
 

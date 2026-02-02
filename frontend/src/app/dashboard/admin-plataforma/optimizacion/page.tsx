@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import {
   FiCpu,
@@ -14,13 +14,48 @@ import {
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { getOptimizationProposals, applyOptimization, runOptimizationCycle, OptimizationProposal } from '@/services/optimization';
+import { toast } from 'react-hot-toast';
 
 export default function OptimizacionEcosistemaPage() {
-  const activeOptimizations = [
-    { id: 'OPT-001', type: 'AUTO_RESERVE', status: 'ACTIVE', impact: '+4.2% Eficiencia', trust: '98%', domain: 'Operativa' },
-    { id: 'OPT-002', type: 'PRICE_ELASTICITY', status: 'PENDING', impact: '+12.5% Ingresos', trust: '85%', domain: 'Finanzas' },
-    { id: 'OPT-003', type: 'FRAUD_DETECTION', status: 'ACTIVE', impact: '-20% Riesgo', trust: '99.9%', domain: 'Seguridad' },
-  ];
+  const [proposals, setProposals] = useState<OptimizationProposal[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchProposals = async () => {
+    try {
+      const data = await getOptimizationProposals();
+      setProposals(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProposals();
+  }, []);
+
+  const handleApply = async (id: string) => {
+    try {
+      await applyOptimization(id);
+      toast.success("Optimización aplicada.");
+      fetchProposals();
+    } catch (err) {
+      toast.error("Error al aplicar.");
+    }
+  };
+
+  const handleRunCycle = async () => {
+    toast.promise(runOptimizationCycle(), {
+      loading: 'Ejecutando ciclo de optimización...',
+      success: (res) => {
+        fetchProposals();
+        return res.message;
+      },
+      error: 'Error al ejecutar ciclo.'
+    });
+  };
 
   return (
     <div className="space-y-10 animate-in slide-in-from-right-8 duration-700">
@@ -46,7 +81,9 @@ export default function OptimizacionEcosistemaPage() {
                   <p className="text-5xl font-black text-indigo-400">+$12.4k</p>
                   <p className="text-xs text-slate-500 mt-2">Últimos 30 días</p>
                </div>
-               <Button className="w-full bg-white text-black font-black py-8 rounded-2xl hover:bg-slate-100 transition-all text-lg shadow-xl shadow-white/5">
+               <Button
+                onClick={handleRunCycle}
+                className="w-full bg-white text-black font-black py-8 rounded-2xl hover:bg-slate-100 transition-all text-lg shadow-xl shadow-white/5">
                   Ejecutar Auditoría IA
                </Button>
             </div>
@@ -67,31 +104,34 @@ export default function OptimizacionEcosistemaPage() {
             </CardHeader>
             <CardContent className="p-0">
                <div className="divide-y divide-slate-50">
-                  {activeOptimizations.map((opt) => (
+                  {proposals.map((opt) => (
                     <div key={opt.id} className="p-10 hover:bg-slate-50/50 transition-all flex flex-col md:flex-row md:items-center justify-between gap-8 group">
                        <div className="flex items-center gap-8">
                           <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${
-                             opt.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-600' : 'bg-indigo-50 text-indigo-600 animate-pulse'
+                             opt.status === 'EXECUTED' ? 'bg-emerald-50 text-emerald-600' : 'bg-indigo-50 text-indigo-600 animate-pulse'
                           }`}>
                              <FiCpu size={32} />
                           </div>
-                          <div>
+                          <div className="flex-1">
                              <div className="flex items-center gap-3 mb-1">
                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{opt.domain}</span>
-                                <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">ID: {opt.id}</span>
+                                <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">ID: {opt.id.substring(0,8)}</span>
                              </div>
-                             <h4 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{opt.type.replace('_', ' ')}</h4>
-                             <p className="text-sm text-slate-500 mt-1">Impacto estimado: <span className="font-bold text-emerald-600">{opt.impact}</span></p>
+                             <h4 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{opt.propuesta_ajuste}</h4>
+                             <p className="text-sm text-slate-500 mt-1">{opt.hallazgo}</p>
+                             <p className="text-xs text-emerald-600 font-bold mt-2">Impacto: {opt.impacto_esperado}</p>
                           </div>
                        </div>
                        <div className="flex items-center gap-6">
                           <div className="text-right">
-                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Confianza IA</p>
-                             <p className="text-lg font-black text-slate-900">{opt.trust}</p>
+                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Estado</p>
+                             <p className="text-lg font-black text-slate-900">{opt.status}</p>
                           </div>
                           <div className="flex gap-2">
-                             {opt.status === 'PENDING' ? (
-                               <Button className="bg-indigo-600 text-white font-black px-6 py-2 rounded-xl shadow-lg shadow-indigo-500/20">Aprobar</Button>
+                             {opt.status === 'PROPOSED' ? (
+                               <Button
+                                onClick={() => handleApply(opt.id)}
+                                className="bg-indigo-600 text-white font-black px-6 py-2 rounded-xl shadow-lg shadow-indigo-500/20">Aprobar</Button>
                              ) : (
                                <Button variant="outline" className="border-slate-200 text-slate-600 font-black px-6 py-2 rounded-xl">Detalles</Button>
                              )}
@@ -99,6 +139,11 @@ export default function OptimizacionEcosistemaPage() {
                        </div>
                     </div>
                   ))}
+                  {proposals.length === 0 && !loading && (
+                    <div className="p-20 text-center text-slate-400 italic">
+                        No hay propuestas activas. Ejecute una auditoría para detectar patrones.
+                    </div>
+                  )}
                </div>
             </CardContent>
          </Card>

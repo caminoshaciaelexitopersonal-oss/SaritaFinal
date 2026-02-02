@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button } from '@/ui/components/core/Button';
+import { Button } from '@/components/ui/Button';
 import { KPICard } from '@/ui/components/data/KPICard';
 import { DataTable } from '@/ui/components/data/DataTable';
 import { FiPlay, FiCheckCircle, FiFileText, FiUsers, FiSettings, FiGlobe } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
+import { useSADI } from '@/hooks/useSADI';
 
 export default function SimulationPage() {
   const [step, setStep] = useState(0);
@@ -65,7 +66,7 @@ export default function SimulationPage() {
       <div className="flex justify-between items-center border-b border-[var(--border-default)] pb-8">
         <div>
           <h1 className="text-4xl font-black tracking-tighter uppercase italic">Simulación ERP End-to-End</h1>
-          <p className="text-[var(--text-muted)] text-lg">Verificación de flujo de datos transversal (Comercial -> Operativo -> Contable).</p>
+          <p className="text-[var(--text-muted)] text-lg">Verificación de flujo de datos transversal (Comercial -{'>'} Operativo -{'>'} Contable).</p>
         </div>
         <Button onClick={() => { setStep(0); setLogs([]); }} variant="outline">Reiniciar Escenario</Button>
       </div>
