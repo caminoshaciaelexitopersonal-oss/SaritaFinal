@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -12,10 +12,18 @@ import {
   FiLayout,
   FiActivity,
   FiSettings,
-  FiFileText
+  FiFileText,
+  FiUsers,
+  FiArrowRight,
+  FiPlus,
+  FiHeart,
+  FiSpeaker
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { useComercialApi } from './hooks/useComercialApi';
+import { TraceabilityBanner, TraceabilityInfo } from '@/components/ui/TraceabilityBanner';
+import { PermissionGuard, usePermissions } from '@/ui/guards/PermissionGuard';
+import { auditLogger } from '@/services/auditLogger';
 
 // Importación de los niveles de clase mundial
 import Level1_Communication from './components/Level1_Communication';
@@ -36,9 +44,72 @@ enum CommercialView {
 }
 
 export default function GestionComercialPage() {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
+  const { role, isReadOnly } = usePermissions();
   const [activeView, setActiveView] = useState<CommercialView>(CommercialView.DASHBOARD);
   const { facturas, isLoading } = useComercialApi();
+
+  useEffect(() => {
+    auditLogger.log({
+      type: 'VIEW_LOAD',
+      view: `Gestion Comercial - ${activeView}`,
+      userRole: role,
+      userEmail: user?.email,
+      status: 'OK'
+    });
+  }, [activeView, role, user]);
+
+  const traceabilityData: Record<CommercialView, TraceabilityInfo> = {
+    [CommercialView.DASHBOARD]: {
+      source: '/api/dashboard/analytics/',
+      model: 'OperationalStats',
+      period: 'Mes Actual',
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      status: 'OK',
+      certainty: 'Datos reales - Backend validado'
+    },
+    [CommercialView.MARKETING]: {
+      source: '/api/marketing/campaigns/',
+      model: 'Campaign',
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      status: 'DEV',
+      certainty: 'Módulo en desarrollo - Backend parcial'
+    },
+    [CommercialView.SALES_CRM]: {
+      source: '/api/bff/sales/opportunities/',
+      model: 'Opportunity',
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      status: 'OK'
+    },
+    [CommercialView.AI_STUDIO]: {
+      source: '/api/sadi/intent/',
+      model: 'SadiSession',
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      status: 'INFO',
+      certainty: 'Motor de Inteligencia Activo'
+    },
+    [CommercialView.FUNNELS]: {
+      source: '/api/bff/funnel-builder/',
+      model: 'Funnel',
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      status: 'DEV',
+      certainty: 'Modo Demo - Persistencia Local'
+    },
+    [CommercialView.INVOICING]: {
+      source: '/api/v1/mi-negocio/comercial/facturas-venta/',
+      model: 'FacturaVenta',
+      period: 'Histórico Total',
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      status: 'OK'
+    },
+    [CommercialView.LOYALTY]: {
+      source: '/api/v1/mi-negocio/comercial/clientes/',
+      model: 'Cliente',
+      period: 'Últimos 12 meses',
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      status: 'OK'
+    }
+  };
 
   const renderContent = () => {
     switch (activeView) {
@@ -53,6 +124,7 @@ export default function GestionComercialPage() {
       case CommercialView.LOYALTY:
         return (
           <div className="p-8 space-y-6 animate-in fade-in duration-500">
+             <TraceabilityBanner info={traceabilityData[CommercialView.LOYALTY]} />
              <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase italic">Fidelización y Postventa</h2>
              </div>
@@ -109,11 +181,14 @@ export default function GestionComercialPage() {
       case CommercialView.INVOICING:
         return (
           <div className="p-8 space-y-6 animate-in fade-in duration-500">
+             <TraceabilityBanner info={traceabilityData[CommercialView.INVOICING]} />
              <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase italic">Libro de Ventas y Facturación</h2>
-                <Link href="/dashboard/prestador/mi-negocio/gestion-comercial/ventas/nueva">
-                   <Button className="bg-brand text-white font-black px-6"><FiPlus className="mr-2"/> Emitir Factura</Button>
-                </Link>
+                <PermissionGuard deniedRoles={['Auditor', 'Observador']}>
+                  <Link href="/dashboard/prestador/mi-negocio/gestion-comercial/ventas/nueva">
+                    <Button className="bg-brand text-white font-black px-6"><FiPlus className="mr-2"/> Emitir Factura</Button>
+                  </Link>
+                </PermissionGuard>
              </div>
              <Card className="border-none shadow-sm overflow-hidden">
                 <CardContent className="p-0">
@@ -145,6 +220,7 @@ export default function GestionComercialPage() {
       default:
         return (
           <div className="p-8 space-y-10 animate-in fade-in duration-700">
+            <TraceabilityBanner info={traceabilityData[CommercialView.DASHBOARD]} />
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
                 <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">Crecimiento y Ventas</h1>
@@ -190,7 +266,7 @@ export default function GestionComercialPage() {
 
                <Card className="border-none shadow-sm bg-white dark:bg-brand-deep/20 rounded-[2rem] p-10 flex flex-col justify-between" onClick={() => setActiveView(CommercialView.MARKETING)}>
                   <div>
-                    <FiMegaphone className="text-brand mb-6" size={40} />
+                    <FiSpeaker className="text-brand mb-6" size={40} />
                     <h3 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Marketing Multicanal</h3>
                     <p className="mt-2 text-slate-500">Envía promociones por WhatsApp, Email y Redes Sociales en un solo clic.</p>
                   </div>
@@ -239,4 +315,3 @@ export default function GestionComercialPage() {
   );
 }
 
-import { FiUsers, FiArrowRight, FiPlus, FiHeart } from 'react-icons/fi';

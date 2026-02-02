@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Opportunity, PipelineStage } from '../types/sales';
 import { getOpportunities, moveOpportunity } from '../services/sales';
+import { PermissionGuard, usePermissions } from '@/ui/guards/PermissionGuard';
+import { auditLogger } from '@/services/auditLogger';
 import {
     TrendingUpIcon, EuroIcon, CheckCircleIcon, UsersIcon, ClipboardListIcon,
     PipelineIcon, DashboardIcon, PlusIcon, SearchIcon, PhoneIcon, MailIcon, 
@@ -22,8 +24,20 @@ const PipelineView: React.FC<{ opportunities: Opportunity[]; setOpportunities: R
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, opportunityId: number) => {
         e.dataTransfer.setData('opportunityId', opportunityId.toString());
     };
+    const { isReadOnly, role } = usePermissions();
+
     const handleDrop = async (e: React.DragEvent<HTMLDivElement>, stageId: PipelineStage) => {
         e.preventDefault();
+        if (isReadOnly) {
+            auditLogger.log({
+                type: 'ACTION_DENIED',
+                view: 'Sales CRM',
+                action: 'Move Opportunity',
+                userRole: role,
+                status: 'ERROR'
+            });
+            return;
+        }
         const opportunityId = parseInt(e.dataTransfer.getData('opportunityId'), 10);
         e.currentTarget.classList.remove('bg-accent');
 
@@ -146,13 +160,18 @@ const OpportunityDetail: React.FC<{ opportunity: Opportunity; onClose: () => voi
 
                 {opportunity.stage === 'won' && (
                     <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 p-4 rounded-xl animate-pulse">
-                        <p className="text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-2 italic">Oportunidad Ganada: Lista para Facturación</p>
-                        <button
-                            onClick={() => onWon(opportunity.id)}
-                            className="w-full bg-emerald-600 text-white font-black text-xs py-3 rounded-lg flex items-center justify-center gap-2"
-                        >
-                            <InvoiceIcon className="w-4 h-4" /> GENERAR FACTURA ERP
-                        </button>
+                        <div className="flex justify-between items-start mb-2">
+                           <p className="text-xs font-bold text-emerald-800 dark:text-emerald-400 italic">Oportunidad Ganada: Lista para Facturación</p>
+                           <span className="text-[8px] bg-emerald-100 text-emerald-700 px-1 rounded font-black">BACKEND REAL</span>
+                        </div>
+                        <PermissionGuard deniedRoles={['Auditor', 'Observador']} fallback={<p className="text-[10px] text-slate-400">Solo lectura: No se puede facturar desde este perfil.</p>}>
+                            <button
+                                onClick={() => onWon(opportunity.id)}
+                                className="w-full bg-emerald-600 text-white font-black text-xs py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-emerald-700 transition-colors"
+                            >
+                                <InvoiceIcon className="w-4 h-4" /> GENERAR FACTURA ERP
+                            </button>
+                        </PermissionGuard>
                     </div>
                 )}
 
@@ -255,10 +274,12 @@ const Level2_Responses: React.FC = () => {
                             <SearchIcon className="w-5 h-5 absolute left-3 text-muted-foreground" />
                             <input type="text" placeholder="Buscar..." className="bg-input rounded-md py-2 pl-10 pr-4 w-64 text-foreground placeholder-muted-foreground" />
                         </div>
-                        <button className="flex items-center space-x-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-                            <PlusIcon className="w-5 h-5"/> 
-                            <span className="font-semibold">Añadir Lead</span>
-                        </button>
+                        <PermissionGuard deniedRoles={['Auditor', 'Observador']}>
+                            <button className="flex items-center space-x-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                                <PlusIcon className="w-5 h-5"/>
+                                <span className="font-semibold">Añadir Lead</span>
+                            </button>
+                        </PermissionGuard>
                     </div>
                 </div>
                 <main className="flex-1 overflow-auto bg-slate-100 dark:bg-black/40">
