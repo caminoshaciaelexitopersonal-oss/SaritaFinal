@@ -176,21 +176,21 @@ export default function Sidebar() {
     {
       title: 'ERP Sistémico',
       links: [
-        { href: '/dashboard/admin_plataforma/gestion_comercial', label: 'Gestión Comercial', icon: FiDollarSign },
-        { href: '/dashboard/admin_plataforma/gestion-operativa', label: 'Gestión Operativa', icon: FiGrid },
-        { href: '/dashboard/admin_plataforma/gestion-contable', label: 'Gestión Contable', icon: FiBookOpen },
-        { href: '/dashboard/admin_plataforma/gestion-financiera', label: 'Gestión Financiera', icon: FiTrendingDown },
-        { href: '/dashboard/admin_plataforma/gestion-archivistica', label: 'Gestión Archivística', icon: FiArchive },
+        { href: '/dashboard/admin-plataforma/gestion-comercial', label: 'Gestión Comercial', icon: FiDollarSign },
+        { href: '/dashboard/admin-plataforma/gestion-operativa', label: 'Gestión Operativa', icon: FiGrid },
+        { href: '/dashboard/admin-plataforma/gestion-contable', label: 'Gestión Contable', icon: FiBookOpen },
+        { href: '/dashboard/admin-plataforma/gestion-financiera', label: 'Gestión Financiera', icon: FiTrendingDown },
+        { href: '/dashboard/admin-plataforma/gestion-archivistica', label: 'Gestión Archivística', icon: FiArchive },
       ],
     },
     {
       title: 'Gobernanza IA',
       links: [
-        { href: '/dashboard/admin_plataforma/inteligencia', label: 'Inteligencia de Decisión', icon: FiActivity },
-        { href: '/dashboard/admin_plataforma/optimizacion', label: 'Optimización Ecosistema', icon: FiZap },
-        { href: '/dashboard/admin_plataforma/rentabilidad', label: 'Análisis de Rentabilidad', icon: FiTrendingUp },
-        { href: '/dashboard/admin_plataforma/planes', label: 'Gestión de Planes', icon: FiShield },
-        { href: '/dashboard/admin_plataforma/web-content', label: 'Gobernanza Web', icon: FiMonitor },
+        { href: '/dashboard/admin-plataforma/inteligencia', label: 'Inteligencia de Decisión', icon: FiActivity },
+        { href: '/dashboard/admin-plataforma/optimizacion', label: 'Optimización Ecosistema', icon: FiZap },
+        { href: '/dashboard/admin-plataforma/rentabilidad', label: 'Análisis de Rentabilidad', icon: FiTrendingUp },
+        { href: '/dashboard/admin-plataforma/planes', label: 'Gestión de Planes', icon: FiShield },
+        { href: '/dashboard/admin-plataforma/web-content', label: 'Gobernanza Web', icon: FiMonitor },
       ],
     },
     {

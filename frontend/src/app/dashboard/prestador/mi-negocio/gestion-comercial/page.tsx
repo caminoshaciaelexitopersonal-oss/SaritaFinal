@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import {
   FiDollarSign,
-  FiMegaphone,
+  FiVolume2,
   FiTrendingUp,
   FiZap,
   FiLayout,
@@ -153,7 +153,7 @@ export default function GestionComercialPage() {
        <div className="bg-white dark:bg-brand-deep/10 border-b border-slate-100 dark:border-white/5 flex items-center px-8 gap-8 overflow-x-auto no-scrollbar sticky top-0 z-30 backdrop-blur-md">
           {[
             { id: CommercialView.DASHBOARD, label: 'Resumen', icon: FiActivity },
-            { id: CommercialView.MARKETING, label: 'Marketing', icon: FiMegaphone },
+            { id: CommercialView.MARKETING, label: 'Marketing', icon: FiVolume2 },
             { id: CommercialView.SALES_CRM, label: 'Ventas y CRM', icon: FiTrendingUp },
             { id: CommercialView.AI_STUDIO, label: 'Estudio AI', icon: FiZap },
             { id: CommercialView.FUNNELS, label: 'Arquitecto', icon: FiLayout },

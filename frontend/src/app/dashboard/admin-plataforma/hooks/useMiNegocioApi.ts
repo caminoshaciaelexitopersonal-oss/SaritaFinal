@@ -1,4 +1,4 @@
-// src/app/dashboard/admin_plataforma/hooks/useMiNegocioApi.ts
+// src/app/dashboard/admin-plataforma/hooks/useMiNegocioApi.ts
 import { useState, useCallback } from 'react';
 import api from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';

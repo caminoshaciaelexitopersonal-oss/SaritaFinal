@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import ImageSlider from '@/components/ImageSlider';
-import { ResenasSection } from '@/components/ResenasSection';
+import ResenasSection from '@/components/ResenasSection';
 import { getArtesanoById, ArtesanoPublicoDetalle } from '@/services/api';
 import { FiPhone, FiMail, FiMapPin, FiFacebook, FiInstagram } from 'react-icons/fi';
 import { FaWhatsapp, FaTiktok } from 'react-icons/fa';
