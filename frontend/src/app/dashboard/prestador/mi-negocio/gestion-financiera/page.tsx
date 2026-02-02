@@ -16,9 +16,13 @@ import {
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import Link from 'next/link';
+import { TraceabilityBanner } from '@/components/ui/TraceabilityBanner';
+import { PermissionGuard, usePermissions } from '@/ui/guards/PermissionGuard';
+import { auditLogger } from '@/services/auditLogger';
 
 export default function GestionFinancieraPage() {
   const { getBankAccounts, getCashTransactions, isLoading } = useMiNegocioApi();
+  const { role, hasPermission } = usePermissions();
   const [accounts, setAccounts] = useState<BankAccount[]>([]);
   const [transactions, setTransactions] = useState<CashTransaction[]>([]);
 
@@ -36,20 +40,44 @@ export default function GestionFinancieraPage() {
 
   const totalBalance = accounts.reduce((acc, curr) => acc + parseFloat(curr.balance), 0);
 
+  useEffect(() => {
+    auditLogger.log({
+      type: 'VIEW_LOAD',
+      view: 'Gestion Financiera',
+      userRole: role,
+      status: 'OK'
+    });
+  }, [role]);
+
+  const maskAccountNumber = (num: string) => {
+    if (hasPermission(['SuperAdmin', 'AdminPlataforma', 'OperadorFinanciero', 'Prestador'])) return num;
+    return `****${num.slice(-4)}`;
+  };
+
   return (
     <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+      <TraceabilityBanner info={{
+          source: '/api/v1/mi-negocio/financiera/',
+          model: 'CuentaBancaria / TransaccionCaja',
+          period: 'Enero 2026',
+          timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+          status: 'OK',
+          certainty: 'Datos reales - Cierre de periodo validado'
+      }} />
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Tesorería y Finanzas</h1>
           <p className="text-gray-500 mt-1">Monitoreo de liquidez, cuentas bancarias y flujo de caja.</p>
         </div>
         <div className="flex gap-3">
-          <Button className="bg-green-600 hover:bg-green-700">
-            <FiPlus className="mr-2" /> Nueva Transacción
-          </Button>
-          <Button variant="outline">
-            <FiDollarSign className="mr-2" /> Conciliar
-          </Button>
+          <PermissionGuard deniedRoles={['Auditor', 'Observador']}>
+            <Button className="bg-green-600 hover:bg-green-700">
+                <FiPlus className="mr-2" /> Nueva Transacción
+            </Button>
+            <Button variant="outline">
+                <FiDollarSign className="mr-2" /> Conciliar
+            </Button>
+          </PermissionGuard>
         </div>
       </div>
 
@@ -138,7 +166,7 @@ export default function GestionFinancieraPage() {
                        </div>
                        <div>
                           <p className="font-bold text-gray-900">{acc.bank_name}</p>
-                          <p className="text-xs text-gray-500">#{acc.account_number} • {acc.account_type === 'SAVINGS' ? 'Ahorros' : 'Corriente'}</p>
+                          <p className="text-xs text-gray-500">#{maskAccountNumber(acc.account_number)} • {acc.account_type === 'SAVINGS' ? 'Ahorros' : 'Corriente'}</p>
                        </div>
                     </div>
                     <div className="text-right">

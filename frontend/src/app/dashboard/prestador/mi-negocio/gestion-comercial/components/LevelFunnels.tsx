@@ -1,9 +1,12 @@
 
 import React from 'react';
 import { FunnelBuilderProvider, useFunnelBuilder } from '../context/FunnelBuilderContext';
+import { PermissionGuard } from '@/ui/guards/PermissionGuard';
 import HierarchyPanel from './funnel-builder/HierarchyPanel';
 import Editor from './funnel-builder/Editor';
 import * as Icons from './icons';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const FunnelBuilder: React.FC = () => {
     const { activeFunnel, activeCadena, setActiveFunnelId } = useFunnelBuilder();
@@ -28,10 +31,12 @@ const FunnelBuilder: React.FC = () => {
                             <Icons.CursorArrowRaysIcon className="w-16 h-16 mx-auto mb-4"/>
                             <h2 className="text-2xl font-bold">No Funnels Found</h2>
                             <p className="max-w-md mt-2">Get started by creating a new funnel.</p>
-                            <button className="mt-6 flex items-center space-x-2 bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90" onClick={() => setActiveFunnelId('new')}>
-                                <Icons.PlusIcon className="w-5 h-5" />
-                                <span>Crear Embudo</span>
-                            </button>
+                            <PermissionGuard deniedRoles={['Auditor', 'Observador']}>
+                                <button className="mt-6 flex items-center space-x-2 bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90" onClick={() => setActiveFunnelId('new')}>
+                                    <Icons.PlusIcon className="w-5 h-5" />
+                                    <span>Crear Embudo</span>
+                                </button>
+                            </PermissionGuard>
                         </div>
                     </div>
                 )}
@@ -71,10 +76,12 @@ const Header: React.FC = () => {
                 </div>
             </div>
             <div className="flex items-center space-x-4">
-                <button className="flex items-center space-x-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors" onClick={() => setActiveFunnelId('new')}>
-                    <Icons.PlusIcon className="w-5 h-5"/>
-                    <span className="font-semibold">New Funnel</span>
-                </button>
+                <PermissionGuard deniedRoles={['Auditor', 'Observador']}>
+                    <button className="flex items-center space-x-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors" onClick={() => setActiveFunnelId('new')}>
+                        <Icons.PlusIcon className="w-5 h-5"/>
+                        <span className="font-semibold">New Funnel</span>
+                    </button>
+                </PermissionGuard>
                 <Icons.BellIcon className="w-6 h-6 text-muted-foreground"/>
                 <Icons.UserCircleIcon className="w-8 h-8 text-muted-foreground"/>
             </div>
@@ -88,12 +95,14 @@ interface LevelFunnelsProps {
 }
 
 const LevelFunnels: React.FC<LevelFunnelsProps> = ({ authToken }) => (
-    <FunnelBuilderProvider authToken={authToken}>
-        <div className="h-full flex flex-col font-sans text-foreground bg-background">
-            <Header />
-            <FunnelBuilder />
-        </div>
-    </FunnelBuilderProvider>
+    <DndProvider backend={HTML5Backend}>
+        <FunnelBuilderProvider authToken={authToken}>
+            <div className="h-full flex flex-col font-sans text-foreground bg-background">
+                <Header />
+                <FunnelBuilder />
+            </div>
+        </FunnelBuilderProvider>
+    </DndProvider>
 );
 
 export default LevelFunnels;

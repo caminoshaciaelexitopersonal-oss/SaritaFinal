@@ -17,6 +17,14 @@ import Link from 'next/link';
 
 const modules = [
   {
+    title: 'Centro de Operaciones',
+    desc: 'Motor de ejecución. Descompón servicios en tareas, asigna responsables y mide tiempos.',
+    icon: FiActivity,
+    href: '/dashboard/prestador/mi-negocio/gestion-operativa/centro-operativo',
+    color: 'bg-emerald-100 text-emerald-600',
+    stats: '2 Activas'
+  },
+  {
     title: 'CRM y Clientes',
     desc: 'Gestión de base de datos de turistas, historial y preferencias.',
     icon: FiUsers,

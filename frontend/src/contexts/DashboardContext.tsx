@@ -1,11 +1,14 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { auditLogger } from '@/services/auditLogger';
 
-// Define the shape of your context data if you have any
-type DashboardContextType = object;
+interface DashboardContextType {
+  isAuditMode: boolean;
+  setAuditMode: (enabled: boolean) => void;
+  toggleAuditMode: () => void;
+}
 
 const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
 
-// Custom hook to use the DashboardContext
 export const useDashboard = () => {
   const context = useContext(DashboardContext);
   if (context === undefined) {
@@ -14,9 +17,28 @@ export const useDashboard = () => {
   return context;
 };
 
-// You might also want a Provider component
 export const DashboardProvider = ({ children }: { children: React.ReactNode }) => {
-  const value = {}; // Your context logic here
+  const [isAuditMode, setIsAuditMode] = useState(false);
+
+  const setAuditMode = (enabled: boolean) => {
+    setIsAuditMode(enabled);
+    auditLogger.log({
+        type: 'ACTION_PERMITTED',
+        view: 'Global',
+        action: `Audit Mode ${enabled ? 'Enabled' : 'Disabled'}`,
+        userRole: 'ADMIN', // This should be dynamic but context doesn't have auth yet
+        status: 'INFO'
+    });
+  };
+
+  const toggleAuditMode = () => setAuditMode(!isAuditMode);
+
+  const value = {
+    isAuditMode,
+    setAuditMode,
+    toggleAuditMode
+  };
+
   return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;
 };
 

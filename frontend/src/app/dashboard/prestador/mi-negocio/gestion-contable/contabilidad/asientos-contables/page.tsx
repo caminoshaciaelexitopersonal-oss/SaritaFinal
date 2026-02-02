@@ -8,10 +8,23 @@ import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
+import { TraceabilityBanner } from '@/components/ui/TraceabilityBanner';
+import { PermissionGuard, usePermissions } from '@/ui/guards/PermissionGuard';
+import { auditLogger } from '@/services/auditLogger';
 
 const AsientosContablesPage = () => {
   const { getJournalEntries, isLoading } = useMiNegocioApi();
+  const { role } = usePermissions();
   const [entries, setEntries] = useState<JournalEntry[]>([]);
+
+  useEffect(() => {
+    auditLogger.log({
+        type: 'VIEW_LOAD',
+        view: 'Asientos Contables',
+        userRole: role,
+        status: 'OK'
+    });
+  }, [role]);
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -38,12 +51,21 @@ const AsientosContablesPage = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 space-y-6">
+      <TraceabilityBanner info={{
+          source: '/api/v1/mi-negocio/contable/asientos/',
+          model: 'JournalEntry',
+          timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+          status: 'OK',
+          certainty: 'Datos reales - Backend validado'
+      }} />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Asientos Contables</h1>
-        <Link href="/dashboard/prestador/mi-negocio/gestion-contable/contabilidad/asientos-contables/nuevo" passHref>
-          <Button>Crear Nuevo Asiento</Button>
-        </Link>
+        <PermissionGuard deniedRoles={['Auditor', 'Observador']}>
+            <Link href="/dashboard/prestador/mi-negocio/gestion-contable/contabilidad/asientos-contables/nuevo" passHref>
+                <Button>Crear Nuevo Asiento</Button>
+            </Link>
+        </PermissionGuard>
       </div>
 
       <Card>

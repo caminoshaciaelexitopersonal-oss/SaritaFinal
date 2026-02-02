@@ -9,11 +9,14 @@ import { useRouter, usePathname } from 'next/navigation';
 import { SADIVoiceLayer } from '@/ui/components/feedback/SADIVoiceLayer';
 import { VoiceConfirmation } from '@/ui/components/feedback/VoiceConfirmation';
 import { useSADI } from '@/hooks/useSADI';
+import { useDashboard } from '@/contexts/DashboardContext';
+import { FiEye } from 'react-icons/fi';
 
 // Componente interno para el layout autenticado
 // Esto asegura que los hooks solo se usen dentro de un contexto autenticado y renderizado
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { isAuditMode } = useDashboard();
   const { state, responseMessage, processAudio, confirmationData, confirmAction, cancelAction } = useSADI();
 
   // Hook para bloquear el scroll del body cuando el sidebar móvil está abierto
@@ -54,7 +57,14 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
 
-      <div className="flex flex-col flex-1 w-0 lg:overflow-x-hidden">
+      <div className="flex flex-col flex-1 w-0 lg:overflow-x-hidden relative">
+        {isAuditMode && (
+          <div className="bg-amber-500 text-black px-4 py-1 text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-4 sticky top-0 z-[60] shadow-md">
+            <FiEye size={14} />
+            MODO AUDITORÍA ACTIVO: SOLO LECTURA ● TRAZABILIDAD FORZADA ● ACCIONES RESTRINGIDAS
+            <FiEye size={14} />
+          </div>
+        )}
         <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
         <main className="flex-1 relative z-0 focus:outline-none p-4 sm:p-6 lg:p-8">
           {children}

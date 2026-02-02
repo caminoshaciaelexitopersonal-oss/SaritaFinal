@@ -74,6 +74,7 @@ const miNegocioNav: NavSection[] = [
     title: 'Gestión Operativa',
     isSubSection: true,
     links: [
+      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/centro-operativo', label: 'Centro de Operaciones', icon: FiActivity },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/perfil', label: 'Mi Perfil', icon: FiUser },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/productos-servicios', label: 'Productos/Servicios', icon: FiBox },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/clientes', label: 'Clientes', icon: FiUsers },
