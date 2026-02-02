@@ -74,10 +74,13 @@ const DashboardTab: React.FC = () => {
                 <button className="bg-primary px-4 py-2 rounded-lg text-primary-foreground font-semibold">Personalizar Dashboard</button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <KpiCard icon={TrendingUpIcon} title="Ingresos (Este Mes)" value="€42,500" change="+12%" />
-                <KpiCard icon={EuroIcon} title="Rentabilidad Cliente (Prom.)" value="€2,150" />
-                <KpiCard icon={SupportIcon} title="Resolución de Tickets" value="92%" change="-1%" />
-                <KpiCard icon={MegaphoneIcon} title="Conversión de Campaña" value="4.1%" change="+0.5%" />
+                <KpiCard icon={TrendingUpIcon} title="ROI Campañas" value="3.5x" change="+0.2" />
+                <KpiCard icon={EuroIcon} title="CAC (Adquisición)" value="€45.20" change="-5%" />
+                <KpiCard icon={UsersIcon} title="LTV (Vida Cliente)" value="€1,280" />
+                <KpiCard icon={MegaphoneIcon} title="Conversión Funnel" value="4.1%" change="+0.5%" />
+            </div>
+            <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg flex items-center gap-2 text-xs text-amber-700 font-medium italic">
+                <span>Nota: Los cálculos de CAC/LTV se basan en datos de inversión en marketing y recurrencia detectada. (Cálculo parcial – backend en progreso)</span>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <SalesForecastChart />

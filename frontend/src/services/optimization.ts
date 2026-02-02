@@ -13,10 +13,10 @@ export interface OptimizationProposal {
 
 export const getOptimizationProposals = async (): Promise<OptimizationProposal[]> => {
     const response = await api.get('/admin/optimization/proposals/');
-    return response.data;
+    return response.data.results || response.data;
 };
 
-export const approveAndExecuteOptimization = async (id: string, justification?: string) => {
+export const applyOptimization = async (id: string, justification?: string) => {
     const response = await api.post(`/admin/optimization/proposals/${id}/apply/`, {
         justificacion: justification
     });
@@ -25,5 +25,10 @@ export const approveAndExecuteOptimization = async (id: string, justification?: 
 
 export const rollbackOptimization = async (id: string) => {
     const response = await api.post(`/admin/optimization/proposals/${id}/rollback/`);
+    return response.data;
+};
+
+export const runOptimizationCycle = async () => {
+    const response = await api.post('/admin/optimization/proposals/run_cycle/');
     return response.data;
 };

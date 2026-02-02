@@ -22,13 +22,18 @@ const ALL_CHANNELS: MarketingChannel[] = [
 
 const ChannelStatusBar = ({ channels }: { channels: MarketingChannel[] }) => (
     <div className="bg-card p-3 rounded-lg flex flex-wrap gap-x-4 gap-y-2 items-center mb-6 border shadow-sm">
-        <h3 className="font-semibold text-muted-foreground whitespace-nowrap">Canales Conectados:</h3>
-        {channels.map(channel => (
-            <div key={channel.id} className="group relative flex items-center space-x-1.5" title={channel.name}>
-                <channel.icon className={`w-5 h-5 ${channel.status === 'connected' ? 'text-foreground' : 'text-gray-600'}`} />
-                <div className={`w-2 h-2 ${channel.status === 'connected' ? 'bg-green-500' : 'bg-red-500'} rounded-full`} />
-            </div>
-        ))}
+        <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-muted-foreground whitespace-nowrap">Canales Conectados:</h3>
+            <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Simulado – Backend Pendiente</span>
+        </div>
+        <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
+            {channels.map(channel => (
+                <div key={channel.id} className="group relative flex items-center space-x-1.5" title={channel.name}>
+                    <channel.icon className={`w-5 h-5 ${channel.status === 'connected' ? 'text-foreground' : 'text-gray-600'}`} />
+                    <div className={`w-2 h-2 ${channel.status === 'connected' ? 'bg-green-500' : 'bg-red-500'} rounded-full`} />
+                </div>
+            ))}
+        </div>
     </div>
 );
 
@@ -106,9 +111,12 @@ const CampaignCreator: React.FC<{ authToken: string; onCampaignCreated: (newCamp
                     <textarea rows={6} value={content} onChange={e => setContent(e.target.value)} placeholder="Escribe el contenido principal de tu campaña..." className="w-full bg-input border rounded-md p-2" />
                 </div>
             </div>
-             <div className="flex justify-end pt-6 border-t mt-6">
+             <div className="flex justify-between items-center pt-6 border-t mt-6">
+                <div className="text-xs text-amber-600 font-medium italic">
+                    Nota: La ejecución real de envíos requiere integración de SADI/Gateways.
+                </div>
                 <button onClick={handleSubmit} disabled={isSubmitting} className="bg-green-600 text-white px-6 py-2 rounded-md hover:opacity-90 disabled:opacity-50">
-                    {isSubmitting ? 'Creando...' : 'Crear Campaña'}
+                    {isSubmitting ? 'Creando (Modo Demo)...' : 'Crear Campaña'}
                 </button>
             </div>
         </div>

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import {
   FiDollarSign,
-  FiMegaphone,
+  FiVolume2,
   FiTrendingUp,
   FiZap,
   FiLayout,
@@ -31,7 +31,8 @@ enum CommercialView {
   SALES_CRM = 'sales_crm',
   AI_STUDIO = 'ai_studio',
   FUNNELS = 'funnels',
-  INVOICING = 'invoicing'
+  INVOICING = 'invoicing',
+  LOYALTY = 'loyalty'
 }
 
 export default function GestionComercialPage() {
@@ -49,9 +50,65 @@ export default function GestionComercialPage() {
         return <LevelAIStudio />;
       case CommercialView.FUNNELS:
         return <LevelFunnels authToken={token!} />;
+      case CommercialView.LOYALTY:
+        return (
+          <div className="p-8 space-y-6 animate-in fade-in duration-500">
+             <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase italic">Fidelización y Postventa</h2>
+             </div>
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="border-none shadow-sm bg-emerald-50 dark:bg-emerald-900/10">
+                   <CardContent className="p-6">
+                      <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">Clientes Activos</p>
+                      <h3 className="text-3xl font-black">142</h3>
+                   </CardContent>
+                </Card>
+                <Card className="border-none shadow-sm bg-brand/5">
+                   <CardContent className="p-6">
+                      <p className="text-[10px] font-black text-brand uppercase tracking-widest mb-1">Tasa de Recompra</p>
+                      <h3 className="text-3xl font-black">24%</h3>
+                   </CardContent>
+                </Card>
+                <Card className="border-none shadow-sm bg-indigo-50 dark:bg-indigo-900/10">
+                   <CardContent className="p-6">
+                      <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">LTV Promedio</p>
+                      <h3 className="text-3xl font-black">€1,280</h3>
+                   </CardContent>
+                </Card>
+             </div>
+             <Card className="border-none shadow-sm overflow-hidden">
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader className="bg-slate-50 dark:bg-black/20">
+                      <TableRow>
+                        <TableHead className="font-bold text-[10px] uppercase tracking-widest px-8">Cliente</TableHead>
+                        <TableHead className="font-bold text-[10px] uppercase tracking-widest">Última Compra</TableHead>
+                        <TableHead className="font-bold text-[10px] uppercase tracking-widest">Estado</TableHead>
+                        <TableHead className="font-bold text-[10px] uppercase tracking-widest text-right px-8">Acción</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-slate-50 dark:border-white/5">
+                          <TableCell className="font-bold text-slate-700 dark:text-slate-200 px-8">EcoTour Adventures</TableCell>
+                          <TableCell className="text-xs text-slate-500">hace 3 días</TableCell>
+                          <TableCell><Badge className="bg-emerald-100 text-emerald-700">Activo</Badge></TableCell>
+                          <TableCell className="text-right px-8"><Button variant="outline" size="sm">Re-enganchar</Button></TableCell>
+                        </TableRow>
+                        <TableRow className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-slate-50 dark:border-white/5">
+                          <TableCell className="font-bold text-slate-700 dark:text-slate-200 px-8">Lodge el Paraíso</TableCell>
+                          <TableCell className="text-xs text-slate-500">hace 12 días</TableCell>
+                          <TableCell><Badge className="bg-amber-100 text-amber-700">En riesgo</Badge></TableCell>
+                          <TableCell className="text-right px-8"><Button variant="outline" size="sm" className="border-amber-200 text-amber-700">Enviar Oferta</Button></TableCell>
+                        </TableRow>
+                    </TableBody>
+                  </Table>
+                </CardContent>
+             </Card>
+          </div>
+        );
       case CommercialView.INVOICING:
         return (
-          <div className="p-8 space-y-6">
+          <div className="p-8 space-y-6 animate-in fade-in duration-500">
              <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase italic">Libro de Ventas y Facturación</h2>
                 <Link href="/dashboard/prestador/mi-negocio/gestion-comercial/ventas/nueva">
@@ -153,11 +210,12 @@ export default function GestionComercialPage() {
        <div className="bg-white dark:bg-brand-deep/10 border-b border-slate-100 dark:border-white/5 flex items-center px-8 gap-8 overflow-x-auto no-scrollbar sticky top-0 z-30 backdrop-blur-md">
           {[
             { id: CommercialView.DASHBOARD, label: 'Resumen', icon: FiActivity },
-            { id: CommercialView.MARKETING, label: 'Marketing', icon: FiMegaphone },
+            { id: CommercialView.MARKETING, label: 'Marketing', icon: FiVolume2 },
             { id: CommercialView.SALES_CRM, label: 'Ventas y CRM', icon: FiTrendingUp },
             { id: CommercialView.AI_STUDIO, label: 'Estudio AI', icon: FiZap },
             { id: CommercialView.FUNNELS, label: 'Arquitecto', icon: FiLayout },
             { id: CommercialView.INVOICING, label: 'Facturación', icon: FiFileText },
+            { id: CommercialView.LOYALTY, label: 'Fidelización', icon: FiHeart },
           ].map(tab => (
             <button
               key={tab.id}
@@ -181,4 +239,4 @@ export default function GestionComercialPage() {
   );
 }
 
-import { FiUsers, FiArrowRight, FiPlus } from 'react-icons/fi';
+import { FiUsers, FiArrowRight, FiPlus, FiHeart } from 'react-icons/fi';

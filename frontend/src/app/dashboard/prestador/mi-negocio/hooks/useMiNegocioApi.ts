@@ -34,6 +34,10 @@ export function useMiNegocioApi() {
     return makeRequest(() => operativoEndpoints.getPerfil().then(res => res.data));
   }, [makeRequest]);
 
+  const updatePerfil = useCallback(async (data: any) => {
+    return makeRequest(() => operativoEndpoints.updatePerfil(data).then(res => res.data), "Perfil actualizado con éxito.");
+  }, [makeRequest]);
+
   // --- API de Contabilidad ---
   const getChartOfAccounts = useCallback(async () => {
     return makeRequest(() => contableEndpoints.getPlanCuentas().then(res =>
@@ -72,6 +76,7 @@ export function useMiNegocioApi() {
     isLoading,
     error,
     getPerfil,
+    updatePerfil,
     getChartOfAccounts,
     getJournalEntries,
     getFacturas,
