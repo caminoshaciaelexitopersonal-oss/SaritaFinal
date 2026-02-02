@@ -27,9 +27,9 @@ export default function AdminPlataformaPage() {
   ];
 
   const mainKpis = [
-    { label: 'Ingresos Totales Ecosistema', value: stats?.ingresos_totales || '$124,500.00', trend: stats?.ingresos_trend || '+12%', icon: FiGlobe, color: 'text-blue-600' },
-    { label: 'Prestadores Verificados', value: stats?.total_prestadores || '42', trend: stats?.prestadores_new || '+5', icon: FiUsers, color: 'text-indigo-600' },
-    { label: 'ROI Sistémico Promedio', value: stats?.roi_promedio || '3.4x', trend: stats?.roi_trend || '+0.2', icon: FiTrendingUp, color: 'text-emerald-600' },
+    { label: 'Total Usuarios Sistema', value: stats?.total_usuarios || '0', trend: 'Global', icon: FiUsers, color: 'text-blue-600' },
+    { label: 'Prestadores Activos', value: stats?.total_prestadores || '0', trend: 'Vía 2', icon: FiActivity, color: 'text-indigo-600' },
+    { label: 'Publicaciones Totales', value: stats?.total_publicaciones || '0', trend: 'Contenido', icon: FiGlobe, color: 'text-emerald-600' },
     { label: 'Índice de Confianza IA', value: stats?.trust_index || '98.2%', trend: 'Estable', icon: FiZap, color: 'text-amber-600' },
   ];
 

@@ -7,7 +7,7 @@ import { FacturaVenta, PaginatedResponse } from '@/services/api';
 const fetcher = (url: string) => api.get(url).then(res => res.data);
 
 export function useComercialApi() {
-  const basePath = '/v1/mi-negocio/gestion_comercial/facturas-venta/';
+  const basePath = '/admin/plataforma/comercial/facturas-venta/';
 
   const { data, error, isLoading } = useSWR<PaginatedResponse<FacturaVenta>>(basePath, fetcher);
 

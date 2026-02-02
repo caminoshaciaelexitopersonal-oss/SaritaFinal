@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Menu, Bell, User, Sun, Moon } from 'lucide-react';
+import { Menu, Bell, User, Sun, Moon, ShieldCheck } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDashboard } from '@/contexts/DashboardContext';
+import { PermissionGuard } from '@/ui/guards/PermissionGuard';
 
 interface HeaderProps {
   isSidebarOpen: boolean;
@@ -13,6 +15,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
+  const { isAuditMode, toggleAuditMode } = useDashboard();
 
   return (
     <header className="bg-white dark:bg-black border-b border-gray-100 dark:border-white/5 transition-colors sticky top-0 z-40">
@@ -39,6 +42,22 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
           {/* Acciones del Sistema */}
           <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* Modo Auditor (F-C+) */}
+            <PermissionGuard allowedRoles={['SuperAdmin', 'AdminPlataforma', 'Auditor']}>
+               <button
+                 onClick={toggleAuditMode}
+                 className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${
+                   isAuditMode
+                   ? 'bg-amber-100 text-amber-700 border-amber-200'
+                   : 'bg-slate-50 dark:bg-brand-deep text-slate-400 dark:text-slate-500 border-transparent'
+                 }`}
+                 title={isAuditMode ? "Desactivar Modo Auditor" : "Activar Modo Auditor"}
+               >
+                 <ShieldCheck size={16} className={isAuditMode ? 'animate-pulse' : ''} />
+                 <span className="hidden lg:inline">{isAuditMode ? 'Modo Auditor ON' : 'Activar Auditoría'}</span>
+               </button>
+            </PermissionGuard>
+
             {/* Toggle Día/Noche */}
             <button
               onClick={toggleTheme}
