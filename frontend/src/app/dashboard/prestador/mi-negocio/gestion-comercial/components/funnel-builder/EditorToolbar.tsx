@@ -13,8 +13,8 @@ const EditorToolbar: React.FC = () => {
     const SaveStatusIndicator = () => {
         switch(saveStatus) {
             case 'saving': return <div className="flex items-center gap-2 text-sm text-muted-foreground"><Icons.LoadingSpinner className="w-4 h-4" /> Guardando...</div>;
-            case 'error': return <div className="flex items-center gap-2 text-sm text-destructive">Error al guardar</div>;
-            case 'saved': default: return <div className="flex items-center gap-2 text-sm text-green-500"><Icons.CheckIcon className="w-4 h-4" /> Guardado</div>;
+            case 'error': return <div className="flex items-center gap-2 text-sm text-amber-600 font-bold bg-amber-50 px-2 py-1 rounded"><Icons.AlertTriangleIcon className="w-4 h-4" /> Modo Demo - Backend Pendiente</div>;
+            case 'saved': default: return <div className="flex items-center gap-2 text-sm text-green-500"><Icons.CheckIcon className="w-4 h-4" /> Guardado localmente</div>;
         }
     };
 
@@ -31,7 +31,7 @@ const EditorToolbar: React.FC = () => {
             </div>
             <div className="flex items-center gap-4">
                 <SaveStatusIndicator />
-                <button onClick={() => alert('Publicando...')} className="bg-primary text-primary-foreground font-bold px-4 py-1.5 rounded-md">Publicar</button>
+                <button onClick={() => alert('Simulado: La publicación requiere infraestructura de hosting de Landings.')} className="bg-primary text-primary-foreground font-bold px-4 py-1.5 rounded-md">Publicar</button>
             </div>
         </div>
     );
