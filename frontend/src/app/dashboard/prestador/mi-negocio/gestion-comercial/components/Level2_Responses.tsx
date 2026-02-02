@@ -160,6 +160,7 @@ const OpportunityDetail: React.FC<{ opportunity: Opportunity; onClose: () => voi
 
                 {opportunity.stage === 'won' && (
                     <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 p-4 rounded-xl animate-pulse">
+ 
                         <div className="flex justify-between items-start mb-2">
                            <p className="text-xs font-bold text-emerald-800 dark:text-emerald-400 italic">Oportunidad Ganada: Lista para Facturación</p>
                            <span className="text-[8px] bg-emerald-100 text-emerald-700 px-1 rounded font-black">BACKEND REAL</span>
@@ -172,6 +173,7 @@ const OpportunityDetail: React.FC<{ opportunity: Opportunity; onClose: () => voi
                                 <InvoiceIcon className="w-4 h-4" /> GENERAR FACTURA ERP
                             </button>
                         </PermissionGuard>
+ 
                     </div>
                 )}
 

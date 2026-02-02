@@ -124,7 +124,9 @@ export default function GestionComercialPage() {
       case CommercialView.LOYALTY:
         return (
           <div className="p-8 space-y-6 animate-in fade-in duration-500">
+ 
              <TraceabilityBanner info={traceabilityData[CommercialView.LOYALTY]} />
+ 
              <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase italic">Fidelización y Postventa</h2>
              </div>
@@ -181,7 +183,9 @@ export default function GestionComercialPage() {
       case CommercialView.INVOICING:
         return (
           <div className="p-8 space-y-6 animate-in fade-in duration-500">
+ 
              <TraceabilityBanner info={traceabilityData[CommercialView.INVOICING]} />
+ 
              <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase italic">Libro de Ventas y Facturación</h2>
                 <PermissionGuard deniedRoles={['Auditor', 'Observador']}>
@@ -315,3 +319,4 @@ export default function GestionComercialPage() {
   );
 }
 
+ 
