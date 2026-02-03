@@ -22,6 +22,9 @@ import {
 import { Badge } from '@/components/ui/Badge';
 import { useComercialApi } from './hooks/useComercialApi';
 import { TraceabilityBanner, TraceabilityInfo } from '@/components/ui/TraceabilityBanner';
+ 
+import { GRCIndicator } from '@/components/ui/GRCIndicator';
+ 
 import { PermissionGuard, usePermissions } from '@/ui/guards/PermissionGuard';
 import { auditLogger } from '@/services/auditLogger';
 
@@ -225,6 +228,13 @@ export default function GestionComercialPage() {
         return (
           <div className="p-8 space-y-10 animate-in fade-in duration-700">
             <TraceabilityBanner info={traceabilityData[CommercialView.DASHBOARD]} />
+ 
+            <GRCIndicator
+              moduleName="Gestión Comercial"
+              risks={['R1: Dependencias externas']}
+              controls={['Backend RBAC', 'Frontend PermissionGuard']}
+            />
+ 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
                 <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">Crecimiento y Ventas</h1>

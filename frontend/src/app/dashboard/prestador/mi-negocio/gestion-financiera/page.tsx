@@ -17,6 +17,9 @@ import {
 import { Badge } from '@/components/ui/Badge';
 import Link from 'next/link';
 import { TraceabilityBanner } from '@/components/ui/TraceabilityBanner';
+ 
+import { GRCIndicator } from '@/components/ui/GRCIndicator';
+ 
 import { PermissionGuard, usePermissions } from '@/ui/guards/PermissionGuard';
 import { auditLogger } from '@/services/auditLogger';
 
@@ -64,6 +67,12 @@ export default function GestionFinancieraPage() {
           status: 'OK',
           certainty: 'Datos reales - Cierre de periodo validado'
       }} />
+ 
+      <GRCIndicator
+        moduleName="Gestión Financiera"
+        controls={['Enmascaramiento de cuentas', 'Audit Log activo']}
+      />
+ 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Tesorería y Finanzas</h1>
