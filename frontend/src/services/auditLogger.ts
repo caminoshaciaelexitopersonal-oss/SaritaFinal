@@ -3,6 +3,7 @@
 export interface AuditEvent {
   id: string;
   timestamp: string;
+ 
   type:
     | 'VIEW_LOAD'
     | 'ACTION_ATTEMPT'
@@ -12,6 +13,7 @@ export interface AuditEvent {
     | 'VOICE_INTENT_DETECTED'
     | 'VOICE_ACTION_CONFIRMED'
     | 'VOICE_ACTION_ABORTED';
+ 
   view: string;
   action?: string;
   details?: any;

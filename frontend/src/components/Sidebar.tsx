@@ -187,8 +187,10 @@ export default function Sidebar() {
     {
       title: 'Gobernanza IA',
       links: [
+ 
         { href: '/dashboard/admin-plataforma/grc', label: 'Centro GRC (Compliance)', icon: FiShield },
         { href: '/dashboard/admin-plataforma/autonomia', label: 'Control de Autonomía', icon: FiCpu },
+ 
         { href: '/dashboard/admin-plataforma/inteligencia', label: 'Inteligencia de Decisión', icon: FiActivity },
         { href: '/dashboard/admin-plataforma/optimizacion', label: 'Optimización Ecosistema', icon: FiZap },
         { href: '/dashboard/admin-plataforma/rentabilidad', label: 'Análisis de Rentabilidad', icon: FiTrendingUp },
