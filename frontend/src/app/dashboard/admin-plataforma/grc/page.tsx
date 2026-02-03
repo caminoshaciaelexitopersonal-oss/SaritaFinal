@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import {
   FiShield, FiAlertTriangle, FiCheckCircle, FiFileText, FiActivity,
-  FiEye, FiAlertCircle, FiClock, FiUser, FiExternalLink, FiTool
+  FiEye, FiAlertCircle, FiClock, FiUser, FiExternalLink, FiTool, FiMic
 } from 'react-icons/fi';
 import { auditLogger } from '@/services/auditLogger';
 
@@ -102,6 +102,9 @@ export default function GRCCenterPage() {
           </TabsTrigger>
           <TabsTrigger value="audit" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 py-2 font-bold uppercase text-[10px] tracking-widest">
             Audit Trail UI
+          </TabsTrigger>
+          <TabsTrigger value="voice" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 py-2 font-bold uppercase text-[10px] tracking-widest">
+            Auditoría de Voz (SADI)
           </TabsTrigger>
           <TabsTrigger value="exceptions" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 py-2 font-bold uppercase text-[10px] tracking-widest">
             Gestión de Excepciones
@@ -197,6 +200,47 @@ export default function GRCCenterPage() {
                            <span className="text-slate-200 shrink-0 font-bold">{log.view}</span>
                            <span className="flex-1">{log.action || '-'}</span>
                            <span className="text-indigo-400 shrink-0 uppercase font-bold">{log.userRole}</span>
+                        </div>
+                      ))
+                    )}
+                 </div>
+              </CardContent>
+           </Card>
+        </TabsContent>
+
+        <TabsContent value="voice">
+           <Card className="border-none shadow-sm overflow-hidden bg-slate-50 border border-slate-200">
+              <CardHeader className="bg-white border-b border-slate-100 p-6 flex flex-row items-center justify-between">
+                 <CardTitle className="text-slate-900 font-black uppercase text-sm tracking-widest flex items-center gap-2">
+                    <FiMic className="text-emerald-600" /> Gobernanza Conversacional
+                 </CardTitle>
+                 <Badge variant="outline">SADI Interface</Badge>
+              </CardHeader>
+              <CardContent className="p-0">
+                 <div className="max-h-[500px] overflow-y-auto divide-y divide-slate-100">
+                    {logs.filter(l => l.type.startsWith('VOICE_')).length === 0 ? (
+                      <div className="p-20 text-center text-slate-400 uppercase italic tracking-widest">No hay registros de voz en esta sesión.</div>
+                    ) : (
+                      logs.filter(l => l.type.startsWith('VOICE_')).map((log) => (
+                        <div key={log.id} className="p-4 bg-white hover:bg-slate-50 transition-colors flex flex-col gap-2">
+                           <div className="flex justify-between items-center">
+                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{new Date(log.timestamp).toLocaleString()}</span>
+                              <Badge className={
+                                log.type === 'VOICE_ACTION_CONFIRMED' ? 'bg-emerald-100 text-emerald-700' :
+                                log.type === 'VOICE_ACTION_ABORTED' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
+                              }>
+                                {log.type}
+                              </Badge>
+                           </div>
+                           <p className="font-black text-slate-800 uppercase italic tracking-tight">{log.action}</p>
+                           {log.details && (
+                             <div className="text-[11px] bg-slate-100 p-3 rounded-lg border border-slate-200 text-slate-600 font-mono">
+                                {JSON.stringify(log.details, null, 2)}
+                             </div>
+                           )}
+                           <div className="flex justify-end">
+                              <span className="text-[9px] font-black text-indigo-600 uppercase">Autoridad: {log.userRole}</span>
+                           </div>
                         </div>
                       ))
                     )}
