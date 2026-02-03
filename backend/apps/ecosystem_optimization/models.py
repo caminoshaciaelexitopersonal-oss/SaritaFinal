@@ -76,6 +76,16 @@ class AutonomyControl(models.Model):
     """
     Control soberano de la autonomía (Punto 6).
     """
+    class ControlType(models.TextChoices):
+        TECHNICAL = 'TECHNICAL', 'Técnico'
+        LEGAL = 'LEGAL', 'Legal/Normativo'
+        OPERATIVE = 'OPERATIVE', 'Operativo'
+
+    control_type = models.CharField(
+        max_length=20,
+        choices=ControlType.choices,
+        default=ControlType.TECHNICAL
+    )
     domain = models.CharField(
         max_length=50,
         choices=PerformanceMetric.Domain.choices,
