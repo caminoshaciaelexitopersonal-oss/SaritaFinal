@@ -50,6 +50,10 @@ class GovernanceAuditLog(models.Model):
     error_message = models.TextField(null=True, blank=True)
     es_intervencion_soberana = models.BooleanField(default=False)
 
+    # --- Hardening Técnico (RC-S): Integridad de Auditoría ---
+    integrity_hash = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+    previous_hash = models.CharField(max_length=64, null=True, blank=True)
+
     class Meta:
         app_label = 'admin_plataforma'
         ordering = ['-timestamp']

@@ -208,19 +208,34 @@ class GovernanceKernel:
 
     def _log_audit(self, intention: GovernanceIntention, parameters: Dict[str, Any], result: Dict[str, Any], success: bool = True, error_message: str = None, is_sovereign: bool = False):
         """
-        Registra la acción en el log de auditoría sistémica.
+        Registra la acción en el log de auditoría sistémica con Hardening RC-S (Hashes).
         """
+        import hashlib
+        import json
+
         try:
-             GovernanceAuditLog.objects.create(
+             # Obtener el hash del registro anterior para encadenamiento
+             last_log = GovernanceAuditLog.objects.order_by('-timestamp').first()
+             previous_hash = last_log.integrity_hash if last_log else "SARITA_GENESIS_BLOCK"
+
+             # Crear log base
+             log_entry = GovernanceAuditLog(
                  usuario=self.user,
                  intencion=intention.name,
                  parametros=parameters,
                  resultado=result,
                  success=success,
                  error_message=error_message,
-                 es_intervencion_soberana=is_sovereign
+                 es_intervencion_soberana=is_sovereign,
+                 previous_hash=previous_hash
              )
-             logger.info(f"AUDIT KERNEL: Usuario={self.user.username}, Acción={intention.name}")
+
+             # Calcular Integrity Hash (RC-S Hardening)
+             payload = f"{log_entry.intencion}{json.dumps(log_entry.parametros)}{log_entry.timestamp}{previous_hash}{success}"
+             log_entry.integrity_hash = hashlib.sha256(payload.encode()).hexdigest()
+
+             log_entry.save()
+             logger.info(f"AUDIT KERNEL (RC-S): Usuario={self.user.username}, Acción={intention.name}, Hash={log_entry.integrity_hash[:8]}")
         except Exception as e:
             logger.error(f"Error al registrar auditoría en el Kernel: {e}")
 
