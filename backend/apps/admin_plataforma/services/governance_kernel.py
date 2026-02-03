@@ -275,6 +275,21 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 
+# Dominio: Autonomía IA (Fase F-F)
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PRIORITIZE_CRITICAL_LEADS",
+    domain="comercial",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED # Autonomía actúa con autoridad delegada
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="OPTIMIZE_MARKETING_BUDGET",
+    domain="comercial",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
+
 GovernanceKernel.register_intention(GovernanceIntention(
     name="ERP_VIEW_CASH_FLOW",
     domain="financiero",

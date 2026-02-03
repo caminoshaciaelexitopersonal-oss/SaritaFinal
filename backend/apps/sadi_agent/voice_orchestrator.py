@@ -92,6 +92,9 @@ class VoiceOrchestrator:
             elif intent.name.startswith("OPTIMIZATION_"):
                 text_response = self._handle_optimization_voice_command(kernel, intent, entities)
                 log.final_status = "COMPLETADA"
+            elif intent.name.startswith("AUTONOMY_"):
+                text_response = self._handle_autonomy_voice_command(kernel, intent, entities)
+                log.final_status = "COMPLETADA"
             elif intent.domain.name == "marketing":
                 text_response = self._handle_marketing_voice_command(kernel, intent, entities)
                 log.final_status = "COMPLETADA"
@@ -300,6 +303,35 @@ class VoiceOrchestrator:
                 return f"Error al aplicar la optimización: {str(e)}"
 
         return "Comando de optimización no reconocido."
+
+    def _handle_autonomy_voice_command(self, kernel: GovernanceKernel, intent, entities) -> str:
+        """Maneja comandos de voz específicos para la autonomía de Fase F-F."""
+        from apps.ecosystem_optimization.models import AutonomousAction, AutonomousExecutionLog, AutonomyControl
+
+        if intent.name == "AUTONOMY_GET_STATUS":
+            control = AutonomyControl.objects.filter(domain=None).first()
+            enabled = control.is_enabled if control else True
+            status = "operativa" if enabled else "bloqueada por Kill Switch"
+            count = AutonomousAction.objects.filter(autonomy_level=2).count()
+            return f"La autonomía global está actualmente {status}. Tengo {count} acciones tipificadas para ejecución autónoma condicionada."
+
+        if intent.name == "AUTONOMY_KILL_SWITCH":
+            domain = entities.get("domain")
+            reason = entities.get("reason", "Activación por comando de voz.")
+            control, _ = AutonomyControl.objects.get_or_create(domain=domain)
+            control.is_enabled = False
+            control.reason = reason
+            control.updated_by = kernel.user
+            control.save()
+            return f"Kill Switch activado para {domain or 'todo el sistema'}. He detenido toda ejecución autónoma delegada."
+
+        if intent.name == "AUTONOMY_EXPLAIN_LAST":
+            last_log = AutonomousExecutionLog.objects.order_by('-timestamp').first()
+            if not last_log:
+                return "No se han registrado ejecuciones autónomas recientemente."
+            return f"La última acción autónoma fue {last_log.action.name}. Explicación: {last_log.explanation}"
+
+        return "Comando de autonomía no reconocido."
 
     def _handle_strategy_voice_command(self, kernel: GovernanceKernel, intent, entities) -> str:
         """Maneja comandos de voz específicos para la inteligencia de decisión de Fase 5."""
