@@ -10,6 +10,24 @@ import { archivisticaEndpoints } from '@/services/endpoints/archivistica';
 import { contableMapper } from '@/services/mappers/contableMapper';
 import { commercialMapper } from '@/services/mappers/commercialMapper';
 
+export interface Cliente {
+  id: number;
+  nombre: string;
+  email: string;
+}
+
+export interface Producto {
+  id: number;
+  nombre: string;
+  precio_venta: string;
+}
+
+export interface ItemFactura {
+  producto: number;
+  cantidad: number;
+  precio_unitario: string;
+}
+
 export function useMiNegocioApi() {
   const { token } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -58,6 +76,18 @@ export function useMiNegocioApi() {
     ));
   }, [makeRequest]);
 
+  const createFacturaVenta = useCallback(async (data: any) => {
+    return makeRequest(() => comercialEndpoints.createFacturaVenta(data).then(res => res.data), "Factura creada con éxito.");
+  }, [makeRequest]);
+
+  const getClientes = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getClientes().then(res => res.data));
+  }, [makeRequest]);
+
+  const getProductos = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getProductosServicios().then(res => res.data));
+  }, [makeRequest]);
+
   // --- API Financiera ---
   const getBankAccounts = useCallback(async () => {
     return makeRequest(() => financieroEndpoints.getBankAccounts().then(res => res.data));
@@ -80,6 +110,9 @@ export function useMiNegocioApi() {
     getChartOfAccounts,
     getJournalEntries,
     getFacturas,
+    createFacturaVenta,
+    getClientes,
+    getProductos,
     getBankAccounts,
     getCashTransactions,
     getArchivisticaDocumentos,
