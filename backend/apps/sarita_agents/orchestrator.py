@@ -3,6 +3,7 @@
 import logging
  
 from django.utils import timezone
+from apps.admin_plataforma.models import GovernancePolicy
 from .models import Mision
 from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
 from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
@@ -55,10 +56,23 @@ class SaritaOrchestrator:
         """
         Ejecuta la lógica de una misión que ya ha sido creada.
         """
+        # S-0.4/5: Hard Kill-Switch & Attack Mode Check
+        attack_mode = GovernancePolicy.objects.filter(name__in=["KILL_SWITCH_AGENTS", "SYSTEM_ATTACK_MODE"], is_active=True).exists()
+        if attack_mode:
+            logger.error(f"S-0: Misión {mision_id} RECHAZADA. Autonomía suspendida por estado de defensa.")
+            return
+
         try:
             mision = Mision.objects.get(id=mision_id)
         except Mision.DoesNotExist:
             logger.error(f"CRITICAL: Misión con ID {mision_id} no encontrada para ejecutar.")
+            return
+
+        # S-0.4: Validación de Intención en la Misión
+        if not self._validate_mission_integrity(mision):
+            mision.estado = 'FALLIDA'
+            mision.resultado_final = {"error": "Fallo de integridad en la directiva de la misión."}
+            mision.save()
             return
 
         logger.info(f"GENERAL SARITA: Ejecutando misión {mision.id}")
@@ -82,6 +96,17 @@ class SaritaOrchestrator:
 
         # Simplemente delega. El Coronel y sus subordinados asíncronos se encargarán del resto.
         coronel.handle_mission(mision)
+
+    def _validate_mission_integrity(self, mision: Mision) -> bool:
+        """
+        Verifica que la misión provenga de un flujo autorizado (S-0.4).
+        """
+        # Implementación de validación básica por ahora:
+        # Asegurar que el dominio de la misión coincida con la directiva original
+        if mision.dominio != mision.directiva_original.get("domain"):
+            logger.error(f"S-0: Violación de integridad detectada en misión {mision.id}.")
+            return False
+        return True
 
     def _report_error(self, message: str):
         logger.error(f"GENERAL SARITA: Error en la directiva -> {message}")

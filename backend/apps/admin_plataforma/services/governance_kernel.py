@@ -4,6 +4,7 @@ from enum import IntEnum
 from django.db import transaction
 from api.models import CustomUser
 from apps.admin_plataforma.models import GovernanceAuditLog, GovernancePolicy
+from api.services import DefenseService
 
 logger = logging.getLogger(__name__)
 
@@ -45,16 +46,43 @@ class GovernanceKernel:
         """
         logger.info(f"KERNEL: Recibida intención '{intention_name}' de usuario {self.user.username}")
 
+        # S-0.5: Verificación de MODO ATAQUE (Congelamiento Sistémico)
+        attack_mode = GovernancePolicy.objects.filter(name="SYSTEM_ATTACK_MODE", is_active=True).exists()
+        if attack_mode and not self.user.is_superuser:
+            # En modo ataque, solo el SuperAdmin (Autoridad Soberana) puede ejecutar acciones Críticas
+            # El resto de usuarios están bloqueados para prevenir propagación de compromiso.
+            logger.warning(f"S-0: Intención '{intention_name}' RECHAZADA. Sistema en MODO ATAQUE.")
+            raise PermissionError("SISTEMA CONGELADO: Se ha detectado una amenaza activa. Todas las operaciones de escritura están suspendidas por seguridad institucional.")
+
         # 1. Resolver intención
         intention = self._registry.get(intention_name)
         if not intention:
-            raise ValueError(f"Intención '{intention_name}' no reconocida por el núcleo de gobernanza.")
+            # S-0.3: Intento de inyectar intención desconocida es una amenaza
+            DefenseService.neutralize_threat(
+                user=self.user,
+                attack_vector="INVALID_INTENTION_INJECTION",
+                payload={"intention_name": intention_name, "params": parameters},
+                headers={}, # Deberían pasarse desde la vista
+                threat_level='HIGH'
+            )
+            raise ValueError(f"Intención '{intention_name}' no reconocida por el núcleo de gobernanza. Acción registrada.")
 
         # 2. Validar Contrato (Requisitos de parámetros)
         self._validate_contract(intention, parameters)
 
         # 3. Validar Autoridad Soberana
-        self._validate_authority(intention)
+        try:
+            self._validate_authority(intention)
+        except PermissionError as e:
+            # S-0.3: Violación de autoridad en el Kernel es una amenaza interna/externa
+            DefenseService.neutralize_threat(
+                user=self.user,
+                attack_vector="GOVERNANCE_AUTHORITY_VIOLATION",
+                payload={"intention_name": intention_name, "error": str(e)},
+                headers={},
+                threat_level='CRITICAL'
+            )
+            raise e
 
         # 4. Evaluar Políticas Globales (Motor de Políticas)
         if not bypass_policy:

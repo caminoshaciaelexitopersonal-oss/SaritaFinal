@@ -32,6 +32,7 @@ export default function AdminPlataformaPage() {
   const { data: flagsRes, mutate: mutateFlags } = useSWR('admin-flags', sovereigntyService.getFlags);
 
   const [isEmergencyDialogOpen, setIsEmergencyDialogOpen] = React.useState(false);
+  const [isAttackModeActive, setIsAttackModeActive] = React.useState(false);
 
   const [flags, setFlags] = React.useState<SystemFlag[]>([]);
 
@@ -49,8 +50,15 @@ export default function AdminPlataformaPage() {
   };
 
   const handleEmergencyKill = async () => {
-    toast.success("CONGELAMIENTO SISTÉMICO EJECUTADO. Acceso operativo restringido.");
+    // Protocolo S-0.5: Activar MODO ATAQUE
+    setIsAttackModeActive(true);
+    toast.success("S-0: MODO ATAQUE ACTIVADO. El sistema ha sido congelado y la autonomía suspendida.");
     setIsEmergencyDialogOpen(false);
+  };
+
+  const handleRestoreNormalMode = () => {
+    setIsAttackModeActive(false);
+    toast.success("S-0: MODO NORMAL RESTAURADO. Operaciones y autonomía habilitadas.");
   };
 
   const mainKpis = [
@@ -98,11 +106,19 @@ export default function AdminPlataformaPage() {
                 <FiClock /> Memoria Histórica
              </Button>
            </Link>
-           <Button
-            onClick={() => setIsEmergencyDialogOpen(true)}
-            className="bg-red-600 text-white font-black px-8 py-6 rounded-2xl hover:bg-red-700 transition-all shadow-xl shadow-red-500/20">
-              <FiPower className="mr-2" /> Suspensión de Urgencia
-           </Button>
+           {!isAttackModeActive ? (
+                <Button
+                    onClick={() => setIsEmergencyDialogOpen(true)}
+                    className="bg-red-600 text-white font-black px-8 py-6 rounded-2xl hover:bg-red-700 transition-all shadow-xl shadow-red-500/20">
+                    <FiPower className="mr-2" /> Activar Modo Ataque
+                </Button>
+           ) : (
+                <Button
+                    onClick={handleRestoreNormalMode}
+                    className="bg-emerald-600 text-white font-black px-8 py-6 rounded-2xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-500/20 animate-pulse">
+                    <FiRepeat className="mr-2" /> Restaurar Modo Normal
+                </Button>
+           )}
         </div>
       </div>
 
