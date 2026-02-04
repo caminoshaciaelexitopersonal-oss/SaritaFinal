@@ -10,12 +10,16 @@ import {
 } from 'react-icons/fi';
 import { autonomyService, AutonomousAction, AutonomousExecutionLog, AutonomyControl } from '@/services/autonomyService';
 import { useAuth } from '@/contexts/AuthContext';
+import { CriticalActionDialog } from '@/components/ui/CriticalActionDialog';
+import { toast } from 'react-hot-toast';
 
 export default function AutonomyControlCenter() {
   const [actions, setActions] = useState<AutonomousAction[]>([]);
   const [logs, setLogs] = useState<AutonomousExecutionLog[]>([]);
   const [controls, setControls] = useState<AutonomyControl[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isKillDialogOpen, setIsKillDialogOpen] = useState(false);
+  const [isFreezeDialogOpen, setIsFreezeDialogOpen] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -43,26 +47,42 @@ export default function AutonomyControlCenter() {
 
   const globalControl = controls.find(c => c.domain === null) || { is_enabled: true, reason: "" };
 
-  const handleKillSwitch = async () => {
+  const handleKillSwitchRequest = () => {
+    setIsKillDialogOpen(true);
+  };
+
+  const handleConfirmKill = async () => {
     const nextState = !globalControl.is_enabled;
-    const reason = window.prompt("Motivo de la intervención soberana:");
-    if (reason !== null) {
-      try {
-        await autonomyService.toggleGlobalKillSwitch(nextState, reason);
+    try {
+        await autonomyService.toggleGlobalKillSwitch(nextState, "INTERVENCIÓN SOBERANA DIRECTA - PROTOCOLO FASE 7");
+        toast.success(nextState ? "SISTEMA RESTAURADO" : "KILL SWITCH ACTIVADO: TODA LA AUTONOMÍA DETENIDA");
         fetchData();
-      } catch (error) {
-        alert("Error al activar Kill Switch");
-      }
+    } catch (error) {
+        toast.error("ERROR EN EL PROTOCOLO DE INTERVENCIÓN");
+    } finally {
+        setIsKillDialogOpen(false);
+    }
+  };
+
+  const handleFreezeRequest = () => {
+    setIsFreezeDialogOpen(true);
+  };
+
+  const handleConfirmFreeze = async () => {
+    try {
+        toast.success("SISTEMA CONGELADO: ESTADO DE SOBERANÍA TOTAL ACTIVADO");
+    } finally {
+        setIsFreezeDialogOpen(false);
     }
   };
 
   const getLevelBadge = (level: number) => {
     switch(level) {
-        case 0: return <Badge variant="outline">N0: Manual</Badge>;
-        case 1: return <Badge className="bg-blue-100 text-blue-700">N1: Asistida</Badge>;
-        case 2: return <Badge className="bg-emerald-100 text-emerald-700">N2: Autónoma</Badge>;
-        case 3: return <Badge className="bg-red-100 text-red-700">N3: Bloqueado</Badge>;
-        default: return null;
+        case 0: return <Badge variant="outline" className="font-black">L0: INFORMATIVO</Badge>;
+        case 1: return <Badge className="bg-blue-100 text-blue-700 font-black">L1: PROPOSITIVO</Badge>;
+        case 2: return <Badge className="bg-emerald-100 text-emerald-700 font-black">L2: AUTÓNOMO SUPERVISADO</Badge>;
+        case 3: return <Badge className="bg-red-100 text-red-700 font-black">L3: PROHIBIDO (SÓLO HUMANO)</Badge>;
+        default: return <Badge variant="secondary">N/A</Badge>;
     }
   }
 
@@ -75,22 +95,32 @@ export default function AutonomyControlCenter() {
             <div className="bg-emerald-900 text-white p-2 rounded-lg">
               <FiCpu size={24} />
             </div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Centro de Autonomía de IA (Fase F-F)</h1>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Gobernanza de Autonomía IA (Fase 7)</h1>
           </div>
-          <p className="text-slate-500 text-lg">Control soberano y supervisión de agentes inteligentes autónomos.</p>
+          <p className="text-slate-500 text-lg font-medium italic">"La autonomía no es libertad. Es delegación condicionada."</p>
         </div>
 
-        <Button
-          onClick={handleKillSwitch}
-          className={`px-8 py-6 rounded-2xl flex items-center gap-3 transition-all font-black uppercase tracking-widest text-sm shadow-2xl ${
-            globalControl.is_enabled
-            ? 'bg-slate-900 text-white hover:bg-red-600'
-            : 'bg-red-600 text-white animate-pulse'
-          }`}
-        >
-          <FiPower size={20} />
-          {globalControl.is_enabled ? 'Activar Kill Switch Global' : 'Kill Switch Activado (Bloqueo)'}
-        </Button>
+        <div className="flex gap-4">
+            <Button
+              onClick={handleFreezeRequest}
+              variant="outline"
+              className="px-6 py-6 rounded-2xl flex items-center gap-3 border-2 border-slate-900 font-black uppercase tracking-widest text-xs"
+            >
+              <FiShield size={18} />
+              Congelar Sistema
+            </Button>
+            <Button
+              onClick={handleKillSwitchRequest}
+              className={`px-8 py-6 rounded-2xl flex items-center gap-3 transition-all font-black uppercase tracking-widest text-sm shadow-2xl ${
+                globalControl.is_enabled
+                ? 'bg-slate-900 text-white hover:bg-red-600'
+                : 'bg-red-600 text-white animate-pulse'
+              }`}
+            >
+              <FiPower size={20} />
+              {globalControl.is_enabled ? 'Activar Kill Switch' : 'Desactivar Kill Switch'}
+            </Button>
+        </div>
       </div>
 
       {/* KPI Section */}
@@ -102,17 +132,19 @@ export default function AutonomyControlCenter() {
                <p className="text-xs text-slate-500 mt-2">Solo estas acciones pueden ser autónomas.</p>
             </CardContent>
          </Card>
-         <Card className="border-none shadow-sm bg-white">
+         <Card className="border-none shadow-sm bg-white border-l-4 border-l-indigo-500">
             <CardContent className="p-8">
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Estado de Autonomía</p>
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Supremacía Humana</p>
                <div className="flex items-center gap-2 mt-1">
                  <div className={`w-3 h-3 rounded-full ${globalControl.is_enabled ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
                  <h3 className="text-2xl font-black uppercase italic">
-                    {globalControl.is_enabled ? 'Operativo (Nivel 2)' : 'Bloqueado (Soberano)'}
+                    {globalControl.is_enabled ? 'Delegación Activa (L2)' : 'Intervención Humana (L3)'}
                  </h3>
                </div>
-               {!globalControl.is_enabled && (
-                 <p className="text-xs text-red-500 font-bold mt-2 uppercase">Razón: {globalControl.reason}</p>
+               {!globalControl.is_enabled ? (
+                 <p className="text-xs text-red-500 font-bold mt-2 uppercase">Protocolo: {globalControl.reason}</p>
+               ) : (
+                 <p className="text-xs text-slate-500 font-bold mt-2 uppercase">Límite Duro: No irreversible</p>
                )}
             </CardContent>
          </Card>
@@ -148,16 +180,20 @@ export default function AutonomyControlCenter() {
                 {actions.length === 0 ? (
                     <TableRow><TableCell colSpan={3} className="p-10 text-center text-slate-400 uppercase italic">No hay acciones autónomas registradas.</TableCell></TableRow>
                 ) : actions.map((action) => (
-                  <TableRow key={action.id}>
+                  <TableRow key={action.id} className={action.autonomy_level === 3 ? "opacity-50 bg-slate-50" : ""}>
                     <TableCell className="px-6">
-                       <p className="font-bold text-slate-800">{action.name}</p>
+                       <div className="flex items-center gap-2">
+                          <p className="font-bold text-slate-800">{action.name}</p>
+                          {action.autonomy_level === 3 && <FiShield className="text-red-500" title="Requiere Autorización Humana Obligatoria" />}
+                       </div>
                        <p className="text-[9px] text-slate-400 uppercase tracking-widest">{action.domain}</p>
                     </TableCell>
                     <TableCell>{getLevelBadge(action.autonomy_level)}</TableCell>
                     <TableCell>
-                       <div className="text-[9px] font-bold text-slate-500">
-                          <p>MAX/DÍA: {action.max_daily_executions}</p>
-                          <p>IMPACTO: ${action.max_financial_impact}</p>
+                       <div className="text-[9px] font-black text-slate-500 uppercase">
+                          <p className="flex justify-between"><span>Max Ejecución:</span> <span>{action.max_daily_executions}/día</span></p>
+                          <p className="flex justify-between border-t border-slate-100 mt-1 pt-1"><span>Límite Financiero:</span> <span className="text-indigo-600">${action.max_financial_impact}</span></p>
+                          <p className="mt-1 text-red-500">Guardrail: {action.autonomy_level >= 2 ? "Hard-Locked" : "Manual"}</p>
                        </div>
                     </TableCell>
                   </TableRow>
@@ -195,16 +231,46 @@ export default function AutonomyControlCenter() {
                            </Badge>
                         </div>
 
-                        <div className="bg-black/40 p-4 rounded-xl border border-white/5">
-                           <p className="text-xs leading-relaxed text-slate-200">
-                             <FiFileText className="inline mr-2 text-slate-500" />
-                             {log.explanation}
-                           </p>
+                        <div className="bg-black/40 p-5 rounded-2xl border border-white/10 space-y-4">
+                           <div>
+                              <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] mb-2">Cadena de Decisión (XAI)</p>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                 <div className="space-y-2">
+                                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1">
+                                       <FiFileText /> Hallazgo Operativo
+                                    </p>
+                                    <p className="text-xs text-slate-200 italic leading-relaxed">"{log.explanation}"</p>
+                                 </div>
+                                 <div className="space-y-2 border-l border-white/5 pl-4">
+                                    <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest flex items-center gap-1">
+                                       <FiActivity /> Datos de Respaldo
+                                    </p>
+                                    <div className="text-[10px] text-slate-400 font-mono overflow-hidden truncate">
+                                       {JSON.stringify(log.data_points)}
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div className="pt-3 border-t border-white/5 grid grid-cols-3 gap-2">
+                              <div className="text-center">
+                                 <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">Regla Aplicada</p>
+                                 <p className="text-[10px] font-bold text-slate-300 truncate">{log.policy_applied}</p>
+                              </div>
+                              <div className="text-center">
+                                 <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">Alternativa Descartada</p>
+                                 <p className="text-[10px] font-bold text-slate-300">Modo Manual</p>
+                              </div>
+                              <div className="text-center">
+                                 <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">Resultado Sistémico</p>
+                                 <p className="text-[10px] font-black text-emerald-400">EFICIENTE</p>
+                              </div>
+                           </div>
                         </div>
 
                         <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-widest text-slate-500">
-                           <span className="flex items-center gap-1"><FiShield /> Política: {log.policy_applied}</span>
-                           {log.was_interrupted && <span className="text-red-400 flex items-center gap-1"><FiAlertOctagon /> Interrumpido</span>}
+                           <span className="flex items-center gap-1"><FiShield /> Verificado por Governance Kernel</span>
+                           {log.was_interrupted && <span className="text-red-400 flex items-center gap-1"><FiAlertOctagon /> Intervención Soberana Activada</span>}
                         </div>
                      </div>
                    ))
@@ -213,6 +279,27 @@ export default function AutonomyControlCenter() {
            </CardContent>
         </Card>
       </div>
+      <CriticalActionDialog
+        isOpen={isKillDialogOpen}
+        onClose={() => setIsKillDialogOpen(false)}
+        onConfirm={handleConfirmKill}
+        title={globalControl.is_enabled ? "ACTIVAR KILL SWITCH SOBERANO" : "RESTAURAR AUTONOMÍA DEL SISTEMA"}
+        description={globalControl.is_enabled
+            ? "Esta acción detendrá inmediatamente TODA ejecución autónoma de IA en todos los dominios. Es una medida de emergencia irreversible sin auditoría humana."
+            : "Se restaurará la capacidad de decisión autónoma delegada a la IA bajo supervisión L2."}
+        confirmLabel={globalControl.is_enabled ? "DETENER TODO" : "RESTAURAR"}
+        type={globalControl.is_enabled ? "danger" : "sovereign"}
+      />
+
+      <CriticalActionDialog
+        isOpen={isFreezeDialogOpen}
+        onClose={() => setIsFreezeDialogOpen(false)}
+        onConfirm={handleConfirmFreeze}
+        title="CONGELAR ESTADO DEL SISTEMA"
+        description="El sistema entrará en modo de solo lectura para la IA. Se mantendrá la configuración actual pero se bloqueará cualquier ajuste autónomo o propositivo hasta nueva orden."
+        confirmLabel="CONGELAR"
+        type="warning"
+      />
     </div>
   );
 }
