@@ -193,6 +193,7 @@ export default function Sidebar() {
         { href: '/dashboard/admin-plataforma/autonomia', label: 'Control de Autonomía', icon: FiCpu },
         { href: '/dashboard/admin-plataforma/agentes', label: 'Jerarquía de Agentes', icon: FiZap },
         { href: '/dashboard/admin-plataforma/log-ejecutivo', label: 'Bitácora de Soberanía', icon: FiFileText },
+        { href: '/dashboard/admin-plataforma/memoria', label: 'Memoria Histórica', icon: FiClock },
  
         { href: '/dashboard/admin-plataforma/inteligencia', label: 'Inteligencia de Decisión', icon: FiActivity },
         { href: '/dashboard/admin-plataforma/optimizacion', label: 'Optimización Ecosistema', icon: FiZap },

@@ -198,6 +198,31 @@ export default function AutonomyControlCenter() {
          </Card>
       </div>
 
+      {/* Alerta Anti-Captura (Fase 10) */}
+      <Card className="border-none shadow-sm bg-amber-50 border border-amber-100 rounded-3xl overflow-hidden">
+         <CardContent className="p-8 flex items-center justify-between">
+            <div className="flex items-center gap-6">
+                <div className="w-14 h-14 bg-amber-500 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                    <FiAlertTriangle size={28} />
+                </div>
+                <div>
+                    <h3 className="text-xl font-black text-slate-900 uppercase italic">Monitor de Concentración de Poder</h3>
+                    <p className="text-sm text-slate-600 font-medium">El sistema detecta patrones de intervención anómalos para prevenir la captura institucional.</p>
+                </div>
+            </div>
+            <div className="flex gap-8 items-center border-l border-amber-200 pl-8">
+                <div className="text-center">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Índice de Dispersión</p>
+                    <p className="text-xl font-black text-emerald-600">ALTO (SEGURO)</p>
+                </div>
+                <div className="text-center">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Uso Intervención</p>
+                    <p className="text-xl font-black text-slate-900">0.02%</p>
+                </div>
+            </div>
+         </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Actions Table */}
         <Card className="border-none shadow-sm overflow-hidden">

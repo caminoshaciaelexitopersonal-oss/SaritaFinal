@@ -74,9 +74,9 @@ export default function AgentHierarchyControl() {
                 <div className="bg-slate-900 text-white p-2 rounded-lg">
                 <FiCpu size={24} />
                 </div>
-                <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase italic">Cuerpo de Funcionarios Digitales</h1>
+                <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase italic">Cuerpo de Funcionarios Digitales y Guardianes</h1>
             </div>
-            <p className="text-slate-500 text-lg font-medium italic">Gestión de asistentes analíticos delegados para el soporte institucional.</p>
+            <p className="text-slate-500 text-lg font-medium italic">Asistentes analíticos delegados que actúan como guardianes de los principios institucionales y la integridad histórica.</p>
             </div>
         </div>
 
@@ -113,6 +113,7 @@ export default function AgentHierarchyControl() {
                                     </TableCell>
                                     <TableCell className="max-w-xs">
                                         <p className="text-sm font-medium text-slate-600 italic">"{agent.last_action}"</p>
+                                        <p className="text-[8px] font-black text-indigo-500 uppercase mt-1 tracking-widest">Estado de Guardianía: ACTIVO</p>
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex items-center gap-2">

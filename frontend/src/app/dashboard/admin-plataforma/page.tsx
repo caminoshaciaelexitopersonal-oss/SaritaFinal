@@ -97,6 +97,11 @@ export default function AdminPlataformaPage() {
                 <FiCpu /> Analítica Delegada
              </Button>
            </Link>
+           <Link href="/dashboard/admin-plataforma/memoria">
+             <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
+                <FiClock /> Memoria Histórica
+             </Button>
+           </Link>
            <Button
             onClick={() => setIsEmergencyDialogOpen(true)}
             className="bg-red-600 text-white font-black px-8 py-6 rounded-2xl hover:bg-red-700 transition-all shadow-xl shadow-red-500/20">
