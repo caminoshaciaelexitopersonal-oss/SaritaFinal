@@ -189,6 +189,7 @@ export default function Sidebar() {
       links: [
  
         { href: '/dashboard/admin-plataforma/grc', label: 'Centro GRC (Compliance)', icon: FiShield },
+        { href: '/dashboard/admin-plataforma/defensa', label: 'Defensa Soberana', icon: FiShield },
         { href: '/dashboard/admin-plataforma/regulacion', label: 'Configuración Regulatoria', icon: FiShield },
         { href: '/dashboard/admin-plataforma/autonomia', label: 'Control de Autonomía', icon: FiCpu },
         { href: '/dashboard/admin-plataforma/agentes', label: 'Jerarquía de Agentes', icon: FiZap },

@@ -1,12 +1,14 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import SaritaProfileView, PlanViewSet, SuscripcionViewSet
+from apps.audit.views import ForensicSecurityLogViewSet
 
 app_name = 'admin_plataforma'
 
 router = DefaultRouter()
 router.register(r'planes', PlanViewSet, basename='plan')
 router.register(r'suscripciones', SuscripcionViewSet, basename='suscripcion')
+router.register(r'audit/forensic-logs', ForensicSecurityLogViewSet, basename='forensic-log')
 
 urlpatterns = [
     path('profile/', SaritaProfileView.as_view(), name='sarita-profile'),

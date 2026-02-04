@@ -71,22 +71,42 @@ logger = logging.getLogger(__name__)
 
 class DefenseService:
     """
-    Servicio Central de Contención y Defensa S-0.3.
+    Servicio Central de Contención y Defensa S-0.3 / S-1.1.
     Responsable de neutralizar ataques y registrar evidencia forense.
+    Organizado en Anillos de Defensa.
     """
 
+    # --- ANILLO 1: OBSERVACIÓN INTELIGENTE (S-1.2) ---
     @staticmethod
-    def neutralize_threat(user, attack_vector, payload, headers, threat_level='HIGH'):
+    def classify_event(attack_vector, user=None):
+        """
+        Clasifica la amenaza según el vector y el contexto (S-1.2).
+        """
+        if attack_vector in ["INVALID_INTENTION_INJECTION", "GOVERNANCE_AUTHORITY_VIOLATION"]:
+            return 'CRITICAL' # 🔴 Ataque activo
+        if attack_vector in ["XSS_ATTEMPT", "DOM_MUTATION"]:
+            return 'CRITICAL'
+        if attack_vector in ["BRUTE_FORCE", "RATE_LIMIT_EXCEEDED"]:
+            return 'HIGH'     # 🟠 Riesgo sistémico
+        if attack_vector in ["UNKNOWN_ROUTE_SCAN"]:
+            return 'MEDIUM'   # 🟡 Riesgo leve
+        return 'LOW'          # 🟢 Ruido
+
+    @staticmethod
+    def neutralize_threat(user, attack_vector, payload, headers, threat_level=None):
         """
         Neutraliza una amenaza activa mediante cuarentena y registro forense.
         """
         source_ip = headers.get('REMOTE_ADDR') or headers.get('HTTP_X_FORWARDED_FOR')
 
+        # S-1.2: Clasificación automática si no se provee nivel
+        effective_level = threat_level or DefenseService.classify_event(attack_vector, user)
+
         # 1. Registro Forense Inmediato
         log_entry = ForensicSecurityLog.objects.create(
             user=user if user and not user.is_anonymous else None,
             source_ip=source_ip,
-            threat_level=threat_level,
+            threat_level=effective_level,
             attack_vector=attack_vector,
             payload_captured=payload,
             headers_captured={k: v for k, v in headers.items() if isinstance(v, str)},
@@ -107,4 +127,84 @@ class DefenseService:
         # 4. Notificar al Sovereignty Center (vía Logs por ahora)
         logger.error(f"S-0 CRITICAL: Ataque detectado y contenido. Vector: {attack_vector}. IP: {source_ip}")
 
+        # S-1.3: Disparar respuesta autónoma si aplica
+        if effective_level in ['HIGH', 'CRITICAL']:
+            AutonomousDefenseManager.trigger_response(log_entry)
+
         return log_entry.id
+
+
+class AutonomousDefenseManager:
+    """
+    Gestor de Respuestas Autónomas S-1.3 (Anillo 2).
+    Ejecuta acciones de contención sin intervención humana dentro de límites duros.
+    """
+
+    @staticmethod
+    def trigger_response(log_entry):
+        """
+        Determina y ejecuta la respuesta óptima ante un log de seguridad.
+        """
+        from apps.ecosystem_optimization.models import AutonomousExecutionLog, AutonomousAction
+        from apps.admin_plataforma.models import GovernancePolicy
+
+        # 1. Verificar si el Kill-Switch de Autonomía está activo (Ring 0 check)
+        if GovernancePolicy.objects.filter(name="KILL_SWITCH_AUTONOMY", is_active=True).exists():
+            logger.warning(f"S-1.3: Respuesta autónoma ABORTADA. Kill-Switch activo para {log_entry.id}")
+            return
+
+        # 2. Seleccionar respuesta según nivel
+        response_action = "NONE"
+        xai_explanation = ""
+
+        if log_entry.threat_level == 'CRITICAL':
+            # Ring 3: Escalamiento forzado (S-1.6)
+            response_action = "FORCE_SYSTEM_FREEZE_PROPOSAL"
+            xai_explanation = "Amenaza crítica detectada. Se propone congelamiento sistémico inmediato para proteger la integridad del Kernel."
+            AutonomousDefenseManager._escalate_to_ring3(log_entry, xai_explanation)
+
+        elif log_entry.threat_level == 'HIGH':
+            # Ring 2: Acción autónoma
+            response_action = "HARDEN_RATE_LIMITS"
+            xai_explanation = "Actividad de alto riesgo detectada. Endurecimiento preventivo de límites de petición para el origen."
+            AutonomousDefenseManager._apply_ring2_containment(log_entry, response_action, xai_explanation)
+
+        # 3. Registrar ejecución de defensa (Auditoría Ring 1)
+        # (Aquí se usaría AutonomousExecutionLog de optimization)
+
+    @staticmethod
+    def _apply_ring2_containment(log_entry, action_name, explanation):
+        """
+        Aplica acciones de contención del Anillo 2.
+        """
+        logger.info(f"S-1.3 (Ring 2): Aplicando {action_name} ante {log_entry.attack_vector}. XAI: {explanation}")
+        # En una implementación real, aquí se interactuaría con Redis/Firewall/Middleware
+        # para aplicar el rate limit o bloqueo de IP.
+
+    @staticmethod
+    def _escalate_to_ring3(log_entry, explanation):
+        """
+        Escala a intervención humana (Anillo 3 / S-1.6).
+        Genera una propuesta estratégica para el SuperAdmin.
+        """
+        from apps.decision_intelligence.models import StrategyProposal
+
+        # S-1.4: Aprendizaje Defensivo (Generación de propuesta desde el evento)
+        StrategyProposal.objects.create(
+            domain='SISTEMICO',
+            nivel_riesgo='HIGH',
+            nivel_urgencia='CRITICAL',
+            decision_level=3, # Estratégica
+            contexto_detectado=f"Ataque detectado: {log_entry.attack_vector} desde IP {log_entry.source_ip}.",
+            riesgo_actual="Compromiso potencial de la integridad del Kernel de Gobernanza.",
+            oportunidad_detectada="Contención total de la amenaza y registro de patrón forense.",
+            accion_sugerida={
+                "intention": "SYSTEM_ATTACK_MODE_TOGGLE",
+                "parameters": {"active": True, "reason": f"Auto-escalation S-1.6 from {log_entry.id}"}
+            },
+            impacto_estimado="Cese de todas las operaciones de escritura; modo solo lectura activo.",
+            nivel_confianza=0.95,
+            agent_id="SARITA_DEFENSE_SENTINEL",
+            agent_id_type="DEFENSE"
+        )
+        logger.warning(f"S-1.6 (Ring 3): Amenaza ESCALADA a SuperAdmin. Propuesta generada para {log_entry.id}")
