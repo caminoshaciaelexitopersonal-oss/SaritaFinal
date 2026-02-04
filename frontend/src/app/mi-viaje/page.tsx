@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { ViewState } from '@/components/ui/ViewState';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
@@ -62,14 +63,6 @@ export default function MiViajePage() {
     }
   };
 
-  if (authLoading || isLoading) {
-    return <div className="text-center py-20">Cargando tu viaje...</div>;
-  }
-
-  if (error) {
-    return <div className="text-center py-20 text-red-500">{error}</div>;
-  }
-
   const atractivosGuardados = savedItems.filter(item => item.content_type_name === 'atractivoturistico');
   const eventosGuardados = savedItems.filter(item => item.content_type_name === 'publicacion');
 
@@ -85,14 +78,14 @@ export default function MiViajePage() {
           </p>
         </div>
 
-        {savedItems.length === 0 ? (
-          <div className="text-center bg-white p-10 rounded-lg shadow-md">
-            <p className="text-gray-500">Aún no has guardado ningún elemento.</p>
-            <Link href="/atractivos" className="mt-4 inline-block text-indigo-600 hover:underline">
-              ¡Empieza a explorar atractivos!
-            </Link>
-          </div>
-        ) : (
+        <ViewState
+           isLoading={authLoading || isLoading}
+           loadingMessage="Organizando tu próxima aventura..."
+           isEmpty={savedItems.length === 0 && !isLoading}
+           emptyMessage="Tu maleta virtual está vacía. Guarda atractivos y eventos para verlos aquí."
+           emptyAction={{ label: "Explorar Atractivos", onClick: () => router.push('/descubre/atractivos') }}
+           error={error}
+        >
           <div className="space-y-12">
             {/* Atractivos Guardados */}
             {atractivosGuardados.length > 0 && (
@@ -142,7 +135,7 @@ export default function MiViajePage() {
               </section>
             )}
           </div>
-        )}
+        </ViewState>
       </div>
     </div>
   );

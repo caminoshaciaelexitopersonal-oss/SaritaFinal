@@ -6,6 +6,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import SaveButton from '@/components/SaveButton';
 import Image from 'next/image';
+import { ViewState } from '@/components/ui/ViewState';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
@@ -82,11 +83,13 @@ function AtractivosContent() {
 
         {/* Contenido */}
         <div className="mt-12">
-          {isLoading ? (
-            <p className="text-center">Cargando atractivos...</p>
-          ) : error ? (
-            <p className="text-center text-red-500">{error}</p>
-          ) : (
+          <ViewState
+             isLoading={isLoading}
+             loadingMessage="Descubriendo atractivos del paraíso..."
+             isEmpty={atractivos.length === 0 && !isLoading}
+             emptyMessage="No se han encontrado atractivos turísticos en esta categoría por el momento."
+             error={error}
+          >
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {atractivos.map((atractivo) => (
                 <div key={atractivo.id} className="border rounded-lg shadow-md hover:shadow-xl transition-shadow flex flex-col h-full bg-white">
@@ -112,9 +115,8 @@ function AtractivosContent() {
                     </div>
                 </div>
               ))}
-              {atractivos.length === 0 && <p className="col-span-full text-center text-gray-500">No hay atractivos para mostrar en esta categoría.</p>}
             </div>
-          )}
+          </ViewState>
         </div>
       </div>
     </div>

@@ -16,6 +16,7 @@ import {
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { ViewState } from '@/components/ui/ViewState';
 
 export default function AdminPlataformaPage() {
   const { data: stats, isLoading } = useSWR('admin-statistics', getStatistics);
@@ -34,6 +35,11 @@ export default function AdminPlataformaPage() {
   ];
 
   return (
+    <ViewState
+       isLoading={isLoading}
+       loadingMessage="Compilando estado de soberanía sistémica..."
+       error={!stats && !isLoading ? "No fue posible recuperar las métricas globales." : null}
+    >
     <div className="space-y-10 animate-in fade-in duration-1000">
       {/* Header de Soberanía */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
@@ -162,5 +168,6 @@ export default function AdminPlataformaPage() {
          </Card>
       </div>
     </div>
+    </ViewState>
   );
 }

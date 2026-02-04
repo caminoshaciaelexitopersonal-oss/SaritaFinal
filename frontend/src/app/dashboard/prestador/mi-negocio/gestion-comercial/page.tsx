@@ -27,6 +27,7 @@ import { GRCIndicator } from '@/components/ui/GRCIndicator';
  
 import { PermissionGuard, usePermissions } from '@/ui/guards/PermissionGuard';
 import { auditLogger } from '@/services/auditLogger';
+import { ViewState } from '@/components/ui/ViewState';
 
 // Importación de los niveles de clase mundial
 import Level1_Communication from './components/Level1_Communication';
@@ -296,6 +297,12 @@ export default function GestionComercialPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-black transition-colors flex flex-col">
+       <ViewState
+          isLoading={isLoading}
+          loadingMessage="Sincronizando flujo comercial..."
+          isEmpty={facturas.length === 0 && activeView === CommercialView.INVOICING}
+          emptyMessage="No se han detectado facturas emitidas en este periodo."
+       >
        {/* Sub-nav horizontal corporativo */}
        <div className="bg-white dark:bg-brand-deep/10 border-b border-slate-100 dark:border-white/5 flex items-center px-8 gap-8 overflow-x-auto no-scrollbar sticky top-0 z-30 backdrop-blur-md">
           {[
@@ -325,6 +332,7 @@ export default function GestionComercialPage() {
        <div className="flex-1 overflow-y-auto">
           {renderContent()}
        </div>
+       </ViewState>
     </div>
   );
 }

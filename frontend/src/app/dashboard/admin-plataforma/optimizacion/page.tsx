@@ -16,10 +16,13 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { getOptimizationProposals, applyOptimization, runOptimizationCycle, OptimizationProposal } from '@/services/optimization';
 import { toast } from 'react-hot-toast';
+import { CriticalActionDialog } from '@/components/ui/CriticalActionDialog';
 
 export default function OptimizacionEcosistemaPage() {
   const [proposals, setProposals] = useState<OptimizationProposal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [selectedProposal, setSelectedProposal] = useState<OptimizationProposal | null>(null);
 
   const fetchProposals = async () => {
     try {
@@ -36,13 +39,22 @@ export default function OptimizacionEcosistemaPage() {
     fetchProposals();
   }, []);
 
-  const handleApply = async (id: string) => {
-    try {
-      await applyOptimization(id);
-      toast.success("Optimización aplicada.");
-      fetchProposals();
-    } catch (err) {
-      toast.error("Error al aplicar.");
+  const handleApplyRequest = (proposal: OptimizationProposal) => {
+    setSelectedProposal(proposal);
+    setIsConfirmDialogOpen(true);
+  };
+
+  const handleConfirmApply = async () => {
+    if (selectedProposal) {
+      try {
+        await applyOptimization(selectedProposal.id);
+        toast.success("Optimización sistémica aplicada con éxito.");
+        fetchProposals();
+      } catch (err) {
+        toast.error("No fue posible aplicar la optimización en este momento.");
+      }
+      setIsConfirmDialogOpen(false);
+      setSelectedProposal(null);
     }
   };
 
@@ -130,7 +142,7 @@ export default function OptimizacionEcosistemaPage() {
                           <div className="flex gap-2">
                              {opt.status === 'PROPOSED' ? (
                                <Button
-                                onClick={() => handleApply(opt.id)}
+                                onClick={() => handleApplyRequest(opt)}
                                 className="bg-indigo-600 text-white font-black px-6 py-2 rounded-xl shadow-lg shadow-indigo-500/20">Aprobar</Button>
                              ) : (
                                <Button variant="outline" className="border-slate-200 text-slate-600 font-black px-6 py-2 rounded-xl">Detalles</Button>
@@ -202,7 +214,15 @@ export default function OptimizacionEcosistemaPage() {
                </div>
             </div>
          </Card>
-      </div>
+      <CriticalActionDialog
+        isOpen={isConfirmDialogOpen}
+        onClose={() => setIsConfirmDialogOpen(false)}
+        onConfirm={handleConfirmApply}
+        title="Confirmar Optimización"
+        description={`SADI ajustará automáticamente los parámetros de ${selectedProposal?.domain || 'sistema'}: ${selectedProposal?.propuesta_ajuste}. ¿Desea proceder con la ejecución soberana?`}
+        confirmLabel="Ejecutar Intervención"
+        type="sovereign"
+      />
     </div>
   );
 }

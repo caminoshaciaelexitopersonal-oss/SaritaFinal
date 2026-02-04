@@ -98,7 +98,7 @@ export const FunnelBuilderProvider: React.FC<PropsWithChildren<FunnelBuilderProv
                 const response = await fetch('/api/bff/funnel-builder/funnel-editor-data/', {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) throw new Error('El sistema no pudo recuperar los datos del constructor. Verifique su conexión activa.');
                 const data = await response.json();
                 setAllData(data);
             } catch (error) {
