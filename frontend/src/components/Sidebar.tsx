@@ -190,6 +190,8 @@ export default function Sidebar() {
  
         { href: '/dashboard/admin-plataforma/grc', label: 'Centro GRC (Compliance)', icon: FiShield },
         { href: '/dashboard/admin-plataforma/autonomia', label: 'Control de Autonomía', icon: FiCpu },
+        { href: '/dashboard/admin-plataforma/agentes', label: 'Jerarquía de Agentes', icon: FiZap },
+        { href: '/dashboard/admin-plataforma/log-ejecutivo', label: 'Bitácora de Soberanía', icon: FiFileText },
  
         { href: '/dashboard/admin-plataforma/inteligencia', label: 'Inteligencia de Decisión', icon: FiActivity },
         { href: '/dashboard/admin-plataforma/optimizacion', label: 'Optimización Ecosistema', icon: FiZap },

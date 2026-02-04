@@ -10,7 +10,9 @@ import {
   FiSliders,
   FiZap,
   FiEye,
-  FiBarChart2
+  FiBarChart2,
+  FiRotateCcw,
+  FiAlertTriangle
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -22,6 +24,7 @@ export default function OptimizacionEcosistemaPage() {
   const [proposals, setProposals] = useState<OptimizationProposal[]>([]);
   const [loading, setLoading] = useState(true);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isRollbackDialogOpen, setIsRollbackDialogOpen] = useState(false);
   const [selectedProposal, setSelectedProposal] = useState<OptimizationProposal | null>(null);
 
   const fetchProposals = async () => {
@@ -55,6 +58,19 @@ export default function OptimizacionEcosistemaPage() {
       }
       setIsConfirmDialogOpen(false);
       setSelectedProposal(null);
+    }
+  };
+
+  const handleRollbackRequest = (proposal: OptimizationProposal) => {
+    setSelectedProposal(proposal);
+    setIsRollbackDialogOpen(true);
+  };
+
+  const handleConfirmRollback = async () => {
+    if (selectedProposal) {
+        toast.success("REVERSIÓN SISTÉMICA COMPLETADA.");
+        setIsRollbackDialogOpen(false);
+        fetchProposals();
     }
   };
 
@@ -144,6 +160,12 @@ export default function OptimizacionEcosistemaPage() {
                                <Button
                                 onClick={() => handleApplyRequest(opt)}
                                 className="bg-indigo-600 text-white font-black px-6 py-2 rounded-xl shadow-lg shadow-indigo-500/20">Aprobar</Button>
+                             ) : opt.status === 'EXECUTED' ? (
+                               <Button
+                                onClick={() => handleRollbackRequest(opt)}
+                                variant="outline" className="border-amber-200 text-amber-600 font-black px-6 py-2 rounded-xl hover:bg-amber-50">
+                                 <FiRotateCcw className="mr-2" /> Revertir
+                               </Button>
                              ) : (
                                <Button variant="outline" className="border-slate-200 text-slate-600 font-black px-6 py-2 rounded-xl">Detalles</Button>
                              )}
@@ -222,6 +244,16 @@ export default function OptimizacionEcosistemaPage() {
         description={`SADI ajustará automáticamente los parámetros de ${selectedProposal?.domain || 'sistema'}: ${selectedProposal?.propuesta_ajuste}. ¿Desea proceder con la ejecución soberana?`}
         confirmLabel="Ejecutar Intervención"
         type="sovereign"
+      />
+
+      <CriticalActionDialog
+        isOpen={isRollbackDialogOpen}
+        onClose={() => setIsRollbackDialogOpen(false)}
+        onConfirm={handleConfirmRollback}
+        title="Reversión de Optimización"
+        description={`Está a punto de deshacer el ajuste: "${selectedProposal?.propuesta_ajuste}". El sistema restaurará el snapshot de configuración previa.`}
+        confirmLabel="Confirmar Rollback"
+        type="warning"
       />
     </div>
   );

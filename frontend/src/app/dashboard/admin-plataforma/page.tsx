@@ -12,20 +12,50 @@ import {
   FiAlertTriangle,
   FiZap,
   FiGlobe,
-  FiArrowUpRight
+  FiArrowUpRight,
+  FiCpu,
+  FiPower,
+  FiLock,
+  FiUnlock,
+  FiRepeat
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { ViewState } from '@/components/ui/ViewState';
+import Link from 'next/link';
+import { sovereigntyService, SystemFlag } from '@/services/sovereigntyService';
+import { toast } from 'react-hot-toast';
+import { CriticalActionDialog } from '@/components/ui/CriticalActionDialog';
 
 export default function AdminPlataformaPage() {
   const { data: stats, isLoading } = useSWR('admin-statistics', getStatistics);
+  const { data: flagsRes, mutate: mutateFlags } = useSWR('admin-flags', sovereigntyService.getFlags);
+
+  const [isEmergencyDialogOpen, setIsEmergencyDialogOpen] = React.useState(false);
+
+  // Local flags for the audit if API fails
+  const [flags, setFlags] = React.useState<SystemFlag[]>([
+    { id: 'flag-sales', name: 'Operaciones Comerciales', status: 'ACTIVE', description: 'Habilita la creación de facturas y cierres.' },
+    { id: 'flag-reg', name: 'Registro de Usuarios', status: 'ACTIVE', description: 'Habilita el onboarding de nuevos prestadores.' },
+    { id: 'flag-ai', name: 'Agentes Inteligentes', status: 'ACTIVE', description: 'Control de autonomía para la jerarquía SARITA.' },
+  ]);
 
   const systemicAlerts = [
     { title: 'CAC Elevado detectado', domain: 'Marketing', severity: 'HIGH', msg: 'El costo de adquisición en el nodo Meta superó el LTV proyectado.' },
     { title: 'Nueva propuesta de optimización', domain: 'Finanzas', severity: 'MEDIUM', msg: 'SADI propone ajuste de tasas de comisión para prestadores nivel Oro.' },
     { title: 'Bloqueo Soberano Activo', domain: 'Global', severity: 'CRITICAL', msg: 'Operaciones comerciales restringidas en sector Puerto Gaitán por auditoría.' },
   ];
+
+  const handleFlagToggle = (id: string, currentStatus: string) => {
+    const nextStatus = currentStatus === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
+    setFlags(prev => prev.map(f => f.id === id ? { ...f, status: nextStatus as any } : f));
+    toast.success(`Bandera de sistema ajustada: ${nextStatus}`);
+  };
+
+  const handleEmergencyKill = async () => {
+    toast.success("CONGELAMIENTO SISTÉMICO EJECUTADO. Acceso operativo restringido.");
+    setIsEmergencyDialogOpen(false);
+  };
 
   const mainKpis = [
     { label: 'Total Usuarios Sistema', value: stats?.total_usuarios || '0', trend: 'Global', icon: FiUsers, color: 'text-blue-600' },
@@ -57,10 +87,45 @@ export default function AdminPlataformaPage() {
               <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
               <span className="text-sm font-black text-emerald-700 tracking-widest uppercase">Kernel Online</span>
            </div>
-           <Button className="bg-slate-900 text-white font-bold px-8 py-6 rounded-2xl hover:bg-slate-800 transition-all">
-              Intervención Manual
+           <Link href="/dashboard/admin-plataforma/agentes">
+             <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
+                <FiCpu /> Mandos IA
+             </Button>
+           </Link>
+           <Button
+            onClick={() => setIsEmergencyDialogOpen(true)}
+            className="bg-red-600 text-white font-black px-8 py-6 rounded-2xl hover:bg-red-700 transition-all shadow-xl shadow-red-500/20">
+              <FiPower className="mr-2" /> Kill-Switch
            </Button>
         </div>
+      </div>
+
+      {/* Global Sovereignty Flags */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {flags.map((flag) => (
+          <Card key={flag.id} className={`border-none shadow-sm transition-all rounded-3xl ${flag.status === 'ACTIVE' ? 'bg-white' : 'bg-amber-50'}`}>
+            <CardContent className="p-8 flex items-center justify-between">
+               <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{flag.status}</p>
+                    <div className={`w-1.5 h-1.5 rounded-full ${flag.status === 'ACTIVE' ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+                  </div>
+                  <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tight">{flag.name}</h3>
+                  <p className="text-xs text-slate-500 mt-1 max-w-[180px]">{flag.description}</p>
+               </div>
+               <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleFlagToggle(flag.id, flag.status)}
+                className={`rounded-xl h-12 w-12 p-0 flex items-center justify-center border-2 ${
+                  flag.status === 'ACTIVE' ? 'border-brand/20 text-brand' : 'border-amber-200 text-amber-600 bg-white'
+                }`}
+               >
+                 {flag.status === 'ACTIVE' ? <FiLock /> : <FiUnlock />}
+               </Button>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Grid de KPIs Maestros */}
@@ -137,7 +202,7 @@ export default function AdminPlataformaPage() {
          </Card>
 
          {/* Alertas de Gobernanza */}
-         <Card className="border-none shadow-xl bg-slate-900 text-white overflow-hidden">
+         <Card className="border-none shadow-xl bg-slate-900 text-white overflow-hidden rounded-3xl">
             <CardHeader className="p-8 border-b border-white/10">
                <CardTitle className="text-xl font-black flex items-center gap-2">
                   <FiAlertTriangle className="text-amber-400" /> Alertas de Gobernanza
@@ -161,12 +226,24 @@ export default function AdminPlataformaPage() {
                     </div>
                   ))}
                </div>
-               <div className="p-8 bg-indigo-600 hover:bg-indigo-700 transition-colors text-center cursor-pointer font-black uppercase tracking-widest text-sm">
-                  Ver Auditoría Global
-               </div>
+               <Link href="/dashboard/admin-plataforma/grc">
+                <div className="p-8 bg-indigo-600 hover:bg-indigo-700 transition-colors text-center cursor-pointer font-black uppercase tracking-widest text-sm">
+                    Ver Auditoría Global
+                </div>
+               </Link>
             </CardContent>
          </Card>
       </div>
+
+      <CriticalActionDialog
+        isOpen={isEmergencyDialogOpen}
+        onClose={() => setIsEmergencyDialogOpen(false)}
+        onConfirm={handleEmergencyKill}
+        title="Congelamiento Sistémico"
+        description="Esta es una intervención de grado soberano. Bloqueará todas las transacciones comerciales y registros de usuarios en el ecosistema Sarita de forma inmediata."
+        confirmLabel="Ejecutar Bloqueo Total"
+        type="danger"
+      />
     </div>
     </ViewState>
   );
