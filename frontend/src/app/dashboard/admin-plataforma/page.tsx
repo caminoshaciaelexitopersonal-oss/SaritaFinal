@@ -87,6 +87,11 @@ export default function AdminPlataformaPage() {
               <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
               <span className="text-sm font-black text-emerald-700 tracking-widest uppercase">Motor de Reglas Activo</span>
            </div>
+           <Link href="/dashboard/admin-plataforma/nodos">
+             <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
+                <FiGlobe /> Nodos Soberanos
+             </Button>
+           </Link>
            <Link href="/dashboard/admin-plataforma/agentes">
              <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
                 <FiCpu /> Analítica Delegada

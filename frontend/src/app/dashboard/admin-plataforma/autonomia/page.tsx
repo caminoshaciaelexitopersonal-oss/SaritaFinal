@@ -47,7 +47,10 @@ export default function AutonomyControlCenter() {
 
   const globalControl = controls.find(c => c.domain === null) || { is_enabled: true, reason: "" };
 
-  const handleKillSwitchRequest = () => {
+  const [killSwitchLevel, setKillSwitchLevel] = useState<'LOCAL' | 'REGIONAL' | 'SOVEREIGN'>('LOCAL');
+
+  const handleKillSwitchRequest = (level: 'LOCAL' | 'REGIONAL' | 'SOVEREIGN') => {
+    setKillSwitchLevel(level);
     setIsKillDialogOpen(true);
   };
 
@@ -109,17 +112,42 @@ export default function AutonomyControlCenter() {
               <FiShield size={18} />
               Modo Observador
             </Button>
-            <Button
-              onClick={handleKillSwitchRequest}
-              className={`px-8 py-6 rounded-2xl flex items-center gap-3 transition-all font-black uppercase tracking-widest text-sm shadow-2xl ${
-                globalControl.is_enabled
-                ? 'bg-slate-900 text-white hover:bg-red-600'
-                : 'bg-red-600 text-white animate-pulse'
-              }`}
-            >
-              <FiPower size={20} />
-              {globalControl.is_enabled ? 'Intervención de Urgencia' : 'Restaurar Operación'}
-            </Button>
+            <div className="flex flex-col gap-2">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Jerarquía de Intervención</p>
+                <div className="flex gap-2">
+                    <Button
+                      onClick={() => handleKillSwitchRequest('LOCAL')}
+                      variant="outline"
+                      className={`px-4 py-4 rounded-xl flex items-center gap-2 transition-all font-black uppercase tracking-widest text-[9px] ${
+                        !globalControl.is_enabled ? 'border-red-500 text-red-500' : 'border-slate-200'
+                      }`}
+                    >
+                      <FiPower size={14} />
+                      Local
+                    </Button>
+                    <Button
+                      onClick={() => handleKillSwitchRequest('REGIONAL')}
+                      variant="outline"
+                      className={`px-4 py-4 rounded-xl flex items-center gap-2 transition-all font-black uppercase tracking-widest text-[9px] ${
+                        !globalControl.is_enabled ? 'border-red-600 text-red-600' : 'border-slate-200'
+                      }`}
+                    >
+                      <FiPower size={14} />
+                      Regional
+                    </Button>
+                    <Button
+                      onClick={() => handleKillSwitchRequest('SOVEREIGN')}
+                      className={`px-6 py-4 rounded-xl flex items-center gap-2 transition-all font-black uppercase tracking-widest text-[9px] shadow-lg ${
+                        globalControl.is_enabled
+                        ? 'bg-slate-900 text-white hover:bg-red-600'
+                        : 'bg-red-600 text-white animate-pulse'
+                      }`}
+                    >
+                      <FiPower size={14} />
+                      {globalControl.is_enabled ? 'Soberano (Global)' : 'Bloqueo Total'}
+                    </Button>
+                </div>
+            </div>
             <Button
               onClick={() => {
                 toast.success("GENERANDO BUNDLE DE EVIDENCIA PARA AUDITORÍA EXTERNA...");
@@ -294,11 +322,11 @@ export default function AutonomyControlCenter() {
         isOpen={isKillDialogOpen}
         onClose={() => setIsKillDialogOpen(false)}
         onConfirm={handleConfirmKill}
-        title={globalControl.is_enabled ? "PROTOCOLO DE INTERVENCIÓN DE RESPONSABILIDAD HUMANA" : "RESTAURAR DELEGACIÓN SISTÉMICA"}
+        title={globalControl.is_enabled ? `PROTOCOLO DE INTERVENCIÓN ${killSwitchLevel}` : "RESTAURAR DELEGACIÓN SISTÉMICA"}
         description={globalControl.is_enabled
-            ? "Se procederá a la suspensión inmediata de todas las funciones autónomas delegadas. La autoridad humana asume el control directo y la responsabilidad total de las operaciones siguientes. Esta acción queda registrada para fines de cumplimiento normativo."
+            ? `Se procederá a la suspensión inmediata de las funciones autónomas delegadas en el nivel ${killSwitchLevel}. La autoridad humana asume el control directo y la responsabilidad total en este ámbito jurisdiccional.`
             : "Se restaurará la capacidad de ejecución delegada al sistema bajo el marco de supervisión institucional L2."}
-        confirmLabel={globalControl.is_enabled ? "ASUMIR CONTROL MANUAL" : "RESTAURAR DELEGACIÓN"}
+        confirmLabel={globalControl.is_enabled ? "ASUMIR CONTROL" : "RESTAURAR DELEGACIÓN"}
         type={globalControl.is_enabled ? "danger" : "sovereign"}
       />
 

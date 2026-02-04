@@ -189,6 +189,7 @@ export default function Sidebar() {
       links: [
  
         { href: '/dashboard/admin-plataforma/grc', label: 'Centro GRC (Compliance)', icon: FiShield },
+        { href: '/dashboard/admin-plataforma/regulacion', label: 'Configuración Regulatoria', icon: FiShield },
         { href: '/dashboard/admin-plataforma/autonomia', label: 'Control de Autonomía', icon: FiCpu },
         { href: '/dashboard/admin-plataforma/agentes', label: 'Jerarquía de Agentes', icon: FiZap },
         { href: '/dashboard/admin-plataforma/log-ejecutivo', label: 'Bitácora de Soberanía', icon: FiFileText },
@@ -203,6 +204,7 @@ export default function Sidebar() {
     {
       title: 'Contenido y Territorio',
       links: [
+        { href: '/dashboard/admin-plataforma/nodos', label: 'Nodos y Territorios', icon: FiGlobe },
         { href: '/dashboard/publicaciones', label: 'Publicaciones', icon: FiFileText },
         { href: '/dashboard/atractivos', label: 'Atractivos Turísticos', icon: FiMapPin },
         { href: '/dashboard/rutas', label: 'Rutas Estratégicas', icon: FiMap },
