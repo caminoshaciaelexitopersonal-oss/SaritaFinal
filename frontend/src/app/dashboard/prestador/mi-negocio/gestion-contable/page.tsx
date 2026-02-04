@@ -43,6 +43,24 @@ export default function GestionContablePage() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Disclaimer de Verdad Operativa (F-CF) */}
+      <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <FiAlertTriangle className="h-5 w-5 text-amber-500" />
+          </div>
+          <div className="ml-3">
+            <p className="text-sm text-amber-700 font-bold uppercase tracking-tight">
+              ESTADO DEL MÓDULO: INTEGRACIÓN PARCIAL
+            </p>
+            <p className="text-xs text-amber-600 mt-1">
+              La arquitectura contable está en proceso de unificación (Tenant vs ProviderProfile).
+              Ciertos reportes pueden no reflejar la totalidad de las operaciones comerciales asíncronas.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Gestión Contable Sistémica</h1>

@@ -10,7 +10,7 @@ import { SADIVoiceLayer } from '@/ui/components/feedback/SADIVoiceLayer';
 import { VoiceConfirmation } from '@/ui/components/feedback/VoiceConfirmation';
 import { useSADI } from '@/hooks/useSADI';
 import { useDashboard } from '@/contexts/DashboardContext';
-import { FiEye } from 'react-icons/fi';
+import { FiEye, FiShield } from 'react-icons/fi';
 
 // Componente interno para el layout autenticado
 // Esto asegura que los hooks solo se usen dentro de un contexto autenticado y renderizado

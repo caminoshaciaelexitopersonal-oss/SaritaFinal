@@ -138,19 +138,19 @@ export default function GestionComercialPage() {
                 <Card className="border-none shadow-sm bg-emerald-50 dark:bg-emerald-900/10">
                    <CardContent className="p-6">
                       <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">Clientes Activos</p>
-                      <h3 className="text-3xl font-black">142</h3>
+                      <h3 className="text-3xl font-black">0</h3>
                    </CardContent>
                 </Card>
                 <Card className="border-none shadow-sm bg-brand/5">
                    <CardContent className="p-6">
                       <p className="text-[10px] font-black text-brand uppercase tracking-widest mb-1">Tasa de Recompra</p>
-                      <h3 className="text-3xl font-black">24%</h3>
+                      <h3 className="text-3xl font-black">0%</h3>
                    </CardContent>
                 </Card>
                 <Card className="border-none shadow-sm bg-indigo-50 dark:bg-indigo-900/10">
                    <CardContent className="p-6">
                       <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">LTV Promedio</p>
-                      <h3 className="text-3xl font-black">€1,280</h3>
+                      <h3 className="text-3xl font-black">$0.00</h3>
                    </CardContent>
                 </Card>
              </div>
@@ -166,17 +166,10 @@ export default function GestionComercialPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-slate-50 dark:border-white/5">
-                          <TableCell className="font-bold text-slate-700 dark:text-slate-200 px-8">EcoTour Adventures</TableCell>
-                          <TableCell className="text-xs text-slate-500">hace 3 días</TableCell>
-                          <TableCell><Badge className="bg-emerald-100 text-emerald-700">Activo</Badge></TableCell>
-                          <TableCell className="text-right px-8"><Button variant="outline" size="sm">Re-enganchar</Button></TableCell>
-                        </TableRow>
-                        <TableRow className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-slate-50 dark:border-white/5">
-                          <TableCell className="font-bold text-slate-700 dark:text-slate-200 px-8">Lodge el Paraíso</TableCell>
-                          <TableCell className="text-xs text-slate-500">hace 12 días</TableCell>
-                          <TableCell><Badge className="bg-amber-100 text-amber-700">En riesgo</Badge></TableCell>
-                          <TableCell className="text-right px-8"><Button variant="outline" size="sm" className="border-amber-200 text-amber-700">Enviar Oferta</Button></TableCell>
+                        <TableRow>
+                          <TableCell colSpan={4} className="p-20 text-center text-slate-400 uppercase italic tracking-widest text-xs">
+                             No hay datos de fidelización disponibles. El modelo de cliente no ha sido sincronizado.
+                          </TableCell>
                         </TableRow>
                     </TableBody>
                   </Table>
@@ -253,10 +246,10 @@ export default function GestionComercialPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                {[
-                 { label: 'Ingresos Mes', val: '$12.4k', icon: FiDollarSign, color: 'text-brand' },
-                 { label: 'Leads Nuevos', val: '24', icon: FiUsers, color: 'text-indigo-600' },
-                 { label: 'Conversión', val: '18%', icon: FiZap, color: 'text-amber-500' },
-                 { label: 'Tickets Activos', val: '08', icon: FiActivity, color: 'text-emerald-600' },
+                 { label: 'Ingresos Mes', val: '$0.00', icon: FiDollarSign, color: 'text-brand' },
+                 { label: 'Leads Nuevos', val: '0', icon: FiUsers, color: 'text-indigo-600' },
+                 { label: 'Conversión', val: '0%', icon: FiZap, color: 'text-amber-500' },
+                 { label: 'Tickets Activos', val: '0', icon: FiActivity, color: 'text-emerald-600' },
                ].map((kpi, i) => (
                  <Card key={i} className="border-none shadow-sm bg-white dark:bg-brand-deep/20">
                     <CardContent className="p-8 flex items-center justify-between">

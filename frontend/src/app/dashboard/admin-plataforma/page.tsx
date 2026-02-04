@@ -33,23 +33,19 @@ export default function AdminPlataformaPage() {
 
   const [isEmergencyDialogOpen, setIsEmergencyDialogOpen] = React.useState(false);
 
-  // Local flags for the audit if API fails
-  const [flags, setFlags] = React.useState<SystemFlag[]>([
-    { id: 'flag-sales', name: 'Operaciones Comerciales', status: 'ACTIVE', description: 'Habilita la creación de facturas y cierres.' },
-    { id: 'flag-reg', name: 'Registro de Usuarios', status: 'ACTIVE', description: 'Habilita el onboarding de nuevos prestadores.' },
-    { id: 'flag-ai', name: 'Agentes Inteligentes', status: 'ACTIVE', description: 'Control de autonomía para la jerarquía SARITA.' },
-  ]);
+  const [flags, setFlags] = React.useState<SystemFlag[]>([]);
 
-  const systemicAlerts = [
-    { title: 'CAC Elevado detectado', domain: 'Marketing', severity: 'HIGH', msg: 'El costo de adquisición en el nodo Meta superó el LTV proyectado.' },
-    { title: 'Nueva propuesta de optimización', domain: 'Finanzas', severity: 'MEDIUM', msg: 'SADI propone ajuste de tasas de comisión para prestadores nivel Oro.' },
-    { title: 'Bloqueo Soberano Activo', domain: 'Global', severity: 'CRITICAL', msg: 'Operaciones comerciales restringidas en sector Puerto Gaitán por auditoría.' },
-  ];
+  const systemicAlerts: any[] = []; // Eliminación de mocks
 
-  const handleFlagToggle = (id: string, currentStatus: string) => {
+  const handleFlagToggle = async (id: string, currentStatus: string) => {
     const nextStatus = currentStatus === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
-    setFlags(prev => prev.map(f => f.id === id ? { ...f, status: nextStatus as any } : f));
-    toast.success(`Bandera de sistema ajustada: ${nextStatus}`);
+    try {
+        await sovereigntyService.toggleFlag(id, nextStatus);
+        toast.success(`Bandera de sistema ajustada: ${nextStatus}`);
+        mutateFlags();
+    } catch (e) {
+        toast.error("INTERVENCIÓN FALLIDA: El Kernel de Gobernanza no permitió el cambio de estado.");
+    }
   };
 
   const handleEmergencyKill = async () => {
@@ -112,7 +108,13 @@ export default function AdminPlataformaPage() {
 
       {/* Global Sovereignty Flags */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {flags.map((flag) => (
+        {(!flagsRes?.data || flagsRes.data.length === 0) && (
+            <div className="md:col-span-3 p-10 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2.5rem] text-center">
+                <FiLock className="mx-auto text-slate-300 mb-4" size={40} />
+                <p className="text-slate-400 font-black uppercase tracking-[0.2em] text-xs">Soberanía de Dominio: No se han definido banderas de control en el Kernel.</p>
+            </div>
+        )}
+        {flagsRes?.data?.map((flag: SystemFlag) => (
           <Card key={flag.id} className={`border-none shadow-sm transition-all rounded-3xl ${flag.status === 'ACTIVE' ? 'bg-white' : 'bg-amber-50'}`}>
             <CardContent className="p-8 flex items-center justify-between">
                <div>
@@ -220,7 +222,11 @@ export default function AdminPlataformaPage() {
             </CardHeader>
             <CardContent className="p-0">
                <div className="divide-y divide-white/5">
-                  {systemicAlerts.map((alert, i) => (
+                  {systemicAlerts.length === 0 ? (
+                      <div className="p-20 text-center text-slate-500 uppercase italic tracking-widest text-xs">
+                          No hay alertas críticas registradas en el periodo actual.
+                      </div>
+                  ) : systemicAlerts.map((alert, i) => (
                     <div key={i} className="p-8 hover:bg-white/5 transition-colors cursor-pointer group">
                        <div className="flex justify-between items-start mb-3">
                           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">{alert.domain}</span>

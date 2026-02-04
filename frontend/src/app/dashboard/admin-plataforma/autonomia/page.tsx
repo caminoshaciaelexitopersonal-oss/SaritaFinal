@@ -13,11 +13,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { CriticalActionDialog } from '@/components/ui/CriticalActionDialog';
 import { toast } from 'react-hot-toast';
 
+import { ViewState } from '@/components/ui/ViewState';
+
 export default function AutonomyControlCenter() {
   const [actions, setActions] = useState<AutonomousAction[]>([]);
   const [logs, setLogs] = useState<AutonomousExecutionLog[]>([]);
   const [controls, setControls] = useState<AutonomyControl[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isKillDialogOpen, setIsKillDialogOpen] = useState(false);
   const [isFreezeDialogOpen, setIsFreezeDialogOpen] = useState(false);
   const { user } = useAuth();
@@ -29,17 +32,19 @@ export default function AutonomyControlCenter() {
   }, []);
 
   const fetchData = async () => {
+    setError(null);
     try {
       const [actionsRes, logsRes, controlsRes] = await Promise.all([
         autonomyService.getActions(),
         autonomyService.getLogs(),
         autonomyService.getControls()
       ]);
-      setActions(actionsRes);
-      setLogs(logsRes);
-      setControls(controlsRes);
-    } catch (error) {
-      console.error("Error fetching autonomy data:", error);
+      setActions(actionsRes.data);
+      setLogs(logsRes.data);
+      setControls(controlsRes.data);
+    } catch (err: any) {
+      console.error("Error fetching autonomy data:", err);
+      setError("BLOQUEO TÉCNICO: No se pudo sincronizar con el Motor de Optimización Ecosistémica. La autonomía se considera SUSPENDIDA por seguridad.");
     } finally {
       setIsLoading(false);
     }
@@ -90,6 +95,7 @@ export default function AutonomyControlCenter() {
   }
 
   return (
+    <ViewState isLoading={isLoading} error={error}>
     <div className="space-y-8 animate-in fade-in duration-700">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
@@ -365,5 +371,6 @@ export default function AutonomyControlCenter() {
         type="warning"
       />
     </div>
+    </ViewState>
   );
 }

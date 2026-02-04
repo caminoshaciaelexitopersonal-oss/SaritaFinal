@@ -68,92 +68,16 @@ export const GRCProvider = ({ children }: { children: ReactNode }) => {
   const [isAuditMode, setIsAuditMode] = useState(false);
 
   // Datos semilla de GRC (Evidencia real del estado actual detectado en auditoría)
-  const [complianceMatrix] = useState<ComplianceItem[]>([
-    {
-      domain: 'Autenticación',
-      status: 'CUMPLE',
-      evidence: '/api/auth/login/',
-      mechanism: 'JWT + localStorage',
-      notes: 'Sesión persistente con manejo de 401 global.'
-    },
-    {
-      domain: 'Autorización',
-      status: 'CUMPLE',
-      evidence: 'PermissionGuard.tsx',
-      mechanism: 'RBAC Frontend (mapBackendRoleToAppRole)',
-      notes: 'Control de acceso basado en roles de negocio interpretados.'
-    },
-    {
-      domain: 'Finanzas (Triple Vía)',
-      status: 'PARCIAL',
-      evidence: '/api/v1/mi-negocio/financiera/',
-      mechanism: 'Read-only + TraceabilityBanner',
-      notes: 'Integración backend activa pero requiere validación de asientos automáticos.'
-    },
-    {
-      domain: 'Datos Personales',
-      status: 'CUMPLE',
-      evidence: 'Audit Mode (Masking)',
-      mechanism: 'Conditional Rendering en UI',
-      notes: 'El modo auditor permite enmascarar datos sensibles.'
-    },
-    {
-      domain: 'Trazabilidad',
-      status: 'PARCIAL',
-      evidence: 'auditLogger.ts',
-      mechanism: 'Local Event Sourcing',
-      notes: 'Logs persistentes en navegador; falta sincronización centralizada.'
-    }
-  ]);
+  const [complianceMatrix, setComplianceMatrix] = useState<ComplianceItem[]>([]);
+  const [risks, setRisks] = useState<RiskItem[]>([]);
+  const [exceptions, setExceptions] = useState<GRCException[]>([]);
 
-  const [risks] = useState<RiskItem[]>([
-    {
-      id: 'R1',
-      title: 'Dependencias Externas Bloqueantes',
-      type: 'TECNICO',
-      impact: 'CRITICO',
-      probability: 'ALTA',
-      status: 'ACTIVO',
-      explanation: 'Conflictos en lucide-react y react-dnd pueden romper el renderizado de módulos CRM.'
-    },
-    {
-      id: 'R2',
-      title: 'Ausencia de Persistencia de Auditoría',
-      type: 'LEGAL',
-      impact: 'ALTO',
-      probability: 'MEDIA',
-      status: 'ACTIVO',
-      explanation: 'Los logs de auditoría frontend se pierden al limpiar caché si no se envían al backend.'
-    },
-    {
-      id: 'R3',
-      title: 'Métricas Sin Backend Real',
-      type: 'OPERATIVO',
-      impact: 'MEDIO',
-      probability: 'MEDIA',
-      status: 'MITIGADO',
-      explanation: 'Se usan fallbacks temporales en el dashboard administrativo.'
-    },
-    {
-      id: 'R4',
-      title: 'Segregación de Funciones Débil',
-      type: 'LEGAL',
-      impact: 'ALTO',
-      probability: 'BAJA',
-      status: 'ACTIVO',
-      explanation: 'El mismo rol ADMIN puede crear y aprobar planes sin control dual mandatorio.'
-    }
-  ]);
-
-  const [exceptions] = useState<GRCException[]>([
-    {
-      id: 'E1',
-      module: 'Gestión Comercial',
-      reason: 'El constructor de embudos usa persistencia local mientras se estabiliza el endpoint BFF.',
-      responsible: 'Arquitectura IA',
-      reviewDate: '2024-06-15'
-    }
-  ]);
+  // Efecto para intentar cargar datos reales
+  // En F-CF, si no hay backend, se mantienen vacíos (La verdad incómoda)
+  useEffect(() => {
+    // Aquí irían las llamadas reales al backend de GRC
+    // setComplianceMatrix([]);
+  }, []);
 
   const [voiceIntentRegistry] = useState<VoiceIntentDefinition[]>([
     {

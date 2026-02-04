@@ -6,7 +6,7 @@ import {
   FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive,
   FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
   FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare, FiMonitor, FiDownload,
-  FiActivity, FiZap, FiCpu, FiTrendingUp
+  FiActivity, FiZap, FiCpu, FiTrendingUp, FiClock, FiGlobe
 } from 'react-icons/fi';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';

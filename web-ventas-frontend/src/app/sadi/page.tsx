@@ -126,6 +126,8 @@ export default function SadiPage() {
 
   const isLoading = status === 'PENDING' || status === 'RUNNING';
 
+  const isModuleBlocked = true; // SADI Execution Engine no está expuesto en el routing real.
+
   return (
     <main className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto space-y-8">
@@ -137,16 +139,28 @@ export default function SadiPage() {
 
         <Card>
           <h2 className="text-2xl font-semibold mb-4">1. Define Your Objective</h2>
-          <textarea
-            value={objective}
-            onChange={(e) => setObjective(e.target.value)}
-            placeholder="e.g., Analyze the latest user feedback and generate a summary report."
-            className="w-full h-32 bg-gray-900 border border-gray-600 rounded-lg p-4 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-            disabled={isLoading}
-          />
-          <Button onClick={handleExecute} disabled={isLoading || !objective}>
-            {isLoading ? `Executing (Status: ${status})...` : 'Execute Agent'}
-          </Button>
+          {isModuleBlocked ? (
+              <div className="p-8 bg-red-900/20 border border-red-500/50 rounded-xl text-center">
+                  <p className="text-red-400 font-black uppercase tracking-widest text-sm mb-2">Motor Inactivo</p>
+                  <p className="text-red-300/70 text-xs italic">
+                      DOMINIO BLOQUEADO: El Sistema Autónomo de Decisión e Inferencia (SADI) no posee un endpoint de ejecución activo en el Kernel de Gobernanza.
+                      Las misiones autónomas están suspendidas por política de seguridad institucional.
+                  </p>
+              </div>
+          ) : (
+            <>
+                <textarea
+                    value={objective}
+                    onChange={(e) => setObjective(e.target.value)}
+                    placeholder="e.g., Analyze the latest user feedback and generate a summary report."
+                    className="w-full h-32 bg-gray-900 border border-gray-600 rounded-lg p-4 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                    disabled={isLoading}
+                />
+                <Button onClick={handleExecute} disabled={isLoading || !objective}>
+                    {isLoading ? `Executing (Status: ${status})...` : 'Execute Agent'}
+                </Button>
+            </>
+          )}
           {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
         </Card>
 
