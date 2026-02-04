@@ -31,11 +31,20 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, setIsSidebarOpen }) => {
           </button>
 
           {/* Contexto del Nodo */}
-          <div className="hidden sm:flex items-center gap-2">
-             <div className="w-2 h-2 bg-brand rounded-full animate-pulse" />
-             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
-               Ecosistema Sarita ● Puerto Gaitán
-             </span>
+          <div className="hidden sm:flex items-center gap-4">
+             <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-brand rounded-full animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                  Ecosistema Sarita ● Puerto Gaitán
+                </span>
+             </div>
+             <div className="h-4 w-px bg-gray-100 dark:bg-white/10" />
+             <div className="px-3 py-1 bg-slate-100 dark:bg-brand-deep rounded-lg flex items-center gap-2" title="Aislamiento Institucional Verificado">
+                <FiLock size={10} className="text-slate-400" />
+                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">
+                   Entidad ID: {user?.id?.substring(0,8) || 'GLOBAL-01'}
+                </span>
+             </div>
           </div>
 
           <div className="flex-1"></div>

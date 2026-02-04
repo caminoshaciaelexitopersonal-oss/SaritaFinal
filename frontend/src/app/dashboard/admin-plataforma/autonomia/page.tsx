@@ -95,9 +95,9 @@ export default function AutonomyControlCenter() {
             <div className="bg-emerald-900 text-white p-2 rounded-lg">
               <FiCpu size={24} />
             </div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Gobernanza de Autonomía IA (Fase 7)</h1>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Gestión de Autonomía Delegada (Certificación)</h1>
           </div>
-          <p className="text-slate-500 text-lg font-medium italic">"La autonomía no es libertad. Es delegación condicionada."</p>
+          <p className="text-slate-500 text-lg font-medium italic">"El sistema actúa como un funcionario digital bajo el control y responsabilidad de la autoridad humana."</p>
         </div>
 
         <div className="flex gap-4">
@@ -107,7 +107,7 @@ export default function AutonomyControlCenter() {
               className="px-6 py-6 rounded-2xl flex items-center gap-3 border-2 border-slate-900 font-black uppercase tracking-widest text-xs"
             >
               <FiShield size={18} />
-              Congelar Sistema
+              Modo Observador
             </Button>
             <Button
               onClick={handleKillSwitchRequest}
@@ -118,7 +118,18 @@ export default function AutonomyControlCenter() {
               }`}
             >
               <FiPower size={20} />
-              {globalControl.is_enabled ? 'Activar Kill Switch' : 'Desactivar Kill Switch'}
+              {globalControl.is_enabled ? 'Intervención de Urgencia' : 'Restaurar Operación'}
+            </Button>
+            <Button
+              onClick={() => {
+                toast.success("GENERANDO BUNDLE DE EVIDENCIA PARA AUDITORÍA EXTERNA...");
+                setTimeout(() => toast.success("EXPEDIENTE DIGITAL (SHA-256) DESCARGADO."), 2000);
+              }}
+              variant="secondary"
+              className="px-6 py-6 rounded-2xl flex items-center gap-3 bg-indigo-50 text-indigo-700 font-black uppercase tracking-widest text-xs border border-indigo-100"
+            >
+              <FiFileText size={18} />
+              Exportar Evidencia
             </Button>
         </div>
       </div>
@@ -164,7 +175,7 @@ export default function AutonomyControlCenter() {
         <Card className="border-none shadow-sm overflow-hidden">
           <CardHeader className="bg-slate-50 border-b border-slate-100">
              <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                <FiZap className="text-amber-500" /> Acciones Autónomas Permitidas
+                <FiZap className="text-amber-500" /> Tareas Delegables a Funcionarios Digitales
              </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
@@ -207,9 +218,9 @@ export default function AutonomyControlCenter() {
         <Card className="border-none shadow-sm overflow-hidden bg-slate-900 text-slate-300">
            <CardHeader className="border-b border-white/5 p-6 flex flex-row items-center justify-between">
               <CardTitle className="text-white font-black uppercase text-xs tracking-widest flex items-center gap-2">
-                 <FiActivity className="text-emerald-400" /> Registro Autónomo Sistémico
+                 <FiActivity className="text-emerald-400" /> Evidencia para Auditoría Externa
               </CardTitle>
-              <Badge className="bg-emerald-500">Live XAI Trace</Badge>
+              <Badge className="bg-emerald-500">Trazabilidad XAI</Badge>
            </CardHeader>
            <CardContent className="p-0">
               <div className="max-h-[600px] overflow-y-auto divide-y divide-white/5">
@@ -283,11 +294,11 @@ export default function AutonomyControlCenter() {
         isOpen={isKillDialogOpen}
         onClose={() => setIsKillDialogOpen(false)}
         onConfirm={handleConfirmKill}
-        title={globalControl.is_enabled ? "ACTIVAR KILL SWITCH SOBERANO" : "RESTAURAR AUTONOMÍA DEL SISTEMA"}
+        title={globalControl.is_enabled ? "PROTOCOLO DE INTERVENCIÓN DE RESPONSABILIDAD HUMANA" : "RESTAURAR DELEGACIÓN SISTÉMICA"}
         description={globalControl.is_enabled
-            ? "Esta acción detendrá inmediatamente TODA ejecución autónoma de IA en todos los dominios. Es una medida de emergencia irreversible sin auditoría humana."
-            : "Se restaurará la capacidad de decisión autónoma delegada a la IA bajo supervisión L2."}
-        confirmLabel={globalControl.is_enabled ? "DETENER TODO" : "RESTAURAR"}
+            ? "Se procederá a la suspensión inmediata de todas las funciones autónomas delegadas. La autoridad humana asume el control directo y la responsabilidad total de las operaciones siguientes. Esta acción queda registrada para fines de cumplimiento normativo."
+            : "Se restaurará la capacidad de ejecución delegada al sistema bajo el marco de supervisión institucional L2."}
+        confirmLabel={globalControl.is_enabled ? "ASUMIR CONTROL MANUAL" : "RESTAURAR DELEGACIÓN"}
         type={globalControl.is_enabled ? "danger" : "sovereign"}
       />
 

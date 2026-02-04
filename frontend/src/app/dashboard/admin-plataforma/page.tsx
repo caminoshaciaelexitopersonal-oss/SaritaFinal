@@ -61,7 +61,7 @@ export default function AdminPlataformaPage() {
     { label: 'Total Usuarios Sistema', value: stats?.total_usuarios || '0', trend: 'Global', icon: FiUsers, color: 'text-blue-600' },
     { label: 'Prestadores Activos', value: stats?.total_prestadores || '0', trend: 'Vía 2', icon: FiActivity, color: 'text-indigo-600' },
     { label: 'Publicaciones Totales', value: stats?.total_publicaciones || '0', trend: 'Contenido', icon: FiGlobe, color: 'text-emerald-600' },
-    { label: 'Índice de Confianza IA', value: stats?.trust_index || '98.2%', trend: 'Estable', icon: FiZap, color: 'text-amber-600' },
+    { label: 'Consistencia Analítica', value: stats?.trust_index || '98.2%', trend: 'Normativo', icon: FiZap, color: 'text-amber-600' },
   ];
 
   return (
@@ -78,24 +78,24 @@ export default function AdminPlataformaPage() {
             <div className="bg-slate-900 text-white p-2 rounded-lg">
               <FiShield size={24} />
             </div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Gobernanza Soberana del Ecosistema</h1>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Centro de Supervisión Institucional</h1>
           </div>
-          <p className="text-slate-500 text-lg font-medium italic">Máxima Autoridad de Supervisión y Control Institucional.</p>
+          <p className="text-slate-500 text-lg font-medium italic">Plataforma de monitoreo y control para la gestión integral del ecosistema.</p>
         </div>
         <div className="flex gap-4">
            <div className="px-6 py-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3">
               <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-sm font-black text-emerald-700 tracking-widest uppercase">Kernel Online</span>
+              <span className="text-sm font-black text-emerald-700 tracking-widest uppercase">Motor de Reglas Activo</span>
            </div>
            <Link href="/dashboard/admin-plataforma/agentes">
              <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
-                <FiCpu /> Mandos IA
+                <FiCpu /> Analítica Delegada
              </Button>
            </Link>
            <Button
             onClick={() => setIsEmergencyDialogOpen(true)}
             className="bg-red-600 text-white font-black px-8 py-6 rounded-2xl hover:bg-red-700 transition-all shadow-xl shadow-red-500/20">
-              <FiPower className="mr-2" /> Kill-Switch
+              <FiPower className="mr-2" /> Suspensión de Urgencia
            </Button>
         </div>
       </div>
@@ -151,7 +151,7 @@ export default function AdminPlataformaPage() {
          <Card className="lg:col-span-2 border-none shadow-sm overflow-hidden bg-white">
             <CardHeader className="bg-slate-50/50 p-6 border-b border-gray-100">
                <CardTitle className="text-xl font-black flex items-center gap-2">
-                  <FiActivity className="text-indigo-600" /> Monitor de Salud del Ecosistema
+                  <FiActivity className="text-indigo-600" /> Monitor de Cumplimiento de Objetivos
                </CardTitle>
             </CardHeader>
             <CardContent className="p-8">
@@ -205,7 +205,7 @@ export default function AdminPlataformaPage() {
          <Card className="border-none shadow-xl bg-slate-900 text-white overflow-hidden rounded-3xl">
             <CardHeader className="p-8 border-b border-white/10">
                <CardTitle className="text-xl font-black flex items-center gap-2">
-                  <FiAlertTriangle className="text-amber-400" /> Alertas de Gobernanza
+                  <FiAlertTriangle className="text-amber-400" /> Notificaciones de Desviación
                </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -239,9 +239,9 @@ export default function AdminPlataformaPage() {
         isOpen={isEmergencyDialogOpen}
         onClose={() => setIsEmergencyDialogOpen(false)}
         onConfirm={handleEmergencyKill}
-        title="Congelamiento Sistémico"
-        description="Esta es una intervención de grado soberano. Bloqueará todas las transacciones comerciales y registros de usuarios en el ecosistema Sarita de forma inmediata."
-        confirmLabel="Ejecutar Bloqueo Total"
+        title="Suspensión de Operaciones por Auditoría"
+        description="Se procederá a la suspensión inmediata de las funciones comerciales y de registro del sistema. Esta medida es de carácter preventivo para asegurar la integridad de los datos durante un proceso de revisión institucional."
+        confirmLabel="Confirmar Suspensión"
         type="danger"
       />
     </div>

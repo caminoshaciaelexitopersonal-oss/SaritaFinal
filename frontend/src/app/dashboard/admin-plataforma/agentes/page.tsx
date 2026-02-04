@@ -74,9 +74,9 @@ export default function AgentHierarchyControl() {
                 <div className="bg-slate-900 text-white p-2 rounded-lg">
                 <FiCpu size={24} />
                 </div>
-                <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase italic">Jerarquía de Agentes SARITA</h1>
+                <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase italic">Cuerpo de Funcionarios Digitales</h1>
             </div>
-            <p className="text-slate-500 text-lg font-medium italic">Control directo de la cadena de mando de inteligencia.</p>
+            <p className="text-slate-500 text-lg font-medium italic">Gestión de asistentes analíticos delegados para el soporte institucional.</p>
             </div>
         </div>
 
@@ -84,15 +84,15 @@ export default function AgentHierarchyControl() {
             <Card className="border-none shadow-xl bg-white rounded-[2.5rem] overflow-hidden">
                 <CardHeader className="p-10 border-b border-slate-50 flex flex-row items-center justify-between bg-slate-50/30">
                     <CardTitle className="text-xl font-black uppercase tracking-widest flex items-center gap-3 italic">
-                        <FiShield className="text-brand" /> Registro de Mandos Activos
+                        <FiShield className="text-brand" /> Registro de Asistentes en Operación
                     </CardTitle>
-                    <Badge className="bg-emerald-500 text-white font-black px-4 py-1">RED SEGURA</Badge>
+                    <Badge className="bg-emerald-500 text-white font-black px-4 py-1">CERTIFICACIÓN VIGENTE</Badge>
                 </CardHeader>
                 <CardContent className="p-0">
                     <Table>
                         <TableHeader className="bg-slate-900 text-white">
                             <TableRow>
-                                <TableHead className="font-black uppercase text-[10px] tracking-widest px-10 py-6">Agente / Rango</TableHead>
+                                <TableHead className="font-black uppercase text-[10px] tracking-widest px-10 py-6">Funcionario / Rol</TableHead>
                                 <TableHead className="font-black uppercase text-[10px] tracking-widest">Dominio</TableHead>
                                 <TableHead className="font-black uppercase text-[10px] tracking-widest">Última Acción</TableHead>
                                 <TableHead className="font-black uppercase text-[10px] tracking-widest">Estado</TableHead>
@@ -167,9 +167,9 @@ export default function AgentHierarchyControl() {
             isOpen={isConfirmOpen}
             onClose={() => setIsConfirmOpen(false)}
             onConfirm={confirmAction}
-            title="Intervención Soberana"
-            description={`Está a punto de alterar el estado operativo del ${selectedAgent?.role}. Esta acción será registrada en el Log de Soberanía.`}
-            confirmLabel="Confirmar Mando"
+            title="Intervención de Responsabilidad Humana"
+            description={`Está a punto de modificar el estado operativo del asistente: ${selectedAgent?.role}. Esta acción queda bajo su responsabilidad directa y será registrada para fines de auditoría institucional.`}
+            confirmLabel="Confirmar Intervención"
             type={actionType === 'kill' ? 'danger' : 'sovereign'}
         />
       </div>

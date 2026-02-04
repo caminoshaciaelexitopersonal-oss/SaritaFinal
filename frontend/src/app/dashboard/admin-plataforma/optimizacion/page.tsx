@@ -96,11 +96,11 @@ export default function OptimizacionEcosistemaPage() {
             <div className="max-w-2xl">
                <div className="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-400/30 px-4 py-2 rounded-full mb-8">
                   <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-indigo-300">Continuous Optimization Engine</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-indigo-300">Analysis & Alignment Engine</span>
                </div>
-               <h1 className="text-6xl font-black tracking-tighter mb-6">Optimización Inteligente del Ecosistema</h1>
+               <h1 className="text-6xl font-black tracking-tighter mb-6">Ajuste Sistémico de Parámetros</h1>
                <p className="text-xl text-slate-400 leading-relaxed">
-                  SADI monitorea patrones transaccionales en tiempo real para proponer ajustes que maximicen la rentabilidad colectiva.
+                  El sistema identifica desviaciones operativas y propone ajustes normativos para asegurar el cumplimiento de los objetivos institucionales.
                </p>
             </div>
             <div className="flex flex-col gap-4">
@@ -112,7 +112,7 @@ export default function OptimizacionEcosistemaPage() {
                <Button
                 onClick={handleRunCycle}
                 className="w-full bg-white text-black font-black py-8 rounded-2xl hover:bg-slate-100 transition-all text-lg shadow-xl shadow-white/5">
-                  Ejecutar Auditoría IA
+                  Iniciar Análisis de Consistencia
                </Button>
             </div>
          </div>
@@ -245,9 +245,9 @@ export default function OptimizacionEcosistemaPage() {
         isOpen={isConfirmDialogOpen}
         onClose={() => setIsConfirmDialogOpen(false)}
         onConfirm={handleConfirmApply}
-        title="Confirmar Optimización"
-        description={`SADI ajustará automáticamente los parámetros de ${selectedProposal?.domain || 'sistema'}: ${selectedProposal?.propuesta_ajuste}. ¿Desea proceder con la ejecución soberana?`}
-        confirmLabel="Ejecutar Intervención"
+        title="Validación de Propuesta Técnica"
+        description={`Se procederá a la aplicación del ajuste sistémico en el dominio ${selectedProposal?.domain || 'institucional'}: ${selectedProposal?.propuesta_ajuste}. El usuario asume la responsabilidad de la validación final de esta propuesta generada por el asistente digital.`}
+        confirmLabel="Validar y Ejecutar"
         type="sovereign"
       />
 
