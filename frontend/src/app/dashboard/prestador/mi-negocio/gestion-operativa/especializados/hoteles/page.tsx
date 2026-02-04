@@ -24,7 +24,7 @@ interface RoomType { id: number; product: Product; capacidad: number; amenities:
 const fetcher = (url: string) => api.get(url).then(res => res.data.results || []);
 
 export default function HotelManagementPage() {
-    const { data: roomTypes, error, isLoading } = useSWR<RoomType[]>('/v1/mi-negocio/operativa/modulos-especializados/hoteles/room-types/', fetcher);
+    const { data: roomTypes, error, isLoading } = useSWR<RoomType[]>('/v1/mi-negocio/operativa/hotel/room-types/', fetcher);
     const [selectedRoomTypeId, setSelectedRoomTypeId] = useState<number | null>(null);
 
     return (

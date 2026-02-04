@@ -8,4 +8,8 @@ export const operativoEndpoints = {
   getReservas: () => httpClient.get('/v1/mi-negocio/operativa/reservas/'),
   getSST: () => httpClient.get('/v1/mi-negocio/operativa/sst/'),
   getNomina: () => httpClient.get('/v1/mi-negocio/operativa/nomina/'),
+
+  // Módulos Especializados
+  getHotelRoomTypes: () => httpClient.get('/v1/mi-negocio/operativa/hotel/room-types/'),
+  getRestaurantTables: () => httpClient.get('/v1/mi-negocio/operativa/restaurante/tables/'),
 };
