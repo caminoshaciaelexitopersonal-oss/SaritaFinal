@@ -61,9 +61,17 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
         {isAuditMode && (
           <div className="bg-amber-500 text-black px-4 py-1 text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-4 sticky top-0 z-[60] shadow-md">
             <FiEye size={14} />
-            MODO AUDITORÍA ACTIVO: SOLO LECTURA ● TRAZABILIDAD FORZADA ● ACCIONES RESTRINGIDAS
+            ESTADO INSTITUCIONAL: MODO AUDITORÍA ACTIVO ● TRAZABILIDAD FORZADA ● ACCIONES RESTRINGIDAS
             <FiEye size={14} />
           </div>
+        )}
+        {/* Placeholder para Modo Emergencia (Fase 5 Kill Switch) */}
+        {user?.role === 'ADMIN' && typeof window !== 'undefined' && localStorage.getItem('emergency_mode') === 'true' && (
+           <div className="bg-red-600 text-white px-4 py-2 text-xs font-black uppercase tracking-[0.4em] flex items-center justify-center gap-4 sticky top-0 z-[70] shadow-2xl animate-pulse">
+              <FiShield size={16} />
+              ALERTA SOBERANA: MODO EMERGENCIA ACTIVADO ● OPERACIONES BLOQUEADAS ● INVESTIGACIÓN EN CURSO
+              <FiShield size={16} />
+           </div>
         )}
         <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
         <main className="flex-1 relative z-0 focus:outline-none p-4 sm:p-6 lg:p-8">

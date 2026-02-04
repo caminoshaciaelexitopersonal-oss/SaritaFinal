@@ -39,10 +39,19 @@ export const setupInterceptors = (httpClient: AxiosInstance) => {
         }
       }
 
-      // Normalized error handling
+      // Normalized error handling - Phase 4 Functional Language
+      let functionalMessage = 'No fue posible completar esta acción por una interrupción en el flujo.';
+      const backendMessage = (error.response?.data as any)?.detail || (error.response?.data as any)?.message;
+
+      if (status === 401) functionalMessage = 'Su sesión ha expirado o requiere una nueva validación de autoridad.';
+      if (status === 403) functionalMessage = 'Esta operación requiere un nivel de soberanía del que su perfil actual no dispone.';
+      if (status === 404) functionalMessage = 'El recurso solicitado no fue localizado. El sistema sigue operativo.';
+      if (error.message.includes('timeout')) functionalMessage = 'El sistema no respondió a tiempo. Estamos registrando este evento para auditoría.';
+
       const normalizedError = {
         code: status || 500,
-        message: (error.response?.data as any)?.detail || (error.response?.data as any)?.message || 'Ocurrió un error inesperado.',
+        message: functionalMessage,
+        original: backendMessage,
         technical: error.message,
         action: status === 401 ? 'REAUTH' : 'RETRY'
       };

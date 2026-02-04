@@ -34,7 +34,7 @@ const statusConfig = {
 };
 
 export default function RestaurantFloorPlanPage() {
-    const { data: tables, error, isLoading } = useSWR<RestaurantTable[]>('/v1/mi-negocio/operativa/modulos-especializados/restaurantes/tables/', fetcher);
+    const { data: tables, error, isLoading } = useSWR<RestaurantTable[]>('/v1/mi-negocio/operativa/restaurante/tables/', fetcher);
     const [isEditMode, setIsEditMode] = useState(false);
 
     return (

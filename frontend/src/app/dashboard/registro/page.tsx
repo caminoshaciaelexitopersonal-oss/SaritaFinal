@@ -323,6 +323,18 @@ export default function RegisterPage() {
             </div>
           )}
 
+          <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+            <input
+              type="checkbox"
+              id="tos_consent"
+              required
+              className="mt-1 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label htmlFor="tos_consent" className="text-xs text-slate-600 leading-relaxed font-medium">
+              Declaro haber leído y aceptado los <span className="text-indigo-600 underline cursor-pointer">Términos de Operación Institucional</span> y la <span className="text-indigo-600 underline cursor-pointer">Política de Tratamiento de Datos del Ecosistema Sarita</span>. Entiendo que toda acción queda registrada para fines de auditoría legal.
+            </label>
+          </div>
+
           <div className="pt-2">
             <button
               type="submit"

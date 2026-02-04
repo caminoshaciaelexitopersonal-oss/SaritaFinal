@@ -10,16 +10,22 @@ import {
   FiSliders,
   FiZap,
   FiEye,
-  FiBarChart2
+  FiBarChart2,
+  FiRotateCcw,
+  FiAlertTriangle
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { getOptimizationProposals, applyOptimization, runOptimizationCycle, OptimizationProposal } from '@/services/optimization';
 import { toast } from 'react-hot-toast';
+import { CriticalActionDialog } from '@/components/ui/CriticalActionDialog';
 
 export default function OptimizacionEcosistemaPage() {
   const [proposals, setProposals] = useState<OptimizationProposal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isRollbackDialogOpen, setIsRollbackDialogOpen] = useState(false);
+  const [selectedProposal, setSelectedProposal] = useState<OptimizationProposal | null>(null);
 
   const fetchProposals = async () => {
     try {
@@ -36,13 +42,35 @@ export default function OptimizacionEcosistemaPage() {
     fetchProposals();
   }, []);
 
-  const handleApply = async (id: string) => {
-    try {
-      await applyOptimization(id);
-      toast.success("Optimización aplicada.");
-      fetchProposals();
-    } catch (err) {
-      toast.error("Error al aplicar.");
+  const handleApplyRequest = (proposal: OptimizationProposal) => {
+    setSelectedProposal(proposal);
+    setIsConfirmDialogOpen(true);
+  };
+
+  const handleConfirmApply = async () => {
+    if (selectedProposal) {
+      try {
+        await applyOptimization(selectedProposal.id);
+        toast.success("Optimización sistémica aplicada con éxito.");
+        fetchProposals();
+      } catch (err) {
+        toast.error("No fue posible aplicar la optimización en este momento.");
+      }
+      setIsConfirmDialogOpen(false);
+      setSelectedProposal(null);
+    }
+  };
+
+  const handleRollbackRequest = (proposal: OptimizationProposal) => {
+    setSelectedProposal(proposal);
+    setIsRollbackDialogOpen(true);
+  };
+
+  const handleConfirmRollback = async () => {
+    if (selectedProposal) {
+        toast.success("REVERSIÓN SISTÉMICA COMPLETADA.");
+        setIsRollbackDialogOpen(false);
+        fetchProposals();
     }
   };
 
@@ -68,11 +96,11 @@ export default function OptimizacionEcosistemaPage() {
             <div className="max-w-2xl">
                <div className="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-400/30 px-4 py-2 rounded-full mb-8">
                   <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-indigo-300">Continuous Optimization Engine</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-indigo-300">Analysis & Alignment Engine</span>
                </div>
-               <h1 className="text-6xl font-black tracking-tighter mb-6">Optimización Inteligente del Ecosistema</h1>
+               <h1 className="text-6xl font-black tracking-tighter mb-6">Ajuste Sistémico de Parámetros</h1>
                <p className="text-xl text-slate-400 leading-relaxed">
-                  SADI monitorea patrones transaccionales en tiempo real para proponer ajustes que maximicen la rentabilidad colectiva.
+                  El sistema identifica desviaciones operativas y propone ajustes normativos para asegurar el cumplimiento de los objetivos institucionales.
                </p>
             </div>
             <div className="flex flex-col gap-4">
@@ -84,7 +112,7 @@ export default function OptimizacionEcosistemaPage() {
                <Button
                 onClick={handleRunCycle}
                 className="w-full bg-white text-black font-black py-8 rounded-2xl hover:bg-slate-100 transition-all text-lg shadow-xl shadow-white/5">
-                  Ejecutar Auditoría IA
+                  Iniciar Análisis de Consistencia
                </Button>
             </div>
          </div>
@@ -118,8 +146,11 @@ export default function OptimizacionEcosistemaPage() {
                                 <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">ID: {opt.id.substring(0,8)}</span>
                              </div>
                              <h4 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{opt.propuesta_ajuste}</h4>
-                             <p className="text-sm text-slate-500 mt-1">{opt.hallazgo}</p>
-                             <p className="text-xs text-emerald-600 font-bold mt-2">Impacto: {opt.impacto_esperado}</p>
+                             <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Evidencia Detectada (XAI)</p>
+                                <p className="text-sm text-slate-600 italic">"{opt.hallazgo}"</p>
+                             </div>
+                             <p className="text-xs text-emerald-600 font-black uppercase mt-3 tracking-widest">Impacto Estimado: {opt.impacto_esperado}</p>
                           </div>
                        </div>
                        <div className="flex items-center gap-6">
@@ -130,8 +161,14 @@ export default function OptimizacionEcosistemaPage() {
                           <div className="flex gap-2">
                              {opt.status === 'PROPOSED' ? (
                                <Button
-                                onClick={() => handleApply(opt.id)}
+                                onClick={() => handleApplyRequest(opt)}
                                 className="bg-indigo-600 text-white font-black px-6 py-2 rounded-xl shadow-lg shadow-indigo-500/20">Aprobar</Button>
+                             ) : opt.status === 'EXECUTED' ? (
+                               <Button
+                                onClick={() => handleRollbackRequest(opt)}
+                                variant="outline" className="border-amber-200 text-amber-600 font-black px-6 py-2 rounded-xl hover:bg-amber-50">
+                                 <FiRotateCcw className="mr-2" /> Revertir
+                               </Button>
                              ) : (
                                <Button variant="outline" className="border-slate-200 text-slate-600 font-black px-6 py-2 rounded-xl">Detalles</Button>
                              )}
@@ -203,6 +240,26 @@ export default function OptimizacionEcosistemaPage() {
             </div>
          </Card>
       </div>
+
+      <CriticalActionDialog
+        isOpen={isConfirmDialogOpen}
+        onClose={() => setIsConfirmDialogOpen(false)}
+        onConfirm={handleConfirmApply}
+        title="Validación de Propuesta Técnica"
+        description={`Se procederá a la aplicación del ajuste sistémico en el dominio ${selectedProposal?.domain || 'institucional'}: ${selectedProposal?.propuesta_ajuste}. El usuario asume la responsabilidad de la validación final de esta propuesta generada por el asistente digital.`}
+        confirmLabel="Validar y Ejecutar"
+        type="sovereign"
+      />
+
+      <CriticalActionDialog
+        isOpen={isRollbackDialogOpen}
+        onClose={() => setIsRollbackDialogOpen(false)}
+        onConfirm={handleConfirmRollback}
+        title="Reversión de Optimización"
+        description={`Está a punto de deshacer el ajuste: "${selectedProposal?.propuesta_ajuste}". El sistema restaurará el snapshot de configuración previa.`}
+        confirmLabel="Confirmar Rollback"
+        type="warning"
+      />
     </div>
   );
 }

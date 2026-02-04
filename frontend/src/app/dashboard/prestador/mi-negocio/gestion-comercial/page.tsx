@@ -27,6 +27,7 @@ import { GRCIndicator } from '@/components/ui/GRCIndicator';
  
 import { PermissionGuard, usePermissions } from '@/ui/guards/PermissionGuard';
 import { auditLogger } from '@/services/auditLogger';
+import { ViewState } from '@/components/ui/ViewState';
 
 // Importación de los niveles de clase mundial
 import Level1_Communication from './components/Level1_Communication';
@@ -205,6 +206,7 @@ export default function GestionComercialPage() {
                         <TableHead className="font-bold text-[10px] uppercase tracking-widest px-8">N° Factura</TableHead>
                         <TableHead className="font-bold text-[10px] uppercase tracking-widest">Cliente</TableHead>
                         <TableHead className="font-bold text-[10px] uppercase tracking-widest">Fecha</TableHead>
+                        <TableHead className="font-bold text-[10px] uppercase tracking-widest text-center">Clasificación</TableHead>
                         <TableHead className="font-bold text-[10px] uppercase tracking-widest text-right px-8">Monto</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -214,6 +216,9 @@ export default function GestionComercialPage() {
                           <TableCell className="font-mono text-xs font-black text-brand px-8">{f.numero_factura}</TableCell>
                           <TableCell className="font-bold text-slate-700 dark:text-slate-200">{f.cliente_nombre}</TableCell>
                           <TableCell className="text-xs text-slate-500">{new Date(f.fecha_emision).toLocaleDateString()}</TableCell>
+                          <TableCell className="text-center">
+                             <Badge variant="outline" className="text-[8px] font-black border-indigo-100 text-indigo-400 uppercase">Dato Financiero</Badge>
+                          </TableCell>
                           <TableCell className="text-right font-black text-slate-900 dark:text-white px-8">${parseFloat(f.total).toLocaleString()}</TableCell>
                         </TableRow>
                       ))}
@@ -237,8 +242,8 @@ export default function GestionComercialPage() {
  
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
-                <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">Crecimiento y Ventas</h1>
-                <p className="text-slate-500 dark:text-slate-400 mt-2 text-lg">Centro de mando comercial del Operador Turístico.</p>
+                <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">Operación y Crecimiento Comercial</h1>
+                <p className="text-slate-500 dark:text-slate-400 mt-2 text-lg font-medium italic">Gestión Operativa del Prestador de Servicios Turísticos.</p>
               </div>
               <div className="flex bg-slate-100 dark:bg-brand-deep/30 p-1 rounded-xl">
                  <button className="px-6 py-2 bg-white dark:bg-brand shadow-sm rounded-lg text-sm font-bold text-slate-900 dark:text-white">Snapshot</button>
@@ -296,6 +301,12 @@ export default function GestionComercialPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-black transition-colors flex flex-col">
+       <ViewState
+          isLoading={isLoading}
+          loadingMessage="Sincronizando flujo comercial..."
+          isEmpty={facturas.length === 0 && activeView === CommercialView.INVOICING}
+          emptyMessage="No se han detectado facturas emitidas en este periodo."
+       >
        {/* Sub-nav horizontal corporativo */}
        <div className="bg-white dark:bg-brand-deep/10 border-b border-slate-100 dark:border-white/5 flex items-center px-8 gap-8 overflow-x-auto no-scrollbar sticky top-0 z-30 backdrop-blur-md">
           {[
@@ -325,6 +336,7 @@ export default function GestionComercialPage() {
        <div className="flex-1 overflow-y-auto">
           {renderContent()}
        </div>
+       </ViewState>
     </div>
   );
 }

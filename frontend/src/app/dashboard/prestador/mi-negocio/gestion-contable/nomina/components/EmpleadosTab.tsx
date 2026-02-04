@@ -7,12 +7,15 @@ import { Button } from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import EmpleadoForm from './EmpleadoForm';
 import { toast } from 'react-toastify';
+import { CriticalActionDialog } from '@/components/ui/CriticalActionDialog';
 
 export default function EmpleadosTab() {
   const { getEmpleados, createEmpleado, updateEmpleado, deleteEmpleado, isLoading } = useMiNegocioApi();
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEmpleado, setSelectedEmpleado] = useState<Empleado | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [empleadoToDelete, setEmpleadoToDelete] = useState<number | null>(null);
 
   const fetchEmpleados = useCallback(async () => {
     const data = await getEmpleados();
@@ -41,13 +44,20 @@ export default function EmpleadosTab() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm('¿Seguro que quieres eliminar este empleado?')) {
-      const success = await deleteEmpleado(id);
+  const handleDeleteRequest = (id: number) => {
+    setEmpleadoToDelete(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (empleadoToDelete) {
+      const success = await deleteEmpleado(empleadoToDelete);
       if (success) {
-        toast.success('Empleado eliminado');
+        toast.success('Registro de empleado eliminado del sistema.');
         fetchEmpleados();
       }
+      setIsDeleteDialogOpen(false);
+      setEmpleadoToDelete(null);
     }
   };
 
@@ -74,13 +84,24 @@ export default function EmpleadosTab() {
               <TableCell>
                 <div className="flex space-x-2">
                   <Button variant="outline" size="sm" onClick={() => handleOpenModal(e)}>Editar</Button>
-                  <Button variant="destructive" size="sm" onClick={() => handleDelete(e.id)}>Eliminar</Button>
+                  <Button variant="destructive" size="sm" onClick={() => handleDeleteRequest(e.id)}>Eliminar</Button>
                 </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
+      <CriticalActionDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="¿Eliminar Empleado?"
+        description="Esta acción desvinculará al empleado de los procesos operativos actuales. El historial contable permanecerá intacto por ley."
+        confirmLabel="Eliminar Definitivamente"
+        type="danger"
+        isLoading={isLoading}
+      />
 
       {isModalOpen && (
         <Modal title={selectedEmpleado ? 'Editar Empleado' : 'Nuevo Empleado'} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

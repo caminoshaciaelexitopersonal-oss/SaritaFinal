@@ -1,7 +1,7 @@
 
 import { Opportunity, PipelineStage } from '../types/sales';
 
-const API_BASE_URL = '/api/bff/sales';
+const API_BASE_URL = '/api/v1/mi-negocio/comercial';
 
 // Function to get the JWT from local storage
 const getAuthToken = (): string | null => {
@@ -17,7 +17,7 @@ interface ApiResponse<T> {
 
 export const getOpportunities = async (): Promise<ApiResponse<Opportunity[]>> => {
     const token = getAuthToken();
-    const response = await fetch(`${API_BASE_URL}/opportunities/`, {
+    const response = await fetch(`${API_BASE_URL}/operaciones-comerciales/`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -42,8 +42,8 @@ export const getOpportunities = async (): Promise<ApiResponse<Opportunity[]>> =>
 
 export const moveOpportunity = async (opportunityId: number, newStage: PipelineStage): Promise<Opportunity> => {
     const token = getAuthToken();
-    const response = await fetch(`${API_BASE_URL}/opportunities/${opportunityId}/move/`, {
-        method: 'POST',
+    const response = await fetch(`${API_BASE_URL}/operaciones-comerciales/${opportunityId}/move/`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,

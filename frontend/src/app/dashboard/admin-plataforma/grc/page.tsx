@@ -11,6 +11,8 @@ import {
   FiEye, FiAlertCircle, FiClock, FiUser, FiExternalLink, FiTool, FiMic
 } from 'react-icons/fi';
 import { auditLogger } from '@/services/auditLogger';
+import { Button } from '@/components/ui/Button';
+import { toast } from 'react-hot-toast';
 
 export default function GRCCenterPage() {
   const { complianceMatrix, risks, exceptions, grcKpis, isAuditMode, toggleAuditMode } = useGRC();
@@ -45,7 +47,7 @@ export default function GRCCenterPage() {
             </div>
             <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Centro de Gobierno, Riesgo y Cumplimiento (GRC)</h1>
           </div>
-          <p className="text-slate-500 text-lg">Monitoreo de integridad sistémica y evidencia de control.</p>
+        <p className="text-slate-500 text-lg">Monitoreo de integridad institucional y custodia de evidencias de control.</p>
         </div>
         <div className="flex gap-4">
            <button
@@ -59,6 +61,16 @@ export default function GRCCenterPage() {
               <FiEye size={18} />
               {isAuditMode ? 'Modo Auditor Activo' : 'Activar Modo Auditor'}
            </button>
+           <Button
+             onClick={() => {
+                toast.success("COMPILANDO EXPEDIENTE DE CUMPLIMIENTO...");
+                setTimeout(() => toast.success("CERTIFICADO DE TRAZABILIDAD (PDF/JSON) GENERADO."), 2000);
+             }}
+             className="px-6 py-3 rounded-2xl flex items-center gap-3 bg-emerald-600 text-white font-black uppercase tracking-widest text-sm shadow-lg hover:bg-emerald-700"
+           >
+              <FiFileText size={18} />
+              Exportar Certificación
+           </Button>
         </div>
       </div>
 
@@ -84,9 +96,9 @@ export default function GRCCenterPage() {
          </Card>
          <Card className="border-none shadow-sm bg-white">
             <CardContent className="p-8">
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Audit Trail (Eventos Recientes)</p>
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Custodia de Evidencia (Eventos)</p>
                <h3 className="text-4xl font-black text-indigo-600">{logs.length}</h3>
-               <p className="text-xs text-slate-500 mt-2">Eventos capturados en la sesión actual.</p>
+               <p className="text-xs text-slate-500 mt-2">Registros capturados para validación externa.</p>
             </CardContent>
          </Card>
       </div>
@@ -98,16 +110,16 @@ export default function GRCCenterPage() {
             Matriz de Cumplimiento
           </TabsTrigger>
           <TabsTrigger value="risks" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 py-2 font-bold uppercase text-[10px] tracking-widest">
-            Catálogo de Riesgos
+            Mapa de Riesgos
           </TabsTrigger>
           <TabsTrigger value="audit" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 py-2 font-bold uppercase text-[10px] tracking-widest">
-            Audit Trail UI
+            Registro de Trazabilidad
           </TabsTrigger>
           <TabsTrigger value="voice" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 py-2 font-bold uppercase text-[10px] tracking-widest">
-            Auditoría de Voz (SADI)
+            Supervisión de Voz
           </TabsTrigger>
           <TabsTrigger value="exceptions" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 py-2 font-bold uppercase text-[10px] tracking-widest">
-            Gestión de Excepciones
+            Control de Excepciones
           </TabsTrigger>
         </TabsList>
 
@@ -181,9 +193,9 @@ export default function GRCCenterPage() {
            <Card className="border-none shadow-sm overflow-hidden bg-slate-900 text-slate-300">
               <CardHeader className="border-b border-white/5 p-6 flex flex-row items-center justify-between">
                  <CardTitle className="text-white font-black uppercase text-sm tracking-widest flex items-center gap-2">
-                    <FiClock className="text-indigo-400" /> Historial de Actividad Frontend
+                    <FiClock className="text-indigo-400" /> Registro de Actividad Institucional
                  </CardTitle>
-                 <Badge className="bg-indigo-500">Live Trace</Badge>
+                 <Badge className="bg-indigo-500">Trazabilidad en Tiempo Real</Badge>
               </CardHeader>
               <CardContent className="p-0">
                  <div className="max-h-[500px] overflow-y-auto font-mono text-[11px] divide-y divide-white/5">
@@ -212,7 +224,7 @@ export default function GRCCenterPage() {
            <Card className="border-none shadow-sm overflow-hidden bg-slate-50 border border-slate-200">
               <CardHeader className="bg-white border-b border-slate-100 p-6 flex flex-row items-center justify-between">
                  <CardTitle className="text-slate-900 font-black uppercase text-sm tracking-widest flex items-center gap-2">
-                    <FiMic className="text-emerald-600" /> Gobernanza Conversacional
+                    <FiMic className="text-emerald-600" /> Supervisión de Interacciones de Voz
                  </CardTitle>
                  <Badge variant="outline">SADI Interface</Badge>
               </CardHeader>

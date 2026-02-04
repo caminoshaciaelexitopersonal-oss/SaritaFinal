@@ -1,31 +1,26 @@
-# ESTATUTO DE CUSTODIA INSTITUCIONAL Y SOBERANÍA DIGITAL
+# ESTATUTO INSTITUCIONAL DEL SISTEMA SARITA
+**Versión 1.0 | Marco de Legitimidad y Gobernanza**
 
-**Sistema:** SARITA
-**Objetivo:** Garantizar la continuidad del sistema más allá de cambios políticos o administrativos.
+## 1. NATURALEZA DEL SISTEMA
+Sarita se define como una **Plataforma de Gobernanza Digital de Triple Vía**. Su propósito no es sustituir la voluntad humana, sino proporcionar una infraestructura técnica para la gestión soberana de ecosistemas turísticos y económicos.
 
-## 1. MODELO DE CUSTODIA
-SARITA no pertenece a una persona natural o entidad privada única. Su custodia se ejerce a través de un modelo de **Agencia Digital Soberana / Fundación Tecnológica Mixta**, diseñada para resistir expropiaciones o capturas políticas simples.
+## 2. TRI-PARTICIÓN DE RESPONSABILIDADES
+El sistema opera bajo un modelo de separación de poderes técnicos:
+1.  **Autoridad Soberana (Humano):** SuperAdmin y Directivos. Son los únicos con poder de veto, reversión total y decisión estratégica final.
+2.  **Núcleo de Gobernanza (Reglas):** El Kernel de Sarita. Actúa como la "Constitución Digital" del sistema, aplicando políticas predefinidas de forma imparcial.
+3.  **Funcionarios Digitales (IA):** Agentes analíticos (SADI/Agentes). Actúan como asistentes técnicos con autonomía delegada y condicionada.
 
-## 2. SEPARACIÓN DE ROLES INSTITUCIONALES
-Para evitar la concentración de poder, el sistema opera bajo una jerarquía de responsabilidades separadas:
+## 3. PRINCIPIO DE NEUTRALIDAD
+Sarita es una herramienta agnóstica. Sus algoritmos de optimización se basan en KPIs objetivos (ROI, Eficiencia, Cumplimiento) y no en sesgos ideológicos o políticos. El sistema es adaptable a las políticas públicas de cada administración mediante la configuración del Governance Kernel.
 
-1. **Custodio Técnico:** Responsable de la infraestructura, mantenimiento y seguridad de los Nodos SARITA.
-2. **Custodio Normativo:** Responsable de configurar y actualizar las políticas en el Kernel de Gobernanza.
-3. **Operador del Sistema:** Responsable de la ejecución de misiones diarias (Coroneles y Capitanes).
-4. **Auditor Independiente:** Ente externo con acceso al rastro de integridad para certificar la transparencia.
+## 4. INALTERABILIDAD Y TRANSPARENCIA
+Toda acción que afecte a terceros (facturación, permisos, suspensiones) debe:
+- Estar motivada por una regla del Kernel.
+- Ser trazable mediante SHA-256.
+- Ser explicable en lenguaje natural (XAI).
 
-## 3. CONSEJO DE SOBERANÍA DIGITAL
-Es el órgano colegiado máximo con autoridad sobre SARITA. Sus facultades exclusivas incluyen:
-- **Autorización de Cambios Estructurales:** Ningún cambio en el Kernel de Gobernanza puede ser desplegado sin firma del Consejo.
-- **Suspensión de Nodos:** Capacidad de aislar jurisdicciones que incumplan los estándares de integridad.
-- **Bloqueo de Automatizaciones:** Potestad para reducir niveles de autonomía de la IA en situaciones de crisis nacional o regional.
-- **Activación de Auditorías Forzosas:** Capacidad de disparar auditorías XAI reconstructivas sobre cualquier evento histórico.
-
-## 4. DERECHO DE REVERSIÓN Y AISLAMIENTO
-Cada nodo SARITA posee el derecho y la capacidad técnica de:
-- **Pausarse:** Congelar todas las operaciones sin pérdida de datos.
-- **Aislarse:** Cortar comunicación con el nodo nacional si se detecta compromiso en la soberanía central, manteniendo la operación local base.
-- **Revertirse:** Regresar al Release Candidate (RC-S) certificado si una actualización es considerada hostil o desviada.
+## 5. SUPREMACÍA DE LA LEY
+Sarita reconoce la primacía de los marcos legales locales e internacionales (GDPR, EU AI Act). Ante cualquier conflicto normativo, el SuperAdmin tiene el mandato de activar la **Suspensión de Urgencia** para permitir la intervención judicial o administrativa.
 
 ---
-**Blindaje Institucional - Fase F-H**
+*Este estatuto constituye la base de confianza para la adopción institucional del sistema.*

@@ -12,13 +12,33 @@ import {
   FiAlertTriangle,
   FiZap,
   FiGlobe,
-  FiArrowUpRight
+  FiArrowUpRight,
+  FiCpu,
+  FiPower,
+  FiLock,
+  FiUnlock,
+  FiRepeat
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { ViewState } from '@/components/ui/ViewState';
+import Link from 'next/link';
+import { sovereigntyService, SystemFlag } from '@/services/sovereigntyService';
+import { toast } from 'react-hot-toast';
+import { CriticalActionDialog } from '@/components/ui/CriticalActionDialog';
 
 export default function AdminPlataformaPage() {
   const { data: stats, isLoading } = useSWR('admin-statistics', getStatistics);
+  const { data: flagsRes, mutate: mutateFlags } = useSWR('admin-flags', sovereigntyService.getFlags);
+
+  const [isEmergencyDialogOpen, setIsEmergencyDialogOpen] = React.useState(false);
+
+  // Local flags for the audit if API fails
+  const [flags, setFlags] = React.useState<SystemFlag[]>([
+    { id: 'flag-sales', name: 'Operaciones Comerciales', status: 'ACTIVE', description: 'Habilita la creación de facturas y cierres.' },
+    { id: 'flag-reg', name: 'Registro de Usuarios', status: 'ACTIVE', description: 'Habilita el onboarding de nuevos prestadores.' },
+    { id: 'flag-ai', name: 'Agentes Inteligentes', status: 'ACTIVE', description: 'Control de autonomía para la jerarquía SARITA.' },
+  ]);
 
   const systemicAlerts = [
     { title: 'CAC Elevado detectado', domain: 'Marketing', severity: 'HIGH', msg: 'El costo de adquisición en el nodo Meta superó el LTV proyectado.' },
@@ -26,14 +46,30 @@ export default function AdminPlataformaPage() {
     { title: 'Bloqueo Soberano Activo', domain: 'Global', severity: 'CRITICAL', msg: 'Operaciones comerciales restringidas en sector Puerto Gaitán por auditoría.' },
   ];
 
+  const handleFlagToggle = (id: string, currentStatus: string) => {
+    const nextStatus = currentStatus === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
+    setFlags(prev => prev.map(f => f.id === id ? { ...f, status: nextStatus as any } : f));
+    toast.success(`Bandera de sistema ajustada: ${nextStatus}`);
+  };
+
+  const handleEmergencyKill = async () => {
+    toast.success("CONGELAMIENTO SISTÉMICO EJECUTADO. Acceso operativo restringido.");
+    setIsEmergencyDialogOpen(false);
+  };
+
   const mainKpis = [
     { label: 'Total Usuarios Sistema', value: stats?.total_usuarios || '0', trend: 'Global', icon: FiUsers, color: 'text-blue-600' },
     { label: 'Prestadores Activos', value: stats?.total_prestadores || '0', trend: 'Vía 2', icon: FiActivity, color: 'text-indigo-600' },
     { label: 'Publicaciones Totales', value: stats?.total_publicaciones || '0', trend: 'Contenido', icon: FiGlobe, color: 'text-emerald-600' },
-    { label: 'Índice de Confianza IA', value: stats?.trust_index || '98.2%', trend: 'Estable', icon: FiZap, color: 'text-amber-600' },
+    { label: 'Consistencia Analítica', value: stats?.trust_index || '98.2%', trend: 'Normativo', icon: FiZap, color: 'text-amber-600' },
   ];
 
   return (
+    <ViewState
+       isLoading={isLoading}
+       loadingMessage="Compilando estado de soberanía sistémica..."
+       error={!stats && !isLoading ? "No fue posible recuperar las métricas globales." : null}
+    >
     <div className="space-y-10 animate-in fade-in duration-1000">
       {/* Header de Soberanía */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
@@ -42,19 +78,64 @@ export default function AdminPlataformaPage() {
             <div className="bg-slate-900 text-white p-2 rounded-lg">
               <FiShield size={24} />
             </div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Centro de Soberanía Sistémica</h1>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Centro de Supervisión Institucional</h1>
           </div>
-          <p className="text-slate-500 text-lg">Autoridad Suprema sobre el Ecosistema Sarita.</p>
+          <p className="text-slate-500 text-lg font-medium italic">Plataforma de monitoreo y control para la gestión integral del ecosistema.</p>
         </div>
         <div className="flex gap-4">
            <div className="px-6 py-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3">
               <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-sm font-black text-emerald-700 tracking-widest uppercase">Kernel Online</span>
+              <span className="text-sm font-black text-emerald-700 tracking-widest uppercase">Motor de Reglas Activo</span>
            </div>
-           <Button className="bg-slate-900 text-white font-bold px-8 py-6 rounded-2xl hover:bg-slate-800 transition-all">
-              Intervención Manual
+           <Link href="/dashboard/admin-plataforma/nodos">
+             <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
+                <FiGlobe /> Nodos Soberanos
+             </Button>
+           </Link>
+           <Link href="/dashboard/admin-plataforma/agentes">
+             <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
+                <FiCpu /> Analítica Delegada
+             </Button>
+           </Link>
+           <Link href="/dashboard/admin-plataforma/memoria">
+             <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
+                <FiClock /> Memoria Histórica
+             </Button>
+           </Link>
+           <Button
+            onClick={() => setIsEmergencyDialogOpen(true)}
+            className="bg-red-600 text-white font-black px-8 py-6 rounded-2xl hover:bg-red-700 transition-all shadow-xl shadow-red-500/20">
+              <FiPower className="mr-2" /> Suspensión de Urgencia
            </Button>
         </div>
+      </div>
+
+      {/* Global Sovereignty Flags */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {flags.map((flag) => (
+          <Card key={flag.id} className={`border-none shadow-sm transition-all rounded-3xl ${flag.status === 'ACTIVE' ? 'bg-white' : 'bg-amber-50'}`}>
+            <CardContent className="p-8 flex items-center justify-between">
+               <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{flag.status}</p>
+                    <div className={`w-1.5 h-1.5 rounded-full ${flag.status === 'ACTIVE' ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+                  </div>
+                  <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tight">{flag.name}</h3>
+                  <p className="text-xs text-slate-500 mt-1 max-w-[180px]">{flag.description}</p>
+               </div>
+               <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleFlagToggle(flag.id, flag.status)}
+                className={`rounded-xl h-12 w-12 p-0 flex items-center justify-center border-2 ${
+                  flag.status === 'ACTIVE' ? 'border-brand/20 text-brand' : 'border-amber-200 text-amber-600 bg-white'
+                }`}
+               >
+                 {flag.status === 'ACTIVE' ? <FiLock /> : <FiUnlock />}
+               </Button>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Grid de KPIs Maestros */}
@@ -80,7 +161,7 @@ export default function AdminPlataformaPage() {
          <Card className="lg:col-span-2 border-none shadow-sm overflow-hidden bg-white">
             <CardHeader className="bg-slate-50/50 p-6 border-b border-gray-100">
                <CardTitle className="text-xl font-black flex items-center gap-2">
-                  <FiActivity className="text-indigo-600" /> Monitor de Salud del Ecosistema
+                  <FiActivity className="text-indigo-600" /> Monitor de Cumplimiento de Objetivos
                </CardTitle>
             </CardHeader>
             <CardContent className="p-8">
@@ -131,10 +212,10 @@ export default function AdminPlataformaPage() {
          </Card>
 
          {/* Alertas de Gobernanza */}
-         <Card className="border-none shadow-xl bg-slate-900 text-white overflow-hidden">
+         <Card className="border-none shadow-xl bg-slate-900 text-white overflow-hidden rounded-3xl">
             <CardHeader className="p-8 border-b border-white/10">
                <CardTitle className="text-xl font-black flex items-center gap-2">
-                  <FiAlertTriangle className="text-amber-400" /> Alertas de Gobernanza
+                  <FiAlertTriangle className="text-amber-400" /> Notificaciones de Desviación
                </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -155,12 +236,25 @@ export default function AdminPlataformaPage() {
                     </div>
                   ))}
                </div>
-               <div className="p-8 bg-indigo-600 hover:bg-indigo-700 transition-colors text-center cursor-pointer font-black uppercase tracking-widest text-sm">
-                  Ver Auditoría Global
-               </div>
+               <Link href="/dashboard/admin-plataforma/grc">
+                <div className="p-8 bg-indigo-600 hover:bg-indigo-700 transition-colors text-center cursor-pointer font-black uppercase tracking-widest text-sm">
+                    Ver Auditoría Global
+                </div>
+               </Link>
             </CardContent>
          </Card>
       </div>
+
+      <CriticalActionDialog
+        isOpen={isEmergencyDialogOpen}
+        onClose={() => setIsEmergencyDialogOpen(false)}
+        onConfirm={handleEmergencyKill}
+        title="Suspensión de Operaciones por Auditoría"
+        description="Se procederá a la suspensión inmediata de las funciones comerciales y de registro del sistema. Esta medida es de carácter preventivo para asegurar la integridad de los datos durante un proceso de revisión institucional."
+        confirmLabel="Confirmar Suspensión"
+        type="danger"
+      />
     </div>
+    </ViewState>
   );
 }
