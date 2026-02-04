@@ -30,13 +30,13 @@ export interface AutonomyControl {
 }
 
 export const autonomyService = {
-    getActions: () => httpClient.get<AutonomousAction[]>('/v1/ecosystem-optimization/actions/'),
-    getLogs: () => httpClient.get<AutonomousExecutionLog[]>('/v1/ecosystem-optimization/logs/'),
-    getControls: () => httpClient.get<AutonomyControl[]>('/v1/ecosystem-optimization/controls/'),
+    getActions: () => httpClient.get<AutonomousAction[]>('/admin/optimization/actions/'),
+    getLogs: () => httpClient.get<AutonomousExecutionLog[]>('/admin/optimization/logs/'),
+    getControls: () => httpClient.get<AutonomyControl[]>('/admin/optimization/controls/'),
 
     toggleGlobalKillSwitch: (enabled: boolean, reason: string) =>
-        httpClient.post('/v1/ecosystem-optimization/controls/global_kill_switch/', { enabled, reason }),
+        httpClient.post('/admin/optimization/controls/global_kill_switch/', { enabled, reason }),
 
     triggerAction: (actionId: string, parameters: any) =>
-        httpClient.post(`/v1/ecosystem-optimization/actions/${actionId}/trigger/`, { parameters })
+        httpClient.post(`/admin/optimization/actions/${actionId}/trigger/`, { parameters })
 };
