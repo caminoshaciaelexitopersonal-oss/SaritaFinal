@@ -73,6 +73,7 @@ export default function ExecutiveLogPage() {
                         <TableRow>
                             <TableHead className="font-black uppercase text-[10px] tracking-widest px-10 py-6">Evento / Decisión</TableHead>
                             <TableHead className="font-black uppercase text-[10px] tracking-widest">Actor</TableHead>
+                            <TableHead className="font-black uppercase text-[10px] tracking-widest text-center">Clasificación</TableHead>
                             <TableHead className="font-black uppercase text-[10px] tracking-widest">Impacto Estimado</TableHead>
                             <TableHead className="font-black uppercase text-[10px] tracking-widest">Estado</TableHead>
                             <TableHead className="font-black uppercase text-[10px] tracking-widest text-right px-10">Gobernanza</TableHead>
@@ -86,6 +87,9 @@ export default function ExecutiveLogPage() {
                                         <p className="font-black text-slate-900 text-lg italic tracking-tight">{log.action}</p>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{new Date(log.timestamp).toLocaleString()}</p>
                                     </div>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Badge variant="outline" className="text-[8px] font-black border-red-100 text-red-600 uppercase">Dato Sensible</Badge>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center gap-3">

@@ -76,12 +76,12 @@ export const SADIVoiceLayer = ({ onAudioReady, state, responseMessage, className
             {state === 'processing' && <FiLoader className="animate-spin text-indigo-500" />}
             {state === 'success' && <FiCheckCircle className="text-emerald-500" />}
             {state === 'error' && <FiAlertCircle className="text-rose-500" />}
-            <span className="text-[10px] font-black uppercase tracking-widest opacity-40">SADI Link</span>
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Brazo Ejecutor IA (SARITA)</span>
           </div>
           <p className="text-xs font-bold leading-relaxed italic">
-            {state === 'listening' ? "Escuchando instrucción..." :
-             state === 'processing' ? "SADI procesando semántica..." :
-             responseMessage || "Esperando comando..."}
+            {state === 'listening' ? "Capturando directiva institucional..." :
+             state === 'processing' ? "Analizando impacto y autoridad..." :
+             responseMessage || "Esperando instrucción soberana..."}
           </p>
         </div>
       )}

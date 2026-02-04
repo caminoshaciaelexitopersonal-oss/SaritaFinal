@@ -78,9 +78,9 @@ export default function AdminPlataformaPage() {
             <div className="bg-slate-900 text-white p-2 rounded-lg">
               <FiShield size={24} />
             </div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Centro de Soberanía Sistémica</h1>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Gobernanza Soberana del Ecosistema</h1>
           </div>
-          <p className="text-slate-500 text-lg">Autoridad Suprema sobre el Ecosistema Sarita.</p>
+          <p className="text-slate-500 text-lg font-medium italic">Máxima Autoridad de Supervisión y Control Institucional.</p>
         </div>
         <div className="flex gap-4">
            <div className="px-6 py-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3">

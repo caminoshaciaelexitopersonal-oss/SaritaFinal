@@ -15,6 +15,7 @@ interface ViewStateProps {
     onClick: () => void;
   };
   error?: string | null;
+  isDegraded?: boolean;
   errorAction?: {
     label: string;
     onClick: () => void;
@@ -48,25 +49,32 @@ export const ViewState: React.FC<ViewStateProps> = ({
     );
   }
 
-  if (error) {
+  if (error || isDegraded) {
     return (
       <div className="flex flex-col items-center justify-center p-12 min-h-[400px] text-center animate-in zoom-in-95 duration-300">
-        <div className="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6">
+        <div className={`w-16 h-16 ${isDegraded ? 'bg-amber-100 text-amber-600' : 'bg-red-100 text-red-600'} rounded-2xl flex items-center justify-center mb-6`}>
           <AlertCircle size={32} />
         </div>
         <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-2">
-          {error.toLowerCase().includes('timeout') || error.toLowerCase().includes('no respondió')
+          {isDegraded ? 'Modo Degradado' :
+           (error?.toLowerCase().includes('timeout') || error?.toLowerCase().includes('no respondió')
             ? 'Latencia Excedida'
-            : 'Error Detectado'}
+            : 'Interrupción Institucional')}
         </h3>
         <p className="text-slate-500 max-w-md mb-8">
-          {error.toLowerCase().includes('timeout')
-            ? 'El sistema no respondió a tiempo. La conexión sigue activa, pero el flujo semántico ha sido interrumpido.'
-            : error}
+          {isDegraded
+            ? 'Ciertos servicios externos (Voz/IA) no están disponibles temporalmente. La operación core del ERP sigue funcional.'
+            : (error?.toLowerCase().includes('timeout')
+              ? 'El sistema no respondió a tiempo. La conexión sigue activa, pero el flujo semántico ha sido interrumpido.'
+              : error)}
         </p>
-        {errorAction && (
-          <Button onClick={errorAction.onClick} variant="outline" className="border-red-200 text-red-600 hover:bg-red-50">
-            {errorAction.label}
+        {(errorAction || isDegraded) && (
+          <Button
+            onClick={errorAction?.onClick || (() => window.location.reload())}
+            variant="outline"
+            className={`${isDegraded ? 'border-amber-200 text-amber-600 hover:bg-amber-50' : 'border-red-200 text-red-600 hover:bg-red-50'}`}
+          >
+            {errorAction?.label || 'Sincronizar Sistema'}
           </Button>
         )}
       </div>

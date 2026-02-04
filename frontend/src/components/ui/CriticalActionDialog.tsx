@@ -62,6 +62,9 @@ export const CriticalActionDialog: React.FC<CriticalActionDialogProps> = ({
           <DialogDescription className="text-slate-600 font-medium leading-relaxed">
             {description}
           </DialogDescription>
+          <div className="mt-6 p-4 bg-white/50 rounded-xl border border-black/5 text-[10px] text-slate-500 font-bold uppercase tracking-wider leading-tight">
+            Aviso de Responsabilidad: Al confirmar, usted asume la titularidad legal de esta operación en el registro institucional.
+          </div>
         </div>
 
         <DialogFooter className="p-8 bg-white flex flex-col sm:flex-row gap-3 sm:justify-center">

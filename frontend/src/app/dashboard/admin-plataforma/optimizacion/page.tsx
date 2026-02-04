@@ -146,8 +146,11 @@ export default function OptimizacionEcosistemaPage() {
                                 <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">ID: {opt.id.substring(0,8)}</span>
                              </div>
                              <h4 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{opt.propuesta_ajuste}</h4>
-                             <p className="text-sm text-slate-500 mt-1">{opt.hallazgo}</p>
-                             <p className="text-xs text-emerald-600 font-bold mt-2">Impacto: {opt.impacto_esperado}</p>
+                             <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Evidencia Detectada (XAI)</p>
+                                <p className="text-sm text-slate-600 italic">"{opt.hallazgo}"</p>
+                             </div>
+                             <p className="text-xs text-emerald-600 font-black uppercase mt-3 tracking-widest">Impacto Estimado: {opt.impacto_esperado}</p>
                           </div>
                        </div>
                        <div className="flex items-center gap-6">
@@ -236,6 +239,8 @@ export default function OptimizacionEcosistemaPage() {
                </div>
             </div>
          </Card>
+      </div>
+
       <CriticalActionDialog
         isOpen={isConfirmDialogOpen}
         onClose={() => setIsConfirmDialogOpen(false)}
