@@ -108,6 +108,7 @@ INSTALLED_APPS = [
     "apps.finanzas.apps.FinanzasConfig",
     "apps.defense_predictive.apps.DefensePredictiveConfig",
     "apps.defense_deception.apps.DefenseDeceptionConfig",
+    "apps.international_interop.apps.InternationalInteropConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
 

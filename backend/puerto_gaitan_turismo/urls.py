@@ -57,6 +57,9 @@ urlpatterns = [
 
     # API para Finanzas Sistémicas
     path('api/admin/finanzas/', include('apps.finanzas.urls')),
+
+    # API para Interoperabilidad Internacional (Z-TRUST-NET)
+    path('api/v1/international-interop/', include('apps.international_interop.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

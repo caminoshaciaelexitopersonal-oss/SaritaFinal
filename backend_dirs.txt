@@ -1,7 +1,0 @@
-backend/__pycache__/
-backend/ai_models/
-backend/api/
-backend/apps/
-backend/puerto_gaitan_turismo/
-backend/staticfiles/
-backend/tools/
