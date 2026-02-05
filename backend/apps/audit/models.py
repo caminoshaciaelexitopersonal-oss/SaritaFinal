@@ -49,7 +49,30 @@ class ForensicSecurityLog(models.Model):
     payload_captured = models.JSONField(help_text="Cuerpo de la petición o parámetros sospechosos.")
     headers_captured = models.JSONField(help_text="Headers HTTP de la petición maliciosa.")
     action_taken = models.CharField(max_length=255, help_text="Ej: SESSION_QUARANTINE, TOKEN_INVALIDATED")
+    previous_hash = models.CharField(max_length=64, null=True, blank=True, help_text="Hash de la entrada anterior para asegurar la integridad de la cadena.")
     integrity_hash = models.CharField(max_length=64, null=True, blank=True, help_text="Hash SHA-256 para prevenir alteración forense.")
+
+    @classmethod
+    def log_event(cls, threat_level, attack_vector, payload_captured, action_taken, user=None, source_ip=None):
+        import hashlib
+        from datetime import datetime
+        last_entry = cls.objects.order_by('-timestamp').first()
+        prev_hash = last_entry.integrity_hash if last_entry else "0" * 64
+
+        # Generar hash de integridad (Chained Hash)
+        raw_data = f"{prev_hash}{threat_level}{attack_vector}{action_taken}{datetime.now().isoformat()}"
+        integrity_hash = hashlib.sha256(raw_data.encode()).hexdigest()
+
+        return cls.objects.create(
+            threat_level=threat_level,
+            attack_vector=attack_vector,
+            payload_captured=payload_captured,
+            action_taken=action_taken,
+            user=user,
+            source_ip=source_ip,
+            previous_hash=prev_hash,
+            integrity_hash=integrity_hash
+        )
 
     class Meta:
         verbose_name = "Forensic Security Log"

@@ -1,5 +1,5 @@
 from datetime import datetime
-from .forensic_log import ForensicSecurityLog
+from apps.audit.models import ForensicSecurityLog
 
 class ActiveDefenseService:
     """
@@ -27,10 +27,11 @@ class ActiveDefenseService:
     def trigger_containment(user, anomalies):
         for anomaly in anomalies:
             ForensicSecurityLog.log_event(
-                event_type="DEFENSE_CONTAINMENT",
-                actor=user.username if user else "ANONYMOUS",
-                description=f"Countermeasure activated for: {anomaly}",
-                impact="SESSION_MONITORING_INTENSIFIED"
+                threat_level="HIGH",
+                attack_vector=anomaly,
+                payload_captured={"user": user.username if user else "ANONYMOUS"},
+                action_taken="SESSION_MONITORING_INTENSIFIED",
+                user=user if hasattr(user, 'id') else None
             )
             # En un caso crítico, podríamos invalidar el token
             # user.auth_token.delete()

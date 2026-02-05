@@ -76,7 +76,7 @@ export default function InteligenciaPage() {
             </div>
             <h1 className="text-6xl font-black tracking-tighter mb-6 uppercase leading-tight max-w-4xl">Núcleo de Inteligencia Estratégica</h1>
             <p className="text-xl text-slate-400 leading-relaxed max-w-2xl font-medium">
-               Análisis sensorial del ecosistema en tiempo real. Los agentes proponen acciones de alta escala para garantizar la soberanía económica.
+               Análisis sensorial del ecosistema en tiempo real. Los funcionarios digitales proponen mandatos operativos de alta escala para garantizar la soberanía económica.
             </p>
          </div>
       </div>
@@ -188,28 +188,28 @@ export default function InteligenciaPage() {
             </Card>
 
             <Card className="border-none shadow-sm bg-white dark:bg-brand-deep/20 p-10 rounded-[2.5rem]">
-               <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8">Estado de los Agentes</h3>
+               <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8">Cuerpo de Funcionarios Digitales</h3>
                <div className="space-y-8">
                   <div className="flex items-center justify-between">
                      <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-black">M</div>
-                        <span className="text-sm font-bold text-slate-600 dark:text-slate-400">Marketing Agent</span>
+                        <span className="text-sm font-bold text-slate-600 dark:text-slate-400">Especialista de Marketing</span>
                      </div>
                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                   </div>
                   <div className="flex items-center justify-between">
                      <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-black">F</div>
-                        <span className="text-sm font-bold text-slate-600 dark:text-slate-400">Financial Auditor</span>
+                        <span className="text-sm font-bold text-slate-600 dark:text-slate-400">Auditor Financiero Digital</span>
                      </div>
                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                   </div>
                   <div className="flex items-center justify-between">
                      <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-slate-100 text-slate-400 rounded-xl flex items-center justify-center font-black italic">G</div>
-                        <span className="text-sm font-bold text-slate-400">Gov. Sentinel</span>
+                        <span className="text-sm font-bold text-slate-400">Centinela de Gobernanza</span>
                      </div>
-                     <Badge variant="outline" className="text-[8px] opacity-50">STDBY</Badge>
+                     <Badge variant="outline" className="text-[8px] opacity-50">ESPERA</Badge>
                   </div>
                </div>
             </Card>
