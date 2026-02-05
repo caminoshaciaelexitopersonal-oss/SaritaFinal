@@ -1,51 +1,33 @@
-# MODELO DE AMENAZAS SARITA (S-0.1)
+# MODELO DE AMENAZAS SARITA (S-4.0) — BLINDAJE TOTAL
 
 ## 1. Introducción
-Este documento define el panorama de amenazas para el ecosistema SARITA, cubriendo desde la interfaz de usuario hasta el núcleo de gobernanza y los agentes de inteligencia.
+Este documento actualiza el panorama de amenazas incorporando vectores de ataque avanzados identificados en la Fase de Blindaje Total.
 
-## 2. Análisis por Capas
+## 2. Nuevos Vectores de Ataque Identificados
 
-### Capa 1: Interfaz de Usuario (UI)
-*   **Amenazas:**
-    *   **XSS (Cross-Site Scripting):** Inyección de scripts maliciosos para robar tokens de sesión o manipular la vista del SuperAdmin.
-    *   **Inyección de Estados:** Manipulación del contexto de React/Context para saltar protecciones visuales o permisos locales.
-    *   **Mutación del DOM:** Alteración ilegítima de elementos de la interfaz para engañar al usuario (clickjacking avanzado).
-*   **Clasificación:** Externa / Automatizada.
+### Subfase A.1: Abuso por Roles Legítimos
+*   **Amenaza:** Un Prestador intentando acceder a métricas de la competencia mediante manipulación de parámetros de filtrado o fuerza bruta en UUIDs correlacionados.
+*   **Mitigación:** Validación estricta de Ownership en cada consulta (Query-Level Security).
 
-### Capa 2: Interfaz de Programación (API)
-*   **Amenazas:**
-    *   **Abuso de Endpoints (Rate Limiting):** Ataques de denegación de servicio o fuerza bruta sobre endpoints críticos (Login, Onboarding).
-    *   **Replay Attacks:** Captura y re-envío de peticiones firmadas para duplicar transacciones financieras.
-    *   **IDOR (Insecure Direct Object Reference):** Acceso a datos de otros "Tenants" mediante manipulación de UUIDs en la URL.
-*   **Clasificación:** Externa / Automatizada / Persistente.
+### Subfase A.2: Scraping y Crawling Agresivo
+*   **Amenaza:** Extracción masiva de inventarios turísticos o datos de precios por parte de terceros no autorizados.
+*   **Mitigación:** Rate limiting por IP/Sesión y detección de patrones de navegación no humanos.
 
-### Capa 3: Núcleo de Gobernanza (Governance Kernel)
-*   **Amenazas:**
-    *   **Intenciones Falsas:** Intento de inyectar intenciones de negocio directamente al kernel saltando la validación de rol.
-    *   **Logic Bypass:** Aprovechar debilidades en la cadena de integridad (hashes) para modificar la bitácora de auditoría.
-    *   **Policy Override:** Manipulación de los parámetros de `GovernancePolicy` para desactivar bloqueos soberanos.
-*   **Clasificación:** Interna / Persistente.
+### Subfase A.3: Ataques de Repetición (Replay)
+*   **Amenaza:** Interceptación y reenvío de peticiones de aprobación financiera o cambios de estado en misiones de agentes.
+*   **Mitigación:** Implementación de Nonces y Timestamps en intenciones críticas.
 
-### Capa 4: Agentes IA (SARITA Agents)
-*   **Amenazas:**
-    *   **Escalado de Permisos:** Un Teniente intentando ejecutar una misión reservada para un Coronel o el General.
-    *   **Misiones Maliciosas:** Inyección de directivas que causen daño económico o reputacional mediante la automatización.
-    *   **Exfiltración de Datos:** Uso de agentes para recopilar y enviar información sensible fuera del entorno institucional.
-*   **Clasificación:** Interna / IA-Automated.
+### Subfase A.4: Inyección en Agentes (Prompt Injection)
+*   **Amenaza:** Usuarios intentando "engañar" a SARITA para que ejecute acciones fuera de su política de gobernanza mediante lenguaje natural.
+*   **Mitigación:** Gobernanza por Kernel (Hard Guardrails) que valida la intención física, no solo el comando lógico.
 
-### Capa 5: Orquestación de Voz (SADI)
-*   **Amenazas:**
-    *   **Prompt Injection:** Comandos de voz diseñados para confundir al motor semántico y ejecutar acciones no autorizadas.
-    *   **Intent Hijacking:** Redirección de una intención legítima hacia una acción crítica mediante ambigüedad fonética.
-*   **Clasificación:** Externa / Humana.
-
-## 3. Clasificación de Actores
+## 3. Clasificación de Actores Actualizada
 | Actor | Motivación | Capacidad |
 | :--- | :--- | :--- |
 | **Atacante Externo** | Lucro / Sabotaje | Alta (Automatización) |
-| **Usuario Interno Malicioso** | Fraude / Espionaje | Media (Acceso Legítimo) |
-| **IA Desalineada (Agente)** | Error de Lógica / Escalado | Alta (Velocidad de Ejecución) |
-| **Actor Persistente (APT)** | Control Soberano | Muy Alta (Infiltración Silenciosa) |
+| **Usuario Interno** | Fraude / Espionaje | Media (Acceso Legítimo) |
+| **Crawler Malicioso** | Robo de Datos | Alta (Velocidad) |
+| **APT / Infiltrado** | Control Soberano | Muy Alta |
 
 ---
-**"Todo lo que no esté explícitamente autorizado, será detectado, contenido y neutralizado."**
+**"Soberanía es la capacidad de decidir quién entra, quién se queda y quién es expulsado del sistema."**

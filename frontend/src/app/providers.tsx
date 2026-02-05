@@ -8,6 +8,7 @@ import { DashboardProvider } from '@/contexts/DashboardContext';
 import { GRCProvider } from '@/contexts/GRCContext';
 import { MSWProvider } from '@/components/MSWProvider';
 import { SecurityShield } from '@/components/common/SecurityShield';
+import { SecurityProvider } from '@/context/SecurityContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -23,9 +24,11 @@ export function Providers({ children }: Props) {
           <GRCProvider>
             <EntityProvider>
               <AuthProvider>
-                <SecurityShield>
-                  {children}
-                </SecurityShield>
+                <SecurityProvider>
+                  <SecurityShield>
+                    {children}
+                  </SecurityShield>
+                </SecurityProvider>
           <ToastContainer
           position="top-right"
           autoClose={5000}

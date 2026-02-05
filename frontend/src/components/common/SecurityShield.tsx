@@ -2,8 +2,11 @@
 
 import React, { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { useSecurity } from '@/context/SecurityContext';
 
 export const SecurityShield: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { reportAnomaly } = useSecurity();
+
   useEffect(() => {
     // 1. Detección de mutaciones ilegítimas del DOM (Defensa S-0.2)
     const observer = new MutationObserver((mutations) => {
@@ -13,9 +16,8 @@ export const SecurityShield: React.FC<{ children: React.ReactNode }> = ({ childr
           mutation.addedNodes.forEach((node) => {
             if (node.nodeName === 'SCRIPT' || node.nodeName === 'IFRAME') {
               console.error('ALERTA DE SEGURIDAD: Inyección de nodo no autorizada detectada.');
+              reportAnomaly(`DOM_MUTATION_DETECTED:${node.nodeName}`);
               toast.error('INTERVENCIÓN SOBERANA: Se ha detectado una mutación no autorizada del DOM. La sesión ha sido congelada por seguridad.');
-              // En un entorno real, aquí se llamaría a un servicio de invalidación de sesión
-              // window.location.href = '/auth/lock';
             }
           });
         }
