@@ -303,6 +303,40 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.DELEGATED
 ))
 
+# --- DOMINIOS INSTITUCIONALES (Fase Z-INSTITUTIONAL) ---
+
+# Dominio: Hacienda / Finanzas Públicas
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PUBLIC_BUDGET_OPTIMIZATION",
+    domain="hacienda",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN
+))
+
+# Dominio: Planeación Nacional
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="TERRITORIAL_IMPACT_SIMULATION",
+    domain="planeacion",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+# Dominio: Seguridad Civil
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="CIVIL_DEFENSE_ALERT",
+    domain="seguridad_civil",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+# Dominio: Gestión Territorial
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="LAND_USE_AUDIT",
+    domain="gestion_territorial",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
+
 GovernanceKernel.register_intention(GovernanceIntention(
     name="ERP_CREATE_VOUCHER",
     domain="contable",

@@ -88,3 +88,28 @@ class ForensicSecurityLog(models.Model):
 
     def __str__(self):
         return f"[{self.threat_level}] {self.attack_vector} @ {self.timestamp}"
+
+
+class PublicSystemAudit(models.Model):
+    """
+    Registro Público de Funciones y Auditorías Abiertas (Z-INSTITUTIONAL).
+    Almacena resúmenes de actividad para transparencia ciudadana sin exponer datos sensibles.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    domain = models.CharField(max_length=50, help_text="Ej: Hacienda, Planeación, Salud")
+    function_name = models.CharField(max_length=100, help_text="Nombre de la función pública asistida")
+    impact_summary = models.TextField(help_text="Descripción del impacto social o administrativo")
+    compliance_score = models.FloatField(default=1.0, help_text="Índice de cumplimiento normativo (0.0 a 1.0)")
+    is_human_reviewed = models.BooleanField(default=False)
+
+    # Referencia al log forense para auditores autorizados
+    technical_trace_id = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Public System Audit Entry"
+        verbose_name_plural = "Public System Audit"
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f"[{self.domain}] {self.function_name} - {self.timestamp.date()}"
