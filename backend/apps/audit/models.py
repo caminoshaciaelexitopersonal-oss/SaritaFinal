@@ -1,5 +1,7 @@
 from django.db import models
 import uuid
+import hashlib
+from django.utils import timezone
 
 class AuditLog(models.Model):
     class Action(models.TextChoices):
@@ -54,9 +56,6 @@ class ForensicSecurityLog(models.Model):
 
     @classmethod
     def log_event(cls, threat_level, attack_vector, payload_captured, action_taken, user=None, source_ip=None):
-        import hashlib
-        from django.utils import timezone
-
         # Generar timestamp fijo para asegurar reproducibilidad del hash
         current_time = timezone.now()
 

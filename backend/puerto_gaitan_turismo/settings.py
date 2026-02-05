@@ -119,8 +119,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "apps.common.security_hardening.SecurityHardeningMiddleware",
-    "apps.defense_deception.middleware.DeceptionMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -129,6 +127,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "apps.common.security_hardening.SecurityHardeningMiddleware",
+    "apps.defense_deception.middleware.DeceptionMiddleware",
     "apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions.TenantMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",

@@ -68,6 +68,15 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "previous_hash",
+                    models.CharField(
+                        blank=True,
+                        help_text="Hash de la entrada anterior para asegurar la integridad de la cadena.",
+                        max_length=64,
+                        null=True,
+                    ),
+                ),
+                (
                     "integrity_hash",
                     models.CharField(
                         blank=True,
