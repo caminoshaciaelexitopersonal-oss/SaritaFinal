@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     "apps.decision_intelligence.apps.DecisionIntelligenceConfig",
     "apps.ecosystem_optimization.apps.EcosystemOptimizationConfig",
     "apps.finanzas.apps.FinanzasConfig",
+    "apps.defense_predictive.apps.DefensePredictiveConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
 

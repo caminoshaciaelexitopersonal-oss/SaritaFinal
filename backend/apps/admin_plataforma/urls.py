@@ -21,6 +21,7 @@ urlpatterns = [
     path('archivistica/', include('apps.admin_plataforma.gestion_archivistica.urls')),
     path('financiera/', include('apps.admin_plataforma.gestion_financiera.urls')),
     path('contabilidad/', include('apps.admin_plataforma.gestion_contable.contabilidad.urls')),
+    path('defense-predictive/', include('apps.defense_predictive.urls')),
  
 
     path('', include(router.urls)),
