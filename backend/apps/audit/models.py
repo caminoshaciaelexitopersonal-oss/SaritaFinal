@@ -55,7 +55,7 @@ class ForensicSecurityLog(models.Model):
     integrity_hash = models.CharField(max_length=64, null=True, blank=True, help_text="Hash SHA-256 para prevenir alteración forense.")
 
     @classmethod
-    def log_event(cls, threat_level, attack_vector, payload_captured, action_taken, user=None, source_ip=None):
+    def log_event(cls, threat_level, attack_vector, payload_captured, headers_captured, action_taken, user=None, source_ip=None):
         # Generar timestamp fijo para asegurar reproducibilidad del hash
         current_time = timezone.now()
 
@@ -64,7 +64,8 @@ class ForensicSecurityLog(models.Model):
 
         # Generar hash de integridad (Chained Hash)
         # Usamos el timestamp exacto que se guardará en la DB
-        raw_data = f"{prev_hash}{threat_level}{attack_vector}{action_taken}{current_time.isoformat()}"
+        # Incluimos payload y headers en el hash para integridad total
+        raw_data = f"{prev_hash}{threat_level}{attack_vector}{action_taken}{current_time.isoformat()}{json.dumps(payload_captured)}{json.dumps(headers_captured)}"
         integrity_hash = hashlib.sha256(raw_data.encode()).hexdigest()
 
         return cls.objects.create(
@@ -72,6 +73,7 @@ class ForensicSecurityLog(models.Model):
             threat_level=threat_level,
             attack_vector=attack_vector,
             payload_captured=payload_captured,
+            headers_captured=headers_captured,
             action_taken=action_taken,
             user=user,
             source_ip=source_ip,

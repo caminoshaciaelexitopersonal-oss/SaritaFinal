@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { useSecurity } from '@/context/SecurityContext';
+import { useSecurity } from '@/contexts/SecurityContext';
 
 export const SecurityShield: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { reportAnomaly } = useSecurity();

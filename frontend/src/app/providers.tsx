@@ -8,7 +8,7 @@ import { DashboardProvider } from '@/contexts/DashboardContext';
 import { GRCProvider } from '@/contexts/GRCContext';
 import { MSWProvider } from '@/components/MSWProvider';
 import { SecurityShield } from '@/components/common/SecurityShield';
-import { SecurityProvider } from '@/context/SecurityContext';
+import { SecurityProvider } from '@/contexts/SecurityContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

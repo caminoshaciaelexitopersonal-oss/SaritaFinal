@@ -102,29 +102,16 @@ class DefenseService:
         # S-1.2: Clasificación automática si no se provee nivel
         effective_level = threat_level or DefenseService.classify_event(attack_vector, user)
 
-        # 1. Registro Forense Inmediato (Filtrando secretos)
+        # 1. Registro Forense Firmado (Filtrando secretos)
         SENSITIVE_HEADERS = ['HTTP_AUTHORIZATION', 'HTTP_COOKIE', 'HTTP_X_API_KEY', 'X-Api-Key', 'Authorization', 'Cookie']
         safe_headers = {k: v for k, v in headers.items() if isinstance(v, str) and k.upper() not in SENSITIVE_HEADERS}
 
-        log_entry = ForensicSecurityLog.objects.create(
-            user=user if user and not user.is_anonymous else None,
-            source_ip=source_ip,
-            threat_level=effective_level,
-            attack_vector=attack_vector,
-            payload_captured=payload,
-            headers_captured=safe_headers,
-            action_taken="SESSION_QUARANTINE, TOKEN_INVALIDATED" if user and not user.is_anonymous else "IP_BLOCK_RECOMMENDED"
-        )
-
-        # 2. Firmar registro forense (Integridad RC-S) usando el log_entry.log_event logic
-        # para asegurar consistencia y reproducibilidad.
-        # Nota: log_event ya crea el objeto, pero aquí ya lo tenemos.
-        # Vamos a delegar la creación y firma al método de clase para evitar inconsistencias.
-        log_entry.delete() # Reemplazar por llamada limpia
+        # S-0.3: Delegar creación y firma atómica al método de clase
         log_entry = ForensicSecurityLog.log_event(
             threat_level=effective_level,
             attack_vector=attack_vector,
             payload_captured=payload,
+            headers_captured=safe_headers,
             action_taken="SESSION_QUARANTINE, TOKEN_INVALIDATED" if user and not user.is_anonymous else "IP_BLOCK_RECOMMENDED",
             user=user if user and not user.is_anonymous else None,
             source_ip=source_ip
