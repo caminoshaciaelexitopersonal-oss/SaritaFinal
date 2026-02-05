@@ -107,6 +107,7 @@ INSTALLED_APPS = [
     "apps.ecosystem_optimization.apps.EcosystemOptimizationConfig",
     "apps.finanzas.apps.FinanzasConfig",
     "apps.defense_predictive.apps.DefensePredictiveConfig",
+    "apps.defense_deception.apps.DefenseDeceptionConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
 
@@ -118,6 +119,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "apps.defense_deception.middleware.DeceptionMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",

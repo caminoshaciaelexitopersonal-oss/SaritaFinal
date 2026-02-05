@@ -22,6 +22,7 @@ urlpatterns = [
     path('financiera/', include('apps.admin_plataforma.gestion_financiera.urls')),
     path('contabilidad/', include('apps.admin_plataforma.gestion_contable.contabilidad.urls')),
     path('defense-predictive/', include('apps.defense_predictive.urls')),
+    path('defense-deception/', include('apps.defense_deception.urls')),
  
 
     path('', include(router.urls)),
