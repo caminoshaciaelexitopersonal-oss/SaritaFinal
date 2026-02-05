@@ -1,0 +1,17 @@
+backend/apps/__pycache__/
+backend/apps/admin_plataforma/
+backend/apps/audit/
+backend/apps/cart/
+backend/apps/common/
+backend/apps/companies/
+backend/apps/decision_intelligence/
+backend/apps/defense_deception/
+backend/apps/defense_predictive/
+backend/apps/ecosystem_optimization/
+backend/apps/finanzas/
+backend/apps/orders/
+backend/apps/payments/
+backend/apps/prestadores/
+backend/apps/sadi_agent/
+backend/apps/sarita_agents/
+backend/apps/web_funnel/
