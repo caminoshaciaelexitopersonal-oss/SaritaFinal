@@ -55,15 +55,21 @@ class ForensicSecurityLog(models.Model):
     @classmethod
     def log_event(cls, threat_level, attack_vector, payload_captured, action_taken, user=None, source_ip=None):
         import hashlib
-        from datetime import datetime
+        from django.utils import timezone
+
+        # Generar timestamp fijo para asegurar reproducibilidad del hash
+        current_time = timezone.now()
+
         last_entry = cls.objects.order_by('-timestamp').first()
         prev_hash = last_entry.integrity_hash if last_entry else "0" * 64
 
         # Generar hash de integridad (Chained Hash)
-        raw_data = f"{prev_hash}{threat_level}{attack_vector}{action_taken}{datetime.now().isoformat()}"
+        # Usamos el timestamp exacto que se guardará en la DB
+        raw_data = f"{prev_hash}{threat_level}{attack_vector}{action_taken}{current_time.isoformat()}"
         integrity_hash = hashlib.sha256(raw_data.encode()).hexdigest()
 
         return cls.objects.create(
+            timestamp=current_time, # Forzar el timestamp usado en el hash
             threat_level=threat_level,
             attack_vector=attack_vector,
             payload_captured=payload_captured,

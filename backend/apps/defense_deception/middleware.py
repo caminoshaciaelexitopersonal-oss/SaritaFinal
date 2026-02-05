@@ -21,10 +21,9 @@ class DeceptionMiddleware:
         adversary = AdversarialProfile.objects.filter(source_ip=source_ip, is_quarantined=True).first()
 
         if adversary:
-            # S-3.3: Drenaje de Ataque (Latencia estratégica)
-            time.sleep(1.5) # Fricción cognitiva deliberada
-
-            # S-3.2: Contención Silenciosa (Burbuja inerte)
+            # S-3.3: Drenaje de Ataque (Contención Silenciosa)
+            # NOTA: Latencia deliberada eliminada temporalmente para prevenir worker exhaustion
+            # en entornos de alta concurrencia.
             return self._handle_silent_containment(request, adversary)
 
         # 2. Verificar si accede a una superficie fantasma (Ghost Surface)
