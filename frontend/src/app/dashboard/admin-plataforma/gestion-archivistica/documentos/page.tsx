@@ -4,6 +4,7 @@ import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useM
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'react-toastify';
 import { UploadCloud } from 'lucide-react';

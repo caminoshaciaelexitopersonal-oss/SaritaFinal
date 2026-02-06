@@ -57,6 +57,18 @@ urlpatterns = [
 
     # API para Finanzas Sistémicas
     path('api/admin/finanzas/', include('apps.finanzas.urls')),
+
+    # API para Interoperabilidad Internacional (Z-TRUST-NET)
+    path('api/v1/international-interop/', include('apps.international_interop.urls')),
+
+    # API para Peace-Net (Estabilidad Global)
+    path('api/v1/peace-net/', include("apps.peace_net.urls")),
+
+    # API para Tratados Operativos (Z-OPERATIONAL-TREATIES)
+    path('api/v1/operational-treaties/', include("apps.operational_treaties.urls")),
+
+    # API para Custodia de Legado (Fase Legado)
+    path('api/v1/legacy/', include("legacy_custody.urls")),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

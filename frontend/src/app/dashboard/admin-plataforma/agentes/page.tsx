@@ -24,20 +24,19 @@ export default function AgentHierarchyControl() {
     fetchAgents();
   }, []);
 
+  const [error, setError] = useState<string | null>(null);
+
   const fetchAgents = async () => {
+    setIsLoading(true);
+    setError(null);
     try {
-      // Since backend might not have this endpoint yet, we fallback to mock for the audit
       const res = await sovereigntyService.getAgents();
       setAgents(res.data);
-    } catch (error) {
-      console.error("Agent fetch error:", error);
-      // Mocking for the sake of the Sovereign Panel exercise if backend is missing
-      setAgents([
-        { id: 'gen-1', role: 'General', hierarchy: 'Lider', status: 'ACTIVE', last_action: 'Orquestación de Misión F-C', domain: 'GLOBAL' },
-        { id: 'cor-mkt', role: 'Coronel Marketing', hierarchy: 'Estratégico', status: 'ACTIVE', last_action: 'Calificación de Lead #422', domain: 'COMERCIAL' },
-        { id: 'cor-fin', role: 'Coronel Finanzas', hierarchy: 'Estratégico', status: 'ACTIVE', last_action: 'Auditoría de ROI Nodo Puerto Gaitán', domain: 'FINANCIERO' },
-        { id: 'cor-ops', role: 'Coronel Prestadores', hierarchy: 'Estratégico', status: 'PAUSED', last_action: 'Onboarding de Prestador XYZ', domain: 'OPERATIVO' },
-      ]);
+    } catch (err: any) {
+      console.error("Agent fetch error:", err);
+      // ELIMINACIÓN DE MOCKS: El frontend refleja la ausencia de endpoint real.
+      setError("BLOQUEO DE DOMINIO: El endpoint de supervisión de agentes no ha sido expuesto en el Kernel de Gobernanza.");
+      setAgents([]);
     } finally {
       setIsLoading(false);
     }
@@ -66,7 +65,7 @@ export default function AgentHierarchyControl() {
   };
 
   return (
-    <ViewState isLoading={isLoading}>
+    <ViewState isLoading={isLoading} error={error}>
       <div className="space-y-10 animate-in fade-in duration-700">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
             <div>

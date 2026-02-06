@@ -14,13 +14,16 @@ import {
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 
+import { ViewState } from '@/components/ui/ViewState';
+
 export default function ProyectosPage() {
-  const activeProjects = [
-    { name: 'Renovación de Infraestructura Nodo Norte', status: 'IN_PROGRESS', progress: 65, deadLine: '2024-12-15', budget: '$12,000' },
-    { name: 'Implementación SADI Voice v2', status: 'PLANNING', progress: 15, deadLine: '2025-01-20', budget: '$5,500' },
-  ];
+  const activeProjects: any[] = []; // ELIMINACIÓN DE MOCKS
 
   return (
+    <ViewState
+        isEmpty={true}
+        emptyMessage="MÓDULO NO DISPONIBLE: El dominio de Gestión de Proyectos está explícitamente comentado en el Kernel de URLs del backend. No hay persistencia activa para este módulo."
+    >
     <div className="space-y-10 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -123,5 +126,6 @@ export default function ProyectosPage() {
          </div>
       </div>
     </div>
+    </ViewState>
   );
 }

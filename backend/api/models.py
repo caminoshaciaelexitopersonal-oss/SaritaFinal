@@ -85,6 +85,10 @@ class CustomUser(AbstractUser):
         CONSEJO_CONSULTIVO_TURISMO = "CONSEJO_CONSULTIVO_TURISMO", _("Consejo Consultivo de Turismo")
         TURISTA = "TURISTA", _("Turista")
 
+    # --- Campos de Identidad IA (Fase Z) ---
+    is_agent = models.BooleanField(default=False, help_text="Indica si este usuario es un Funcionario Digital (Agente IA).")
+    agent_domain = models.CharField(max_length=100, blank=True, null=True, help_text="Dominio institucional asignado al agente.")
+
     class AIProvider(models.TextChoices):
         OPENAI = "OPENAI", _("OpenAI")
         GOOGLE = "GOOGLE", _("Google")

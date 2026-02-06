@@ -56,7 +56,11 @@ export default function HomePage() {
 
         setMessages([...newMessages as any, { role: 'sarita', text: saritaResponse }]);
       } else {
-        setMessages([...newMessages as any, { role: 'sarita', text: 'He detectado una interrupción en el flujo semántico. ¿Podrías reformular tu comando?' }]);
+        // VERDAD OPERATIVA: No ocultar el fallo del servicio.
+        setMessages([...newMessages as any, {
+            role: 'sarita',
+            text: `SERVICIO NO DISPONIBLE: SADI Engine reportó un error (${response.status}). La capa de marketing conversacional ha sido interrumpida por inestabilidad en el nodo de inteligencia.`
+        }]);
       }
     } catch (err) {
       console.error(err);

@@ -11,6 +11,17 @@ from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.serializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 
+class MetaStandardView(APIView):
+    """
+    Vista para obtener la doctrina de la FASE META (Estándar SARITA).
+    """
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        kernel = GovernanceKernel(user=request.user)
+        metadata = kernel.get_meta_standard_metadata()
+        return Response(metadata)
+
 class SaritaProfileView(APIView):
     """
     Vista para obtener el perfil empresarial de la Plataforma Sarita.

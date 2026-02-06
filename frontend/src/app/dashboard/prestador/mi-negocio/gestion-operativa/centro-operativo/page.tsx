@@ -22,7 +22,9 @@ import {
   FiBarChart2,
   FiUpload,
   FiMessageSquare,
-  FiPauseCircle
+  FiPauseCircle,
+  FiTrendingUp,
+  FiUsers
 } from 'react-icons/fi';
 
 // --- TIPOS OPERATIVOS ---
@@ -64,65 +66,10 @@ interface Operacion {
     }[];
 }
 
-// --- MOCK DATA INICIAL ---
-const initialOperations: Operacion[] = [
-    {
-        id: 'OP-2024-001',
-        venta_id: 'FV-1024',
-        servicio_nombre: 'Tour Eco-Llanos Premium',
-        cliente_nombre: 'Juan Pérez',
-        estado: 'EJECUCION',
-        progreso: 45,
-        fecha_inicio: '2024-05-20',
-        fecha_fin_estimada: '2024-05-25',
-        responsable_lider: 'Carlos Operador',
-        actividades: [
-            {
-                id: 'ACT-01',
-                nombre: 'Preparación Logística',
-                tareas: [
-                    { id: 'T-01', nombre: 'Reserva de Transporte', responsable: 'Carlos Operador', rol: 'OPERADOR', estado: 'LISTO', fecha_limite: '2024-05-20', dependencias: [], comentarios: ['Vehículo 4x4 confirmado'], evidencias: [] },
-                    { id: 'T-02', nombre: 'Kit de Bienvenida', responsable: 'Ana Soporte', rol: 'SOPORTE', estado: 'LISTO', fecha_limite: '2024-05-21', dependencias: [], comentarios: [], evidencias: [] },
-                ]
-            },
-            {
-                id: 'ACT-02',
-                nombre: 'Ejecución de Campo',
-                tareas: [
-                    { id: 'T-03', nombre: 'Recepción de Turistas', responsable: 'Carlos Operador', rol: 'OPERADOR', estado: 'EN_PROGRESO', fecha_limite: '2024-05-22', dependencias: ['T-01', 'T-02'], comentarios: [], evidencias: [] },
-                    { id: 'T-04', nombre: 'Guianza Sendero Jaguar', responsable: 'Luis Guía', rol: 'OPERADOR', estado: 'PENDIENTE', fecha_limite: '2024-05-23', dependencias: ['T-03'], comentarios: [], evidencias: [] },
-                ]
-            }
-        ],
-        incidencias: [
-            { id: 'INC-01', titulo: 'Retraso en proveedor de catering', estado: 'RESOLUCION', prioridad: 'MEDIA', fecha: '2024-05-21' }
-        ]
-    },
-    {
-        id: 'OP-2024-002',
-        venta_id: 'FV-1025',
-        servicio_nombre: 'Alojamiento Glamping Deluxe',
-        cliente_nombre: 'Familia Gomez',
-        estado: 'PREPARACION',
-        progreso: 15,
-        fecha_inicio: '2024-05-22',
-        fecha_fin_estimada: '2024-05-24',
-        responsable_lider: 'Marta Supervisor',
-        actividades: [
-            {
-                id: 'ACT-A1',
-                nombre: 'Check-in Setup',
-                tareas: [
-                    { id: 'T-A1', nombre: 'Limpieza y Sanitización', responsable: 'Limpieza Team', rol: 'OPERADOR', estado: 'EN_PROGRESO', fecha_limite: '2024-05-22', dependencias: [], comentarios: [], evidencias: [] },
-                ]
-            }
-        ],
-        incidencias: []
-    }
-];
+import { ViewState } from '@/components/ui/ViewState';
 
 export default function CentroOperativoPage() {
-    const [operations, setOperations] = useState<Operacion[]>(initialOperations);
+    const [operations, setOperations] = useState<Operacion[]>([]);
     const [selectedOpId, setSelectedOpId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'PANEL' | 'TAREAS' | 'INCIDENCIAS' | 'METRICAS'>('PANEL');
     const [isNewOpModalOpen, setIsNewOpModalOpen] = useState(false);
@@ -268,6 +215,10 @@ export default function CentroOperativoPage() {
                 )}
 
                 {activeTab === 'PANEL' && (
+                    <ViewState
+                        isEmpty={operations.length === 0}
+                        emptyMessage="DOMINIO BLOQUEADO: El Motor de Descomposición Operativa no está activo en el backend. Las ventas no pueden ser transformadas en tareas automáticamente aún."
+                    >
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
                         {/* Lista de Operaciones Activas */}
                         <div className="lg:col-span-2 space-y-6">
@@ -401,6 +352,7 @@ export default function CentroOperativoPage() {
                             )}
                         </div>
                     </div>
+                    </ViewState>
                 )}
 
                 {activeTab === 'TAREAS' && (

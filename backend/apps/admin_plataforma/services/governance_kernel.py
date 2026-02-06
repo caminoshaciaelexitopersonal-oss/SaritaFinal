@@ -4,6 +4,7 @@ from enum import IntEnum
 from django.db import transaction
 from api.models import CustomUser
 from apps.admin_plataforma.models import GovernanceAuditLog, GovernancePolicy
+from api.services import DefenseService
 
 logger = logging.getLogger(__name__)
 
@@ -39,24 +40,161 @@ class GovernanceKernel:
     def __init__(self, user: CustomUser):
         self.user = user
 
+    def get_current_systemic_state(self):
+        """Fase Z-GOVERNANCE-LIVE: Retorna el estado operativo actual."""
+        from apps.governance_live.models import SystemicState
+        state = SystemicState.objects.filter(is_active=True).first()
+        return state.current_level if state else 'NORMAL'
+
+    def get_meta_standard_metadata(self) -> Dict[str, Any]:
+        """FASE META: Retorna la metadata del estándar civilizatorio."""
+        return {
+            "name": "SARITA Standard",
+            "category": "Infraestructura de Gobernanza Algorítmica Civilizatoria",
+            "status": "LEGADO_PROTEGIDO",
+            "principles": [
+                "Soberanía Humana Absoluta",
+                "Trazabilidad Forense e Inmutabilidad",
+                "Reversibilidad y Desaceleración Algorítmica",
+                "Compartimentación Jurisdiccional",
+                "Neutralidad Política y Estabilidad Institucional",
+                "Transparencia XAI (Cadena de Decisión)",
+                "Autonomía Regulada por Capas",
+                "Bien Público Civilizatorio (Anti-Privatización)",
+                "Ética de Datos y Privacidad Soberana",
+                "Preservación del Legado y Transmisión Generacional"
+            ],
+            "compliance_metrics": {
+                "active_treaties": 5, # TIT, TNA, TNID, TSDS, LEGADO
+                "audit_integrity": "SHA-256_CHAINED",
+                "human_supremacy_level": "SOVEREIGN_MANDATORY",
+                "legacy_protection": "ACTIVE"
+            }
+        }
+
+    def transition_systemic_state(self, new_level: str, reason: str, context: dict = None):
+        """Fase Z-GOVERNANCE-LIVE: Cambia el estado operativo del sistema."""
+        if not self.user.is_superuser:
+            raise PermissionError("Solo la Autoridad Soberana puede cambiar el estado sistémico.")
+
+        from apps.governance_live.models import SystemicState
+        # Desactivar estados anteriores
+        SystemicState.objects.filter(is_active=True).update(is_active=False)
+
+        new_state = SystemicState.objects.create(
+            current_level=new_level,
+            authorized_by=self.user,
+            reason=reason,
+            context_data=context or {}
+        )
+        logger.warning(f"KERNEL: Transición de Estado Sistémico a '{new_level}' por {self.user.username}")
+
+        # Auditoría especial de cambio de estado
+        self._log_audit(
+            GovernanceIntention("SYSTEM_STATE_TRANSITION", "governance", self.user.role, min_authority=AuthorityLevel.SOVEREIGN),
+            {"new_level": new_level, "reason": reason},
+            {"status": "TRANSITIONED"}
+        )
+        return new_state
+
+    def validate_interop_mandate(self, signal_type: str, node_id: str, direction: str = 'OUTGOING') -> bool:
+        """
+        Z-TRUST-IMPLEMENTATION: Valida si existe un mandato legal/técnico (Tratado)
+        que autorice el intercambio de esta señal con el nodo especificado.
+        """
+        from apps.operational_treaties.models import OperationalTreaty
+
+        # 1. Buscar tratados activos que incluyan al nodo
+        active_treaties = OperationalTreaty.objects.filter(
+            is_active=True,
+            participating_nodes__contains=node_id
+        )
+
+        for treaty in active_treaties:
+            # 2. Verificar si el tipo de señal está permitido
+            if signal_type in treaty.signal_types_allowed:
+                # 3. Verificar permisos de dirección
+                required_perm = 'EMIT_SIGNALS' if direction == 'OUTGOING' else 'RECEIVE_SIGNALS'
+                if treaty.permissions_granted.get(required_perm, False):
+                    logger.info(f"KERNEL: Mandato VALIDADO para '{signal_type}' con {node_id} vía {treaty.name}")
+                    return True
+
+        logger.error(f"KERNEL: Mandato RECHAZADO para '{signal_type}' con {node_id}. Sin tratado habilitante.")
+        return False
+
     def resolve_and_execute(self, intention_name: str, parameters: Dict[str, Any], bypass_policy: bool = False) -> Dict[str, Any]:
         """
         Punto de entrada único para ejecutar intenciones.
         """
         logger.info(f"KERNEL: Recibida intención '{intention_name}' de usuario {self.user.username}")
 
+        # 0. EVALUACIÓN DE LEGADO (FASE LEGADO) - PRIORIDAD MÁXIMA
+        intention_obj = self._registry.get(intention_name)
+        if intention_obj:
+            self._evaluate_legacy_protections(intention_obj, parameters)
+
+        # Z-GOVERNANCE-LIVE: Verificación de Restricciones por Estado Sistémico
+        current_state = self.get_current_systemic_state()
+        if current_state in ['CONTAINMENT', 'PARTIAL_DECOUPLING', 'TOTAL_DECOUPLING'] and not self.user.is_superuser:
+            logger.warning(f"KERNEL: Bloqueo por Estado '{current_state}'. Intención '{intention_name}' RECHAZADA.")
+            raise PermissionError(f"SISTEMA EN MODO {current_state}: La autonomía delegada está restringida para preservar la integridad nacional.")
+
+        # Z-GOVERNANCE-LIVE: Barreras Anti-Deriva (Protección contra expansión de mandato)
+        intention = self._registry.get(intention_name)
+        if intention and hasattr(self.user, 'is_agent') and self.user.is_agent:
+            # Si el usuario es un agente (Funcionario Digital), validamos su dominio asignado
+            if intention.domain != self.user.agent_domain and not self.user.is_superuser:
+                logger.error(f"ANTI-DRIFT: Agente de '{self.user.agent_domain}' intentó acceder a '{intention.domain}'. BLOQUEADO.")
+                raise PermissionError(f"DERIVA DETECTADA: El Funcionario Digital de '{self.user.agent_domain}' no tiene mandato para operar en el dominio '{intention.domain}'.")
+
+        # Z-OPERATIONAL: Protocolo de Desaceleración Algorítmica (PDA)
+        # Si existe una política de desaceleración activa, forzamos intervención humana en intenciones de nivel DELEGATED
+        pda_active = GovernancePolicy.objects.filter(name="ALGORITHMIC_DECELERATION_PROTOCOL", is_active=True).exists()
+        if pda_active:
+            intention = self._registry.get(intention_name)
+            if intention and intention.min_authority == AuthorityLevel.DELEGATED and not self.user.is_superuser:
+                logger.warning(f"PDA: Intención '{intention_name}' bloqueada por Desaceleración Algorítmica. Requiere Autoridad Soberana.")
+                raise PermissionError("PROTOCOLO DE DESACELERACIÓN ACTIVO: Esta acción delegada ha sido suspendida temporalmente para preservar la estabilidad. Requiere autorización manual del SuperAdmin.")
+
+        # S-0.5: Verificación de MODO ATAQUE (Congelamiento Sistémico)
+        attack_mode = GovernancePolicy.objects.filter(name="SYSTEM_ATTACK_MODE", is_active=True).exists()
+        if attack_mode and not self.user.is_superuser:
+            # En modo ataque, solo el SuperAdmin (Autoridad Soberana) puede ejecutar acciones Críticas
+            # El resto de usuarios están bloqueados para prevenir propagación de compromiso.
+            logger.warning(f"S-0: Intención '{intention_name}' RECHAZADA. Sistema en MODO ATAQUE.")
+            raise PermissionError("SISTEMA CONGELADO: Se ha detectado una amenaza activa. Todas las operaciones de escritura están suspendidas por seguridad institucional.")
+
         # 1. Resolver intención
         intention = self._registry.get(intention_name)
         if not intention:
-            raise ValueError(f"Intención '{intention_name}' no reconocida por el núcleo de gobernanza.")
+            # S-0.3: Intento de inyectar intención desconocida es una amenaza
+            DefenseService.neutralize_threat(
+                user=self.user,
+                attack_vector="INVALID_INTENTION_INJECTION",
+                payload={"intention_name": intention_name, "params": parameters},
+                headers={}, # Deberían pasarse desde la vista
+                threat_level='HIGH'
+            )
+            raise ValueError(f"Intención '{intention_name}' no reconocida por el núcleo de gobernanza. Acción registrada.")
 
         # 2. Validar Contrato (Requisitos de parámetros)
         self._validate_contract(intention, parameters)
 
         # 3. Validar Autoridad Soberana
-        self._validate_authority(intention)
+        try:
+            self._validate_authority(intention)
+        except PermissionError as e:
+            # S-0.3: Violación de autoridad en el Kernel es una amenaza interna/externa
+            DefenseService.neutralize_threat(
+                user=self.user,
+                attack_vector="GOVERNANCE_AUTHORITY_VIOLATION",
+                payload={"intention_name": intention_name, "error": str(e)},
+                headers={},
+                threat_level='CRITICAL'
+            )
+            raise e
 
-        # 4. Evaluar Políticas Globales (Motor de Políticas)
+        # 5. Evaluar Políticas Globales (Motor de Políticas)
         if not bypass_policy:
             self._evaluate_policies(intention, parameters)
 
@@ -135,6 +273,26 @@ class GovernanceKernel:
         proposal.save()
 
         return result
+
+    def _evaluate_legacy_protections(self, intention: GovernanceIntention, parameters: Dict[str, Any]):
+        """
+        FASE LEGADO: Protecciones duras para la preservación del modelo a largo plazo.
+        """
+        # 1. Prohibición de Auto-Modificación del Núcleo
+        if intention.domain == 'governance' and intention.name.startswith('SYSTEM_EVOLUTION'):
+            if not self.user.is_superuser:
+                logger.critical(f"LEGADO: Intento de auto-modificación DETECTADO de {self.user.username}. BLOQUEADO.")
+                raise PermissionError("FASE LEGADO: La evolución del núcleo de gobernanza está bloqueada. Requiere autorización soberana multicanal.")
+
+        # 2. Prohibición de Privatización / Transferencia de Propiedad
+        if intention.name == 'PLATFORM_TRANSFER_OWNERSHIP':
+             logger.critical(f"LEGADO: Intento de privatización del sistema BLOQUEADO. SARITA es un bien público civilizatorio.")
+             raise PermissionError("FASE LEGADO: SARITA no puede ser privatizada ni transferida a intereses privados.")
+
+        # 3. Prohibición de Vigilancia Masiva No Auditada
+        if intention.domain == 'surveillance' and not parameters.get('audit_reference'):
+            logger.critical(f"LEGADO: Intento de vigilancia no auditada BLOQUEADO.")
+            raise PermissionError("FASE LEGADO: Prohibido cualquier uso de vigilancia que no posea una referencia de auditoría legítima.")
 
     def _evaluate_policies(self, intention: GovernanceIntention, parameters: Dict[str, Any]):
         """
@@ -271,6 +429,70 @@ GovernanceKernel.register_intention(GovernanceIntention(
 GovernanceKernel.register_intention(GovernanceIntention(
     name="ERP_GENERATE_BALANCE",
     domain="contable",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+# Dominio: FASE LEGADO
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="GENERATE_LEGACY_BUNDLE",
+    domain="governance",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PLATFORM_TRANSFER_OWNERSHIP",
+    domain="plataforma",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="SYSTEM_EVOLUTION_HARDENING",
+    domain="governance",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN
+))
+
+# Dominio: FASE META
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="QUERY_META_STANDARD",
+    domain="governance",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+# --- DOMINIOS INSTITUCIONALES (Fase Z-INSTITUTIONAL) ---
+
+# Dominio: Hacienda / Finanzas Públicas
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PUBLIC_BUDGET_OPTIMIZATION",
+    domain="hacienda",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN
+))
+
+# Dominio: Planeación Nacional
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="TERRITORIAL_IMPACT_SIMULATION",
+    domain="planeacion",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+# Dominio: Seguridad Civil
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="CIVIL_DEFENSE_ALERT",
+    domain="seguridad_civil",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+# Dominio: Gestión Territorial
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="LAND_USE_AUDIT",
+    domain="gestion_territorial",
     required_role=CustomUser.Role.ADMIN,
     min_authority=AuthorityLevel.DELEGATED
 ))

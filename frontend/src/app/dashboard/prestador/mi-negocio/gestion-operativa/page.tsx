@@ -9,9 +9,9 @@ import {
   FiCalendar,
   FiClock,
   FiTrendingUp,
-  FiMapPin,
   FiArrowRight,
-  FiZap
+  FiZap,
+  FiActivity
 } from 'react-icons/fi';
 import Link from 'next/link';
 

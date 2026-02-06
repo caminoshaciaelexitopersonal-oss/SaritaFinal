@@ -58,10 +58,16 @@ class CapitanTemplate:
 
         header = []
         for _, tarea_info in plan.pasos_del_plan.items():
- 
+            teniente_name = tarea_info.get("teniente", "default")
+
+            # S-0.4: Prevenir escalado de permisos y ejecución fuera del roster
+            if teniente_name not in self.tenientes:
+                logger.error(f"S-0: Capitán {self.__class__.__name__} intentó delegar a Teniente {teniente_name} fuera de su roster.")
+                continue
+
             tarea = TareaDelegada.objects.create(
                 plan_tactico=plan,
-                teniente_asignado=tarea_info.get("teniente", "default"),
+                teniente_asignado=teniente_name,
                 descripcion_tarea=tarea_info.get("descripcion", "N/A"),
  
                 parametros=tarea_info.get("parametros", {}),

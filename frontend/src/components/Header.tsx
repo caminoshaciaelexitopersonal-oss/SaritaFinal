@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Menu, Bell, User, Sun, Moon, ShieldCheck } from 'lucide-react';
+import { FiLock } from 'react-icons/fi';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDashboard } from '@/contexts/DashboardContext';
@@ -39,10 +40,10 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, setIsSidebarOpen }) => {
                 </span>
              </div>
              <div className="h-4 w-px bg-gray-100 dark:bg-white/10" />
-             <div className="px-3 py-1 bg-slate-100 dark:bg-brand-deep rounded-lg flex items-center gap-2" title="Aislamiento Institucional Verificado">
+             <div className="px-3 py-1 bg-slate-100 dark:bg-brand-deep rounded-lg flex items-center gap-2" title="Aislamiento Institucional Verificado (Modelo: ProviderProfile)">
                 <FiLock size={10} className="text-slate-400" />
                 <span className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">
-                   Entidad ID: {user?.id?.substring(0,8) || 'GLOBAL-01'}
+                   Entidad ID: {user?.id?.substring(0,8) || 'GLOBAL-01'} ● Modelo: {user?.role === 'PRESTADOR' ? 'ProviderProfile' : 'Systemic'}
                 </span>
              </div>
           </div>

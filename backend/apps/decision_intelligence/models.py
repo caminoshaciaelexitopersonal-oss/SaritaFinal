@@ -55,6 +55,7 @@ class StrategyProposal(models.Model):
 
     # --- Trazabilidad ---
     agent_id = models.CharField(max_length=255, help_text="Identificador del agente que generó la propuesta.")
+    agent_id_type = models.CharField(max_length=50, blank=True, null=True)
     decidida_por = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,

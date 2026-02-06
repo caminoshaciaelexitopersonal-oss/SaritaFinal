@@ -106,6 +106,13 @@ INSTALLED_APPS = [
     "apps.decision_intelligence.apps.DecisionIntelligenceConfig",
     "apps.ecosystem_optimization.apps.EcosystemOptimizationConfig",
     "apps.finanzas.apps.FinanzasConfig",
+    "apps.defense_predictive.apps.DefensePredictiveConfig",
+    "apps.defense_deception.apps.DefenseDeceptionConfig",
+    "apps.international_interop.apps.InternationalInteropConfig",
+    "apps.peace_net.apps.PeaceNetConfig",
+    "apps.operational_treaties.apps.OperationalTreatiesConfig",
+    "apps.governance_live.apps.GovernanceLiveConfig",
+    "legacy_custody.apps.LegacyCustodyConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
 
@@ -125,6 +132,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "apps.common.security_hardening.SecurityHardeningMiddleware",
+    "apps.defense_deception.middleware.DeceptionMiddleware",
     "apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions.TenantMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",

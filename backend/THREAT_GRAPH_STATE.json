@@ -1,0 +1,260 @@
+{
+    "version": "1.0-S2",
+    "timestamp": "2026-02-05T07:32:47.499375+00:00",
+    "nodes": [
+        {
+            "id": "7128c088-e1db-4fd0-83e1-468439c86e4c",
+            "name": "EP: api/schema/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "fc3febc2-39f8-47e7-9966-727dee1c1a2d",
+            "name": "EP: api/schema/swagger-ui/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "0c983088-1f14-4dba-bf9c-bd2fb06bd101",
+            "name": "EP: api/auth/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "8016d467-be03-4a01-8f14-c01c3fa9d370",
+            "name": "EP: api/auth/registration/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "eae79493-b090-4461-98d9-ce5b7a4e2124",
+            "name": "EP: api/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "6357815e-0b7d-4ad7-84a5-da63681ea146",
+            "name": "EP: api/v1/mi-negocio/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "4cd25803-0a3a-4157-b581-4431c5a9bd01",
+            "name": "EP: api/admin/plataforma/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": true
+        },
+        {
+            "id": "73e14b7c-bd5b-42b1-9108-c503ed4118c5",
+            "name": "EP: api/web/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "2c8aa2a0-667b-4ee1-b5ee-3ea0686f8ec5",
+            "name": "EP: api/cart/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "1b45cf70-be85-4081-bf24-24f008a553d7",
+            "name": "EP: api/payments/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "7f785624-1138-4169-b494-48abb6d3176a",
+            "name": "EP: api/sadi/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "b25aa4a1-eb66-4191-bbf7-ee236d63b5bc",
+            "name": "EP: api/voice/marketing/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "aab29be4-9785-438c-8917-706f23201023",
+            "name": "EP: api/sarita/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "34e36211-2ffe-4bfb-a6d7-0af1e31cb1dd",
+            "name": "EP: api/admin/intelligence/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": true
+        },
+        {
+            "id": "20311f0f-4f76-4838-af40-f3489100a631",
+            "name": "EP: api/admin/optimization/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": true
+        },
+        {
+            "id": "b2fc8a4e-e4df-4285-bf13-2c2866b84905",
+            "name": "EP: api/admin/finanzas/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": true
+        },
+        {
+            "id": "8c4b2ea8-f570-49f3-802d-e0eb02b8b9f0",
+            "name": "EP: admin/",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "38d4f37e-d009-4300-8b1f-abc442436be1",
+            "name": "EP: ^media/(?P<path>.*)$",
+            "node_type": "ENDPOINT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "477c5248-5e2b-4210-b62a-82f3750041e1",
+            "name": "ROLE: ADMIN",
+            "node_type": "ROLE",
+            "risk_score": 0.0,
+            "is_critical": true
+        },
+        {
+            "id": "350b6a24-3681-4051-85fa-96892f52467a",
+            "name": "ROLE: ADMIN_ENTIDAD",
+            "node_type": "ROLE",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "9f2b19cf-e645-41ec-a809-3d415379f24f",
+            "name": "ROLE: ADMIN_DEPARTAMENTAL",
+            "node_type": "ROLE",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "92fb847a-0faa-42c7-b23e-10e8e33a4690",
+            "name": "ROLE: ADMIN_MUNICIPAL",
+            "node_type": "ROLE",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "26eba76a-862e-4c2e-a39f-a79b2747d05c",
+            "name": "ROLE: FUNCIONARIO_DIRECTIVO",
+            "node_type": "ROLE",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "1f58531b-8767-4d76-8512-c281e6be1ed1",
+            "name": "ROLE: FUNCIONARIO_PROFESIONAL",
+            "node_type": "ROLE",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "e1072afd-82b3-4665-9fa3-301e37240e51",
+            "name": "ROLE: PRESTADOR",
+            "node_type": "ROLE",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "4bfef7f5-5637-4444-b0d1-1b0d47c7f8a3",
+            "name": "ROLE: ARTESANO",
+            "node_type": "ROLE",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "9fd8c4ae-9ac9-44f6-9ed0-e86eacb3de1d",
+            "name": "ROLE: CONSEJO_CONSULTIVO_TURISMO",
+            "node_type": "ROLE",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "0bafa33a-513a-4152-bf1b-c0d0efd25cc3",
+            "name": "ROLE: TURISTA",
+            "node_type": "ROLE",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "ec7be548-8610-409c-83b0-7ff68414a90e",
+            "name": "AGENT: GENERAL_SARITA",
+            "node_type": "AGENT",
+            "risk_score": 0.0,
+            "is_critical": true
+        },
+        {
+            "id": "0a0d74f3-1cb2-485c-8170-bb4f094925fb",
+            "name": "AGENT: CORONEL_MARKETING",
+            "node_type": "AGENT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "10199a13-36e2-4149-80bd-124a5e78abeb",
+            "name": "AGENT: CORONEL_FINANZAS",
+            "node_type": "AGENT",
+            "risk_score": 0.0,
+            "is_critical": false
+        },
+        {
+            "id": "c15fc7bc-9dc4-4ca9-be36-bc106236a4b8",
+            "name": "AGENT: CORONEL_PRESTADORES",
+            "node_type": "AGENT",
+            "risk_score": 0.0,
+            "is_critical": false
+        }
+    ],
+    "edges": [
+        {
+            "source_id": "ec7be548-8610-409c-83b0-7ff68414a90e",
+            "target_id": "0a0d74f3-1cb2-485c-8170-bb4f094925fb",
+            "edge_type": "DELEGATES_TO",
+            "exposure_level": 0.05
+        },
+        {
+            "source_id": "ec7be548-8610-409c-83b0-7ff68414a90e",
+            "target_id": "10199a13-36e2-4149-80bd-124a5e78abeb",
+            "edge_type": "DELEGATES_TO",
+            "exposure_level": 0.05
+        },
+        {
+            "source_id": "ec7be548-8610-409c-83b0-7ff68414a90e",
+            "target_id": "c15fc7bc-9dc4-4ca9-be36-bc106236a4b8",
+            "edge_type": "DELEGATES_TO",
+            "exposure_level": 0.05
+        },
+        {
+            "source_id": "477c5248-5e2b-4210-b62a-82f3750041e1",
+            "target_id": "8c4b2ea8-f570-49f3-802d-e0eb02b8b9f0",
+            "edge_type": "HAS_ACCESS",
+            "exposure_level": 0.3
+        }
+    ],
+    "summary": {
+        "critical_nodes": 6,
+        "total_surface": 32
+    }
+}

@@ -1,15 +1,18 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import SaritaProfileView, PlanViewSet, SuscripcionViewSet
+from .views import SaritaProfileView, PlanViewSet, SuscripcionViewSet, MetaStandardView
+from apps.audit.views import ForensicSecurityLogViewSet
 
 app_name = 'admin_plataforma'
 
 router = DefaultRouter()
 router.register(r'planes', PlanViewSet, basename='plan')
 router.register(r'suscripciones', SuscripcionViewSet, basename='suscripcion')
+router.register(r'audit/forensic-logs', ForensicSecurityLogViewSet, basename='forensic-log')
 
 urlpatterns = [
     path('profile/', SaritaProfileView.as_view(), name='sarita-profile'),
+    path('doctrina/', MetaStandardView.as_view(), name='meta-standard'),
 
  
     # ERP SISTÉMICO - ACOPLAMIENTO FUNCIONAL TOTAL FASE 1
@@ -19,6 +22,8 @@ urlpatterns = [
     path('archivistica/', include('apps.admin_plataforma.gestion_archivistica.urls')),
     path('financiera/', include('apps.admin_plataforma.gestion_financiera.urls')),
     path('contabilidad/', include('apps.admin_plataforma.gestion_contable.contabilidad.urls')),
+    path('defense-predictive/', include('apps.defense_predictive.urls')),
+    path('defense-deception/', include('apps.defense_deception.urls')),
  
 
     path('', include(router.urls)),

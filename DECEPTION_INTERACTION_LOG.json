@@ -1,0 +1,37 @@
+{
+    "version": "1.0-S3",
+    "layer": "Adaptive Deception Layer (ADL)",
+    "active_ghost_surfaces": [
+        {
+            "id": "a83f7100-2d8f-418f-9ae9-836bc7445b7a",
+            "name": "Honeypot Admin Login",
+            "path": "/api/admin/v1/auth/root/",
+            "type": "HONEYPOT_LOGIN"
+        },
+        {
+            "id": "2421a762-43bc-47e6-adad-7a26b5a1151b",
+            "name": "Fake DB Export",
+            "path": "/api/v1/mi-negocio/backup/full/",
+            "type": "SIMULATED_DB_EXPORT"
+        },
+        {
+            "id": "0c92f0c8-ee1c-4842-8983-bf84e4b09aba",
+            "name": "Sensitive Config API",
+            "path": "/api/v1/kernel/config/secrets/",
+            "type": "FAKE_API"
+        }
+    ],
+    "recent_neutralizations": [
+        {
+            "source_ip": "10.0.0.1",
+            "strategy": "SILENT_CONTAINMENT",
+            "cognitive_cost_imposed": 7.5,
+            "status": "DISSIDED"
+        }
+    ],
+    "summary": {
+        "active_surfaces": 3,
+        "neutralization_rate": "100%",
+        "roi_attacker": 0.0
+    }
+}

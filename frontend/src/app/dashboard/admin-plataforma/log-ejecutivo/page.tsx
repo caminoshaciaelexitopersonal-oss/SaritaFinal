@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import {
   FiFileText, FiUser, FiCpu, FiCheckCircle, FiXCircle, FiRotateCcw, FiActivity
@@ -22,9 +23,12 @@ interface ExecutiveLog {
     reversible: boolean;
 }
 
+import { sovereigntyService } from '@/services/sovereigntyService';
+
 export default function ExecutiveLogPage() {
   const [logs, setLogs] = useState<ExecutiveLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedLog, setSelectedLog] = useState<ExecutiveLog | null>(null);
   const [isRollbackOpen, setIsRollbackOpen] = useState(false);
 
@@ -33,16 +37,21 @@ export default function ExecutiveLogPage() {
   }, []);
 
   const fetchLogs = async () => {
-    // Simulated fetch of humanized audit logs
-    setTimeout(() => {
-        setLogs([
-            { id: '1', action: 'Ajuste de Comisiones Pro', actor: 'HUMANO', actor_name: 'SuperAdmin', timestamp: new Date().toISOString(), impact: 'Incremento de ROI proyectado en 2.4%', status: 'EJECUTADO', reversible: true },
-            { id: '2', action: 'Optimización de Pauta Voz', actor: 'IA', actor_name: 'Coronel Marketing', timestamp: new Date(Date.now() - 3600000).toISOString(), impact: 'Reducción de CAC en nodo Meta', status: 'EJECUTADO', reversible: true },
-            { id: '3', action: 'Bloqueo de Usuario Malicioso', actor: 'HUMANO', actor_name: 'SuperAdmin', timestamp: new Date(Date.now() - 7200000).toISOString(), impact: 'Seguridad sistémica preservada', status: 'EJECUTADO', reversible: false },
-            { id: '4', action: 'Actualización de Tarifas Base', actor: 'IA', actor_name: 'Coronel Finanzas', timestamp: new Date(Date.now() - 86400000).toISOString(), impact: 'Nivelación inflacionaria', status: 'REVERTIDO', reversible: false },
-        ]);
+    setIsLoading(true);
+    setError(null);
+    try {
+        // Intentar obtener logs reales de gobernanza
+        // Nota: Si el endpoint no existe, mostrará el error institucional.
+        const res = await sovereigntyService.getSystemStatus();
+        // Mapear logs de backend si existieran, por ahora el servicio falla
+        setLogs([]);
+    } catch (err: any) {
+        console.error("Log fetch error:", err);
+        setError("SERVICIO NO DISPONIBLE: El endpoint de la Bitácora de Soberanía no responde. La integridad del log no puede ser verificada en tiempo real.");
+        setLogs([]);
+    } finally {
         setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleRollbackRequest = (log: ExecutiveLog) => {
@@ -57,7 +66,7 @@ export default function ExecutiveLogPage() {
   };
 
   return (
-    <ViewState isLoading={isLoading}>
+    <ViewState isLoading={isLoading} error={error} isEmpty={logs.length === 0 && !error && !isLoading}>
       <div className="space-y-10 animate-in fade-in duration-700">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
             <div>

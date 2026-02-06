@@ -1,8 +1,28 @@
 import { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 
+let requestCount = 0;
+let lastReset = Date.now();
+const MAX_REQUESTS_PER_MINUTE = 60; // Límite duro preventivo S-0.2
+
 export const setupInterceptors = (httpClient: AxiosInstance) => {
   httpClient.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
+      const now = Date.now();
+      if (now - lastReset > 60000) {
+        requestCount = 0;
+        lastReset = now;
+      }
+
+      requestCount++;
+      if (requestCount > MAX_REQUESTS_PER_MINUTE) {
+        console.error('S-0.2: Bloqueo de Rate Limit preventivo en cliente activado.');
+        return Promise.reject({
+            status: 429,
+            message: 'PROTECCIÓN SOBERANA: Frecuencia de peticiones excesiva. Acción contenida preventivamente en el cliente.',
+            action: 'WAIT'
+        });
+      }
+
       if (typeof window !== 'undefined') {
         const token = localStorage.getItem('token') || localStorage.getItem('authToken');
         if (token) {
@@ -46,6 +66,7 @@ export const setupInterceptors = (httpClient: AxiosInstance) => {
       if (status === 401) functionalMessage = 'Su sesión ha expirado o requiere una nueva validación de autoridad.';
       if (status === 403) functionalMessage = 'Esta operación requiere un nivel de soberanía del que su perfil actual no dispone.';
       if (status === 404) functionalMessage = 'El recurso solicitado no fue localizado. El sistema sigue operativo.';
+      if (status === 429) functionalMessage = 'Límite de peticiones excedido. El sistema ha detectado una frecuencia inusual y ha bloqueado temporalmente su acceso para prevenir abusos.';
       if (error.message.includes('timeout')) functionalMessage = 'El sistema no respondió a tiempo. Estamos registrando este evento para auditoría.';
 
       const normalizedError = {
