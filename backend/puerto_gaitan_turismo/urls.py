@@ -66,6 +66,9 @@ urlpatterns = [
 
     # API para Tratados Operativos (Z-OPERATIONAL-TREATIES)
     path('api/v1/operational-treaties/', include("apps.operational_treaties.urls")),
+
+    # API para Custodia de Legado (Fase Legado)
+    path('api/v1/legacy/', include("legacy_custody.urls")),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

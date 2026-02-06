@@ -6,18 +6,18 @@ import { getStatistics } from '@/services/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import {
   FiShield,
-  FiTrendingUp,
   FiUsers,
   FiActivity,
   FiAlertTriangle,
   FiZap,
   FiGlobe,
-  FiArrowUpRight,
   FiCpu,
   FiPower,
   FiLock,
   FiUnlock,
-  FiRepeat
+  FiRepeat,
+  FiClock,
+  FiAward
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';

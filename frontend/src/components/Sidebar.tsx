@@ -6,7 +6,7 @@ import {
   FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive,
   FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
   FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare, FiMonitor, FiDownload,
-  FiActivity, FiZap, FiCpu, FiTrendingUp, FiClock, FiGlobe
+  FiActivity, FiZap, FiCpu, FiTrendingUp, FiClock, FiGlobe, FiTarget
 } from 'react-icons/fi';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -188,6 +188,8 @@ export default function Sidebar() {
       title: 'Gobernanza IA',
       links: [
  
+        { href: '/dashboard/admin-plataforma/doctrina', label: 'Doctrina del Sistema', icon: FiBookOpen },
+        { href: '/dashboard/admin-plataforma/legado', label: 'Custodia de Legado', icon: FiShield },
         { href: '/dashboard/admin-plataforma/grc', label: 'Centro GRC (Compliance)', icon: FiShield },
         { href: '/dashboard/admin-plataforma/defensa', label: 'Defensa Soberana', icon: FiShield },
         { href: '/dashboard/admin-plataforma/defensa-predictiva', label: 'Análisis Predictivo', icon: FiZap },

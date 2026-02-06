@@ -10,7 +10,7 @@ import {
 import { httpClient } from '@/services/httpClient';
 
 export default function DoctrinaMetaPage() {
-  const [standardData, setStandardData] = useState<any>(null);
+  const [standardData, setStandardData] = useState<Record<string, any> | null>(null);
 
   useEffect(() => {
     httpClient.get('/admin-plataforma/doctrina/')
@@ -20,34 +20,54 @@ export default function DoctrinaMetaPage() {
 
   const metaPoints = [
     {
-      title: "1. Naturaleza de la Fase Meta",
-      desc: "SARITA deja de ser un sistema que se usa y se convierte en el estándar que define cómo deben existir otros sistemas autónomos.",
-      icon: <FiGlobe className="text-emerald-500" />
+      title: "1. Soberanía Humana Absoluta",
+      desc: "Supremacía del mandato humano sobre cualquier lógica algorítmica. El sistema es un instrumento, no una autoridad.",
+      icon: <FiAnchor className="text-emerald-500" />
     },
     {
-      title: "2. Principio Fundacional",
-      desc: "La autonomía tecnológica solo es aceptable cuando está subordinada a estructuras de gobernanza humana, trazable y reversible.",
-      icon: <FiAnchor className="text-indigo-500" />
+      title: "2. Trazabilidad Forense",
+      desc: "Inmutabilidad absoluta mediante encadenamiento de hashes. Cada decisión tiene un autor y un porqué verificable.",
+      icon: <FiShield className="text-indigo-500" />
     },
     {
-      title: "3. Estándar Histórico",
-      desc: "SARITA define una categoría nueva: Infraestructura de Gobernanza Algorítmica Civilizatoria. No es un producto, es una norma.",
-      icon: <FiAward className="text-amber-500" />
+      title: "3. Reversibilidad (PDA)",
+      desc: "Protocolo de Desaceleración Algorítmica: capacidad de congelar y revertir cualquier acción autónoma en milisegundos.",
+      icon: <FiZap className="text-amber-500" />
     },
     {
-      title: "4. Requisitos Universales",
-      desc: "Todo sistema legítimo debe poseer un núcleo de gobernanza, jerarquía humana, registro inmutable y apagado soberano.",
-      icon: <FiShield className="text-red-500" />
+      title: "4. Jurisdicción Estricta",
+      desc: "Compartimentación y Anti-Deriva: los agentes no pueden actuar fuera de su dominio institucional asignado.",
+      icon: <FiTarget className="text-red-500" />
     },
     {
-      title: "5. Evolución sin Escalada",
-      desc: "Es posible aprender sin dominar y optimizar sin expandir el poder. Se prohíbe la autonomía absoluta por ser un riesgo sistémico.",
-      icon: <FiZap className="text-yellow-500" />
+      title: "5. Neutralidad Institucional",
+      desc: "Estabilidad técnica independiente de ciclos políticos. El sistema protege la infraestructura, no la ideología.",
+      icon: <FiGlobe className="text-blue-500" />
     },
     {
-      title: "6. Memoria Civilizatoria",
-      desc: "Conserva crisis evitadas y lecciones aprendidas para garantizar la continuidad institucional más allá de los ciclos políticos.",
-      icon: <FiBook className="text-slate-500" />
+      title: "6. Transparencia XAI",
+      desc: "Cadena de decisión de 5 puntos: Hallazgo, Datos, Regla, Alternativas e Impacto. Prohibida la opacidad técnica.",
+      icon: <FiActivity className="text-purple-500" />
+    },
+    {
+      title: "7. Autonomía Regulada",
+      desc: "Jerarquía de niveles (L0-L3). La delegación es condicional y revocable por el Núcleo de Gobernanza.",
+      icon: <FiCpu className="text-slate-500" />
+    },
+    {
+      title: "8. Bien Público",
+      desc: "SARITA es infraestructura civilizatoria. Se prohíbe su privatización o transferencia a intereses particulares.",
+      icon: <FiAward className="text-yellow-600" />
+    },
+    {
+      title: "9. Privacidad Soberana",
+      desc: "Ética de datos radical. La soberanía de la información pertenece a la institución y al ciudadano, no al procesador.",
+      icon: <FiStar className="text-cyan-500" />
+    },
+    {
+      title: "10. Legado Generacional",
+      desc: "Preservación del conocimiento y transmisión segura del control sistémico a las futuras generaciones de custodios.",
+      icon: <FiBook className="text-slate-700" />
     }
   ];
 
@@ -67,7 +87,7 @@ export default function DoctrinaMetaPage() {
                 SARITA <span className="text-emerald-400">Standard</span>
             </h1>
             <p className="text-xl text-slate-300 font-medium leading-relaxed italic">
-                "Gobernamos los sistemas para que los humanos sigan gobernando las sociedades. La tecnología más poderosa bajo el mandato de la humanidad."
+                &quot;Gobernamos los sistemas para que los humanos sigan gobernando las sociedades. La tecnología más poderosa bajo el mandato de la humanidad.&quot;
             </p>
          </div>
       </div>

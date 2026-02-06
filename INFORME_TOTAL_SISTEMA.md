@@ -9,10 +9,11 @@
 ## 📗 1. INVENTARIO TOTAL DEL SISTEMA
 
 ### VÍA 1: CORPORACIONES / GOBIERNO (Soberanía y Control)
-*   **Control Maestro:** `backend/apps/admin_plataforma/`
-*   **Gobernanza Viva:** `backend/apps/governance_live/`. Gestiona la **Máquina de Estados Sistémicos** y la **Memoria Institucional**.
-*   **Interoperabilidad Regulada:** `backend/apps/operational_treaties/`. Implementa tratados TIT/TNA y el **Sovereign Kill Switch**.
-*   **Custodia de Legado:** `backend/apps/legacy_custody/`. (NUEVO) Gestión de custodios institucionales y preservación de hitos históricos.
+*   **Control Maestro:** `backend/apps/admin_plataforma/`. Kernel de gobernanza y orquestación de intenciones.
+*   **Gobernanza Viva (Phase Z-LIVE):** `backend/apps/governance_live/`. Gestiona la **Máquina de Estados Sistémicos** y la **Memoria Institucional**.
+*   **Interoperabilidad Regulada (Phase Z-TREATIES):** `backend/apps/operational_treaties/`. Implementa tratados TIT/TNA/TNID/TSDS y el **Sovereign Kill Switch**.
+*   **Paz Sistémica (Phase Z-PEACE):** `backend/apps/peace_net/`. Motor de estabilidad y detección de conflictos territoriales.
+*   **Custodia de Legado (Phase Legado):** `backend/legacy_custody/`. Gestión de custodios institucionales y preservación de hitos históricos mediante sellado de evidencia.
 *   **Inteligencia Decisora:** Panel de control SuperAdmin con capacidad de intervención soberana inmediata.
 
 ### VÍA 2: EMPRESARIOS (PRESTADORES - Operación)
@@ -72,14 +73,20 @@ SARITA ha blindado su futuro mediante la institucionalización de la **FASE LEGA
 
 ---
 
-## 📗 5. FASE META: EL ESTÁNDAR CIVILIZATORIO
+## 📗 5. FASE META: EL ESTÁNDAR CIVILIZATORIO (META-STANDARD)
 
-SARITA ha trascendido su naturaleza de software para institucionalizarse como el **Estándar de Gobernanza Algorítmica Civilizatoria**.
+SARITA ha trascendido su naturaleza de software para institucionalizarse como el **Estándar de Gobernanza Algorítmica Civilizatoria (Meta-Standard)**, codificado en 10 principios operativos e inviolables:
 
-1.  **Subordinación Irrevocable:** La tecnología opera bajo el mandato humano, con mecanismos físicos y lógicos de reversibilidad.
-2.  **Referente de Certificación:** SARITA define el marco de interoperabilidad ética y técnica global.
-3.  **Prevención Sistémica (Peace-Net):** Detección proactiva de anomalías socio-económicas para preservar la estabilidad institucional.
-4.  **Auditabilidad Absoluta:** No existe acción autónoma sin una cadena de decisión explicable (XAI) y un registro inmutable.
+1.  **Soberanía Humana Absoluta:** Supremacía del mandato humano sobre cualquier lógica algorítmica.
+2.  **Trazabilidad Forense:** Inmutabilidad mediante encadenamiento de hashes SHA-256.
+3.  **Reversibilidad (PDA):** Protocolo de Desaceleración Algorítmica para congelamiento inmediato.
+4.  **Jurisdicción Estricta:** Bloqueo Anti-Deriva por compartimentación de dominios.
+5.  **Neutralidad Institucional:** Estabilidad técnica independiente de ciclos ideológicos.
+6.  **Transparencia XAI:** Cadena de decisión de 5 puntos para cada acción autónoma.
+7.  **Autonomía Regulada:** Jerarquía de niveles (L0-L3) con delegación condicional.
+8.  **Bien Público:** Prohibición absoluta de privatización o transferencia de propiedad.
+9.  **Privacidad Soberana:** Soberanía radical del dato institucional y ciudadano.
+10. **Legado Generacional:** Transmisión segura del control a custodios futuros.
 
 ---
 

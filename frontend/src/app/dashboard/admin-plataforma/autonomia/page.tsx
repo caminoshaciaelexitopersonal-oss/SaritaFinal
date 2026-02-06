@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import {
-  FiCpu, FiZap, FiAlertOctagon, FiActivity, FiShield, FiFileText, FiClock, FiSearch, FiPower
+  FiCpu, FiZap, FiAlertOctagon, FiActivity, FiShield, FiFileText, FiClock, FiSearch, FiPower, FiAlertTriangle
 } from 'react-icons/fi';
 import { autonomyService, AutonomousAction, AutonomousExecutionLog, AutonomyControl } from '@/services/autonomyService';
 import { useAuth } from '@/contexts/AuthContext';

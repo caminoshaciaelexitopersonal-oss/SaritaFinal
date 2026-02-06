@@ -22,7 +22,9 @@ import {
   FiBarChart2,
   FiUpload,
   FiMessageSquare,
-  FiPauseCircle
+  FiPauseCircle,
+  FiTrendingUp,
+  FiUsers
 } from 'react-icons/fi';
 
 // --- TIPOS OPERATIVOS ---

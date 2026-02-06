@@ -53,12 +53,16 @@ class GovernanceKernel:
             "category": "Infraestructura de Gobernanza Algorítmica Civilizatoria",
             "status": "LEGADO_PROTEGIDO",
             "principles": [
-                "Subordinación a la soberanía humana",
-                "Trazabilidad inmutable de decisiones",
-                "Reversibilidad de acciones autónomas",
-                "Separación estricta de dominios institucionales",
-                "Limitación consciente como virtud técnica",
-                "Preservación del legado civilizatorio"
+                "Soberanía Humana Absoluta",
+                "Trazabilidad Forense e Inmutabilidad",
+                "Reversibilidad y Desaceleración Algorítmica",
+                "Compartimentación Jurisdiccional",
+                "Neutralidad Política y Estabilidad Institucional",
+                "Transparencia XAI (Cadena de Decisión)",
+                "Autonomía Regulada por Capas",
+                "Bien Público Civilizatorio (Anti-Privatización)",
+                "Ética de Datos y Privacidad Soberana",
+                "Preservación del Legado y Transmisión Generacional"
             ],
             "compliance_metrics": {
                 "active_treaties": 5, # TIT, TNA, TNID, TSDS, LEGADO
