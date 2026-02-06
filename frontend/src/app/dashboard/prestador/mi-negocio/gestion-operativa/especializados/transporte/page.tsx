@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import {
@@ -16,10 +17,16 @@ import { Badge } from '@/components/ui/Badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 
 export default function TransportePage() {
-  const vehicles = [
-    { plate: 'XYZ-123', model: 'Van Mercedes Sprinter', capacity: '12 Pax', status: 'IN_TRANSIT', driver: 'Carlos Ruiz' },
-    { plate: 'ABC-456', model: 'Bus Hino', capacity: '40 Pax', status: 'AVAILABLE', driver: 'Luis Mora' },
-  ];
+  const { getVehicles, isLoading } = useMiNegocioApi();
+  const [vehicles, setVehicles] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await getVehicles();
+      if (data) setVehicles(data.results || []);
+    };
+    loadData();
+  }, [getVehicles]);
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
@@ -84,19 +91,26 @@ export default function TransportePage() {
                     <TableRow key={i} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-slate-50 dark:border-white/5">
                        <TableCell className="px-8 py-6">
                           <div>
-                             <p className="font-black text-slate-900 dark:text-white mb-1 uppercase tracking-tighter">{v.plate}</p>
-                             <p className="text-[10px] text-slate-400 font-bold">{v.model}</p>
+                             <p className="font-black text-slate-900 dark:text-white mb-1 uppercase tracking-tighter">{v.placa}</p>
+                             <p className="text-[10px] text-slate-400 font-bold">{v.nombre} ({v.tipo_vehiculo})</p>
                           </div>
                        </TableCell>
-                       <TableCell className="font-bold text-slate-500">{v.capacity}</TableCell>
-                       <TableCell className="font-bold text-slate-700 dark:text-slate-200">{v.driver}</TableCell>
+                       <TableCell className="font-bold text-slate-500">{v.capacidad} PAX</TableCell>
+                       <TableCell className="font-bold text-slate-700 dark:text-slate-200">Por Asignar</TableCell>
                        <TableCell className="text-center px-8">
                           <Badge className={v.status === 'AVAILABLE' ? 'bg-emerald-100 text-emerald-700' : 'bg-indigo-100 text-indigo-700'}>
-                             {v.status === 'AVAILABLE' ? 'DISPONIBLE' : 'EN RUTA'}
+                             {v.status === 'AVAILABLE' ? 'DISPONIBLE' : 'EN SERVICIO'}
                           </Badge>
                        </TableCell>
                     </TableRow>
                   ))}
+                  {vehicles.length === 0 && !isLoading && (
+                     <TableRow>
+                        <TableCell colSpan={4} className="text-center py-20 text-slate-400 italic">
+                           No hay vehículos vinculados a la flota.
+                        </TableCell>
+                     </TableRow>
+                  )}
                </TableBody>
             </Table>
          </CardContent>

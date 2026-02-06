@@ -99,6 +99,18 @@ class SaritaOrchestrator:
         # Simplemente delega. El Coronel y sus subordinados asíncronos se encargarán del resto.
         coronel.handle_mission(mision)
 
+    def handle_directive(self, directive: dict):
+        """
+        Punto de entrada síncrono para manejar una directiva completa.
+        Utilizado principalmente por comandos de gestión y pruebas.
+        """
+        mision = self.start_mission(directive)
+        self.execute_mission(mision.id)
+
+        # Recargar de la DB para obtener el resultado final (inicialmente será PROCESSING)
+        mision.refresh_from_db()
+        return mision.resultado_final or {"status": "EN_COLA", "mision_id": str(mision.id)}
+
     def _validate_mission_integrity(self, mision: Mision) -> bool:
         """
         Verifica que la misión provenga de un flujo autorizado (S-0.4).

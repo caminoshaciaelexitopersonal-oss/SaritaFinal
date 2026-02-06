@@ -12,4 +12,6 @@ export const operativoEndpoints = {
   // Módulos Especializados
   getHotelRoomTypes: () => httpClient.get('/v1/mi-negocio/operativa/hotel/room-types/'),
   getRestaurantTables: () => httpClient.get('/v1/mi-negocio/operativa/restaurante/tables/'),
+  getVehicles: () => httpClient.get('/v1/mi-negocio/operativa/transporte/vehicles/'),
+  getTours: () => httpClient.get('/v1/mi-negocio/operativa/guias/tours/'),
 };

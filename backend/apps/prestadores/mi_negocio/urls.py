@@ -12,6 +12,7 @@ urlpatterns = [
     # Módulo contable es una agrupación de otros módulos
     path('contable/contabilidad/', include('apps.prestadores.mi_negocio.gestion_contable.contabilidad.urls')),
     path('contable/activos-fijos/', include('apps.prestadores.mi_negocio.gestion_contable.activos_fijos.urls')),
+    path('contable/nomina/', include('apps.prestadores.mi_negocio.gestion_contable.nomina.urls')),
 
     # Gestión Archivística
     path('archivistica/', include('apps.prestadores.mi_negocio.gestion_archivistica.urls')),

@@ -17,13 +17,17 @@ from ..services import FacturacionService
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
+        if hasattr(obj, 'perfil_ref_id'):
+            return obj.perfil_ref_id == request.user.perfil_prestador.id
         return obj.perfil == request.user.perfil_prestador
 
 class OperacionComercialViewSet(viewsets.ModelViewSet):
     serializer_class = OperacionComercialSerializer
     permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
     def get_queryset(self):
-        return OperacionComercial.objects.filter(perfil=self.request.user.perfil_prestador)
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return OperacionComercial.objects.filter(perfil_ref_id=self.request.user.perfil_prestador.id)
+        return OperacionComercial.objects.none()
 
     @action(detail=True, methods=['post'])
     def confirmar(self, request, pk=None):
@@ -53,7 +57,9 @@ class FacturaVentaViewSet(viewsets.ReadOnlyModelViewSet):
         return FacturaVentaDetailSerializer
 
     def get_queryset(self):
-        return FacturaVenta.objects.filter(perfil=self.request.user.perfil_prestador).select_related('cliente')
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return FacturaVenta.objects.filter(perfil_ref_id=self.request.user.perfil_prestador.id)
+        return FacturaVenta.objects.none()
 
     @action(detail=True, methods=['post'], url_path='registrar-pago')
     @transaction.atomic
