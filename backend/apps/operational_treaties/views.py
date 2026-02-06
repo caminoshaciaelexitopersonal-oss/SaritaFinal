@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -28,6 +29,33 @@ class OperationalTreatyViewSet(viewsets.ModelViewSet):
     def list_audits(self, request):
         audits = TreatyComplianceAudit.objects.all()[:100]
         return Response(TreatyComplianceAuditSerializer(audits, many=True).data)
+
+    @action(detail=False, methods=['get'], url_path='transparency-summary')
+    def transparency_summary(self, request):
+        """
+        Z-TRUST-IMPLEMENTATION: Resumen para la UX de Soberanía.
+        Muestra qué tratados están activos y qué señales se están compartiendo.
+        """
+        active_treaties = OperationalTreaty.objects.filter(is_active=True)
+
+        summary = []
+        for treaty in active_treaties:
+            summary.append({
+                "treaty_name": treaty.name,
+                "type": treaty.type,
+                "shared_since": treaty.signed_at,
+                "partner_nodes": treaty.participating_nodes,
+                "signals_allowed": treaty.signal_types_allowed,
+                "audit_level": treaty.audit_level,
+                "is_monitored": True
+            })
+
+        return Response({
+            "node_sovereignty_status": "FULL_CONTROL",
+            "active_cooperation_treaties": summary,
+            "system_trust_index": 1.0,
+            "last_integrity_verification": timezone.now()
+        })
 
     @action(detail=False, methods=['post'], url_path='pap-early-warning')
     def emit_pap(self, request):

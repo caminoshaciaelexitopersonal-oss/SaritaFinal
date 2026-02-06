@@ -38,15 +38,15 @@ class InternationalInteropViewSet(viewsets.ViewSet):
         level = request.data.get('level')
         description = request.data.get('description')
 
-        signal = TrustSignalService.emit_threat_signal(category, level, description)
+        signal = TrustSignalService.emit_threat_signal(category, level, description, request.user)
         return Response(TrustSignalSerializer(signal).data)
+
+    @action(detail=False, methods=['post'], url_path='receive-external-signal')
+    def receive_signal(self, request):
+        TrustSignalService.receive_external_signal(request.data, request.user)
+        return Response({"status": "SIGNAL_PROCESSED"})
 
     @action(detail=False, methods=['get'], url_path='active-signals')
     def list_signals(self, request):
         signals = TrustSignal.objects.order_by('-timestamp')[:50]
         return Response(TrustSignalSerializer(signals, many=True).data)
-
-    @action(detail=False, methods=['post'], url_path='receive-external-signal')
-    def receive_signal(self, request):
-        TrustSignalService.receive_external_signal(request.data)
-        return Response({"status": "SIGNAL_PROCESSED"})

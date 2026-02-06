@@ -80,7 +80,10 @@ class TrustCertificateService:
 
         # 1. Verificar firma (Simulado: en prod usaría la llave pública del nodo_id)
         payload = f"{node_id}{cert_type}{issued_at}{json.dumps(evidence)}"
-        expected_signature = hashlib.sha256((payload + "SARITA_NODE_PRIVATE_KEY").encode()).hexdigest()
+
+        from django.conf import settings
+        private_key = getattr(settings, "SARITA_NODE_PRIVATE_KEY", "SARITA_FALLBACK_KEY_STABLE_Z")
+        expected_signature = hashlib.sha256((payload + private_key).encode()).hexdigest()
 
         if signature != expected_signature:
             logger.error(f"Z-TRUST-NET: Firma de certificado INVÁLIDA de {node_id}")
@@ -98,8 +101,15 @@ class TrustSignalService:
     """
 
     @staticmethod
-    def emit_threat_signal(category: str, level: str, description: str):
+    def emit_threat_signal(category: str, level: str, description: str, user: CustomUser):
         """Emite una señal de alerta temprana para la red global."""
+        from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
+
+        # 3.1: Validar mandato en el Kernel antes de emitir
+        kernel = GovernanceKernel(user)
+        if not kernel.validate_interop_mandate(category, "GLOBAL_MESH", direction='OUTGOING'):
+            raise PermissionError(f"Gobernanza: No existe tratado activo para emitir señales de tipo '{category}'.")
+
         signal = TrustSignal.objects.create(
             origin_node="SARITA_NATIONAL_NODE_01",
             category=category,
@@ -110,9 +120,19 @@ class TrustSignalService:
         return signal
 
     @staticmethod
-    def receive_external_signal(signal_data: dict):
+    def receive_external_signal(signal_data: dict, user: CustomUser):
         """Procesa una señal recibida de otro país."""
+        from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
+
         node_id = signal_data.get('origin_node')
+        category = signal_data.get('category')
+
+        # 3.1: Validar mandato en el Kernel antes de recibir
+        kernel = GovernanceKernel(user)
+        if not kernel.validate_interop_mandate(category, node_id, direction='INCOMING'):
+            logger.error(f"Z-TRUST-NET: Señal de {node_id} RECHAZADA por el Kernel. Sin mandato para '{category}'.")
+            return
+
         level = signal_data.get('level')
         category = signal_data.get('category')
 

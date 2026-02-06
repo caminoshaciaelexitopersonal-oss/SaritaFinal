@@ -40,6 +40,31 @@ class GovernanceKernel:
     def __init__(self, user: CustomUser):
         self.user = user
 
+    def validate_interop_mandate(self, signal_type: str, node_id: str, direction: str = 'OUTGOING') -> bool:
+        """
+        Z-TRUST-IMPLEMENTATION: Valida si existe un mandato legal/técnico (Tratado)
+        que autorice el intercambio de esta señal con el nodo especificado.
+        """
+        from apps.operational_treaties.models import OperationalTreaty
+
+        # 1. Buscar tratados activos que incluyan al nodo
+        active_treaties = OperationalTreaty.objects.filter(
+            is_active=True,
+            participating_nodes__contains=node_id
+        )
+
+        for treaty in active_treaties:
+            # 2. Verificar si el tipo de señal está permitido
+            if signal_type in treaty.signal_types_allowed:
+                # 3. Verificar permisos de dirección
+                required_perm = 'EMIT_SIGNALS' if direction == 'OUTGOING' else 'RECEIVE_SIGNALS'
+                if treaty.permissions_granted.get(required_perm, False):
+                    logger.info(f"KERNEL: Mandato VALIDADO para '{signal_type}' con {node_id} vía {treaty.name}")
+                    return True
+
+        logger.error(f"KERNEL: Mandato RECHAZADO para '{signal_type}' con {node_id}. Sin tratado habilitante.")
+        return False
+
     def resolve_and_execute(self, intention_name: str, parameters: Dict[str, Any], bypass_policy: bool = False) -> Dict[str, Any]:
         """
         Punto de entrada único para ejecutar intenciones.

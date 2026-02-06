@@ -30,8 +30,12 @@ class AlgorithmicCertificate(models.Model):
     is_revoked = models.BooleanField(default=False)
     revocation_reason = models.TextField(null=True, blank=True)
 
-    def generate_signature(self, private_key="SARITA_NODE_PRIVATE_KEY"):
+    def generate_signature(self, private_key=None):
         """Genera una firma determinista para el certificado."""
+        if not private_key:
+            from django.conf import settings
+            private_key = getattr(settings, "SARITA_NODE_PRIVATE_KEY", "SARITA_FALLBACK_KEY_STABLE_Z")
+
         payload = f"{self.node_id}{self.type}{self.issued_at.isoformat()}{json.dumps(self.evidence_summary)}"
         # En una implementación real, se usaría RSA/ECDSA con la llave privada del nodo
         self.signature = hashlib.sha256((payload + private_key).encode()).hexdigest()

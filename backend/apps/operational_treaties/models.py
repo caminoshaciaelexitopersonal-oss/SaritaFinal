@@ -21,8 +21,16 @@ class OperationalTreaty(models.Model):
     version = models.CharField(max_length=20, default='1.0')
     is_active = models.BooleanField(default=True)
 
+    # Tipificación Explícita (Fase Z-TRUST-IMPLEMENTATION)
+    scope = models.TextField(help_text="Alcance institucional y geográfico del tratado.")
+    permissions_granted = models.JSONField(default=dict, help_text="Capacidades técnicas habilitadas (ej: READ_ALERTS, PROPOSE_MITIGATION).")
+    data_boundaries = models.JSONField(default=dict, help_text="Límites duros de acceso a datos (ej: AGGREGATED_ONLY).")
+    signal_types_allowed = models.JSONField(default=list, help_text="Tipos de señales DSO permitidas.")
+    revocation_rules = models.JSONField(default=dict, help_text="Condiciones de auto-suspensión del tratado.")
+    audit_level = models.IntegerField(default=1, help_text="Nivel de auditoría (1: Local, 2: Cruzada, 3: Supranacional).")
+
     # Parámetros técnicos del tratado
-    guardrails_config = models.JSONField(help_text="Configuración de límites algorítmicos para este tratado.")
+    guardrails_config = models.JSONField(default=dict, help_text="Configuración de límites algorítmicos para este tratado.")
 
     # Identificadores de los nodos participantes
     participating_nodes = models.JSONField(default=list, help_text="Lista de IDs de nodos soberanos firmantes.")
