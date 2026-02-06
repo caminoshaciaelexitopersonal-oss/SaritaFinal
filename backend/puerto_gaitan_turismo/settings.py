@@ -109,6 +109,7 @@ INSTALLED_APPS = [
     "apps.defense_predictive.apps.DefensePredictiveConfig",
     "apps.defense_deception.apps.DefenseDeceptionConfig",
     "apps.international_interop.apps.InternationalInteropConfig",
+    "apps.peace_net.apps.PeaceNetConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
 
