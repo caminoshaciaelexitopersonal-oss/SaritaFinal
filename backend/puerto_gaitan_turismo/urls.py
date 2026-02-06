@@ -63,6 +63,9 @@ urlpatterns = [
 
     # API para Peace-Net (Estabilidad Global)
     path('api/v1/peace-net/', include("apps.peace_net.urls")),
+
+    # API para Tratados Operativos (Z-OPERATIONAL-TREATIES)
+    path('api/v1/operational-treaties/', include("apps.operational_treaties.urls")),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

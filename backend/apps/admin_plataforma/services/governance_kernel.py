@@ -46,6 +46,15 @@ class GovernanceKernel:
         """
         logger.info(f"KERNEL: Recibida intención '{intention_name}' de usuario {self.user.username}")
 
+        # Z-OPERATIONAL: Protocolo de Desaceleración Algorítmica (PDA)
+        # Si existe una política de desaceleración activa, forzamos intervención humana en intenciones de nivel DELEGATED
+        pda_active = GovernancePolicy.objects.filter(name="ALGORITHMIC_DECELERATION_PROTOCOL", is_active=True).exists()
+        if pda_active:
+            intention = self._registry.get(intention_name)
+            if intention and intention.min_authority == AuthorityLevel.DELEGATED and not self.user.is_superuser:
+                logger.warning(f"PDA: Intención '{intention_name}' bloqueada por Desaceleración Algorítmica. Requiere Autoridad Soberana.")
+                raise PermissionError("PROTOCOLO DE DESACELERACIÓN ACTIVO: Esta acción delegada ha sido suspendida temporalmente para preservar la estabilidad. Requiere autorización manual del SuperAdmin.")
+
         # S-0.5: Verificación de MODO ATAQUE (Congelamiento Sistémico)
         attack_mode = GovernancePolicy.objects.filter(name="SYSTEM_ATTACK_MODE", is_active=True).exists()
         if attack_mode and not self.user.is_superuser:
