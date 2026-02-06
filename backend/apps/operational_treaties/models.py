@@ -38,6 +38,23 @@ class OperationalTreaty(models.Model):
     signed_at = models.DateTimeField(default=timezone.now)
     expires_at = models.DateTimeField(null=True, blank=True)
 
+    # Métricas y Evolución (Fase Z-GOVERNANCE-LIVE)
+    performance_metrics = models.JSONField(default=dict, help_text="Métricas de efectividad del tratado.")
+    risk_indicators = models.JSONField(default=dict, help_text="Señales de riesgo asociadas a este tratado.")
+    trust_score = models.FloatField(default=1.0, help_text="Nivel de confianza actual en la contraparte (0.0 a 1.0).")
+
+    lifecycle_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('ACTIVE', 'Activo'),
+            ('OBSERVATION', 'En Observación'),
+            ('ADJUSTMENT', 'En Ajuste'),
+            ('SUSPENDED', 'Suspendido'),
+            ('EXPIRED', 'Expirado')
+        ],
+        default='ACTIVE'
+    )
+
     def __str__(self):
         return f"{self.get_type_display()} v{self.version} ({self.name})"
 
@@ -62,7 +79,8 @@ class TreatyComplianceAudit(models.Model):
     integrity_hash = models.CharField(max_length=64, null=True, blank=True)
 
     def generate_hash(self, prev_hash):
-        data = f"{prev_hash}{self.treaty.id}{self.timestamp.isoformat()}{json.dumps(self.payload_summary)}{self.is_compliant}"
+        ts = self.timestamp.isoformat() if self.timestamp else timezone.now().isoformat()
+        data = f"{prev_hash}{self.treaty.id}{ts}{json.dumps(self.payload_summary)}{self.is_compliant}"
         return hashlib.sha256(data.encode()).hexdigest()
 
     class Meta:

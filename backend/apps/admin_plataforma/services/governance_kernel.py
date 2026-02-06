@@ -40,6 +40,37 @@ class GovernanceKernel:
     def __init__(self, user: CustomUser):
         self.user = user
 
+    def get_current_systemic_state(self):
+        """Fase Z-GOVERNANCE-LIVE: Retorna el estado operativo actual."""
+        from apps.governance_live.models import SystemicState
+        state = SystemicState.objects.filter(is_active=True).first()
+        return state.current_level if state else 'NORMAL'
+
+    def transition_systemic_state(self, new_level: str, reason: str, context: dict = None):
+        """Fase Z-GOVERNANCE-LIVE: Cambia el estado operativo del sistema."""
+        if not self.user.is_superuser:
+            raise PermissionError("Solo la Autoridad Soberana puede cambiar el estado sistémico.")
+
+        from apps.governance_live.models import SystemicState
+        # Desactivar estados anteriores
+        SystemicState.objects.filter(is_active=True).update(is_active=False)
+
+        new_state = SystemicState.objects.create(
+            current_level=new_level,
+            authorized_by=self.user,
+            reason=reason,
+            context_data=context or {}
+        )
+        logger.warning(f"KERNEL: Transición de Estado Sistémico a '{new_level}' por {self.user.username}")
+
+        # Auditoría especial de cambio de estado
+        self._log_audit(
+            GovernanceIntention("SYSTEM_STATE_TRANSITION", "governance", self.user.role, min_authority=AuthorityLevel.SOVEREIGN),
+            {"new_level": new_level, "reason": reason},
+            {"status": "TRANSITIONED"}
+        )
+        return new_state
+
     def validate_interop_mandate(self, signal_type: str, node_id: str, direction: str = 'OUTGOING') -> bool:
         """
         Z-TRUST-IMPLEMENTATION: Valida si existe un mandato legal/técnico (Tratado)
@@ -70,6 +101,20 @@ class GovernanceKernel:
         Punto de entrada único para ejecutar intenciones.
         """
         logger.info(f"KERNEL: Recibida intención '{intention_name}' de usuario {self.user.username}")
+
+        # Z-GOVERNANCE-LIVE: Verificación de Restricciones por Estado Sistémico
+        current_state = self.get_current_systemic_state()
+        if current_state in ['CONTAINMENT', 'PARTIAL_DECOUPLING', 'TOTAL_DECOUPLING'] and not self.user.is_superuser:
+            logger.warning(f"KERNEL: Bloqueo por Estado '{current_state}'. Intención '{intention_name}' RECHAZADA.")
+            raise PermissionError(f"SISTEMA EN MODO {current_state}: La autonomía delegada está restringida para preservar la integridad nacional.")
+
+        # Z-GOVERNANCE-LIVE: Barreras Anti-Deriva (Protección contra expansión de mandato)
+        intention = self._registry.get(intention_name)
+        if intention and hasattr(self.user, 'is_agent') and self.user.is_agent:
+            # Si el usuario es un agente (Funcionario Digital), validamos su dominio asignado
+            if intention.domain != self.user.agent_domain and not self.user.is_superuser:
+                logger.error(f"ANTI-DRIFT: Agente de '{self.user.agent_domain}' intentó acceder a '{intention.domain}'. BLOQUEADO.")
+                raise PermissionError(f"DERIVA DETECTADA: El Funcionario Digital de '{self.user.agent_domain}' no tiene mandato para operar en el dominio '{intention.domain}'.")
 
         # Z-OPERATIONAL: Protocolo de Desaceleración Algorítmica (PDA)
         # Si existe una política de desaceleración activa, forzamos intervención humana en intenciones de nivel DELEGATED

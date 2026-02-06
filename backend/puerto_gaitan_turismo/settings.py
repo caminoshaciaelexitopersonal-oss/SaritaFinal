@@ -111,6 +111,7 @@ INSTALLED_APPS = [
     "apps.international_interop.apps.InternationalInteropConfig",
     "apps.peace_net.apps.PeaceNetConfig",
     "apps.operational_treaties.apps.OperationalTreatiesConfig",
+    "apps.governance_live.apps.GovernanceLiveConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
 
