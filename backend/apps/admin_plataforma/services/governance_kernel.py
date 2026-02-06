@@ -46,6 +46,28 @@ class GovernanceKernel:
         state = SystemicState.objects.filter(is_active=True).first()
         return state.current_level if state else 'NORMAL'
 
+    def get_meta_standard_metadata(self) -> Dict[str, Any]:
+        """FASE META: Retorna la metadata del estándar civilizatorio."""
+        return {
+            "name": "SARITA Standard",
+            "category": "Infraestructura de Gobernanza Algorítmica Civilizatoria",
+            "status": "LEGADO_PROTEGIDO",
+            "principles": [
+                "Subordinación a la soberanía humana",
+                "Trazabilidad inmutable de decisiones",
+                "Reversibilidad de acciones autónomas",
+                "Separación estricta de dominios institucionales",
+                "Limitación consciente como virtud técnica",
+                "Preservación del legado civilizatorio"
+            ],
+            "compliance_metrics": {
+                "active_treaties": 5, # TIT, TNA, TNID, TSDS, LEGADO
+                "audit_integrity": "SHA-256_CHAINED",
+                "human_supremacy_level": "SOVEREIGN_MANDATORY",
+                "legacy_protection": "ACTIVE"
+            }
+        }
+
     def transition_systemic_state(self, new_level: str, reason: str, context: dict = None):
         """Fase Z-GOVERNANCE-LIVE: Cambia el estado operativo del sistema."""
         if not self.user.is_superuser:
@@ -101,6 +123,11 @@ class GovernanceKernel:
         Punto de entrada único para ejecutar intenciones.
         """
         logger.info(f"KERNEL: Recibida intención '{intention_name}' de usuario {self.user.username}")
+
+        # 0. EVALUACIÓN DE LEGADO (FASE LEGADO) - PRIORIDAD MÁXIMA
+        intention_obj = self._registry.get(intention_name)
+        if intention_obj:
+            self._evaluate_legacy_protections(intention_obj, parameters)
 
         # Z-GOVERNANCE-LIVE: Verificación de Restricciones por Estado Sistémico
         current_state = self.get_current_systemic_state()
@@ -163,7 +190,7 @@ class GovernanceKernel:
             )
             raise e
 
-        # 4. Evaluar Políticas Globales (Motor de Políticas)
+        # 5. Evaluar Políticas Globales (Motor de Políticas)
         if not bypass_policy:
             self._evaluate_policies(intention, parameters)
 
@@ -242,6 +269,26 @@ class GovernanceKernel:
         proposal.save()
 
         return result
+
+    def _evaluate_legacy_protections(self, intention: GovernanceIntention, parameters: Dict[str, Any]):
+        """
+        FASE LEGADO: Protecciones duras para la preservación del modelo a largo plazo.
+        """
+        # 1. Prohibición de Auto-Modificación del Núcleo
+        if intention.domain == 'governance' and intention.name.startswith('SYSTEM_EVOLUTION'):
+            if not self.user.is_superuser:
+                logger.critical(f"LEGADO: Intento de auto-modificación DETECTADO de {self.user.username}. BLOQUEADO.")
+                raise PermissionError("FASE LEGADO: La evolución del núcleo de gobernanza está bloqueada. Requiere autorización soberana multicanal.")
+
+        # 2. Prohibición de Privatización / Transferencia de Propiedad
+        if intention.name == 'PLATFORM_TRANSFER_OWNERSHIP':
+             logger.critical(f"LEGADO: Intento de privatización del sistema BLOQUEADO. SARITA es un bien público civilizatorio.")
+             raise PermissionError("FASE LEGADO: SARITA no puede ser privatizada ni transferida a intereses privados.")
+
+        # 3. Prohibición de Vigilancia Masiva No Auditada
+        if intention.domain == 'surveillance' and not parameters.get('audit_reference'):
+            logger.critical(f"LEGADO: Intento de vigilancia no auditada BLOQUEADO.")
+            raise PermissionError("FASE LEGADO: Prohibido cualquier uso de vigilancia que no posea una referencia de auditoría legítima.")
 
     def _evaluate_policies(self, intention: GovernanceIntention, parameters: Dict[str, Any]):
         """
@@ -380,6 +427,36 @@ GovernanceKernel.register_intention(GovernanceIntention(
     domain="contable",
     required_role=CustomUser.Role.ADMIN,
     min_authority=AuthorityLevel.DELEGATED
+))
+
+# Dominio: FASE LEGADO
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="GENERATE_LEGACY_BUNDLE",
+    domain="governance",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PLATFORM_TRANSFER_OWNERSHIP",
+    domain="plataforma",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="SYSTEM_EVOLUTION_HARDENING",
+    domain="governance",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN
+))
+
+# Dominio: FASE META
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="QUERY_META_STANDARD",
+    domain="governance",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 # --- DOMINIOS INSTITUCIONALES (Fase Z-INSTITUTIONAL) ---

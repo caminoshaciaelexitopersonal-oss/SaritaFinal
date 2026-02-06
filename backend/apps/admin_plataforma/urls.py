@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import SaritaProfileView, PlanViewSet, SuscripcionViewSet
+from .views import SaritaProfileView, PlanViewSet, SuscripcionViewSet, MetaStandardView
 from apps.audit.views import ForensicSecurityLogViewSet
 
 app_name = 'admin_plataforma'
@@ -12,6 +12,7 @@ router.register(r'audit/forensic-logs', ForensicSecurityLogViewSet, basename='fo
 
 urlpatterns = [
     path('profile/', SaritaProfileView.as_view(), name='sarita-profile'),
+    path('doctrina/', MetaStandardView.as_view(), name='meta-standard'),
 
  
     # ERP SISTÉMICO - ACOPLAMIENTO FUNCIONAL TOTAL FASE 1

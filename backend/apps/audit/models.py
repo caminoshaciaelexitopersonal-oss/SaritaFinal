@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 import hashlib
+import json
 from django.utils import timezone
 
 class AuditLog(models.Model):

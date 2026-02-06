@@ -5,6 +5,7 @@ from django.utils import timezone
 class SystemicRiskIndicator(models.Model):
     """
     Indicadores de Riesgo Sistémico (Z-PEACE-NET).
+    Sensor de estabilidad civilizatoria bajo el Estándar SARITA.
     Capturan señales de tensión en dominios económicos, institucionales o sociales.
     """
     class Domain(models.TextChoices):

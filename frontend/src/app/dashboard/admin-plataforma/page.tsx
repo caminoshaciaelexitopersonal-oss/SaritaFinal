@@ -106,6 +106,11 @@ export default function AdminPlataformaPage() {
                 <FiClock /> Memoria Histórica
              </Button>
            </Link>
+           <Link href="/dashboard/admin-plataforma/doctrina">
+             <Button variant="outline" className="border-emerald-200 text-emerald-700 bg-emerald-50 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
+                <FiAward /> Doctrina Meta
+             </Button>
+           </Link>
            {!isAttackModeActive ? (
                 <Button
                     onClick={() => setIsEmergencyDialogOpen(true)}

@@ -7,6 +7,7 @@ from django.utils import timezone
 class OperationalTreaty(models.Model):
     """
     Tratados Operativos (Z-OPERATIONAL-TREATIES).
+    Marco de interoperabilidad ética y técnica bajo el Estándar SARITA.
     Define los marcos técnicos y jurídicos de cooperación entre nodos.
     """
     class TreatyType(models.TextChoices):

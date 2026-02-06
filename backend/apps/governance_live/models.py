@@ -5,6 +5,7 @@ from django.utils import timezone
 class SystemicState(models.Model):
     """
     Representa el estado operativo global de SARITA (Fase Z-GOVERNANCE-LIVE).
+    Implementación del Estándar SARITA para el control de flujo civilizatorio.
     Define el nivel de autonomía y restricción del sistema.
     """
     class StateLevel(models.TextChoices):
@@ -41,6 +42,7 @@ class SystemicState(models.Model):
 class GovernanceMemory(models.Model):
     """
     Memoria Institucional (Z-GOVERNANCE-LIVE).
+    Componente de Memoria Civilizatoria del Estándar SARITA.
     Almacena patrones históricos de riesgo y respuestas efectivas.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

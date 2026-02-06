@@ -112,6 +112,7 @@ INSTALLED_APPS = [
     "apps.peace_net.apps.PeaceNetConfig",
     "apps.operational_treaties.apps.OperationalTreatiesConfig",
     "apps.governance_live.apps.GovernanceLiveConfig",
+    "apps.legacy_custody.apps.LegacyCustodyConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
 
