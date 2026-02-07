@@ -16,10 +16,16 @@ import {
 import { Badge } from '@/components/ui/Badge';
 
 export default function GuideManagementPage() {
-  const activeTours = [
-    { name: 'Expedición Rio Meta', duration: '4h', level: 'Intermedio', price: '$45,000' },
-    { name: 'Avistamiento de Toninas', duration: '2h', level: 'Fácil', price: '$28,000' },
-  ];
+  const { getTours, isLoading } = useMiNegocioApi();
+  const [activeTours, setActiveTours] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await getTours();
+      if (data) setActiveTours(data.results || []);
+    };
+    loadData();
+  }, [getTours]);
 
   return (
     <div className="space-y-10 animate-in slide-in-from-right-8 duration-700">
@@ -49,17 +55,17 @@ export default function GuideManagementPage() {
                              <FiMapPin size={32} />
                           </div>
                           <div>
-                             <h4 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-2 italic">{tour.name}</h4>
+                             <h4 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-2 italic">{tour.product?.nombre || tour.nombre}</h4>
                              <div className="flex items-center gap-6 text-xs font-bold text-slate-400 uppercase tracking-widest">
-                                <span className="flex items-center gap-1.5"><FiClock className="text-brand" /> {tour.duration}</span>
-                                <span className="flex items-center gap-1.5"><FiUsers className="text-brand" /> {tour.level}</span>
+                                <span className="flex items-center gap-1.5"><FiClock className="text-brand" /> {tour.duracion_horas || 'N/A'}h</span>
+                                <span className="flex items-center gap-1.5"><FiUsers className="text-brand" /> {tour.nivel_dificultad || 'Bajo'}</span>
                              </div>
                           </div>
                        </div>
                        <div className="flex items-center gap-10">
                           <div className="text-right">
                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Precio Unitario</p>
-                             <p className="text-2xl font-black text-slate-900 dark:text-white">{tour.price}</p>
+                             <p className="text-2xl font-black text-slate-900 dark:text-white">${tour.product?.base_price || '0'}</p>
                           </div>
                           <Button variant="ghost" className="h-14 w-14 rounded-2xl bg-slate-50 dark:bg-black/20 text-slate-400 hover:text-brand hover:bg-brand/10 transition-all">
                              <FiChevronRight size={24} />
@@ -67,6 +73,11 @@ export default function GuideManagementPage() {
                        </div>
                     </div>
                   ))}
+                  {activeTours.length === 0 && !isLoading && (
+                    <div className="p-20 text-center text-slate-400 italic">
+                       No hay experiencias configuradas en el catálogo.
+                    </div>
+                  )}
                </div>
             </CardContent>
          </Card>
