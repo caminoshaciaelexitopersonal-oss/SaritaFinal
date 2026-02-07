@@ -1,21 +1,21 @@
-# backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/gestion_operativa/capitan_gestion_operativa_general.py
+# backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/gestion_operativa/sg_sst/capitan_incidentes_sst.py
 import logging
 from apps.sarita_agents.agents.capitan_template import CapitanTemplate
 from apps.sarita_agents.models import Mision, PlanTáctico
 
 logger = logging.getLogger(__name__)
 
-class CapitanGestionOperativaGeneral(CapitanTemplate):
+class CapitanIncidentesSST(CapitanTemplate):
     """
-    Agente Operativo General: Orquesta la ejecución de servicios y órdenes de trabajo.
+    Agente de Incidentes SST: Gestiona el rastro de accidentes y casi-accidentes laborales.
     """
 
     def plan(self, mision: Mision) -> PlanTáctico:
-        logger.info(f"CAPITÁN (Op General): Planificando ejecución para misión {mision.id}")
+        logger.info(f"CAPITÁN (Incidencias SST): Documentando evento para misión {mision.id}")
 
         pasos = {
-            "creacion_orden": {
-                "descripcion": "Generar orden de servicio en el dominio operativo.",
+            "registro_incidente": {
+                "descripcion": "Crear registro de incidente y disparar flujo de investigación.",
                 "teniente": "admin_persistencia_operativa",
                 "parametros": mision.directiva_original.get("parameters", {})
             }

@@ -69,17 +69,17 @@ class DocumentCoordinatorService:
         file_content_b64 = base64.b64encode(file_content).decode('utf-8')
         start_file_processing_flow.delay(initial_version.id, file_content_b64)
 
-        # AuditLogger.log(
-        #     user=user.usuario,
-        #     action=AuditLog.Action.DOCUMENT_CREATED,
-        #     request=request,
-        #     details={
-        #         'document_id': str(doc.id),
-        #         'document_code': doc.document_code,
-        #         'version_id': initial_version.id,
-        #         'title': initial_version.title
-        #     }
-        # )
+        AuditLogger.log(
+            user=user.usuario,
+            action=AuditLog.Action.DOCUMENT_CREATED,
+            request=request,
+            details={
+                'document_id': str(doc.id),
+                'document_code': doc.document_code,
+                'version_id': str(initial_version.id),
+                'title': initial_version.title
+            }
+        )
 
         return initial_version
 
@@ -107,17 +107,17 @@ class DocumentCoordinatorService:
         file_content_b64 = base64.b64encode(file_content).decode('utf-8')
         start_file_processing_flow.delay(new_version.id, file_content_b64)
 
-        # AuditLogger.log(
-        #     user=user.usuario,
-        #     action=AuditLog.Action.VERSION_UPLOADED,
-        #     request=request,
-        #     details={
-        #         'document_id': str(document.id),
-        #         'document_code': document.document_code,
-        #         'new_version_id': new_version.id,
-        #         'new_version_number': new_version.version_number,
-        #         'title': new_version.title
-        #     }
-        # )
+        AuditLogger.log(
+            user=user.usuario,
+            action=AuditLog.Action.VERSION_UPLOADED,
+            request=request,
+            details={
+                'document_id': str(document.id),
+                'document_code': document.document_code,
+                'new_version_id': str(new_version.id),
+                'new_version_number': new_version.version_number,
+                'title': new_version.title
+            }
+        )
 
         return new_version

@@ -1,22 +1,22 @@
-# backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/gestion_financiera/capitan_ratios_y_formulas_financieras.py
+# backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/gestion_comercial/capitan_comercial_estrategico.py
 import logging
 from apps.sarita_agents.agents.capitan_template import CapitanTemplate
 from apps.sarita_agents.models import Mision, PlanTáctico
 
 logger = logging.getLogger(__name__)
 
-class CapitanRatiosYFormulasFinancieras(CapitanTemplate):
+class CapitanComercialEstrategico(CapitanTemplate):
     """
-    Agente de Indicadores: Calcula KPIs financieros de alto nivel (EBITDA, ROI, Liquidez).
+    Agente Comercial Estratégico: Analiza el rendimiento comercial y sugiere optimizaciones.
     """
 
     def plan(self, mision: Mision) -> PlanTáctico:
-        logger.info(f"CAPITÁN (Indicadores): Generando reporte de ratios para misión {mision.id}")
+        logger.info(f"CAPITÁN (Estratégico): Analizando estrategia comercial para misión {mision.id}")
 
         pasos = {
-            "calculo_indicadores": {
-                "descripcion": "Calcular indicadores de liquidez, rentabilidad y eficiencia.",
-                "teniente": "roi_calculator", # Reutilizando teniente existente
+            "analisis_roi_cac": {
+                "descripcion": "Calcular indicadores de eficiencia comercial (CAC, ROI).",
+                "teniente": "roi_calculator", # Ya existe en TENIENTE_MAP
                 "parametros": mision.directiva_original.get("parameters", {})
             }
         }
@@ -29,6 +29,8 @@ class CapitanRatiosYFormulasFinancieras(CapitanTemplate):
         )
 
     def _get_tenientes(self) -> dict:
+        # roi_calculator se importa de tasks.py indirectamente a través del orquestador,
+        # pero aquí necesitamos registrarlo en el roster local del capitán para S-0.4
         from apps.sarita_agents.tasks import TenienteROICalculator
         return {
             "roi_calculator": TenienteROICalculator()

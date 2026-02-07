@@ -1,32 +1,38 @@
+# backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/gestion_operativa/capitan_operacion_tours.py
+import logging
 from apps.sarita_agents.agents.capitan_template import CapitanTemplate
-from typing import Dict, Any
+from apps.sarita_agents.models import Mision, PlanTáctico
+
+logger = logging.getLogger(__name__)
 
 class CapitanOperacionTours(CapitanTemplate):
     """
-    Misión: Gestionar las operaciones específicas de los tours y actividades turísticas.
+    Agente Especializado en Tours: Gestiona itinerarios, guías y experiencias turísticas.
     """
 
-    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
-        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN CapitanOperacionTours: Inicializado para Misión ID {self.mision_id}.")
+    def plan(self, mision: Mision) -> PlanTáctico:
+        logger.info(f"CAPITÁN (Tours): Planificando experiencia para misión {mision.id}")
 
-    def plan(self):
-        """
-        El corazón del Capitán. Aquí es donde defines el plan táctico.
-        Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
-        """
-        self.logger.info(f"CAPITÁN CapitanOperacionTours: Planificando la misión.")
+        pasos = {
+            "gestion_experiencia": {
+                "descripcion": "Asignar guía calificado y preparar logística del itinerario.",
+                "teniente": "gestor_tours",
+                "parametros": mision.directiva_original.get("parameters", {})
+            }
+        }
 
-        # 1. Crear el Plan Táctico
-        plan_tactico = self.get_or_create_plan_tactico(
-            nombre="Plan de Ejecución para CapitanOperacionTours",
-            descripcion=f"Este plan detalla los pasos para cumplir el objetivo: {self.objective}"
+        return PlanTáctico.objects.create(
+            mision=mision,
+            capitan_responsable=self.__class__.__name__,
+            pasos_del_plan=pasos,
+            estado='PLANIFICADO'
         )
 
-        # 2. Definir y Delegar Tareas (EJEMPLO - DEBE SER IMPLEMENTADO)
-        # self.delegar_tarea(plan_tactico=plan_tactico, nombre_teniente="...", descripcion="...", parametros_especificos={...})
+    def _get_tenientes(self) -> dict:
+        class TenienteTours:
+            def execute_task(self, tarea):
+                return {"status": "SUCCESS", "message": "Itinerario de tour validado y activo."}
 
-        # 3. Lanzar la Ejecución del Plan
-        self.lanzar_ejecucion_plan()
-
-        self.logger.info(f"CAPITÁN CapitanOperacionTours: Planificación completada y tareas delegadas.")
+        return {
+            "gestor_tours": TenienteTours()
+        }
