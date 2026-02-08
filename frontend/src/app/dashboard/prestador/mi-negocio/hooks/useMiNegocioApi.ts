@@ -119,6 +119,19 @@ export function useMiNegocioApi() {
     return makeRequest(() => financieroEndpoints.getTesoreria().then(res => res.data));
   }, [makeRequest]);
 
+  // --- API SG-SST ---
+  const getSSTRisks = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTRisks().then(res => res.data));
+  }, [makeRequest]);
+
+  const getSSTIncidents = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTIncidents().then(res => res.data));
+  }, [makeRequest]);
+
+  const reportSSTIncident = useCallback(async (data: any) => {
+    return makeRequest(() => operativoEndpoints.reportSSTIncident(data).then(res => res.data), "Incidente reportado exitosamente.");
+  }, [makeRequest]);
+
   // --- API Archivística ---
   const getArchivisticaDocumentos = useCallback(async () => {
     return makeRequest(() => archivisticaEndpoints.getDocumentos().then(res => res.data));
@@ -184,6 +197,9 @@ export function useMiNegocioApi() {
     getProyecciones,
     getRiesgos,
     getTesoreria,
+    getSSTRisks,
+    getSSTIncidents,
+    reportSSTIncident,
     getArchivisticaDocumentos,
     getEmpleados,
     createEmpleado,

@@ -24,4 +24,7 @@ urlpatterns = [
 
     # Gestión Archivística
     path('archivistica/', include('apps.prestadores.mi_negocio.gestion_archivistica.urls')),
+
+    # Seguridad y Salud en el Trabajo (SG-SST)
+    path('operativa/sst/', include('apps.prestadores.mi_negocio.gestion_operativa.sg_sst.urls')),
 ]

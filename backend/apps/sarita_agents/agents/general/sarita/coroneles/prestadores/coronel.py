@@ -104,6 +104,10 @@ from .capitanes.gestion_financiera.capitanes_especializados import (
 from .capitanes.gestion_operativa.sg_sst.capitan_sst import CapitanSST
 from .capitanes.gestion_operativa.sg_sst.capitan_incidentes_sst import CapitanIncidentesSST
 from .capitanes.gestion_operativa.sg_sst.capitan_normativo_sst import CapitanNormativoSST
+from .capitanes.gestion_operativa.sg_sst.capitanes_sst_especializados import (
+    CapitanIdentificacionPeligros, CapitanEvaluacionRiesgos, CapitanSaludOcupacional,
+    CapitanRiesgoPsicosocial, CapitanEmergencias, CapitanCapacitacionSST, CapitanVigilanciaSST
+)
 from .capitanes.gestion_contable.nomina.capitan_nomina import CapitanNomina
 from .capitanes.gestion_contable.nomina.capitan_liquidacion_contratos import CapitanLiquidacionContratos
 from .capitanes.gestion_contable.nomina.capitan_legal_laboral import CapitanLegalLaboral
@@ -223,6 +227,13 @@ class PrestadoresCoronel(CoronelTemplate):
             "sst_general": CapitanSST(coronel=self),
             "sst_incidentes": CapitanIncidentesSST(coronel=self),
             "sst_normativo": CapitanNormativoSST(coronel=self),
+            "sst_peligros": CapitanIdentificacionPeligros(coronel=self),
+            "sst_evaluacion": CapitanEvaluacionRiesgos(coronel=self),
+            "sst_salud": CapitanSaludOcupacional(coronel=self),
+            "sst_psicosocial": CapitanRiesgoPsicosocial(coronel=self),
+            "sst_emergencias": CapitanEmergencias(coronel=self),
+            "sst_capacitacion": CapitanCapacitacionSST(coronel=self),
+            "sst_vigilancia": CapitanVigilanciaSST(coronel=self),
             "nomina_general": CapitanNomina(coronel=self),
             "nomina_liquidacion": CapitanLiquidacionContratos(coronel=self),
             "nomina_legal": CapitanLegalLaboral(coronel=self),
@@ -288,6 +299,11 @@ class PrestadoresCoronel(CoronelTemplate):
             "GENERATE_BALANCE": "balance_general",
             "GENERATE_CASH_FLOW": "flujo_efectivo",
             "GENERATE_EQUITY_CHANGE": "cambios_patrimonio",
+            "IDENTIFY_HAZARDS": "sst_peligros",
+            "EVALUATE_SST_RISK": "sst_evaluacion",
+            "REGISTER_SST_INCIDENT": "sst_incidentes",
+            "MANAGE_SST_EMERGENCY": "sst_emergencias",
+            "AUDIT_SST_COMPLIANCE": "sst_normativo",
         }
 
         cap_key = mapping.get(m_type)
