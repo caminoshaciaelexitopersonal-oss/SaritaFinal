@@ -32,10 +32,25 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='users', null=True, blank=True)
-    roles = models.ManyToManyField(Role, related_name='users', blank=True)
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='comercial_users', null=True, blank=True)
+    roles = models.ManyToManyField(Role, related_name='comercial_users', blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='comercial_user_set',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='comercial_user_set',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )
 
     objects = UserManager()
 
@@ -47,20 +62,20 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 # --- Modelos para el Arquitecto de Embudos ---
 
-class Categoria(models.Model):
+class ComercialCategoria(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='categorias')
     nombre = models.CharField(max_length=255)
     def __str__(self):
         return self.nombre
 
-class Subcategoria(models.Model):
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='subcategorias')
+class ComercialSubcategoria(models.Model):
+    categoria = models.ForeignKey(ComercialCategoria, on_delete=models.CASCADE, related_name='subcategorias')
     nombre = models.CharField(max_length=255)
     def __str__(self):
         return f"{self.categoria.nombre} > {self.nombre}"
 
 class LandingPage(models.Model):
-    subcategoria = models.ForeignKey(Subcategoria, on_delete=models.CASCADE, related_name='landing_pages')
+    subcategoria = models.ForeignKey(ComercialSubcategoria, on_delete=models.CASCADE, related_name='landing_pages')
     slug = models.SlugField(unique=True)
     estado = models.CharField(max_length=10, choices=[('borrador', 'Borrador'), ('publicado', 'Publicado')], default='borrador')
     def __str__(self):

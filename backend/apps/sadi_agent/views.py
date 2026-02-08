@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, serializers
+from drf_spectacular.utils import extend_schema
 from .semantic_engine import SemanticEngine
 from apps.sarita_agents.orchestrator import sarita_orchestrator
 import logging
@@ -13,6 +14,7 @@ class MarketingVoiceIntentView(APIView):
     """
     permission_classes = [] # Público para prospectos
 
+    @extend_schema(responses={202: serializers.JSONField()})
     def post(self, request):
         text = request.data.get("text")
         if not text:

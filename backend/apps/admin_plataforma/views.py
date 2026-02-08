@@ -1,8 +1,9 @@
 
-from rest_framework import viewsets
+from rest_framework import viewsets, serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
+from drf_spectacular.utils import extend_schema
 from .services.gestion_plataforma_service import GestionPlataformaService
 from .services.governance_kernel import GovernanceKernel
 from .models import Plan, Suscripcion
@@ -17,6 +18,7 @@ class MetaStandardView(APIView):
     """
     permission_classes = [IsAdminUser]
 
+    @extend_schema(responses={200: serializers.JSONField()})
     def get(self, request):
         kernel = GovernanceKernel(user=request.user)
         metadata = kernel.get_meta_standard_metadata()
@@ -27,6 +29,7 @@ class SaritaProfileView(APIView):
     Vista para obtener el perfil empresarial de la Plataforma Sarita.
     """
     permission_classes = [IsAdminUser]
+    serializer_class = PerfilSerializer
 
     def get(self, request):
         """

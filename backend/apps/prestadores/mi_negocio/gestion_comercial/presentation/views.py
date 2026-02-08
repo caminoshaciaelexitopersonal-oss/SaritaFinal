@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from .serializers import (
     FacturaVentaListSerializer,
     FacturaVentaDetailSerializer,
+    FacturaVentaWriteSerializer,
     OperacionComercialSerializer
 )
 from ..domain.models import OperacionComercial, FacturaVenta
@@ -48,13 +49,15 @@ class OperacionComercialViewSet(viewsets.ModelViewSet):
         return Response(OperacionComercialSerializer(operacion).data)
 
 
-class FacturaVentaViewSet(viewsets.ReadOnlyModelViewSet):
+class FacturaVentaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
 
     def get_serializer_class(self):
         if self.action == 'list':
             return FacturaVentaListSerializer
-        return FacturaVentaDetailSerializer
+        if self.action == 'retrieve':
+            return FacturaVentaDetailSerializer
+        return FacturaVentaWriteSerializer
 
     def get_queryset(self):
         if hasattr(self.request.user, 'perfil_prestador'):

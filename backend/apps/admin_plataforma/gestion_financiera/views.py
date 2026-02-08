@@ -2,11 +2,11 @@ from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from apps.admin_plataforma.gestion_financiera.models import CuentaBancaria, OrdenPago
-from .serializers import CuentaBancariaSerializer
+from .serializers import AdminCuentaBancariaSerializer, AdminOrdenPagoSerializer
 
 class CuentaBancariaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = CuentaBancaria.objects.all()
-    serializer_class = CuentaBancariaSerializer
+    serializer_class = AdminCuentaBancariaSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):
@@ -16,5 +16,5 @@ class CuentaBancariaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
 
 class OrdenPagoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = OrdenPago.objects.all()
-    # serializer_class = OrdenPagoSerializer # Add if exists
+    serializer_class = AdminOrdenPagoSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]

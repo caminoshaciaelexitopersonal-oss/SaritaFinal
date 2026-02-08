@@ -27,7 +27,7 @@ FIELD_ENCRYPTION_KEY = os.environ.get(
 
 DEBUG = True
 
-ALLOWED_HOSTS_str = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,.localhost")
+ALLOWED_HOSTS_str = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,.localhost,testserver")
 ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_str.split(",")]
 
 # --- CSRF y Seguridad ---

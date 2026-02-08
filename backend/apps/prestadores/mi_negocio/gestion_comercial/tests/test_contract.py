@@ -43,11 +43,35 @@ class ContractValidationTests(APITestCase):
         )
 
         # 4. El modelo debe incluir el nuevo estado 'COMERCIAL_CONFIRMADA'
-        factura_detail_schema_ref = schema['paths'][facturas_path]['get']['responses']['200']['content']['application/json']['schema']['properties']['results']['items']['$ref']
-        factura_detail_component = factura_detail_schema_ref.split('/')[-1]
-        factura_detail_properties = schema['components']['schemas'][factura_detail_component]['properties']
+        response_schema = schema['paths'][facturas_path]['get']['responses']['200']['content']['application/json']['schema']
 
-        estado_enum = factura_detail_properties['estado']['enum']
+        # Resolver paginación si existe
+        if '$ref' in response_schema:
+            comp_name = response_schema['$ref'].split('/')[-1]
+            response_schema = schema['components']['schemas'][comp_name]
+
+        if 'properties' in response_schema and 'results' in response_schema['properties']:
+            item_schema = response_schema['properties']['results']['items']
+        else:
+            item_schema = response_schema
+
+        if '$ref' in item_schema:
+            comp_name = item_schema['$ref'].split('/')[-1]
+            factura_detail_properties = schema['components']['schemas'][comp_name]['properties']
+        else:
+            factura_detail_properties = item_schema['properties']
+
+        print(f"DEBUG: estado schema: {factura_detail_properties['estado']}")
+
+        estado_field = factura_detail_properties['estado']
+        if 'allOf' in estado_field:
+            estado_field = estado_field['allOf'][0]
+
+        if '$ref' in estado_field:
+            comp_name = estado_field['$ref'].split('/')[-1]
+            estado_field = schema['components']['schemas'][comp_name]
+
+        estado_enum = estado_field['enum']
         self.assertIn(
             'COMERCIAL_CONFIRMADA',
             estado_enum,

@@ -2,14 +2,14 @@ from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from apps.admin_plataforma.gestion_operativa.modulos_genericos.inventario.models import InventoryItem
-from .serializers import InventoryItemSerializer
+from .serializers import AdminInventoryItemSerializer
 
 class InventoryItemViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para que el Super Admin gestione el inventario sistémico.
     """
     queryset = InventoryItem.objects.all()
-    serializer_class = InventoryItemSerializer
+    serializer_class = AdminInventoryItemSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):

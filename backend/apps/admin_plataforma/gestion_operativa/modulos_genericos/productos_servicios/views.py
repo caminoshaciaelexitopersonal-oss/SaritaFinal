@@ -2,14 +2,14 @@ from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from .models import Product
-from .serializers import ProductSerializer
+from .serializers import AdminProductSerializer
 
 class ProductViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para que el Super Admin gestione los productos/servicios sistémicos.
     """
     queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    serializer_class = AdminProductSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):

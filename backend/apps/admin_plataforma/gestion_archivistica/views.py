@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from apps.admin_plataforma.gestion_archivistica.models import Document, DocumentVersion, Process, ProcessType, DocumentType
-from .serializers import DocumentSerializer, ProcessSerializer
+from .serializers import DocumentSerializer, AdminProcessSerializer
 
 class DocumentViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Document.objects.all()
@@ -16,12 +16,12 @@ class DocumentViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
 
 class ProcessViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Process.objects.all()
-    serializer_class = ProcessSerializer
+    serializer_class = AdminProcessSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
 class ProcessTypeViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = ProcessType.objects.all()
-    serializer_class = ProcessSerializer # Placeholder serializer or update it
+    serializer_class = AdminProcessSerializer # Placeholder serializer or update it
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
 class DocumentTypeViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):

@@ -1,7 +1,10 @@
 # funnels/runtime_models.py
 import uuid
 from django.db import models
-from infrastructure.models import Tenant, User
+try:
+    from infrastructure.models import Tenant, User
+except (ImportError, ValueError):
+    from ..infrastructure.models import Tenant, User
 from .models import Funnel, FunnelVersion
 
 class Lead(models.Model):

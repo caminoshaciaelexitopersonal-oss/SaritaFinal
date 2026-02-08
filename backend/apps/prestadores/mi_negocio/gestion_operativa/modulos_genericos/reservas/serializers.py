@@ -10,31 +10,34 @@ class PoliticaCancelacionSerializer(serializers.ModelSerializer):
         read_only_fields = ('perfil',)
 
 class ReservaServicioAdicionalSerializer(serializers.ModelSerializer):
+    servicio_id = serializers.UUIDField(source='servicio_ref_id')
+
     class Meta:
         model = ReservaServicioAdicional
-        fields = ('servicio', 'cantidad', 'precio_unitario')
+        fields = ('servicio_id', 'cantidad', 'precio_unitario')
 
 class ReservaSerializer(serializers.ModelSerializer):
     servicios_adicionales = ReservaServicioAdicionalSerializer(many=True, required=False)
     # producto_info = ProductSerializer(source='producto', read_only=True)
-    cliente_info = ClienteSerializer(source='cliente', read_only=True)
+    cliente_id = serializers.UUIDField(source='cliente_ref_id')
+    # cliente_info = ClienteSerializer(source='cliente', read_only=True)
 
     class Meta:
         model = Reserva
         fields = [
-            'id', 'cliente', 'estado',
+            'id', 'cliente_id', 'estado',
             'fecha_inicio', 'fecha_fin',
             'precio_total', 'deposito_pagado',
             'notas',
             'servicios_adicionales',
-            'cliente_info'
+            # 'cliente_info'
         ]
         read_only_fields = ('perfil',)
 
     def create(self, validated_data):
         servicios_data = validated_data.pop('servicios_adicionales', [])
         # TODO: Lógica para calcular costo_total basado en costo_base, impuestos y servicios
-        validated_data['costo_total'] = validated_data.get('costo_base', 0) + validated_data.get('impuestos', 0)
+        # validated_data['costo_total'] = validated_data.get('costo_base', 0) + validated_data.get('impuestos', 0)
         reserva = Reserva.objects.create(**validated_data)
         for servicio_data in servicios_data:
             ReservaServicioAdicional.objects.create(reserva=reserva, **servicio_data)

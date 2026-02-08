@@ -1,7 +1,8 @@
 
-from rest_framework import viewsets, status, permissions
+from rest_framework import viewsets, status, permissions, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 from .models import Payment
 from .serializers import PaymentSerializer, InitiatePaymentSerializer
 from .services import PaymentService
@@ -47,6 +48,7 @@ class PaymentViewSet(viewsets.GenericViewSet):
 class PaymentWebhookViewSet(viewsets.ViewSet):
     permission_classes = [permissions.AllowAny]
 
+    @extend_schema(responses={200: serializers.JSONField()})
     @action(detail=False, methods=['post'], url_path='confirm')
     def confirm_payment(self, request):
         transaction_id = request.data.get('transaction_id')

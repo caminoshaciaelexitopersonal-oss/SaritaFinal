@@ -12,15 +12,13 @@ class PerfilSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProviderProfile
         fields = [
-            'id', 'usuario', 'nombre_comercial', 'provider_type', 'telefono_principal',
-            'email_comercial', 'direccion', 'is_verified'
+            'id', 'usuario', 'nombre_negocio', 'nit'
         ]
-        read_only_fields = ['usuario', 'is_verified']
+        read_only_fields = ['usuario']
 
 class PerfilUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProviderProfile
         fields = [
-            'nombre_comercial', 'telefono_principal', 'email_comercial',
-            'direccion'
+            'nombre_negocio', 'nit'
         ]

@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from apps.admin_plataforma.gestion_operativa.modulos_especializados.guias.models import Skill, TourDetail
-from .serializers import SkillSerializer
+from .serializers import AdminSkillSerializer
 # Asumimos que TeamMember y su serializer existirán
 # from ..personal.models import TeamMember
 # from ..personal.serializers import TeamMemberSerializer
@@ -13,7 +13,7 @@ from api.permissions import IsSuperAdmin
 
 class SkillViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Skill.objects.all()
-    serializer_class = SkillSerializer
+    serializer_class = AdminSkillSerializer
 
 class TourProductViewSet(ProductViewSet):
     """

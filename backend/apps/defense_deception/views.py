@@ -31,6 +31,7 @@ class AdversarialProfileViewSet(viewsets.ReadOnlyModelViewSet):
 
 class DisuasionStatsView(APIView):
     permission_classes = [IsAdminUser]
+    serializer_class = DisuasionMetricSerializer
     def get(self, request):
         from .services import AdversarialProfilerService
         AdversarialProfilerService.update_global_metrics()
