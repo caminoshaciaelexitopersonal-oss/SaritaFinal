@@ -31,6 +31,10 @@ from .capitanes.gestion_comercial.capitan_auditoria_ventas import CapitanAuditor
 from .capitanes.gestion_comercial.capitan_prevencion_fraude import CapitanPrevencionFraude
 from .capitanes.gestion_comercial.capitan_comercial_estrategico import CapitanComercialEstrategico
 from .capitanes.gestion_comercial.capitan_gestion_comercial_general import CapitanGestionComercialGeneral
+from .capitanes.gestion_comercial.capitan_comercial_hotelero import CapitanComercialHotelero
+from .capitanes.gestion_comercial.capitan_comercial_gastronomico import CapitanComercialGastronomico
+from .capitanes.gestion_comercial.capitan_comercial_turistico_tours import CapitanComercialTuristicoTours
+from .capitanes.gestion_comercial.capitan_comercial_transporte import CapitanComercialTransporte
 
 # --- OTROS DOMINIOS ---
 from .capitanes.onboarding_prestador_capitan import CapitanOnboardingPrestador
@@ -38,22 +42,72 @@ from .capitanes.gestion_archivistica.capitan_archivistico import CapitanArchivis
 from .capitanes.gestion_archivistica.capitan_integridad_documental import CapitanIntegridadDocumental
 from .capitanes.gestion_archivistica.capitan_retencion_normativa import CapitanRetencionNormativa
 from .capitanes.gestion_archivistica.capitan_auditoria_documental import CapitanAuditoriaDocumental
+from .capitanes.gestion_archivistica.capitan_busqueda_documental import CapitanBusquedaDocumental
+from .capitanes.gestion_archivistica.capitan_captura_y_creacion_documental import CapitanCapturaYCreacionDocumental
+from .capitanes.gestion_archivistica.capitan_cumplimiento_normativo import CapitanCumplimientoNormativo
+from .capitanes.gestion_archivistica.capitan_gestion_documental_general import CapitanGestionDocumentalGeneral
+from .capitanes.gestion_archivistica.capitan_politicas_retencion import CapitanPoliticasRetencion
+from .capitanes.gestion_archivistica.capitan_seguridad_documental import CapitanSeguridadDocumental
+from .capitanes.gestion_archivistica.capitan_trazabilidad_documental import CapitanTrazabilidadDocumental
+from .capitanes.gestion_archivistica.capitan_documentos_legales import CapitanDocumentosLegales
+from .capitanes.gestion_archivistica.capitan_documentos_contables import CapitanDocumentosContables
+from .capitanes.gestion_archivistica.capitan_documentos_operativos import CapitanDocumentosOperativos
+from .capitanes.gestion_archivistica.capitan_documentos_sst import CapitanDocumentosSST
+from .capitanes.gestion_archivistica.capitan_documentos_nomina import CapitanDocumentosNomina
+from .capitanes.gestion_archivistica.capitan_documentos_publicos import CapitanDocumentosPublicos
+from .capitanes.gestion_archivistica.capitan_documentos_confidenciales import CapitanDocumentosConfidenciales
+from .capitanes.gestion_archivistica.capitan_conservacion_historica import CapitanConservacionHistorica
+from .capitanes.gestion_archivistica.capitan_disposicion_final import CapitanDisposicionFinal
+from .capitanes.gestion_archivistica.capitan_notarizacion_blockchain import CapitanNotarizacionBlockchain
 from .capitanes.gestion_operativa.capitan_gestion_operativa_general import CapitanGestionOperativaGeneral
 from .capitanes.gestion_operativa.capitan_control_operativo import CapitanControlOperativo
 from .capitanes.gestion_operativa.capitan_incidentes_operativos import CapitanIncidentesOperativos
 from .capitanes.gestion_operativa.capitan_calidad_y_cumplimiento import CapitanCalidadYCumplimiento
+from .capitanes.gestion_operativa.capitan_flujos_secuenciales import CapitanFlujosSecuenciales
+from .capitanes.gestion_operativa.capitan_flujos_paralelos import CapitanFlujosParalelos
+from .capitanes.gestion_operativa.capitan_validacion_ordenes import CapitanValidacionOrdenes
+from .capitanes.gestion_operativa.capitan_enrutamiento_ordenes import CapitanEnrutamientoOrdenes
+from .capitanes.gestion_operativa.capitan_priorizacion_tareas import CapitanPriorizacionTareas
+from .capitanes.gestion_operativa.capitan_asignacion_tareas import CapitanAsignacionTareas
+from .capitanes.gestion_operativa.capitan_transiciones_estado import CapitanTransicionesEstado
+from .capitanes.gestion_operativa.capitan_bloqueos_operativos import CapitanBloqueosOperativos
+from .capitanes.gestion_operativa.capitan_gestion_reintentos import CapitanGestionReintentos
+from .capitanes.gestion_operativa.capitan_fallback_operativo import CapitanFallbackOperativo
+from .capitanes.gestion_operativa.capitan_escalamiento_excepciones import CapitanEscalamientoExcepciones
+from .capitanes.gestion_operativa.capitan_coordinacion_guias import CapitanCoordinacionGuias
+from .capitanes.gestion_operativa.capitan_calidad_experiencias import CapitanCalidadExperiencias
+from .capitanes.gestion_operativa.capitan_rutas_estrategicas import CapitanRutasEstrategicas
+from .capitanes.gestion_operativa.capitan_despacho_vehiculos import CapitanDespachoVehiculos
+from .capitanes.gestion_operativa.capitan_monitoreo_zonas import CapitanMonitoreoZonas
+from .capitanes.gestion_operativa.capitan_protocolos_emergencia import CapitanProtocolosEmergencia
+from .capitanes.gestion_operativa.capitan_atencion_digital import CapitanAtencionDigital
 from .capitanes.gestion_contable.capitan_contabilidad_general import CapitanContabilidadGeneral
 from .capitanes.gestion_contable.capitan_asientos_automaticos import CapitanAsientosAutomaticos
 from .capitanes.gestion_contable.capitan_cierre_contable import CapitanCierreContable
 from .capitanes.gestion_contable.capitan_auditoria_contable import CapitanAuditoriaContable
+from .capitanes.gestion_contable.capitan_reconocimiento_ingresos import CapitanReconocimientoIngresos
+from .capitanes.gestion_contable.capitan_impuestos_iva import CapitanImpuestosIVA
+from .capitanes.gestion_contable.capitan_provisiones_contables import CapitanProvisionesContables
+from .capitanes.gestion_contable.capitan_conciliacion_automatica import CapitanConciliacionAutomatica
+from .capitanes.gestion_contable.capitan_reportes_normativos import CapitanReportesNormativos
 from .capitanes.gestion_financiera.capitan_base import CapitanFinancieraBase # Use base if specific missing
 from .capitanes.gestion_financiera.capitan_gestion_financiera import CapitanGestionFinanciera
 from .capitanes.gestion_financiera.capitan_flujo_caja import CapitanFlujoCaja
 from .capitanes.gestion_financiera.capitan_riesgo_financiero import CapitanRiesgoFinanciero
 from .capitanes.gestion_financiera.capitan_ratios_y_formulas_financieras import CapitanRatiosYFormulasFinancieras
+from .capitanes.gestion_financiera.capitanes_especializados import (
+    CapitanTesoreria, CapitanCustodiaFondos, CapitanLiquidez, CapitanPagos,
+    CapitanDistribucion, CapitanReservas, CapitanProyecciones, CapitanCumplimientoFinanciero,
+    CapitanEstadoResultados, CapitanBalanceGeneral, CapitanFlujoEfectivo,
+    CapitanCambiosPatrimonio, CapitanConciliacionBancaria, CapitanProvisionesFinancieras
+)
 from .capitanes.gestion_operativa.sg_sst.capitan_sst import CapitanSST
 from .capitanes.gestion_operativa.sg_sst.capitan_incidentes_sst import CapitanIncidentesSST
 from .capitanes.gestion_operativa.sg_sst.capitan_normativo_sst import CapitanNormativoSST
+from .capitanes.gestion_operativa.sg_sst.capitanes_sst_especializados import (
+    CapitanIdentificacionPeligros, CapitanEvaluacionRiesgos, CapitanSaludOcupacional,
+    CapitanRiesgoPsicosocial, CapitanEmergencias, CapitanCapacitacionSST, CapitanVigilanciaSST
+)
 from .capitanes.gestion_contable.nomina.capitan_nomina import CapitanNomina
 from .capitanes.gestion_contable.nomina.capitan_liquidacion_contratos import CapitanLiquidacionContratos
 from .capitanes.gestion_contable.nomina.capitan_legal_laboral import CapitanLegalLaboral
@@ -93,6 +147,10 @@ class PrestadoresCoronel(CoronelTemplate):
             "prevencion_fraude": CapitanPrevencionFraude(coronel=self),
             "comercial_estrategico": CapitanComercialEstrategico(coronel=self),
             "comercial_general": CapitanGestionComercialGeneral(coronel=self),
+            "comercial_hotel": CapitanComercialHotelero(coronel=self),
+            "comercial_gastronomia": CapitanComercialGastronomico(coronel=self),
+            "comercial_tours": CapitanComercialTuristicoTours(coronel=self),
+            "comercial_transporte": CapitanComercialTransporte(coronel=self),
 
             # Otros
             "onboarding": CapitanOnboardingPrestador(coronel=self),
@@ -100,21 +158,82 @@ class PrestadoresCoronel(CoronelTemplate):
             "integridad_documental": CapitanIntegridadDocumental(coronel=self),
             "retencion_normativa": CapitanRetencionNormativa(coronel=self),
             "auditoria_documental": CapitanAuditoriaDocumental(coronel=self),
+            "busqueda_documental": CapitanBusquedaDocumental(coronel=self),
+            "captura_documental": CapitanCapturaYCreacionDocumental(coronel=self),
+            "cumplimiento_archivistico": CapitanCumplimientoNormativo(coronel=self),
+            "gestion_documental_general": CapitanGestionDocumentalGeneral(coronel=self),
+            "politicas_retencion": CapitanPoliticasRetencion(coronel=self),
+            "seguridad_documental": CapitanSeguridadDocumental(coronel=self),
+            "trazabilidad_documental": CapitanTrazabilidadDocumental(coronel=self),
+            "documentos_legales": CapitanDocumentosLegales(coronel=self),
+            "documentos_contables": CapitanDocumentosContables(coronel=self),
+            "documentos_operativos": CapitanDocumentosOperativos(coronel=self),
+            "documentos_sst": CapitanDocumentosSST(coronel=self),
+            "documentos_nomina": CapitanDocumentosNomina(coronel=self),
+            "documentos_publicos": CapitanDocumentosPublicos(coronel=self),
+            "documentos_confidenciales": CapitanDocumentosConfidenciales(coronel=self),
+            "conservacion_historica": CapitanConservacionHistorica(coronel=self),
+            "disposicion_final": CapitanDisposicionFinal(coronel=self),
+            "notarizacion_blockchain": CapitanNotarizacionBlockchain(coronel=self),
             "operativo_general": CapitanGestionOperativaGeneral(coronel=self),
             "seguimiento_operativo": CapitanControlOperativo(coronel=self),
             "incidentes_operativos": CapitanIncidentesOperativos(coronel=self),
             "cierre_operativo": CapitanCalidadYCumplimiento(coronel=self),
+            "flujos_secuenciales": CapitanFlujosSecuenciales(coronel=self),
+            "flujos_paralelos": CapitanFlujosParalelos(coronel=self),
+            "validacion_ordenes": CapitanValidacionOrdenes(coronel=self),
+            "enrutamiento_ordenes": CapitanEnrutamientoOrdenes(coronel=self),
+            "priorizacion_tareas": CapitanPriorizacionTareas(coronel=self),
+            "asignacion_tareas": CapitanAsignacionTareas(coronel=self),
+            "transiciones_estado": CapitanTransicionesEstado(coronel=self),
+            "bloqueos_operativos": CapitanBloqueosOperativos(coronel=self),
+            "gestion_reintentos": CapitanGestionReintentos(coronel=self),
+            "fallback_operativo": CapitanFallbackOperativo(coronel=self),
+            "escalamiento_excepciones": CapitanEscalamientoExcepciones(coronel=self),
+            "coordinacion_guias": CapitanCoordinacionGuias(coronel=self),
+            "calidad_experiencias": CapitanCalidadExperiencias(coronel=self),
+            "rutas_estrategicas": CapitanRutasEstrategicas(coronel=self),
+            "despacho_vehiculos": CapitanDespachoVehiculos(coronel=self),
+            "monitoreo_zonas": CapitanMonitoreoZonas(coronel=self),
+            "protocolos_emergencia": CapitanProtocolosEmergencia(coronel=self),
+            "atencion_digital": CapitanAtencionDigital(coronel=self),
             "contabilidad_general": CapitanContabilidadGeneral(coronel=self),
             "asientos_automaticos": CapitanAsientosAutomaticos(coronel=self),
             "cierre_contable": CapitanCierreContable(coronel=self),
             "auditoria_contable": CapitanAuditoriaContable(coronel=self),
+            "reconocimiento_ingresos": CapitanReconocimientoIngresos(coronel=self),
+            "impuestos_iva": CapitanImpuestosIVA(coronel=self),
+            "provisiones_contables": CapitanProvisionesContables(coronel=self),
+            "conciliacion_automatica": CapitanConciliacionAutomatica(coronel=self),
+            "reportes_normativos": CapitanReportesNormativos(coronel=self),
             "gestion_financiera": CapitanGestionFinanciera(coronel=self),
             "flujo_caja": CapitanFlujoCaja(coronel=self),
             "riesgo_financiero": CapitanRiesgoFinanciero(coronel=self),
             "indicadores_financieros": CapitanRatiosYFormulasFinancieras(coronel=self),
+            "tesoreria": CapitanTesoreria(coronel=self),
+            "custodia_fondos": CapitanCustodiaFondos(coronel=self),
+            "liquidez": CapitanLiquidez(coronel=self),
+            "pagos_financieros": CapitanPagos(coronel=self),
+            "distribucion_fondos": CapitanDistribucion(coronel=self),
+            "reservas": CapitanReservas(coronel=self),
+            "proyecciones": CapitanProyecciones(coronel=self),
+            "cumplimiento_financiero": CapitanCumplimientoFinanciero(coronel=self),
+            "estado_resultados": CapitanEstadoResultados(coronel=self),
+            "balance_general": CapitanBalanceGeneral(coronel=self),
+            "flujo_efectivo": CapitanFlujoEfectivo(coronel=self),
+            "cambios_patrimonio": CapitanCambiosPatrimonio(coronel=self),
+            "conciliacion_bancaria": CapitanConciliacionBancaria(coronel=self),
+            "provisiones_financieras": CapitanProvisionesFinancieras(coronel=self),
             "sst_general": CapitanSST(coronel=self),
             "sst_incidentes": CapitanIncidentesSST(coronel=self),
             "sst_normativo": CapitanNormativoSST(coronel=self),
+            "sst_peligros": CapitanIdentificacionPeligros(coronel=self),
+            "sst_evaluacion": CapitanEvaluacionRiesgos(coronel=self),
+            "sst_salud": CapitanSaludOcupacional(coronel=self),
+            "sst_psicosocial": CapitanRiesgoPsicosocial(coronel=self),
+            "sst_emergencias": CapitanEmergencias(coronel=self),
+            "sst_capacitacion": CapitanCapacitacionSST(coronel=self),
+            "sst_vigilancia": CapitanVigilanciaSST(coronel=self),
             "nomina_general": CapitanNomina(coronel=self),
             "nomina_liquidacion": CapitanLiquidacionContratos(coronel=self),
             "nomina_legal": CapitanLegalLaboral(coronel=self),
@@ -142,6 +261,49 @@ class PrestadoresCoronel(CoronelTemplate):
             "VALIDAR_CUMPLIMIENTO_COMERCIAL": "cumplimiento_comercial",
             "AVANZAR_LEAD": "conversion",
             "ANALISIS_ESTRATEGICO_COMERCIAL": "comercial_estrategico",
+            # Archivístico
+            "ARCHIVE_LEAL_DOC": "documentos_legales",
+            "ARCHIVE_ACCOUNTING_DOC": "documentos_contables",
+            "ARCHIVE_OPERATIONAL_DOC": "documentos_operativos",
+            "ARCHIVE_SST_DOC": "documentos_sst",
+            "ARCHIVE_PAYROLL_DOC": "documentos_nomina",
+            "NOTARIZE_DOC": "notarizacion_blockchain",
+            "RETENTION_AUDIT": "politicas_retencion",
+            "DOCUMENT_SEARCH": "busqueda_documental",
+            # Operativo Genérico
+            "EXECUTE_OPERATIONAL_FLOW": "operativo_general",
+            "UPDATE_OPERATIONAL_STATE": "transiciones_estado",
+            "ASSIGN_TASK": "asignacion_tareas",
+            "RETRY_OPERATION": "gestion_reintentos",
+            # Operativo Especializado
+            "COORDINATE_GUIDE": "coordinacion_guias",
+            "AUDIT_QUALITY": "calidad_experiencias",
+            "PLAN_ROUTE": "rutas_estrategicas",
+            "DISPATCH_VEHICLE": "despacho_vehiculos",
+            "MONITOR_ZONE": "monitoreo_zonas",
+            "EMERGENCY_PROTOCOL": "protocolos_emergencia",
+            "DIGITAL_SERVICE": "atencion_digital",
+            # Contable
+            "RECOGNIZE_REVENUE": "reconocimiento_ingresos",
+            "CALCULATE_TAX": "impuestos_iva",
+            "MONTHLY_CLOSE": "cierre_contable",
+            "GENERATE_FINANCIAL_REPORT": "reportes_normativos",
+            "AUDIT_TREASURY": "tesoreria",
+            "MANAGE_CUSTODY": "custodia_fondos",
+            "CHECK_LIQUIDITY": "liquidez",
+            "EXECUTE_PAYMENT": "pagos_financieros",
+            "DISTRIBUTE_FUNDS": "distribucion_fondos",
+            "MANAGE_RESERVES": "reservas",
+            "FORECAST_FINANCE": "proyecciones",
+            "GENERATE_P_L": "estado_resultados",
+            "GENERATE_BALANCE": "balance_general",
+            "GENERATE_CASH_FLOW": "flujo_efectivo",
+            "GENERATE_EQUITY_CHANGE": "cambios_patrimonio",
+            "IDENTIFY_HAZARDS": "sst_peligros",
+            "EVALUATE_SST_RISK": "sst_evaluacion",
+            "REGISTER_SST_INCIDENT": "sst_incidentes",
+            "MANAGE_SST_EMERGENCY": "sst_emergencias",
+            "AUDIT_SST_COMPLIANCE": "sst_normativo",
         }
 
         cap_key = mapping.get(m_type)

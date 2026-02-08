@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Empleado, Contrato, Planilla, NovedadNomina, ConceptoNomina
+from .models import Empleado, Contrato, Planilla, NovedadNomina, ConceptoNomina, DetalleLiquidacion
+from decimal import Decimal
 
 class ContratoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,15 +32,15 @@ class NovedadNominaSerializer(serializers.ModelSerializer):
         fields = ['id', 'empleado', 'concepto', 'concepto_id', 'valor', 'descripcion']
 
 class PlanillaSerializer(serializers.ModelSerializer):
-    novedades = NovedadNominaSerializer(many=True)
+    novedades = NovedadNominaSerializer(many=True, required=False)
 
     class Meta:
         model = Planilla
-        fields = ['id', 'periodo_inicio', 'periodo_fin', 'total_devengado', 'total_deduccion', 'total_neto', 'novedades']
-        read_only_fields = ('total_devengado', 'total_deduccion', 'total_neto')
+        fields = ['id', 'periodo_inicio', 'periodo_fin', 'total_devengado', 'total_deduccion', 'total_neto', 'estado', 'novedades']
+        read_only_fields = ('total_devengado', 'total_deduccion', 'total_neto', 'estado')
 
     def create(self, validated_data):
-        novedades_data = validated_data.pop('novedades')
+        novedades_data = validated_data.pop('novedades', [])
         validated_data['perfil'] = self.context['request'].user.perfil_prestador
         planilla = Planilla.objects.create(**validated_data)
 

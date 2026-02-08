@@ -433,6 +433,47 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.DELEGATED
 ))
 
+# Dominio: Gestión de Nómina
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PAYROLL_RUN_LIQUIDATION",
+    domain="hacienda",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED,
+    required_params=["planilla_id"]
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PAYROLL_AUTHORIZE_PAYMENT",
+    domain="hacienda",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN,
+    required_params=["planilla_id"]
+))
+
+# Dominio: Seguridad y Salud (SG-SST)
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="SST_REGISTER_INCIDENT",
+    domain="seguridad_civil",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.OPERATIONAL,
+    required_params=["tipo", "gravedad", "descripcion"]
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="SST_BLOCK_OPERATION",
+    domain="seguridad_civil",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED,
+    required_params=["proceso_id", "motivo"]
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="SST_UPDATE_RISK_MATRIX",
+    domain="planeacion",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED
+))
+
 # Dominio: FASE LEGADO
 GovernanceKernel.register_intention(GovernanceIntention(
     name="GENERATE_LEGACY_BUNDLE",

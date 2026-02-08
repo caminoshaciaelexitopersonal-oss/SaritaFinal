@@ -7,6 +7,9 @@ export const operativoEndpoints = {
   getProductosServicios: () => httpClient.get('/v1/mi-negocio/operativa/productos-servicios/'),
   getReservas: () => httpClient.get('/v1/mi-negocio/operativa/reservas/'),
   getSST: () => httpClient.get('/v1/mi-negocio/operativa/sst/'),
+  getSSTRisks: () => httpClient.get('/v1/mi-negocio/operativa/sst/matriz-riesgos/'),
+  getSSTIncidents: () => httpClient.get('/v1/mi-negocio/operativa/sst/incidentes-laborales/'),
+  reportSSTIncident: (data: any) => httpClient.post('/v1/mi-negocio/operativa/sst/incidentes-laborales/', data),
   getNomina: () => httpClient.get('/v1/mi-negocio/operativa/nomina/'),
 
   // Módulos Especializados
@@ -14,4 +17,6 @@ export const operativoEndpoints = {
   getRestaurantTables: () => httpClient.get('/v1/mi-negocio/operativa/restaurante/tables/'),
   getVehicles: () => httpClient.get('/v1/mi-negocio/operativa/transporte/vehicles/'),
   getTours: () => httpClient.get('/v1/mi-negocio/operativa/guias/tours/'),
+  getProcesosOperativos: () => httpClient.get('/v1/mi-negocio/operativa/procesos/'),
+  updateProcesoEstado: (id: string, nuevo_estado: string) => httpClient.post(`/v1/mi-negocio/operativa/procesos/${id}/avanzar_estado/`, { nuevo_estado }),
 };
