@@ -56,9 +56,16 @@ export default function WalletCarteraPage() {
                  </div>
                  <div className="relative z-10">
                     <p className="text-slate-400 font-black uppercase tracking-widest text-xs mb-4">Saldo Disponible</p>
-                    <h2 className="text-6xl font-black text-slate-900 mb-8">${wallet?.balance || '0.00'} <span className="text-xl text-slate-400 font-medium">COP</span></h2>
+                    <h2 className="text-6xl font-black text-slate-900 mb-2">${wallet?.balance || '0.00'} <span className="text-xl text-slate-400 font-medium">COP</span></h2>
 
-                    <div className="flex gap-4">
+                    {wallet?.locked_balance > 0 && (
+                      <div className="flex items-center gap-2 text-amber-600 mb-8 font-bold text-sm bg-amber-50 w-fit px-3 py-1 rounded-full border border-amber-100">
+                        <FiLock size={14} />
+                        ${wallet.locked_balance} Bloqueados por servicios activos
+                      </div>
+                    )}
+
+                    <div className="flex gap-4 mt-8">
                        <Link href="/mi-viaje/monedero/transferir" className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-2xl font-bold text-center transition-all shadow-lg shadow-indigo-200">
                           Transferir
                        </Link>

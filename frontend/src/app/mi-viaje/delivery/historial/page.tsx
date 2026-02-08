@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
-import { FiList, FiArrowLeft, FiMapPin, FiCalendar, FiArrowRight } from 'react-icons/fi';
+import { FiList, FiArrowLeft, FiMapPin, FiCalendar, FiArrowRight, FiStar } from 'react-icons/fi';
+import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { ViewState } from '@/components/ui/ViewState';
 import Link from 'next/link';
@@ -30,6 +31,16 @@ export default function DeliveryHistorialPage() {
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
+
+  const handleRate = async (id: string, rating: number) => {
+    try {
+      await api.post(`/delivery/services/${id}/rate/`, { rating });
+      toast.success("Gracias por su calificación soberana.");
+      fetchHistory();
+    } catch (err) {
+      toast.error("Error al calificar el servicio.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
@@ -88,6 +99,26 @@ export default function DeliveryHistorialPage() {
                              <p className="text-[10px] font-black text-slate-400 uppercase">Costo del Servicio</p>
                              <p className="text-2xl font-black text-slate-900">${item.estimated_price} COP</p>
                           </div>
+                          {item.status === 'COMPLETED' && !item.rating && (
+                            <div className="flex items-center justify-end gap-1">
+                               {[1, 2, 3, 4, 5].map((star) => (
+                                 <button
+                                   key={star}
+                                   onClick={() => handleRate(item.id, star)}
+                                   className="text-slate-300 hover:text-amber-400 transition-colors"
+                                 >
+                                   <FiStar />
+                                 </button>
+                               ))}
+                            </div>
+                          )}
+
+                          {item.rating && (
+                            <div className="flex items-center justify-end gap-1 text-amber-500 font-bold text-xs uppercase tracking-widest">
+                               {item.rating} <FiStar fill="currentColor" />
+                            </div>
+                          )}
+
                           <Link
                              href={`/mi-viaje/delivery/estado?id=${item.id}`}
                              className="bg-slate-900 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors"

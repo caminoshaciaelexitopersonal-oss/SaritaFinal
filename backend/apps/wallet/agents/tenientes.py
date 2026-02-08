@@ -4,7 +4,8 @@ from .sargentos import (
     SargentoRegistroMovimiento,
     SargentoCalculoSaldo,
     SargentoEscrituraContable,
-    SargentoBitacoraSoberana
+    SargentoBitacoraSoberana,
+    SargentoOperacionBalance
 )
 
 logger = logging.getLogger(__name__)
@@ -12,8 +13,12 @@ logger = logging.getLogger(__name__)
 class TenienteValidacionSaldo(TenienteTemplate):
     def perform_action(self, parametros: dict):
         sargento = SargentoCalculoSaldo()
-        balance = sargento.execute(parametros.get("wallet_id"))
-        return {"current_balance": float(balance)}
+        res = sargento.execute(parametros.get("wallet_id"))
+        return {
+            "balance": float(res["balance"]),
+            "locked_balance": float(res["locked_balance"]),
+            "total": float(res["total"])
+        }
 
 class TenienteAutorizacionTransferencias(TenienteTemplate):
     def perform_action(self, parametros: dict):
@@ -38,3 +43,17 @@ class TenienteEvidenciasFinancieras(TenienteTemplate):
         sargento_bit = SargentoBitacoraSoberana()
         entry_id = sargento_bit.execute(parametros)
         return {"audit_entry": entry_id, "integrity": "VERIFIED"}
+
+class TenienteBloqueoFondos(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        sargento = SargentoOperacionBalance()
+        parametros["operation"] = "lock"
+        sargento.execute(parametros)
+        return {"status": "LOCKED", "amount": parametros.get("amount")}
+
+class TenienteLiberacionFondos(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        sargento = SargentoOperacionBalance()
+        parametros["operation"] = "unlock"
+        sargento.execute(parametros)
+        return {"status": "UNLOCKED", "amount": parametros.get("amount")}

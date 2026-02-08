@@ -11,6 +11,8 @@ export default function WalletTransaccionesPage() {
   const { token } = useAuth();
   const router = useRouter();
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [filteredTransactions, setFilteredTransactions] = useState<any[]>([]);
+  const [filter, setFilter] = useState('ALL');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +21,9 @@ export default function WalletTransaccionesPage() {
     setIsLoading(true);
     try {
       const response = await api.get('/wallet/transactions/');
-      setTransactions(response.data.results || []);
+      const data = response.data.results || [];
+      setTransactions(data);
+      setFilteredTransactions(data);
     } catch (err) {
       setError("Error al cargar el historial de transacciones.");
     } finally {
@@ -30,6 +34,14 @@ export default function WalletTransaccionesPage() {
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
+
+  useEffect(() => {
+    if (filter === 'ALL') {
+      setFilteredTransactions(transactions);
+    } else {
+      setFilteredTransactions(transactions.filter(tx => tx.type === filter));
+    }
+  }, [filter, transactions]);
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -48,7 +60,21 @@ export default function WalletTransaccionesPage() {
            </div>
         </div>
 
-        <ViewState isLoading={isLoading} error={error} isEmpty={transactions.length === 0}>
+        <div className="flex gap-2 bg-white p-2 rounded-2xl border border-slate-100 shadow-sm w-fit">
+           {['ALL', 'DEPOSIT', 'PAYMENT', 'REFUND'].map((f) => (
+             <button
+               key={f}
+               onClick={() => setFilter(f)}
+               className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-widest transition-all ${
+                 filter === f ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-slate-400 hover:text-slate-600'
+               }`}
+             >
+               {f}
+             </button>
+           ))}
+        </div>
+
+        <ViewState isLoading={isLoading} error={error} isEmpty={filteredTransactions.length === 0}>
            <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
               <div className="overflow-x-auto">
                  <table className="w-full text-left">
@@ -62,7 +88,7 @@ export default function WalletTransaccionesPage() {
                        </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
-                       {transactions.map((tx: any) => (
+                       {filteredTransactions.map((tx: any) => (
                           <tr key={tx.id} className="hover:bg-slate-50 transition-colors">
                              <td className="px-8 py-6">
                                 <p className="text-sm font-bold text-slate-900">{new Date(tx.timestamp).toLocaleString()}</p>

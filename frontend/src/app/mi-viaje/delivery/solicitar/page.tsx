@@ -14,8 +14,22 @@ export default function SolicitarDeliveryPage() {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [vehicleType, setVehicleType] = useState('MOTO');
+  const [companies, setCompanies] = useState<any[]>([]);
+  const [selectedCompany, setSelectedCompany] = useState('');
   const [estimatedPrice, setEstimatedPrice] = useState(15000);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const res = await api.get('/delivery/companies/');
+        setCompanies(res.data.results || []);
+      } catch (err) {
+        console.error("Error fetching delivery companies", err);
+      }
+    };
+    fetchCompanies();
+  }, []);
 
   const handleRequest = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +41,7 @@ export default function SolicitarDeliveryPage() {
         origin_address: origin,
         destination_address: destination,
         vehicle_type: vehicleType,
+        delivery_company: selectedCompany || null,
         estimated_price: estimatedPrice
       });
 
@@ -86,6 +101,20 @@ export default function SolicitarDeliveryPage() {
                        />
                     </div>
                  </div>
+              </div>
+
+              <div className="space-y-4">
+                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Empresa (Opcional)</label>
+                 <select
+                    value={selectedCompany}
+                    onChange={(e) => setSelectedCompany(e.target.value)}
+                    className="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
+                 >
+                    <option value="">Cualquier empresa disponible</option>
+                    {companies.map(c => (
+                       <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                 </select>
               </div>
 
               <div className="space-y-4">

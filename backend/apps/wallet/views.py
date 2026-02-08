@@ -17,6 +17,8 @@ class WalletAccountViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def deposit(self, request, pk=None):
+        # Permitimos que el turista deposite en su propia cuenta (Vía 3)
+        # El Kernel validará el rol.
         kernel = GovernanceKernel(user=request.user)
         try:
             result = kernel.resolve_and_execute(
@@ -24,7 +26,7 @@ class WalletAccountViewSet(viewsets.ModelViewSet):
                 parameters={
                     "wallet_id": str(pk),
                     "amount": request.data.get("amount"),
-                    "description": request.data.get("description")
+                    "description": request.data.get("description", "Carga de fondos institucional")
                 }
             )
             return Response(result)

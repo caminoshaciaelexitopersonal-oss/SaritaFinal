@@ -17,7 +17,34 @@ class SargentoCalculoSaldo:
     def execute(self, wallet_id):
         logger.info(f"SARGENTO: Calculando saldo para {wallet_id}")
         wallet = WalletAccount.objects.get(id=wallet_id)
-        return wallet.balance
+        return {
+            "balance": wallet.balance,
+            "locked_balance": wallet.locked_balance,
+            "total": wallet.balance + wallet.locked_balance
+        }
+
+class SargentoOperacionBalance:
+    """Ejecuta cambios en el balance (bloqueo/liberación)."""
+    def execute(self, params):
+        wallet_id = params.get("wallet_id")
+        amount = Decimal(str(params.get("amount")))
+        operation = params.get("operation") # 'lock', 'unlock'
+
+        wallet = WalletAccount.objects.get(id=wallet_id)
+
+        if operation == 'lock':
+            if wallet.balance < amount:
+                raise ValueError("Saldo insuficiente para bloqueo.")
+            wallet.balance -= amount
+            wallet.locked_balance += amount
+        elif operation == 'unlock':
+            if wallet.locked_balance < amount:
+                raise ValueError("No hay suficiente saldo bloqueado.")
+            wallet.locked_balance -= amount
+            wallet.balance += amount
+
+        wallet.save()
+        return True
 
 class SargentoBloqueoCuenta:
     """Aplica un bloqueo de estado a una cuenta de monedero."""

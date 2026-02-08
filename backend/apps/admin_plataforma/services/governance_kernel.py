@@ -432,6 +432,14 @@ class GovernanceKernel:
                 service = delivery_service.complete_service(parameters["service_id"])
                 return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
 
+            if intention.name == "DELIVERY_RATE":
+                service = delivery_service.rate_service(
+                    service_id=parameters["service_id"],
+                    rating=parameters["rating"],
+                    comment=parameters.get("comment", "")
+                )
+                return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
+
         from .gestion_plataforma_service import GestionPlataformaService
         service = GestionPlataformaService(admin_user=self.user)
 
@@ -520,9 +528,9 @@ GovernanceKernel.register_intention(GovernanceIntention(
 GovernanceKernel.register_intention(GovernanceIntention(
     name="WALLET_DEPOSIT",
     domain="wallet",
-    required_role=CustomUser.Role.ADMIN,
+    required_role=CustomUser.Role.TURISTA, # Cambiado para permitir carga propia
     required_params=["wallet_id", "amount"],
-    min_authority=AuthorityLevel.DELEGATED
+    min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
@@ -579,6 +587,14 @@ GovernanceKernel.register_intention(GovernanceIntention(
     domain="delivery",
     required_role=CustomUser.Role.DELIVERY,
     required_params=["service_id"],
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="DELIVERY_RATE",
+    domain="delivery",
+    required_role=CustomUser.Role.TURISTA,
+    required_params=["service_id", "rating"],
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 

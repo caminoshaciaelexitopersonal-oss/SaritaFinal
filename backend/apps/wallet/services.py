@@ -12,7 +12,12 @@ class WalletService:
         self.user = user
 
     def deposit(self, wallet_id, amount, description="Depósito de fondos", intention_id=None):
+        # En este entorno, permitimos que el usuario deposite en su propia cuenta
+        # o que el admin deposite en cualquier cuenta.
         wallet = get_object_or_404(WalletAccount, id=wallet_id)
+
+        if not self.user.is_superuser and wallet.user != self.user:
+            raise PermissionError("No tiene permisos para depositar en esta cuenta.")
 
         with transaction.atomic():
             wallet.balance += Decimal(str(amount))
@@ -25,15 +30,50 @@ class WalletService:
                 status=WalletTransaction.Status.EXECUTED,
                 description=description,
                 governance_intention_id=intention_id,
-                metadata={"executed_by": self.user.username}
+                metadata={
+                    "executed_by": self.user.username,
+                    "method": "INSTITUTIONAL_GATEWAY"
+                }
             )
 
             self._integrate_erp(tx)
 
             return tx
 
+    def lock_funds(self, wallet_id, amount, reason="Reserva de fondos"):
+        wallet = get_object_or_404(WalletAccount, id=wallet_id)
+        amount_dec = Decimal(str(amount))
+
+        if wallet.balance < amount_dec:
+            raise ValueError("Saldo insuficiente para bloquear.")
+
+        with transaction.atomic():
+            wallet.balance -= amount_dec
+            wallet.locked_balance += amount_dec
+            wallet.save()
+
+            logger.info(f"WALLET: Bloqueados {amount_dec} en cuenta {wallet.id}. Motivo: {reason}")
+            return wallet
+
+    def unlock_funds(self, wallet_id, amount, reason="Liberación de fondos"):
+        wallet = get_object_or_404(WalletAccount, id=wallet_id)
+        amount_dec = Decimal(str(amount))
+
+        if wallet.locked_balance < amount_dec:
+            raise ValueError("No hay suficiente saldo bloqueado.")
+
+        with transaction.atomic():
+            wallet.locked_balance -= amount_dec
+            wallet.balance += amount_dec
+            wallet.save()
+
+            logger.info(f"WALLET: Liberados {amount_dec} en cuenta {wallet.id}. Motivo: {reason}")
+            return wallet
+
     def pay(self, to_wallet_id, amount, related_service_id=None, description="Pago de servicio", intention_id=None):
-        from_wallet = WalletAccount.objects.get(user=self.user) # Assuming 1 wallet per user for now
+        from_wallet = WalletAccount.objects.filter(user=self.user).first()
+        if not from_wallet:
+            raise ValueError("El usuario no posee un monedero activo.")
         to_wallet = get_object_or_404(WalletAccount, id=to_wallet_id)
         amount_dec = Decimal(str(amount))
 

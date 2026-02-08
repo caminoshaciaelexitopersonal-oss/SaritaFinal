@@ -57,3 +57,17 @@ class DeliveryServiceViewSet(viewsets.ModelViewSet):
             serializer.save(service=service)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'])
+    def rate(self, request, pk=None):
+        kernel = GovernanceKernel(user=request.user)
+        try:
+            params = request.data.copy()
+            params["service_id"] = pk
+            result = kernel.resolve_and_execute(
+                intention_name="DELIVERY_RATE",
+                parameters=params
+            )
+            return Response(result)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

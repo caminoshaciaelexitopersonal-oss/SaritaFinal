@@ -73,6 +73,18 @@ class DeliveryLogisticService:
 
             return service
 
+    def rate_service(self, service_id, rating, comment=""):
+        service = get_object_or_404(DeliveryService, id=service_id)
+        if service.status != DeliveryService.Status.COMPLETED:
+            raise ValueError("Solo se pueden calificar servicios completados.")
+
+        service.rating = rating
+        service.tourist_comment = comment
+        service.save()
+
+        logger.info(f"DELIVERY: Servicio {service_id} calificado con {rating}")
+        return service
+
     def _process_payment(self, service):
         """
         Ejecuta el pago real desde el monedero del turista al monedero de la empresa/conductor.

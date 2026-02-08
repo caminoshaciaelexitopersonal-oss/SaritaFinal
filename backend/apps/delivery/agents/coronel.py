@@ -7,7 +7,8 @@ from .capitanes import (
     CapitanAsignacionServicios,
     CapitanEjecucionOperativaDelivery,
     CapitanPagosLiquidacionesDelivery,
-    CapitanAuditoriaDelivery
+    CapitanAuditoriaDelivery,
+    CapitanCalificacionesDelivery
 )
 
 logger = logging.getLogger(__name__)
@@ -24,7 +25,8 @@ class CoronelDelivery(CoronelTemplate):
             "asignacion": CapitanAsignacionServicios(self),
             "ejecucion": CapitanEjecucionOperativaDelivery(self),
             "pagos": CapitanPagosLiquidacionesDelivery(self),
-            "auditoria": CapitanAuditoriaDelivery(self)
+            "auditoria": CapitanAuditoriaDelivery(self),
+            "calificaciones": CapitanCalificacionesDelivery(self)
         }
 
     def _select_capitan(self, mission: dict):
@@ -41,5 +43,7 @@ class CoronelDelivery(CoronelTemplate):
             return self.capitanes["ejecucion"]
         if "pago" in action or "liquidar" in action:
             return self.capitanes["pagos"]
+        if "rate" in action or "calificar" in action:
+            return self.capitanes["calificaciones"]
 
         return self.capitanes["auditoria"]

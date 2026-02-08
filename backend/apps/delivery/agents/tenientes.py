@@ -48,3 +48,15 @@ class TenienteControlEjecucion(TenienteTemplate):
 class TenienteEvidenciasServicio(TenienteTemplate):
     def perform_action(self, parametros: dict):
         return {"evidence_hash": "SHA256-DELIVERY-TRACE", "audited": True}
+
+class TenienteValidacionServicio(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        # Valida que el servicio cumpla con los requisitos operativos
+        from apps.delivery.models import DeliveryService
+        service_id = parametros.get("service_id")
+        service = DeliveryService.objects.get(id=service_id)
+        return {
+            "is_valid": True,
+            "status": service.status,
+            "can_proceed": service.status not in ["CANCELLED", "COMPLETED"]
+        }

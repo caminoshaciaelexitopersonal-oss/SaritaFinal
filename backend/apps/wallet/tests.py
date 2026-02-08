@@ -20,20 +20,28 @@ class WalletIntegrationTest(TestCase):
             role=CustomUser.Role.PRESTADOR
         )
 
-        # Create wallets
-        self.tourist_wallet = WalletAccount.objects.create(
+        # Get or create wallets (signals might have created them)
+        self.tourist_wallet, _ = WalletAccount.objects.get_or_create(
             user=self.tourist_user,
-            owner_type=WalletAccount.OwnerType.TOURIST,
-            owner_id=str(self.tourist_user.id),
-            company=self.company,
-            balance=Decimal('100.00')
+            defaults={
+                'owner_type': WalletAccount.OwnerType.TOURIST,
+                'owner_id': str(self.tourist_user.id),
+                'company': self.company,
+                'balance': Decimal('100.00')
+            }
         )
-        self.provider_wallet = WalletAccount.objects.create(
+        if self.tourist_wallet.balance < Decimal('100.00'):
+            self.tourist_wallet.balance = Decimal('100.00')
+            self.tourist_wallet.save()
+
+        self.provider_wallet, _ = WalletAccount.objects.get_or_create(
             user=self.provider_user,
-            owner_type=WalletAccount.OwnerType.PROVIDER,
-            owner_id='some-uuid-for-provider-test',
-            company=self.company,
-            balance=Decimal('0.00')
+            defaults={
+                'owner_type': WalletAccount.OwnerType.PROVIDER,
+                'owner_id': 'some-uuid-for-provider-test',
+                'company': self.company,
+                'balance': Decimal('0.00')
+            }
         )
 
     def test_governance_payment(self):
@@ -84,7 +92,7 @@ class WalletIntegrationTest(TestCase):
             }
         )
 
-        self.assertEqual(result['new_status'], WalletAccount.Status.FROZEN)
+        self.assertEqual(result['status'], 'SUCCESS')
         self.tourist_wallet.refresh_from_db()
         self.assertEqual(self.tourist_wallet.status, WalletAccount.Status.FROZEN)
 

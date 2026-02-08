@@ -17,7 +17,8 @@ class CapitanDeliveryBase(CapitanTemplate):
             TenienteControlVehiculos,
             TenienteAsignacionRuta,
             TenienteControlEjecucion,
-            TenienteEvidenciasServicio
+            TenienteEvidenciasServicio,
+            TenienteValidacionServicio
         )
 
         roster = {
@@ -26,7 +27,8 @@ class CapitanDeliveryBase(CapitanTemplate):
             "control_vehiculos": TenienteControlVehiculos(),
             "asignacion_ruta": TenienteAsignacionRuta(),
             "control_ejecucion": TenienteControlEjecucion(),
-            "evidencias_servicio": TenienteEvidenciasServicio()
+            "evidencias_servicio": TenienteEvidenciasServicio(),
+            "validacion_servicio": TenienteValidacionServicio()
         }
 
         for _, tarea_info in plan.pasos_del_plan.items():
@@ -55,6 +57,22 @@ class CapitanAfiliacionDelivery(CapitanDeliveryBase):
             "paso_1": {
                 "teniente": "validacion_empresa",
                 "descripcion": "Validar estatus legal y tributario de la empresa",
+                "parametros": mision.directiva_original.get("parameters", {})
+            }
+        }
+        plan.save()
+        return plan
+
+class CapitanCalificacionesDelivery(CapitanDeliveryBase):
+    def _get_tenientes(self) -> dict:
+        return {"validacion_servicio": "TenienteValidacionServicio"}
+
+    def plan(self, mision) -> PlanTáctico:
+        plan = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
+        plan.pasos_del_plan = {
+            "paso_1": {
+                "teniente": "validacion_servicio",
+                "descripcion": "Validar estatus para calificación",
                 "parametros": mision.directiva_original.get("parameters", {})
             }
         }
