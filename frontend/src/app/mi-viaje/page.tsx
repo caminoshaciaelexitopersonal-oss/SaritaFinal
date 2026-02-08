@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ViewState } from '@/components/ui/ViewState';
+import { FiTruck } from 'react-icons/fi';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
@@ -46,7 +47,7 @@ export default function MiViajePage() {
   useEffect(() => {
     if (!authLoading) {
       if (!user || user.role !== 'TURISTA') {
-        router.push('/login');
+        router.push('/dashboard/login');
       } else {
         fetchSavedItems();
       }
@@ -98,13 +99,34 @@ export default function MiViajePage() {
                         </h2>
                      </div>
                      <div className="flex gap-3">
-                        <Link href="/mi-viaje/monedero/cartera" className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-6 py-3 rounded-2xl font-bold transition-all border border-white/10">
+                        <Link href="/mi-viaje/monedero/cartera" className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-6 py-3 rounded-2xl font-bold transition-all border border-white/10 text-sm">
                            Ver Cartera
                         </Link>
-                        <Link href="/mi-viaje/monedero/transferir" className="bg-white text-indigo-600 hover:bg-indigo-50 px-6 py-3 rounded-2xl font-bold transition-all shadow-lg">
+                        <Link href="/mi-viaje/monedero/transferir" className="bg-white text-indigo-600 hover:bg-indigo-50 px-6 py-3 rounded-2xl font-bold transition-all shadow-lg text-sm">
                            Transferir Fondos
                         </Link>
                      </div>
+                  </div>
+               </div>
+            </section>
+
+            {/* Sección de Delivery / Transporte */}
+            <section className="bg-indigo-900 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden group">
+               <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                  <FiTruck size={140} />
+               </div>
+               <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
+                  <div className="flex-1">
+                     <h2 className="text-3xl font-black mb-2 tracking-tight">Logística Institucional</h2>
+                     <p className="text-indigo-300 font-medium">Solicite traslados y delivery certificados bajo gobernanza SARITA.</p>
+                  </div>
+                  <div className="flex flex-wrap justify-center gap-4">
+                     <Link href="/mi-viaje/delivery/solicitar" className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg">
+                        Solicitar Servicio
+                     </Link>
+                     <Link href="/mi-viaje/delivery/historial" className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-2xl font-bold transition-all border border-white/10">
+                        Mi Historial
+                     </Link>
                   </div>
                </div>
             </section>

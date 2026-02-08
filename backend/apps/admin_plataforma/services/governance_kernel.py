@@ -403,6 +403,35 @@ class GovernanceKernel:
                 wallet = wallet_service.freeze(wallet_id=parameters["wallet_id"], motivo=parameters["motivo"])
                 return {"status": "SUCCESS", "agent_report": agent_result, "wallet_id": str(wallet.id)}
 
+        # Registro de Servicios de Dominio - Ejército de Agentes Delivery
+        if intention.domain == "delivery":
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+
+            directive = {
+                "domain": "delivery",
+                "action": intention.name,
+                "parameters": parameters,
+                "user_id": str(self.user.id),
+                "role": self.user.role
+            }
+
+            agent_result = sarita_orchestrator.handle_directive(directive)
+
+            from apps.delivery.services import DeliveryLogisticService
+            delivery_service = DeliveryLogisticService(user=self.user)
+
+            if intention.name == "DELIVERY_REQUEST":
+                service = delivery_service.create_request(parameters, intention_id=agent_result.get('mision_id'))
+                return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
+
+            if intention.name == "DELIVERY_ASSIGN":
+                service = delivery_service.assign_service(parameters)
+                return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
+
+            if intention.name == "DELIVERY_COMPLETE":
+                service = delivery_service.complete_service(parameters["service_id"])
+                return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
+
         from .gestion_plataforma_service import GestionPlataformaService
         service = GestionPlataformaService(admin_user=self.user)
 
@@ -526,6 +555,39 @@ GovernanceKernel.register_intention(GovernanceIntention(
     required_role=CustomUser.Role.ADMIN,
     required_params=["wallet_id", "motivo"],
     min_authority=AuthorityLevel.SOVEREIGN
+))
+
+# Dominio: Delivery y Logística
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="DELIVERY_REQUEST",
+    domain="delivery",
+    required_role=CustomUser.Role.TURISTA,
+    required_params=["origin_address", "destination_address", "estimated_price"],
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="DELIVERY_ASSIGN",
+    domain="delivery",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["service_id", "driver_id", "vehicle_id"],
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="DELIVERY_COMPLETE",
+    domain="delivery",
+    required_role=CustomUser.Role.DELIVERY,
+    required_params=["service_id"],
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="VEHICLE_REGISTER",
+    domain="delivery",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["plate", "vehicle_type", "company_id"],
+    min_authority=AuthorityLevel.DELEGATED
 ))
 
 # Dominio: FASE LEGADO

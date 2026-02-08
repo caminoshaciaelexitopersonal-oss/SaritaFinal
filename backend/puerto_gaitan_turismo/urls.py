@@ -45,6 +45,9 @@ urlpatterns = [
     # API para el Monedero Institucional
     path('api/wallet/', include('apps.wallet.urls')),
 
+    # API para la Plataforma de Delivery
+    path('api/delivery/', include('apps.delivery.urls')),
+
     # API para el Agente SADI
     path('api/sadi/', include('apps.sadi_agent.urls')),
     path('api/voice/marketing/', include('apps.sadi_agent.urls')), # Alias para Phase 4-M
