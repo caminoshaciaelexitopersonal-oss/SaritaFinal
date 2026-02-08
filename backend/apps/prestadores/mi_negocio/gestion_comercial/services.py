@@ -113,11 +113,40 @@ class FacturacionService:
                 precio_unitario=item_op.precio_unitario,
             )
 
-        # 2. Registrar el asiento contable
-        # Nota: El servicio de contabilidad también deberá ser refactorizado para
-        # resolver las referencias por ID en lugar de esperar objetos.
-        # Por ahora, se asume que esta adaptación es parte de la FASE 14.5.
-        FacturaVentaAccountingService.registrar_factura_venta(factura, cliente=cliente, perfil=perfil)
+        # 2. Registrar el reflejo contable vía Agentes (Fase 5)
+        try:
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+
+            # TODO: Obtener el periodo contable activo real
+            from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import PeriodoContable, Cuenta
+            periodo = PeriodoContable.objects.filter(provider_id=operacion.perfil_ref_id, cerrado=False).first()
+
+            if periodo:
+                # Buscar cuentas base para el asiento (simplificado)
+                cuenta_cxc = Cuenta.objects.filter(plan_de_cuentas__provider_id=operacion.perfil_ref_id, codigo='1305').first()
+                cuenta_ingreso = Cuenta.objects.filter(plan_de_cuentas__provider_id=operacion.perfil_ref_id, codigo='4135').first()
+
+                if cuenta_cxc and cuenta_ingreso:
+                    movimientos = [
+                        {"cuenta_id": str(cuenta_cxc.id), "debito": float(factura.total), "descripcion": "CxC Cliente"},
+                        {"cuenta_id": str(cuenta_ingreso.id), "credito": float(factura.total), "descripcion": "Venta de servicios"}
+                    ]
+
+                    directive_acc = {
+                        "domain": "prestadores",
+                        "mission": {"type": "RECOGNIZE_REVENUE"},
+                        "parameters": {
+                            "periodo_id": str(periodo.id),
+                            "fecha": str(factura.fecha_emision),
+                            "descripcion": f"Factura {factura.numero_factura}",
+                            "movimientos": movimientos,
+                            "usuario_id": factura.creado_por.id
+                        }
+                    }
+                    sarita_orchestrator.handle_directive(directive_acc)
+                    logger.info(f"GESTIÓN COMERCIAL: Misión de registro contable delegada para factura {factura.numero_factura}")
+        except Exception as e:
+            logger.error(f"Error al delegar reflejo contable de factura {factura.numero_factura}: {e}")
 
         # 3. Enviar a la DIAN (simulado)
         dian_response = DianService.enviar_factura(factura, cliente=cliente)

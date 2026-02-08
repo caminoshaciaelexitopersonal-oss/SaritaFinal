@@ -120,6 +120,29 @@ class TenienteArchivado(TenienteTemplate):
             return {"status": "SUCCESS", "version_id": version_id}
         return {"status": "FAILED"}
 
+class TenienteRegistroContable(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos import SargentoContable
+        asiento = SargentoContable.generar_asiento_partida_doble(
+            periodo_id=parametros.get("periodo_id"),
+            fecha=parametros.get("fecha"),
+            descripcion=parametros.get("descripcion"),
+            movimientos=parametros.get("movimientos"),
+            usuario_id=parametros.get("usuario_id")
+        )
+        if asiento:
+            return {"status": "SUCCESS", "asiento_id": str(asiento.id)}
+        return {"status": "FAILED"}
+
+class TenienteCierreContable(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos import SargentoContable
+        success = SargentoContable.ejecutar_cierre_periodo(
+            periodo_id=parametros.get("periodo_id"),
+            usuario_id=parametros.get("usuario_id")
+        )
+        return {"status": "SUCCESS" if success else "FAILED"}
+
 # --- TENIENTES COMERCIALES (SARGENTOS LOGIC) ---
 class TenienteContratacionComercial(TenienteTemplate):
     def perform_action(self, parametros: dict):
@@ -173,6 +196,8 @@ TENIENTE_MAP = {
     'archivistico_sello': TenienteSelloTemporal,
     'archivistico_acceso': TenienteAuditoriaAcceso,
     'archivistico_archivado': TenienteArchivado,
+    'contable_registro': TenienteRegistroContable,
+    'contable_cierre': TenienteCierreContable,
     'operativo_transicion': TenienteTransicionEstado,
     'operativo_coordinacion_turista': TenienteCoordinacionTuristica,
     'operativo_despacho_logistico': TenienteDespachoLogistico,

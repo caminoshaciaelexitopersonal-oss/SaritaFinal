@@ -85,6 +85,11 @@ from .capitanes.gestion_contable.capitan_contabilidad_general import CapitanCont
 from .capitanes.gestion_contable.capitan_asientos_automaticos import CapitanAsientosAutomaticos
 from .capitanes.gestion_contable.capitan_cierre_contable import CapitanCierreContable
 from .capitanes.gestion_contable.capitan_auditoria_contable import CapitanAuditoriaContable
+from .capitanes.gestion_contable.capitan_reconocimiento_ingresos import CapitanReconocimientoIngresos
+from .capitanes.gestion_contable.capitan_impuestos_iva import CapitanImpuestosIVA
+from .capitanes.gestion_contable.capitan_provisiones_contables import CapitanProvisionesContables
+from .capitanes.gestion_contable.capitan_conciliacion_automatica import CapitanConciliacionAutomatica
+from .capitanes.gestion_contable.capitan_reportes_normativos import CapitanReportesNormativos
 from .capitanes.gestion_financiera.capitan_base import CapitanFinancieraBase # Use base if specific missing
 from .capitanes.gestion_financiera.capitan_gestion_financiera import CapitanGestionFinanciera
 from .capitanes.gestion_financiera.capitan_flujo_caja import CapitanFlujoCaja
@@ -186,6 +191,11 @@ class PrestadoresCoronel(CoronelTemplate):
             "asientos_automaticos": CapitanAsientosAutomaticos(coronel=self),
             "cierre_contable": CapitanCierreContable(coronel=self),
             "auditoria_contable": CapitanAuditoriaContable(coronel=self),
+            "reconocimiento_ingresos": CapitanReconocimientoIngresos(coronel=self),
+            "impuestos_iva": CapitanImpuestosIVA(coronel=self),
+            "provisiones_contables": CapitanProvisionesContables(coronel=self),
+            "conciliacion_automatica": CapitanConciliacionAutomatica(coronel=self),
+            "reportes_normativos": CapitanReportesNormativos(coronel=self),
             "gestion_financiera": CapitanGestionFinanciera(coronel=self),
             "flujo_caja": CapitanFlujoCaja(coronel=self),
             "riesgo_financiero": CapitanRiesgoFinanciero(coronel=self),
@@ -242,6 +252,11 @@ class PrestadoresCoronel(CoronelTemplate):
             "MONITOR_ZONE": "monitoreo_zonas",
             "EMERGENCY_PROTOCOL": "protocolos_emergencia",
             "DIGITAL_SERVICE": "atencion_digital",
+            # Contable
+            "RECOGNIZE_REVENUE": "reconocimiento_ingresos",
+            "CALCULATE_TAX": "impuestos_iva",
+            "MONTHLY_CLOSE": "cierre_contable",
+            "GENERATE_FINANCIAL_REPORT": "reportes_normativos",
         }
 
         cap_key = mapping.get(m_type)
