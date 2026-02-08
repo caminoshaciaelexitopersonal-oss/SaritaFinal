@@ -108,6 +108,18 @@ export function useMiNegocioApi() {
     return makeRequest(() => nominaEndpoints.getEmpleados().then(res => res.data));
   }, [makeRequest]);
 
+  const createEmpleado = useCallback(async (data: any) => {
+    return makeRequest(() => nominaEndpoints.createEmpleado(data).then(res => res.data), "Empleado creado.");
+  }, [makeRequest]);
+
+  const updateEmpleado = useCallback(async (id: number, data: any) => {
+    return makeRequest(() => nominaEndpoints.updateEmpleado(id, data).then(res => res.data), "Datos de empleado actualizados.");
+  }, [makeRequest]);
+
+  const deleteEmpleado = useCallback(async (id: number) => {
+    return makeRequest(() => nominaEndpoints.deleteEmpleado(id).then(res => res.data), "Empleado eliminado.");
+  }, [makeRequest]);
+
   const getPlanillas = useCallback(async () => {
     return makeRequest(() => nominaEndpoints.getPlanillas().then(res => res.data));
   }, [makeRequest]);
@@ -136,6 +148,9 @@ export function useMiNegocioApi() {
     getCashTransactions,
     getArchivisticaDocumentos,
     getEmpleados,
+    createEmpleado,
+    updateEmpleado,
+    deleteEmpleado,
     getPlanillas,
     getVehicles,
     getTours,
