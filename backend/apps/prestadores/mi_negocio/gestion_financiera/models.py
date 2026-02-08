@@ -2,8 +2,22 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
 # from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import ChartOfAccount
+from .statements_models import *
+
+class TesoreriaCentral(TenantAwareModel):
+    """
+    Entidad de gobierno central para la custodia de fondos.
+    """
+    saldo_total_custodia = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    reservas_totales = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    liquidez_disponible = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    ultima_conciliacion = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Tesorería Central"
+        verbose_name_plural = "Tesorerías Centrales"
 
 class CuentaBancaria(models.Model):
     perfil_ref_id = models.UUIDField()

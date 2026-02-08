@@ -536,6 +536,7 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.DELEGATED
 ))
 
+ 
 # Dominio: Monedero Institucional
 GovernanceKernel.register_intention(GovernanceIntention(
     name="WALLET_DEPOSIT",
@@ -615,6 +616,7 @@ GovernanceKernel.register_intention(GovernanceIntention(
     domain="delivery",
     required_role=CustomUser.Role.ADMIN,
     required_params=["plate", "vehicle_type", "company_id"],
+ 
     min_authority=AuthorityLevel.DELEGATED
 ))
 

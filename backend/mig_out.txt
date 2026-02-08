@@ -1,0 +1,837 @@
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:228: UserWarning: app_settings.USERNAME_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['username']['required']
+  required=allauth_account_settings.USERNAME_REQUIRED,
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:230: UserWarning: app_settings.EMAIL_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['email']['required']
+  email = serializers.EmailField(required=allauth_account_settings.EMAIL_REQUIRED)
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:288: UserWarning: app_settings.EMAIL_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['email']['required']
+  email = serializers.EmailField(required=allauth_account_settings.EMAIL_REQUIRED)
+/app/backend/apps/prestadores/mi_negocio/gestion_comercial/ai/services/ai_manager/providers/gemini_provider.py:2: FutureWarning:
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+KERNEL: Intención 'PLATFORM_CREATE_PLAN' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_SUSPEND_USER' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'ERP_CONFIRM_SALE' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ERP_GENERATE_BALANCE' registrada en el dominio 'contable'.
+KERNEL: Intención 'SST_REGISTER_INCIDENT' registrada en el dominio 'seguridad_civil'.
+KERNEL: Intención 'SST_BLOCK_OPERATION' registrada en el dominio 'seguridad_civil'.
+KERNEL: Intención 'SST_UPDATE_RISK_MATRIX' registrada en el dominio 'planeacion'.
+KERNEL: Intención 'GENERATE_LEGACY_BUNDLE' registrada en el dominio 'governance'.
+KERNEL: Intención 'PLATFORM_TRANSFER_OWNERSHIP' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'SYSTEM_EVOLUTION_HARDENING' registrada en el dominio 'governance'.
+KERNEL: Intención 'QUERY_META_STANDARD' registrada en el dominio 'governance'.
+KERNEL: Intención 'PUBLIC_BUDGET_OPTIMIZATION' registrada en el dominio 'hacienda'.
+KERNEL: Intención 'TERRITORIAL_IMPACT_SIMULATION' registrada en el dominio 'planeacion'.
+KERNEL: Intención 'CIVIL_DEFENSE_ALERT' registrada en el dominio 'seguridad_civil'.
+KERNEL: Intención 'LAND_USE_AUDIT' registrada en el dominio 'gestion_territorial'.
+KERNEL: Intención 'ERP_CREATE_VOUCHER' registrada en el dominio 'contable'.
+KERNEL: Intención 'ERP_VIEW_SALES_STATS' registrada en el dominio 'comercial'.
+KERNEL: Intención 'PRIORITIZE_CRITICAL_LEADS' registrada en el dominio 'comercial'.
+KERNEL: Intención 'OPTIMIZE_MARKETING_BUDGET' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ERP_VIEW_CASH_FLOW' registrada en el dominio 'financiero'.
+KERNEL: Intención 'ERP_MANAGE_RESOURCES' registrada en el dominio 'operativo'.
+KERNEL: Intención 'ERP_SEARCH_DOCUMENT' registrada en el dominio 'archivistico'.
+KERNEL: Intención 'PLATFORM_UPDATE_PLAN' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_OPTIMIZE_RESOURCES' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_UPDATE_WEB_CMS' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_UPDATE_LEGAL' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'ONBOARDING_PRESTADOR' registrada en el dominio 'prestadores'.
+KERNEL: Intención 'AUDITORIA_GLOBAL' registrada en el dominio 'administrador_general'.
+CAPITÁN (CapitanMarketing): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPublicidadYAdquisicionDeTraficoADS): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionOperativaDeContenidosComerciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProduccionYAutomatizacionAudiovisual): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSEOTuristico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRecomendacionesSADI): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAlianzasComerciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConversion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmbudosConversion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanImplementacionTecnicaDeEmbudosYCRM): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPasarelaPagos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCotizacionesDinamicas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVentaConversacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanContratacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFirmaDigital): Inicializado. Tenientes listos.
+CAPITÁN (CapitanKYCVerificacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLegalidadYPrivacidad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRelacionClientes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanMensajeriaYEnviosMasivos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFidelizacionLealtad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSoporteViajero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPostventaFeedback): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoComercial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanInteligenciaAnaliticaYOptimizacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaVentas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPrevencionFraude): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialEstrategico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionComercialGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialHotelero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialGastronomico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialTuristicoTours): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialTransporte): Inicializado. Tenientes listos.
+CAPITÁN (CapitanOnboardingPrestador): Inicializado. Tenientes listos.
+CAPITÁN (CapitanArchivistico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIntegridadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRetencionNormativa): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBusquedaDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapturaYCreacionDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoNormativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionDocumentalGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPoliticasRetencion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSeguridadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTrazabilidadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosLegales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosContables): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosNomina): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosPublicos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosConfidenciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConservacionHistorica): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDisposicionFinal): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNotarizacionBlockchain): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionOperativaGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanControlOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCalidadYCumplimiento): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujosSecuenciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujosParalelos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanValidacionOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEnrutamientoOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPriorizacionTareas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAsignacionTareas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTransicionesEstado): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBloqueosOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionReintentos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFallbackOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEscalamientoExcepciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCoordinacionGuias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCalidadExperiencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRutasEstrategicas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDespachoVehiculos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanMonitoreoZonas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProtocolosEmergencia): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAtencionDigital): Inicializado. Tenientes listos.
+CAPITÁN (CapitanContabilidadGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAsientosAutomaticos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCierreContable): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaContable): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReconocimientoIngresos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanImpuestosIVA): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProvisionesContables): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConciliacionAutomatica): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReportesNormativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionFinanciera): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujoCaja): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRatiosYFormulasFinancieras): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTesoreria): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCustodiaFondos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLiquidez): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPagos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDistribucion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReservas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProyecciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEstadoResultados): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBalanceGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujoEfectivo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCambiosPatrimonio): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConciliacionBancaria): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProvisionesFinancieras): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNormativoSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIdentificacionPeligros): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvaluacionRiesgos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSaludOcupacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoPsicosocial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmergencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapacitacionSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVigilanciaSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNomina): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLiquidacionContratos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLegalLaboral): Inicializado. Tenientes listos.
+CORONEL (prestadores): Inicializado. Capitanes listos.
+CAPITÁN (CapitanAuditoriaGlobal): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanVentas): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanContabilidad): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanOperativo): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanArchivistico): Inicializado. Tenientes listos.
+CORONEL (administrador_general): Inicializado. Capitanes listos.
+CAPITÁN (CapitanEmbudo): Inicializado. Tenientes listos.
+CORONEL (marketing): Inicializado. Capitanes listos.
+CAPITÁN (CapitanCAC): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLTV): Inicializado. Tenientes listos.
+CAPITÁN (CapitanROI): Inicializado. Tenientes listos.
+CORONEL (finanzas): Inicializado. Capitanes listos.
+CAPITÁN (CapitanSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNormativoSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIdentificacionPeligros): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvaluacionRiesgos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSaludOcupacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoPsicosocial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmergencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapacitacionSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVigilanciaSST): Inicializado. Tenientes listos.
+CORONEL (sg_sst): Inicializado. Capitanes listos.
+CORONEL (peace_net): Inicializado. Capitanes listos.
+GENERAL SARITA: Orquestador inicializado. Coroneles listos para recibir órdenes.
+System check identified some issues:
+
+WARNINGS:
+?: (account.W001) ACCOUNT_LOGIN_METHODS conflicts with ACCOUNT_SIGNUP_FIELDS
+?: (staticfiles.W004) The directory '/app/backend/static' in the STATICFILES_DIRS setting does not exist.
+?: (urls.W005) URL namespace 'sadi_agent' isn't unique. You may not be able to reverse all URLs in this namespace
+(0.006)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+(0.006)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG: Antes de importar api.signals
+DEBUG: Antes de importar api.signals
+DEBUG: Después de importar api.signals
+DEBUG: Después de importar api.signals
+Initializing AI providers...
+Warning: No AI providers initialized. Falling back to DummyProvider.
+No changes detected in app 'nomina'
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:228: UserWarning: app_settings.USERNAME_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['username']['required']
+  required=allauth_account_settings.USERNAME_REQUIRED,
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:230: UserWarning: app_settings.EMAIL_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['email']['required']
+  email = serializers.EmailField(required=allauth_account_settings.EMAIL_REQUIRED)
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:288: UserWarning: app_settings.EMAIL_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['email']['required']
+  email = serializers.EmailField(required=allauth_account_settings.EMAIL_REQUIRED)
+/app/backend/apps/prestadores/mi_negocio/gestion_comercial/ai/services/ai_manager/providers/gemini_provider.py:2: FutureWarning:
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+KERNEL: Intención 'PLATFORM_CREATE_PLAN' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_SUSPEND_USER' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'ERP_CONFIRM_SALE' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ERP_GENERATE_BALANCE' registrada en el dominio 'contable'.
+KERNEL: Intención 'SST_REGISTER_INCIDENT' registrada en el dominio 'seguridad_civil'.
+KERNEL: Intención 'SST_BLOCK_OPERATION' registrada en el dominio 'seguridad_civil'.
+KERNEL: Intención 'SST_UPDATE_RISK_MATRIX' registrada en el dominio 'planeacion'.
+KERNEL: Intención 'GENERATE_LEGACY_BUNDLE' registrada en el dominio 'governance'.
+KERNEL: Intención 'PLATFORM_TRANSFER_OWNERSHIP' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'SYSTEM_EVOLUTION_HARDENING' registrada en el dominio 'governance'.
+KERNEL: Intención 'QUERY_META_STANDARD' registrada en el dominio 'governance'.
+KERNEL: Intención 'PUBLIC_BUDGET_OPTIMIZATION' registrada en el dominio 'hacienda'.
+KERNEL: Intención 'TERRITORIAL_IMPACT_SIMULATION' registrada en el dominio 'planeacion'.
+KERNEL: Intención 'CIVIL_DEFENSE_ALERT' registrada en el dominio 'seguridad_civil'.
+KERNEL: Intención 'LAND_USE_AUDIT' registrada en el dominio 'gestion_territorial'.
+KERNEL: Intención 'ERP_CREATE_VOUCHER' registrada en el dominio 'contable'.
+KERNEL: Intención 'ERP_VIEW_SALES_STATS' registrada en el dominio 'comercial'.
+KERNEL: Intención 'PRIORITIZE_CRITICAL_LEADS' registrada en el dominio 'comercial'.
+KERNEL: Intención 'OPTIMIZE_MARKETING_BUDGET' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ERP_VIEW_CASH_FLOW' registrada en el dominio 'financiero'.
+KERNEL: Intención 'ERP_MANAGE_RESOURCES' registrada en el dominio 'operativo'.
+KERNEL: Intención 'ERP_SEARCH_DOCUMENT' registrada en el dominio 'archivistico'.
+KERNEL: Intención 'PLATFORM_UPDATE_PLAN' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_OPTIMIZE_RESOURCES' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_UPDATE_WEB_CMS' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_UPDATE_LEGAL' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'ONBOARDING_PRESTADOR' registrada en el dominio 'prestadores'.
+KERNEL: Intención 'AUDITORIA_GLOBAL' registrada en el dominio 'administrador_general'.
+CAPITÁN (CapitanMarketing): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPublicidadYAdquisicionDeTraficoADS): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionOperativaDeContenidosComerciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProduccionYAutomatizacionAudiovisual): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSEOTuristico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRecomendacionesSADI): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAlianzasComerciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConversion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmbudosConversion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanImplementacionTecnicaDeEmbudosYCRM): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPasarelaPagos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCotizacionesDinamicas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVentaConversacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanContratacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFirmaDigital): Inicializado. Tenientes listos.
+CAPITÁN (CapitanKYCVerificacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLegalidadYPrivacidad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRelacionClientes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanMensajeriaYEnviosMasivos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFidelizacionLealtad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSoporteViajero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPostventaFeedback): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoComercial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanInteligenciaAnaliticaYOptimizacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaVentas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPrevencionFraude): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialEstrategico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionComercialGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialHotelero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialGastronomico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialTuristicoTours): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialTransporte): Inicializado. Tenientes listos.
+CAPITÁN (CapitanOnboardingPrestador): Inicializado. Tenientes listos.
+CAPITÁN (CapitanArchivistico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIntegridadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRetencionNormativa): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBusquedaDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapturaYCreacionDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoNormativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionDocumentalGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPoliticasRetencion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSeguridadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTrazabilidadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosLegales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosContables): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosNomina): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosPublicos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosConfidenciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConservacionHistorica): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDisposicionFinal): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNotarizacionBlockchain): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionOperativaGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanControlOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCalidadYCumplimiento): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujosSecuenciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujosParalelos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanValidacionOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEnrutamientoOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPriorizacionTareas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAsignacionTareas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTransicionesEstado): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBloqueosOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionReintentos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFallbackOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEscalamientoExcepciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCoordinacionGuias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCalidadExperiencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRutasEstrategicas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDespachoVehiculos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanMonitoreoZonas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProtocolosEmergencia): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAtencionDigital): Inicializado. Tenientes listos.
+CAPITÁN (CapitanContabilidadGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAsientosAutomaticos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCierreContable): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaContable): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReconocimientoIngresos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanImpuestosIVA): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProvisionesContables): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConciliacionAutomatica): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReportesNormativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionFinanciera): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujoCaja): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRatiosYFormulasFinancieras): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTesoreria): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCustodiaFondos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLiquidez): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPagos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDistribucion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReservas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProyecciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEstadoResultados): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBalanceGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujoEfectivo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCambiosPatrimonio): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConciliacionBancaria): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProvisionesFinancieras): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNormativoSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIdentificacionPeligros): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvaluacionRiesgos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSaludOcupacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoPsicosocial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmergencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapacitacionSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVigilanciaSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNomina): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLiquidacionContratos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLegalLaboral): Inicializado. Tenientes listos.
+CORONEL (prestadores): Inicializado. Capitanes listos.
+CAPITÁN (CapitanAuditoriaGlobal): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanVentas): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanContabilidad): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanOperativo): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanArchivistico): Inicializado. Tenientes listos.
+CORONEL (administrador_general): Inicializado. Capitanes listos.
+CAPITÁN (CapitanEmbudo): Inicializado. Tenientes listos.
+CORONEL (marketing): Inicializado. Capitanes listos.
+CAPITÁN (CapitanCAC): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLTV): Inicializado. Tenientes listos.
+CAPITÁN (CapitanROI): Inicializado. Tenientes listos.
+CORONEL (finanzas): Inicializado. Capitanes listos.
+CAPITÁN (CapitanSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNormativoSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIdentificacionPeligros): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvaluacionRiesgos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSaludOcupacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoPsicosocial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmergencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapacitacionSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVigilanciaSST): Inicializado. Tenientes listos.
+CORONEL (sg_sst): Inicializado. Capitanes listos.
+CORONEL (peace_net): Inicializado. Capitanes listos.
+GENERAL SARITA: Orquestador inicializado. Coroneles listos para recibir órdenes.
+(0.000) BEGIN; args=None; alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) SELECT JSON('{"a": "b"}'); args=None; alias=default
+(0.000) SELECT JSON('{"a": "b"}'); args=None; alias=default
+(0.000) COMMIT; args=None; alias=default
+(0.000) COMMIT; args=None; alias=default
+System check identified some issues:
+
+WARNINGS:
+?: (account.W001) ACCOUNT_LOGIN_METHODS conflicts with ACCOUNT_SIGNUP_FIELDS
+?: (staticfiles.W004) The directory '/app/backend/static' in the STATICFILES_DIRS setting does not exist.
+?: (urls.W005) URL namespace 'sadi_agent' isn't unique. You may not be able to reverse all URLs in this namespace
+(0.006)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+(0.006)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+(0.000)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+(0.000)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+(0.000)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+(0.000)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin'; args=('admin',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin'; args=('admin',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin' AND "django_content_type"."model" IN ('logentry')); args=('admin', 'logentry'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin' AND "django_content_type"."model" IN ('logentry')); args=('admin', 'logentry'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (1) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(1,); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (1) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(1,); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin'; args=('admin',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin'; args=('admin',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'auth'; args=('auth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'auth'; args=('auth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'auth' AND "django_content_type"."model" IN ('permission', 'group')); args=('auth', 'permission', 'group'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'auth' AND "django_content_type"."model" IN ('permission', 'group')); args=('auth', 'permission', 'group'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (2, 3) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(2, 3); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (2, 3) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(2, 3); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'auth'; args=('auth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'auth'; args=('auth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'contenttypes'; args=('contenttypes',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'contenttypes'; args=('contenttypes',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'contenttypes' AND "django_content_type"."model" IN ('contenttype')); args=('contenttypes', 'contenttype'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'contenttypes' AND "django_content_type"."model" IN ('contenttype')); args=('contenttypes', 'contenttype'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (4) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(4,); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (4) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(4,); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'contenttypes'; args=('contenttypes',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'contenttypes'; args=('contenttypes',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sessions'; args=('sessions',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sessions'; args=('sessions',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'sessions' AND "django_content_type"."model" IN ('session')); args=('sessions', 'session'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'sessions' AND "django_content_type"."model" IN ('session')); args=('sessions', 'session'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (5) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(5,); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (5) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(5,); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sessions'; args=('sessions',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sessions'; args=('sessions',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sites'; args=('sites',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sites'; args=('sites',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'sites' AND "django_content_type"."model" IN ('site')); args=('sites', 'site'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'sites' AND "django_content_type"."model" IN ('site')); args=('sites', 'site'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (6) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(6,); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (6) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(6,); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sites'; args=('sites',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sites'; args=('sites',); alias=default
+(0.000) SELECT 1 AS "a" FROM "django_site" LIMIT 1; args=(1,); alias=default
+(0.000) SELECT 1 AS "a" FROM "django_site" LIMIT 1; args=(1,); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'authtoken'; args=('authtoken',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'authtoken'; args=('authtoken',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'authtoken' AND "django_content_type"."model" IN ('token', 'tokenproxy')); args=('authtoken', 'token', 'tokenproxy'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'authtoken' AND "django_content_type"."model" IN ('token', 'tokenproxy')); args=('authtoken', 'token', 'tokenproxy'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (8, 7) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(8, 7); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (8, 7) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(8, 7); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'authtoken'; args=('authtoken',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'authtoken'; args=('authtoken',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'allauth'; args=('allauth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'allauth'; args=('allauth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'allauth'; args=('allauth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'allauth'; args=('allauth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'account'; args=('account',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'account'; args=('account',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'account' AND "django_content_type"."model" IN ('emailconfirmation', 'emailaddress')); args=('account', 'emailconfirmation', 'emailaddress'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'account' AND "django_content_type"."model" IN ('emailconfirmation', 'emailaddress')); args=('account', 'emailconfirmation', 'emailaddress'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (9, 10) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(9, 10); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (9, 10) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(9, 10); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'account'; args=('account',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'account'; args=('account',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'socialaccount'; args=('socialaccount',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'socialaccount'; args=('socialaccount',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'socialaccount' AND "django_content_type"."model" IN ('socialaccount', 'socialapp', 'socialtoken')); args=('socialaccount', 'socialaccount', 'socialapp', 'socialtoken'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'socialaccount' AND "django_content_type"."model" IN ('socialaccount', 'socialapp', 'socialtoken')); args=('socialaccount', 'socialaccount', 'socialapp', 'socialtoken'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (11, 12, 13) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(11, 12, 13); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (11, 12, 13) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(11, 12, 13); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'socialaccount'; args=('socialaccount',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'socialaccount'; args=('socialaccount',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'mfa'; args=('mfa',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'mfa'; args=('mfa',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'mfa' AND "django_content_type"."model" IN ('authenticator')); args=('mfa', 'authenticator'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'mfa' AND "django_content_type"."model" IN ('authenticator')); args=('mfa', 'authenticator'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (14) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(14,); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (14) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(14,); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'mfa'; args=('mfa',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'mfa'; args=('mfa',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'dj_rest_auth'; args=('dj_rest_auth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'dj_rest_auth'; args=('dj_rest_auth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'dj_rest_auth'; args=('dj_rest_auth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'dj_rest_auth'; args=('dj_rest_auth',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'modeltranslation'; args=('modeltranslation',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'modeltranslation'; args=('modeltranslation',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'modeltranslation'; args=('modeltranslation',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'modeltranslation'; args=('modeltranslation',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'api'; args=('api',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'api'; args=('api',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'api' AND "django_content_type"."model" IN ('verificacion', 'hechohistorico', 'video', 'pregunta', 'department', 'documentoverificacion', 'homepagecomponent', 'profile', 'respuestausuario', 'menuitem', 'opcionrespuesta', 'respuestaitemverificacion', 'itemverificacion', 'sugerencia', 'tipodocumentoverificacion', 'rutaturistica', 'customuser', 'asistenciacapacitacion', 'atractivoturistico', 'artesano', 'perfiladministrador', 'perfilfuncionariodirectivo', 'elementoguardado', 'scoringrule', 'formulario', 'imagenatractivo', 'consejoconsultivo', 'imagenrutaturistica', 'plantillaverificacion', 'resena', 'userllmconfig', 'notificacion', 'siteconfiguration', 'imagenpaginainstitucional', 'perfilfuncionarioprofesional', 'imagengaleria', 'agenttask', 'auditlog', 'rubroartesano', 'paginainstitucional', 'imagenartesano', 'municipality', 'entity', 'publicacion', 'contenidomunicipio')); args=('api', 'verificacion', 'hechohistorico', 'video', 'pregunta', 'department', 'documentoverificacion', 'homepagecomponent', 'profile', 'respuestausuario', 'menuitem', 'opcionrespuesta', 'respuestaitemverificacion', 'itemverificacion', 'sugerencia', 'tipodocumentoverificacion', 'rutaturistica', 'customuser', 'asistenciacapacitacion', 'atractivoturistico', 'artesano', 'perfiladministrador', 'perfilfuncionariodirectivo', 'elementoguardado', 'scoringrule', 'formulario', 'imagenatractivo', 'consejoconsultivo', 'imagenrutaturistica', 'plantillaverificacion', 'resena', 'userllmconfig', 'notificacion', 'siteconfiguration', 'imagenpaginainstitucional', 'perfilfuncionarioprofesional', 'imagengaleria', 'agenttask', 'auditlog', 'rubroartesano', 'paginainstitucional', 'imagenartesano', 'municipality', 'entity', 'publicacion', 'contenidomunicipio'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'api' AND "django_content_type"."model" IN ('verificacion', 'hechohistorico', 'video', 'pregunta', 'department', 'documentoverificacion', 'homepagecomponent', 'profile', 'respuestausuario', 'menuitem', 'opcionrespuesta', 'respuestaitemverificacion', 'itemverificacion', 'sugerencia', 'tipodocumentoverificacion', 'rutaturistica', 'customuser', 'asistenciacapacitacion', 'atractivoturistico', 'artesano', 'perfiladministrador', 'perfilfuncionariodirectivo', 'elementoguardado', 'scoringrule', 'formulario', 'imagenatractivo', 'consejoconsultivo', 'imagenrutaturistica', 'plantillaverificacion', 'resena', 'userllmconfig', 'notificacion', 'siteconfiguration', 'imagenpaginainstitucional', 'perfilfuncionarioprofesional', 'imagengaleria', 'agenttask', 'auditlog', 'rubroartesano', 'paginainstitucional', 'imagenartesano', 'municipality', 'entity', 'publicacion', 'contenidomunicipio')); args=('api', 'verificacion', 'hechohistorico', 'video', 'pregunta', 'department', 'documentoverificacion', 'homepagecomponent', 'profile', 'respuestausuario', 'menuitem', 'opcionrespuesta', 'respuestaitemverificacion', 'itemverificacion', 'sugerencia', 'tipodocumentoverificacion', 'rutaturistica', 'customuser', 'asistenciacapacitacion', 'atractivoturistico', 'artesano', 'perfiladministrador', 'perfilfuncionariodirectivo', 'elementoguardado', 'scoringrule', 'formulario', 'imagenatractivo', 'consejoconsultivo', 'imagenrutaturistica', 'plantillaverificacion', 'resena', 'userllmconfig', 'notificacion', 'siteconfiguration', 'imagenpaginainstitucional', 'perfilfuncionarioprofesional', 'imagengaleria', 'agenttask', 'auditlog', 'rubroartesano', 'paginainstitucional', 'imagenartesano', 'municipality', 'entity', 'publicacion', 'contenidomunicipio'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'api'; args=('api',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'api'; args=('api',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'prestadores'; args=('prestadores',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'prestadores'; args=('prestadores',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'prestadores' AND "django_content_type"."model" IN ('tipoalojamiento', 'amenity', 'categoriaprestador', 'skill', 'paqueteturistico', 'reserva', 'actividadensitio', 'tourdetail', 'procesooperativo', 'inventoryitem', 'reservaservicioadicional', 'menu', 'politicacancelacion', 'excepcionhorario', 'investigacionincidente', 'incidentelaboral', 'evento', 'promocion', 'vehicle', 'plato', 'product', 'zonadelivery', 'alojamiento', 'ruta', 'horario', 'costo', 'companiatransporte', 'restaurante', 'providerprofile', 'saludocupacional', 'operadorturistico', 'tipovehiculo', 'vehiculodealquiler', 'menuitemdetail', 'restauranttable', 'horarioruta', 'itinerariodia', 'room', 'alquiler', 'habitacion', 'kitchenstation', 'organizadorevento', 'cliente', 'matrizriesgo', 'vehiculo', 'capacitacionsst', 'roomtype', 'controlriesgo', 'sitioturistico', 'valoracion', 'categoriaplato', 'tareaoperativa', 'tarifa')); args=('prestadores', 'tipoalojamiento', 'amenity', 'categoriaprestador', 'skill', 'paqueteturistico', 'reserva', 'actividadensitio', 'tourdetail', 'procesooperativo', 'inventoryitem', 'reservaservicioadicional', 'menu', 'politicacancelacion', 'excepcionhorario', 'investigacionincidente', 'incidentelaboral', 'evento', 'promocion', 'vehicle', 'plato', 'product', 'zonadelivery', 'alojamiento', 'ruta', 'horario', 'costo', 'companiatransporte', 'restaurante', 'providerprofile', 'saludocupacional', 'operadorturistico', 'tipovehiculo', 'vehiculodealquiler', 'menuitemdetail', 'restauranttable', 'horarioruta', 'itinerariodia', 'room', 'alquiler', 'habitacion', 'kitchenstation', 'organizadorevento', 'cliente', 'matrizriesgo', 'vehiculo', 'capacitacionsst', 'roomtype', 'controlriesgo', 'sitioturistico', 'valoracion', 'categoriaplato', 'tareaoperativa', 'tarifa'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'prestadores' AND "django_content_type"."model" IN ('tipoalojamiento', 'amenity', 'categoriaprestador', 'skill', 'paqueteturistico', 'reserva', 'actividadensitio', 'tourdetail', 'procesooperativo', 'inventoryitem', 'reservaservicioadicional', 'menu', 'politicacancelacion', 'excepcionhorario', 'investigacionincidente', 'incidentelaboral', 'evento', 'promocion', 'vehicle', 'plato', 'product', 'zonadelivery', 'alojamiento', 'ruta', 'horario', 'costo', 'companiatransporte', 'restaurante', 'providerprofile', 'saludocupacional', 'operadorturistico', 'tipovehiculo', 'vehiculodealquiler', 'menuitemdetail', 'restauranttable', 'horarioruta', 'itinerariodia', 'room', 'alquiler', 'habitacion', 'kitchenstation', 'organizadorevento', 'cliente', 'matrizriesgo', 'vehiculo', 'capacitacionsst', 'roomtype', 'controlriesgo', 'sitioturistico', 'valoracion', 'categoriaplato', 'tareaoperativa', 'tarifa')); args=('prestadores', 'tipoalojamiento', 'amenity', 'categoriaprestador', 'skill', 'paqueteturistico', 'reserva', 'actividadensitio', 'tourdetail', 'procesooperativo', 'inventoryitem', 'reservaservicioadicional', 'menu', 'politicacancelacion', 'excepcionhorario', 'investigacionincidente', 'incidentelaboral', 'evento', 'promocion', 'vehicle', 'plato', 'product', 'zonadelivery', 'alojamiento', 'ruta', 'horario', 'costo', 'companiatransporte', 'restaurante', 'providerprofile', 'saludocupacional', 'operadorturistico', 'tipovehiculo', 'vehiculodealquiler', 'menuitemdetail', 'restauranttable', 'horarioruta', 'itinerariodia', 'room', 'alquiler', 'habitacion', 'kitchenstation', 'organizadorevento', 'cliente', 'matrizriesgo', 'vehiculo', 'capacitacionsst', 'roomtype', 'controlriesgo', 'sitioturistico', 'valoracion', 'categoriaplato', 'tareaoperativa', 'tarifa'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (261, 262, 273, 274, 275, 276, 277, 278, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(261, 262, 273, 274, 275, 276, 277, 278, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (261, 262, 273, 274, 275, 276, 277, 278, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(261, 262, 273, 274, 275, 276, 277, 278, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'prestadores'; args=('prestadores',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'prestadores'; args=('prestadores',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_comercial'; args=('gestion_comercial',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_comercial'; args=('gestion_comercial',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'gestion_comercial' AND "django_content_type"."model" IN ('tenant', 'embudo', 'asynctask', 'funnelpage', 'contratocomercial', 'user', 'recibocaja', 'funnellandingpage', 'marketingcontent', 'comercialsubcategoria', 'bloque', 'historicalembudo', 'ordenoperativa', 'facturaventa', 'leadevent', 'itemfactura', 'landingpage', 'comercialcategoria', 'funnelpublication', 'campaignchannel', 'cadenaturismo', 'pagina', 'aiinteraction', 'historicalpagina', 'operacioncomercial', 'itemoperacioncomercial', 'funnelcategoria', 'funnelevent', 'leadcapture', 'funnel', 'historicalaiinteraction', 'funnelversion', 'domainevent', 'historicalbloque', 'role', 'campaign', 'leadstate', 'contentasset', 'lead', 'funnelsubcategoria')); args=('gestion_comercial', 'tenant', 'embudo', 'asynctask', 'funnelpage', 'contratocomercial', 'user', 'recibocaja', 'funnellandingpage', 'marketingcontent', 'comercialsubcategoria', 'bloque', 'historicalembudo', 'ordenoperativa', 'facturaventa', 'leadevent', 'itemfactura', 'landingpage', 'comercialcategoria', 'funnelpublication', 'campaignchannel', 'cadenaturismo', 'pagina', 'aiinteraction', 'historicalpagina', 'operacioncomercial', 'itemoperacioncomercial', 'funnelcategoria', 'funnelevent', 'leadcapture', 'funnel', 'historicalaiinteraction', 'funnelversion', 'domainevent', 'historicalbloque', 'role', 'campaign', 'leadstate', 'contentasset', 'lead', 'funnelsubcategoria'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'gestion_comercial' AND "django_content_type"."model" IN ('tenant', 'embudo', 'asynctask', 'funnelpage', 'contratocomercial', 'user', 'recibocaja', 'funnellandingpage', 'marketingcontent', 'comercialsubcategoria', 'bloque', 'historicalembudo', 'ordenoperativa', 'facturaventa', 'leadevent', 'itemfactura', 'landingpage', 'comercialcategoria', 'funnelpublication', 'campaignchannel', 'cadenaturismo', 'pagina', 'aiinteraction', 'historicalpagina', 'operacioncomercial', 'itemoperacioncomercial', 'funnelcategoria', 'funnelevent', 'leadcapture', 'funnel', 'historicalaiinteraction', 'funnelversion', 'domainevent', 'historicalbloque', 'role', 'campaign', 'leadstate', 'contentasset', 'lead', 'funnelsubcategoria')); args=('gestion_comercial', 'tenant', 'embudo', 'asynctask', 'funnelpage', 'contratocomercial', 'user', 'recibocaja', 'funnellandingpage', 'marketingcontent', 'comercialsubcategoria', 'bloque', 'historicalembudo', 'ordenoperativa', 'facturaventa', 'leadevent', 'itemfactura', 'landingpage', 'comercialcategoria', 'funnelpublication', 'campaignchannel', 'cadenaturismo', 'pagina', 'aiinteraction', 'historicalpagina', 'operacioncomercial', 'itemoperacioncomercial', 'funnelcategoria', 'funnelevent', 'leadcapture', 'funnel', 'historicalaiinteraction', 'funnelversion', 'domainevent', 'historicalbloque', 'role', 'campaign', 'leadstate', 'contentasset', 'lead', 'funnelsubcategoria'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (128, 129, 130, 131, 132, 133, 134, 263, 136, 135, 264, 139, 137, 141, 142, 138, 140, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(128, 129, 130, 131, 132, 133, 134, 263, 136, 135, 264, 139, 137, 141, 142, 138, 140, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (128, 129, 130, 131, 132, 133, 134, 263, 136, 135, 264, 139, 137, 141, 142, 138, 140, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(128, 129, 130, 131, 132, 133, 134, 263, 136, 135, 264, 139, 137, 141, 142, 138, 140, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_comercial'; args=('gestion_comercial',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_comercial'; args=('gestion_comercial',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_financiera'; args=('gestion_financiera',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_financiera'; args=('gestion_financiera',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'gestion_financiera' AND "django_content_type"."model" IN ('riesgofinanciero', 'ordenpago', 'balancegeneral', 'cuentabancaria', 'estadoresultados', 'tesoreriacentral', 'proyeccionfinanciera', 'flujoefectivo', 'reservafinanciera', 'cambiospatrimonio')); args=('gestion_financiera', 'riesgofinanciero', 'ordenpago', 'balancegeneral', 'cuentabancaria', 'estadoresultados', 'tesoreriacentral', 'proyeccionfinanciera', 'flujoefectivo', 'reservafinanciera', 'cambiospatrimonio'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'gestion_financiera' AND "django_content_type"."model" IN ('riesgofinanciero', 'ordenpago', 'balancegeneral', 'cuentabancaria', 'estadoresultados', 'tesoreriacentral', 'proyeccionfinanciera', 'flujoefectivo', 'reservafinanciera', 'cambiospatrimonio')); args=('gestion_financiera', 'riesgofinanciero', 'ordenpago', 'balancegeneral', 'cuentabancaria', 'estadoresultados', 'tesoreriacentral', 'proyeccionfinanciera', 'flujoefectivo', 'reservafinanciera', 'cambiospatrimonio'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (265, 266, 267, 268, 269, 270, 143, 272, 144, 271) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(265, 266, 267, 268, 269, 270, 143, 272, 144, 271); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (265, 266, 267, 268, 269, 270, 143, 272, 144, 271) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(265, 266, 267, 268, 269, 270, 143, 272, 144, 271); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_financiera'; args=('gestion_financiera',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_financiera'; args=('gestion_financiera',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'empresa'; args=('empresa',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'empresa'; args=('empresa',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'empresa' AND "django_content_type"."model" IN ('informacionempresa', 'tercero')); args=('empresa', 'informacionempresa', 'tercero'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'empresa' AND "django_content_type"."model" IN ('informacionempresa', 'tercero')); args=('empresa', 'informacionempresa', 'tercero'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (145, 146) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(145, 146); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (145, 146) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(145, 146); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'empresa'; args=('empresa',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'empresa'; args=('empresa',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'nomina'; args=('nomina',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'nomina'; args=('nomina',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'nomina' AND "django_content_type"."model" IN ('detalleliquidacion', 'novedadnomina', 'contrato', 'ausencia', 'incapacidadlaboral', 'planilla', 'conceptonomina', 'provisionnomina', 'empleado')); args=('nomina', 'detalleliquidacion', 'novedadnomina', 'contrato', 'ausencia', 'incapacidadlaboral', 'planilla', 'conceptonomina', 'provisionnomina', 'empleado'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'nomina' AND "django_content_type"."model" IN ('detalleliquidacion', 'novedadnomina', 'contrato', 'ausencia', 'incapacidadlaboral', 'planilla', 'conceptonomina', 'provisionnomina', 'empleado')); args=('nomina', 'detalleliquidacion', 'novedadnomina', 'contrato', 'ausencia', 'incapacidadlaboral', 'planilla', 'conceptonomina', 'provisionnomina', 'empleado'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (281, 147, 148, 149, 150, 279, 280, 151, 152) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(281, 147, 148, 149, 150, 279, 280, 151, 152); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (281, 147, 148, 149, 150, 279, 280, 151, 152) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(281, 147, 148, 149, 150, 279, 280, 151, 152); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'nomina'; args=('nomina',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'nomina'; args=('nomina',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'cierres'; args=('cierres',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'cierres'; args=('cierres',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'cierres' AND "django_content_type"."model" IN ('periodocontable')); args=('cierres', 'periodocontable'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'cierres' AND "django_content_type"."model" IN ('periodocontable')); args=('cierres', 'periodocontable'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (153) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(153,); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (153) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(153,); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'cierres'; args=('cierres',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'cierres'; args=('cierres',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'activos_fijos'; args=('activos_fijos',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'activos_fijos'; args=('activos_fijos',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'activos_fijos' AND "django_content_type"."model" IN ('activofijo', 'categoriaactivo', 'calculodepreciacion')); args=('activos_fijos', 'activofijo', 'categoriaactivo', 'calculodepreciacion'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'activos_fijos' AND "django_content_type"."model" IN ('activofijo', 'categoriaactivo', 'calculodepreciacion')); args=('activos_fijos', 'activofijo', 'categoriaactivo', 'calculodepreciacion'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (154, 155, 156) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(154, 155, 156); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (154, 155, 156) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(154, 155, 156); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'activos_fijos'; args=('activos_fijos',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'activos_fijos'; args=('activos_fijos',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'compras'; args=('compras',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'compras'; args=('compras',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'compras' AND "django_content_type"."model" IN ('proveedor', 'facturacompra')); args=('compras', 'proveedor', 'facturacompra'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'compras' AND "django_content_type"."model" IN ('proveedor', 'facturacompra')); args=('compras', 'proveedor', 'facturacompra'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (157, 158) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(157, 158); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (157, 158) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(157, 158); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'compras'; args=('compras',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'compras'; args=('compras',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'contabilidad'; args=('contabilidad',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'contabilidad'; args=('contabilidad',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'contabilidad' AND "django_content_type"."model" IN ('cuenta', 'asientocontable', 'plandecuentas', 'transaccion', 'periodocontable')); args=('contabilidad', 'cuenta', 'asientocontable', 'plandecuentas', 'transaccion', 'periodocontable'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'contabilidad' AND "django_content_type"."model" IN ('cuenta', 'asientocontable', 'plandecuentas', 'transaccion', 'periodocontable')); args=('contabilidad', 'cuenta', 'asientocontable', 'plandecuentas', 'transaccion', 'periodocontable'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (160, 161, 162, 163, 159) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(160, 161, 162, 163, 159); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (160, 161, 162, 163, 159) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(160, 161, 162, 163, 159); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'contabilidad'; args=('contabilidad',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'contabilidad'; args=('contabilidad',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'inventario'; args=('inventario',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'inventario'; args=('inventario',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'inventario' AND "django_content_type"."model" IN ('almacen', 'movimientoinventario')); args=('inventario', 'almacen', 'movimientoinventario'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'inventario' AND "django_content_type"."model" IN ('almacen', 'movimientoinventario')); args=('inventario', 'almacen', 'movimientoinventario'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (164, 165) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(164, 165); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (164, 165) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(164, 165); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'inventario'; args=('inventario',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'inventario'; args=('inventario',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'companies'; args=('companies',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'companies'; args=('companies',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'companies' AND "django_content_type"."model" IN ('companyencryptionkey', 'company')); args=('companies', 'companyencryptionkey', 'company'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'companies' AND "django_content_type"."model" IN ('companyencryptionkey', 'company')); args=('companies', 'companyencryptionkey', 'company'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (166, 167) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(166, 167); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (166, 167) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(166, 167); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'companies'; args=('companies',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'companies'; args=('companies',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'audit'; args=('audit',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'audit'; args=('audit',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'audit' AND "django_content_type"."model" IN ('publicsystemaudit', 'auditlog', 'forensicsecuritylog')); args=('audit', 'publicsystemaudit', 'auditlog', 'forensicsecuritylog'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'audit' AND "django_content_type"."model" IN ('publicsystemaudit', 'auditlog', 'forensicsecuritylog')); args=('audit', 'publicsystemaudit', 'auditlog', 'forensicsecuritylog'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (168, 169, 170) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(168, 169, 170); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (168, 169, 170) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(168, 169, 170); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'audit'; args=('audit',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'audit'; args=('audit',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_archivistica'; args=('gestion_archivistica',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_archivistica'; args=('gestion_archivistica',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'gestion_archivistica' AND "django_content_type"."model" IN ('process', 'document', 'processtype', 'documentversion', 'documenttype')); args=('gestion_archivistica', 'process', 'document', 'processtype', 'documentversion', 'documenttype'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'gestion_archivistica' AND "django_content_type"."model" IN ('process', 'document', 'processtype', 'documentversion', 'documenttype')); args=('gestion_archivistica', 'process', 'document', 'processtype', 'documentversion', 'documenttype'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (171, 172, 173, 174, 175) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(171, 172, 173, 174, 175); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (171, 172, 173, 174, 175) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(171, 172, 173, 174, 175); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_archivistica'; args=('gestion_archivistica',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'gestion_archivistica'; args=('gestion_archivistica',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_plataforma'; args=('admin_plataforma',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_plataforma'; args=('admin_plataforma',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_plataforma' AND "django_content_type"."model" IN ('plan', 'suscripcion', 'governancepolicy', 'governanceauditlog')); args=('admin_plataforma', 'plan', 'suscripcion', 'governancepolicy', 'governanceauditlog'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_plataforma' AND "django_content_type"."model" IN ('plan', 'suscripcion', 'governancepolicy', 'governanceauditlog')); args=('admin_plataforma', 'plan', 'suscripcion', 'governancepolicy', 'governanceauditlog'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (176, 177, 178, 179) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(176, 177, 178, 179); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (176, 177, 178, 179) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(176, 177, 178, 179); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_plataforma'; args=('admin_plataforma',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_plataforma'; args=('admin_plataforma',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_financiera'; args=('admin_financiera',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_financiera'; args=('admin_financiera',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_financiera' AND "django_content_type"."model" IN ('transaccionbancaria', 'cuentabancaria', 'ordenpago')); args=('admin_financiera', 'transaccionbancaria', 'cuentabancaria', 'ordenpago'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_financiera' AND "django_content_type"."model" IN ('transaccionbancaria', 'cuentabancaria', 'ordenpago')); args=('admin_financiera', 'transaccionbancaria', 'cuentabancaria', 'ordenpago'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (180, 181, 182) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(180, 181, 182); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (180, 181, 182) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(180, 181, 182); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_financiera'; args=('admin_financiera',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_financiera'; args=('admin_financiera',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_archivistica'; args=('admin_archivistica',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_archivistica'; args=('admin_archivistica',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_archivistica' AND "django_content_type"."model" IN ('process', 'document', 'processtype', 'documentversion', 'documenttype')); args=('admin_archivistica', 'process', 'document', 'processtype', 'documentversion', 'documenttype'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_archivistica' AND "django_content_type"."model" IN ('process', 'document', 'processtype', 'documentversion', 'documenttype')); args=('admin_archivistica', 'process', 'document', 'processtype', 'documentversion', 'documenttype'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (183, 184, 185, 186, 187) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(183, 184, 185, 186, 187); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (183, 184, 185, 186, 187) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(183, 184, 185, 186, 187); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_archivistica'; args=('admin_archivistica',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_archivistica'; args=('admin_archivistica',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_contabilidad'; args=('admin_contabilidad',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_contabilidad'; args=('admin_contabilidad',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_contabilidad' AND "django_content_type"."model" IN ('cuenta', 'asientocontable', 'plandecuentas', 'transaccion', 'periodocontable')); args=('admin_contabilidad', 'cuenta', 'asientocontable', 'plandecuentas', 'transaccion', 'periodocontable'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_contabilidad' AND "django_content_type"."model" IN ('cuenta', 'asientocontable', 'plandecuentas', 'transaccion', 'periodocontable')); args=('admin_contabilidad', 'cuenta', 'asientocontable', 'plandecuentas', 'transaccion', 'periodocontable'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (192, 188, 189, 190, 191) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(192, 188, 189, 190, 191); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (192, 188, 189, 190, 191) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(192, 188, 189, 190, 191); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_contabilidad'; args=('admin_contabilidad',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_contabilidad'; args=('admin_contabilidad',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_inventario'; args=('admin_inventario',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_inventario'; args=('admin_inventario',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_inventario' AND "django_content_type"."model" IN ('almacen', 'movimientoinventario', 'producto', 'categoriaproducto')); args=('admin_inventario', 'almacen', 'movimientoinventario', 'producto', 'categoriaproducto'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_inventario' AND "django_content_type"."model" IN ('almacen', 'movimientoinventario', 'producto', 'categoriaproducto')); args=('admin_inventario', 'almacen', 'movimientoinventario', 'producto', 'categoriaproducto'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (193, 194, 195, 196) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(193, 194, 195, 196); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (193, 194, 195, 196) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(193, 194, 195, 196); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_inventario'; args=('admin_inventario',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_inventario'; args=('admin_inventario',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_compras'; args=('admin_compras',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_compras'; args=('admin_compras',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_compras' AND "django_content_type"."model" IN ('proveedor', 'facturacompra')); args=('admin_compras', 'proveedor', 'facturacompra'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_compras' AND "django_content_type"."model" IN ('proveedor', 'facturacompra')); args=('admin_compras', 'proveedor', 'facturacompra'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (197, 198) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(197, 198); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (197, 198) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(197, 198); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_compras'; args=('admin_compras',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_compras'; args=('admin_compras',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_activos_fijos'; args=('admin_activos_fijos',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_activos_fijos'; args=('admin_activos_fijos',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_activos_fijos' AND "django_content_type"."model" IN ('activofijo', 'categoriaactivo', 'calculodepreciacion')); args=('admin_activos_fijos', 'activofijo', 'categoriaactivo', 'calculodepreciacion'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_activos_fijos' AND "django_content_type"."model" IN ('activofijo', 'categoriaactivo', 'calculodepreciacion')); args=('admin_activos_fijos', 'activofijo', 'categoriaactivo', 'calculodepreciacion'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (200, 201, 199) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(200, 201, 199); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (200, 201, 199) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(200, 201, 199); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_activos_fijos'; args=('admin_activos_fijos',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_activos_fijos'; args=('admin_activos_fijos',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_nomina'; args=('admin_nomina',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_nomina'; args=('admin_nomina',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_nomina' AND "django_content_type"."model" IN ('detalleliquidacion', 'novedadnomina', 'contrato', 'planilla', 'conceptonomina', 'empleado')); args=('admin_nomina', 'detalleliquidacion', 'novedadnomina', 'contrato', 'planilla', 'conceptonomina', 'empleado'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'admin_nomina' AND "django_content_type"."model" IN ('detalleliquidacion', 'novedadnomina', 'contrato', 'planilla', 'conceptonomina', 'empleado')); args=('admin_nomina', 'detalleliquidacion', 'novedadnomina', 'contrato', 'planilla', 'conceptonomina', 'empleado'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (202, 203, 204, 205, 206, 207) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(202, 203, 204, 205, 206, 207); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (202, 203, 204, 205, 206, 207) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(202, 203, 204, 205, 206, 207); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_nomina'; args=('admin_nomina',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'admin_nomina'; args=('admin_nomina',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sadi_agent'; args=('sadi_agent',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sadi_agent'; args=('sadi_agent',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'sadi_agent' AND "django_content_type"."model" IN ('voiceinteractionlog', 'voicepermission', 'semanticdomain', 'entity', 'example', 'intent')); args=('sadi_agent', 'voiceinteractionlog', 'voicepermission', 'semanticdomain', 'entity', 'example', 'intent'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'sadi_agent' AND "django_content_type"."model" IN ('voiceinteractionlog', 'voicepermission', 'semanticdomain', 'entity', 'example', 'intent')); args=('sadi_agent', 'voiceinteractionlog', 'voicepermission', 'semanticdomain', 'entity', 'example', 'intent'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (208, 209, 210, 211, 212, 213) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(208, 209, 210, 211, 212, 213); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (208, 209, 210, 211, 212, 213) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(208, 209, 210, 211, 212, 213); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sadi_agent'; args=('sadi_agent',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sadi_agent'; args=('sadi_agent',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sarita_agents'; args=('sarita_agents',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sarita_agents'; args=('sarita_agents',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'sarita_agents' AND "django_content_type"."model" IN ('tareadelegada', 'registrodeejecucion', 'prestador', 'mision', 'plantáctico')); args=('sarita_agents', 'tareadelegada', 'registrodeejecucion', 'prestador', 'mision', 'plantáctico'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'sarita_agents' AND "django_content_type"."model" IN ('tareadelegada', 'registrodeejecucion', 'prestador', 'mision', 'plantáctico')); args=('sarita_agents', 'tareadelegada', 'registrodeejecucion', 'prestador', 'mision', 'plantáctico'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (215, 216, 217, 218, 219) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(215, 216, 217, 218, 219); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (215, 216, 217, 218, 219) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(215, 216, 217, 218, 219); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sarita_agents'; args=('sarita_agents',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'sarita_agents'; args=('sarita_agents',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'web_funnel'; args=('web_funnel',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'web_funnel'; args=('web_funnel',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'web_funnel' AND "django_content_type"."model" IN ('section', 'webpage', 'mediaasset', 'contentblock')); args=('web_funnel', 'section', 'webpage', 'mediaasset', 'contentblock'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'web_funnel' AND "django_content_type"."model" IN ('section', 'webpage', 'mediaasset', 'contentblock')); args=('web_funnel', 'section', 'webpage', 'mediaasset', 'contentblock'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (220, 221, 222, 223) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(220, 221, 222, 223); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (220, 221, 222, 223) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(220, 221, 222, 223); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'web_funnel'; args=('web_funnel',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'web_funnel'; args=('web_funnel',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'decision_intelligence'; args=('decision_intelligence',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'decision_intelligence'; args=('decision_intelligence',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'decision_intelligence' AND "django_content_type"."model" IN ('decisionmatrix', 'strategyproposal')); args=('decision_intelligence', 'decisionmatrix', 'strategyproposal'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'decision_intelligence' AND "django_content_type"."model" IN ('decisionmatrix', 'strategyproposal')); args=('decision_intelligence', 'decisionmatrix', 'strategyproposal'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (224, 225) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(224, 225); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (224, 225) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(224, 225); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'decision_intelligence'; args=('decision_intelligence',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'decision_intelligence'; args=('decision_intelligence',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'ecosystem_optimization'; args=('ecosystem_optimization',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'ecosystem_optimization'; args=('ecosystem_optimization',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'ecosystem_optimization' AND "django_content_type"."model" IN ('optimizationauditlog', 'autonomousexecutionlog', 'autonomycontrol', 'autonomousaction', 'performancemetric', 'optimizationproposal')); args=('ecosystem_optimization', 'optimizationauditlog', 'autonomousexecutionlog', 'autonomycontrol', 'autonomousaction', 'performancemetric', 'optimizationproposal'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'ecosystem_optimization' AND "django_content_type"."model" IN ('optimizationauditlog', 'autonomousexecutionlog', 'autonomycontrol', 'autonomousaction', 'performancemetric', 'optimizationproposal')); args=('ecosystem_optimization', 'optimizationauditlog', 'autonomousexecutionlog', 'autonomycontrol', 'autonomousaction', 'performancemetric', 'optimizationproposal'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (226, 227, 228, 229, 230, 231) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(226, 227, 228, 229, 230, 231); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (226, 227, 228, 229, 230, 231) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(226, 227, 228, 229, 230, 231); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'ecosystem_optimization'; args=('ecosystem_optimization',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'ecosystem_optimization'; args=('ecosystem_optimization',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'finanzas'; args=('finanzas',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'finanzas'; args=('finanzas',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'finanzas' AND "django_content_type"."model" IN ('financialeventrecord', 'financialmetric')); args=('finanzas', 'financialeventrecord', 'financialmetric'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'finanzas' AND "django_content_type"."model" IN ('financialeventrecord', 'financialmetric')); args=('finanzas', 'financialeventrecord', 'financialmetric'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (232, 233) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(232, 233); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (232, 233) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(232, 233); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'finanzas'; args=('finanzas',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'finanzas'; args=('finanzas',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'defense_predictive'; args=('defense_predictive',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'defense_predictive'; args=('defense_predictive',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'defense_predictive' AND "django_content_type"."model" IN ('pdegovernanceconfig', 'threatedge', 'threatnode', 'preventivehardening', 'predictivescenario')); args=('defense_predictive', 'pdegovernanceconfig', 'threatedge', 'threatnode', 'preventivehardening', 'predictivescenario'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'defense_predictive' AND "django_content_type"."model" IN ('pdegovernanceconfig', 'threatedge', 'threatnode', 'preventivehardening', 'predictivescenario')); args=('defense_predictive', 'pdegovernanceconfig', 'threatedge', 'threatnode', 'preventivehardening', 'predictivescenario'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (234, 235, 236, 237, 238) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(234, 235, 236, 237, 238); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (234, 235, 236, 237, 238) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(234, 235, 236, 237, 238); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'defense_predictive'; args=('defense_predictive',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'defense_predictive'; args=('defense_predictive',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'defense_deception'; args=('defense_deception',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'defense_deception'; args=('defense_deception',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'defense_deception' AND "django_content_type"."model" IN ('disuasionmetric', 'adversarialprofile', 'deceptioninteractionlog', 'ghostsurface')); args=('defense_deception', 'disuasionmetric', 'adversarialprofile', 'deceptioninteractionlog', 'ghostsurface'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'defense_deception' AND "django_content_type"."model" IN ('disuasionmetric', 'adversarialprofile', 'deceptioninteractionlog', 'ghostsurface')); args=('defense_deception', 'disuasionmetric', 'adversarialprofile', 'deceptioninteractionlog', 'ghostsurface'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (240, 241, 242, 239) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(240, 241, 242, 239); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (240, 241, 242, 239) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(240, 241, 242, 239); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'defense_deception'; args=('defense_deception',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'defense_deception'; args=('defense_deception',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'international_interop'; args=('international_interop',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'international_interop'; args=('international_interop',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'international_interop' AND "django_content_type"."model" IN ('algorithmiccertificate', 'trustsignal')); args=('international_interop', 'algorithmiccertificate', 'trustsignal'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'international_interop' AND "django_content_type"."model" IN ('algorithmiccertificate', 'trustsignal')); args=('international_interop', 'algorithmiccertificate', 'trustsignal'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (243, 244) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(243, 244); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (243, 244) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(243, 244); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'international_interop'; args=('international_interop',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'international_interop'; args=('international_interop',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'peace_net'; args=('peace_net',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'peace_net'; args=('peace_net',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'peace_net' AND "django_content_type"."model" IN ('systemicriskindicator', 'mitigationscenario', 'stabilityalert')); args=('peace_net', 'systemicriskindicator', 'mitigationscenario', 'stabilityalert'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'peace_net' AND "django_content_type"."model" IN ('systemicriskindicator', 'mitigationscenario', 'stabilityalert')); args=('peace_net', 'systemicriskindicator', 'mitigationscenario', 'stabilityalert'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (245, 246, 247) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(245, 246, 247); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (245, 246, 247) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(245, 246, 247); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'peace_net'; args=('peace_net',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'peace_net'; args=('peace_net',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'operational_treaties'; args=('operational_treaties',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'operational_treaties'; args=('operational_treaties',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'operational_treaties' AND "django_content_type"."model" IN ('operationaltreaty', 'sovereignkillswitch', 'treatycomplianceaudit')); args=('operational_treaties', 'operationaltreaty', 'sovereignkillswitch', 'treatycomplianceaudit'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'operational_treaties' AND "django_content_type"."model" IN ('operationaltreaty', 'sovereignkillswitch', 'treatycomplianceaudit')); args=('operational_treaties', 'operationaltreaty', 'sovereignkillswitch', 'treatycomplianceaudit'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (248, 249, 250) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(248, 249, 250); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (248, 249, 250) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(248, 249, 250); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'operational_treaties'; args=('operational_treaties',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'operational_treaties'; args=('operational_treaties',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'governance_live'; args=('governance_live',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'governance_live'; args=('governance_live',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'governance_live' AND "django_content_type"."model" IN ('governancememory', 'systemicstate')); args=('governance_live', 'governancememory', 'systemicstate'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'governance_live' AND "django_content_type"."model" IN ('governancememory', 'systemicstate')); args=('governance_live', 'governancememory', 'systemicstate'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (251, 252) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(251, 252); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (251, 252) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(251, 252); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'governance_live'; args=('governance_live',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'governance_live'; args=('governance_live',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'legacy_custody'; args=('legacy_custody',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'legacy_custody'; args=('legacy_custody',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'legacy_custody' AND "django_content_type"."model" IN ('legacycustodian', 'legacyguardrail', 'legacymilestone')); args=('legacy_custody', 'legacycustodian', 'legacyguardrail', 'legacymilestone'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'legacy_custody' AND "django_content_type"."model" IN ('legacycustodian', 'legacyguardrail', 'legacymilestone')); args=('legacy_custody', 'legacycustodian', 'legacyguardrail', 'legacymilestone'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (253, 254, 255) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(253, 254, 255); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (253, 254, 255) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(253, 254, 255); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'legacy_custody'; args=('legacy_custody',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'legacy_custody'; args=('legacy_custody',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'cart'; args=('cart',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'cart'; args=('cart',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'cart' AND "django_content_type"."model" IN ('cartitem', 'cart')); args=('cart', 'cartitem', 'cart'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'cart' AND "django_content_type"."model" IN ('cartitem', 'cart')); args=('cart', 'cartitem', 'cart'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (256, 257) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(256, 257); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (256, 257) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(256, 257); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'cart'; args=('cart',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'cart'; args=('cart',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'orders'; args=('orders',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'orders'; args=('orders',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'orders' AND "django_content_type"."model" IN ('orderitem', 'order')); args=('orders', 'orderitem', 'order'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'orders' AND "django_content_type"."model" IN ('orderitem', 'order')); args=('orders', 'orderitem', 'order'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (258, 259) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(258, 259); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (258, 259) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(258, 259); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'orders'; args=('orders',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'orders'; args=('orders',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'payments'; args=('payments',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'payments'; args=('payments',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'payments' AND "django_content_type"."model" IN ('payment')); args=('payments', 'payment'); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE ("django_content_type"."app_label" = 'payments' AND "django_content_type"."model" IN ('payment')); args=('payments', 'payment'); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (260) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(260,); alias=default
+(0.000) SELECT "auth_permission"."content_type_id" AS "content_type", "auth_permission"."codename" AS "codename" FROM "auth_permission" INNER JOIN "django_content_type" ON ("auth_permission"."content_type_id" = "django_content_type"."id") WHERE "auth_permission"."content_type_id" IN (260) ORDER BY "django_content_type"."app_label" ASC, "django_content_type"."model" ASC, 2 ASC; args=(260,); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'payments'; args=('payments',); alias=default
+(0.000) SELECT "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_content_type" WHERE "django_content_type"."app_label" = 'payments'; args=('payments',); alias=default
+DEBUG: Antes de importar api.signals
+DEBUG: Antes de importar api.signals
+DEBUG: Después de importar api.signals
+DEBUG: Después de importar api.signals
+Initializing AI providers...
+Warning: No AI providers initialized. Falling back to DummyProvider.
+Operations to perform:
+  Apply all migrations: nomina
+Running migrations:
+  No migrations to apply.

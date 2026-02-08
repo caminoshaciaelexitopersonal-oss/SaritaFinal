@@ -53,11 +53,117 @@ class TenienteROICalculator(TenienteTemplate):
         roi = cap.evaluate_roi(cac, ltv)
         return {"roi": roi, "profitable": roi > 0}
 
+# --- TENIENTES ARCHIVÍSTICOS (SARGENTOS LOGIC) ---
+class TenienteIntegridadArchivistica(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        version_id = parametros.get("version_id")
+        content = parametros.get("content", b"")
+        success = SargentoArchivistico.validar_integridad(version_id, content)
+        return {"status": "SUCCESS" if success else "FAILED", "integrated": success}
+
+class TenienteSelloTemporal(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        version_id = parametros.get("version_id")
+        success = SargentoArchivistico.aplicar_sello_temporal(version_id)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteAuditoriaAcceso(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        document_id = parametros.get("document_id")
+        user_id = parametros.get("user_id")
+        action = parametros.get("action", "READ")
+        success = SargentoArchivistico.registrar_acceso(document_id, user_id, action)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteTransicionEstado(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos import SargentoOperativo
+        entidad_tipo = parametros.get("entidad_tipo")
+        entidad_id = parametros.get("entidad_id")
+        nuevo_estado = parametros.get("nuevo_estado")
+        success = SargentoOperativo.actualizar_estado(entidad_tipo, entidad_id, nuevo_estado)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteCoordinacionTuristica(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados import SargentoEspecializado
+        tour_id = parametros.get("tour_id")
+        guia_id = parametros.get("guia_id")
+        success = SargentoEspecializado.asignar_guia(tour_id, guia_id)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteDespachoLogistico(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados import SargentoEspecializado
+        vehiculo_id = parametros.get("vehiculo_id")
+        ruta_id = parametros.get("ruta_id")
+        success = SargentoEspecializado.activar_transporte(vehiculo_id, ruta_id)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteMonitoreoSeguridad(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados import SargentoEspecializado
+        zona_id = parametros.get("zona_id")
+        desc = parametros.get("descripcion")
+        nivel = parametros.get("nivel", "LOW")
+        success = SargentoEspecializado.registrar_incidente_seguridad(zona_id, desc, nivel)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteArchivado(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        version_id = SargentoArchivistico.archivar_documento(parametros)
+        if version_id:
+            return {"status": "SUCCESS", "version_id": version_id}
+        return {"status": "FAILED"}
+
+class TenienteRegistroContable(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos import SargentoContable
+        asiento = SargentoContable.generar_asiento_partida_doble(
+            periodo_id=parametros.get("periodo_id"),
+            fecha=parametros.get("fecha"),
+            descripcion=parametros.get("descripcion"),
+            movimientos=parametros.get("movimientos"),
+            usuario_id=parametros.get("usuario_id")
+        )
+        if asiento:
+            return {"status": "SUCCESS", "asiento_id": str(asiento.id)}
+        return {"status": "FAILED"}
+
+class TenienteCierreContable(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos import SargentoContable
+        success = SargentoContable.ejecutar_cierre_periodo(
+            periodo_id=parametros.get("periodo_id"),
+            usuario_id=parametros.get("usuario_id")
+        )
+        return {"status": "SUCCESS" if success else "FAILED"}
+
 # --- TENIENTES COMERCIALES (SARGENTOS LOGIC) ---
+class TenienteContratacionComercial(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_comercial.domain.sargentos import SargentoComercial
+        operacion_id = parametros.get("operacion_id")
+        contrato = SargentoComercial.generar_contrato(operacion_id)
+        if contrato:
+            return {"status": "SUCCESS", "contrato_id": str(contrato.id)}
+        return {"status": "FAILED", "message": "No se pudo generar el contrato."}
+
+class TenienteActivacionOperativa(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_comercial.domain.sargentos import SargentoComercial
+        contrato_id = parametros.get("contrato_id")
+        orden = SargentoComercial.generar_orden_operativa(contrato_id)
+        if orden:
+            return {"status": "SUCCESS", "orden_id": str(orden.id)}
+        return {"status": "FAILED", "message": "No se pudo generar la orden operativa."}
+
 class TenienteGenericoComercial(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        # Aquí es donde el Teniente delegaría a Sargentos (funciones atómicas)
-        # Por ahora, simulamos el éxito de la operación atómica.
         action = parametros.get("action", "unknown_action")
         logger.info(f"TENIENTE COMERCIAL: Ejecutando acción atómica: {action}")
         return {"status": "SUCCESS", "action": action, "result": "Operación completada por Sargento Virtual"}
@@ -85,7 +191,20 @@ TENIENTE_MAP = {
     'cac_calculator': TenienteCACCalculator,
     'ltv_calculator': TenienteLTVCalculator,
     'roi_calculator': TenienteROICalculator,
+    # Archivísticos (Nuevos)
+    'archivistico_integridad': TenienteIntegridadArchivistica,
+    'archivistico_sello': TenienteSelloTemporal,
+    'archivistico_acceso': TenienteAuditoriaAcceso,
+    'archivistico_archivado': TenienteArchivado,
+    'contable_registro': TenienteRegistroContable,
+    'contable_cierre': TenienteCierreContable,
+    'operativo_transicion': TenienteTransicionEstado,
+    'operativo_coordinacion_turista': TenienteCoordinacionTuristica,
+    'operativo_despacho_logistico': TenienteDespachoLogistico,
+    'operativo_monitoreo_seguridad': TenienteMonitoreoSeguridad,
     # Comerciales (Nuevos)
+    'comercial_contratacion': TenienteContratacionComercial,
+    'comercial_activacion': TenienteActivacionOperativa,
     'seo_technical': TenienteGenericoComercial,
     'content_optimization': TenienteGenericoComercial,
     'matching_engine': TenienteGenericoComercial,

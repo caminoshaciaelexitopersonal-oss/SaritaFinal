@@ -23,7 +23,10 @@ interface RoomType { id: number; product: Product; capacidad: number; amenities:
 
 const fetcher = (url: string) => api.get(url).then(res => res.data.results || []);
 
+import { useMiNegocioApi } from '../../../hooks/useMiNegocioApi';
+
 export default function HotelManagementPage() {
+    const { triggerMission, isLoading: isMissionLoading } = useMiNegocioApi();
     const { data: roomTypes, error, isLoading } = useSWR<RoomType[]>('/v1/mi-negocio/operativa/hotel/room-types/', fetcher);
     const [selectedRoomTypeId, setSelectedRoomTypeId] = useState<number | null>(null);
 
@@ -92,7 +95,16 @@ export default function HotelManagementPage() {
                                     </div>
                                     <div className="flex gap-2">
                                        <Button variant="outline" className="border-slate-200 dark:border-white/10 font-bold h-12 px-6"><FiSettings className="mr-2" /> Configurar</Button>
-                                       <Button className="bg-brand text-white font-black h-12 px-8">Audit</Button>
+                                       <Button
+                                          className="bg-brand text-white font-black h-12 px-8"
+                                          onClick={() => triggerMission('AUDIT_QUALITY', {
+                                              room_type_id: rt.id,
+                                              context: 'Hotel Management Audit'
+                                          })}
+                                          disabled={isMissionLoading}
+                                       >
+                                          Audit
+                                       </Button>
                                     </div>
                                 </div>
                             </div>

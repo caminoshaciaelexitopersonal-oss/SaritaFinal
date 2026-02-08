@@ -22,6 +22,60 @@ logger = logging.getLogger(__name__)
 class FacturacionService:
     @staticmethod
     @transaction.atomic
+    def procesar_intencion_venta(perfil_id, cliente_id, items_data, usuario):
+        """
+        Punto de entrada para el flujo comercial gobernado por agentes.
+        1. Registra Intención.
+        2. Crea Operación Comercial (Borrador).
+        3. Delega a Agentes la validación y creación de contrato.
+        """
+        # 1. Crear Operación Comercial
+        operacion = OperacionComercial.objects.create(
+            perfil_ref_id=perfil_id,
+            cliente_ref_id=cliente_id,
+            creado_por=usuario,
+            estado=OperacionComercial.Estado.BORRADOR
+        )
+        total_subtotal = 0
+        for item in items_data:
+            producto_id = item['producto']
+            cantidad = item['cantidad']
+            precio = item['precio_unitario']
+            subtotal = Decimal(cantidad) * Decimal(precio)
+            total_subtotal += subtotal
+            ItemOperacionComercial.objects.create(
+                operacion=operacion,
+                producto_ref_id=producto_id,
+                descripcion=f"Producto {producto_id}", # Idealmente traer de ProductoService
+                cantidad=cantidad,
+                precio_unitario=precio,
+                subtotal=subtotal
+            )
+        operacion.subtotal = total_subtotal
+        operacion.total = total_subtotal # Sin impuestos por ahora
+        operacion.save()
+
+        # 2. Registrar Auditoría de Intención
+        AuditLog.objects.create(
+            user=usuario,
+            username=usuario.username,
+            action="SALE_INTENT_DETECTED",
+            details={"operacion_id": str(operacion.id), "total": str(operacion.total)}
+        )
+
+        # 3. Delegar a Agente de Contratación
+        from apps.sarita_agents.orchestrator import sarita_orchestrator
+        directive = {
+            "domain": "prestadores",
+            "mission": {"type": "SIGN_CONTRACT"},
+            "parameters": {"operacion_id": str(operacion.id)}
+        }
+        sarita_orchestrator.handle_directive(directive)
+
+        return operacion
+
+    @staticmethod
+    @transaction.atomic
     def facturar_operacion_confirmada(operacion: OperacionComercial):
         """
         Orquesta el proceso completo de facturación para una operación confirmada.
@@ -59,11 +113,40 @@ class FacturacionService:
                 precio_unitario=item_op.precio_unitario,
             )
 
-        # 2. Registrar el asiento contable
-        # Nota: El servicio de contabilidad también deberá ser refactorizado para
-        # resolver las referencias por ID en lugar de esperar objetos.
-        # Por ahora, se asume que esta adaptación es parte de la FASE 14.5.
-        FacturaVentaAccountingService.registrar_factura_venta(factura, cliente=cliente, perfil=perfil)
+        # 2. Registrar el reflejo contable vía Agentes (Fase 5)
+        try:
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+
+            # TODO: Obtener el periodo contable activo real
+            from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import PeriodoContable, Cuenta
+            periodo = PeriodoContable.objects.filter(provider_id=operacion.perfil_ref_id, cerrado=False).first()
+
+            if periodo:
+                # Buscar cuentas base para el asiento (simplificado)
+                cuenta_cxc = Cuenta.objects.filter(plan_de_cuentas__provider_id=operacion.perfil_ref_id, codigo='1305').first()
+                cuenta_ingreso = Cuenta.objects.filter(plan_de_cuentas__provider_id=operacion.perfil_ref_id, codigo='4135').first()
+
+                if cuenta_cxc and cuenta_ingreso:
+                    movimientos = [
+                        {"cuenta_id": str(cuenta_cxc.id), "debito": float(factura.total), "descripcion": "CxC Cliente"},
+                        {"cuenta_id": str(cuenta_ingreso.id), "credito": float(factura.total), "descripcion": "Venta de servicios"}
+                    ]
+
+                    directive_acc = {
+                        "domain": "prestadores",
+                        "mission": {"type": "RECOGNIZE_REVENUE"},
+                        "parameters": {
+                            "periodo_id": str(periodo.id),
+                            "fecha": str(factura.fecha_emision),
+                            "descripcion": f"Factura {factura.numero_factura}",
+                            "movimientos": movimientos,
+                            "usuario_id": factura.creado_por.id
+                        }
+                    }
+                    sarita_orchestrator.handle_directive(directive_acc)
+                    logger.info(f"GESTIÓN COMERCIAL: Misión de registro contable delegada para factura {factura.numero_factura}")
+        except Exception as e:
+            logger.error(f"Error al delegar reflejo contable de factura {factura.numero_factura}: {e}")
 
         # 3. Enviar a la DIAN (simulado)
         dian_response = DianService.enviar_factura(factura, cliente=cliente)
@@ -74,46 +157,36 @@ class FacturacionService:
             factura.estado_dian = FacturaVenta.EstadoDIAN.RECHAZADA
         factura.dian_response_log = dian_response
 
-        # --- INICIO DE INTEGRACIÓN CON SGA ---
-        # 4. Archivar el documento de la factura
+        # --- INTEGRACIÓN CON SGA VÍA AGENTES ---
         try:
-            # Preparar contenido y metadatos para el SGA
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+
             factura_content = {
                 "numero_factura": factura.numero_factura,
-                "cliente": cliente.nombre, # Usar el objeto resuelto
+                "cliente": cliente.nombre,
                 "total": str(factura.total),
                 "cufe": factura.cufe
             }
-            factura_bytes = json.dumps(factura_content, indent=2).encode('utf-8')
 
-            metadata = {'source_model': 'FacturaVenta', 'source_id': factura.id}
+            directive = {
+                "domain": "prestadores",
+                "mission": {"type": "ARCHIVE_ACCOUNTING_DOC"},
+                "parameters": {
+                    "company_id": perfil.company_id,
+                    "user_id": factura.creado_por.id,
+                    "process_type_code": 'CONT',
+                    "process_code": 'FACT',
+                    "document_type_code": 'FV',
+                    "document_content": json.dumps(factura_content).encode('utf-8'),
+                    "original_filename": f"{factura.numero_factura}.json",
+                    "document_metadata": {'source_model': 'FacturaVenta', 'source_id': str(factura.id)},
+                }
+            }
+            sarita_orchestrator.handle_directive(directive)
+            logger.info(f"GESTIÓN COMERCIAL: Misión de archivado delegada para factura {factura.numero_factura}")
 
-            # Invocar al servicio de archivado
-            # Nota: factura.perfil.company.id es un anti-patrón.
-            # El company_id debería obtenerse del perfil resuelto.
-            document_version = ArchivingService.archive_document(
-                company_id=perfil.company_id, # Usar el ID de referencia
-                user_id=factura.creado_por.id,
-                process_type_code='CONT',
-                process_code='FACT',
-                document_type_code='FV',
-                document_content=factura_bytes,
-                original_filename=f"{factura.numero_factura}.json",
-                document_metadata=metadata,
-                requires_blockchain_notarization=True
-            )
-
-            # Vincular el registro de archivo con la factura
-            factura.documento_archivistico = document_version.document
         except Exception as e:
-            # Usar logging estructurado en lugar de print
-            logger.error(
-                "Error al archivar la factura %s: %s",
-                factura.numero_factura,
-                e,
-                exc_info=True  # Adjuntar traceback al log
-            )
-        # --- FIN DE INTEGRACIÓN CON SGA ---
+            logger.error(f"Error al delegar archivado de factura {factura.numero_factura}: {e}")
 
         factura.save()
 

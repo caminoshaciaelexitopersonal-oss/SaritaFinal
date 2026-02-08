@@ -104,11 +104,23 @@ class FacturaVentaWriteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         items_data = validated_data.pop('items')
-        validated_data['perfil'] = self.context['request'].user.perfil_prestador
-        factura = FacturaVenta.objects.create(**validated_data)
-        for item_data in items_data:
-            ItemFactura.objects.create(factura=factura, **item_data)
-        factura.recalcular_totales()
+        usuario = self.context['request'].user
+        perfil_id = usuario.perfil_prestador.id
+        cliente_id = validated_data.get('cliente_id')
+
+        # Usar el servicio para procesar la intención comercial gobernada
+        from ..services import FacturacionService
+        operacion = FacturacionService.procesar_intencion_venta(
+            perfil_id=perfil_id,
+            cliente_id=cliente_id,
+            items_data=items_data,
+            usuario=usuario
+        )
+
+        # La factura se crea como consecuencia de la confirmación de la operación (o por el agente)
+        # En este flujo síncrono para la UI, forzamos la creación de la factura si la operación se creó.
+        # En una fase más avanzada, esto sería asíncrono tras la firma del contrato.
+        factura = FacturacionService.facturar_operacion_confirmada(operacion)
         return factura
 
 

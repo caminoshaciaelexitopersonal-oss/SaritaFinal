@@ -70,14 +70,19 @@ import { ViewState } from '@/components/ui/ViewState';
 import api from '@/services/api';
 import { toast } from 'react-toastify';
 
+import { useMiNegocioApi } from '../../hooks/useMiNegocioApi';
+
 export default function CentroOperativoPage() {
+ 
     const [operations, setOperations] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+ 
     const [selectedOpId, setSelectedOpId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'PANEL' | 'TAREAS' | 'INCIDENCIAS' | 'METRICAS'>('PANEL');
     const [isNewOpModalOpen, setIsNewOpModalOpen] = useState(false);
 
     useEffect(() => {
+ 
         const fetchReservas = async () => {
             try {
                 const res = await api.get('/v1/mi-negocio/operativa/genericos/reservas/');
@@ -90,6 +95,7 @@ export default function CentroOperativoPage() {
         };
         fetchReservas();
     }, []);
+ 
 
     const selectedOp = operations.find(o => o.id === selectedOpId);
 
@@ -312,10 +318,12 @@ export default function CentroOperativoPage() {
 
                                             <div className="mt-10 pt-6 border-t border-white/10 flex flex-col gap-3">
                                                 <Button
+ 
                                                     className="w-full bg-brand text-white font-black text-xs py-6 rounded-2xl shadow-lg shadow-brand/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
                                                     onClick={() => toast.info("Generando Suborden de Delivery via Puente Interoperable...")}
                                                 >
                                                     <FiArrowRight /> Solicitar Delivery para Orden
+ 
                                                 </Button>
 
                                                 <div className="bg-white/5 p-4 rounded-2xl">

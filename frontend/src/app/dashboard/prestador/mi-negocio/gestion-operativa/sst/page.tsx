@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import {
@@ -14,17 +14,21 @@ import {
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import { useMiNegocioApi } from '../../hooks/useMiNegocioApi';
 
 export default function SG_SST_Page() {
-  const risks = [
-    { area: 'Operación Río', level: 'HIGH', factor: 'Biomecánico', control: 'EPP' },
-    { area: 'Oficinas', level: 'LOW', factor: 'Ergonómico', control: 'Pausas activas' },
-  ];
+  const { getSSTRisks, getSSTIncidents, isLoading } = useMiNegocioApi();
+  const [risks, setRisks] = useState<any[]>([]);
+  const [incidents, setIncidents] = useState<any[]>([]);
 
-  const incidents = [
-    { date: '2024-07-15', type: 'Incidente', description: 'Resbalón en muelle', status: 'CLOSED' },
-    { date: '2024-08-01', type: 'Casi Accidente', description: 'Falla en arnés de seguridad', status: 'OPEN' },
-  ];
+  useEffect(() => {
+    const loadData = async () => {
+      const [r, i] = await Promise.all([getSSTRisks(), getSSTIncidents()]);
+      if (r) setRisks(r);
+      if (i) setIncidents(i);
+    };
+    loadData();
+  }, [getSSTRisks, getSSTIncidents]);
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
@@ -91,11 +95,11 @@ export default function SG_SST_Page() {
                   <TableBody>
                      {risks.map((risk, i) => (
                        <TableRow key={i} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-slate-50 dark:border-white/5">
-                          <TableCell className="px-8 font-bold text-slate-700 dark:text-slate-200 uppercase tracking-tighter italic">{risk.area}</TableCell>
-                          <TableCell className="text-sm text-slate-500 font-medium">{risk.factor}</TableCell>
+                          <TableCell className="px-8 font-bold text-slate-700 dark:text-slate-200 uppercase tracking-tighter italic">{risk.clasificacion}</TableCell>
+                          <TableCell className="text-sm text-slate-500 font-medium">{risk.peligro_descripcion}</TableCell>
                           <TableCell className="text-center">
-                             <Badge className={risk.level === 'HIGH' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}>
-                                {risk.level}
+                             <Badge className={risk.nivel_riesgo > 10 ? 'bg-red-100 text-red-700' : risk.nivel_riesgo > 5 ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}>
+                                {risk.nivel_riesgo}
                              </Badge>
                           </TableCell>
                        </TableRow>
@@ -118,16 +122,20 @@ export default function SG_SST_Page() {
                     <div key={i} className="p-8 hover:bg-slate-50 dark:hover:bg-white/5 transition-all flex items-center justify-between">
                        <div>
                           <div className="flex items-center gap-3 mb-1">
-                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{inc.date}</span>
-                             <Badge variant="outline" className="text-[8px] font-black">{inc.type}</Badge>
+                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{new Date(inc.fecha_hora).toLocaleDateString()}</span>
+                             <Badge variant="outline" className="text-[8px] font-black">{inc.tipo}</Badge>
+                             <Badge className={inc.gravedad === 'MORTAL' ? 'bg-black text-white' : inc.gravedad === 'GRAVE' ? 'bg-red-600 text-white' : 'bg-amber-500 text-white'}>{inc.gravedad}</Badge>
                           </div>
-                          <p className="font-bold text-slate-800 dark:text-slate-200">{inc.description}</p>
+                          <p className="font-bold text-slate-800 dark:text-slate-200">{inc.descripcion_hechos}</p>
                        </div>
-                       <Badge className={inc.status === 'CLOSED' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}>
-                          {inc.status}
+                       <Badge className={inc.estado_investigacion === 'CERRADA' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}>
+                          {inc.estado_investigacion}
                        </Badge>
                     </div>
                   ))}
+                  {incidents.length === 0 && (
+                    <div className="p-20 text-center text-slate-400 italic text-sm">No se registran incidentes laborales.</div>
+                  )}
                </div>
             </CardContent>
          </Card>
