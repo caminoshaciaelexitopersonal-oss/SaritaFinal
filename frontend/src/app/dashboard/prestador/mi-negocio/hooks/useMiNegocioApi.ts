@@ -158,6 +158,18 @@ export function useMiNegocioApi() {
     return makeRequest(() => nominaEndpoints.getPlanillas().then(res => res.data));
   }, [makeRequest]);
 
+  const createPlanilla = useCallback(async (data: any) => {
+    return makeRequest(() => nominaEndpoints.createPlanilla(data).then(res => res.data), "Periodo de nómina creado.");
+  }, [makeRequest]);
+
+  const liquidarPlanilla = useCallback(async (id: string) => {
+    return makeRequest(() => nominaEndpoints.liquidarPlanilla(id).then(res => res.data), "Planilla liquidada.");
+  }, [makeRequest]);
+
+  const contabilizarPlanilla = useCallback(async (id: string) => {
+    return makeRequest(() => nominaEndpoints.contabilizarPlanilla(id).then(res => res.data), "Planilla contabilizada y procesada para pago.");
+  }, [makeRequest]);
+
   // --- API Especializada ---
   const getVehicles = useCallback(async () => {
     return makeRequest(() => operativoEndpoints.getVehicles().then(res => res.data));
@@ -206,6 +218,9 @@ export function useMiNegocioApi() {
     updateEmpleado,
     deleteEmpleado,
     getPlanillas,
+    createPlanilla,
+    liquidarPlanilla,
+    contabilizarPlanilla,
     getVehicles,
     getTours,
     getProcesosOperativos,

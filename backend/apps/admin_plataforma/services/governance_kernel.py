@@ -433,6 +433,23 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.DELEGATED
 ))
 
+# Dominio: Gestión de Nómina
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PAYROLL_RUN_LIQUIDATION",
+    domain="hacienda",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.DELEGATED,
+    required_params=["planilla_id"]
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PAYROLL_AUTHORIZE_PAYMENT",
+    domain="hacienda",
+    required_role=CustomUser.Role.ADMIN,
+    min_authority=AuthorityLevel.SOVEREIGN,
+    required_params=["planilla_id"]
+))
+
 # Dominio: Seguridad y Salud (SG-SST)
 GovernanceKernel.register_intention(GovernanceIntention(
     name="SST_REGISTER_INCIDENT",
