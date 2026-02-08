@@ -3,7 +3,7 @@ from django.db import models
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from django.conf import settings
 
-class PaqueteTuristico(models.Model):
+class PaqueteAgencia(models.Model):
     """
     Representa un paquete turístico ofrecido por una agencia de viajes.
     """
@@ -28,7 +28,7 @@ class PaqueteTuristico(models.Model):
     def __str__(self):
         return f"{self.nombre} ({self.duracion_dias} días)"
 
-class ReservaPaquete(models.Model):
+class ReservaPaqueteAgencia(models.Model):
     """
     Representa una reserva de un paquete turístico por parte de un cliente.
     """
@@ -40,7 +40,7 @@ class ReservaPaquete(models.Model):
         ('completada', 'Completada'),
     ]
 
-    paquete = models.ForeignKey(PaqueteTuristico, on_delete=models.CASCADE, related_name='reservas')
+    paquete = models.ForeignKey(PaqueteAgencia, on_delete=models.CASCADE, related_name='reservas')
     # Podría enlazarse con el modelo Cliente si existe y es relevante.
     # cliente = models.ForeignKey('gestion_comercial.Cliente', on_delete=models.SET_NULL, null=True, blank=True)
     nombre_cliente_temporal = models.CharField(max_length=150, help_text="Nombre del cliente que hace la reserva")

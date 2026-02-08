@@ -8,19 +8,19 @@ class CapitanRutasTuristicas(CapitanTemplate):
     múltiples municipios para crear productos turísticos competitivos.
     """
 
-    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
-        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Inicializado para Misión ID {self.mision_id}.")
+    def __init__(self, coronel):
+        super().__init__(coronel=coronel)
+        logger.info(f"CAPITÁN {self.__class__.__name__}: Inicializado para Misión ID {mision.id}.")
 
-    def plan(self):
+    def plan(self, mision):
         """
         El corazón del Capitán. Aquí es donde defines el plan táctico.
         """
-        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Planificando la misión.")
+        logger.info(f"CAPITÁN {self.__class__.__name__}: Planificando la misión.")
 
-        plan_tactico = self.get_or_create_plan_tactico(
+        plan_tactico = self.coronel.get_or_create_plan_tactico(
             nombre=f"Plan de Rutas Turísticas",
-            descripcion=f"Desarrollar rutas turísticas para el objetivo: {self.objective}"
+            descripcion=f"Desarrollar rutas turísticas para el objetivo: {mision.directiva_original.get('objective', 'N/A')}"
         )
 
         self.delegar_tarea(
@@ -30,5 +30,5 @@ class CapitanRutasTuristicas(CapitanTemplate):
             parametros_especificos=self.parametros
         )
 
-        self.lanzar_ejecucion_plan()
-        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Planificación completada y tarea delegada a 'rutas_turisticas'.")
+        # self.lanzar_ejecucion_plan() handled by template
+        logger.info(f"CAPITÁN {self.__class__.__name__}: Planificación completada y tarea delegada a 'rutas_turisticas'.")

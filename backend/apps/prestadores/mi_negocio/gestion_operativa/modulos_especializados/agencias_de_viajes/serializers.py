@@ -1,10 +1,10 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/agencias_de_viajes/serializers.py
 from rest_framework import serializers
-from .models import PaqueteTuristico, ReservaPaquete
+from .models import PaqueteAgencia, ReservaPaqueteAgencia
 
 class PaqueteTuristicoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PaqueteTuristico
+        model = PaqueteAgencia
         fields = [
             'id', 'nombre', 'descripcion', 'duracion_dias', 'precio_por_persona',
             'servicios_incluidos', 'estado', 'created_at', 'updated_at'
@@ -16,7 +16,7 @@ class ReservaPaqueteSerializer(serializers.ModelSerializer):
     paquete_nombre = serializers.CharField(source='paquete.nombre', read_only=True)
 
     class Meta:
-        model = ReservaPaquete
+        model = ReservaPaqueteAgencia
         fields = [
             'id', 'paquete', 'paquete_nombre', 'nombre_cliente_temporal', 'email_cliente',
             'telefono_cliente', 'fecha_inicio', 'numero_de_personas',

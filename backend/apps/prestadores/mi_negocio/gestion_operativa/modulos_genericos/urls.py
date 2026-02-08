@@ -35,4 +35,5 @@ urlpatterns = [
     path('transporte/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.urls')),
     path('arrendadora-vehiculos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.arrendadoras_vehiculos.urls')),
     path('sitios-turisticos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.sitios_turisticos.urls')),
+    path('agencias-viajes/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias_de_viajes.urls')),
 ]

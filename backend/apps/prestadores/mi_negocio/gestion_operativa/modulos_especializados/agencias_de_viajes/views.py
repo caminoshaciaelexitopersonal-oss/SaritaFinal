@@ -2,7 +2,7 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import PaqueteTuristico, ReservaPaquete
+from .models import PaqueteAgencia, ReservaPaqueteAgencia
 from .serializers import PaqueteTuristicoSerializer, ReservaPaqueteSerializer
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions import IsOwner
 
@@ -15,7 +15,7 @@ class PaqueteTuristicoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # Filtra los paquetes para que solo el prestador logueado pueda ver y gestionar los suyos
-        return PaqueteTuristico.objects.filter(perfil=self.request.user.perfil_prestador)
+        return PaqueteAgencia.objects.filter(perfil=self.request.user.perfil_prestador)
 
     def perform_create(self, serializer):
         # Asigna el perfil del prestador logueado automáticamente al crear un nuevo paquete
@@ -55,7 +55,7 @@ class ReservaPaqueteViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # Un prestador solo puede ver las reservas de sus propios paquetes.
-        return ReservaPaquete.objects.filter(paquete__perfil=self.request.user.perfil_prestador)
+        return ReservaPaqueteAgencia.objects.filter(paquete__perfil=self.request.user.perfil_prestador)
 
     def perform_create(self, serializer):
         # La validación en el serializer se asegura de que el paquete pertenezca al prestador.
