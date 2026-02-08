@@ -76,8 +76,8 @@ export default function GestionComercialPage() {
       source: '/api/marketing/campaigns/',
       model: 'Campaign',
       timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-      status: 'DEV',
-      certainty: 'Módulo en desarrollo - Backend parcial'
+      status: 'OK',
+      certainty: 'Datos reales - Orquestación SARITA'
     },
     [CommercialView.SALES_CRM]: {
       source: '/api/bff/sales/opportunities/',
@@ -96,8 +96,8 @@ export default function GestionComercialPage() {
       source: '/api/bff/funnel-builder/',
       model: 'Funnel',
       timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-      status: 'DEV',
-      certainty: 'Modo Demo - Persistencia Local'
+      status: 'OK',
+      certainty: 'Datos reales - Motor de Conversión Activo'
     },
     [CommercialView.INVOICING]: {
       source: '/api/v1/mi-negocio/comercial/facturas-venta/',

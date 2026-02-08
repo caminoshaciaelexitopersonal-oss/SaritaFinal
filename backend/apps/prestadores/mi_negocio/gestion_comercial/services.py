@@ -22,6 +22,60 @@ logger = logging.getLogger(__name__)
 class FacturacionService:
     @staticmethod
     @transaction.atomic
+    def procesar_intencion_venta(perfil_id, cliente_id, items_data, usuario):
+        """
+        Punto de entrada para el flujo comercial gobernado por agentes.
+        1. Registra Intención.
+        2. Crea Operación Comercial (Borrador).
+        3. Delega a Agentes la validación y creación de contrato.
+        """
+        # 1. Crear Operación Comercial
+        operacion = OperacionComercial.objects.create(
+            perfil_ref_id=perfil_id,
+            cliente_ref_id=cliente_id,
+            creado_por=usuario,
+            estado=OperacionComercial.Estado.BORRADOR
+        )
+        total_subtotal = 0
+        for item in items_data:
+            producto_id = item['producto']
+            cantidad = item['cantidad']
+            precio = item['precio_unitario']
+            subtotal = Decimal(cantidad) * Decimal(precio)
+            total_subtotal += subtotal
+            ItemOperacionComercial.objects.create(
+                operacion=operacion,
+                producto_ref_id=producto_id,
+                descripcion=f"Producto {producto_id}", # Idealmente traer de ProductoService
+                cantidad=cantidad,
+                precio_unitario=precio,
+                subtotal=subtotal
+            )
+        operacion.subtotal = total_subtotal
+        operacion.total = total_subtotal # Sin impuestos por ahora
+        operacion.save()
+
+        # 2. Registrar Auditoría de Intención
+        AuditLog.objects.create(
+            user=usuario,
+            username=usuario.username,
+            action="SALE_INTENT_DETECTED",
+            details={"operacion_id": str(operacion.id), "total": str(operacion.total)}
+        )
+
+        # 3. Delegar a Agente de Contratación
+        from apps.sarita_agents.orchestrator import sarita_orchestrator
+        directive = {
+            "domain": "prestadores",
+            "mission": {"type": "SIGN_CONTRACT"},
+            "parameters": {"operacion_id": str(operacion.id)}
+        }
+        sarita_orchestrator.handle_directive(directive)
+
+        return operacion
+
+    @staticmethod
+    @transaction.atomic
     def facturar_operacion_confirmada(operacion: OperacionComercial):
         """
         Orquesta el proceso completo de facturación para una operación confirmada.

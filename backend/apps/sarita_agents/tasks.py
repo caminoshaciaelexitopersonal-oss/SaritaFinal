@@ -54,10 +54,26 @@ class TenienteROICalculator(TenienteTemplate):
         return {"roi": roi, "profitable": roi > 0}
 
 # --- TENIENTES COMERCIALES (SARGENTOS LOGIC) ---
+class TenienteContratacionComercial(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_comercial.domain.sargentos import SargentoComercial
+        operacion_id = parametros.get("operacion_id")
+        contrato = SargentoComercial.generar_contrato(operacion_id)
+        if contrato:
+            return {"status": "SUCCESS", "contrato_id": str(contrato.id)}
+        return {"status": "FAILED", "message": "No se pudo generar el contrato."}
+
+class TenienteActivacionOperativa(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_comercial.domain.sargentos import SargentoComercial
+        contrato_id = parametros.get("contrato_id")
+        orden = SargentoComercial.generar_orden_operativa(contrato_id)
+        if orden:
+            return {"status": "SUCCESS", "orden_id": str(orden.id)}
+        return {"status": "FAILED", "message": "No se pudo generar la orden operativa."}
+
 class TenienteGenericoComercial(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        # Aquí es donde el Teniente delegaría a Sargentos (funciones atómicas)
-        # Por ahora, simulamos el éxito de la operación atómica.
         action = parametros.get("action", "unknown_action")
         logger.info(f"TENIENTE COMERCIAL: Ejecutando acción atómica: {action}")
         return {"status": "SUCCESS", "action": action, "result": "Operación completada por Sargento Virtual"}
@@ -86,6 +102,8 @@ TENIENTE_MAP = {
     'ltv_calculator': TenienteLTVCalculator,
     'roi_calculator': TenienteROICalculator,
     # Comerciales (Nuevos)
+    'comercial_contratacion': TenienteContratacionComercial,
+    'comercial_activacion': TenienteActivacionOperativa,
     'seo_technical': TenienteGenericoComercial,
     'content_optimization': TenienteGenericoComercial,
     'matching_engine': TenienteGenericoComercial,

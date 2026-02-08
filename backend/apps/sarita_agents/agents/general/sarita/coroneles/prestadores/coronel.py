@@ -31,6 +31,10 @@ from .capitanes.gestion_comercial.capitan_auditoria_ventas import CapitanAuditor
 from .capitanes.gestion_comercial.capitan_prevencion_fraude import CapitanPrevencionFraude
 from .capitanes.gestion_comercial.capitan_comercial_estrategico import CapitanComercialEstrategico
 from .capitanes.gestion_comercial.capitan_gestion_comercial_general import CapitanGestionComercialGeneral
+from .capitanes.gestion_comercial.capitan_comercial_hotelero import CapitanComercialHotelero
+from .capitanes.gestion_comercial.capitan_comercial_gastronomico import CapitanComercialGastronomico
+from .capitanes.gestion_comercial.capitan_comercial_turistico_tours import CapitanComercialTuristicoTours
+from .capitanes.gestion_comercial.capitan_comercial_transporte import CapitanComercialTransporte
 
 # --- OTROS DOMINIOS ---
 from .capitanes.onboarding_prestador_capitan import CapitanOnboardingPrestador
@@ -93,6 +97,10 @@ class PrestadoresCoronel(CoronelTemplate):
             "prevencion_fraude": CapitanPrevencionFraude(coronel=self),
             "comercial_estrategico": CapitanComercialEstrategico(coronel=self),
             "comercial_general": CapitanGestionComercialGeneral(coronel=self),
+            "comercial_hotel": CapitanComercialHotelero(coronel=self),
+            "comercial_gastronomia": CapitanComercialGastronomico(coronel=self),
+            "comercial_tours": CapitanComercialTuristicoTours(coronel=self),
+            "comercial_transporte": CapitanComercialTransporte(coronel=self),
 
             # Otros
             "onboarding": CapitanOnboardingPrestador(coronel=self),
