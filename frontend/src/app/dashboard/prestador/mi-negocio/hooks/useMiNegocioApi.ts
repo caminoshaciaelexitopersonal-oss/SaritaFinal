@@ -8,6 +8,7 @@ import { comercialEndpoints } from '@/services/endpoints/comercial';
 import { financieroEndpoints } from '@/services/endpoints/financiero';
 import { archivisticaEndpoints } from '@/services/endpoints/archivistica';
 import { nominaEndpoints } from '@/services/endpoints/nomina';
+import { saritaEndpoints } from '@/services/endpoints/sarita';
 import { contableMapper } from '@/services/mappers/contableMapper';
 import { commercialMapper } from '@/services/mappers/commercialMapper';
 
@@ -141,6 +142,10 @@ export function useMiNegocioApi() {
     return makeRequest(() => operativoEndpoints.updateProcesoEstado(id, nuevo_estado).then(res => res.data), "Estado operativo actualizado.");
   }, [makeRequest]);
 
+  const triggerMission = useCallback(async (type: string, parameters: any) => {
+    return makeRequest(() => saritaEndpoints.triggerMission(type, parameters).then(res => res.data), "Misión delegada exitosamente.");
+  }, [makeRequest]);
+
   return {
     isLoading,
     error,
@@ -164,5 +169,6 @@ export function useMiNegocioApi() {
     getTours,
     getProcesosOperativos,
     updateProcesoEstado,
+    triggerMission,
   };
 }

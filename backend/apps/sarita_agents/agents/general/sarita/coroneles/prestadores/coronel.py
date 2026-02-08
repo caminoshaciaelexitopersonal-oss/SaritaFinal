@@ -74,6 +74,13 @@ from .capitanes.gestion_operativa.capitan_bloqueos_operativos import CapitanBloq
 from .capitanes.gestion_operativa.capitan_gestion_reintentos import CapitanGestionReintentos
 from .capitanes.gestion_operativa.capitan_fallback_operativo import CapitanFallbackOperativo
 from .capitanes.gestion_operativa.capitan_escalamiento_excepciones import CapitanEscalamientoExcepciones
+from .capitanes.gestion_operativa.capitan_coordinacion_guias import CapitanCoordinacionGuias
+from .capitanes.gestion_operativa.capitan_calidad_experiencias import CapitanCalidadExperiencias
+from .capitanes.gestion_operativa.capitan_rutas_estrategicas import CapitanRutasEstrategicas
+from .capitanes.gestion_operativa.capitan_despacho_vehiculos import CapitanDespachoVehiculos
+from .capitanes.gestion_operativa.capitan_monitoreo_zonas import CapitanMonitoreoZonas
+from .capitanes.gestion_operativa.capitan_protocolos_emergencia import CapitanProtocolosEmergencia
+from .capitanes.gestion_operativa.capitan_atencion_digital import CapitanAtencionDigital
 from .capitanes.gestion_contable.capitan_contabilidad_general import CapitanContabilidadGeneral
 from .capitanes.gestion_contable.capitan_asientos_automaticos import CapitanAsientosAutomaticos
 from .capitanes.gestion_contable.capitan_cierre_contable import CapitanCierreContable
@@ -168,6 +175,13 @@ class PrestadoresCoronel(CoronelTemplate):
             "gestion_reintentos": CapitanGestionReintentos(coronel=self),
             "fallback_operativo": CapitanFallbackOperativo(coronel=self),
             "escalamiento_excepciones": CapitanEscalamientoExcepciones(coronel=self),
+            "coordinacion_guias": CapitanCoordinacionGuias(coronel=self),
+            "calidad_experiencias": CapitanCalidadExperiencias(coronel=self),
+            "rutas_estrategicas": CapitanRutasEstrategicas(coronel=self),
+            "despacho_vehiculos": CapitanDespachoVehiculos(coronel=self),
+            "monitoreo_zonas": CapitanMonitoreoZonas(coronel=self),
+            "protocolos_emergencia": CapitanProtocolosEmergencia(coronel=self),
+            "atencion_digital": CapitanAtencionDigital(coronel=self),
             "contabilidad_general": CapitanContabilidadGeneral(coronel=self),
             "asientos_automaticos": CapitanAsientosAutomaticos(coronel=self),
             "cierre_contable": CapitanCierreContable(coronel=self),
@@ -220,6 +234,14 @@ class PrestadoresCoronel(CoronelTemplate):
             "UPDATE_OPERATIONAL_STATE": "transiciones_estado",
             "ASSIGN_TASK": "asignacion_tareas",
             "RETRY_OPERATION": "gestion_reintentos",
+            # Operativo Especializado
+            "COORDINATE_GUIDE": "coordinacion_guias",
+            "AUDIT_QUALITY": "calidad_experiencias",
+            "PLAN_ROUTE": "rutas_estrategicas",
+            "DISPATCH_VEHICLE": "despacho_vehiculos",
+            "MONITOR_ZONE": "monitoreo_zonas",
+            "EMERGENCY_PROTOCOL": "protocolos_emergencia",
+            "DIGITAL_SERVICE": "atencion_digital",
         }
 
         cap_key = mapping.get(m_type)

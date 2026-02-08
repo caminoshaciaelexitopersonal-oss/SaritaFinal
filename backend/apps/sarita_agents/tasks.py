@@ -87,6 +87,31 @@ class TenienteTransicionEstado(TenienteTemplate):
         success = SargentoOperativo.actualizar_estado(entidad_tipo, entidad_id, nuevo_estado)
         return {"status": "SUCCESS" if success else "FAILED"}
 
+class TenienteCoordinacionTuristica(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados import SargentoEspecializado
+        tour_id = parametros.get("tour_id")
+        guia_id = parametros.get("guia_id")
+        success = SargentoEspecializado.asignar_guia(tour_id, guia_id)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteDespachoLogistico(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados import SargentoEspecializado
+        vehiculo_id = parametros.get("vehiculo_id")
+        ruta_id = parametros.get("ruta_id")
+        success = SargentoEspecializado.activar_transporte(vehiculo_id, ruta_id)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteMonitoreoSeguridad(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados import SargentoEspecializado
+        zona_id = parametros.get("zona_id")
+        desc = parametros.get("descripcion")
+        nivel = parametros.get("nivel", "LOW")
+        success = SargentoEspecializado.registrar_incidente_seguridad(zona_id, desc, nivel)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
 class TenienteArchivado(TenienteTemplate):
     def perform_action(self, parametros: dict):
         from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
@@ -149,6 +174,9 @@ TENIENTE_MAP = {
     'archivistico_acceso': TenienteAuditoriaAcceso,
     'archivistico_archivado': TenienteArchivado,
     'operativo_transicion': TenienteTransicionEstado,
+    'operativo_coordinacion_turista': TenienteCoordinacionTuristica,
+    'operativo_despacho_logistico': TenienteDespachoLogistico,
+    'operativo_monitoreo_seguridad': TenienteMonitoreoSeguridad,
     # Comerciales (Nuevos)
     'comercial_contratacion': TenienteContratacionComercial,
     'comercial_activacion': TenienteActivacionOperativa,

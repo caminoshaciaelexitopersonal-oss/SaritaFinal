@@ -71,7 +71,7 @@ import { ViewState } from '@/components/ui/ViewState';
 import { useMiNegocioApi } from '../../hooks/useMiNegocioApi';
 
 export default function CentroOperativoPage() {
-    const { getProcesosOperativos, updateProcesoEstado, isLoading } = useMiNegocioApi();
+    const { getProcesosOperativos, updateProcesoEstado, triggerMission, isLoading } = useMiNegocioApi();
     const [operations, setOperations] = useState<Operacion[]>([]);
     const [selectedOpId, setSelectedOpId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'PANEL' | 'TAREAS' | 'INCIDENCIAS' | 'METRICAS'>('PANEL');
@@ -365,7 +365,15 @@ export default function CentroOperativoPage() {
                                                 <Button
                                                     variant="ghost"
                                                     className="w-full text-red-400 hover:bg-red-500/10 font-bold text-xs"
-                                                    onClick={() => addIncident(selectedOp.id, 'Nueva incidencia reportada por operador.')}
+                                                    onClick={async () => {
+                                                        await triggerMission('MONITOR_ZONE', {
+                                                            zona_id: selectedOp.id,
+                                                            descripcion: 'Nueva incidencia reportada por operador.',
+                                                            nivel: 'HIGH'
+                                                        });
+                                                        addIncident(selectedOp.id, 'Nueva incidencia reportada por operador.');
+                                                    }}
+                                                    disabled={isLoading}
                                                 >
                                                     <FiAlertCircle className="mr-2"/> Reportar Incidencia
                                                 </Button>
