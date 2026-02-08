@@ -31,11 +31,29 @@ class GovernanceKernel:
     """
 
     _registry: Dict[str, GovernanceIntention] = {}
+    _agent_registry: Dict[str, Dict[str, Any]] = {}
 
     @classmethod
     def register_intention(cls, intention: GovernanceIntention):
         cls._registry[intention.name] = intention
         logger.info(f"KERNEL: Intención '{intention.name}' registrada en el dominio '{intention.domain}'.")
+
+    @classmethod
+    def register_agent(cls, agent_id: str, metadata: Dict[str, Any]):
+        """
+        Fase 1.1: Registro obligatorio de agentes en el Kernel.
+        """
+        cls._agent_registry[agent_id] = {
+            "id": agent_id,
+            "nivel": metadata.get("nivel"),
+            "superior": metadata.get("superior"),
+            "dominio": metadata.get("dominio"),
+            "mision": metadata.get("mision"),
+            "eventos": metadata.get("eventos", []),
+            "estado": "ACTIVO",
+            "auditado": True
+        }
+        logger.info(f"KERNEL: Agente '{agent_id}' ({metadata.get('nivel')}) registrado formalmente.")
 
     def __init__(self, user: CustomUser):
         self.user = user
