@@ -699,6 +699,30 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="SALE_CREATED",
+    domain="comercial",
+    required_role=CustomUser.Role.PRESTADOR,
+    required_params=["cliente_id", "total"],
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="SALE_CONFIRMED",
+    domain="comercial",
+    required_role=CustomUser.Role.PRESTADOR,
+    required_params=["operacion_id"],
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="SALE_CONTRACT_FORMALIZED",
+    domain="comercial",
+    required_role=CustomUser.Role.ADMIN, # O sistema automático con nivel DELEGATED
+    required_params=["operacion_id"],
+    min_authority=AuthorityLevel.DELEGATED
+))
+
 # Dominio: Autonomía IA (Fase F-F)
 GovernanceKernel.register_intention(GovernanceIntention(
     name="PRIORITIZE_CRITICAL_LEADS",

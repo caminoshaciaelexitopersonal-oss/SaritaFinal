@@ -87,6 +87,65 @@ class RegistroDeEjecucion(models.Model):
 
     def __str__(self):
         return f"Log de Tarea {self.tarea_delegada_id} @ {self.timestamp}"
+
+# --- Jerarquía Reforzada Fase 1: Sargentos y Soldados ---
+
+class Sargento(models.Model):
+    """
+    Ejecutor atómico IA.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    nombre_identificador = models.CharField(max_length=255, unique=True, help_text="Ej: sargento_validacion_precio")
+    dominio = models.CharField(max_length=100)
+    funcion_principal = models.TextField()
+
+    def __str__(self):
+        return f"Sargento {self.nombre_identificador}"
+
+class Soldado(models.Model):
+    """
+    Ejecutor humano bajo gobernanza del sistema.
+    Cada Sargento tiene exactamente 5 soldados.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sargento = models.ForeignKey(Sargento, on_delete=models.CASCADE, related_name='soldados')
+    usuario_asignado = models.ForeignKey('api.CustomUser', on_delete=models.SET_NULL, null=True, blank=True)
+    posicion = models.PositiveSmallIntegerField(help_text="Posición del 1 al 5 en el escuadrón.")
+    esta_disponible = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ('sargento', 'posicion')
+        constraints = [
+            models.CheckConstraint(check=models.Q(posicion__gte=1, posicion__lte=5), name='posicion_soldado_1_a_5')
+        ]
+
+    def __str__(self):
+        return f"Soldado {self.posicion} de {self.sargento.nombre_identificador}"
+
+class OrdenManual(models.Model):
+    """
+    Órdenes emitidas por un Sargento para ser ejecutadas por un Soldado (Humano).
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sargento = models.ForeignKey(Sargento, on_delete=models.CASCADE)
+    soldado = models.ForeignKey(Soldado, on_delete=models.CASCADE, related_name='ordenes')
+    descripcion = models.TextField()
+    evidencia_requerida = models.TextField()
+    parametros = models.JSONField(default=dict)
+    estado = models.CharField(max_length=20, default='PENDIENTE', choices=[
+        ('PENDIENTE', 'Pendiente'),
+        ('EN_EJECUCION', 'En Ejecución'),
+        ('VALIDANDO', 'Validando Evidencia'),
+        ('COMPLETADA', 'Completada'),
+        ('RECHAZADA', 'Rechazada'),
+    ])
+    evidencia_url = models.URLField(null=True, blank=True)
+    bitacora_ejecucion = models.TextField(blank=True)
+    timestamp_creacion = models.DateTimeField(auto_now_add=True)
+    timestamp_finalizacion = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Orden {self.id} -> Soldado {self.soldado.posicion}"
  
 
 # --- Modelos de Dominio (Ejemplo para Fase U) ---
