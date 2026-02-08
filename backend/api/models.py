@@ -84,6 +84,7 @@ class CustomUser(AbstractUser):
         ARTESANO = "ARTESANO", _("Artesano")
         CONSEJO_CONSULTIVO_TURISMO = "CONSEJO_CONSULTIVO_TURISMO", _("Consejo Consultivo de Turismo")
         TURISTA = "TURISTA", _("Turista")
+        DELIVERY = "DELIVERY", _("Delivery / Logística")
 
     # --- Campos de Identidad IA (Fase Z) ---
     is_agent = models.BooleanField(default=False, help_text="Indica si este usuario es un Funcionario Digital (Agente IA).")

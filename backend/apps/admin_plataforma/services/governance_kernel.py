@@ -349,6 +349,109 @@ class GovernanceKernel:
         """
         Delega la ejecución al servicio de dominio correspondiente.
         """
+        # Registro de Servicios de Dominio - Ejército de Agentes Monedero
+        if intention.domain == "wallet":
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+
+            # Convertimos la intención en una directiva para el ejército de agentes
+            directive = {
+                "domain": "wallet",
+                "action": intention.name,
+                "parameters": parameters,
+                "user_id": str(self.user.id),
+                "role": self.user.role
+            }
+
+            # El General SARITA toma el mando
+            agent_result = sarita_orchestrator.handle_directive(directive)
+
+            # Integración con el servicio real para persistencia de estado (Sargentos llamarían a esto en un flujo real completo)
+            # Para cumplir con el "Cierre Estructural", aseguramos que el rastro financiero se genere.
+            from apps.wallet.services import WalletService
+            wallet_service = WalletService(user=self.user)
+
+            intention_ref = agent_result.get('mision_id', 'SARITA-NATIVE')
+
+            if intention.name == "WALLET_DEPOSIT":
+                tx = wallet_service.deposit(
+                    wallet_id=parameters["wallet_id"],
+                    amount=parameters["amount"],
+                    description=parameters.get("description", "Depósito de fondos"),
+                    intention_id=intention_ref
+                )
+                return {"status": "SUCCESS", "agent_report": agent_result, "transaction_id": str(tx.id)}
+
+            if intention.name == "WALLET_PAY":
+                tx = wallet_service.pay(
+                    to_wallet_id=parameters["to_wallet_id"],
+                    amount=parameters["amount"],
+                    related_service_id=parameters.get("related_service_id"),
+                    description=parameters.get("description", "Pago de servicio"),
+                    intention_id=intention_ref
+                )
+                return {"status": "SUCCESS", "agent_report": agent_result, "transaction_id": str(tx.id)}
+
+            if intention.name == "WALLET_REFUND":
+                tx = wallet_service.refund(transaction_id=parameters["transaction_id"])
+                return {"status": "SUCCESS", "agent_report": agent_result, "refund_transaction_id": str(tx.id)}
+
+            if intention.name == "WALLET_LIQUIDATE":
+                tx = wallet_service.liquidate(wallet_id=parameters["wallet_id"])
+                return {"status": "SUCCESS", "agent_report": agent_result, "liquidation_id": str(tx.id)}
+
+            if intention.name == "WALLET_FREEZE":
+                wallet = wallet_service.freeze(wallet_id=parameters["wallet_id"], motivo=parameters["motivo"])
+                return {"status": "SUCCESS", "agent_report": agent_result, "wallet_id": str(wallet.id)}
+
+        # Registro de Servicios de Dominio - Ejército de Agentes Delivery
+        if intention.domain == "delivery":
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+
+            directive = {
+                "domain": "delivery",
+                "action": intention.name,
+                "parameters": parameters,
+                "user_id": str(self.user.id),
+                "role": self.user.role
+            }
+
+            agent_result = sarita_orchestrator.handle_directive(directive)
+
+            from apps.delivery.services import DeliveryLogisticService
+            delivery_service = DeliveryLogisticService(user=self.user)
+
+            if intention.name == "DELIVERY_REQUEST":
+                # FASE 9: Usamos el puente de interoperabilidad si hay una orden relacionada
+                intention_ref = agent_result.get('mision_id', 'SARITA-NATIVE')
+                if parameters.get("related_operational_order_id"):
+                    from .interoperability_bridge import InteroperabilityBridge
+                    bridge = InteroperabilityBridge(user=self.user)
+                    service = bridge.link_delivery_to_specialized_order(
+                        parameters["related_operational_order_id"],
+                        parameters,
+                        intention_id=intention_ref
+                    )
+                else:
+                    service = delivery_service.create_request(parameters, intention_id=intention_ref)
+
+                return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
+
+            if intention.name == "DELIVERY_ASSIGN":
+                service = delivery_service.assign_service(parameters)
+                return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
+
+            if intention.name == "DELIVERY_COMPLETE":
+                service = delivery_service.complete_service(parameters["service_id"])
+                return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
+
+            if intention.name == "DELIVERY_RATE":
+                service = delivery_service.rate_service(
+                    service_id=parameters["service_id"],
+                    rating=parameters["rating"],
+                    comment=parameters.get("comment", "")
+                )
+                return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
+
         from .gestion_plataforma_service import GestionPlataformaService
         service = GestionPlataformaService(admin_user=self.user)
 
@@ -433,44 +536,87 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.DELEGATED
 ))
 
-# Dominio: Gestión de Nómina
+ 
+# Dominio: Monedero Institucional
 GovernanceKernel.register_intention(GovernanceIntention(
-    name="PAYROLL_RUN_LIQUIDATION",
-    domain="hacienda",
-    required_role=CustomUser.Role.ADMIN,
-    min_authority=AuthorityLevel.DELEGATED,
-    required_params=["planilla_id"]
+    name="WALLET_DEPOSIT",
+    domain="wallet",
+    required_role=CustomUser.Role.TURISTA, # Cambiado para permitir carga propia
+    required_params=["wallet_id", "amount"],
+    min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
-    name="PAYROLL_AUTHORIZE_PAYMENT",
-    domain="hacienda",
-    required_role=CustomUser.Role.ADMIN,
-    min_authority=AuthorityLevel.SOVEREIGN,
-    required_params=["planilla_id"]
-))
-
-# Dominio: Seguridad y Salud (SG-SST)
-GovernanceKernel.register_intention(GovernanceIntention(
-    name="SST_REGISTER_INCIDENT",
-    domain="seguridad_civil",
-    required_role=CustomUser.Role.ADMIN,
-    min_authority=AuthorityLevel.OPERATIONAL,
-    required_params=["tipo", "gravedad", "descripcion"]
+    name="WALLET_PAY",
+    domain="wallet",
+    required_role=CustomUser.Role.TURISTA,
+    required_params=["to_wallet_id", "amount"],
+    min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
-    name="SST_BLOCK_OPERATION",
-    domain="seguridad_civil",
+    name="WALLET_REFUND",
+    domain="wallet",
     required_role=CustomUser.Role.ADMIN,
-    min_authority=AuthorityLevel.DELEGATED,
-    required_params=["proceso_id", "motivo"]
+    required_params=["transaction_id"],
+    min_authority=AuthorityLevel.DELEGATED
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
-    name="SST_UPDATE_RISK_MATRIX",
-    domain="planeacion",
+    name="WALLET_LIQUIDATE",
+    domain="wallet",
     required_role=CustomUser.Role.ADMIN,
+    required_params=["wallet_id"],
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="WALLET_FREEZE",
+    domain="wallet",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["wallet_id", "motivo"],
+    min_authority=AuthorityLevel.SOVEREIGN
+))
+
+# Dominio: Delivery y Logística
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="DELIVERY_REQUEST",
+    domain="delivery",
+    required_role=CustomUser.Role.TURISTA,
+    required_params=["origin_address", "destination_address", "estimated_price"],
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="DELIVERY_ASSIGN",
+    domain="delivery",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["service_id", "driver_id", "vehicle_id"],
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="DELIVERY_COMPLETE",
+    domain="delivery",
+    required_role=CustomUser.Role.DELIVERY,
+    required_params=["service_id"],
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="DELIVERY_RATE",
+    domain="delivery",
+    required_role=CustomUser.Role.TURISTA,
+    required_params=["service_id", "rating"],
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="VEHICLE_REGISTER",
+    domain="delivery",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["plate", "vehicle_type", "company_id"],
+ 
     min_authority=AuthorityLevel.DELEGATED
 ))
 

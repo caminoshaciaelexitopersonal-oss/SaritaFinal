@@ -119,6 +119,8 @@ INSTALLED_APPS = [
     "apps.cart.apps.CartConfig",
     "apps.orders.apps.OrdersConfig",
     "apps.payments.apps.PaymentsConfig",
+    "apps.wallet.apps.WalletConfig",
+    "apps.delivery.apps.DeliveryConfig",
 ]
 
 
