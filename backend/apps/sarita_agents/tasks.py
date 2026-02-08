@@ -78,6 +78,15 @@ class TenienteAuditoriaAcceso(TenienteTemplate):
         success = SargentoArchivistico.registrar_acceso(document_id, user_id, action)
         return {"status": "SUCCESS" if success else "FAILED"}
 
+class TenienteTransicionEstado(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos import SargentoOperativo
+        entidad_tipo = parametros.get("entidad_tipo")
+        entidad_id = parametros.get("entidad_id")
+        nuevo_estado = parametros.get("nuevo_estado")
+        success = SargentoOperativo.actualizar_estado(entidad_tipo, entidad_id, nuevo_estado)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
 class TenienteArchivado(TenienteTemplate):
     def perform_action(self, parametros: dict):
         from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
@@ -139,6 +148,7 @@ TENIENTE_MAP = {
     'archivistico_sello': TenienteSelloTemporal,
     'archivistico_acceso': TenienteAuditoriaAcceso,
     'archivistico_archivado': TenienteArchivado,
+    'operativo_transicion': TenienteTransicionEstado,
     # Comerciales (Nuevos)
     'comercial_contratacion': TenienteContratacionComercial,
     'comercial_activacion': TenienteActivacionOperativa,

@@ -63,6 +63,17 @@ from .capitanes.gestion_operativa.capitan_gestion_operativa_general import Capit
 from .capitanes.gestion_operativa.capitan_control_operativo import CapitanControlOperativo
 from .capitanes.gestion_operativa.capitan_incidentes_operativos import CapitanIncidentesOperativos
 from .capitanes.gestion_operativa.capitan_calidad_y_cumplimiento import CapitanCalidadYCumplimiento
+from .capitanes.gestion_operativa.capitan_flujos_secuenciales import CapitanFlujosSecuenciales
+from .capitanes.gestion_operativa.capitan_flujos_paralelos import CapitanFlujosParalelos
+from .capitanes.gestion_operativa.capitan_validacion_ordenes import CapitanValidacionOrdenes
+from .capitanes.gestion_operativa.capitan_enrutamiento_ordenes import CapitanEnrutamientoOrdenes
+from .capitanes.gestion_operativa.capitan_priorizacion_tareas import CapitanPriorizacionTareas
+from .capitanes.gestion_operativa.capitan_asignacion_tareas import CapitanAsignacionTareas
+from .capitanes.gestion_operativa.capitan_transiciones_estado import CapitanTransicionesEstado
+from .capitanes.gestion_operativa.capitan_bloqueos_operativos import CapitanBloqueosOperativos
+from .capitanes.gestion_operativa.capitan_gestion_reintentos import CapitanGestionReintentos
+from .capitanes.gestion_operativa.capitan_fallback_operativo import CapitanFallbackOperativo
+from .capitanes.gestion_operativa.capitan_escalamiento_excepciones import CapitanEscalamientoExcepciones
 from .capitanes.gestion_contable.capitan_contabilidad_general import CapitanContabilidadGeneral
 from .capitanes.gestion_contable.capitan_asientos_automaticos import CapitanAsientosAutomaticos
 from .capitanes.gestion_contable.capitan_cierre_contable import CapitanCierreContable
@@ -146,6 +157,17 @@ class PrestadoresCoronel(CoronelTemplate):
             "seguimiento_operativo": CapitanControlOperativo(coronel=self),
             "incidentes_operativos": CapitanIncidentesOperativos(coronel=self),
             "cierre_operativo": CapitanCalidadYCumplimiento(coronel=self),
+            "flujos_secuenciales": CapitanFlujosSecuenciales(coronel=self),
+            "flujos_paralelos": CapitanFlujosParalelos(coronel=self),
+            "validacion_ordenes": CapitanValidacionOrdenes(coronel=self),
+            "enrutamiento_ordenes": CapitanEnrutamientoOrdenes(coronel=self),
+            "priorizacion_tareas": CapitanPriorizacionTareas(coronel=self),
+            "asignacion_tareas": CapitanAsignacionTareas(coronel=self),
+            "transiciones_estado": CapitanTransicionesEstado(coronel=self),
+            "bloqueos_operativos": CapitanBloqueosOperativos(coronel=self),
+            "gestion_reintentos": CapitanGestionReintentos(coronel=self),
+            "fallback_operativo": CapitanFallbackOperativo(coronel=self),
+            "escalamiento_excepciones": CapitanEscalamientoExcepciones(coronel=self),
             "contabilidad_general": CapitanContabilidadGeneral(coronel=self),
             "asientos_automaticos": CapitanAsientosAutomaticos(coronel=self),
             "cierre_contable": CapitanCierreContable(coronel=self),
@@ -193,6 +215,11 @@ class PrestadoresCoronel(CoronelTemplate):
             "NOTARIZE_DOC": "notarizacion_blockchain",
             "RETENTION_AUDIT": "politicas_retencion",
             "DOCUMENT_SEARCH": "busqueda_documental",
+            # Operativo Genérico
+            "EXECUTE_OPERATIONAL_FLOW": "operativo_general",
+            "UPDATE_OPERATIONAL_STATE": "transiciones_estado",
+            "ASSIGN_TASK": "asignacion_tareas",
+            "RETRY_OPERATION": "gestion_reintentos",
         }
 
         cap_key = mapping.get(m_type)

@@ -133,6 +133,14 @@ export function useMiNegocioApi() {
     return makeRequest(() => operativoEndpoints.getTours().then(res => res.data));
   }, [makeRequest]);
 
+  const getProcesosOperativos = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getProcesosOperativos().then(res => res.data));
+  }, [makeRequest]);
+
+  const updateProcesoEstado = useCallback(async (id: string, nuevo_estado: string) => {
+    return makeRequest(() => operativoEndpoints.updateProcesoEstado(id, nuevo_estado).then(res => res.data), "Estado operativo actualizado.");
+  }, [makeRequest]);
+
   return {
     isLoading,
     error,
@@ -154,5 +162,7 @@ export function useMiNegocioApi() {
     getPlanillas,
     getVehicles,
     getTours,
+    getProcesosOperativos,
+    updateProcesoEstado,
   };
 }

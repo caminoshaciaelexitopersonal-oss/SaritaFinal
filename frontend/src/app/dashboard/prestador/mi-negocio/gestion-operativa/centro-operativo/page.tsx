@@ -68,11 +68,37 @@ interface Operacion {
 
 import { ViewState } from '@/components/ui/ViewState';
 
+import { useMiNegocioApi } from '../../hooks/useMiNegocioApi';
+
 export default function CentroOperativoPage() {
+    const { getProcesosOperativos, updateProcesoEstado, isLoading } = useMiNegocioApi();
     const [operations, setOperations] = useState<Operacion[]>([]);
     const [selectedOpId, setSelectedOpId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'PANEL' | 'TAREAS' | 'INCIDENCIAS' | 'METRICAS'>('PANEL');
     const [isNewOpModalOpen, setIsNewOpModalOpen] = useState(false);
+
+    useEffect(() => {
+        const loadOps = async () => {
+            const data = await getProcesosOperativos();
+            if (data) {
+                // Adaptar de BD a UI si es necesario
+                setOperations(data.map((d: any) => ({
+                    id: d.id,
+                    venta_id: 'N/A',
+                    servicio_nombre: d.nombre,
+                    cliente_nombre: 'Cargando...',
+                    estado: d.estado,
+                    progreso: d.estado === 'COMPLETADO' ? 100 : 25,
+                    fecha_inicio: d.inicio_real || 'Pendiente',
+                    fecha_fin_estimada: d.fin_real || 'Próximamente',
+                    responsable_lider: 'Agente IA',
+                    actividades: d.tareas ? [{ id: '1', nombre: 'Tareas del Proceso', tareas: d.tareas }] : [],
+                    incidencias: []
+                })));
+            }
+        };
+        loadOps();
+    }, [getProcesosOperativos]);
 
     const selectedOp = operations.find(o => o.id === selectedOpId);
 
@@ -326,10 +352,13 @@ export default function CentroOperativoPage() {
                                                 </div>
                                                 <Button
                                                     className="w-full bg-brand text-white font-black text-xs py-6 rounded-2xl shadow-lg shadow-brand/20 hover:scale-[1.02] transition-transform"
-                                                    onClick={() => {
-                                                        setOperations(prev => prev.map(o => o.id === selectedOp.id ? { ...o, estado: 'VALIDACION', progreso: 90 } : o));
-                                                        alert('Checkpoint activado. Operación movida a fase de VALIDACIÓN.');
+                                                    onClick={async () => {
+                                                        const success = await updateProcesoEstado(selectedOp.id, 'COMPLETADO');
+                                                        if (success) {
+                                                            setOperations(prev => prev.map(o => o.id === selectedOp.id ? { ...o, estado: 'COMPLETADA', progreso: 100 } : o));
+                                                        }
                                                     }}
+                                                    disabled={isLoading}
                                                 >
                                                     <FiCheckCircle className="mr-2"/> Validar Hito Maestro
                                                 </Button>

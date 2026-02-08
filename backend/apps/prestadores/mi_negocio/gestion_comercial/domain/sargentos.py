@@ -97,6 +97,24 @@ class SargentoComercial:
                 estado='PENDIENTE'
             )
             logger.info(f"SARGENTO: Orden operativa {orden.id} generada.")
+
+            # Activar misión de ejecución operativa vía agentes
+            try:
+                from apps.sarita_agents.orchestrator import sarita_orchestrator
+                directive = {
+                    "domain": "prestadores",
+                    "mission": {"type": "EXECUTE_OPERATIONAL_FLOW"},
+                    "parameters": {
+                        "orden_id": str(orden.id),
+                        "perfil_id": str(orden.perfil_ref_id),
+                        "descripcion": orden.descripcion_servicio
+                    }
+                }
+                sarita_orchestrator.handle_directive(directive)
+                logger.info(f"SARGENTO: Misión de ejecución operativa delegada para orden {orden.id}")
+            except Exception as e:
+                logger.error(f"SARGENTO: Error al delegar ejecución operativa: {e}")
+
             return orden
         except Exception as e:
             logger.error(f"SARGENTO: Error al generar orden: {e}")
