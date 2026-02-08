@@ -1,16 +1,20 @@
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from drf_spectacular.utils import extend_schema
 from .models import FinancialEventRecord, FinancialMetric
 from django.db.models import Sum, Count, Avg
 from api.permissions import IsSuperAdmin
+from .serializers import FinancialDashboardSerializer, ROIAnalysisSerializer
 
 class FinancialDashboardViewSet(viewsets.ViewSet):
     """
     Vista para el ERP del Super Admin con métricas de rentabilidad en tiempo real.
     """
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+    serializer_class = FinancialDashboardSerializer
 
+    @extend_schema(responses={200: FinancialDashboardSerializer})
     def list(self, request):
         # Resumen Global
         total_sessions = FinancialEventRecord.objects.filter(event_type='voice_session_started').count()
@@ -28,6 +32,7 @@ class FinancialDashboardViewSet(viewsets.ViewSet):
             "recent_events": FinancialEventRecord.objects.all()[:10].values()
         })
 
+    @extend_schema(responses={200: ROIAnalysisSerializer(many=True)})
     @action(detail=False, methods=['get'])
     def roi_analysis(self, request):
         """Métricas de ROI por tipo de usuario."""

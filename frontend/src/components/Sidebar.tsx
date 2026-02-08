@@ -91,10 +91,8 @@ const miNegocioNav: NavSection[] = [
     title: 'Módulos Pro',
     isSubSection: true,
     links: [
-      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/hoteles/habitaciones', label: 'Habitaciones', icon: FiBriefcase, prestadorCategoria: 'hotel' },
-      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes/menu', label: 'Menú/Carta', icon: FiBookOpen, prestadorCategoria: 'restaurante' },
-      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes/mesas', label: 'Gestión de Mesas', icon: FiGrid, prestadorCategoria: 'restaurante' },
-      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes/pedidos', label: 'Pedidos (TPV)', icon: FiShoppingCart, prestadorCategoria: 'restaurante' },
+      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/hoteles', label: 'Habitaciones', icon: FiBriefcase, prestadorCategoria: 'hotel' },
+      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes', label: 'Control de Salón', icon: FiGrid, prestadorCategoria: 'restaurante' },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/guias', label: 'Mis Rutas', icon: FiMap, prestadorCategoria: 'guía' },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/transporte', label: 'Vehículos', icon: FiTruck, prestadorCategoria: 'transporte' },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/agencias', label: 'Paquetes Turísticos', icon: FiBriefcase, prestadorCategoria: 'agencia' },

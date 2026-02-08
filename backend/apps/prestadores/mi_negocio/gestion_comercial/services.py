@@ -5,6 +5,7 @@ from django.utils import timezone
 import json
 
 from .domain.models import OperacionComercial, FacturaVenta, ItemFactura
+from apps.audit.models import AuditLog
 from apps.prestadores.mi_negocio.gestion_contable.services.facturacion import FacturaVentaAccountingService
 from apps.prestadores.mi_negocio.gestion_archivistica.archiving import ArchivingService
 from .dian_services import DianService
@@ -115,6 +116,20 @@ class FacturacionService:
         # --- FIN DE INTEGRACIÓN CON SGA ---
 
         factura.save()
+
+        # 4.5 Registrar en el Log de Auditoría
+        AuditLog.objects.create(
+            user=factura.creado_por,
+            username=factura.creado_por.username,
+            company_id=perfil.company_id,
+            action=AuditLog.Action.INVOICE_GENERATED,
+            details={
+                "factura_id": str(factura.id),
+                "numero_factura": factura.numero_factura,
+                "total": str(factura.total),
+                "operacion_id": str(operacion.id)
+            }
+        )
 
         # 5. Actualizar estado de la operación original
         operacion.estado = OperacionComercial.Estado.FACTURADA

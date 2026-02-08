@@ -1,6 +1,9 @@
 # marketing/models.py
 from django.db import models
-from infrastructure.models import Tenant
+try:
+    from infrastructure.models import Tenant
+except (ImportError, ValueError):
+    from ..infrastructure.models import Tenant
 # from funnels.runtime_models import Lead # Se elimina para evitar importación circular
 
 class Campaign(models.Model):
@@ -20,7 +23,7 @@ class Campaign(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
 
     # Podríamos vincular una campaña a un segmento de leads específico
-    target_leads = models.ManyToManyField('funnels.Lead', blank=True, related_name='marketing_campaigns')
+    target_leads = models.ManyToManyField('gestion_comercial.Lead', blank=True, related_name='marketing_campaigns')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

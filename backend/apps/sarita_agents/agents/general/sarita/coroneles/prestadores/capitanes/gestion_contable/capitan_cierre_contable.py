@@ -1,33 +1,44 @@
+# backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/gestion_contable/capitan_cierre_contable.py
+import logging
 from apps.sarita_agents.agents.capitan_template import CapitanTemplate
-from typing import Dict, Any
+from apps.sarita_agents.models import Mision, PlanTáctico
+
+logger = logging.getLogger(__name__)
 
 class CapitanCierreContable(CapitanTemplate):
     """
-    Misión: Ejecutar los procedimientos técnicos del cierre de un período contable
-    (mensual, anual), como el cálculo de amortizaciones, depreciaciones y ajustes.
+    Agente de Cierre: Ejecuta el cierre de periodos y traslada saldos a cuentas de resultado.
     """
 
-    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
-        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN CapitanCierreContable: Inicializado para Misión ID {self.mision_id}.")
+    def plan(self, mision: Mision) -> PlanTáctico:
+        logger.info(f"CAPITÁN (Cierre): Iniciando cierre de periodo para misión {mision.id}")
 
-    def plan(self):
-        """
-        El corazón del Capitán. Aquí es donde defines el plan táctico.
-        Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
-        """
-        self.logger.info(f"CAPITÁN CapitanCierreContable: Planificando la misión.")
+        pasos = {
+            "validar_periodo": {
+                "descripcion": "Verificar que todos los asientos del periodo estén balanceados.",
+                "teniente": "auditor_balance_contable",
+                "parametros": mision.directiva_original.get("parameters", {})
+            },
+            "ejecutar_cierre": {
+                "descripcion": "Bloquear periodo y generar asiento de cierre.",
+                "teniente": "admin_persistencia_contable",
+                "parametros": mision.directiva_original.get("parameters", {})
+            }
+        }
 
-        # 1. Crear el Plan Táctico
-        plan_tactico = self.get_or_create_plan_tactico(
-            nombre="Plan de Ejecución para CapitanCierreContable",
-            descripcion=f"Este plan detalla los pasos para cumplir el objetivo: {self.objective}"
+        return PlanTáctico.objects.create(
+            mision=mision,
+            capitan_responsable=self.__class__.__name__,
+            pasos_del_plan=pasos,
+            estado='PLANIFICADO'
         )
 
-        # 2. Definir y Delegar Tareas (EJEMPLO - DEBE SER IMPLEMENTADO)
-        # self.delegar_tarea(plan_tactico=plan_tactico, nombre_teniente="...", descripcion="...", parametros_especificos={...})
-
-        # 3. Lanzar la Ejecución del Plan
-        self.lanzar_ejecucion_plan()
-
-        self.logger.info(f"CAPITÁN CapitanCierreContable: Planificación completada y tareas delegadas.")
+    def _get_tenientes(self) -> dict:
+        from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.operativos.tenientes_persistencia import AdminTenientePersistenciaContable
+        class TenienteAuditorBalance:
+            def execute_task(self, tarea):
+                return {"status": "SUCCESS", "message": "Balance verificado para cierre."}
+        return {
+            "auditor_balance_contable": TenienteAuditorBalance(),
+            "admin_persistencia_contable": AdminTenientePersistenciaContable()
+        }

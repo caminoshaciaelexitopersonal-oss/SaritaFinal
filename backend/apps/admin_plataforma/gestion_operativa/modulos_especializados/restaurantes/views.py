@@ -3,17 +3,17 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from apps.admin_plataforma.gestion_operativa.modulos_especializados.restaurantes.models import KitchenStation, RestaurantTable
-from .serializers import KitchenStationSerializer, RestaurantTableSerializer
+from .serializers import AdminKitchenStationSerializer, AdminRestaurantTableSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 
 class KitchenStationViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = KitchenStation.objects.all()
-    serializer_class = KitchenStationSerializer
+    serializer_class = AdminKitchenStationSerializer
 
 class RestaurantTableViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = RestaurantTable.objects.all()
-    serializer_class = RestaurantTableSerializer
+    serializer_class = AdminRestaurantTableSerializer
 
     @action(detail=True, methods=['post'], url_path='change-status')
     def change_status(self, request, pk=None):

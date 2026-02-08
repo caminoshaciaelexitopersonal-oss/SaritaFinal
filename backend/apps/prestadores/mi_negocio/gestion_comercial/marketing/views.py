@@ -1,11 +1,18 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, serializers
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.template import Template, Context
 from rest_framework.views import APIView
 from rest_framework.decorators import action
-from ai.services.ai_manager.ai_manager import ai_manager
-from ai.services.sanitizers import sanitize_plain_text
+from drf_spectacular.utils import extend_schema
+try:
+    from ..ai.services.ai_manager.ai_manager import ai_manager
+    from ..ai.services.sanitizers import sanitize_plain_text
+except (ImportError, ValueError):
+    # Fallback to absolute import if relative fails
+    from apps.prestadores.mi_negocio.gestion_comercial.ai.services.ai_manager.ai_manager import ai_manager
+    from apps.prestadores.mi_negocio.gestion_comercial.ai.services.sanitizers import sanitize_plain_text
+
 from .models import Campaign
 from .serializers import CampaignSerializer
 from .services import validate_social_post
@@ -19,10 +26,24 @@ class CampaignViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Campaign.objects.filter(tenant=self.request.user.tenant)
+        user = self.request.user
+        if hasattr(user, 'perfil_prestador'):
+             # Bridge to the shadow Tenant model used by this module
+             return Campaign.objects.filter(tenant__name=user.perfil_prestador.nombre_comercial)
+        if hasattr(user, 'tenant'):
+             return Campaign.objects.filter(tenant=user.tenant)
+        return Campaign.objects.none()
 
     def perform_create(self, serializer):
-        serializer.save(tenant=self.request.user.tenant)
+        user = self.request.user
+        tenant = None
+        if hasattr(user, 'perfil_prestador'):
+            from ..infrastructure.models import Tenant
+            tenant, _ = Tenant.objects.get_or_create(name=user.perfil_prestador.nombre_comercial)
+        elif hasattr(user, 'tenant'):
+            tenant = user.tenant
+
+        serializer.save(tenant=tenant)
 
     @action(detail=True, methods=['post'], url_path='send')
     def send_campaign(self, request, pk=None):
@@ -33,15 +54,32 @@ class CampaignViewSet(viewsets.ModelViewSet):
                 {"error": "La campaña no tiene canales activos o conectados."},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+        # --- INTEGRACIÓN CON AGENTES SARITA ---
+        from apps.sarita_agents.orchestrator import sarita_orchestrator
+        directive = {
+            "domain": "prestadores",
+            "mission": {
+                "type": "MARKETING_CAMP",
+                "params": {
+                    "campaign_id": str(campaign.id),
+                    "campaign_name": campaign.name,
+                    "channels": [c.channel_type for c in campaign.channels.filter(is_active=True)]
+                }
+            }
+        }
+        sarita_orchestrator.handle_directive(directive)
+
         campaign.status = 'scheduled'
         campaign.save()
         return Response(
-            {"status": f"Campaña '{campaign.name}' programada para envío."},
+            {"status": f"Campaña '{campaign.name}' delegada al sistema de agentes para ejecución."},
             status=status.HTTP_200_OK
         )
 
 class EmailRenderView(APIView):
     permission_classes = [IsAuthenticated]
+    @extend_schema(responses={200: serializers.JSONField()})
     def post(self, request, *args, **kwargs):
         template_content = request.data.get('template')
         context_data = request.data.get('context', {})
@@ -57,6 +95,7 @@ class EmailRenderView(APIView):
 
 class AIRewriteEmailView(APIView):
     permission_classes = [IsAuthenticated]
+    @extend_schema(responses={200: serializers.JSONField()})
     def post(self, request, *args, **kwargs):
         base_text = request.data.get('text')
         if not base_text:
@@ -73,6 +112,7 @@ class AIRewriteEmailView(APIView):
 
 class SocialPostPreviewView(APIView):
     permission_classes = [IsAuthenticated]
+    @extend_schema(responses={200: serializers.JSONField()})
     def post(self, request, *args, **kwargs):
         platform = request.data.get('platform')
         content = request.data.get('content', '')

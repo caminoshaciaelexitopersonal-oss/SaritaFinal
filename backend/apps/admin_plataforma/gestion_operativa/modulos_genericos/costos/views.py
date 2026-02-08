@@ -2,11 +2,11 @@ from rest_framework import viewsets, permissions
 from api.permissions import IsSuperAdmin
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from apps.admin_plataforma.gestion_operativa.modulos_genericos.costos.models import Costo
-from .serializers import CostoSerializer
+from .serializers import AdminCostoSerializer
 
 class CostoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Costo.objects.all()
-    serializer_class = CostoSerializer
+    serializer_class = AdminCostoSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):

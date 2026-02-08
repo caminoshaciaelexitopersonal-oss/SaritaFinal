@@ -7,7 +7,7 @@ class DocumentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['provider']
 
-class ProcessSerializer(serializers.ModelSerializer):
+class AdminProcessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Process
         fields = '__all__'

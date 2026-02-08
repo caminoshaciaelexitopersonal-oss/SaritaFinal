@@ -43,11 +43,33 @@ class ContractValidationTests(APITestCase):
         )
 
         # 4. El modelo debe incluir el nuevo estado 'COMERCIAL_CONFIRMADA'
-        factura_detail_schema_ref = schema['paths'][facturas_path]['get']['responses']['200']['content']['application/json']['schema']['properties']['results']['items']['$ref']
+        schema_node = schema['paths'][facturas_path]['get']['responses']['200']['content']['application/json']['schema']
+
+        # Manejar paginación si existe
+        if '$ref' in schema_node and 'Paginated' in schema_node['$ref']:
+            component_name = schema_node['$ref'].split('/')[-1]
+            pagination_schema = schema['components']['schemas'][component_name]
+            factura_detail_schema_ref = pagination_schema['properties']['results']['items']['$ref']
+        elif 'properties' in schema_node and 'results' in schema_node['properties']:
+            factura_detail_schema_ref = schema_node['properties']['results']['items']['$ref']
+        elif 'items' in schema_node:
+            factura_detail_schema_ref = schema_node['items']['$ref']
+        else:
+            # Si no es ninguna de las anteriores, intentar acceder directamente (comportamiento original como fallback)
+            factura_detail_schema_ref = schema_node['properties']['results']['items']['$ref']
+
         factura_detail_component = factura_detail_schema_ref.split('/')[-1]
         factura_detail_properties = schema['components']['schemas'][factura_detail_component]['properties']
 
-        estado_enum = factura_detail_properties['estado']['enum']
+        estado_prop = factura_detail_properties['estado']
+        if 'enum' in estado_prop:
+            estado_enum = estado_prop['enum']
+        elif 'allOf' in estado_prop:
+            enum_ref = estado_prop['allOf'][0]['$ref'].split('/')[-1]
+            estado_enum = schema['components']['schemas'][enum_ref]['enum']
+        else:
+            self.fail("No se pudo encontrar el enum para el campo 'estado' en el esquema.")
+
         self.assertIn(
             'COMERCIAL_CONFIRMADA',
             estado_enum,

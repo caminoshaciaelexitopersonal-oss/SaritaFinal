@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, serializers
+from rest_framework.parsers import MultiPartParser
+from drf_spectacular.utils import extend_schema
 from pathlib import Path
 from django.conf import settings
 from .voice_orchestrator import VoiceOrchestrator
@@ -14,7 +16,9 @@ class MarketingVoiceAudioView(APIView):
     Endpoint para recibir audio directo del embudo de marketing.
     """
     permission_classes = []
+    parser_classes = [MultiPartParser]
 
+    @extend_schema(responses={200: serializers.JSONField()})
     def post(self, request):
         audio_file = request.FILES.get("audio")
         if not audio_file:

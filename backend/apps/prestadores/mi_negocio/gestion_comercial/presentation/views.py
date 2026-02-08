@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from .serializers import (
     FacturaVentaListSerializer,
     FacturaVentaDetailSerializer,
+    FacturaVentaWriteSerializer,
     OperacionComercialSerializer
 )
 from ..domain.models import OperacionComercial, FacturaVenta
@@ -17,13 +18,17 @@ from ..services import FacturacionService
 
 class IsPrestadorOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
+        if hasattr(obj, 'perfil_ref_id'):
+            return obj.perfil_ref_id == request.user.perfil_prestador.id
         return obj.perfil == request.user.perfil_prestador
 
 class OperacionComercialViewSet(viewsets.ModelViewSet):
     serializer_class = OperacionComercialSerializer
     permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
     def get_queryset(self):
-        return OperacionComercial.objects.filter(perfil=self.request.user.perfil_prestador)
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return OperacionComercial.objects.filter(perfil_ref_id=self.request.user.perfil_prestador.id)
+        return OperacionComercial.objects.none()
 
     @action(detail=True, methods=['post'])
     def confirmar(self, request, pk=None):
@@ -44,16 +49,20 @@ class OperacionComercialViewSet(viewsets.ModelViewSet):
         return Response(OperacionComercialSerializer(operacion).data)
 
 
-class FacturaVentaViewSet(viewsets.ReadOnlyModelViewSet):
+class FacturaVentaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsPrestadorOwner]
 
     def get_serializer_class(self):
         if self.action == 'list':
             return FacturaVentaListSerializer
-        return FacturaVentaDetailSerializer
+        if self.action == 'retrieve':
+            return FacturaVentaDetailSerializer
+        return FacturaVentaWriteSerializer
 
     def get_queryset(self):
-        return FacturaVenta.objects.filter(perfil=self.request.user.perfil_prestador).select_related('cliente')
+        if hasattr(self.request.user, 'perfil_prestador'):
+            return FacturaVenta.objects.filter(perfil_ref_id=self.request.user.perfil_prestador.id)
+        return FacturaVenta.objects.none()
 
     @action(detail=True, methods=['post'], url_path='registrar-pago')
     @transaction.atomic

@@ -1,12 +1,12 @@
 from rest_framework import viewsets
 from apps.admin_plataforma.gestion_operativa.modulos_especializados.transporte.models import Vehicle #, MaintenanceOrder
-from .serializers import VehicleSerializer #, MaintenanceOrderSerializer
+from .serializers import AdminVehicleSerializer #, MaintenanceOrderSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 
 class VehicleViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Vehicle.objects.all()
-    serializer_class = VehicleSerializer
+    serializer_class = AdminVehicleSerializer
     filterset_fields = ['status', 'tipo_vehiculo']
     search_fields = ['nombre', 'placa']
 

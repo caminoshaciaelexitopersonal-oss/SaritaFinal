@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 from ..domain.models import OperacionComercial, ItemOperacionComercial, FacturaVenta, ItemFactura, ReciboCaja
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.serializers import ClienteSerializer
@@ -39,18 +40,23 @@ class OperacionComercialSerializer(serializers.ModelSerializer):
 
 
 class ItemFacturaSerializer(serializers.ModelSerializer):
-    producto_id = serializers.PrimaryKeyRelatedField(
-        queryset=Product.objects.all(), source='producto', write_only=True
-    )
+    producto_id = serializers.UUIDField(source='producto_ref_id')
 
     class Meta:
         model = ItemFactura
-        fields = ['id', 'producto', 'producto_id', 'descripcion', 'cantidad', 'precio_unitario', 'subtotal', 'impuestos']
-        read_only_fields = ('subtotal', 'producto',)
+        fields = ['id', 'producto_id', 'descripcion', 'cantidad', 'precio_unitario', 'subtotal', 'impuestos']
+        read_only_fields = ('subtotal',)
 
 class FacturaVentaListSerializer(serializers.ModelSerializer):
     cliente_nombre = serializers.CharField(source='cliente.nombre', read_only=True)
-    estado_display = serializers.CharField(source='get_estado_display', read_only=True)
+    estado_display = serializers.CharField(source='operacion.get_estado_display', read_only=True)
+    total = serializers.DecimalField(source='operacion.total', max_digits=12, decimal_places=2, read_only=True)
+
+    @extend_schema_field(serializers.ChoiceField(choices=OperacionComercial.Estado.choices))
+    def get_estado(self, obj):
+        return obj.operacion.estado
+
+    estado = serializers.SerializerMethodField()
 
     class Meta:
         model = FacturaVenta
@@ -60,30 +66,41 @@ class FacturaVentaListSerializer(serializers.ModelSerializer):
 class FacturaVentaDetailSerializer(serializers.ModelSerializer):
     items = ItemFacturaSerializer(many=True, read_only=True)
     cliente = ClienteSerializer(read_only=True)
-    estado_display = serializers.CharField(source='get_estado_display', read_only=True)
+    estado_display = serializers.CharField(source='operacion.get_estado_display', read_only=True)
+    total = serializers.DecimalField(source='operacion.total', max_digits=12, decimal_places=2, read_only=True)
+
+    @extend_schema_field(serializers.ChoiceField(choices=OperacionComercial.Estado.choices))
+    def get_estado(self, obj):
+        return obj.operacion.estado
+
+    estado = serializers.SerializerMethodField()
+
+    subtotal = serializers.DecimalField(source='operacion.subtotal', max_digits=12, decimal_places=2, read_only=True)
+    impuestos = serializers.DecimalField(source='operacion.impuestos', max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = FacturaVenta
         fields = [
-            'id', 'numero_factura', 'cliente', 'fecha_emision', 'fecha_vencimiento',
-            'subtotal', 'impuestos', 'total', 'total_pagado',
-            'estado', 'estado_display', 'items', 'estado_dian', 'cufe'
+            'id', 'numero_factura', 'cliente', 'fecha_emision',
+            'subtotal', 'impuestos', 'total',
+            'estado', 'estado_display', 'items'
         ]
         read_only_fields = fields
 
 
 class FacturaVentaWriteSerializer(serializers.ModelSerializer):
-    items = ItemFacturaSerializer(many=True)
+    items = ItemFacturaSerializer(many=True, required=False)
     creado_por = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    cliente_id = serializers.IntegerField(write_only=True)
+    cliente_id = serializers.UUIDField(write_only=True, required=True)
+    total = serializers.DecimalField(source='operacion.total', max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = FacturaVenta
         fields = [
-            'id', 'cliente_id', 'numero_factura', 'fecha_emision', 'fecha_vencimiento',
-            'subtotal', 'impuestos', 'total', 'total_pagado', 'estado', 'creado_por', 'items'
+            'id', 'cliente_id', 'numero_factura', 'fecha_emision',
+            'operacion', 'creado_por', 'items', 'total'
         ]
-        read_only_fields = ('subtotal', 'impuestos', 'total', 'total_pagado', 'estado')
+        read_only_fields = ('total',)
 
     def create(self, validated_data):
         items_data = validated_data.pop('items')

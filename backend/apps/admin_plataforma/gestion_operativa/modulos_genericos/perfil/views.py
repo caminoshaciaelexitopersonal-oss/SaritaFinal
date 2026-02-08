@@ -12,6 +12,7 @@ class PerfilViewSet(SystemicERPViewSetMixin, viewsets.GenericViewSet):
     ViewSet para que el Super Admin gestione el perfil sistémico de la plataforma.
     """
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+    serializer_class = PerfilSerializer
 
     def get_object(self):
         return GestionPlataformaService.get_perfil_gobierno()

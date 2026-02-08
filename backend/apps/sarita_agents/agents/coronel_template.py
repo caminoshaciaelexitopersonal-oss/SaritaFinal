@@ -74,3 +74,12 @@ class CoronelTemplate:
             "captain_report": report,
             "report_from": f"Coronel ({self.domain})"
         }
+
+    def get_or_create_plan_tactico(self, mision, capitan_name):
+        from apps.sarita_agents.models import PlanTáctico
+        plan, created = PlanTáctico.objects.get_or_create(
+            mision=mision,
+            capitan_responsable=capitan_name,
+            defaults={'pasos_del_plan': {}}
+        )
+        return plan

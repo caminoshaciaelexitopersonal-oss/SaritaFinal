@@ -5,13 +5,13 @@ from apps.admin_plataforma.gestion_contable.contabilidad.models import (
     PlanDeCuentas, Cuenta, PeriodoContable, AsientoContable, Transaccion
 )
 from .serializers import (
-    PlanDeCuentasSerializer, CuentaSerializer,
-    PeriodoContableSerializer, AsientoContableSerializer
+    AdminPlanDeCuentasSerializer, AdminCuentaSerializer,
+    AdminPeriodoContableSerializer, AdminAsientoContableSerializer
 )
 
 class PlanDeCuentasViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = PlanDeCuentas.objects.all()
-    serializer_class = PlanDeCuentasSerializer
+    serializer_class = AdminPlanDeCuentasSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def perform_create(self, serializer):
@@ -21,15 +21,15 @@ class PlanDeCuentasViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
 
 class CuentaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = Cuenta.objects.all()
-    serializer_class = CuentaSerializer
+    serializer_class = AdminCuentaSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
 class PeriodoContableViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = PeriodoContable.objects.all()
-    serializer_class = PeriodoContableSerializer
+    serializer_class = AdminPeriodoContableSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
 class AsientoContableViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = AsientoContable.objects.all()
-    serializer_class = AsientoContableSerializer
+    serializer_class = AdminAsientoContableSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]

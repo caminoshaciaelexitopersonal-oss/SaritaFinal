@@ -13,10 +13,10 @@ from rest_framework import serializers
 # IMPORTAR DESDE PRESTADORES (CANÓNICO)
 from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta, ReciboCaja
 from .serializers import (
-    FacturaVentaListSerializer,
-    FacturaVentaDetailSerializer,
-    FacturaVentaWriteSerializer,
-    ReciboCajaSerializer
+    AdminFacturaVentaListSerializer,
+    AdminFacturaVentaDetailSerializer,
+    AdminFacturaVentaWriteSerializer,
+    AdminReciboCajaSerializer
 )
 # Modelos financieros actualizados
 from apps.admin_plataforma.gestion_financiera.models import CuentaBancaria, OrdenPago
@@ -26,10 +26,10 @@ class FacturaVentaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return FacturaVentaListSerializer
+            return AdminFacturaVentaListSerializer
         if self.action == 'retrieve':
-            return FacturaVentaDetailSerializer
-        return FacturaVentaWriteSerializer
+            return AdminFacturaVentaDetailSerializer
+        return AdminFacturaVentaWriteSerializer
 
     def get_queryset(self):
  
@@ -44,7 +44,7 @@ class FacturaVentaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
         serializer.save(perfil_ref_id=perfil.id, creado_por=self.request.user)
 
 class ReciboCajaViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-    serializer_class = ReciboCajaSerializer
+    serializer_class = AdminReciboCajaSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
     def get_queryset(self):

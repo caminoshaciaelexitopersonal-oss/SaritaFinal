@@ -1,32 +1,35 @@
+# backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/gestion_financiera/capitan_ratios_y_formulas_financieras.py
+import logging
 from apps.sarita_agents.agents.capitan_template import CapitanTemplate
-from typing import Dict, Any
+from apps.sarita_agents.models import Mision, PlanTáctico
+
+logger = logging.getLogger(__name__)
 
 class CapitanRatiosYFormulasFinancieras(CapitanTemplate):
     """
-    Misión: Calcular y analizar ratios y fórmulas financieras para la toma de decisiones.
+    Agente de Indicadores: Calcula KPIs financieros de alto nivel (EBITDA, ROI, Liquidez).
     """
 
-    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
-        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN CapitanRatiosYFormulasFinancieras: Inicializado para Misión ID {self.mision_id}.")
+    def plan(self, mision: Mision) -> PlanTáctico:
+        logger.info(f"CAPITÁN (Indicadores): Generando reporte de ratios para misión {mision.id}")
 
-    def plan(self):
-        """
-        El corazón del Capitán. Aquí es donde defines el plan táctico.
-        Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
-        """
-        self.logger.info(f"CAPITÁN CapitanRatiosYFormulasFinancieras: Planificando la misión.")
+        pasos = {
+            "calculo_indicadores": {
+                "descripcion": "Calcular indicadores de liquidez, rentabilidad y eficiencia.",
+                "teniente": "roi_calculator", # Reutilizando teniente existente
+                "parametros": mision.directiva_original.get("parameters", {})
+            }
+        }
 
-        # 1. Crear el Plan Táctico
-        plan_tactico = self.get_or_create_plan_tactico(
-            nombre="Plan de Ejecución para CapitanRatiosYFormulasFinancieras",
-            descripcion=f"Este plan detalla los pasos para cumplir el objetivo: {self.objective}"
+        return PlanTáctico.objects.create(
+            mision=mision,
+            capitan_responsable=self.__class__.__name__,
+            pasos_del_plan=pasos,
+            estado='PLANIFICADO'
         )
 
-        # 2. Definir y Delegar Tareas (EJEMPLO - DEBE SER IMPLEMENTADO)
-        # self.delegar_tarea(plan_tactico=plan_tactico, nombre_teniente="...", descripcion="...", parametros_especificos={...})
-
-        # 3. Lanzar la Ejecución del Plan
-        self.lanzar_ejecucion_plan()
-
-        self.logger.info(f"CAPITÁN CapitanRatiosYFormulasFinancieras: Planificación completada y tareas delegadas.")
+    def _get_tenientes(self) -> dict:
+        from apps.sarita_agents.tasks import TenienteROICalculator
+        return {
+            "roi_calculator": TenienteROICalculator()
+        }

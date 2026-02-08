@@ -7,6 +7,7 @@ import { operativoEndpoints } from '@/services/endpoints/operativo';
 import { comercialEndpoints } from '@/services/endpoints/comercial';
 import { financieroEndpoints } from '@/services/endpoints/financiero';
 import { archivisticaEndpoints } from '@/services/endpoints/archivistica';
+import { nominaEndpoints } from '@/services/endpoints/nomina';
 import { contableMapper } from '@/services/mappers/contableMapper';
 import { commercialMapper } from '@/services/mappers/commercialMapper';
 
@@ -102,6 +103,24 @@ export function useMiNegocioApi() {
     return makeRequest(() => archivisticaEndpoints.getDocumentos().then(res => res.data));
   }, [makeRequest]);
 
+  // --- API Nómina ---
+  const getEmpleados = useCallback(async () => {
+    return makeRequest(() => nominaEndpoints.getEmpleados().then(res => res.data));
+  }, [makeRequest]);
+
+  const getPlanillas = useCallback(async () => {
+    return makeRequest(() => nominaEndpoints.getPlanillas().then(res => res.data));
+  }, [makeRequest]);
+
+  // --- API Especializada ---
+  const getVehicles = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getVehicles().then(res => res.data));
+  }, [makeRequest]);
+
+  const getTours = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getTours().then(res => res.data));
+  }, [makeRequest]);
+
   return {
     isLoading,
     error,
@@ -116,5 +135,9 @@ export function useMiNegocioApi() {
     getBankAccounts,
     getCashTransactions,
     getArchivisticaDocumentos,
+    getEmpleados,
+    getPlanillas,
+    getVehicles,
+    getTours,
   };
 }

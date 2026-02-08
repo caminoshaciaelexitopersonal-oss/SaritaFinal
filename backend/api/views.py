@@ -1,7 +1,8 @@
-from rest_framework import generics, views, viewsets, status, mixins, permissions
+from rest_framework import generics, views, viewsets, status, mixins, permissions, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from drf_spectacular.utils import extend_schema
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -673,6 +674,7 @@ class AgentTaskStatusView(generics.RetrieveAPIView):
 class AnalyticsDataView(views.APIView):
     permission_classes = [IsAdminOrFuncionario]
 
+    @extend_schema(responses={200: serializers.JSONField()})
     def get(self, request, *args, **kwargs):
         total_usuarios = CustomUser.objects.count()
         total_publicaciones = Publicacion.objects.count()
@@ -709,12 +711,14 @@ class ArtesanoPublicDetailView(generics.RetrieveAPIView):
 
 class DetailedStatisticsView(views.APIView):
     permission_classes = [IsAdmin]
+    @extend_schema(responses={200: serializers.JSONField()})
     def get(self, request, *args, **kwargs):
         return Response({"message": "Datos de estadísticas detalladas."})
 
 class ExportExcelView(views.APIView):
     permission_classes = [IsAdmin]
 
+    @extend_schema(responses={501: serializers.JSONField()})
     def get(self, request, *args, **kwargs):
         return Response(
             {"error": "Esta funcionalidad aún no está implementada."},
@@ -745,5 +749,6 @@ class PlaceholderView(views.APIView):
     """
     permission_classes = [IsAuthenticated, IsPrestador]
 
+    @extend_schema(responses={204: None})
     def get(self, request, *args, **kwargs):
         return Response(status=status.HTTP_204_NO_CONTENT)

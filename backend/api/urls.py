@@ -106,6 +106,11 @@ path(
     # --- Vistas para el Sistema de Agentes ---
     path('agent/tasks/<uuid:id>/', views.AgentTaskStatusView.as_view(), name='agent-task-status'),
 
+    # --- Mapeos Directos para Frontend (Fase 1 - Gestión Comercial) ---
+    path('marketing/', include(('apps.prestadores.mi_negocio.gestion_comercial.marketing.urls', 'marketing'), namespace='marketing')),
+    path('funnels/', include(('apps.prestadores.mi_negocio.gestion_comercial.funnels.urls', 'funnel'), namespace='funnel')),
+    path('bff/funnel-builder/', include(('apps.prestadores.mi_negocio.gestion_comercial.funnels.urls', 'funnel-builder'), namespace='funnel-builder')),
+
     # --- Vistas de Administración y Análisis (endpoints específicos no cubiertos por el router) ---
     path('dashboard/analytics/', views.AnalyticsDataView.as_view(), name='dashboard-analytics'),
     path('admin/statistics/detailed/', views.DetailedStatisticsView.as_view(), name='admin-detailed-statistics'),

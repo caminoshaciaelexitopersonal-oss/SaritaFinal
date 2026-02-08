@@ -1,6 +1,9 @@
 import uuid
 from django.db import models
-from infrastructure.models import Tenant
+try:
+    from infrastructure.models import Tenant
+except (ImportError, ValueError):
+    from ..infrastructure.models import Tenant
 
 class CadenaTurismo(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='cadenas')
@@ -9,26 +12,26 @@ class CadenaTurismo(models.Model):
     color_secundario = models.CharField(max_length=7)
     def __str__(self): return self.nombre
 
-class Categoria(models.Model):
+class FunnelCategoria(models.Model):
     cadena = models.ForeignKey(CadenaTurismo, on_delete=models.CASCADE, related_name='categorias')
     nombre = models.CharField(max_length=255)
     icon = models.CharField(max_length=50, blank=True)
     def __str__(self): return self.nombre
 
-class Subcategoria(models.Model):
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='subcategorias')
+class FunnelSubcategoria(models.Model):
+    categoria = models.ForeignKey(FunnelCategoria, on_delete=models.CASCADE, related_name='subcategorias')
     nombre = models.CharField(max_length=255)
     def __str__(self): return self.nombre
 
-class LandingPage(models.Model):
-    subcategoria = models.ForeignKey(Subcategoria, on_delete=models.CASCADE, related_name='landing_pages')
+class FunnelLandingPage(models.Model):
+    subcategoria = models.ForeignKey(FunnelSubcategoria, on_delete=models.CASCADE, related_name='landing_pages')
     nombre = models.CharField(max_length=255)
     publicada = models.BooleanField(default=False)
     def __str__(self): return self.nombre
 
 class Funnel(models.Model):
     STATUS_CHOICES = [('draft', 'Draft'), ('published', 'Published'), ('archived', 'Archived')]
-    landing_page = models.ForeignKey(LandingPage, on_delete=models.CASCADE, related_name='funnels', null=True)
+    landing_page = models.ForeignKey(FunnelLandingPage, on_delete=models.CASCADE, related_name='funnels', null=True)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='funnels')
     name = models.CharField(max_length=255)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='draft')

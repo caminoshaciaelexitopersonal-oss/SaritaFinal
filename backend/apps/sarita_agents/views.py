@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.utils import extend_schema
 from .models import Mision
 from .serializers import MisionSerializer, DirectiveSerializer
 from .orchestrator import sarita_orchestrator
@@ -15,7 +16,12 @@ class DirectiveView(APIView):
     Recibe una directiva, crea una Misión y encola su ejecución asíncrona.
     """
     permission_classes = [IsAuthenticated]
+    serializer_class = DirectiveSerializer
 
+    @extend_schema(
+        request=DirectiveSerializer,
+        responses={202: MisionSerializer}
+    )
     def post(self, request, *args, **kwargs):
         serializer = DirectiveSerializer(data=request.data)
         if not serializer.is_valid():
@@ -47,7 +53,9 @@ class MissionStatusView(APIView):
     Consulta el estado y la trazabilidad completa de una misión.
     """
     permission_classes = [IsAuthenticated]
+    serializer_class = MisionSerializer
 
+    @extend_schema(responses={200: MisionSerializer})
     def get(self, request, id, *args, **kwargs):
         try:
             mision = Mision.objects.get(id=id)

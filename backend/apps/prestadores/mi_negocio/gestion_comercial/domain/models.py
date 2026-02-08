@@ -8,6 +8,7 @@ class OperacionComercial(models.Model):
     class Estado(models.TextChoices):
         BORRADOR = 'BORRADOR', 'Borrador'
         CONFIRMADA = 'CONFIRMADA', 'Confirmada'
+        COMERCIAL_CONFIRMADA = 'COMERCIAL_CONFIRMADA', 'Comercial Confirmada'
         FACTURADA = 'FACTURADA', 'Facturada'
         ANULADA = 'ANULADA', 'Anulada'
 

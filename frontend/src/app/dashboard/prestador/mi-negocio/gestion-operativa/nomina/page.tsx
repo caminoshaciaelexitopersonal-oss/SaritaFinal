@@ -16,12 +16,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/Badge';
 
 export default function NominaPage() {
-  const { isLoading } = useMiNegocioApi();
+  const { getEmpleados, isLoading } = useMiNegocioApi();
+  const [employees, setEmployees] = useState<any[]>([]);
 
-  const employees = [
-    { name: 'Juan Perez', role: 'Operativo', salary: '$1,200', status: 'ACTIVE', joinDate: '2023-01-10' },
-    { name: 'Maria Lopez', role: 'Administrativo', salary: '$1,800', status: 'ACTIVE', joinDate: '2022-05-15' },
-  ];
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await getEmpleados();
+      if (data) setEmployees(data.results);
+    };
+    loadData();
+  }, [getEmpleados]);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
@@ -91,19 +95,26 @@ export default function NominaPage() {
                        <TableCell>
                           <div className="flex items-center gap-3">
                              <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center font-bold text-xs text-slate-400 uppercase">
-                                {emp.name.charAt(0)}
+                                {emp.nombre.charAt(0)}
                              </div>
-                             <span className="font-bold text-slate-700 dark:text-slate-200">{emp.name}</span>
+                             <span className="font-bold text-slate-700 dark:text-slate-200">{emp.nombre} {emp.apellido}</span>
                           </div>
                        </TableCell>
-                       <TableCell className="text-sm text-slate-500 font-medium">{emp.role}</TableCell>
-                       <TableCell className="text-xs text-slate-400 font-bold uppercase tracking-widest">{emp.joinDate}</TableCell>
-                       <TableCell className="font-black text-slate-900 dark:text-white">{emp.salary}</TableCell>
+                       <TableCell className="text-sm text-slate-500 font-medium">{emp.contratos?.[0]?.cargo || 'N/A'}</TableCell>
+                       <TableCell className="text-xs text-slate-400 font-bold uppercase tracking-widest">{emp.contratos?.[0]?.fecha_inicio || 'N/A'}</TableCell>
+                       <TableCell className="font-black text-slate-900 dark:text-white">${emp.contratos?.[0]?.salario || '0'}</TableCell>
                        <TableCell className="text-center">
                           <Badge className="bg-emerald-100 text-emerald-700 border-none font-bold text-[9px]">ACTIVO</Badge>
                        </TableCell>
                     </TableRow>
                   ))}
+                  {employees.length === 0 && !isLoading && (
+                    <TableRow>
+                       <TableCell colSpan={5} className="text-center py-12 text-gray-400 italic">
+                         No hay colaboradores registrados.
+                       </TableCell>
+                    </TableRow>
+                  )}
                </TableBody>
             </Table>
             <div className="p-12 text-center bg-slate-50/50 dark:bg-black/20 border-t border-slate-50 dark:border-white/5">

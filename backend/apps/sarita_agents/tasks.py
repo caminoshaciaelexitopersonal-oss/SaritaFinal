@@ -53,6 +53,15 @@ class TenienteROICalculator(TenienteTemplate):
         roi = cap.evaluate_roi(cac, ltv)
         return {"roi": roi, "profitable": roi > 0}
 
+# --- TENIENTES COMERCIALES (SARGENTOS LOGIC) ---
+class TenienteGenericoComercial(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        # Aquí es donde el Teniente delegaría a Sargentos (funciones atómicas)
+        # Por ahora, simulamos el éxito de la operación atómica.
+        action = parametros.get("action", "unknown_action")
+        logger.info(f"TENIENTE COMERCIAL: Ejecutando acción atómica: {action}")
+        return {"status": "SUCCESS", "action": action, "result": "Operación completada por Sargento Virtual"}
+
 # --- MAPEO DE TENIENTES ---
 TENIENTE_MAP = {
     # Prestadores (Funcionales)
@@ -76,6 +85,22 @@ TENIENTE_MAP = {
     'cac_calculator': TenienteCACCalculator,
     'ltv_calculator': TenienteLTVCalculator,
     'roi_calculator': TenienteROICalculator,
+    # Comerciales (Nuevos)
+    'seo_technical': TenienteGenericoComercial,
+    'content_optimization': TenienteGenericoComercial,
+    'matching_engine': TenienteGenericoComercial,
+    'partnership_manager': TenienteGenericoComercial,
+    'payment_gateway': TenienteGenericoComercial,
+    'pricing_engine': TenienteGenericoComercial,
+    'nlp_handler': TenienteGenericoComercial,
+    'signature_provider': TenienteGenericoComercial,
+    'id_validator': TenienteGenericoComercial,
+    'gdpr_compliance': TenienteGenericoComercial,
+    'points_manager': TenienteGenericoComercial,
+    'ticket_handler': TenienteGenericoComercial,
+    'survey_manager': TenienteGenericoComercial,
+    'integrity_checker': TenienteGenericoComercial,
+    'anomaly_detector': TenienteGenericoComercial,
 }
 
 logger = logging.getLogger(__name__)

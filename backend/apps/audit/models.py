@@ -13,6 +13,10 @@ class AuditLog(models.Model):
         VERSION_DOWNLOADED = 'VERSION_DOWNLOADED', 'Descargó versión'
         VERSION_DELETED = 'VERSION_DELETED', 'Eliminó versión'
         VERSION_VERIFIED = 'VERSION_VERIFIED', 'Verificó integridad de versión'
+        # --- ACCIONES COMERCIALES ---
+        SALE_CREATED = 'SALE_CREATED', 'Operación comercial iniciada'
+        SALE_CONFIRMED = 'SALE_CONFIRMED', 'Operación comercial confirmada'
+        INVOICE_GENERATED = 'INVOICE_GENERATED', 'Factura de venta generada'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey('api.CustomUser', on_delete=models.SET_NULL, null=True, blank=True)
