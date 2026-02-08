@@ -99,6 +99,26 @@ export function useMiNegocioApi() {
     return makeRequest(() => financieroEndpoints.getCashTransactions().then(res => res.data));
   }, [makeRequest]);
 
+  const getEstadoResultados = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getEstadoResultados().then(res => res.data));
+  }, [makeRequest]);
+
+  const getBalanceGeneral = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getBalanceGeneral().then(res => res.data));
+  }, [makeRequest]);
+
+  const getProyecciones = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getProyecciones().then(res => res.data));
+  }, [makeRequest]);
+
+  const getRiesgos = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getRiesgos().then(res => res.data));
+  }, [makeRequest]);
+
+  const getTesoreria = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getTesoreria().then(res => res.data));
+  }, [makeRequest]);
+
   // --- API Archivística ---
   const getArchivisticaDocumentos = useCallback(async () => {
     return makeRequest(() => archivisticaEndpoints.getDocumentos().then(res => res.data));
@@ -159,6 +179,11 @@ export function useMiNegocioApi() {
     getProductos,
     getBankAccounts,
     getCashTransactions,
+    getEstadoResultados,
+    getBalanceGeneral,
+    getProyecciones,
+    getRiesgos,
+    getTesoreria,
     getArchivisticaDocumentos,
     getEmpleados,
     createEmpleado,

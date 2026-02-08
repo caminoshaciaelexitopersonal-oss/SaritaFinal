@@ -95,6 +95,12 @@ from .capitanes.gestion_financiera.capitan_gestion_financiera import CapitanGest
 from .capitanes.gestion_financiera.capitan_flujo_caja import CapitanFlujoCaja
 from .capitanes.gestion_financiera.capitan_riesgo_financiero import CapitanRiesgoFinanciero
 from .capitanes.gestion_financiera.capitan_ratios_y_formulas_financieras import CapitanRatiosYFormulasFinancieras
+from .capitanes.gestion_financiera.capitanes_especializados import (
+    CapitanTesoreria, CapitanCustodiaFondos, CapitanLiquidez, CapitanPagos,
+    CapitanDistribucion, CapitanReservas, CapitanProyecciones, CapitanCumplimientoFinanciero,
+    CapitanEstadoResultados, CapitanBalanceGeneral, CapitanFlujoEfectivo,
+    CapitanCambiosPatrimonio, CapitanConciliacionBancaria, CapitanProvisionesFinancieras
+)
 from .capitanes.gestion_operativa.sg_sst.capitan_sst import CapitanSST
 from .capitanes.gestion_operativa.sg_sst.capitan_incidentes_sst import CapitanIncidentesSST
 from .capitanes.gestion_operativa.sg_sst.capitan_normativo_sst import CapitanNormativoSST
@@ -200,6 +206,20 @@ class PrestadoresCoronel(CoronelTemplate):
             "flujo_caja": CapitanFlujoCaja(coronel=self),
             "riesgo_financiero": CapitanRiesgoFinanciero(coronel=self),
             "indicadores_financieros": CapitanRatiosYFormulasFinancieras(coronel=self),
+            "tesoreria": CapitanTesoreria(coronel=self),
+            "custodia_fondos": CapitanCustodiaFondos(coronel=self),
+            "liquidez": CapitanLiquidez(coronel=self),
+            "pagos_financieros": CapitanPagos(coronel=self),
+            "distribucion_fondos": CapitanDistribucion(coronel=self),
+            "reservas": CapitanReservas(coronel=self),
+            "proyecciones": CapitanProyecciones(coronel=self),
+            "cumplimiento_financiero": CapitanCumplimientoFinanciero(coronel=self),
+            "estado_resultados": CapitanEstadoResultados(coronel=self),
+            "balance_general": CapitanBalanceGeneral(coronel=self),
+            "flujo_efectivo": CapitanFlujoEfectivo(coronel=self),
+            "cambios_patrimonio": CapitanCambiosPatrimonio(coronel=self),
+            "conciliacion_bancaria": CapitanConciliacionBancaria(coronel=self),
+            "provisiones_financieras": CapitanProvisionesFinancieras(coronel=self),
             "sst_general": CapitanSST(coronel=self),
             "sst_incidentes": CapitanIncidentesSST(coronel=self),
             "sst_normativo": CapitanNormativoSST(coronel=self),
@@ -257,6 +277,17 @@ class PrestadoresCoronel(CoronelTemplate):
             "CALCULATE_TAX": "impuestos_iva",
             "MONTHLY_CLOSE": "cierre_contable",
             "GENERATE_FINANCIAL_REPORT": "reportes_normativos",
+            "AUDIT_TREASURY": "tesoreria",
+            "MANAGE_CUSTODY": "custodia_fondos",
+            "CHECK_LIQUIDITY": "liquidez",
+            "EXECUTE_PAYMENT": "pagos_financieros",
+            "DISTRIBUTE_FUNDS": "distribucion_fondos",
+            "MANAGE_RESERVES": "reservas",
+            "FORECAST_FINANCE": "proyecciones",
+            "GENERATE_P_L": "estado_resultados",
+            "GENERATE_BALANCE": "balance_general",
+            "GENERATE_CASH_FLOW": "flujo_efectivo",
+            "GENERATE_EQUITY_CHANGE": "cambios_patrimonio",
         }
 
         cap_key = mapping.get(m_type)

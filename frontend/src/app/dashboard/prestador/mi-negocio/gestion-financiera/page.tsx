@@ -25,22 +25,48 @@ import { PermissionGuard, usePermissions } from '@/ui/guards/PermissionGuard';
 import { auditLogger } from '@/services/auditLogger';
 
 export default function GestionFinancieraPage() {
-  const { getBankAccounts, getCashTransactions, isLoading } = useMiNegocioApi();
+  const {
+    getBankAccounts,
+    getCashTransactions,
+    getEstadoResultados,
+    getBalanceGeneral,
+    getProyecciones,
+    getRiesgos,
+    getTesoreria,
+    isLoading
+  } = useMiNegocioApi();
   const { role, hasPermission } = usePermissions();
+  const [activeTab, setActiveTab] = useState<'tesoreria' | 'estados' | 'proyecciones' | 'riesgos'>('tesoreria');
+
   const [accounts, setAccounts] = useState<BankAccount[]>([]);
   const [transactions, setTransactions] = useState<CashTransaction[]>([]);
+  const [pyg, setPyg] = useState<any[]>([]);
+  const [balance, setBalance] = useState<any[]>([]);
+  const [proyecciones, setProyecciones] = useState<any[]>([]);
+  const [riesgos, setRiesgos] = useState<any[]>([]);
+  const [tesoreria, setTesoreria] = useState<any>(null);
 
   useEffect(() => {
     const loadData = async () => {
-      const [accs, txs] = await Promise.all([
+      const [accs, txs, p, b, pr, r, t] = await Promise.all([
         getBankAccounts(),
-        getCashTransactions()
+        getCashTransactions(),
+        getEstadoResultados(),
+        getBalanceGeneral(),
+        getProyecciones(),
+        getRiesgos(),
+        getTesoreria()
       ]);
       if (accs) setAccounts(accs);
       if (txs) setTransactions(txs);
+      if (p) setPyg(p);
+      if (b) setBalance(b);
+      if (pr) setProyecciones(pr);
+      if (r) setRiesgos(r);
+      if (t) setTesoreria(t[0]);
     };
     loadData();
-  }, [getBankAccounts, getCashTransactions]);
+  }, [getBankAccounts, getCashTransactions, getEstadoResultados, getBalanceGeneral, getProyecciones, getRiesgos, getTesoreria]);
 
   const totalBalance = accounts.reduce((acc, curr) => acc + parseFloat(curr.balance), 0);
 
@@ -76,21 +102,44 @@ export default function GestionFinancieraPage() {
  
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Tesorería y Finanzas</h1>
-          <p className="text-gray-500 mt-1">Monitoreo de liquidez, cuentas bancarias y flujo de caja.</p>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Gestión Financiera Soberana</h1>
+          <p className="text-gray-500 mt-1">Gobierno, custodia y proyección de los recursos del sistema.</p>
         </div>
         <div className="flex gap-3">
           <PermissionGuard deniedRoles={['Auditor', 'Observador']}>
             <Button className="bg-green-600 hover:bg-green-700">
-                <FiPlus className="mr-2" /> Nueva Transacción
+                <FiPlus className="mr-2" /> Orden de Pago
             </Button>
-            <Button variant="outline">
-                <FiDollarSign className="mr-2" /> Conciliar
+            <Button variant="outline" className="border-brand text-brand font-bold">
+                <FiShield className="mr-2" /> Autorizar Todo
             </Button>
           </PermissionGuard>
         </div>
       </div>
 
+      {/* Tabs de Navegación Financiera */}
+      <div className="flex border-b border-gray-200 gap-8 overflow-x-auto no-scrollbar">
+         {[
+           { id: 'tesoreria', label: 'Tesorería y Caja', icon: FiCreditCard },
+           { id: 'estados', label: 'Estados Financieros', icon: FiFileText },
+           { id: 'proyecciones', label: 'Planeación y Forecast', icon: FiTrendingUp },
+           { id: 'riesgos', label: 'Riesgo y Cumplimiento', icon: FiAlertTriangle },
+         ].map(tab => (
+           <button
+             key={tab.id}
+             onClick={() => setActiveTab(tab.id as any)}
+             className={`py-4 flex items-center gap-2 text-xs font-black uppercase tracking-widest border-b-2 transition-all ${
+               activeTab === tab.id ? 'border-brand text-brand' : 'border-transparent text-gray-400 hover:text-gray-600'
+             }`}
+           >
+             <tab.icon />
+             {tab.label}
+           </button>
+         ))}
+      </div>
+
+      {activeTab === 'tesoreria' && (
+      <>
       {/* Hero Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="bg-indigo-600 text-white shadow-xl border-none overflow-hidden relative">
@@ -244,6 +293,113 @@ export default function GestionFinancieraPage() {
           </CardContent>
         </Card>
       </div>
+      </>
+      )}
+
+      {activeTab === 'estados' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+           <Card className="border-none shadow-sm">
+              <CardHeader><CardTitle className="text-lg font-bold">Estado de Resultados (P&L)</CardTitle></CardHeader>
+              <CardContent>
+                 <div className="space-y-4">
+                    <div className="flex justify-between border-b pb-2"><span>Ingresos Totales</span><span className="font-black text-green-600">$0.00</span></div>
+                    <div className="flex justify-between border-b pb-2"><span>Costos de Venta</span><span className="font-black text-red-500">$0.00</span></div>
+                    <div className="flex justify-between border-b pb-2"><span>Gastos Operativos</span><span className="font-black text-red-500">$0.00</span></div>
+                    <div className="flex justify-between pt-2">
+                       <span className="font-bold">Utilidad Neta</span>
+                       <span className="text-2xl font-black text-indigo-600">$0.00</span>
+                    </div>
+                 </div>
+              </CardContent>
+           </Card>
+
+           <Card className="border-none shadow-sm">
+              <CardHeader><CardTitle className="text-lg font-bold">Balance General</CardTitle></CardHeader>
+              <CardContent>
+                 <div className="space-y-4">
+                    <div className="flex justify-between border-b pb-2"><span>Total Activos</span><span className="font-black text-indigo-600">$0.00</span></div>
+                    <div className="flex justify-between border-b pb-2"><span>Total Pasivos</span><span className="font-black text-amber-600">$0.00</span></div>
+                    <div className="flex justify-between pt-2">
+                       <span className="font-bold">Patrimonio Total</span>
+                       <span className="text-2xl font-black text-slate-900">$0.00</span>
+                    </div>
+                 </div>
+              </CardContent>
+           </Card>
+
+           <Card className="border-none shadow-sm">
+              <CardHeader><CardTitle className="text-lg font-bold">Flujo de Efectivo</CardTitle></CardHeader>
+              <CardContent className="h-40 flex items-center justify-center italic text-gray-400">Datos en proceso de compilación...</CardContent>
+           </Card>
+
+           <Card className="border-none shadow-sm">
+              <CardHeader><CardTitle className="text-lg font-bold">Cambios en el Patrimonio</CardTitle></CardHeader>
+              <CardContent className="h-40 flex items-center justify-center italic text-gray-400">Datos en proceso de compilación...</CardContent>
+           </Card>
+        </div>
+      )}
+
+      {activeTab === 'proyecciones' && (
+        <div className="space-y-6">
+           <Card className="bg-slate-900 text-white p-10 rounded-[2rem]">
+              <h3 className="text-2xl font-black italic">Simulador de Escenarios IA</h3>
+              <p className="mt-4 text-slate-400">Ajusta variables para ver cómo impactaría tu flujo de caja en los próximos 6 meses.</p>
+              <Button className="mt-8 bg-brand text-white font-black px-10">Crear Proyección</Button>
+           </Card>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="p-8 border-none shadow-sm bg-white">
+                 <h4 className="font-bold mb-4">Forecast de Ingresos - Q1 2026</h4>
+                 <div className="h-48 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400">Gráfico de Proyección</div>
+              </Card>
+              <Card className="p-8 border-none shadow-sm bg-white">
+                 <h4 className="font-bold mb-4">Análisis de Estacionalidad</h4>
+                 <div className="h-48 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400">Datos Estacionales</div>
+              </Card>
+           </div>
+        </div>
+      )}
+
+      {activeTab === 'riesgos' && (
+        <div className="space-y-6">
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="p-6 border-l-4 border-red-500 bg-red-50">
+                 <p className="text-xs font-black text-red-600 uppercase">Riesgo de Liquidez</p>
+                 <h4 className="font-bold mt-1">Crítico: Cobertura de 0.8 meses</h4>
+              </Card>
+              <Card className="p-6 border-l-4 border-amber-500 bg-amber-50">
+                 <p className="text-xs font-black text-amber-600 uppercase">Riesgo Impositivo</p>
+                 <h4 className="font-bold mt-1">Medio: Pendiente cierre de IVA</h4>
+              </Card>
+              <Card className="p-6 border-l-4 border-emerald-500 bg-emerald-50">
+                 <p className="text-xs font-black text-emerald-600 uppercase">Puntaje Crediticio</p>
+                 <h4 className="font-bold mt-1">Excelente: 940/1000</h4>
+              </Card>
+           </div>
+           <Card className="border-none shadow-sm">
+              <CardHeader><CardTitle className="text-lg font-bold">Matriz de Riesgo y Cumplimiento</CardTitle></CardHeader>
+              <CardContent>
+                 <Table>
+                    <TableHeader className="bg-slate-50">
+                       <TableRow>
+                          <TableHead>Categoría</TableHead>
+                          <TableHead>Impacto</TableHead>
+                          <TableHead>Probabilidad</TableHead>
+                          <TableHead>Estrategia de Mitigación</TableHead>
+                       </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                       <TableRow>
+                          <TableCell className="font-bold">Financiero</TableCell>
+                          <TableCell><Badge className="bg-red-500">ALTO</Badge></TableCell>
+                          <TableCell>Baja</TableCell>
+                          <TableCell>Aumento de reserva legal al 15%</TableCell>
+                       </TableRow>
+                    </TableBody>
+                 </Table>
+              </CardContent>
+           </Card>
+        </div>
+      )}
     </div>
   );
 }
