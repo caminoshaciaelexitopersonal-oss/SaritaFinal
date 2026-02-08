@@ -20,7 +20,9 @@ class DeliveryLogisticService:
                 destination_address=parameters["destination_address"],
                 estimated_price=parameters["estimated_price"],
                 governance_intention_id=intention_id,
-                status=DeliveryService.Status.REQUESTED
+                status=DeliveryService.Status.REQUESTED,
+                related_operational_order_id=parameters.get("related_operational_order_id"),
+                provider_id=parameters.get("provider_id")
             )
 
             DeliveryEvent.objects.create(
@@ -28,6 +30,9 @@ class DeliveryLogisticService:
                 event_type="REQUEST_CREATED",
                 description=f"Servicio solicitado por {self.user.username}"
             )
+
+            # --- IMPACTO ERP QUÍNTUPLE (FASE 9) ---
+            self._propagate_erp_impact(service, "DELIVERY_REQUESTED")
 
             return service
 
@@ -48,6 +53,8 @@ class DeliveryLogisticService:
                 event_type="DRIVER_ASSIGNED",
                 description=f"Conductor {driver.user.username} asignado con vehículo {vehicle.plate}"
             )
+
+            self._propagate_erp_impact(service, "DELIVERY_ASSIGNED")
 
             return service
 
@@ -71,6 +78,8 @@ class DeliveryLogisticService:
             # --- INTEGRACIÓN CON MONEDERO (PAGO OBLIGATORIO) ---
             self._process_payment(service)
 
+            self._propagate_erp_impact(service, "DELIVERY_COMPLETED")
+
             return service
 
     def rate_service(self, service_id, rating, comment=""):
@@ -84,6 +93,24 @@ class DeliveryLogisticService:
 
         logger.info(f"DELIVERY: Servicio {service_id} calificado con {rating}")
         return service
+
+    def _propagate_erp_impact(self, service, event_type):
+        """Propaga el impacto a las 5 dimensiones del ERP."""
+        from apps.admin_plataforma.services.quintuple_erp import QuintupleERPService
+        erp_service = QuintupleERPService(user=self.user)
+
+        payload = {
+            "company_id": str(service.delivery_company.company.id) if service.delivery_company else None,
+            "perfil_id": str(service.provider_id) if service.provider_id else None,
+            "cliente_id": str(service.tourist.id),
+            "amount": float(service.final_price or service.estimated_price),
+            "description": f"Servicio Delivery {service.id} - {event_type}",
+            "delivery_service_id": str(service.id),
+            "reserva_id": str(service.related_operational_order_id) if service.related_operational_order_id else None,
+            "wallet_transaction_id": str(service.wallet_transaction) if service.wallet_transaction else None
+        }
+
+        erp_service.record_impact(event_type, payload)
 
     def _process_payment(self, service):
         """

@@ -22,15 +22,18 @@ class ReservaSerializer(serializers.ModelSerializer):
     cliente_id = serializers.UUIDField(source='cliente_ref_id')
     # cliente_info = ClienteSerializer(source='cliente', read_only=True)
 
+    # Interoperabilidad (FASE 9)
+    related_deliveries = serializers.SerializerMethodField()
+
     class Meta:
         model = Reserva
         fields = [
-            'id', 'cliente_id', 'estado',
+            'id', 'id_publico', 'cliente_id', 'estado',
             'fecha_inicio', 'fecha_fin',
             'precio_total', 'deposito_pagado',
             'notas',
             'servicios_adicionales',
-            # 'cliente_info'
+            'related_deliveries'
         ]
         read_only_fields = ('perfil',)
 
@@ -42,6 +45,12 @@ class ReservaSerializer(serializers.ModelSerializer):
         for servicio_data in servicios_data:
             ReservaServicioAdicional.objects.create(reserva=reserva, **servicio_data)
         return reserva
+
+    def get_related_deliveries(self, obj):
+        from apps.delivery.models import DeliveryService
+        from apps.delivery.serializers import DeliveryServiceSerializer
+        deliveries = DeliveryService.objects.filter(related_operational_order_id=obj.id)
+        return DeliveryServiceSerializer(deliveries, many=True).data
 
     def update(self, instance, validated_data):
         servicios_data = validated_data.pop('servicios_adicionales', None)

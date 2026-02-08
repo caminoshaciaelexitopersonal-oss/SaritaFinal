@@ -179,120 +179,33 @@ class WalletService:
 
     def _integrate_erp(self, transaction: WalletTransaction):
         """
-        Integración con los módulos del ERP Quíntuple.
+        Integración con los módulos del ERP Quíntuple (FASE 9).
         """
-        logger.info(f"ERP INTEGRATION: Procesando transacción {transaction.id}")
+        from apps.admin_plataforma.services.quintuple_erp import QuintupleERPService
+        erp_service = QuintupleERPService(user=self.user)
 
-        # 1. Gestión Contable: Asiento automático
-        self._create_accounting_entry(transaction)
+        # Determinamos el contexto del impacto
+        # Buscamos si hay un servicio de delivery relacionado para extraer más contexto
+        related_delivery_id = None
+        if transaction.related_service_id:
+            related_delivery_id = transaction.related_service_id
 
-        # 2. Gestión Financiera: Flujo de caja / Orden de pago
-        self._update_financial_state(transaction)
+        company = transaction.to_wallet.company if transaction.to_wallet else transaction.from_wallet.company
+        perfil_id = None
 
-        # 3. Gestión Archivística: Evidencia legal
-        self._generate_archival_evidence(transaction)
+        if transaction.to_wallet and transaction.to_wallet.owner_type == WalletAccount.OwnerType.PROVIDER:
+            perfil_id = transaction.to_wallet.owner_id
+        elif transaction.from_wallet and transaction.from_wallet.owner_type == WalletAccount.OwnerType.PROVIDER:
+            perfil_id = transaction.from_wallet.owner_id
 
-    def _create_accounting_entry(self, transaction: WalletTransaction):
-        try:
-            from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, PeriodoContable, Cuenta
-            # Esto es una simplificación, en un sistema real buscaríamos el periodo activo y las cuentas correctas del plan
-            # Para esta implementación, buscaremos o crearemos lo mínimo necesario para que sea trazable.
+        payload = {
+            "company_id": str(company.id) if company else None,
+            "perfil_id": str(perfil_id) if perfil_id else None,
+            "cliente_id": str(self.user.id),
+            "amount": float(transaction.amount),
+            "description": transaction.description,
+            "wallet_transaction_id": str(transaction.id),
+            "delivery_service_id": str(related_delivery_id) if related_delivery_id else None
+        }
 
-            # Buscamos un periodo activo para la compañía
-            periodo = PeriodoContable.objects.filter(provider_id=transaction.to_wallet.company_id if transaction.to_wallet else transaction.from_wallet.company_id, cerrado=False).first()
-            if not periodo:
-                logger.error("No hay periodo contable abierto para integración.")
-                return
-
-            asiento = AsientoContable.objects.create(
-                provider_id=periodo.provider_id,
-                periodo=periodo,
-                fecha=transaction.timestamp.date(),
-                descripcion=f"Movimiento Monedero SARITA - TX {transaction.id}",
-                creado_por=self.user
-            )
-
-            # Registro simplificado de partida doble (Caja vs Monedero)
-            # En producción esto depende del tipo de transacción
-            # Supongamos una cuenta genérica para monedero
-
-            # Debito / Crédito según tipo
-            if transaction.type == WalletTransaction.TransactionType.PAYMENT:
-                # El prestador recibe (to_wallet)
-                # DEBITO a Monedero (Activo aumenta)
-                # CREDITO a Ingresos por Servicios
-                pass # Implementar lógica específica de cuentas si están configuradas
-
-            logger.info(f"Asiento contable creado para TX {transaction.id}")
-        except ImportError:
-            logger.warning("Módulo contable no disponible para integración.")
-        except Exception as e:
-            logger.error(f"Error en integración contable: {e}")
-
-    def _update_financial_state(self, transaction: WalletTransaction):
-        try:
-            import uuid as uuid_lib
-            from apps.prestadores.mi_negocio.gestion_financiera.models import OrdenPago
-
-            # Buscamos el perfil del prestador si aplica
-            perfil_id = None
-            if transaction.to_wallet and transaction.to_wallet.owner_type == WalletAccount.OwnerType.PROVIDER:
-                perfil_id = transaction.to_wallet.owner_id
-            elif transaction.from_wallet and transaction.from_wallet.owner_type == WalletAccount.OwnerType.PROVIDER:
-                perfil_id = transaction.from_wallet.owner_id
-
-            if transaction.type == WalletTransaction.TransactionType.LIQUIDATION and perfil_id:
-                OrdenPago.objects.create(
-                    perfil_ref_id=uuid_lib.UUID(perfil_id),
-                    monto=transaction.amount,
-                    fecha_pago=transaction.timestamp.date(),
-                    concepto=f"Liquidación Monedero SARITA {transaction.id}",
-                    estado=OrdenPago.EstadoPago.PENDIENTE
-                )
-            logger.info(f"Estado financiero actualizado para TX {transaction.id}")
-        except Exception as e:
-            logger.error(f"Error en integración financiera: {e}")
-
-    def _generate_archival_evidence(self, transaction: WalletTransaction):
-        try:
-            from apps.prestadores.mi_negocio.gestion_archivistica.models import Document, DocumentType, Process, ProcessType
-
-            company = transaction.to_wallet.company if transaction.to_wallet else transaction.from_wallet.company
-
-            # Buscamos o creamos el tipo de documento para comprobantes financieros
-            doc_type, _ = DocumentType.objects.get_or_create(
-                company=company,
-                code="COMP_FIN",
-                defaults={"name": "Comprobante Financiero"}
-            )
-
-            # Buscamos o creamos el proceso de Tesorería
-            proc_type, _ = ProcessType.objects.get_or_create(
-                company=company,
-                code="TES",
-                defaults={"name": "Tesorería"}
-            )
-
-            process, _ = Process.objects.get_or_create(
-                company=company,
-                process_type=proc_type,
-                code="TES-WAL",
-                defaults={"name": "Gestión de Monedero"}
-            )
-
-            # Creamos el documento
-            doc = Document.objects.create(
-                company=company,
-                process=process,
-                document_type=doc_type,
-                sequence=Document.objects.filter(company=company).count() + 1,
-                document_code=f"WAL-{transaction.id.hex[:8]}",
-                created_by=self.user
-            )
-
-            transaction.metadata["archival_document_id"] = str(doc.id)
-            transaction.save()
-
-            logger.info(f"Evidencia archivística generada: {doc.document_code}")
-        except Exception as e:
-            logger.error(f"Error en integración archivística: {e}")
+        erp_service.record_impact(f"WALLET_{transaction.type}", payload)

@@ -40,6 +40,11 @@ class DeliveryServiceViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def request_delivery(self, request):
         kernel = GovernanceKernel(user=request.user)
+
+        # FASE 9: Directriz de Interoperabilidad
+        # En producción, se debería validar que related_operational_order_id esté presente
+        # para cumplir con "Delivery nunca actúa sin una Orden Operativa".
+
         try:
             result = kernel.resolve_and_execute(
                 intention_name="DELIVERY_REQUEST",

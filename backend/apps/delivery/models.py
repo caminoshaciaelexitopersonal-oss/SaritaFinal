@@ -73,6 +73,13 @@ class DeliveryService(models.Model):
     wallet_transaction = models.UUIDField(null=True, blank=True, help_text="ID de la transacción en apps.wallet")
     governance_intention_id = models.CharField(max_length=255, null=True, blank=True)
 
+    # Interoperabilidad (FASE 9)
+    related_operational_order_id = models.UUIDField(null=True, blank=True, help_text="ID de la Reserva/Orden Operativa vinculada")
+
+    # Feedback
+    rating = models.PositiveIntegerField(null=True, blank=True)
+    tourist_comment = models.TextField(blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

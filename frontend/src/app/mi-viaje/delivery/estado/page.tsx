@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import api from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
-import { FiClock, FiUser, FiTruck, FiCheckCircle, FiShield, FiRotateCw } from 'react-icons/fi';
+import { FiClock, FiUser, FiTruck, FiCheckCircle, FiShield, FiRotateCw, FiExternalLink } from 'react-icons/fi';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ViewState } from '@/components/ui/ViewState';
 
@@ -97,6 +97,25 @@ function DeliveryStatusContent() {
                        </div>
                     </div>
                  </div>
+
+                 {/* Orden Operativa Vinculada (Interoperabilidad FASE 9) */}
+                 {service?.related_operational_order_id && (
+                    <div className="bg-indigo-50 p-8 rounded-3xl border border-indigo-100 flex items-center justify-between group">
+                       <div className="flex items-center gap-6">
+                          <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
+                             <FiCheckCircle size={32} />
+                          </div>
+                          <div>
+                             <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Servicio Especializado Vinculado</p>
+                             <p className="text-xl font-black text-indigo-900">Orden Operativa</p>
+                             <p className="text-xs font-mono font-bold text-indigo-400 truncate w-32">{service.related_operational_order_id}</p>
+                          </div>
+                       </div>
+                       <button className="p-4 bg-white text-indigo-600 rounded-2xl shadow-sm opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
+                          <FiExternalLink />
+                       </button>
+                    </div>
+                 )}
 
                  {/* Detalles del Vehículo */}
                  {service?.vehicle && (

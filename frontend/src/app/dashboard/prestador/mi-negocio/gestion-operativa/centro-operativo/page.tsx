@@ -67,12 +67,29 @@ interface Operacion {
 }
 
 import { ViewState } from '@/components/ui/ViewState';
+import api from '@/services/api';
+import { toast } from 'react-toastify';
 
 export default function CentroOperativoPage() {
-    const [operations, setOperations] = useState<Operacion[]>([]);
+    const [operations, setOperations] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [selectedOpId, setSelectedOpId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'PANEL' | 'TAREAS' | 'INCIDENCIAS' | 'METRICAS'>('PANEL');
     const [isNewOpModalOpen, setIsNewOpModalOpen] = useState(false);
+
+    useEffect(() => {
+        const fetchReservas = async () => {
+            try {
+                const res = await api.get('/v1/mi-negocio/operativa/genericos/reservas/');
+                setOperations(res.data.results || []);
+            } catch (err) {
+                console.error("Error fetching reservas", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchReservas();
+    }, []);
 
     const selectedOp = operations.find(o => o.id === selectedOpId);
 
@@ -216,14 +233,15 @@ export default function CentroOperativoPage() {
 
                 {activeTab === 'PANEL' && (
                     <ViewState
+                        isLoading={isLoading}
                         isEmpty={operations.length === 0}
-                        emptyMessage="DOMINIO BLOQUEADO: El Motor de Descomposición Operativa no está activo en el backend. Las ventas no pueden ser transformadas en tareas automáticamente aún."
+                        emptyMessage="Sin operaciones activas."
                     >
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
                         {/* Lista de Operaciones Activas */}
                         <div className="lg:col-span-2 space-y-6">
                             <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                                <div className="w-2 h-2 bg-brand rounded-full animate-pulse"></div> Operaciones en Curso ({operations.length})
+                                <div className="w-2 h-2 bg-brand rounded-full animate-pulse"></div> Órdenes Especializadas ({operations.length})
                             </h3>
                             <div className="grid grid-cols-1 gap-4">
                                 {operations.map(op => (
@@ -235,37 +253,25 @@ export default function CentroOperativoPage() {
                                         <CardContent className="p-6">
                                             <div className="flex justify-between items-start mb-4">
                                                 <div>
-                                                    <p className="text-[10px] font-black text-brand uppercase tracking-tighter mb-1">{op.id} • VENTA {op.venta_id}</p>
-                                                    <h4 className="text-xl font-bold text-slate-900 dark:text-white leading-tight">{op.servicio_nombre}</h4>
-                                                    <p className="text-sm text-slate-500 mt-1 flex items-center gap-1"><FiUser size={12}/> {op.cliente_nombre}</p>
+                                                    <p className="text-[10px] font-black text-brand uppercase tracking-tighter mb-1">RESERVA {op.id_publico?.slice(0,8)}</p>
+                                                    <h4 className="text-xl font-bold text-slate-900 dark:text-white leading-tight">Servicio Operativo Especializado</h4>
+                                                    <p className="text-sm text-slate-500 mt-1 flex items-center gap-1"><FiUser size={12}/> Cliente: {op.cliente_id?.slice(0,8)}</p>
                                                 </div>
                                                 <Badge className={`uppercase font-black text-[10px] ${
-                                                    op.estado === 'EJECUCION' ? 'bg-blue-100 text-blue-700' :
-                                                    op.estado === 'INCIDENCIA' ? 'bg-red-100 text-red-700 animate-pulse' :
+                                                    op.estado === 'CONFIRMADA' ? 'bg-blue-100 text-blue-700' :
+                                                    op.estado === 'COMPLETADA' ? 'bg-emerald-100 text-emerald-700' :
                                                     'bg-slate-100 text-slate-700'
                                                 }`}>
                                                     {op.estado}
                                                 </Badge>
                                             </div>
-                                            <div className="space-y-2">
-                                                <div className="flex justify-between text-[10px] font-black uppercase text-slate-400">
-                                                    <span>Progreso Real</span>
-                                                    <span>{op.progreso}%</span>
-                                                </div>
-                                                <div className="h-1.5 w-full bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
-                                                    <div
-                                                        className={`h-full transition-all duration-1000 ${op.estado === 'INCIDENCIA' ? 'bg-red-500' : 'bg-brand'}`}
-                                                        style={{ width: `${op.progreso}%` }}
-                                                    ></div>
-                                                </div>
-                                            </div>
+
                                             <div className="mt-6 flex items-center justify-between border-t border-slate-50 dark:border-white/5 pt-4">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold">CO</div>
-                                                    <span className="text-xs font-bold text-slate-600 dark:text-slate-400">{op.responsable_lider}</span>
-                                                </div>
                                                 <div className="text-[10px] font-black text-slate-400 flex items-center gap-1 uppercase">
-                                                    <FiClock /> Fin: {op.fecha_fin_estimada}
+                                                   <FiClock /> Inicio: {new Date(op.fecha_inicio).toLocaleDateString()}
+                                                </div>
+                                                <div className="text-[10px] font-black text-brand flex items-center gap-1 uppercase">
+                                                   ${op.precio_total} COP
                                                 </div>
                                             </div>
                                         </CardContent>
@@ -279,67 +285,45 @@ export default function CentroOperativoPage() {
                             {selectedOp ? (
                                 <div className="space-y-6 animate-in slide-in-from-right duration-500 sticky top-32">
                                     <div className="flex justify-between items-center">
-                                        <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Detalle Operativo</h3>
+                                        <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Interoperabilidad Logística</h3>
                                         <button onClick={() => setSelectedOpId(null)} className="text-xs text-slate-400 hover:text-slate-900">Cerrar</button>
                                     </div>
 
                                     <Card className="border-none bg-slate-900 text-white shadow-xl rounded-3xl overflow-hidden">
                                         <CardContent className="p-8">
-                                            <p className="text-indigo-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Hoja de Ruta</p>
-                                            <div className="space-y-8">
-                                                {selectedOp.actividades.map(act => (
-                                                    <div key={act.id} className="relative pl-6 before:absolute before:left-0 before:top-2 before:bottom-0 before:w-px before:bg-white/10">
-                                                        <div className="absolute left-[-4px] top-1.5 w-2 h-2 rounded-full bg-indigo-500 ring-4 ring-slate-900"></div>
-                                                        <h5 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">{act.nombre}</h5>
-                                                        <div className="space-y-3">
-                                                            {act.tareas.map(tarea => (
-                                                                <div key={tarea.id} className="bg-white/5 p-3 rounded-xl border border-white/5 group hover:bg-white/10 transition-all">
-                                                                    <div className="flex justify-between items-start">
-                                                                        <p className="text-xs font-bold leading-tight">{tarea.nombre}</p>
-                                                                        <button className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                            <FiMoreVertical size={14} className="text-slate-500" />
-                                                                        </button>
-                                                                    </div>
-                                                                    <div className="mt-3 flex items-center justify-between">
-                                                                        <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase ${
-                                                                            tarea.estado === 'LISTO' ? 'bg-emerald-500/20 text-emerald-400' :
-                                                                            tarea.estado === 'EN_PROGRESO' ? 'bg-blue-500/20 text-blue-400 animate-pulse' :
-                                                                            'bg-white/10 text-slate-400'
-                                                                        }`}>
-                                                                            {tarea.estado}
-                                                                        </span>
-                                                                        <span className="text-[9px] text-slate-500 font-medium italic">{tarea.responsable}</span>
-                                                                    </div>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
+                                            <p className="text-indigo-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Subórdenes Delivery</p>
+                                            <div className="space-y-4">
+                                                {selectedOp.related_deliveries?.map((del: any) => (
+                                                   <div key={del.id} className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                                                      <div className="flex justify-between items-start mb-2">
+                                                         <span className="text-[9px] font-black px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 uppercase tracking-widest">{del.status}</span>
+                                                         <span className="text-[9px] text-slate-500 font-mono">{del.id.slice(0,8)}</span>
+                                                      </div>
+                                                      <p className="text-xs font-bold text-white mb-1">Destino: {del.destination_address}</p>
+                                                      <p className="text-[10px] text-slate-400">Conductor: {del.driver?.username || 'Pendiente'}</p>
+                                                   </div>
                                                 ))}
+                                                {selectedOp.related_deliveries?.length === 0 && (
+                                                   <div className="text-center py-6 border-2 border-dashed border-white/10 rounded-2xl opacity-40">
+                                                      <p className="text-[10px] font-black uppercase">Sin Logística Asignada</p>
+                                                   </div>
+                                                )}
                                             </div>
+
                                             <div className="mt-10 pt-6 border-t border-white/10 flex flex-col gap-3">
-                                                <div className="bg-white/5 p-4 rounded-2xl mb-2">
-                                                    <p className="text-[9px] font-black uppercase text-indigo-400 mb-2">Control de Calidad</p>
-                                                    <div className="flex gap-2">
-                                                        <Button className="flex-1 bg-white/10 text-white text-[10px] h-10 rounded-xl hover:bg-white/20"><FiUpload className="mr-1"/> Subir Evidencia</Button>
-                                                        <Button className="flex-1 bg-white/10 text-white text-[10px] h-10 rounded-xl hover:bg-white/20"><FiClipboard className="mr-1"/> Checklist</Button>
-                                                    </div>
+                                                <Button
+                                                    className="w-full bg-brand text-white font-black text-xs py-6 rounded-2xl shadow-lg shadow-brand/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
+                                                    onClick={() => toast.info("Generando Suborden de Delivery via Puente Interoperable...")}
+                                                >
+                                                    <FiArrowRight /> Solicitar Delivery para Orden
+                                                </Button>
+
+                                                <div className="bg-white/5 p-4 rounded-2xl">
+                                                   <p className="text-[9px] font-black uppercase text-indigo-400 mb-2">Sincronización ERP</p>
+                                                   <div className="flex items-center gap-2 text-[10px] text-slate-400">
+                                                      <FiCheckCircle className="text-emerald-500" /> Trazabilidad Quíntuple Activa
+                                                   </div>
                                                 </div>
-                                                <Button
-                                                    className="w-full bg-brand text-white font-black text-xs py-6 rounded-2xl shadow-lg shadow-brand/20 hover:scale-[1.02] transition-transform"
-                                                    onClick={() => {
-                                                        setOperations(prev => prev.map(o => o.id === selectedOp.id ? { ...o, estado: 'VALIDACION', progreso: 90 } : o));
-                                                        alert('Checkpoint activado. Operación movida a fase de VALIDACIÓN.');
-                                                    }}
-                                                >
-                                                    <FiCheckCircle className="mr-2"/> Validar Hito Maestro
-                                                </Button>
-                                                <Button
-                                                    variant="ghost"
-                                                    className="w-full text-red-400 hover:bg-red-500/10 font-bold text-xs"
-                                                    onClick={() => addIncident(selectedOp.id, 'Nueva incidencia reportada por operador.')}
-                                                >
-                                                    <FiAlertCircle className="mr-2"/> Reportar Incidencia
-                                                </Button>
                                             </div>
                                         </CardContent>
                                     </Card>

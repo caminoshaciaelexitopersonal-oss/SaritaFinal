@@ -32,6 +32,11 @@ class Reserva(models.Model):
     modificado_en = models.DateTimeField(auto_now=True)
     documento_archivistico_ref_id = models.UUIDField(null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if not self.id_publico:
+            self.id_publico = uuid.uuid4()
+        super().save(*args, **kwargs)
+
 class ReservaServicioAdicional(models.Model):
     reserva = models.ForeignKey(Reserva, on_delete=models.CASCADE, related_name='servicios_adicionales')
     servicio_ref_id = models.UUIDField()

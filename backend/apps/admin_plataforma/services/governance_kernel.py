@@ -421,7 +421,19 @@ class GovernanceKernel:
             delivery_service = DeliveryLogisticService(user=self.user)
 
             if intention.name == "DELIVERY_REQUEST":
-                service = delivery_service.create_request(parameters, intention_id=agent_result.get('mision_id'))
+                # FASE 9: Usamos el puente de interoperabilidad si hay una orden relacionada
+                intention_ref = agent_result.get('mision_id', 'SARITA-NATIVE')
+                if parameters.get("related_operational_order_id"):
+                    from .interoperability_bridge import InteroperabilityBridge
+                    bridge = InteroperabilityBridge(user=self.user)
+                    service = bridge.link_delivery_to_specialized_order(
+                        parameters["related_operational_order_id"],
+                        parameters,
+                        intention_id=intention_ref
+                    )
+                else:
+                    service = delivery_service.create_request(parameters, intention_id=intention_ref)
+
                 return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
 
             if intention.name == "DELIVERY_ASSIGN":
