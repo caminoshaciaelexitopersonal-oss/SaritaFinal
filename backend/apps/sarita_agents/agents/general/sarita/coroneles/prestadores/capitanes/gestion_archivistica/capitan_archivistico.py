@@ -29,7 +29,6 @@ class CapitanArchivistico(CapitanTemplate):
         )
 
     def _get_tenientes(self) -> dict:
-        from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.operativos.tenientes_persistencia import AdminTenientePersistenciaArchivistica
         return {
-            "admin_persistencia_archivistica": AdminTenientePersistenciaArchivistica()
+            "admin_persistencia_archivistica": "admin_persistencia_archivistica"
         }

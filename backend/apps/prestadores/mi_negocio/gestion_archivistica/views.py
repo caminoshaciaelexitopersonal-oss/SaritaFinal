@@ -53,7 +53,14 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # Solo retorna documentos de la compañía del usuario
-        return Document.objects.filter(company=self.request.user.perfil_prestador.company)
+        qs = Document.objects.filter(company=self.request.user.perfil_prestador.company)
+
+        # Auditoría de consulta de catálogo
+        if self.action == 'list':
+            from .sargentos import SargentoArchivistico
+            SargentoArchivistico.registrar_acceso(None, self.request.user.id, action="LIST_CATALOG")
+
+        return qs
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -100,7 +107,9 @@ class DocumentViewSet(viewsets.ModelViewSet):
             coordinator = FileCoordinator()
             file_content = coordinator.download(version)
 
-            # AuditLogger.log(...) # La lógica de auditoría se puede añadir aquí
+            # --- AUDITORÍA ARCHIVÍSTICA VÍA SARGENTO ---
+            from .sargentos import SargentoArchivistico
+            SargentoArchivistico.registrar_acceso(document.id, request.user.id, action="DOWNLOAD")
 
             response = HttpResponse(file_content, content_type='application/octet-stream')
             response['Content-Disposition'] = f'attachment; filename="{version.original_filename}"'

@@ -1,32 +1,10 @@
 from apps.sarita_agents.agents.capitan_template import CapitanTemplate
-from typing import Dict, Any
+from apps.sarita_agents.models import PlanTáctico
 
 class CapitanCapturaYCreacionDocumental(CapitanTemplate):
-    """
-    Misión: Gestionar la captura y creación de documentos.
-    """
+    def _get_tenientes(self) -> dict:
+        return {"archivado": "archivistico_archivado"}
 
-    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
-        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN CapitanCapturaYCreacionDocumental: Inicializado para Misión ID {self.mision_id}.")
-
-    def plan(self):
-        """
-        El corazón del Capitán. Aquí es donde defines el plan táctico.
-        Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
-        """
-        self.logger.info(f"CAPITÁN CapitanCapturaYCreacionDocumental: Planificando la misión.")
-
-        # 1. Crear el Plan Táctico
-        plan_tactico = self.get_or_create_plan_tactico(
-            nombre="Plan de Ejecución para CapitanCapturaYCreacionDocumental",
-            descripcion=f"Este plan detalla los pasos para cumplir el objetivo: {self.objective}"
-        )
-
-        # 2. Definir y Delegar Tareas (EJEMPLO - DEBE SER IMPLEMENTADO)
-        # self.delegar_tarea(plan_tactico=plan_tactico, nombre_teniente="...", descripcion="...", parametros_especificos={...})
-
-        # 3. Lanzar la Ejecución del Plan
-        self.lanzar_ejecucion_plan()
-
-        self.logger.info(f"CAPITÁN CapitanCapturaYCreacionDocumental: Planificación completada y tareas delegadas.")
+    def plan(self, mision):
+        pasos = {"1": {"teniente": "archivado", "descripcion": "Capturar evento y generar documento.", "parametros": mision.directiva_original.get("parameters", {})}}
+        return PlanTáctico.objects.create(mision=mision, capitan_responsable=self.__class__.__name__, pasos_del_plan=pasos, estado='PLANIFICADO')

@@ -128,46 +128,36 @@ class FacturacionService:
             factura.estado_dian = FacturaVenta.EstadoDIAN.RECHAZADA
         factura.dian_response_log = dian_response
 
-        # --- INICIO DE INTEGRACIÓN CON SGA ---
-        # 4. Archivar el documento de la factura
+        # --- INTEGRACIÓN CON SGA VÍA AGENTES ---
         try:
-            # Preparar contenido y metadatos para el SGA
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+
             factura_content = {
                 "numero_factura": factura.numero_factura,
-                "cliente": cliente.nombre, # Usar el objeto resuelto
+                "cliente": cliente.nombre,
                 "total": str(factura.total),
                 "cufe": factura.cufe
             }
-            factura_bytes = json.dumps(factura_content, indent=2).encode('utf-8')
 
-            metadata = {'source_model': 'FacturaVenta', 'source_id': factura.id}
+            directive = {
+                "domain": "prestadores",
+                "mission": {"type": "ARCHIVE_ACCOUNTING_DOC"},
+                "parameters": {
+                    "company_id": perfil.company_id,
+                    "user_id": factura.creado_por.id,
+                    "process_type_code": 'CONT',
+                    "process_code": 'FACT',
+                    "document_type_code": 'FV',
+                    "document_content": json.dumps(factura_content).encode('utf-8'),
+                    "original_filename": f"{factura.numero_factura}.json",
+                    "document_metadata": {'source_model': 'FacturaVenta', 'source_id': str(factura.id)},
+                }
+            }
+            sarita_orchestrator.handle_directive(directive)
+            logger.info(f"GESTIÓN COMERCIAL: Misión de archivado delegada para factura {factura.numero_factura}")
 
-            # Invocar al servicio de archivado
-            # Nota: factura.perfil.company.id es un anti-patrón.
-            # El company_id debería obtenerse del perfil resuelto.
-            document_version = ArchivingService.archive_document(
-                company_id=perfil.company_id, # Usar el ID de referencia
-                user_id=factura.creado_por.id,
-                process_type_code='CONT',
-                process_code='FACT',
-                document_type_code='FV',
-                document_content=factura_bytes,
-                original_filename=f"{factura.numero_factura}.json",
-                document_metadata=metadata,
-                requires_blockchain_notarization=True
-            )
-
-            # Vincular el registro de archivo con la factura
-            factura.documento_archivistico = document_version.document
         except Exception as e:
-            # Usar logging estructurado en lugar de print
-            logger.error(
-                "Error al archivar la factura %s: %s",
-                factura.numero_factura,
-                e,
-                exc_info=True  # Adjuntar traceback al log
-            )
-        # --- FIN DE INTEGRACIÓN CON SGA ---
+            logger.error(f"Error al delegar archivado de factura {factura.numero_factura}: {e}")
 
         factura.save()
 

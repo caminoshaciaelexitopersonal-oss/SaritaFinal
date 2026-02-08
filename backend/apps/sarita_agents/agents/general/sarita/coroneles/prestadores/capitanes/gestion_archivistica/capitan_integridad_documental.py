@@ -16,7 +16,7 @@ class CapitanIntegridadDocumental(CapitanTemplate):
         pasos = {
             "verificacion_hash": {
                 "descripcion": "Validar hashes SHA-256 y trazabilidad Blockchain.",
-                "teniente": "validador_integridad_archivistica",
+                "teniente": "archivistico_integridad",
                 "parametros": mision.directiva_original.get("parameters", {})
             }
         }
@@ -29,10 +29,6 @@ class CapitanIntegridadDocumental(CapitanTemplate):
         )
 
     def _get_tenientes(self) -> dict:
-        class TenienteValidadorIntegridad:
-            def execute_task(self, tarea):
-                return {"status": "SUCCESS", "message": "Integridad documental verificada."}
-
         return {
-            "validador_integridad_archivistica": TenienteValidadorIntegridad()
+            "archivistico_integridad": "archivistico_integridad"
         }

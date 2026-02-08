@@ -31,6 +31,39 @@ class SargentoComercial:
                 }
             )
             logger.info(f"SARGENTO: Contrato generado para operación {operacion_id}")
+
+            # Activar misión de archivado legal vía agentes
+            try:
+                from apps.sarita_agents.orchestrator import sarita_orchestrator
+                import json
+
+                contract_content = {
+                    "contrato_id": str(contrato.id),
+                    "operacion_id": str(operacion.id),
+                    "terminos": contrato.terminos_y_condiciones,
+                    "fecha": str(timezone.now())
+                }
+
+                directive = {
+                    "domain": "prestadores",
+                    "mission": {"type": "ARCHIVE_LEAL_DOC"},
+                    "parameters": {
+                        "company_id": str(operacion.perfil_ref_id), # Simplificado para demo
+                        "user_id": operacion.creado_por.id,
+                        "process_type_code": 'LEGAL',
+                        "process_code": 'CONT',
+                        "document_type_code": 'CONTRATO',
+                        "document_content": json.dumps(contract_content).encode('utf-8'),
+                        "original_filename": f"CONTRATO-{contrato.id}.json",
+                        "document_metadata": {'source_model': 'ContratoComercial', 'source_id': str(contrato.id)},
+                    }
+                }
+                sarita_orchestrator.handle_directive(directive)
+            except Exception as e:
+                logger.error(f"SARGENTO: Error al delegar archivado de contrato: {e}")
+
+            self.registrar_bitacora(operacion.creado_por.id, "CONTRACT_CREATED", {"contrato_id": str(contrato.id)})
+
             return contrato
         except Exception as e:
             logger.error(f"SARGENTO: Error al generar contrato: {e}")

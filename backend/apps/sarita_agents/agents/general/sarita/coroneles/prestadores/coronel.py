@@ -42,6 +42,23 @@ from .capitanes.gestion_archivistica.capitan_archivistico import CapitanArchivis
 from .capitanes.gestion_archivistica.capitan_integridad_documental import CapitanIntegridadDocumental
 from .capitanes.gestion_archivistica.capitan_retencion_normativa import CapitanRetencionNormativa
 from .capitanes.gestion_archivistica.capitan_auditoria_documental import CapitanAuditoriaDocumental
+from .capitanes.gestion_archivistica.capitan_busqueda_documental import CapitanBusquedaDocumental
+from .capitanes.gestion_archivistica.capitan_captura_y_creacion_documental import CapitanCapturaYCreacionDocumental
+from .capitanes.gestion_archivistica.capitan_cumplimiento_normativo import CapitanCumplimientoNormativo
+from .capitanes.gestion_archivistica.capitan_gestion_documental_general import CapitanGestionDocumentalGeneral
+from .capitanes.gestion_archivistica.capitan_politicas_retencion import CapitanPoliticasRetencion
+from .capitanes.gestion_archivistica.capitan_seguridad_documental import CapitanSeguridadDocumental
+from .capitanes.gestion_archivistica.capitan_trazabilidad_documental import CapitanTrazabilidadDocumental
+from .capitanes.gestion_archivistica.capitan_documentos_legales import CapitanDocumentosLegales
+from .capitanes.gestion_archivistica.capitan_documentos_contables import CapitanDocumentosContables
+from .capitanes.gestion_archivistica.capitan_documentos_operativos import CapitanDocumentosOperativos
+from .capitanes.gestion_archivistica.capitan_documentos_sst import CapitanDocumentosSST
+from .capitanes.gestion_archivistica.capitan_documentos_nomina import CapitanDocumentosNomina
+from .capitanes.gestion_archivistica.capitan_documentos_publicos import CapitanDocumentosPublicos
+from .capitanes.gestion_archivistica.capitan_documentos_confidenciales import CapitanDocumentosConfidenciales
+from .capitanes.gestion_archivistica.capitan_conservacion_historica import CapitanConservacionHistorica
+from .capitanes.gestion_archivistica.capitan_disposicion_final import CapitanDisposicionFinal
+from .capitanes.gestion_archivistica.capitan_notarizacion_blockchain import CapitanNotarizacionBlockchain
 from .capitanes.gestion_operativa.capitan_gestion_operativa_general import CapitanGestionOperativaGeneral
 from .capitanes.gestion_operativa.capitan_control_operativo import CapitanControlOperativo
 from .capitanes.gestion_operativa.capitan_incidentes_operativos import CapitanIncidentesOperativos
@@ -108,6 +125,23 @@ class PrestadoresCoronel(CoronelTemplate):
             "integridad_documental": CapitanIntegridadDocumental(coronel=self),
             "retencion_normativa": CapitanRetencionNormativa(coronel=self),
             "auditoria_documental": CapitanAuditoriaDocumental(coronel=self),
+            "busqueda_documental": CapitanBusquedaDocumental(coronel=self),
+            "captura_documental": CapitanCapturaYCreacionDocumental(coronel=self),
+            "cumplimiento_archivistico": CapitanCumplimientoNormativo(coronel=self),
+            "gestion_documental_general": CapitanGestionDocumentalGeneral(coronel=self),
+            "politicas_retencion": CapitanPoliticasRetencion(coronel=self),
+            "seguridad_documental": CapitanSeguridadDocumental(coronel=self),
+            "trazabilidad_documental": CapitanTrazabilidadDocumental(coronel=self),
+            "documentos_legales": CapitanDocumentosLegales(coronel=self),
+            "documentos_contables": CapitanDocumentosContables(coronel=self),
+            "documentos_operativos": CapitanDocumentosOperativos(coronel=self),
+            "documentos_sst": CapitanDocumentosSST(coronel=self),
+            "documentos_nomina": CapitanDocumentosNomina(coronel=self),
+            "documentos_publicos": CapitanDocumentosPublicos(coronel=self),
+            "documentos_confidenciales": CapitanDocumentosConfidenciales(coronel=self),
+            "conservacion_historica": CapitanConservacionHistorica(coronel=self),
+            "disposicion_final": CapitanDisposicionFinal(coronel=self),
+            "notarizacion_blockchain": CapitanNotarizacionBlockchain(coronel=self),
             "operativo_general": CapitanGestionOperativaGeneral(coronel=self),
             "seguimiento_operativo": CapitanControlOperativo(coronel=self),
             "incidentes_operativos": CapitanIncidentesOperativos(coronel=self),
@@ -150,6 +184,15 @@ class PrestadoresCoronel(CoronelTemplate):
             "VALIDAR_CUMPLIMIENTO_COMERCIAL": "cumplimiento_comercial",
             "AVANZAR_LEAD": "conversion",
             "ANALISIS_ESTRATEGICO_COMERCIAL": "comercial_estrategico",
+            # Archivístico
+            "ARCHIVE_LEAL_DOC": "documentos_legales",
+            "ARCHIVE_ACCOUNTING_DOC": "documentos_contables",
+            "ARCHIVE_OPERATIONAL_DOC": "documentos_operativos",
+            "ARCHIVE_SST_DOC": "documentos_sst",
+            "ARCHIVE_PAYROLL_DOC": "documentos_nomina",
+            "NOTARIZE_DOC": "notarizacion_blockchain",
+            "RETENTION_AUDIT": "politicas_retencion",
+            "DOCUMENT_SEARCH": "busqueda_documental",
         }
 
         cap_key = mapping.get(m_type)

@@ -53,6 +53,39 @@ class TenienteROICalculator(TenienteTemplate):
         roi = cap.evaluate_roi(cac, ltv)
         return {"roi": roi, "profitable": roi > 0}
 
+# --- TENIENTES ARCHIVÍSTICOS (SARGENTOS LOGIC) ---
+class TenienteIntegridadArchivistica(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        version_id = parametros.get("version_id")
+        content = parametros.get("content", b"")
+        success = SargentoArchivistico.validar_integridad(version_id, content)
+        return {"status": "SUCCESS" if success else "FAILED", "integrated": success}
+
+class TenienteSelloTemporal(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        version_id = parametros.get("version_id")
+        success = SargentoArchivistico.aplicar_sello_temporal(version_id)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteAuditoriaAcceso(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        document_id = parametros.get("document_id")
+        user_id = parametros.get("user_id")
+        action = parametros.get("action", "READ")
+        success = SargentoArchivistico.registrar_acceso(document_id, user_id, action)
+        return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteArchivado(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        version_id = SargentoArchivistico.archivar_documento(parametros)
+        if version_id:
+            return {"status": "SUCCESS", "version_id": version_id}
+        return {"status": "FAILED"}
+
 # --- TENIENTES COMERCIALES (SARGENTOS LOGIC) ---
 class TenienteContratacionComercial(TenienteTemplate):
     def perform_action(self, parametros: dict):
@@ -101,6 +134,11 @@ TENIENTE_MAP = {
     'cac_calculator': TenienteCACCalculator,
     'ltv_calculator': TenienteLTVCalculator,
     'roi_calculator': TenienteROICalculator,
+    # Archivísticos (Nuevos)
+    'archivistico_integridad': TenienteIntegridadArchivistica,
+    'archivistico_sello': TenienteSelloTemporal,
+    'archivistico_acceso': TenienteAuditoriaAcceso,
+    'archivistico_archivado': TenienteArchivado,
     # Comerciales (Nuevos)
     'comercial_contratacion': TenienteContratacionComercial,
     'comercial_activacion': TenienteActivacionOperativa,
