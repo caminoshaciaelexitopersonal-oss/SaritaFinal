@@ -10,6 +10,7 @@ from .agents.general.sarita.coroneles.administrador_general.coronel import Admin
 from .marketing.coronel_marketing import CoronelMarketing
 from .finanzas.coronel_finanzas import CoronelFinanzas
 from apps.peace_net.coronel import PeaceNetCoronel
+from apps.wallet.agents.coronel import CoronelMonedero
 # from .agents.general.sarita.coroneles.clientes_turistas.coronel import ClientesTuristasCoronel
 # from .agents.general.sarita.coroneles.gubernamental.coronel import GubernamentalCoronel
 
@@ -33,6 +34,7 @@ class SaritaOrchestrator:
             "marketing": CoronelMarketing(general=self, domain="marketing"),
             "finanzas": CoronelFinanzas(general=self, domain="finanzas"),
             "peace_net": PeaceNetCoronel(general=self, domain="peace_net"),
+            "wallet": CoronelMonedero(general=self),
             # "clientes_turistas": ClientesTuristasCoronel(general=self),
             # "gubernamental": GubernamentalCoronel(general=self),
         }

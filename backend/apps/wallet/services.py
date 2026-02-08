@@ -11,7 +11,7 @@ class WalletService:
     def __init__(self, user: CustomUser):
         self.user = user
 
-    def deposit(self, wallet_id, amount, description="Depósito de fondos"):
+    def deposit(self, wallet_id, amount, description="Depósito de fondos", intention_id=None):
         wallet = get_object_or_404(WalletAccount, id=wallet_id)
 
         with transaction.atomic():
@@ -24,6 +24,7 @@ class WalletService:
                 type=WalletTransaction.TransactionType.DEPOSIT,
                 status=WalletTransaction.Status.EXECUTED,
                 description=description,
+                governance_intention_id=intention_id,
                 metadata={"executed_by": self.user.username}
             )
 
@@ -31,7 +32,7 @@ class WalletService:
 
             return tx
 
-    def pay(self, to_wallet_id, amount, related_service_id=None, description="Pago de servicio"):
+    def pay(self, to_wallet_id, amount, related_service_id=None, description="Pago de servicio", intention_id=None):
         from_wallet = WalletAccount.objects.get(user=self.user) # Assuming 1 wallet per user for now
         to_wallet = get_object_or_404(WalletAccount, id=to_wallet_id)
         amount_dec = Decimal(str(amount))
@@ -57,6 +58,7 @@ class WalletService:
                 status=WalletTransaction.Status.EXECUTED,
                 related_service_id=related_service_id,
                 description=description,
+                governance_intention_id=intention_id,
                 metadata={"payer": self.user.username}
             )
 

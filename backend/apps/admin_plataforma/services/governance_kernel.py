@@ -349,6 +349,60 @@ class GovernanceKernel:
         """
         Delega la ejecución al servicio de dominio correspondiente.
         """
+        # Registro de Servicios de Dominio - Ejército de Agentes Monedero
+        if intention.domain == "wallet":
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+
+            # Convertimos la intención en una directiva para el ejército de agentes
+            directive = {
+                "domain": "wallet",
+                "action": intention.name,
+                "parameters": parameters,
+                "user_id": str(self.user.id),
+                "role": self.user.role
+            }
+
+            # El General SARITA toma el mando
+            agent_result = sarita_orchestrator.handle_directive(directive)
+
+            # Integración con el servicio real para persistencia de estado (Sargentos llamarían a esto en un flujo real completo)
+            # Para cumplir con el "Cierre Estructural", aseguramos que el rastro financiero se genere.
+            from apps.wallet.services import WalletService
+            wallet_service = WalletService(user=self.user)
+
+            intention_ref = agent_result.get('mision_id', 'SARITA-NATIVE')
+
+            if intention.name == "WALLET_DEPOSIT":
+                tx = wallet_service.deposit(
+                    wallet_id=parameters["wallet_id"],
+                    amount=parameters["amount"],
+                    description=parameters.get("description", "Depósito de fondos"),
+                    intention_id=intention_ref
+                )
+                return {"status": "SUCCESS", "agent_report": agent_result, "transaction_id": str(tx.id)}
+
+            if intention.name == "WALLET_PAY":
+                tx = wallet_service.pay(
+                    to_wallet_id=parameters["to_wallet_id"],
+                    amount=parameters["amount"],
+                    related_service_id=parameters.get("related_service_id"),
+                    description=parameters.get("description", "Pago de servicio"),
+                    intention_id=intention_ref
+                )
+                return {"status": "SUCCESS", "agent_report": agent_result, "transaction_id": str(tx.id)}
+
+            if intention.name == "WALLET_REFUND":
+                tx = wallet_service.refund(transaction_id=parameters["transaction_id"])
+                return {"status": "SUCCESS", "agent_report": agent_result, "refund_transaction_id": str(tx.id)}
+
+            if intention.name == "WALLET_LIQUIDATE":
+                tx = wallet_service.liquidate(wallet_id=parameters["wallet_id"])
+                return {"status": "SUCCESS", "agent_report": agent_result, "liquidation_id": str(tx.id)}
+
+            if intention.name == "WALLET_FREEZE":
+                wallet = wallet_service.freeze(wallet_id=parameters["wallet_id"], motivo=parameters["motivo"])
+                return {"status": "SUCCESS", "agent_report": agent_result, "wallet_id": str(wallet.id)}
+
         from .gestion_plataforma_service import GestionPlataformaService
         service = GestionPlataformaService(admin_user=self.user)
 
@@ -431,6 +485,47 @@ GovernanceKernel.register_intention(GovernanceIntention(
     domain="contable",
     required_role=CustomUser.Role.ADMIN,
     min_authority=AuthorityLevel.DELEGATED
+))
+
+# Dominio: Monedero Institucional
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="WALLET_DEPOSIT",
+    domain="wallet",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["wallet_id", "amount"],
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="WALLET_PAY",
+    domain="wallet",
+    required_role=CustomUser.Role.TURISTA,
+    required_params=["to_wallet_id", "amount"],
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="WALLET_REFUND",
+    domain="wallet",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["transaction_id"],
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="WALLET_LIQUIDATE",
+    domain="wallet",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["wallet_id"],
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="WALLET_FREEZE",
+    domain="wallet",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["wallet_id", "motivo"],
+    min_authority=AuthorityLevel.SOVEREIGN
 ))
 
 # Dominio: FASE LEGADO

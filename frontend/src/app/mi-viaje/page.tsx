@@ -87,6 +87,28 @@ export default function MiViajePage() {
            error={error}
         >
           <div className="space-y-12">
+            {/* Sección de Monedero - Acceso Rápido */}
+            <section className="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+               <div className="bg-gradient-to-r from-indigo-600 to-blue-700 p-8 text-white">
+                  <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                     <div>
+                        <p className="text-indigo-100 text-sm font-bold uppercase tracking-widest mb-1">Mi Monedero Institucional</p>
+                        <h2 className="text-4xl font-black">
+                           Infraestructura Financiera Soberana
+                        </h2>
+                     </div>
+                     <div className="flex gap-3">
+                        <Link href="/mi-viaje/monedero/cartera" className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-6 py-3 rounded-2xl font-bold transition-all border border-white/10">
+                           Ver Cartera
+                        </Link>
+                        <Link href="/mi-viaje/monedero/transferir" className="bg-white text-indigo-600 hover:bg-indigo-50 px-6 py-3 rounded-2xl font-bold transition-all shadow-lg">
+                           Transferir Fondos
+                        </Link>
+                     </div>
+                  </div>
+               </div>
+            </section>
+
             {/* Atractivos Guardados */}
             {atractivosGuardados.length > 0 && (
               <section>
