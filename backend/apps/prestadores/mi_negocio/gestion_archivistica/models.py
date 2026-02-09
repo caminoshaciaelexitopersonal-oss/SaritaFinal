@@ -92,3 +92,35 @@ class DocumentVersion(models.Model):
 
     def __str__(self):
         return f"{self.document.document_code} - v{self.version_number}"
+
+class AccessLog(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    document_version = models.ForeignKey(DocumentVersion, on_delete=models.CASCADE, related_name='access_logs')
+    user = models.ForeignKey('api.CustomUser', on_delete=models.SET_NULL, null=True)
+    accessed_at = models.DateTimeField(auto_now_add=True)
+    action = models.CharField(max_length=50) # VIEW, DOWNLOAD, PRINT
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+
+    class Meta:
+        app_label = 'gestion_archivistica'
+
+class RetentionPolicy(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    company = models.ForeignKey('companies.Company', on_delete=models.CASCADE)
+    document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE)
+    retention_years = models.PositiveIntegerField()
+    disposition_action = models.CharField(max_length=50, choices=[('DESTROY', 'Destruir'), ('ARCHIVE', 'Archivo Permanente')])
+
+    class Meta:
+        app_label = 'gestion_archivistica'
+
+class DestructionLog(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    document = models.OneToOneField(Document, on_delete=models.CASCADE)
+    destroyed_by = models.ForeignKey('api.CustomUser', on_delete=models.SET_NULL, null=True)
+    destroyed_at = models.DateTimeField(auto_now_add=True)
+    reason = models.TextField()
+    certificate_hash = models.CharField(max_length=64)
+
+    class Meta:
+        app_label = 'gestion_archivistica'

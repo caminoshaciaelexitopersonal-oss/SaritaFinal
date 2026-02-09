@@ -1,5 +1,5 @@
 # backend/apps/sarita_agents/agents/archivistica_base_templates.py
-# Plantilla Maestra para la FASE 2.2 — Validación Funcional Archivística
+# Plantilla Maestra para la FASE 2.3 — Ruptura Controlada Archivística
 
 import logging
 from typing import Dict, Any, List, Optional
@@ -44,15 +44,33 @@ class AgenteArchivisticoBase:
         return is_sup_active
 
     def validar_jerarquia(self, nivel_requerido=None):
-        """Validación obligatoria antes de cualquier acción functional (FASE 2.2)."""
+        """Validación obligatoria antes de cualquier acción funcional (FASE 2.2/2.3)."""
+        from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
+
+        # 0. Verificar si el nivel es el correcto para la acción
         if nivel_requerido and self.nivel != nivel_requerido:
-            raise PermissionError(f"USURPACIÓN DETECTADA: {self.__class__.__name__} ({self.nivel}) intentó acción de {nivel_requerido}.")
+            self.penalizar_confianza("ABUSO_DE_PODER", f"Agente de nivel {self.nivel} intentó ejecutar acción de nivel {nivel_requerido}")
+            raise PermissionError(f"SABOTAJE DETECTADO: El agente {self.__class__.__name__} ({self.nivel}) intentó ejecutar una acción de nivel {nivel_requerido}.")
 
+        # 1. Verificar estado activo
         if not self.is_active():
-            raise PermissionError(f"BLOQUEO: Agente {self.__class__.__name__} está DESHABILITADO.")
+            raise PermissionError(f"ERROR JERÁRQUICO: El agente {self.__class__.__name__} está DESHABILITADO.")
 
+        # 2. Verificar integridad de superior
         if not self.verificar_superior():
-            raise PermissionError(f"CADENA ROTA: El superior directo ({self.superior}) no está disponible.")
+            raise PermissionError(f"ERROR JERÁRQUICO: Superior {self.superior} inactivo. Cadena de mando rota.")
+
+        # 3. Verificar score de confianza (Fase 2.3)
+        agent_data = GovernanceKernel._agent_registry.get(self.__class__.__name__, {})
+        if agent_data.get("trust_score", 100) < 20:
+             logger.critical(f"NODO CORRUPTO AISLADO: {self.__class__.__name__} tiene score crítico y ha sido bloqueado.")
+             GovernanceKernel.alternar_estado_agente(self.__class__.__name__, "AISLADO")
+             raise PermissionError(f"RESILIENCIA: Agente {self.__class__.__name__} aislado por baja confiabilidad.")
+
+    def penalizar_confianza(self, tipo, motivo):
+        """Disminuye el score de confianza y registra la violación."""
+        from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
+        GovernanceKernel.penalizar_agente(self.__class__.__name__, tipo, motivo)
 
     def log_auditoria(self, accion, resultado, politica="POLITICA_ESTANDAR_SARITA"):
         """Registro de auditoría institucional."""
@@ -78,7 +96,6 @@ class CapitanArchivisticoBase(AgenteArchivisticoBase):
             self.log_auditoria("ORQUESTACIÓN", "FALLA: Sin Tenientes asignados")
             raise ValueError(f"FALLA ESTRUCTURAL: Capitán {self.__class__.__name__} no tiene Tenientes funcionales.")
 
-        # Simulación de selección del primer teniente disponible para la tarea
         target_teniente_class = next(iter(tenientes.values()))
         self.log_auditoria("AUTORIZACIÓN", f"Orden delegada a Teniente: {target_teniente_class}")
         return {"status": "DELEGATED_TO_TACTICAL", "target": target_teniente_class}
@@ -128,10 +145,11 @@ class SoldadoArchivisticoBase(AgenteArchivisticoBase):
         if not self.tarea_manual:
             raise ValueError(f"FALLA ESTRUCTURAL: Soldado {self.__class__.__name__} no tiene tarea manual definida.")
 
-        # Validar mandato (que el superior sea el esperado)
-        if self.superior not in str(self.log_auditoria): # Simple check for the sake of the test logic
-             pass
-
-        resultado = "ÉXITO"
         self.log_auditoria("EJECUCIÓN_MANUAL", f"Tarea '{self.tarea_manual}' completada con evidencia.")
         return {"status": "SUCCESS", "task": self.tarea_manual, "evidence_hash": "SHA256_MOCK_EV"}
+
+    def intentar_borrado_prohibido(self, document_id):
+        """Fase 2.3: Simulación de sabotaje por autoridad."""
+        self.log_auditoria("INTENTO_ELIMINACIÓN", f"Sabotaje detectado sobre documento {document_id}")
+        self.penalizar_confianza("USURPACIÓN", f"Soldado intentó eliminación directa de {document_id}")
+        return {"status": "BLOCKED", "reason": "SECURITY_VIOLATION"}
