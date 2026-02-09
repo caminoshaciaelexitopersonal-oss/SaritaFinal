@@ -10,22 +10,22 @@ class CoronelConversion(CoronelTemplate):
         super().__init__(general=general, domain="comercial_conversion")
 
     def _get_capitanes(self) -> dict:
-        from ...prestadores.capitanes.gestion_comercial.capitan_conversion import CapitanConversion
-        from ...prestadores.capitanes.gestion_comercial.capitan_embudos_conversion import CapitanEmbudosConversion
-        from ...prestadores.capitanes.gestion_comercial.capitan_implementacion_tecnica_de_embudos_y_crm import CapitanImplementacionTecnicaDeEmbudosYCRM
-        from ...prestadores.capitanes.gestion_comercial.capitan_pasarela_pagos import CapitanPasarelaPagos
-        from ...prestadores.capitanes.gestion_comercial.capitan_cotizaciones_dinamicas import CapitanCotizacionesDinamicas
-        from ...prestadores.capitanes.gestion_comercial.capitan_venta_conversacional import CapitanVentaConversacional
-        from ...prestadores.capitanes.gestion_comercial.capitan_comercial_hotelero import CapitanComercialHotelero
-        from ...prestadores.capitanes.gestion_comercial.capitan_comercial_gastronomico import CapitanComercialGastronomico
-        from ...prestadores.capitanes.gestion_comercial.capitan_comercial_turistico_tours import CapitanComercialTuristicoTours
-        from ...prestadores.capitanes.gestion_comercial.capitan_comercial_transporte import CapitanComercialTransporte
-        from ...prestadores.capitanes.gestion_comercial.capitan_comercial_artesanos import CapitanComercialArtesanos
-        from ...prestadores.capitanes.gestion_comercial.capitan_comercial_agencias import CapitanComercialAgencias
-        from ...prestadores.capitanes.gestion_comercial.capitan_comercial_internacional import CapitanComercialInternacional
-        from ...prestadores.capitanes.gestion_comercial.capitan_comercial_corporativo import CapitanComercialCorporativo
-        from ...prestadores.capitanes.gestion_comercial.capitan_comercial_voz import CapitanComercialVoz
-        from ...prestadores.capitanes.gestion_comercial.capitan_comercial_presencial import CapitanComercialPresencial
+        from ...capitanes.capitan_conversion import CapitanConversion
+        from ...capitanes.capitan_embudos_conversion import CapitanEmbudosConversion
+        from ...capitanes.capitan_implementacion_tecnica_de_embudos_y_crm import CapitanImplementacionTecnicaDeEmbudosYCRM
+        from ...capitanes.capitan_pasarela_pagos import CapitanPasarelaPagos
+        from ...capitanes.capitan_cotizaciones_dinamicas import CapitanCotizacionesDinamicas
+        from ...capitanes.capitan_venta_conversacional import CapitanVentaConversacional
+        from ...capitanes.capitan_comercial_hotelero import CapitanComercialHotelero
+        from ...capitanes.capitan_comercial_gastronomico import CapitanComercialGastronomico
+        from ...capitanes.capitan_comercial_turistico_tours import CapitanComercialTuristicoTours
+        from ...capitanes.capitan_comercial_transporte import CapitanComercialTransporte
+        from ...capitanes.capitan_comercial_artesanos import CapitanComercialArtesanos
+        from ...capitanes.capitan_comercial_agencias import CapitanComercialAgencias
+        from ...capitanes.capitan_comercial_internacional import CapitanComercialInternacional
+        from ...capitanes.capitan_comercial_corporativo import CapitanComercialCorporativo
+        from ...capitanes.capitan_comercial_voz import CapitanComercialVoz
+        from ...capitanes.capitan_comercial_presencial import CapitanComercialPresencial
 
         return {
             "conversion": CapitanConversion(coronel=self),

@@ -10,11 +10,11 @@ class CoronelRelacion(CoronelTemplate):
         super().__init__(general=general, domain="comercial_relacion")
 
     def _get_capitanes(self) -> dict:
-        from ...prestadores.capitanes.gestion_comercial.capitan_relacion_clientes import CapitanRelacionClientes
-        from ...prestadores.capitanes.gestion_comercial.capitan_mensajeria_y_envios_masivos import CapitanMensajeriaYEnviosMasivos
-        from ...prestadores.capitanes.gestion_comercial.capitan_fidelizacion_lealtad import CapitanFidelizacionLealtad
-        from ...prestadores.capitanes.gestion_comercial.capitan_soporte_viajero import CapitanSoporteViajero
-        from ...prestadores.capitanes.gestion_comercial.capitan_postventa_feedback import CapitanPostventaFeedback
+        from ...capitanes.capitan_relacion_clientes import CapitanRelacionClientes
+        from ...capitanes.capitan_mensajeria_y_envios_masivos import CapitanMensajeriaYEnviosMasivos
+        from ...capitanes.capitan_fidelizacion_lealtad import CapitanFidelizacionLealtad
+        from ...capitanes.capitan_soporte_viajero import CapitanSoporteViajero
+        from ...capitanes.capitan_postventa_feedback import CapitanPostventaFeedback
 
         return {
             "crm": CapitanRelacionClientes(coronel=self),

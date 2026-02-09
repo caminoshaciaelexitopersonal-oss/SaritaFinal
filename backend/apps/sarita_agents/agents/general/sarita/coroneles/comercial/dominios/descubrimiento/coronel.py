@@ -11,13 +11,13 @@ class CoronelDescubrimiento(CoronelTemplate):
         super().__init__(general=general, domain="comercial_descubrimiento")
 
     def _get_capitanes(self) -> dict:
-        from ...prestadores.capitanes.gestion_comercial.capitan_marketing import CapitanMarketing
-        from ...prestadores.capitanes.gestion_comercial.capitan_publicidad_y_adquisicion_de_trafico_ads import CapitanPublicidadYAdquisicionDeTraficoADS
-        from ...prestadores.capitanes.gestion_comercial.capitan_gestion_operativa_de_contenidos_comerciales import CapitanGestionOperativaDeContenidosComerciales
-        from ...prestadores.capitanes.gestion_comercial.capitan_produccion_y_automatizacion_audiovisual import CapitanProduccionYAutomatizacionAudiovisual
-        from ...prestadores.capitanes.gestion_comercial.capitan_seo_turistico import CapitanSEOTuristico
-        from ...prestadores.capitanes.gestion_comercial.capitan_recomendaciones_sadi import CapitanRecomendacionesSADI
-        from ...prestadores.capitanes.gestion_comercial.capitan_alianzas_comerciales import CapitanAlianzasComerciales
+        from ...capitanes.capitan_marketing import CapitanMarketing
+        from ...capitanes.capitan_publicidad_y_adquisicion_de_trafico_ads import CapitanPublicidadYAdquisicionDeTraficoADS
+        from ...capitanes.capitan_gestion_operativa_de_contenidos_comerciales import CapitanGestionOperativaDeContenidosComerciales
+        from ...capitanes.capitan_produccion_y_automatizacion_audiovisual import CapitanProduccionYAutomatizacionAudiovisual
+        from ...capitanes.capitan_seo_turistico import CapitanSEOTuristico
+        from ...capitanes.capitan_recomendaciones_sadi import CapitanRecomendacionesSADI
+        from ...capitanes.capitan_alianzas_comerciales import CapitanAlianzasComerciales
 
         # Nuevos capitanes especializados
         # from .capitanes.capitan_catalogo import CapitanCatalogo

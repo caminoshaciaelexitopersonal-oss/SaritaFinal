@@ -51,9 +51,43 @@ class GovernanceKernel:
             "mision": metadata.get("mision"),
             "eventos": metadata.get("eventos", []),
             "estado": "ACTIVO",
+            "trust_score": 100,
+            "violation_history": [],
             "auditado": True
         }
         logger.info(f"KERNEL: Agente '{agent_id}' ({metadata.get('nivel')}) registrado formalmente.")
+
+    @classmethod
+    def penalizar_agente(cls, agent_id: str, tipo_violacion: str, motivo: str):
+        """
+        Fase 1.3: Sistema de Confianza Dinámica. Penaliza a un agente.
+        """
+        agent_data = cls._agent_registry.get(agent_id)
+        if not agent_data:
+            return
+
+        penalizacion = {
+            "tipo": tipo_violacion,
+            "motivo": motivo,
+            "timestamp": str(logging.Formatter.default_msec_format) # Placeholder simple
+        }
+
+        agent_data["violation_history"].append(penalizacion)
+
+        # Penalización progresiva
+        points = {
+            "ABUSO_DE_PODER": 30,
+            "USURPACION": 50,
+            "OMISION": 10,
+            "MANIPULACION": 40,
+            "FALSIFICACION": 60,
+            "SARGENTO_FALLIDO": 5
+        }
+
+        loss = points.get(tipo_violacion, 15)
+        agent_data["trust_score"] = max(0, agent_data["trust_score"] - loss)
+
+        logger.error(f"SABOTAJE: Agente '{agent_id}' penalizado con -{loss} pts. Motivo: {motivo}. Score actual: {agent_data['trust_score']}")
 
     @classmethod
     def alternar_estado_agente(cls, agent_id: str, nuevo_estado: str, caller_agent_id: Optional[str] = None):

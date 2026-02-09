@@ -10,10 +10,10 @@ class CoronelCumplimiento(CoronelTemplate):
         super().__init__(general=general, domain="comercial_cumplimiento")
 
     def _get_capitanes(self) -> dict:
-        from ...prestadores.capitanes.gestion_comercial.capitan_cumplimiento_comercial import CapitanCumplimientoComercial
-        from ...prestadores.capitanes.gestion_comercial.capitan_inteligencia_analitica_y_optimizacion import CapitanInteligenciaAnaliticaYOptimizacion
-        from ...prestadores.capitanes.gestion_comercial.capitan_auditoria_ventas import CapitanAuditoriaVentas
-        from ...prestadores.capitanes.gestion_comercial.capitan_prevencion_fraude import CapitanPrevencionFraude
+        from ...capitanes.capitan_cumplimiento_comercial import CapitanCumplimientoComercial
+        from ...capitanes.capitan_inteligencia_analitica_y_optimizacion import CapitanInteligenciaAnaliticaYOptimizacion
+        from ...capitanes.capitan_auditoria_ventas import CapitanAuditoriaVentas
+        from ...capitanes.capitan_prevencion_fraude import CapitanPrevencionFraude
 
         return {
             "cumplimiento": CapitanCumplimientoComercial(coronel=self),
