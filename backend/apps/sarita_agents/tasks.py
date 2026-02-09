@@ -202,61 +202,6 @@ class TenienteGenericoComercial(TenienteTemplate):
         return {"status": "SUCCESS", "action": action, "result": "Operación completada por Sargento Virtual"}
 
 # --- MAPEO DE TENIENTES ---
-TENIENTE_MAP = {
-    # Prestadores (Funcionales)
-    'persistencia': TenientePersistenciaPrestador,
-    'validacion': TenienteValidacionPrestador,
-    # Administración General
-    'auditoria_global': TenienteAuditoriaGlobal,
-    # Operativos Super Admin (ERP Administrativo)
-    'admin_persistencia_comercial': AdminTenientePersistenciaComercial,
-    'admin_persistencia_contable': AdminTenientePersistenciaContable,
-    'admin_persistencia_financiera': AdminTenientePersistenciaFinanciera,
-    'admin_persistencia_operativa': AdminTenientePersistenciaOperativa,
-    'admin_persistencia_archivistica': AdminTenientePersistenciaArchivistica,
-    # Marketing & Ventas (Phase 4-M)
-    'marketing_calificacion': TenienteCalificacion,
-    'marketing_dolor': TenienteDolor,
-    'marketing_oferta': TenienteOferta,
-    'marketing_objeciones': TenienteObjeciones,
-    'marketing_cierre': TenienteCierre,
-    # Finanzas (Phase 4-F)
-    'cac_calculator': TenienteCACCalculator,
-    'ltv_calculator': TenienteLTVCalculator,
-    'roi_calculator': TenienteROICalculator,
-    # Archivísticos (Nuevos)
-    'archivistico_integridad': TenienteIntegridadArchivistica,
-    'archivistico_sello': TenienteSelloTemporal,
-    'archivistico_acceso': TenienteAuditoriaAcceso,
-    'archivistico_archivado': TenienteArchivado,
-    'contable_registro': TenienteRegistroContable,
-    'contable_cierre': TenienteCierreContable,
-    'operativo_transicion': TenienteTransicionEstado,
-    'operativo_coordinacion_turista': TenienteCoordinacionTuristica,
-    'operativo_despacho_logistico': TenienteDespachoLogistico,
-    'operativo_monitoreo_seguridad': TenienteMonitoreoSeguridad,
-    'operativo_creacion_orden': TenienteCreacionOrden,
-    'operativo_registro_costo': TenienteRegistroCosto,
-    'operativo_asignacion_recurso': TenienteAsignacionRecurso,
-    # Comerciales (Nuevos)
-    'comercial_contratacion': TenienteContratacionComercial,
-    'comercial_activacion': TenienteActivacionOperativa,
-    'seo_technical': TenienteGenericoComercial,
-    'content_optimization': TenienteGenericoComercial,
-    'matching_engine': TenienteGenericoComercial,
-    'partnership_manager': TenienteGenericoComercial,
-    'payment_gateway': TenienteGenericoComercial,
-    'pricing_engine': TenienteGenericoComercial,
-    'nlp_handler': TenienteGenericoComercial,
-    'signature_provider': TenienteGenericoComercial,
-    'id_validator': TenienteGenericoComercial,
-    'gdpr_compliance': TenienteGenericoComercial,
-    'points_manager': TenienteGenericoComercial,
-    'ticket_handler': TenienteGenericoComercial,
-    'survey_manager': TenienteGenericoComercial,
-    'integrity_checker': TenienteGenericoComercial,
-    'anomaly_detector': TenienteGenericoComercial,
-}
 
 logger = logging.getLogger(__name__)
 
@@ -315,3 +260,125 @@ def finalizar_mision(mision_id: str, reporte_final: dict):
         mision.estado = 'COMPLETADA_PARCIALMENTE'
     mision.timestamp_fin = timezone.now()
     mision.save()
+
+# --- TENIENTES OPERATIVOS GENÉRICOS (FASE 3.1) ---
+
+class TenienteOperacionComercial(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.sargentos import SargentoReservas
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.sargentos import SargentoClientes
+        action = parametros.get("action")
+        if action == "CONFIRM":
+            SargentoReservas.confirmar_reserva(parametros.get("reserva_id"))
+        if action == "CREATE_CLIENT":
+            SargentoClientes.crear_cliente(parametros.get("perfil_id"), parametros.get("cliente_data"))
+        return {"status": "SUCCESS", "action": action}
+
+class TenienteLogisticaRecursos(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.sargentos import SargentoInventario
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.sargentos import SargentoProductos
+        if "item_id" in parametros:
+            SargentoInventario.descontar_stock(parametros.get("item_id"), parametros.get("cantidad"))
+        if "producto_id" in parametros:
+            SargentoProductos.validar_oferta(parametros.get("producto_id"))
+        return {"status": "SUCCESS"}
+
+class TenienteAdministracionFisica(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.horarios.sargentos import SargentoHorarios
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.sargentos import SargentoPerfil
+        if "fecha" in parametros:
+            SargentoHorarios.validar_turno(parametros.get("perfil_id"), parametros.get("fecha"), parametros.get("hora"))
+        if "perfil_data" in parametros:
+            SargentoPerfil.actualizar_datos_base(parametros.get("perfil_id"), parametros.get("perfil_data"))
+        return {"status": "SUCCESS"}
+
+class TenienteGestionCostos(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.sargentos import SargentoCostos
+        SargentoCostos.registrar_gasto(parametros.get("perfil_id"), parametros)
+        return {"status": "SUCCESS"}
+
+class TenienteInformacionEvidencia(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.documentos.sargentos import SargentoDocumentos
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.galeria.sargentos import SargentoGaleria
+        if "doc_id" in parametros:
+            SargentoDocumentos.archivar_evidencia(parametros.get("doc_id"), parametros)
+        if "image_url" in parametros:
+            SargentoGaleria.registrar_imagen(parametros.get("perfil_id"), parametros.get("image_url"))
+        return {"status": "SUCCESS"}
+
+class TenienteAnalisisDatos(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.estadisticas.sargentos import SargentoEstadisticas
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.valoraciones.sargentos import SargentoValoraciones
+        if "kpi" in parametros:
+            SargentoEstadisticas.actualizar_kpi(parametros.get("perfil_id"), parametros.get("kpi"), parametros.get("valor"))
+        if "resena_id" in parametros:
+            SargentoValoraciones.registrar_puntuacion(parametros.get("resena_id"), parametros.get("puntos"))
+        return {"status": "SUCCESS"}
+
+
+TENIENTE_MAP = {
+    # Prestadores (Funcionales)
+    'persistencia': TenientePersistenciaPrestador,
+    'validacion': TenienteValidacionPrestador,
+    # Administración General
+    'auditoria_global': TenienteAuditoriaGlobal,
+    # Operativos Super Admin (ERP Administrativo)
+    'admin_persistencia_comercial': AdminTenientePersistenciaComercial,
+    'admin_persistencia_contable': AdminTenientePersistenciaContable,
+    'admin_persistencia_financiera': AdminTenientePersistenciaFinanciera,
+    'admin_persistencia_operativa': AdminTenientePersistenciaOperativa,
+    'admin_persistencia_archivistica': AdminTenientePersistenciaArchivistica,
+    # Marketing & Ventas (Phase 4-M)
+    'marketing_calificacion': TenienteCalificacion,
+    'marketing_dolor': TenienteDolor,
+    'marketing_oferta': TenienteOferta,
+    'marketing_objeciones': TenienteObjeciones,
+    'marketing_cierre': TenienteCierre,
+    # Finanzas (Phase 4-F)
+    'cac_calculator': TenienteCACCalculator,
+    'ltv_calculator': TenienteLTVCalculator,
+    'roi_calculator': TenienteROICalculator,
+    # Archivísticos (Nuevos)
+    'archivistico_integridad': TenienteIntegridadArchivistica,
+    'archivistico_sello': TenienteSelloTemporal,
+    'archivistico_acceso': TenienteAuditoriaAcceso,
+    'archivistico_archivado': TenienteArchivado,
+    'contable_registro': TenienteRegistroContable,
+    'contable_cierre': TenienteCierreContable,
+    'operativo_transicion': TenienteTransicionEstado,
+    'operativo_coordinacion_turista': TenienteCoordinacionTuristica,
+    'operativo_despacho_logistico': TenienteDespachoLogistico,
+    'operativo_monitoreo_seguridad': TenienteMonitoreoSeguridad,
+    'operativo_creacion_orden': TenienteCreacionOrden,
+    'operativo_registro_costo': TenienteRegistroCosto,
+    'operativo_asignacion_recurso': TenienteAsignacionRecurso,
+    'operativo_comercial': TenienteOperacionComercial,
+    'operativo_logistica': TenienteLogisticaRecursos,
+    'operativo_admin_fisica': TenienteAdministracionFisica,
+    'operativo_gestion_costos': TenienteGestionCostos,
+    'operativo_info_evidencia': TenienteInformacionEvidencia,
+    'operativo_analisis_datos': TenienteAnalisisDatos,
+    # Comerciales (Nuevos)
+    'comercial_contratacion': TenienteContratacionComercial,
+    'comercial_activacion': TenienteActivacionOperativa,
+    'seo_technical': TenienteGenericoComercial,
+    'content_optimization': TenienteGenericoComercial,
+    'matching_engine': TenienteGenericoComercial,
+    'partnership_manager': TenienteGenericoComercial,
+    'payment_gateway': TenienteGenericoComercial,
+    'pricing_engine': TenienteGenericoComercial,
+    'nlp_handler': TenienteGenericoComercial,
+    'signature_provider': TenienteGenericoComercial,
+    'id_validator': TenienteGenericoComercial,
+    'gdpr_compliance': TenienteGenericoComercial,
+    'points_manager': TenienteGenericoComercial,
+    'ticket_handler': TenienteGenericoComercial,
+    'survey_manager': TenienteGenericoComercial,
+    'integrity_checker': TenienteGenericoComercial,
+    'anomaly_detector': TenienteGenericoComercial,
+}

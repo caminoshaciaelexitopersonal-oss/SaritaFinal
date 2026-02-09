@@ -3,10 +3,10 @@ from apps.sarita_agents.models import PlanTáctico
 
 class CapitanTransicionesEstado(CapitanTemplate):
     def _get_tenientes(self) -> dict:
-        return {"operativo_transicion": "operativo_transicion"}
+        return {"operativo_comercial": "operativo_comercial"}
 
     def plan(self, mision):
         p = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
-        p.pasos_del_plan = {"1": {"teniente": "operativo_transicion", "descripcion": "Acción operativa genérica", "parametros": {}}}
+        p.pasos_del_plan = {"1": {"teniente": "operativo_comercial", "descripcion": "Ejecución de CapitanTransicionesEstado", "parametros": mision.directiva_original.get('parameters', {})}}
         p.save()
         return p
