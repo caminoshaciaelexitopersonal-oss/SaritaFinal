@@ -55,6 +55,23 @@ class GovernanceKernel:
         }
         logger.info(f"KERNEL: Agente '{agent_id}' ({metadata.get('nivel')}) registrado formalmente.")
 
+    @classmethod
+    def alternar_estado_agente(cls, agent_id: str, nuevo_estado: str, caller_agent_id: Optional[str] = None):
+        """
+        Fase 1.2: Permite a un superior (o SuperAdmin) cambiar el estado de un subordinado.
+        """
+        agent_data = cls._agent_registry.get(agent_id)
+        if not agent_data:
+            raise ValueError(f"Agente {agent_id} no encontrado.")
+
+        # Validar jerarquía del llamador
+        if caller_agent_id:
+            if agent_data.get("superior") != caller_agent_id:
+                raise PermissionError(f"ACCESO DENEGADO: {caller_agent_id} no es superior directo de {agent_id}.")
+
+        agent_data["estado"] = nuevo_estado
+        logger.warning(f"KERNEL: Agente '{agent_id}' cambiado a estado '{nuevo_estado}' por '{caller_agent_id or 'ADMIN'}'.")
+
     def __init__(self, user: CustomUser):
         self.user = user
 
