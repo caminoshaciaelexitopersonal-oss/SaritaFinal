@@ -84,7 +84,9 @@ class TenienteTransicionEstado(TenienteTemplate):
         entidad_tipo = parametros.get("entidad_tipo")
         entidad_id = parametros.get("entidad_id")
         nuevo_estado = parametros.get("nuevo_estado")
-        success = SargentoOperativo.actualizar_estado(entidad_tipo, entidad_id, nuevo_estado)
+        motivo = parametros.get("motivo", "")
+        agente_id = parametros.get("agente_id")
+        success = SargentoOperativo.actualizar_estado(entidad_tipo, entidad_id, nuevo_estado, motivo, agente_id)
         return {"status": "SUCCESS" if success else "FAILED"}
 
 class TenienteCoordinacionTuristica(TenienteTemplate):
@@ -111,6 +113,37 @@ class TenienteMonitoreoSeguridad(TenienteTemplate):
         nivel = parametros.get("nivel", "LOW")
         success = SargentoEspecializado.registrar_incidente_seguridad(zona_id, desc, nivel)
         return {"status": "SUCCESS" if success else "FAILED"}
+
+class TenienteCreacionOrden(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos import SargentoOperativo
+        res = SargentoOperativo.crear_orden_servicio(
+            perfil_id=parametros.get("perfil_id"),
+            descripcion=parametros.get("descripcion"),
+            parametros=parametros
+        )
+        return {"status": "SUCCESS", "orden_id": res.get("id")}
+
+class TenienteRegistroCosto(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos import SargentoOperativo
+        costo_id = SargentoOperativo.registrar_costo_operativo(
+            perfil_id=parametros.get("perfil_id"),
+            orden_id=parametros.get("orden_id"),
+            concepto=parametros.get("concepto"),
+            monto=parametros.get("monto")
+        )
+        return {"status": "SUCCESS", "costo_id": costo_id}
+
+class TenienteAsignacionRecurso(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        from apps.prestadores.mi_negocio.gestion_operativa.sargentos import SargentoOperativo
+        asignacion_id = SargentoOperativo.asignar_recurso(
+            orden_id=parametros.get("orden_id"),
+            item_id=parametros.get("item_id"),
+            cantidad=parametros.get("cantidad")
+        )
+        return {"status": "SUCCESS", "asignacion_id": asignacion_id}
 
 class TenienteArchivado(TenienteTemplate):
     def perform_action(self, parametros: dict):
@@ -202,6 +235,9 @@ TENIENTE_MAP = {
     'operativo_coordinacion_turista': TenienteCoordinacionTuristica,
     'operativo_despacho_logistico': TenienteDespachoLogistico,
     'operativo_monitoreo_seguridad': TenienteMonitoreoSeguridad,
+    'operativo_creacion_orden': TenienteCreacionOrden,
+    'operativo_registro_costo': TenienteRegistroCosto,
+    'operativo_asignacion_recurso': TenienteAsignacionRecurso,
     # Comerciales (Nuevos)
     'comercial_contratacion': TenienteContratacionComercial,
     'comercial_activacion': TenienteActivacionOperativa,

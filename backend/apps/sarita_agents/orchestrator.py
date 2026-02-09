@@ -6,6 +6,7 @@ from django.utils import timezone
 from apps.admin_plataforma.models import GovernancePolicy
 from .models import Mision
 from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
+from .agents.general.sarita.coroneles.operativo_general.coronel import CoronelOperativoGeneral
 from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
 from .marketing.coronel_marketing import CoronelMarketing
 from .finanzas.coronel_finanzas import CoronelFinanzas
@@ -34,6 +35,7 @@ class SaritaOrchestrator:
         # El 'domain' es la clave para la delegación.
         self.coroneles = {
             "prestadores": PrestadoresCoronel(general=self),
+            "operativo_general": CoronelOperativoGeneral(general=self),
             "administrador_general": AdministradorGeneralCoronel(general=self),
             "marketing": CoronelMarketing(general=self, domain="marketing"),
             "finanzas": CoronelFinanzas(general=self, domain="finanzas"),

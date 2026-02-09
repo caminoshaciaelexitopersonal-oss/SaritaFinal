@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -73,7 +73,7 @@ import { toast } from 'react-toastify';
 import { useMiNegocioApi } from '../../hooks/useMiNegocioApi';
 
 export default function CentroOperativoPage() {
- 
+    const { getOrdenesOperativas, updateOrdenEstado, reportIncidente, isLoading: apiLoading } = useMiNegocioApi();
     const [operations, setOperations] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
  
@@ -81,20 +81,18 @@ export default function CentroOperativoPage() {
     const [activeTab, setActiveTab] = useState<'PANEL' | 'TAREAS' | 'INCIDENCIAS' | 'METRICAS'>('PANEL');
     const [isNewOpModalOpen, setIsNewOpModalOpen] = useState(false);
 
+    const loadOperations = useCallback(async () => {
+        setIsLoading(true);
+        const data = await getOrdenesOperativas();
+        if (data) {
+            setOperations(data.results || data);
+        }
+        setIsLoading(false);
+    }, [getOrdenesOperativas]);
+
     useEffect(() => {
- 
-        const fetchReservas = async () => {
-            try {
-                const res = await api.get('/v1/mi-negocio/operativa/genericos/reservas/');
-                setOperations(res.data.results || []);
-            } catch (err) {
-                console.error("Error fetching reservas", err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchReservas();
-    }, []);
+        loadOperations();
+    }, [loadOperations]);
  
 
     const selectedOp = operations.find(o => o.id === selectedOpId);
@@ -259,9 +257,9 @@ export default function CentroOperativoPage() {
                                         <CardContent className="p-6">
                                             <div className="flex justify-between items-start mb-4">
                                                 <div>
-                                                    <p className="text-[10px] font-black text-brand uppercase tracking-tighter mb-1">RESERVA {op.id_publico?.slice(0,8)}</p>
-                                                    <h4 className="text-xl font-bold text-slate-900 dark:text-white leading-tight">Servicio Operativo Especializado</h4>
-                                                    <p className="text-sm text-slate-500 mt-1 flex items-center gap-1"><FiUser size={12}/> Cliente: {op.cliente_id?.slice(0,8)}</p>
+                                                    <p className="text-[10px] font-black text-brand uppercase tracking-tighter mb-1">ORDEN {op.id?.slice(0,8)}</p>
+                                                    <h4 className="text-xl font-bold text-slate-900 dark:text-white leading-tight">{op.descripcion_servicio}</h4>
+                                                    <p className="text-sm text-slate-500 mt-1 flex items-center gap-1"><FiUser size={12}/> Contrato: {op.contrato_ref_id?.slice(0,8)}</p>
                                                 </div>
                                                 <Badge className={`uppercase font-black text-[10px] ${
                                                     op.estado === 'CONFIRMADA' ? 'bg-blue-100 text-blue-700' :

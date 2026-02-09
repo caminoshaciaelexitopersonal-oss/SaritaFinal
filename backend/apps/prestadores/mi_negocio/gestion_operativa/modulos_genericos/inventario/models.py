@@ -26,3 +26,15 @@ class InventoryItem(TenantAwareModel):
         verbose_name_plural = "Ítems de Inventario"
         ordering = ['nombre_item']
         app_label = 'prestadores'
+
+class AsignacionRecurso(models.Model):
+    """Vínculo entre un recurso de inventario y una orden operativa."""
+    item = models.ForeignKey(InventoryItem, on_delete=models.CASCADE, related_name='asignaciones')
+    orden_operativa_ref_id = models.UUIDField()
+    cantidad_asignada = models.DecimalField(max_digits=10, decimal_places=2)
+    cantidad_consumida_real = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    fecha_asignacion = models.DateTimeField(auto_now_add=True)
+    completado = models.BooleanField(default=False)
+
+    class Meta:
+        app_label = 'prestadores'

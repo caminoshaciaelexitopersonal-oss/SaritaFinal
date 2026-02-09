@@ -19,4 +19,9 @@ export const operativoEndpoints = {
   getTours: () => httpClient.get('/v1/mi-negocio/operativa/guias/tours/'),
   getProcesosOperativos: () => httpClient.get('/v1/mi-negocio/operativa/procesos/'),
   updateProcesoEstado: (id: string, nuevo_estado: string) => httpClient.post(`/v1/mi-negocio/operativa/procesos/${id}/avanzar_estado/`, { nuevo_estado }),
+
+  // Motor Operativo Genérico (Fase 3)
+  getOrdenesOperativas: () => httpClient.get('/v1/mi-negocio/operativa/ordenes/'),
+  updateOrdenEstado: (id: string, nuevo_estado: string, motivo: string) => httpClient.post(`/v1/mi-negocio/operativa/ordenes/${id}/cambiar-estado/`, { nuevo_estado, motivo }),
+  reportIncidente: (data: any) => httpClient.post('/v1/mi-negocio/operativa/incidencias/', data),
 };
