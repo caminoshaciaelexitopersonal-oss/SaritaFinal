@@ -6,27 +6,27 @@ class CapitanImpuestos(CapitanTemplate):
     Misión: Garantizar el cumplimiento de todas las obligaciones fiscales, calculando y declarando impuestos de manera precisa y oportuna para evitar sanciones.
     """
 
-    def __init__(self, coronel):
-        super().__init__(coronel=coronel)
-        logger.info(f"CAPITÁN CapitanImpuestos: Inicializado para Misión ID {mision.id}.")
+    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
+        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
+        self.logger.info(f"CAPITÁN CapitanImpuestos: Inicializado para Misión ID {self.mision_id}.")
 
-    def plan(self, mision):
+    def plan(self):
         """
         El corazón del Capitán. Aquí es donde defines el plan táctico.
         Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
         """
-        logger.info(f"CAPITÁN CapitanImpuestos: Planificando la misión.")
+        self.logger.info(f"CAPITÁN CapitanImpuestos: Planificando la misión.")
 
         # 1. Crear el Plan Táctico
-        plan_tactico = self.coronel.get_or_create_plan_tactico(
+        plan_tactico = self.get_or_create_plan_tactico(
             nombre="Plan de Ejecución para CapitanImpuestos",
-            descripcion=f"Este plan detalla los pasos para cumplir el objetivo: {mision.directiva_original.get('objective', 'N/A')}"
+            descripcion=f"Este plan detalla los pasos para cumplir el objetivo: {self.objective}"
         )
 
         # 2. Definir y Delegar Tareas (EJEMPLO - DEBE SER IMPLEMENTADO)
         # self.delegar_tarea(plan_tactico=plan_tactico, nombre_teniente="...", descripcion="...", parametros_especificos={...})
 
         # 3. Lanzar la Ejecución del Plan
-        # self.lanzar_ejecucion_plan() handled by template
+        self.lanzar_ejecucion_plan()
 
-        logger.info(f"CAPITÁN CapitanImpuestos: Planificación completada y tareas delegadas.")
+        self.logger.info(f"CAPITÁN CapitanImpuestos: Planificación completada y tareas delegadas.")

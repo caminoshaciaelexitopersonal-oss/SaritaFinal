@@ -191,34 +191,9 @@ export function useMiNegocioApi() {
     return makeRequest(() => saritaEndpoints.triggerMission(type, parameters).then(res => res.data), "Misión delegada exitosamente.");
   }, [makeRequest]);
 
-  // --- Métodos Genéricos para Módulos Especializados ---
-  const fetchData = useCallback(async (endpoint: string) => {
-    const { api } = await import('@/services/api');
-    return makeRequest(() => api.get(`/v1/mi-negocio/${endpoint}`).then(res => res.data));
-  }, [makeRequest]);
-
-  const postData = useCallback(async (endpoint: string, data: any) => {
-    const { api } = await import('@/services/api');
-    return makeRequest(() => api.post(`/v1/mi-negocio/${endpoint}`, data).then(res => res.data));
-  }, [makeRequest]);
-
-  const putData = useCallback(async (endpoint: string, data: any) => {
-    const { api } = await import('@/services/api');
-    return makeRequest(() => api.put(`/v1/mi-negocio/${endpoint}`, data).then(res => res.data));
-  }, [makeRequest]);
-
-  const deleteData = useCallback(async (endpoint: string) => {
-    const { api } = await import('@/services/api');
-    return makeRequest(() => api.delete(`/v1/mi-negocio/${endpoint}`).then(res => res.data));
-  }, [makeRequest]);
-
   return {
     isLoading,
     error,
-    fetchData,
-    postData,
-    putData,
-    deleteData,
     getPerfil,
     updatePerfil,
     getChartOfAccounts,

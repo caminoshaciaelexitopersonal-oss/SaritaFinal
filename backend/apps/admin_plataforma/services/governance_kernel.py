@@ -31,80 +31,11 @@ class GovernanceKernel:
     """
 
     _registry: Dict[str, GovernanceIntention] = {}
-    _agent_registry: Dict[str, Dict[str, Any]] = {}
 
     @classmethod
     def register_intention(cls, intention: GovernanceIntention):
         cls._registry[intention.name] = intention
         logger.info(f"KERNEL: Intención '{intention.name}' registrada en el dominio '{intention.domain}'.")
-
-    @classmethod
-    def register_agent(cls, agent_id: str, metadata: Dict[str, Any]):
-        """
-        Fase 1.1: Registro obligatorio de agentes en el Kernel.
-        """
-        cls._agent_registry[agent_id] = {
-            "id": agent_id,
-            "nivel": metadata.get("nivel"),
-            "superior": metadata.get("superior"),
-            "dominio": metadata.get("dominio"),
-            "mision": metadata.get("mision"),
-            "eventos": metadata.get("eventos", []),
-            "estado": "ACTIVO",
-            "trust_score": 100,
-            "violation_history": [],
-            "auditado": True
-        }
-        logger.info(f"KERNEL: Agente '{agent_id}' ({metadata.get('nivel')}) registrado formalmente.")
-
-    @classmethod
-    def penalizar_agente(cls, agent_id: str, tipo_violacion: str, motivo: str):
-        """
-        Fase 1.3: Sistema de Confianza Dinámica. Penaliza a un agente.
-        """
-        agent_data = cls._agent_registry.get(agent_id)
-        if not agent_data:
-            return
-
-        penalizacion = {
-            "tipo": tipo_violacion,
-            "motivo": motivo,
-            "timestamp": str(logging.Formatter.default_msec_format) # Placeholder simple
-        }
-
-        agent_data["violation_history"].append(penalizacion)
-
-        # Penalización progresiva
-        points = {
-            "ABUSO_DE_PODER": 30,
-            "USURPACION": 50,
-            "OMISION": 10,
-            "MANIPULACION": 40,
-            "FALSIFICACION": 60,
-            "SARGENTO_FALLIDO": 5
-        }
-
-        loss = points.get(tipo_violacion, 15)
-        agent_data["trust_score"] = max(0, agent_data["trust_score"] - loss)
-
-        logger.error(f"SABOTAJE: Agente '{agent_id}' penalizado con -{loss} pts. Motivo: {motivo}. Score actual: {agent_data['trust_score']}")
-
-    @classmethod
-    def alternar_estado_agente(cls, agent_id: str, nuevo_estado: str, caller_agent_id: Optional[str] = None):
-        """
-        Fase 1.2: Permite a un superior (o SuperAdmin) cambiar el estado de un subordinado.
-        """
-        agent_data = cls._agent_registry.get(agent_id)
-        if not agent_data:
-            raise ValueError(f"Agente {agent_id} no encontrado.")
-
-        # Validar jerarquía del llamador
-        if caller_agent_id:
-            if agent_data.get("superior") != caller_agent_id:
-                raise PermissionError(f"ACCESO DENEGADO: {caller_agent_id} no es superior directo de {agent_id}.")
-
-        agent_data["estado"] = nuevo_estado
-        logger.warning(f"KERNEL: Agente '{agent_id}' cambiado a estado '{nuevo_estado}' por '{caller_agent_id or 'ADMIN'}'.")
 
     def __init__(self, user: CustomUser):
         self.user = user
@@ -766,30 +697,6 @@ GovernanceKernel.register_intention(GovernanceIntention(
     domain="comercial",
     required_role=CustomUser.Role.ADMIN,
     min_authority=AuthorityLevel.OPERATIONAL
-))
-
-GovernanceKernel.register_intention(GovernanceIntention(
-    name="SALE_CREATED",
-    domain="comercial",
-    required_role=CustomUser.Role.PRESTADOR,
-    required_params=["cliente_id", "total"],
-    min_authority=AuthorityLevel.OPERATIONAL
-))
-
-GovernanceKernel.register_intention(GovernanceIntention(
-    name="SALE_CONFIRMED",
-    domain="comercial",
-    required_role=CustomUser.Role.PRESTADOR,
-    required_params=["operacion_id"],
-    min_authority=AuthorityLevel.OPERATIONAL
-))
-
-GovernanceKernel.register_intention(GovernanceIntention(
-    name="SALE_CONTRACT_FORMALIZED",
-    domain="comercial",
-    required_role=CustomUser.Role.ADMIN, # O sistema automático con nivel DELEGATED
-    required_params=["operacion_id"],
-    min_authority=AuthorityLevel.DELEGATED
 ))
 
 # Dominio: Autonomía IA (Fase F-F)

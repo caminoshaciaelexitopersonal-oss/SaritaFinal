@@ -8,19 +8,19 @@ class CapitanEstandaresCertificaciones(CapitanTemplate):
     siguiendo los lineamientos y programas nacionales.
     """
 
-    def __init__(self, coronel):
-        super().__init__(coronel=coronel)
-        logger.info(f"CAPITÁN {self.__class__.__name__}: Inicializado para Misión ID {mision.id}.")
+    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
+        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
+        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Inicializado para Misión ID {self.mision_id}.")
 
-    def plan(self, mision):
+    def plan(self):
         """
         El corazón del Capitán. Aquí es donde defines el plan táctico.
         """
-        logger.info(f"CAPITÁN {self.__class__.__name__}: Planificando la misión.")
+        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Planificando la misión.")
 
-        plan_tactico = self.coronel.get_or_create_plan_tactico(
+        plan_tactico = self.get_or_create_plan_tactico(
             nombre=f"Plan de Estándares y Certificaciones",
-            descripcion=f"Promover estándares para el objetivo: {mision.directiva_original.get('objective', 'N/A')}"
+            descripcion=f"Promover estándares para el objetivo: {self.objective}"
         )
 
         self.delegar_tarea(
@@ -30,5 +30,5 @@ class CapitanEstandaresCertificaciones(CapitanTemplate):
             parametros_especificos=self.parametros
         )
 
-        # self.lanzar_ejecucion_plan() handled by template
-        logger.info(f"CAPITÁN {self.__class__.__name__}: Planificación completada y tarea delegada a 'estandares_certificaciones'.")
+        self.lanzar_ejecucion_plan()
+        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Planificación completada y tarea delegada a 'estandares_certificaciones'.")
