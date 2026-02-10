@@ -20,7 +20,8 @@ class ProcesoOperativo(TenantAwareModel):
     inicio_real = models.DateTimeField(null=True, blank=True)
     fin_real = models.DateTimeField(null=True, blank=True)
 
-    class Meta: app_label = 'prestadores'
+    class Meta(TenantAwareModel.Meta):
+        app_label = 'mi_negocio'
 
 class TareaOperativa(TenantAwareModel):
     """
@@ -32,7 +33,8 @@ class TareaOperativa(TenantAwareModel):
     estado = models.CharField(max_length=20, default='PENDIENTE')
     fecha_limite = models.DateTimeField()
 
-    class Meta: app_label = 'prestadores'
+    class Meta(TenantAwareModel.Meta):
+        app_label = 'mi_negocio'
 
 class OrdenOperativa(TenantAwareModel):
     """
@@ -57,7 +59,8 @@ class OrdenOperativa(TenantAwareModel):
     costo_proyectado = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     costo_real_acumulado = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
-    class Meta: app_label = 'prestadores'
+    class Meta(TenantAwareModel.Meta):
+        app_label = 'mi_negocio'
 
 class RegistroOperativo(models.Model):
     """Bitácora de transiciones y eventos de una orden."""
@@ -68,7 +71,8 @@ class RegistroOperativo(models.Model):
     agente_responsable_id = models.UUIDField()
     observaciones = models.TextField(blank=True)
 
-    class Meta: app_label = 'prestadores'
+    class Meta:
+        app_label = 'mi_negocio'
 
 class EvidenciaOperativa(models.Model):
     """Pruebas de ejecución vinculadas a una orden."""
@@ -77,7 +81,8 @@ class EvidenciaOperativa(models.Model):
     archivo_ref_id = models.UUIDField(help_text="Referencia al archivo en Gestión Archivística")
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    class Meta: app_label = 'prestadores'
+    class Meta:
+        app_label = 'mi_negocio'
 
 class IncidenteOperativo(TenantAwareModel):
     """Fallas o eventos inesperados durante la ejecución."""
@@ -88,4 +93,5 @@ class IncidenteOperativo(TenantAwareModel):
     estado = models.CharField(max_length=20, choices=[('ABIERTA', 'Abierta'), ('EN_RESOLUCION', 'En Resolución'), ('RESUELTA', 'Resuelta')], default='ABIERTA')
     fecha_reporte = models.DateTimeField(auto_now_add=True)
 
-    class Meta: app_label = 'prestadores'
+    class Meta(TenantAwareModel.Meta):
+        app_label = 'mi_negocio'

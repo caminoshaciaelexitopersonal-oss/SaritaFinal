@@ -1,5 +1,6 @@
 # backend/apps/prestadores/mi_negocio/gestion_operativa/sargentos.py
 import logging
+import uuid
 from django.utils import timezone
 from .modulos_genericos.perfil.models import ProviderProfile
 from apps.audit.models import AuditLog
@@ -15,12 +16,10 @@ class SargentoOperativo:
     @staticmethod
     def crear_orden_servicio(perfil_id, descripcion, parametros=None):
         from .models import OrdenOperativa
-        from django.utils import timezone
-        import uuid
 
         orden = OrdenOperativa.objects.create(
             provider_id=perfil_id,
-            contrato_ref_id=parametros.get("contrato_id", uuid.uuid4()),
+            contrato_ref_id=parametros.get("contrato_id", uuid.uuid4()) if parametros else uuid.uuid4(),
             descripcion_servicio=descripcion,
             fecha_inicio=timezone.now(),
             fecha_fin_estimada=timezone.now() + timezone.timedelta(days=1),
@@ -31,40 +30,34 @@ class SargentoOperativo:
 
     @staticmethod
     def actualizar_estado(entidad_tipo, entidad_id, nuevo_estado, motivo="", agente_id=None):
-        from django.apps import apps
         from .models import OrdenOperativa, RegistroOperativo
 
-        # Lógica atómica: Actualizar campo 'estado'
         logger.info(f"SARGENTO: Actualizando estado de {entidad_tipo} {entidad_id} a {nuevo_estado}")
 
         if entidad_tipo == "OrdenOperativa":
-            orden = OrdenOperativa.objects.get(id=entidad_id)
-            estado_anterior = orden.estado
-            orden.estado = nuevo_estado
-            orden.save()
+            try:
+                orden = OrdenOperativa.objects.get(id=entidad_id)
+                estado_anterior = orden.estado
+                orden.estado = nuevo_estado
+                orden.save()
 
-            # REGISTRO OBLIGATORIO EN BITÁCORA
-            RegistroOperativo.objects.create(
-                orden=orden,
-                estado_anterior=estado_anterior,
-                estado_nuevo=nuevo_estado,
-                agente_responsable_id=agente_id or uuid.uuid4(), # Fallback si no viene agente
-                observaciones=motivo
-            )
-            return True
+                RegistroOperativo.objects.create(
+                    orden=orden,
+                    estado_anterior=estado_anterior,
+                    estado_nuevo=nuevo_estado,
+                    agente_responsable_id=agente_id or uuid.uuid4(),
+                    observaciones=motivo
+                )
+                return True
+            except OrdenOperativa.DoesNotExist:
+                logger.error(f"SARGENTO: OrdenOperativa {entidad_id} no existe.")
+                return False
 
         return False
 
     @staticmethod
     def registrar_ejecucion_tarea(tarea_id, operario_id, resultado):
-        # Lógica atómica: Guardar log de ejecución
         logger.info(f"SARGENTO: Registrando ejecución de tarea {tarea_id} por operario {operario_id}")
-        return True
-
-    @staticmethod
-    def gestionar_reintento(operacion_id, intento_n):
-        # Lógica atómica: Incrementar contador de reintentos
-        logger.info(f"SARGENTO: Gestionando reintento {intento_n} para operacion {operacion_id}")
         return True
 
     @staticmethod
@@ -83,17 +76,20 @@ class SargentoOperativo:
     @staticmethod
     def asignar_recurso(orden_id, item_id, cantidad):
         from .modulos_genericos.inventario.models import AsignacionRecurso, InventoryItem
-        item = InventoryItem.objects.get(id=item_id)
-        asignacion = AsignacionRecurso.objects.create(
-            item=item,
-            orden_operativa_ref_id=orden_id,
-            cantidad_asignada=cantidad
-        )
-        # Bloquear stock (simplificado)
-        item.cantidad -= cantidad
-        item.save()
-        logger.info(f"SARGENTO: Recurso {item_id} asignado a orden {orden_id}.")
-        return str(asignacion.id)
+        try:
+            item = InventoryItem.objects.get(id=item_id)
+            asignacion = AsignacionRecurso.objects.create(
+                item=item,
+                orden_operativa_ref_id=orden_id,
+                cantidad_asignada=cantidad
+            )
+            item.cantidad -= cantidad
+            item.save()
+            logger.info(f"SARGENTO: Recurso {item_id} asignado a orden {orden_id}.")
+            return str(asignacion.id)
+        except InventoryItem.DoesNotExist:
+            logger.error(f"SARGENTO: Item de inventario {item_id} no existe.")
+            return None
 
     @staticmethod
     def registrar_bitacora_operativa(usuario_id, accion, detalles):
