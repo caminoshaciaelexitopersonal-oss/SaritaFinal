@@ -82,3 +82,13 @@ class IndicadorFinancieroHistoricoSerializer(serializers.ModelSerializer):
     class Meta:
         model = IndicadorFinancieroHistorico
         fields = '__all__'
+
+class AlertaFinancieraSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AlertaFinanciera
+        fields = '__all__'
+
+class LogFinancieroInmutableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LogFinancieroInmutable
+        fields = '__all__'

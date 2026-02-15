@@ -16,11 +16,14 @@ import {
 const menuItems = [
   { label: 'Dashboard', href: '/dashboard/prestador/mi-negocio/gestion-financiera', icon: FiHome },
   { label: 'Tesorería', href: '/dashboard/prestador/mi-negocio/gestion-financiera/tesoreria', icon: FiDollarSign },
+  { label: 'Conciliación', href: '/dashboard/prestador/mi-negocio/gestion-financiera/conciliacion', icon: FiShield },
   { label: 'Presupuestos', href: '/dashboard/prestador/mi-negocio/gestion-financiera/presupuestos', icon: FiTarget },
   { label: 'Proyecciones', href: '/dashboard/prestador/mi-negocio/gestion-financiera/proyecciones', icon: FiTrendingUp },
   { label: 'Créditos', href: '/dashboard/prestador/mi-negocio/gestion-financiera/creditos', icon: FiCreditCard },
   { label: 'Indicadores', href: '/dashboard/prestador/mi-negocio/gestion-financiera/indicadores', icon: FiBarChart2 },
   { label: 'Reportes', href: '/dashboard/prestador/mi-negocio/gestion-financiera/reportes', icon: FiFileText },
+  { label: 'Alertas', href: '/dashboard/prestador/mi-negocio/gestion-financiera/alertas', icon: FiAlertCircle },
+  { label: 'Configuración', href: '/dashboard/prestador/mi-negocio/gestion-financiera/configuracion', icon: FiSettings },
 ];
 
 export default function GestionFinancieraLayout({ children }: { children: React.ReactNode }) {

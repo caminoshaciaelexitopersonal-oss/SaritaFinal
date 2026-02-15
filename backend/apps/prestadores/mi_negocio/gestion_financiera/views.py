@@ -83,3 +83,22 @@ class IndicadorFinancieroViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         return IndicadorFinancieroHistorico.objects.filter(provider_id=self.request.user.perfil_prestador.id)
+
+class AlertaFinancieraViewSet(viewsets.ModelViewSet):
+    serializer_class = AlertaFinancieraSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return AlertaFinanciera.objects.filter(provider_id=self.request.user.perfil_prestador.id)
+
+    @action(detail=True, methods=['post'])
+    def resolver(self, request, pk=None):
+        alerta = self.get_object()
+        alerta.resuelta = True
+        alerta.save()
+        return Response({"status": "Alerta resuelta"})
+
+class LogFinancieroViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = LogFinancieroInmutableSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return LogFinancieroInmutable.objects.filter(provider_id=self.request.user.perfil_prestador.id)

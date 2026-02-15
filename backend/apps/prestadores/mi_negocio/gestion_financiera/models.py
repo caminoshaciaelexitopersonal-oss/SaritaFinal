@@ -55,6 +55,7 @@ class OrdenPago(models.Model):
 class Presupuesto(TenantAwareModel):
     nombre = models.CharField(max_length=255)
     año = models.PositiveIntegerField()
+    centro_costo = models.CharField(max_length=100, blank=True, help_text="Ej: Operaciones, Marketing, Administración")
     total_estimado = models.DecimalField(max_digits=18, decimal_places=2, default=0)
     total_ejecutado = models.DecimalField(max_digits=18, decimal_places=2, default=0)
     activo = models.BooleanField(default=True)
@@ -89,3 +90,30 @@ class IndicadorFinancieroHistorico(TenantAwareModel):
     valor = models.DecimalField(max_digits=18, decimal_places=2)
     fecha_calculo = models.DateTimeField(auto_now_add=True)
     metadata_calculo = models.JSONField(default=dict)
+
+class AlertaFinanciera(TenantAwareModel):
+    class TipoAlerta(models.TextChoices):
+        DESVIACION_PRESUPUESTAL = 'DESVIACION_PRESUPUESTAL', 'Desviación Presupuestal'
+        BAJA_LIQUIDEZ = 'BAJA_LIQUIDEZ', 'Baja Liquidez'
+        VENCIMIENTO_CREDITO = 'VENCIMIENTO_CREDITO', 'Vencimiento de Crédito'
+        INCONSISTENCIA_AUDITORIA = 'INCONSISTENCIA_AUDITORIA', 'Inconsistencia de Auditoría'
+
+    tipo = models.CharField(max_length=50, choices=TipoAlerta.choices)
+    titulo = models.CharField(max_length=255)
+    descripcion = models.TextField()
+    nivel_prioridad = models.CharField(max_length=20, default='ALTA') # BAJA, MEDIA, ALTA, CRITICA
+    resuelta = models.BooleanField(default=False)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+class LogFinancieroInmutable(TenantAwareModel):
+    """
+    Registro para auditoría forense de cambios financieros.
+    """
+    entidad_afectada = models.CharField(max_length=100) # Presupuesto, Credito, etc.
+    registro_id = models.UUIDField()
+    accion = models.CharField(max_length=100) # CREATE, UPDATE, DELETE
+    datos_anteriores = models.JSONField(null=True)
+    datos_nuevos = models.JSONField()
+    usuario_id = models.IntegerField()
+    hash_integridad = models.CharField(max_length=64, unique=True)
+    fecha_registro = models.DateTimeField(auto_now_add=True)

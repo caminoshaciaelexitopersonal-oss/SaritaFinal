@@ -11,4 +11,6 @@ export const financieroEndpoints = {
   getPresupuestos: () => httpClient.get('/v1/mi-negocio/financiera/presupuestos/'),
   getCreditos: () => httpClient.get('/v1/mi-negocio/financiera/creditos/'),
   getIndicadores: () => httpClient.get('/v1/mi-negocio/financiera/indicadores/'),
+  getAlertas: () => httpClient.get('/v1/mi-negocio/financiera/alertas/'),
+  resolverAlerta: (id: string) => httpClient.post(`/v1/mi-negocio/financiera/alertas/${id}/resolver/`),
 };
