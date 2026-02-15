@@ -1,6 +1,6 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/operativo_general/coronel.py
 import logging
-from ...coronel_template import CoronelTemplate
+from apps.sarita_agents.agents.coronel_template import CoronelTemplate
 
 class CoronelOperativoGeneral(CoronelTemplate):
     """
@@ -28,7 +28,7 @@ class CoronelOperativoGeneral(CoronelTemplate):
         from .capitanes.capitan_evidencia_documental import CapitanEvidenciaDocumental
         from .capitanes.capitan_evidencia_visual import CapitanEvidenciaVisual
         from .capitanes.capitan_integridad_evidencia import CapitanIntegridadEvidencia
-        from .capitanes.capitan_sla_operativo import CapitanSLAOperativo
+        from .capitanes.capitan_s_l_a_operativo import CapitanSLAOperativo
         from .capitanes.capitan_productividad_agentes import CapitanProductividadAgentes
         from .capitanes.capitan_configuracion_capacidad import CapitanConfiguracionCapacidad
         from .capitanes.capitan_gestion_incidencias import CapitanGestionIncidencias

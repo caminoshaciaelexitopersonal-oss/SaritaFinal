@@ -25,6 +25,11 @@ from apps.sarita_agents.marketing.tenientes_marketing import (
     TenienteCalificacion, TenienteDolor, TenienteOferta, TenienteObjeciones, TenienteCierre
 )
 from apps.sarita_agents.agents.teniente_template import TenienteTemplate
+from apps.sarita_agents.agents.general.sarita.coroneles.operativo_especializado.tenientes_especializados import (
+    TenienteOperativoHospedaje,
+    TenienteOperativoGastronomia,
+    TenienteOperativoTransporte
+)
 
 # --- TENIENTES FINANCIEROS (Phase 4-F) ---
 class TenienteCACCalculator(TenienteTemplate):
@@ -238,15 +243,33 @@ def ejecutar_mision_completa(self, mision_id: str):
 @shared_task
 def consolidar_plan_tactico(resultados, plan_id: str):
     from .models import PlanTáctico
+    from django.conf import settings
     plan = PlanTáctico.objects.get(id=plan_id)
-    if all(res['status'] == 'SUCCESS' for res in resultados):
+
+    # Si resultados está vacío (EAGER mode), intentar recuperarlos de la BD
+    if not resultados and getattr(settings, 'CELERY_TASK_ALWAYS_EAGER', False):
+        from .models import TareaDelegada
+        from .models import RegistroDeEjecucion
+        tareas = TareaDelegada.objects.filter(plan_tactico=plan)
+        resultados = []
+        for t in tareas:
+            reg = RegistroDeEjecucion.objects.filter(tarea_delegada=t).first()
+            if reg:
+                resultados.append(reg.resultado or {"status": "SUCCESS" if reg.exitoso else "FAILED"})
+
+    if all(res.get('status') == 'SUCCESS' for res in resultados if res):
         plan.estado = 'COMPLETADO'
     else:
         plan.estado = 'COMPLETADO_PARCIALMENTE'
     plan.save()
+
     reporte_capitan = {"captain": plan.capitan_responsable, "status": plan.estado, "details": resultados}
     reporte_final = {"status": "FORWARDED", "captain_report": reporte_capitan, "report_from": f"Coronel ({plan.mision.dominio})"}
-    finalizar_mision.delay(plan.mision.id, reporte_final)
+
+    if getattr(settings, 'CELERY_TASK_ALWAYS_EAGER', False):
+        finalizar_mision(str(plan.mision.id), reporte_final)
+    else:
+        finalizar_mision.delay(str(plan.mision.id), reporte_final)
 
 @shared_task
 def finalizar_mision(mision_id: str, reporte_final: dict):
@@ -381,4 +404,8 @@ TENIENTE_MAP = {
     'survey_manager': TenienteGenericoComercial,
     'integrity_checker': TenienteGenericoComercial,
     'anomaly_detector': TenienteGenericoComercial,
+    # Operativos Especializados (Phase 4)
+    'teniente_hospedaje': TenienteOperativoHospedaje,
+    'teniente_gastronomia': TenienteOperativoGastronomia,
+    'teniente_transporte': TenienteOperativoTransporte,
 }

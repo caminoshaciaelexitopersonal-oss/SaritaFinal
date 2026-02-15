@@ -18,6 +18,25 @@ class SargentoEspecializado:
         return True
 
     @staticmethod
+    def actualizar_estado_habitacion(provider_id, habitacion_id, nuevo_estado):
+        """
+        Actualiza el estado de una habitación validando multi-tenancy.
+        """
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.hoteles.models import Room
+        try:
+            # S-1: Validación estricta de aislamiento (Tenant Hardening)
+            habitacion = Room.objects.get(id=habitacion_id, provider_id=provider_id)
+            estado_anterior = habitacion.status
+            habitacion.status = nuevo_estado
+            habitacion.save()
+
+            logger.info(f"SARGENTO-ESP: Habitación {habitacion_id} actualizada a {nuevo_estado}")
+            return True
+        except Room.DoesNotExist:
+            logger.error(f"SARGENTO-ESP: Habitación {habitacion_id} no encontrada (Contexto Provider: {provider_id})")
+            return False
+
+    @staticmethod
     def activar_transporte(vehiculo_id, ruta_id):
         # Lógica atómica: Activar vehículo en una ruta específica
         logger.info(f"SARGENTO-ESP: Vehículo {vehiculo_id} activado para ruta {ruta_id}")

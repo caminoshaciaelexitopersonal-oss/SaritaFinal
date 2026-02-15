@@ -1,27 +1,21 @@
-from rest_framework import viewsets
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, permissions
+from .models import Room, RoomType, Amenity
+from .serializers import RoomSerializer, RoomTypeSerializer, AmenitySerializer
 
-from .models import Amenity, RoomType, Room
-from .serializers import AmenitySerializer, RoomTypeSerializer, RoomSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel # Para permisos
-
-class HotelFeatureViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet base para características de hotel que solo pertenecen al proveedor.
-    El TenantManager se encarga del aislamiento.
-    """
-    filter_backends = [DjangoFilterBackend]
-    # permission_classes = [IsAuthenticated] # Se hereda de DRF por defecto
-
-class AmenityViewSet(HotelFeatureViewSet):
-    queryset = Amenity.objects.all()
+class AmenityViewSet(viewsets.ModelViewSet):
     serializer_class = AmenitySerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return Amenity.objects.filter(provider=self.request.user.perfil_prestador)
 
-class RoomTypeViewSet(HotelFeatureViewSet):
-    queryset = RoomType.objects.select_related('product').prefetch_related('amenities').all()
+class RoomTypeViewSet(viewsets.ModelViewSet):
     serializer_class = RoomTypeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return RoomType.objects.filter(provider=self.request.user.perfil_prestador)
 
-class RoomViewSet(HotelFeatureViewSet):
-    queryset = Room.objects.select_related('room_type__product').all()
+class RoomViewSet(viewsets.ModelViewSet):
     serializer_class = RoomSerializer
-    filterset_fields = ['room_type', 'housekeeping_status']
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return Room.objects.filter(provider=self.request.user.perfil_prestador)

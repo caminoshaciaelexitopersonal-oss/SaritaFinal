@@ -7,6 +7,9 @@ from apps.admin_plataforma.models import GovernancePolicy
 from .models import Mision
 from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
 from .agents.general.sarita.coroneles.operativo_general.coronel import CoronelOperativoGeneral
+from .agents.general.sarita.coroneles.operativo_especializado.hospedaje.coronel import CoronelOperativoHospedaje
+from .agents.general.sarita.coroneles.operativo_especializado.gastronomia.coronel import CoronelOperativoGastronomia
+from .agents.general.sarita.coroneles.operativo_especializado.transporte.coronel import CoronelOperativoTransporte
 from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
 from .marketing.coronel_marketing import CoronelMarketing
 from .finanzas.coronel_finanzas import CoronelFinanzas
@@ -36,6 +39,9 @@ class SaritaOrchestrator:
         self.coroneles = {
             "prestadores": PrestadoresCoronel(general=self),
             "operativo_general": CoronelOperativoGeneral(general=self),
+            "operativo_hospedaje": CoronelOperativoHospedaje(general=self),
+            "operativo_gastronomia": CoronelOperativoGastronomia(general=self),
+            "operativo_transporte": CoronelOperativoTransporte(general=self),
             "administrador_general": AdministradorGeneralCoronel(general=self),
             "marketing": CoronelMarketing(general=self, domain="marketing"),
             "finanzas": CoronelFinanzas(general=self, domain="finanzas"),
