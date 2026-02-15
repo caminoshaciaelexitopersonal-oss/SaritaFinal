@@ -11,22 +11,21 @@ class CapitanAgenciaViajes(CapitanTemplate):
 
 
     def _get_tenientes(self) -> Dict[str, Any]:
-        return {}
-    def plan(self):
+        from ...tenientes.operativo_agencia_teniente import TenienteOperativoAgencia
+        return {"operativo_agencia": TenienteOperativoAgencia()}
+
+    def plan(self, mision):
         """
-        El corazón del Capitán. Aquí es donde defines el plan táctico.
-        Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
+        El corazón del Capitán. Diseña el plan táctico para la Agencia.
         """
-
-        # 1. Crear el Plan Táctico
-        plan_tactico = self.get_or_create_plan_tactico(
-            nombre="Plan de Ejecución para CapitanAgenciaViajes",
-            descripcion=f"Este plan detalla los pasos para cumplir el objetivo: {self.objective}"
-        )
-
-        # 2. Definir y Delegar Tareas (EJEMPLO - DEBE SER IMPLEMENTADO)
-        # self.delegar_tarea(plan_tactico=plan_tactico, nombre_teniente="...", descripcion="...", parametros_especificos={...})
-
-        # 3. Lanzar la Ejecución del Plan
-        self.lanzar_ejecucion_plan()
+        p = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
+        p.pasos_del_plan = {
+            "1": {
+                "teniente": "operativo_agencia",
+                "descripcion": "Ejecución operativa completa de la agencia (Sargento + Soldados)",
+                "parametros": mision.directiva_original.get("parameters", {})
+            }
+        }
+        p.save()
+        return p
 

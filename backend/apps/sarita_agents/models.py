@@ -87,7 +87,37 @@ class RegistroDeEjecucion(models.Model):
 
     def __str__(self):
         return f"Log de Tarea {self.tarea_delegada_id} @ {self.timestamp}"
- 
+
+class MicroTarea(models.Model):
+    """
+    NIVEL 6: Ejecutada por un Soldado bajo la supervisión de un Sargento.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tarea_padre = models.ForeignKey(TareaDelegada, on_delete=models.CASCADE, related_name='micro_tareas')
+    soldado_asignado = models.CharField(max_length=255)
+    descripcion = models.TextField()
+    parametros = models.JSONField(default=dict)
+    estado = models.CharField(max_length=50, default='PENDIENTE', choices=[
+        ('PENDIENTE', 'Pendiente'),
+        ('EN_PROGRESO', 'En Progreso'),
+        ('COMPLETADA', 'Completada'),
+        ('FALLIDA', 'Fallida'),
+    ])
+    timestamp_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"MicroTarea {self.id} ({self.estado}) - {self.soldado_asignado}"
+
+class RegistroMicroTarea(models.Model):
+    """
+    Log de ejecución detallado para un Soldado.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    micro_tarea = models.ForeignKey(MicroTarea, on_delete=models.CASCADE, related_name='logs')
+    timestamp = models.DateTimeField(auto_now_add=True)
+    exitoso = models.BooleanField()
+    resultado = models.JSONField(null=True, blank=True)
+    observaciones = models.TextField(blank=True)
 
 # --- Modelos de Dominio (Ejemplo para Fase U) ---
 

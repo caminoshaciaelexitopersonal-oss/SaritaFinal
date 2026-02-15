@@ -31,7 +31,11 @@ class TenienteTemplate:
 
         try:
             # --- LA LÓGICA DE NEGOCIO REAL SE IMPLEMENTA AQUÍ ---
-            resultado = self.perform_action(tarea.parametros)
+            # En Fase 4.1, pasamos el ID de la tarea para trazabilidad de Sargentos/Soldados
+            params = tarea.parametros.copy()
+            params["tarea_delegada_id"] = str(tarea.id)
+
+            resultado = self.perform_action(params)
 
             tarea.estado = 'COMPLETADA'
             log.exitoso = True

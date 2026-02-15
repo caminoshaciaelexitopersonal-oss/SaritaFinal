@@ -30,6 +30,8 @@ from apps.sarita_agents.agents.general.sarita.coroneles.operativo_especializado.
     TenienteOperativoGastronomia,
     TenienteOperativoTransporte
 )
+from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.operativo_agencia_teniente import TenienteOperativoAgencia
+from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.operativo_artesano_teniente import TenienteOperativoArtesano
 
 # --- TENIENTES FINANCIEROS (Phase 4-F) ---
 class TenienteCACCalculator(TenienteTemplate):
@@ -408,4 +410,7 @@ TENIENTE_MAP = {
     'teniente_hospedaje': TenienteOperativoHospedaje,
     'teniente_gastronomia': TenienteOperativoGastronomia,
     'teniente_transporte': TenienteOperativoTransporte,
+    # Fase 4.1
+    'operativo_agencia': TenienteOperativoAgencia,
+    'operativo_artesano': TenienteOperativoArtesano,
 }
