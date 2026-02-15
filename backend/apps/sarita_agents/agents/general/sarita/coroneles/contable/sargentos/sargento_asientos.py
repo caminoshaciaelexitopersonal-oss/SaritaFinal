@@ -28,6 +28,7 @@ class SargentoAsientosContables(SergeantTemplate):
         # Pasar parámetros de persistencia a los soldados si existen
         common = {
             "periodo_id": params.get("periodo_id"),
+            "provider_id": params.get("provider_id"),
             "fecha": params.get("fecha"),
             "usuario_id": params.get("usuario_id"),
             "movimientos": params.get("movimientos")
@@ -36,7 +37,7 @@ class SargentoAsientosContables(SergeantTemplate):
         return [
             {**common, "monto": params.get("monto_ingreso", 0), "type": "INGRESO"},
             {**common, "monto": params.get("monto_gasto", 0), "type": "GASTO"},
-            {"type": "CONCILIACION_WALLET"},
-            {"type": "FISCAL"},
-            {"periodo": params.get("periodo", "actual"), "type": "CIERRE"}
+            {**common, "type": "CONCILIACION_WALLET"},
+            {**common, "type": "FISCAL"},
+            {**common, "periodo": params.get("periodo", "actual"), "type": "CIERRE"}
         ]

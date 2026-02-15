@@ -115,6 +115,38 @@ class AsientoContableViewSet(BaseTenantViewSet):
         balance = ContabilidadService.generar_balance_comprobacion(provider, periodo_id)
         return Response(balance)
 
+    @action(detail=False, methods=['get'])
+    def estado_resultados(self, request):
+        fecha_inicio = request.query_params.get('fecha_inicio')
+        fecha_fin = request.query_params.get('fecha_fin')
+        if not fecha_inicio or not fecha_fin:
+            return Response({"error": "Debe proporcionar fecha_inicio y fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        reporte = ContabilidadService.generar_estado_resultados(provider, fecha_inicio, fecha_fin)
+        return Response(reporte)
+
+    @action(detail=False, methods=['get'])
+    def balance_general(self, request):
+        fecha_corte = request.query_params.get('fecha_corte')
+        if not fecha_corte:
+            return Response({"error": "Debe proporcionar fecha_corte"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        reporte = ContabilidadService.generar_balance_general(provider, fecha_corte)
+        return Response(reporte)
+
+    @action(detail=False, methods=['get'])
+    def flujo_caja(self, request):
+        fecha_inicio = request.query_params.get('fecha_inicio')
+        fecha_fin = request.query_params.get('fecha_fin')
+        if not fecha_inicio or not fecha_fin:
+            return Response({"error": "Debe proporcionar fecha_inicio y fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        reporte = ContabilidadService.generar_flujo_caja(provider, fecha_inicio, fecha_fin)
+        return Response(reporte)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

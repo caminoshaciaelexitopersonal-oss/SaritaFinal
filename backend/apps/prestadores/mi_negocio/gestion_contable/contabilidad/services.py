@@ -136,6 +136,124 @@ class ContabilidadService:
                 })
         return balance
 
+    @staticmethod
+    def generar_estado_resultados(provider, fecha_inicio, fecha_fin):
+        """
+        Genera el Estado de Resultados (P&L): Ingresos - Gastos.
+        """
+        # Cuentas de Ingresos (Clase 4) y Gastos (Clase 5)
+        cuentas_ingresos = Cuenta.objects.filter(provider=provider, codigo__startswith='4')
+        cuentas_gastos = Cuenta.objects.filter(provider=provider, codigo__startswith='5')
+
+        total_ingresos = Decimal('0.00')
+        detalles_ingresos = []
+        for c in cuentas_ingresos:
+            val = Transaccion.objects.filter(
+                asiento__provider=provider,
+                asiento__fecha__range=[fecha_inicio, fecha_fin],
+                cuenta=c
+            ).aggregate(saldo=Sum('credito') - Sum('debito'))['saldo'] or Decimal('0.00')
+            if val != 0:
+                total_ingresos += val
+                detalles_ingresos.append({"cuenta": c.nombre, "valor": val})
+
+        total_gastos = Decimal('0.00')
+        detalles_gastos = []
+        for c in cuentas_gastos:
+            val = Transaccion.objects.filter(
+                asiento__provider=provider,
+                asiento__fecha__range=[fecha_inicio, fecha_fin],
+                cuenta=c
+            ).aggregate(saldo=Sum('debito') - Sum('credito'))['saldo'] or Decimal('0.00')
+            if val != 0:
+                total_gastos += val
+                detalles_gastos.append({"cuenta": c.nombre, "valor": val})
+
+        return {
+            "periodo": f"{fecha_inicio} a {fecha_fin}",
+            "ingresos": {"total": total_ingresos, "detalles": detalles_ingresos},
+            "gastos": {"total": total_gastos, "detalles": detalles_gastos},
+            "utilidad_neta": total_ingresos - total_gastos
+        }
+
+    @staticmethod
+    def generar_balance_general(provider, fecha_corte):
+        """
+        Genera el Balance General: Activos = Pasivos + Patrimonio.
+        """
+        tipos = {
+            "ACTIVO": '1',
+            "PASIVO": '2',
+            "PATRIMONIO": '3'
+        }
+
+        balance = {}
+        total_secciones = {}
+
+        for seccion, prefijo in tipos.items():
+            cuentas = Cuenta.objects.filter(provider=provider, codigo__startswith=prefijo)
+            total_seccion = Decimal('0.00')
+            detalles = []
+
+            for cuenta in cuentas:
+                # El saldo acumulado incluye el saldo inicial + todos los movimientos hasta la fecha de corte
+                movimientos = Transaccion.objects.filter(
+                    asiento__provider=provider,
+                    asiento__fecha__lte=fecha_corte,
+                    cuenta=cuenta
+                ).aggregate(d=Sum('debito'), c=Sum('credito'))
+
+                deb = movimientos['d'] or Decimal('0.00')
+                cre = movimientos['c'] or Decimal('0.00')
+
+                # Regla de naturaleza de cuenta
+                if prefijo == '1': # Activo: D - C
+                    saldo = cuenta.saldo_inicial + deb - cre
+                else: # Pasivo/Patrimonio: C - D
+                    saldo = cuenta.saldo_inicial + cre - deb
+
+                if saldo != 0:
+                    total_seccion += saldo
+                    detalles.append({"cuenta": cuenta.nombre, "codigo": cuenta.codigo, "saldo": saldo})
+
+            balance[seccion] = detalles
+            total_secciones[seccion] = total_seccion
+
+        return {
+            "fecha_corte": fecha_corte,
+            "balance": balance,
+            "totales": total_secciones,
+            "diferencia_ecuacion": total_secciones["ACTIVO"] - (total_secciones["PASIVO"] + total_secciones["PATRIMONIO"])
+        }
+
+    @staticmethod
+    def generar_flujo_caja(provider, fecha_inicio, fecha_fin):
+        """
+        Genera un reporte de Flujo de Caja simplificado basado en cuentas de efectivo (Clase 11).
+        """
+        cuentas_efectivo = Cuenta.objects.filter(provider=provider, codigo__startswith='11')
+
+        entradas = Transaccion.objects.filter(
+            asiento__provider=provider,
+            asiento__fecha__range=[fecha_inicio, fecha_fin],
+            cuenta__in=cuentas_efectivo,
+            debito__gt=0
+        ).aggregate(total=Sum('debito'))['total'] or Decimal('0.00')
+
+        salidas = Transaccion.objects.filter(
+            asiento__provider=provider,
+            asiento__fecha__range=[fecha_inicio, fecha_fin],
+            cuenta__in=cuentas_efectivo,
+            credito__gt=0
+        ).aggregate(total=Sum('credito'))['total'] or Decimal('0.00')
+
+        return {
+            "periodo": f"{fecha_inicio} a {fecha_fin}",
+            "entradas_efectivo": entradas,
+            "salidas_efectivo": salidas,
+            "flujo_neto": entradas - salidas
+        }
+
 class StandardChartOfAccountsService:
     """
     Servicio para inicializar la estructura contable estándar de un nuevo prestador.

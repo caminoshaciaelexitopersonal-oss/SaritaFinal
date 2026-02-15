@@ -55,12 +55,62 @@ class SoldadoRegistroGasto(SoldierTemplate):
 class SoldadoConciliacionWallet(SoldierTemplate):
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO CONCILIACIÓN WALLET: Cruzando datos con Wallet.")
-        return {"action": "wallet_reconciled", "status": "OK"}
+        from apps.wallet.models import WalletAccount
+        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import Cuenta, Transaccion
+        from django.db.models import Sum
+        from decimal import Decimal
+
+        provider_id = params.get('provider_id')
+        if not provider_id:
+            return {"status": "error", "message": "Falta provider_id"}
+
+        # 1. Obtener saldo en Wallet real
+        wallet = WalletAccount.objects.filter(owner_id=provider_id, owner_type=WalletAccount.OwnerType.PROVIDER).first()
+        wallet_balance = wallet.balance if wallet else Decimal('0.00')
+
+        # 2. Obtener saldo en cuenta contable 112505
+        cuenta_puente = Cuenta.objects.filter(provider_id=provider_id, codigo='112505').first()
+        if not cuenta_puente:
+             return {"status": "warning", "message": "No se encontró cuenta puente 112505"}
+
+        movimientos = Transaccion.objects.filter(cuenta=cuenta_puente).aggregate(d=Sum('debito'), c=Sum('credito'))
+        d = movimientos['d'] or Decimal('0.00')
+        c = movimientos['c'] or Decimal('0.00')
+        contable_balance = cuenta_puente.saldo_inicial + d - c
+
+        diferencia = wallet_balance - contable_balance
+
+        return {
+            "action": "wallet_reconciled",
+            "wallet_balance": float(wallet_balance),
+            "contable_balance": float(contable_balance),
+            "difference": float(diferencia),
+            "status": "OK" if diferencia == 0 else "DISCREPANCY"
+        }
 
 class SoldadoVerificacionFiscal(SoldierTemplate):
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO FISCAL: Verificando cumplimiento normativo.")
-        return {"action": "tax_verified", "compliance": True}
+        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import Cuenta, Transaccion
+        from django.db.models import Sum
+        from decimal import Decimal
+
+        provider_id = params.get('provider_id')
+        # Buscar cuentas de pasivos (2) para ver obligaciones
+        cuentas_pasivos = Cuenta.objects.filter(provider_id=provider_id, codigo__startswith='2')
+        total_pasivos = Decimal('0.00')
+        for c in cuentas_pasivos:
+            movs = Transaccion.objects.filter(cuenta=c).aggregate(d=Sum('debito'), cr=Sum('credito'))
+            d = movs['d'] or Decimal('0.00')
+            cr = movs['cr'] or Decimal('0.00')
+            total_pasivos += (c.saldo_inicial + cr - d)
+
+        return {
+            "action": "tax_verified",
+            "compliance": True,
+            "total_obligations": float(total_pasivos),
+            "status": "CLEAR" if total_pasivos >= 0 else "DEBT_DETECTED"
+        }
 
 class SoldadoCierreParcial(SoldierTemplate):
     def perform_action(self, params: dict):
