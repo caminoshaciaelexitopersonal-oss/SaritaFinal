@@ -6,16 +6,17 @@ class CapitanActivosFijos(CapitanTemplate):
     Misión: Controlar y gestionar el ciclo de vida completo de los activos fijos, desde la adquisición hasta la baja, incluyendo el cálculo de la depreciación.
     """
 
-    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
-        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN CapitanActivosFijos: Inicializado para Misión ID {self.mision_id}.")
+    def __init__(self, coronel):
+        super().__init__(coronel=coronel)
 
+
+    def _get_tenientes(self) -> Dict[str, Any]:
+        return {}
     def plan(self):
         """
         El corazón del Capitán. Aquí es donde defines el plan táctico.
         Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
         """
-        self.logger.info(f"CAPITÁN CapitanActivosFijos: Planificando la misión.")
 
         # 1. Crear el Plan Táctico
         plan_tactico = self.get_or_create_plan_tactico(
@@ -29,4 +30,3 @@ class CapitanActivosFijos(CapitanTemplate):
         # 3. Lanzar la Ejecución del Plan
         self.lanzar_ejecucion_plan()
 
-        self.logger.info(f"CAPITÁN CapitanActivosFijos: Planificación completada y tareas delegadas.")

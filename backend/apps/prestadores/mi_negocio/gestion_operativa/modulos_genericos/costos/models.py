@@ -18,6 +18,11 @@ class Costo(models.Model):
 
     tipo_costo = models.CharField(_("Tipo de Costo"), max_length=50, choices=Tipo.choices, default=Tipo.VARIABLE)
 
+    # Vínculo con operación genérica
+    orden_operativa_ref_id = models.UUIDField(null=True, blank=True, help_text="Vínculo con la orden que generó el gasto.")
+    insumo_ref_id = models.UUIDField(null=True, blank=True, help_text="Vínculo con el ítem de inventario si aplica.")
+    personal_ref_id = models.UUIDField(null=True, blank=True, help_text="Vínculo con el colaborador si es mano de obra.")
+
     def __str__(self):
         return f"{self.concepto} - ${self.monto}"
 

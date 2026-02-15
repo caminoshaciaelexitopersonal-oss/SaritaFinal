@@ -6,16 +6,17 @@ class CapitanBienestarLaboral(CapitanTemplate):
     Misión: Desarrollo de programas de salud mental, pausas activas y prevención del acoso.
     """
 
-    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
-        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN CapitanBienestarLaboral: Inicializado para Misión ID {self.mision_id}.")
+    def __init__(self, coronel):
+        super().__init__(coronel=coronel)
 
+
+    def _get_tenientes(self) -> Dict[str, Any]:
+        return {}
     def plan(self):
         """
         El corazón del Capitán. Aquí es donde defines el plan táctico.
         Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
         """
-        self.logger.info(f"CAPITÁN CapitanBienestarLaboral: Planificando la misión.")
 
         # 1. Crear el Plan Táctico
         plan_tactico = self.get_or_create_plan_tactico(
@@ -29,4 +30,3 @@ class CapitanBienestarLaboral(CapitanTemplate):
         # 3. Lanzar la Ejecución del Plan
         self.lanzar_ejecucion_plan()
 
-        self.logger.info(f"CAPITÁN CapitanBienestarLaboral: Planificación completada y tareas delegadas.")

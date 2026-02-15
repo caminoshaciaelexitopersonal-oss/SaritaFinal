@@ -1,0 +1,322 @@
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:228: UserWarning: app_settings.USERNAME_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['username']['required']
+  required=allauth_account_settings.USERNAME_REQUIRED,
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:230: UserWarning: app_settings.EMAIL_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['email']['required']
+  email = serializers.EmailField(required=allauth_account_settings.EMAIL_REQUIRED)
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:288: UserWarning: app_settings.EMAIL_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['email']['required']
+  email = serializers.EmailField(required=allauth_account_settings.EMAIL_REQUIRED)
+/app/backend/apps/prestadores/mi_negocio/gestion_comercial/ai/services/ai_manager/providers/gemini_provider.py:2: FutureWarning:
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+KERNEL: Intención 'PLATFORM_CREATE_PLAN' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_SUSPEND_USER' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'ERP_CONFIRM_SALE' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ERP_GENERATE_BALANCE' registrada en el dominio 'contable'.
+KERNEL: Intención 'WALLET_DEPOSIT' registrada en el dominio 'wallet'.
+KERNEL: Intención 'WALLET_PAY' registrada en el dominio 'wallet'.
+KERNEL: Intención 'WALLET_REFUND' registrada en el dominio 'wallet'.
+KERNEL: Intención 'WALLET_LIQUIDATE' registrada en el dominio 'wallet'.
+KERNEL: Intención 'WALLET_FREEZE' registrada en el dominio 'wallet'.
+KERNEL: Intención 'DELIVERY_REQUEST' registrada en el dominio 'delivery'.
+KERNEL: Intención 'DELIVERY_ASSIGN' registrada en el dominio 'delivery'.
+KERNEL: Intención 'DELIVERY_COMPLETE' registrada en el dominio 'delivery'.
+KERNEL: Intención 'DELIVERY_RATE' registrada en el dominio 'delivery'.
+KERNEL: Intención 'VEHICLE_REGISTER' registrada en el dominio 'delivery'.
+KERNEL: Intención 'GENERATE_LEGACY_BUNDLE' registrada en el dominio 'governance'.
+KERNEL: Intención 'PLATFORM_TRANSFER_OWNERSHIP' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'SYSTEM_EVOLUTION_HARDENING' registrada en el dominio 'governance'.
+KERNEL: Intención 'QUERY_META_STANDARD' registrada en el dominio 'governance'.
+KERNEL: Intención 'PUBLIC_BUDGET_OPTIMIZATION' registrada en el dominio 'hacienda'.
+KERNEL: Intención 'TERRITORIAL_IMPACT_SIMULATION' registrada en el dominio 'planeacion'.
+KERNEL: Intención 'CIVIL_DEFENSE_ALERT' registrada en el dominio 'seguridad_civil'.
+KERNEL: Intención 'LAND_USE_AUDIT' registrada en el dominio 'gestion_territorial'.
+KERNEL: Intención 'ERP_CREATE_VOUCHER' registrada en el dominio 'contable'.
+KERNEL: Intención 'ERP_VIEW_SALES_STATS' registrada en el dominio 'comercial'.
+KERNEL: Intención 'PRIORITIZE_CRITICAL_LEADS' registrada en el dominio 'comercial'.
+KERNEL: Intención 'OPTIMIZE_MARKETING_BUDGET' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ERP_VIEW_CASH_FLOW' registrada en el dominio 'financiero'.
+KERNEL: Intención 'ERP_MANAGE_RESOURCES' registrada en el dominio 'operativo'.
+KERNEL: Intención 'ERP_SEARCH_DOCUMENT' registrada en el dominio 'archivistico'.
+KERNEL: Intención 'PLATFORM_UPDATE_PLAN' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_OPTIMIZE_RESOURCES' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_UPDATE_WEB_CMS' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_UPDATE_LEGAL' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'ONBOARDING_PRESTADOR' registrada en el dominio 'prestadores'.
+KERNEL: Intención 'AUDITORIA_GLOBAL' registrada en el dominio 'administrador_general'.
+CAPITÁN (CapitanMarketing): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPublicidadYAdquisicionDeTraficoADS): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionOperativaDeContenidosComerciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProduccionYAutomatizacionAudiovisual): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSEOTuristico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRecomendacionesSADI): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAlianzasComerciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConversion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmbudosConversion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanImplementacionTecnicaDeEmbudosYCRM): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPasarelaPagos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCotizacionesDinamicas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVentaConversacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanContratacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFirmaDigital): Inicializado. Tenientes listos.
+CAPITÁN (CapitanKYCVerificacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLegalidadYPrivacidad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRelacionClientes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanMensajeriaYEnviosMasivos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFidelizacionLealtad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSoporteViajero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPostventaFeedback): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoComercial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanInteligenciaAnaliticaYOptimizacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaVentas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPrevencionFraude): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialEstrategico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionComercialGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialHotelero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialGastronomico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialTuristicoTours): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialTransporte): Inicializado. Tenientes listos.
+CAPITÁN (CapitanOnboardingPrestador): Inicializado. Tenientes listos.
+CAPITÁN (CapitanArchivistico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIntegridadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRetencionNormativa): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBusquedaDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapturaYCreacionDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoNormativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionDocumentalGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPoliticasRetencion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSeguridadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTrazabilidadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosLegales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosContables): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosNomina): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosPublicos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosConfidenciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConservacionHistorica): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDisposicionFinal): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNotarizacionBlockchain): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionOperativaGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanControlOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCalidadYCumplimiento): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujosSecuenciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujosParalelos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanValidacionOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEnrutamientoOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPriorizacionTareas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAsignacionTareas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTransicionesEstado): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBloqueosOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionReintentos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFallbackOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEscalamientoExcepciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCoordinacionGuias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCalidadExperiencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRutasEstrategicas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDespachoVehiculos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanMonitoreoZonas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProtocolosEmergencia): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAtencionDigital): Inicializado. Tenientes listos.
+CAPITÁN (CapitanContabilidadGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAsientosAutomaticos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCierreContable): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaContable): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReconocimientoIngresos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanImpuestosIVA): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProvisionesContables): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConciliacionAutomatica): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReportesNormativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionFinanciera): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujoCaja): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRatiosYFormulasFinancieras): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTesoreria): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCustodiaFondos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLiquidez): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPagos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDistribucion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReservas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProyecciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEstadoResultados): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBalanceGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujoEfectivo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCambiosPatrimonio): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConciliacionBancaria): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProvisionesFinancieras): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNormativoSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIdentificacionPeligros): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvaluacionRiesgos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSaludOcupacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoPsicosocial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmergencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapacitacionSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVigilanciaSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNomina): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLiquidacionContratos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLegalLaboral): Inicializado. Tenientes listos.
+CORONEL (prestadores): Inicializado. Capitanes listos.
+CAPITÁN (CapitanCreacionOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTransicionesEstado): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCancelacionOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVinculacionContrato): Inicializado. Tenientes listos.
+CAPITÁN (CapitanValidacionDisponibilidad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAsignacionRecursos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConsumoInventario): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBloqueoAgotamiento): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionTurnos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanExcepcionesHorario): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRegistroCostosReales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCostosManoObra): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCostosInsumos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanImpactoContableOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvidenciaDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvidenciaVisual): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIntegridadEvidencia): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSLAOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProductividadAgentes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConfiguracionCapacidad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionIncidencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFeedbackPostServicio): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReprogramacionEmergencia): Inicializado. Tenientes listos.
+CORONEL (operativo_general): Inicializado. Capitanes listos.
+CAPITÁN (CapitanGestionHabitaciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCheckInCheckOut): Inicializado. Tenientes listos.
+CORONEL (operativo_hospedaje): Inicializado. Capitanes listos.
+CAPITÁN (CapitanServicioMesa): Inicializado. Tenientes listos.
+CAPITÁN (CapitanOperacionCocina): Inicializado. Tenientes listos.
+CORONEL (operativo_gastronomia): Inicializado. Capitanes listos.
+CAPITÁN (CapitanDespachoFlota): Inicializado. Tenientes listos.
+CAPITÁN (CapitanMonitoreoRutas): Inicializado. Tenientes listos.
+CORONEL (operativo_transporte): Inicializado. Capitanes listos.
+CAPITÁN (CapitanAuditoriaGlobal): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanVentas): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanContabilidad): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanOperativo): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanArchivistico): Inicializado. Tenientes listos.
+CORONEL (administrador_general): Inicializado. Capitanes listos.
+CAPITÁN (CapitanEmbudo): Inicializado. Tenientes listos.
+CORONEL (marketing): Inicializado. Capitanes listos.
+CAPITÁN (CapitanCAC): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLTV): Inicializado. Tenientes listos.
+CAPITÁN (CapitanROI): Inicializado. Tenientes listos.
+CORONEL (finanzas): Inicializado. Capitanes listos.
+CAPITÁN (CapitanSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNormativoSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIdentificacionPeligros): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvaluacionRiesgos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSaludOcupacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoPsicosocial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmergencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapacitacionSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVigilanciaSST): Inicializado. Tenientes listos.
+CORONEL (sg_sst): Inicializado. Capitanes listos.
+CAPITÁN (CapitanNomina): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLiquidacionContratos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLegalLaboral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPagosYTesoreria): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNovedadesYAusencias): Inicializado. Tenientes listos.
+DEBUG: Antes de importar api.signals
+DEBUG: Antes de importar api.signals
+DEBUG: Después de importar api.signals
+DEBUG: Después de importar api.signals
+Initializing AI providers...
+Warning: No AI providers initialized. Falling back to DummyProvider.
+Traceback (most recent call last):
+  File "/app/backend/manage.py", line 29, in <module>
+    main()
+  File "/app/backend/manage.py", line 25, in main
+    execute_from_command_line(sys.argv)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/core/management/base.py", line 460, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/core/management/commands/check.py", line 81, in handle
+    self.check(
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/core/management/base.py", line 492, in check
+    all_issues = checks.run_checks(
+                 ^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+    new_errors = check(app_configs=app_configs, databases=databases)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/core/checks/urls.py", line 16, in check_url_config
+    return check_resolver(resolver)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/core/checks/urls.py", line 26, in check_resolver
+    return check_method()
+           ^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/urls/resolvers.py", line 531, in check
+    for pattern in self.url_patterns:
+                   ^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/urls/resolvers.py", line 718, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+    return import_module(self.urlconf_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/app/backend/puerto_gaitan_turismo/urls.py", line 52, in <module>
+    path('api/sadi/', include('apps.sadi_agent.urls')),
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/app/backend/apps/sadi_agent/urls.py", line 4, in <module>
+    from .views import MarketingVoiceIntentView
+  File "/app/backend/apps/sadi_agent/views.py", line 6, in <module>
+    from apps.sarita_agents.orchestrator import sarita_orchestrator
+  File "/app/backend/apps/sarita_agents/orchestrator.py", line 153, in <module>
+    sarita_orchestrator = SaritaOrchestrator()
+                          ^^^^^^^^^^^^^^^^^^^^
+  File "/app/backend/apps/sarita_agents/orchestrator.py", line 49, in __init__
+    "nomina": CoronelNomina(general=self, domain="nomina"),
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/backend/apps/sarita_agents/agents/coronel_template.py", line 17, in __init__
+    self.capitanes = self._get_capitanes()
+                     ^^^^^^^^^^^^^^^^^^^^^
+  File "/app/backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/gestion_contable/nomina/coronel_nomina.py", line 22, in _get_capitanes
+    "novedades": CapitanNovedadesYAusencias(coronel=self),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/backend/apps/sarita_agents/agents/general/sarita/coroneles/prestadores/capitanes/gestion_contable/nomina/capitan_novedades_y_ausencias.py", line 11, in __init__
+    self.logger.info(f"CAPITÁN CapitanNovedadesYAusencias: Inicializado para Misión ID {self.mision_id}.")
+    ^^^^^^^^^^^
+AttributeError: 'CapitanNovedadesYAusencias' object has no attribute 'logger'

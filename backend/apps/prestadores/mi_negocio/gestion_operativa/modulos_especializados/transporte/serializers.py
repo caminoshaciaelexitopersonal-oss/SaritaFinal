@@ -1,15 +1,12 @@
 from rest_framework import serializers
-from .models import Vehicle #, MaintenanceOrder
+from .models import Vehicle, TransportRoute
 
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vehicle
-        fields = [
-            'id', 'nombre', 'placa', 'modelo_ano', 'tipo_vehiculo',
-            'capacidad', 'status', 'insurance_expiry_date', 'tech_inspection_expiry_date'
-        ]
+        fields = '__all__'
 
-# class MaintenanceOrderSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = MaintenanceOrder
-#         fields = '__all__'
+class TransportRouteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransportRoute
+        fields = '__all__'

@@ -1,14 +1,11 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
-# Asumimos TeamMember y Reservation de módulos genéricos futuros
-# from ..personal.models import TeamMember
-# from ..reservas.models import Reservation
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 
 class Vehicle(TenantAwareModel):
     """
-    Representa un vehículo en la flota de la transportadora.
+    Flota de la transportadora.
     """
     class VehicleStatus(models.TextChoices):
         AVAILABLE = 'AVAILABLE', _('Disponible')
@@ -16,33 +13,36 @@ class Vehicle(TenantAwareModel):
         MAINTENANCE = 'MAINTENANCE', _('En Mantenimiento')
         INACTIVE = 'INACTIVE', _('Inactivo')
 
-    nombre = models.CharField(_("Nombre Identificativo"), max_length=150)
-    placa = models.CharField(_("Placa"), max_length=10, unique=True)
-    modelo_ano = models.PositiveIntegerField(_("Modelo (Año)"))
-    tipo_vehiculo = models.CharField(_("Tipo"), max_length=50) # Ej: Van, Bus
-    capacidad = models.PositiveSmallIntegerField(_("Capacidad de Pasajeros"))
+    product = models.OneToOneField(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='vehicle_details',
+        null=True, blank=True
+    )
+    placa = models.CharField(_("Placa"), max_length=10, unique=True, null=True, blank=True)
+    modelo_ano = models.PositiveIntegerField(_("Modelo (Año)"), null=True, blank=True)
+    capacidad = models.PositiveSmallIntegerField(_("Capacidad de Pasajeros"), default=1)
     status = models.CharField(_("Estado"), max_length=20, choices=VehicleStatus.choices, default=VehicleStatus.AVAILABLE)
 
-    # Campos de cumplimiento
-    insurance_expiry_date = models.DateField(_("Vencimiento de Póliza"))
-    tech_inspection_expiry_date = models.DateField(_("Vencimiento Revisión T-M"))
+    insurance_expiry_date = models.DateField(_("Vencimiento de Póliza"), null=True, blank=True)
 
     def __str__(self):
-        return f"{self.nombre} ({self.placa})"
+        return f"{self.product.nombre} ({self.placa})"
 
-    class Meta:
+    class Meta(TenantAwareModel.Meta):
         app_label = 'prestadores'
 
-# class MaintenanceOrder(TenantAwareModel):
-#     """
-#     Una orden de trabajo para mantenimiento de un vehículo.
-#     """
-#     class MaintenanceType(models.TextChoices):
-#         PREVENTIVE = 'PREVENTIVE', _('Preventivo')
-#         CORRECTIVE = 'CORRECTIVE', _('Correctivo')
-#
-#     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='maintenance_orders')
-#     maintenance_type = models.CharField(max_length=20, choices=MaintenanceType.choices)
-#     description = models.TextField()
-#     reported_by = models.ForeignKey(TeamMember, on_delete=models.SET_NULL, null=True, blank=True)
-#     # ... otros campos como `fecha_completado`, `costo`, etc.
+class TransportRoute(TenantAwareModel):
+    """
+    Rutas frecuentes.
+    """
+    nombre = models.CharField(max_length=200)
+    origen = models.CharField(max_length=150)
+    destino = models.CharField(max_length=150)
+    distancia_km = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.nombre}: {self.origen} - {self.destino}"
+
+    class Meta(TenantAwareModel.Meta):
+        app_label = 'prestadores'

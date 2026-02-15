@@ -8,15 +8,16 @@ class CapitanContextoViaje(CapitanTemplate):
     para anticipar necesidades y ofrecer asistencia proactiva.
     """
 
-    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
-        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Inicializado para Misión ID {self.mision_id}.")
+    def __init__(self, coronel):
+        super().__init__(coronel=coronel)
 
+
+    def _get_tenientes(self) -> Dict[str, Any]:
+        return {}
     def plan(self):
         """
         El corazón del Capitán. Aquí es donde defines el plan táctico.
         """
-        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Planificando la misión.")
 
         plan_tactico = self.get_or_create_plan_tactico(
             nombre=f"Plan de Contexto de Viaje",
@@ -31,4 +32,3 @@ class CapitanContextoViaje(CapitanTemplate):
         )
 
         self.lanzar_ejecucion_plan()
-        self.logger.info(f"CAPITÁN {self.__class__.__name__}: Planificación completada y tarea delegada a 'contexto_viaje'.")

@@ -1,0 +1,4 @@
+Fixed 241 capitanes.
+Fixed app_label in apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/hoteles/models.py
+Fixed app_label in apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/restaurantes/models.py
+Fixed app_label in apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/transporte/models.py

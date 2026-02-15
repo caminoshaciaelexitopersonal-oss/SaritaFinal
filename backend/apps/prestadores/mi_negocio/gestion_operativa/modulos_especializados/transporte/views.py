@@ -1,25 +1,15 @@
-from rest_framework import viewsets
-from .models import Vehicle #, MaintenanceOrder
-from .serializers import VehicleSerializer #, MaintenanceOrderSerializer
+from rest_framework import viewsets, permissions
+from .models import Vehicle, TransportRoute
+from .serializers import VehicleSerializer, TransportRouteSerializer
 
 class VehicleViewSet(viewsets.ModelViewSet):
-    queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
-    filterset_fields = ['status', 'tipo_vehiculo']
-    search_fields = ['nombre', 'placa']
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return Vehicle.objects.filter(provider=self.request.user.perfil_prestador)
 
-# class MaintenanceOrderViewSet(viewsets.ModelViewSet):
-#     queryset = MaintenanceOrder.objects.all()
-#     serializer_class = MaintenanceOrderSerializer
-#     filterset_fields = ['vehicle', 'maintenance_type']
-
-# La acción para asignar recursos (vehículo, conductor) a una reserva
-# se implementará en el `ReservationViewSet` del módulo genérico 'reservas'.
-#
-# @action(detail=True, methods=['post'], url_path='assign-transport')
-# def assign_transport(self, request, pk=None):
-#     reservation = self.get_object()
-#     vehicle_id = request.data.get('vehicle_id')
-#     driver_id = request.data.get('driver_id')
-#     # ... lógica de asignación y validación ...
-#     return Response(...)
+class TransportRouteViewSet(viewsets.ModelViewSet):
+    serializer_class = TransportRouteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return TransportRoute.objects.filter(provider=self.request.user.perfil_prestador)

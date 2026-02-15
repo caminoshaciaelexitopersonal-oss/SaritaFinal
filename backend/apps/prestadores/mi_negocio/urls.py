@@ -3,12 +3,14 @@ from api.views import PlaceholderView
 
 app_name = 'mi_negocio'
 
-from .gestion_operativa.views import ProcesoOperativoViewSet, TareaOperativaViewSet
+from .gestion_operativa.views import ProcesoOperativoViewSet, TareaOperativaViewSet, OrdenOperativaViewSet, IncidenteOperativoViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'operativa/procesos', ProcesoOperativoViewSet, basename='proceso-operativo')
 router.register(r'operativa/tareas', TareaOperativaViewSet, basename='tarea-operativa')
+router.register(r'operativa/ordenes', OrdenOperativaViewSet, basename='orden-operativa')
+router.register(r'operativa/incidencias', IncidenteOperativoViewSet, basename='incidente-operativo')
 
 urlpatterns = [
     path('', include(router.urls)),

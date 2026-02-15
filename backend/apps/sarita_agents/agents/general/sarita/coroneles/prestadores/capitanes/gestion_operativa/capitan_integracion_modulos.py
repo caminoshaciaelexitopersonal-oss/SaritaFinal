@@ -8,16 +8,17 @@ class CapitanIntegracionModulos(CapitanTemplate):
     la consistencia de los datos y la correcta secuencia de las operaciones.
     """
 
-    def __init__(self, mision_id: str, objective: str, parametros: Dict[str, Any]):
-        super().__init__(mision_id=mision_id, objective=objective, parametros=parametros)
-        self.logger.info(f"CAPITÁN CapitanIntegracionModulos: Inicializado para Misión ID {self.mision_id}.")
+    def __init__(self, coronel):
+        super().__init__(coronel=coronel)
 
+
+    def _get_tenientes(self) -> Dict[str, Any]:
+        return {}
     def plan(self):
         """
         El corazón del Capitán. Aquí es donde defines el plan táctico.
         Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
         """
-        self.logger.info(f"CAPITÁN CapitanIntegracionModulos: Planificando la misión.")
 
         # 1. Crear el Plan Táctico
         plan_tactico = self.get_or_create_plan_tactico(
@@ -31,4 +32,3 @@ class CapitanIntegracionModulos(CapitanTemplate):
         # 3. Lanzar la Ejecución del Plan
         self.lanzar_ejecucion_plan()
 
-        self.logger.info(f"CAPITÁN CapitanIntegracionModulos: Planificación completada y tareas delegadas.")

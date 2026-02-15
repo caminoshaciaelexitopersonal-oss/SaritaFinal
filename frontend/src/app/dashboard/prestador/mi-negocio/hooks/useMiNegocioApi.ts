@@ -187,6 +187,19 @@ export function useMiNegocioApi() {
     return makeRequest(() => operativoEndpoints.updateProcesoEstado(id, nuevo_estado).then(res => res.data), "Estado operativo actualizado.");
   }, [makeRequest]);
 
+  // --- API de Órdenes Operativas (Fase 3) ---
+  const getOrdenesOperativas = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getOrdenesOperativas().then(res => res.data));
+  }, [makeRequest]);
+
+  const updateOrdenEstado = useCallback(async (id: string, nuevo_estado: string, motivo: string = "") => {
+    return makeRequest(() => operativoEndpoints.updateOrdenEstado(id, nuevo_estado, motivo).then(res => res.data), "Transición de estado enviada a gobernanza.");
+  }, [makeRequest]);
+
+  const reportIncidente = useCallback(async (data: any) => {
+    return makeRequest(() => operativoEndpoints.reportIncidente(data).then(res => res.data), "Incidencia reportada en el motor operativo.");
+  }, [makeRequest]);
+
   const triggerMission = useCallback(async (type: string, parameters: any) => {
     return makeRequest(() => saritaEndpoints.triggerMission(type, parameters).then(res => res.data), "Misión delegada exitosamente.");
   }, [makeRequest]);
@@ -225,6 +238,9 @@ export function useMiNegocioApi() {
     getTours,
     getProcesosOperativos,
     updateProcesoEstado,
+    getOrdenesOperativas,
+    updateOrdenEstado,
+    reportIncidente,
     triggerMission,
   };
 }
