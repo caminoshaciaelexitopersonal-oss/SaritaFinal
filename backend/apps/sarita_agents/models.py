@@ -11,8 +11,8 @@ class Mision(models.Model):
     idempotency_key = models.UUIDField(unique=True, null=True, blank=True, help_text="Clave única para prevenir duplicados.")
 
     directiva_original = models.JSONField(help_text="La directiva JSON original recibida por el orquestador.")
-    dominio = models.CharField(max_length=100, help_text="Dominio de negocio objetivo (ej. 'prestadores').")
-    estado = models.CharField(max_length=50, default='PENDIENTE', choices=[
+    dominio = models.CharField(max_length=100, db_index=True, help_text="Dominio de negocio objetivo (ej. 'prestadores').")
+    estado = models.CharField(max_length=50, default='PENDIENTE', db_index=True, choices=[
         ('PENDIENTE', 'Pendiente'),
         ('EN_PROGRESO', 'En Progreso'),
         ('COMPLETADA', 'Completada'),
@@ -34,9 +34,9 @@ class PlanTáctico(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     mision = models.ForeignKey(Mision, on_delete=models.CASCADE, related_name='planes_tacticos')
-    capitan_responsable = models.CharField(max_length=255, help_text="Clase del Capitán que generó el plan.")
+    capitan_responsable = models.CharField(max_length=255, db_index=True, help_text="Clase del Capitán que generó el plan.")
     pasos_del_plan = models.JSONField(help_text="Los pasos estructurados del plan.")
-    estado = models.CharField(max_length=50, default='PLANIFICADO', choices=[
+    estado = models.CharField(max_length=50, default='PLANIFICADO', db_index=True, choices=[
         ('PLANIFICADO', 'Planificado'),
         ('EN_EJECUCION', 'En Ejecución'),
         ('COMPLETADO', 'Completado'),
@@ -56,10 +56,10 @@ class TareaDelegada(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     plan_tactico = models.ForeignKey(PlanTáctico, on_delete=models.CASCADE, related_name='tareas')
-    teniente_asignado = models.CharField(max_length=255, help_text="Identificador del Teniente responsable.")
+    teniente_asignado = models.CharField(max_length=255, db_index=True, help_text="Identificador del Teniente responsable.")
     descripcion_tarea = models.TextField()
     parametros = models.JSONField(default=dict)
-    estado = models.CharField(max_length=50, default='PENDIENTE', choices=[
+    estado = models.CharField(max_length=50, default='PENDIENTE', db_index=True, choices=[
         ('PENDIENTE', 'Pendiente'),
 
         ('EN_COLA', 'En Cola'),
@@ -94,10 +94,10 @@ class MicroTarea(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tarea_padre = models.ForeignKey(TareaDelegada, on_delete=models.CASCADE, related_name='micro_tareas')
-    soldado_asignado = models.CharField(max_length=255)
+    soldado_asignado = models.CharField(max_length=255, db_index=True)
     descripcion = models.TextField()
     parametros = models.JSONField(default=dict)
-    estado = models.CharField(max_length=50, default='PENDIENTE', choices=[
+    estado = models.CharField(max_length=50, default='PENDIENTE', db_index=True, choices=[
         ('PENDIENTE', 'Pendiente'),
         ('EN_PROGRESO', 'En Progreso'),
         ('COMPLETADA', 'Completada'),
@@ -114,8 +114,8 @@ class RegistroMicroTarea(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     micro_tarea = models.ForeignKey(MicroTarea, on_delete=models.CASCADE, related_name='logs')
-    timestamp = models.DateTimeField(auto_now_add=True)
-    exitoso = models.BooleanField()
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    exitoso = models.BooleanField(db_index=True)
     resultado = models.JSONField(null=True, blank=True)
     observaciones = models.TextField(blank=True)
 

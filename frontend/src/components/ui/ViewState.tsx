@@ -7,6 +7,7 @@ import { Button } from './Button';
 
 interface ViewStateProps {
   isLoading?: boolean;
+  isSilentLoading?: boolean;
   loadingMessage?: string;
   isEmpty?: boolean;
   emptyMessage?: string;
@@ -41,7 +42,7 @@ export const ViewState: React.FC<ViewStateProps> = ({
   disabledMessage = 'Esta acción requiere un nivel de autoridad superior.',
   children
 }) => {
-  if (isLoading) {
+  if (isLoading && !isSilentLoading) {
     return (
       <div className="flex flex-col items-center justify-center p-12 min-h-[400px] animate-in fade-in duration-500">
         <Spinner text={loadingMessage} />
