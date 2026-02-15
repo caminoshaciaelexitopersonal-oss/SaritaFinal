@@ -32,6 +32,7 @@ from apps.sarita_agents.agents.general.sarita.coroneles.operativo_especializado.
 )
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.operativo_agencia_teniente import TenienteOperativoAgencia
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.operativo_artesano_teniente import TenienteOperativoArtesano
+from apps.sarita_agents.agents.general.sarita.coroneles.contable.tenientes.teniente_registro import TenienteRegistroContable
 
 # --- TENIENTES FINANCIEROS (Phase 4-F) ---
 class TenienteCACCalculator(TenienteTemplate):
@@ -413,4 +414,6 @@ TENIENTE_MAP = {
     # Fase 4.1
     'operativo_agencia': TenienteOperativoAgencia,
     'operativo_artesano': TenienteOperativoArtesano,
+    # Fase 5
+    'registro_contable': TenienteRegistroContable,
 }
