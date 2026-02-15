@@ -1,7 +1,8 @@
 # backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/services.py
 from decimal import Decimal
 from django.db import transaction
-from .models import AsientoContable, Transaccion, Cuenta
+from django.db.models import Sum
+from .models import AsientoContable, Transaccion, Cuenta, PlanDeCuentas, PeriodoContable
 
 class ContabilidadValidationError(Exception):
     """Excepción personalizada para errores de validación contable."""
@@ -89,3 +90,112 @@ class ContabilidadService:
         except PeriodoContable.DoesNotExist:
             raise ContabilidadValidationError("El período no existe, ya está cerrado o no pertenece a tu negocio.")
 
+    @staticmethod
+    def obtener_libro_diario(provider, fecha_inicio, fecha_fin):
+        """Genera el Libro Diario para un rango de fechas."""
+        return AsientoContable.objects.filter(
+            provider=provider,
+            fecha__range=[fecha_inicio, fecha_fin]
+        ).prefetch_related('transacciones', 'transacciones__cuenta').order_by('fecha', 'id')
+
+    @staticmethod
+    def obtener_libro_mayor(provider, cuenta_codigo, fecha_inicio, fecha_fin):
+        """Genera los movimientos de una cuenta específica (Libro Mayor)."""
+        return Transaccion.objects.filter(
+            asiento__provider=provider,
+            cuenta__codigo__startswith=cuenta_codigo,
+            asiento__fecha__range=[fecha_inicio, fecha_fin]
+        ).select_related('asiento', 'cuenta').order_by('asiento__fecha')
+
+    @staticmethod
+    def generar_balance_comprobacion(provider, periodo_id):
+        """Genera el Balance de Comprobación para un periodo."""
+        cuentas = Cuenta.objects.filter(plan_de_cuentas__provider=provider)
+        balance = []
+        for cuenta in cuentas:
+            movimientos = Transaccion.objects.filter(
+                asiento__provider=provider,
+                asiento__periodo_id=periodo_id,
+                cuenta=cuenta
+            ).aggregate(
+                total_debito=Sum('debito'),
+                total_credito=Sum('credito')
+            )
+
+            debito = movimientos['total_debito'] or Decimal('0.00')
+            credito = movimientos['total_credito'] or Decimal('0.00')
+
+            if debito > 0 or credito > 0 or cuenta.saldo_inicial > 0:
+                balance.append({
+                    "codigo": cuenta.codigo,
+                    "nombre": cuenta.nombre,
+                    "saldo_inicial": cuenta.saldo_inicial,
+                    "debitos": debito,
+                    "creditos": credito,
+                    "nuevo_saldo": cuenta.saldo_inicial + debito - credito
+                })
+        return balance
+
+class StandardChartOfAccountsService:
+    """
+    Servicio para inicializar la estructura contable estándar de un nuevo prestador.
+    """
+    @staticmethod
+    @transaction.atomic
+    def inicializar_contabilidad(provider):
+        # 1. Crear Plan de Cuentas
+        plan, _ = PlanDeCuentas.objects.get_or_create(
+            provider=provider,
+            nombre=f"Plan Contable Estándar - {provider.nombre_comercial}",
+            defaults={"descripcion": "Plan de cuentas generado automáticamente por SARITA."}
+        )
+
+        # 2. Cuentas Maestras
+        estructura = [
+            # ACTIVOS
+            ("1", "ACTIVOS", Cuenta.TipoCuenta.ACTIVO, None),
+            ("11", "DISPONIBLE", Cuenta.TipoCuenta.ACTIVO, "1"),
+            ("1105", "CAJA", Cuenta.TipoCuenta.ACTIVO, "11"),
+            ("110505", "Caja General", Cuenta.TipoCuenta.ACTIVO, "1105"),
+            ("1110", "BANCOS", Cuenta.TipoCuenta.ACTIVO, "11"),
+            ("111005", "Moneda Nacional", Cuenta.TipoCuenta.ACTIVO, "1110"),
+            ("1125", "PUENTE WALLET SARITA", Cuenta.TipoCuenta.ACTIVO, "11"),
+            ("112505", "Wallet Soberano", Cuenta.TipoCuenta.ACTIVO, "1125"),
+
+            # PASIVOS
+            ("2", "PASIVOS", Cuenta.TipoCuenta.PASIVO, None),
+            ("21", "OBLIGACIONES FINANCIERAS", Cuenta.TipoCuenta.PASIVO, "2"),
+            ("23", "CUENTAS POR PAGAR", Cuenta.TipoCuenta.PASIVO, "2"),
+
+            # PATRIMONIO
+            ("3", "PATRIMONIO", Cuenta.TipoCuenta.PATRIMONIO, None),
+            ("31", "CAPITAL SOCIAL", Cuenta.TipoCuenta.PATRIMONIO, "3"),
+
+            # INGRESOS
+            ("4", "INGRESOS", Cuenta.TipoCuenta.INGRESOS, None),
+            ("41", "OPERACIONALES", Cuenta.TipoCuenta.INGRESOS, "4"),
+            ("4135", "COMERCIO", Cuenta.TipoCuenta.INGRESOS, "41"),
+            ("413505", "Servicios Turísticos", Cuenta.TipoCuenta.INGRESOS, "4135"),
+
+            # GASTOS
+            ("5", "GASTOS", Cuenta.TipoCuenta.GASTOS, None),
+            ("51", "OPERACIONALES DE ADM", Cuenta.TipoCuenta.GASTOS, "5"),
+            ("5105", "GASTOS DE PERSONAL", Cuenta.TipoCuenta.GASTOS, "51"),
+        ]
+
+        cuentas_creadas = {}
+        for codigo, nombre, tipo, parent_code in estructura:
+            parent = cuentas_creadas.get(parent_code)
+            cuenta, _ = Cuenta.objects.get_or_create(
+                plan_de_cuentas=plan,
+                codigo=codigo,
+                defaults={
+                    "nombre": nombre,
+                    "tipo": tipo,
+                    "parent": parent,
+                    "provider": provider
+                }
+            )
+            cuentas_creadas[codigo] = cuenta
+
+        return plan

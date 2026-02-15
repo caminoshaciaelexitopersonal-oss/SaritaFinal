@@ -12,13 +12,19 @@ class SoldadoRegistroIngreso(SoldierTemplate):
         # Integración con lógica real de persistencia contable
         from apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos import SargentoContable
 
-        if params.get('periodo_id') and params.get('movimientos'):
+        if (params.get('periodo_id') or params.get('provider_id')) and params.get('movimientos'):
+             from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+             provider = None
+             if params.get('provider_id'):
+                 provider = ProviderProfile.objects.get(id=params['provider_id'])
+
              SargentoContable.generar_asiento_partida_doble(
-                 periodo_id=params['periodo_id'],
+                 periodo_id=params.get('periodo_id'),
                  fecha=params.get('fecha'),
                  descripcion=params.get('descripcion', 'Registro de Ingreso via Agente'),
                  movimientos=params['movimientos'],
-                 usuario_id=params.get('usuario_id')
+                 usuario_id=params.get('usuario_id'),
+                 provider=provider
              )
 
         return {"action": "income_registered", "amount": params.get('monto')}
@@ -29,13 +35,19 @@ class SoldadoRegistroGasto(SoldierTemplate):
 
         from apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos import SargentoContable
 
-        if params.get('periodo_id') and params.get('movimientos'):
+        if (params.get('periodo_id') or params.get('provider_id')) and params.get('movimientos'):
+             from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+             provider = None
+             if params.get('provider_id'):
+                 provider = ProviderProfile.objects.get(id=params['provider_id'])
+
              SargentoContable.generar_asiento_partida_doble(
-                 periodo_id=params['periodo_id'],
+                 periodo_id=params.get('periodo_id'),
                  fecha=params.get('fecha'),
                  descripcion=params.get('descripcion', 'Registro de Gasto via Agente'),
                  movimientos=params['movimientos'],
-                 usuario_id=params.get('usuario_id')
+                 usuario_id=params.get('usuario_id'),
+                 provider=provider
              )
 
         return {"action": "expense_registered", "amount": params.get('monto')}

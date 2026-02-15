@@ -66,6 +66,7 @@ class PeriodoContableViewSet(BaseTenantViewSet):
 
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from .models import (
     PlanDeCuentas,
     Cuenta,
@@ -77,6 +78,7 @@ from .serializers import (
     CuentaSerializer,
     PeriodoContableSerializer,
     AsientoContableSerializer,
+    TransaccionSerializer,
 )
 from .services import ContabilidadService, ContabilidadValidationError
 
@@ -89,6 +91,29 @@ class AsientoContableViewSet(BaseTenantViewSet):
     queryset = AsientoContable.objects.all().prefetch_related('transacciones')
     serializer_class = AsientoContableSerializer
     filterset_fields = ['periodo', 'fecha']
+
+    @action(detail=False, methods=['get'])
+    def libro_diario(self, request):
+        fecha_inicio = request.query_params.get('fecha_inicio')
+        fecha_fin = request.query_params.get('fecha_fin')
+
+        if not fecha_inicio or not fecha_fin:
+            return Response({"error": "Debe proporcionar fecha_inicio y fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        asientos = ContabilidadService.obtener_libro_diario(provider, fecha_inicio, fecha_fin)
+        serializer = self.get_serializer(asientos, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def balance_comprobacion(self, request):
+        periodo_id = request.query_params.get('periodo_id')
+        if not periodo_id:
+            return Response({"error": "Debe proporcionar periodo_id"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        balance = ContabilidadService.generar_balance_comprobacion(provider, periodo_id)
+        return Response(balance)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
