@@ -254,10 +254,12 @@ export default function Sidebar() {
       <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar pb-10">
         <SidebarLink link={{ href: '/dashboard', label: 'Dashboard Central', icon: FiHome }} />
 
-        {user.role === 'PRESTADOR' && (
+        {(user.role === 'PRESTADOR' || user.role === 'ARTESANO') && (
           <div className="mt-8">
             <div className="px-4 mb-4 flex items-center justify-between group cursor-pointer" onClick={() => setIsMiNegocioOpen(!isMiNegocioOpen)}>
-               <span className="text-xs font-black text-slate-900 dark:text-white tracking-widest uppercase">Mi Negocio</span>
+               <span className="text-xs font-black text-slate-900 dark:text-white tracking-widest uppercase">
+                 {user.role === 'ARTESANO' ? 'Mi Taller' : 'Mi Negocio'}
+               </span>
                {isMiNegocioOpen ? <FiChevronDown size={14} className="text-slate-400" /> : <FiChevronRight size={14} className="text-slate-400" />}
             </div>
             {isMiNegocioOpen && (
