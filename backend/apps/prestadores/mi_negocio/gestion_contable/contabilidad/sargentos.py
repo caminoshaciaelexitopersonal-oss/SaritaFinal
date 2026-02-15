@@ -69,6 +69,10 @@ class SargentoContable:
                             raise
                 else:
                     raise ValueError("Debe proporcionar cuenta_id o cuenta_codigo")
+
+                if not cuenta.is_active:
+                    raise ValueError(f"La cuenta {cuenta.codigo} está inactiva.")
+
                 debito = mov.get('debito', 0)
                 credito = mov.get('credito', 0)
                 total_debito += debito

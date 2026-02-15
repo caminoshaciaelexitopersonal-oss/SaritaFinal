@@ -71,6 +71,34 @@ export function useMiNegocioApi() {
     ));
   }, [makeRequest]);
 
+  const getLibroDiario = useCallback(async (fechaInicio: string, fechaFin: string) => {
+    return makeRequest(() => contableEndpoints.getLibroDiario(fechaInicio, fechaFin).then(res => res.data));
+  }, [makeRequest]);
+
+  const getLibroMayor = useCallback(async (cuentaCodigo: string, fechaInicio: string, fechaFin: string) => {
+    return makeRequest(() => contableEndpoints.getLibroMayor(cuentaCodigo, fechaInicio, fechaFin).then(res => res.data));
+  }, [makeRequest]);
+
+  const getBalanceComprobacion = useCallback(async (periodoId: string) => {
+    return makeRequest(() => contableEndpoints.getBalanceComprobacion(periodoId).then(res => res.data));
+  }, [makeRequest]);
+
+  const getEstadoResultados = useCallback(async (fechaInicio: string, fechaFin: string) => {
+    return makeRequest(() => contableEndpoints.getEstadoResultados(fechaInicio, fechaFin).then(res => res.data));
+  }, [makeRequest]);
+
+  const getBalanceGeneral = useCallback(async (fechaCorte: string) => {
+    return makeRequest(() => contableEndpoints.getBalanceGeneral(fechaCorte).then(res => res.data));
+  }, [makeRequest]);
+
+  const getFlujoCaja = useCallback(async (fechaInicio: string, fechaFin: string) => {
+    return makeRequest(() => contableEndpoints.getFlujoCaja(fechaInicio, fechaFin).then(res => res.data));
+  }, [makeRequest]);
+
+  const getConciliacionWallet = useCallback(async (providerId: string) => {
+    return makeRequest(() => contableEndpoints.getConciliacionWallet(providerId).then(res => res.data));
+  }, [makeRequest]);
+
   // --- API de Ventas ---
   const getFacturas = useCallback(async () => {
     return makeRequest(() => comercialEndpoints.getFacturasVenta().then(res =>
@@ -211,6 +239,13 @@ export function useMiNegocioApi() {
     updatePerfil,
     getChartOfAccounts,
     getJournalEntries,
+    getLibroDiario,
+    getLibroMayor,
+    getBalanceComprobacion,
+    getEstadoResultados,
+    getBalanceGeneral,
+    getFlujoCaja,
+    getConciliacionWallet,
     getFacturas,
     createFacturaVenta,
     getClientes,

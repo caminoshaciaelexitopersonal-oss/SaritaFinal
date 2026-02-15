@@ -147,6 +147,20 @@ class AsientoContableViewSet(BaseTenantViewSet):
         reporte = ContabilidadService.generar_flujo_caja(provider, fecha_inicio, fecha_fin)
         return Response(reporte)
 
+    @action(detail=False, methods=['get'])
+    def libro_mayor(self, request):
+        cuenta_codigo = request.query_params.get('cuenta_codigo')
+        fecha_inicio = request.query_params.get('fecha_inicio')
+        fecha_fin = request.query_params.get('fecha_fin')
+
+        if not cuenta_codigo or not fecha_inicio or not fecha_fin:
+            return Response({"error": "Faltan parámetros: cuenta_codigo, fecha_inicio, fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        movimientos = ContabilidadService.obtener_libro_mayor(provider, cuenta_codigo, fecha_inicio, fecha_fin)
+        serializer = TransaccionSerializer(movimientos, many=True)
+        return Response(serializer.data)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
