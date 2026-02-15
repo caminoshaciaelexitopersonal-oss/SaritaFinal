@@ -3,7 +3,8 @@ from .models import (
     CuentaBancaria, OrdenPago, TesoreriaCentral, EstadoResultados,
     BalanceGeneral, FlujoEfectivo, CambiosPatrimonio, ReservaFinanciera,
     ProyeccionFinanciera, RiesgoFinanciero, Presupuesto, LineaPresupuesto,
-    CreditoFinanciero, CuotaCredito, IndicadorFinancieroHistorico
+    CreditoFinanciero, CuotaCredito, IndicadorFinancieroHistorico,
+    AlertaFinanciera, LogFinancieroInmutable
 )
 
 class TesoreriaCentralSerializer(serializers.ModelSerializer):

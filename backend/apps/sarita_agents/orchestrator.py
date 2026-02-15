@@ -15,7 +15,7 @@ from .agents.general.sarita.coroneles.contable.coronel import CoronelContable
 from .agents.general.sarita.coroneles.financiero.coronel import CoronelFinanciero
 from .marketing.coronel_marketing import CoronelMarketing
 from .finanzas.coronel_finanzas import CoronelFinanzas
-from .agents.general.sarita.coroneles.prestadores.capitanes.gestion_operativa.sg_sst.coronel_sst import CoronelSST
+from .agents.general.sarita.coroneles.sg_sst.coronel import CoronelSST
 from .agents.general.sarita.coroneles.prestadores.capitanes.gestion_contable.nomina.coronel_nomina import CoronelNomina
 from apps.peace_net.coronel import PeaceNetCoronel
 from apps.wallet.agents.coronel import CoronelMonedero

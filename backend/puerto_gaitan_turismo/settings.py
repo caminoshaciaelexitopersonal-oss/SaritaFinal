@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     "apps.companies.apps.CompaniesConfig",
     "apps.audit.apps.AuditConfig",
     "apps.prestadores.mi_negocio.gestion_archivistica.apps.GestionArchivisticaConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.sg_sst.apps.SgsstConfig",
 
     # App para el panel de administración de la plataforma
     "apps.admin_plataforma.apps.AdminPlataformaConfig",

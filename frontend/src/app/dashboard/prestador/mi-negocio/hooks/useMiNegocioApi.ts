@@ -168,6 +168,10 @@ export function useMiNegocioApi() {
   }, [makeRequest]);
 
   // --- API SG-SST ---
+  const getSSTDashboard = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTDashboard().then(res => res.data));
+  }, [makeRequest]);
+
   const getSSTRisks = useCallback(async () => {
     return makeRequest(() => operativoEndpoints.getSSTRisks().then(res => res.data));
   }, [makeRequest]);
@@ -178,6 +182,26 @@ export function useMiNegocioApi() {
 
   const reportSSTIncident = useCallback(async (data: any) => {
     return makeRequest(() => operativoEndpoints.reportSSTIncident(data).then(res => res.data), "Incidente reportado exitosamente.");
+  }, [makeRequest]);
+
+  const getSSTPlanAnual = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTPlanAnual().then(res => res.data));
+  }, [makeRequest]);
+
+  const getSSTCapacitaciones = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTCapacitaciones().then(res => res.data));
+  }, [makeRequest]);
+
+  const getSSTInspecciones = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTInspecciones().then(res => res.data));
+  }, [makeRequest]);
+
+  const getSSTIndicadores = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTIndicadores().then(res => res.data));
+  }, [makeRequest]);
+
+  const getSSTAlertas = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTAlertas().then(res => res.data));
   }, [makeRequest]);
 
   // --- API Archivística ---
@@ -282,9 +306,15 @@ export function useMiNegocioApi() {
     getIndicadores,
     getAlertas,
     resolverAlerta,
+    getSSTDashboard,
     getSSTRisks,
     getSSTIncidents,
     reportSSTIncident,
+    getSSTPlanAnual,
+    getSSTCapacitaciones,
+    getSSTInspecciones,
+    getSSTIndicadores,
+    getSSTAlertas,
     getArchivisticaDocumentos,
     getEmpleados,
     createEmpleado,

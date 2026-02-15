@@ -38,6 +38,10 @@ from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.ten
 from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.teniente_proyecciones import TenienteProyecciones
 from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.teniente_obligaciones import TenienteObligaciones
 from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.teniente_indicadores import TenienteIndicadores
+from apps.sarita_agents.agents.general.sarita.coroneles.sg_sst.tenientes.tenientes_especializados import (
+    TenienteRiesgos, TenienteIncidentes, TenienteCapacitacion,
+    TenienteInspecciones, TenienteIndicadores as TenienteIndicadoresSST
+)
 
 # --- TENIENTES FINANCIEROS (Phase 4-F) ---
 class TenienteCACCalculator(TenienteTemplate):
@@ -427,4 +431,10 @@ TENIENTE_MAP = {
     'proyecciones': TenienteProyecciones,
     'obligaciones': TenienteObligaciones,
     'indicadores': TenienteIndicadores,
+    # Fase 7 - SGSST
+    'sst_riesgos': TenienteRiesgos,
+    'sst_incidentes': TenienteIncidentes,
+    'sst_capacitacion': TenienteCapacitacion,
+    'sst_inspecciones': TenienteInspecciones,
+    'sst_indicadores': TenienteIndicadoresSST,
 }

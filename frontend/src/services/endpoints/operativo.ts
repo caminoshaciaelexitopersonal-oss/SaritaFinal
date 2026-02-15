@@ -6,10 +6,18 @@ export const operativoEndpoints = {
   getClientes: () => httpClient.get('/v1/mi-negocio/operativa/clientes/'),
   getProductosServicios: () => httpClient.get('/v1/mi-negocio/operativa/productos-servicios/'),
   getReservas: () => httpClient.get('/v1/mi-negocio/operativa/reservas/'),
-  getSST: () => httpClient.get('/v1/mi-negocio/operativa/sst/'),
-  getSSTRisks: () => httpClient.get('/v1/mi-negocio/operativa/sst/matriz-riesgos/'),
-  getSSTIncidents: () => httpClient.get('/v1/mi-negocio/operativa/sst/incidentes-laborales/'),
-  reportSSTIncident: (data: any) => httpClient.post('/v1/mi-negocio/operativa/sst/incidentes-laborales/', data),
+
+  // SG-SST (Actualizado Fase 7)
+  getSSTDashboard: () => httpClient.get('/v1/mi-negocio/operativa/sst/dashboard/'),
+  getSSTRisks: () => httpClient.get('/v1/mi-negocio/operativa/sst/riesgos/'),
+  getSSTIncidents: () => httpClient.get('/v1/mi-negocio/operativa/sst/incidentes/'),
+  reportSSTIncident: (data: any) => httpClient.post('/v1/mi-negocio/operativa/sst/incidentes/', data),
+  getSSTPlanAnual: () => httpClient.get('/v1/mi-negocio/operativa/sst/plan-anual/'),
+  getSSTCapacitaciones: () => httpClient.get('/v1/mi-negocio/operativa/sst/capacitaciones/'),
+  getSSTInspecciones: () => httpClient.get('/v1/mi-negocio/operativa/sst/inspecciones/'),
+  getSSTIndicadores: () => httpClient.get('/v1/mi-negocio/operativa/sst/indicadores/'),
+  getSSTAlertas: () => httpClient.get('/v1/mi-negocio/operativa/sst/alertas/'),
+
   getNomina: () => httpClient.get('/v1/mi-negocio/operativa/nomina/'),
 
   // Módulos Especializados
