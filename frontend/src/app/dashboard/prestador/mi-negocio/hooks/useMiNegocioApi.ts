@@ -147,6 +147,18 @@ export function useMiNegocioApi() {
     return makeRequest(() => financieroEndpoints.getTesoreria().then(res => res.data));
   }, [makeRequest]);
 
+  const getPresupuestos = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getPresupuestos().then(res => res.data));
+  }, [makeRequest]);
+
+  const getCreditos = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getCreditos().then(res => res.data));
+  }, [makeRequest]);
+
+  const getIndicadores = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getIndicadores().then(res => res.data));
+  }, [makeRequest]);
+
   // --- API SG-SST ---
   const getSSTRisks = useCallback(async () => {
     return makeRequest(() => operativoEndpoints.getSSTRisks().then(res => res.data));
@@ -257,6 +269,9 @@ export function useMiNegocioApi() {
     getProyecciones,
     getRiesgos,
     getTesoreria,
+    getPresupuestos,
+    getCreditos,
+    getIndicadores,
     getSSTRisks,
     getSSTIncidents,
     reportSSTIncident,

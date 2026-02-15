@@ -49,3 +49,43 @@ class OrdenPago(models.Model):
     referencia_pago = models.CharField(max_length=100, blank=True)
 
     documento_archivistico_ref_id = models.UUIDField(null=True, blank=True)
+
+# --- NUEVOS MODELOS FASE 6 ---
+
+class Presupuesto(TenantAwareModel):
+    nombre = models.CharField(max_length=255)
+    año = models.PositiveIntegerField()
+    total_estimado = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    total_ejecutado = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    activo = models.BooleanField(default=True)
+
+class LineaPresupuesto(models.Model):
+    presupuesto = models.ForeignKey(Presupuesto, on_delete=models.CASCADE, related_name='lineas')
+    cuenta_contable_ref_id = models.UUIDField(help_text="Referencia a la cuenta de gastos/ingresos")
+    nombre_item = models.CharField(max_length=255)
+    monto_presupuestado = models.DecimalField(max_digits=18, decimal_places=2)
+    monto_ejecutado = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+
+class CreditoFinanciero(TenantAwareModel):
+    entidad_financiera = models.CharField(max_length=255)
+    monto_principal = models.DecimalField(max_digits=18, decimal_places=2)
+    tasa_interes_anual = models.DecimalField(max_digits=5, decimal_places=2)
+    plazo_meses = models.PositiveIntegerField()
+    fecha_desembolso = models.DateField()
+    saldo_pendiente = models.DecimalField(max_digits=18, decimal_places=2)
+    estado = models.CharField(max_length=50, default='ACTIVO') # ACTIVO, PAGADO, MORA
+
+class CuotaCredito(models.Model):
+    credito = models.ForeignKey(CreditoFinanciero, on_delete=models.CASCADE, related_name='cuotas')
+    numero_cuota = models.PositiveIntegerField()
+    fecha_vencimiento = models.DateField()
+    monto_capital = models.DecimalField(max_digits=18, decimal_places=2)
+    monto_interes = models.DecimalField(max_digits=18, decimal_places=2)
+    esta_pagada = models.BooleanField(default=False)
+    fecha_pago = models.DateField(null=True, blank=True)
+
+class IndicadorFinancieroHistorico(TenantAwareModel):
+    nombre = models.CharField(max_length=100) # Liquidez, EBITDA, etc.
+    valor = models.DecimalField(max_digits=18, decimal_places=2)
+    fecha_calculo = models.DateTimeField(auto_now_add=True)
+    metadata_calculo = models.JSONField(default=dict)

@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import CuentaBancaria, OrdenPago, TesoreriaCentral, EstadoResultados, BalanceGeneral, FlujoEfectivo, CambiosPatrimonio, ReservaFinanciera, ProyeccionFinanciera, RiesgoFinanciero
+from .models import (
+    CuentaBancaria, OrdenPago, TesoreriaCentral, EstadoResultados,
+    BalanceGeneral, FlujoEfectivo, CambiosPatrimonio, ReservaFinanciera,
+    ProyeccionFinanciera, RiesgoFinanciero, Presupuesto, LineaPresupuesto,
+    CreditoFinanciero, CuotaCredito, IndicadorFinancieroHistorico
+)
 
 class TesoreriaCentralSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,4 +54,31 @@ class CuentaBancariaSerializer(serializers.ModelSerializer):
 class OrdenPagoSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrdenPago
+        fields = '__all__'
+
+class LineaPresupuestoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LineaPresupuesto
+        fields = '__all__'
+
+class PresupuestoSerializer(serializers.ModelSerializer):
+    lineas = LineaPresupuestoSerializer(many=True, read_only=True)
+    class Meta:
+        model = Presupuesto
+        fields = '__all__'
+
+class CuotaCreditoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CuotaCredito
+        fields = '__all__'
+
+class CreditoFinancieroSerializer(serializers.ModelSerializer):
+    cuotas = CuotaCreditoSerializer(many=True, read_only=True)
+    class Meta:
+        model = CreditoFinanciero
+        fields = '__all__'
+
+class IndicadorFinancieroHistoricoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IndicadorFinancieroHistorico
         fields = '__all__'
