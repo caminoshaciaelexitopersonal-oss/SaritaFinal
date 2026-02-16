@@ -86,3 +86,27 @@ class TenienteOperativoGuias(TenienteTemplate):
             return SargentoGuias.liquidar_comision(parametros, user)
 
         return {"status": "ERROR", "message": "Acción no reconocida"}
+
+class TenienteOperativoAgencia(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        action = parametros.get("action")
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.sargentos import SargentoAgencia
+        from api.models import CustomUser
+
+        user_id = parametros.get("user_id")
+        user = CustomUser.objects.get(id=user_id) if user_id else None
+
+        try:
+            if action == "CREATE_PACKAGE":
+                return SargentoAgencia.crear_paquete_turistico(parametros, user)
+            if action == "BOOK_PACKAGE":
+                return SargentoAgencia.reservar_paquete_consolidado(parametros, user)
+            if action == "CANCEL_PACKAGE_COMPONENT":
+                return SargentoAgencia.cancelar_componente_paquete(parametros, user)
+            if action == "LIQUIDATE_AGENCY_PACKAGE":
+                return SargentoAgencia.liquidar_agencia(parametros, user)
+        except Exception as e:
+            logger.error(f"Error en TenienteOperativoAgencia: {e}", exc_info=True)
+            return {"status": "FAILED", "error": str(e)}
+
+        return {"status": "ERROR", "message": "Acción no reconocida por Teniente Agencia"}
