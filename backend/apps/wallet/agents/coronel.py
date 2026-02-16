@@ -5,7 +5,8 @@ from .capitanes import (
     CapitanTransferencias,
     CapitanPagosServicios,
     CapitanLiquidaciones,
-    CapitanAuditoriaFinanciera
+    CapitanAuditoriaFinanciera,
+    CapitanAntifraude
 )
 
 logger = logging.getLogger(__name__)
@@ -20,7 +21,8 @@ class CoronelMonedero(CoronelTemplate):
             "transferencias": CapitanTransferencias(self),
             "pagos": CapitanPagosServicios(self),
             "liquidaciones": CapitanLiquidaciones(self),
-            "auditoria": CapitanAuditoriaFinanciera(self)
+            "auditoria": CapitanAuditoriaFinanciera(self),
+            "antifraude": CapitanAntifraude(self)
         }
 
     def _select_capitan(self, mission: dict):
@@ -35,5 +37,7 @@ class CoronelMonedero(CoronelTemplate):
             return self.capitanes["liquidaciones"]
         if "auditar" in action or "verificar" in action:
             return self.capitanes["auditoria"]
+        if "fraude" in action or "riesgo" in action:
+            return self.capitanes["antifraude"]
 
         return self.capitanes["auditoria"] # Default to audit for unknown actions

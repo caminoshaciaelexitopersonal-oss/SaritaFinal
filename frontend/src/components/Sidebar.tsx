@@ -6,7 +6,7 @@ import {
   FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive,
   FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
   FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare, FiMonitor, FiDownload,
-  FiActivity, FiZap, FiCpu, FiTrendingUp, FiClock, FiGlobe, FiTarget
+  FiActivity, FiZap, FiCpu, FiTrendingUp, FiClock, FiGlobe, FiTarget, FiCreditCard
 } from 'react-icons/fi';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -108,6 +108,15 @@ const miNegocioNav: NavSection[] = [
     ],
   },
   { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Archivo Digital', icon: FiArchive }] },
+  {
+    title: 'Monedero Soberano',
+    isSubSection: true,
+    links: [
+      { href: '/dashboard/prestador/mi-negocio/monedero', label: 'Mi Monedero', icon: FiCreditCard },
+      { href: '/dashboard/prestador/mi-negocio/monedero/transferencias', label: 'Transferencias', icon: FiZap },
+      { href: '/dashboard/prestador/mi-negocio/monedero/comisiones', label: 'Comisiones', icon: FiAward },
+    ]
+  },
   { title: 'Análisis Financiero', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-financiera', label: 'Tesorería', icon: FiTrendingDown }] },
   { title: 'Gestión Contable', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-contable', label: 'Libros Contables', icon: FiBookOpen }] },
 ];
