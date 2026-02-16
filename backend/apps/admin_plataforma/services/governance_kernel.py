@@ -407,7 +407,7 @@ class GovernanceKernel:
         # Registro de Servicios de Dominio - Operación Nocturna (Fase 11)
         if intention.domain == "operativo_nocturno":
             from apps.sarita_agents.orchestrator import sarita_orchestrator
-            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.bares_discotecas.services import NightclubService
+            from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.bares_discotecas.services import NightclubService
 
             directive = {
                 "domain": "operativo_nocturno",
@@ -438,7 +438,7 @@ class GovernanceKernel:
         # Registro de Servicios de Dominio - Guías Turísticos (Fase 12)
         if intention.domain == "operativo_guias":
             from apps.sarita_agents.orchestrator import sarita_orchestrator
-            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.sargentos import SargentoGuias
+            from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.guias.sargentos import SargentoGuias
 
             directive = {
                 "domain": "operativo_guias",
@@ -461,7 +461,7 @@ class GovernanceKernel:
         # Registro de Servicios de Dominio - Transporte Turístico (Fase 13)
         if intention.domain == "operativo_transporte":
             from apps.sarita_agents.orchestrator import sarita_orchestrator
-            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.sargentos import SargentoTransporte
+            from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.transporte.sargentos import SargentoTransporte
 
             directive = {
                 "domain": "operativo_transporte",
@@ -495,7 +495,7 @@ class GovernanceKernel:
         # Registro de Servicios de Dominio - Agencia de Viajes (Fase 14)
         if intention.domain == "operativo_agencia":
             from apps.sarita_agents.orchestrator import sarita_orchestrator
-            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.sargentos import SargentoAgencia
+            from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.agencias.sargentos import SargentoAgencia
 
             directive = {
                 "domain": "operativo_agencia",
@@ -531,7 +531,7 @@ class GovernanceKernel:
         # Registro de Servicios de Dominio - Artesanos (Fase 15)
         if intention.domain == "operativo_artesano":
             from apps.sarita_agents.orchestrator import sarita_orchestrator
-            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.artesanos.sargentos import SargentoArtesano
+            from apps.prestadores.mi_negocio.operativa_turistica.cadena_productiva.artesanos.sargentos import SargentoArtesano
 
             directive = {
                 "domain": "operativo_artesano",

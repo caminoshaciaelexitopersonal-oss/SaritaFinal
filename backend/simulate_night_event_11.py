@@ -13,7 +13,7 @@ django.setup()
 
 from api.models import CustomUser
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.bares_discotecas.models import (
+from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.bares_discotecas.models import (
     NightEvent, NightZone, NightTable, NightConsumption, LiquorInventory
 )
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product

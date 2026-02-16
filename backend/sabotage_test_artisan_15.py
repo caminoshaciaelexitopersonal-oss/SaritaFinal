@@ -11,7 +11,7 @@ django.setup()
 from api.models import CustomUser
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.artesanos.models import RawMaterial, ArtisanProduct, WorkshopOrder
+from apps.prestadores.mi_negocio.operativa_turistica.cadena_productiva.artesanos.models import RawMaterial, ArtisanProduct, WorkshopOrder
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
 
 def run_sabotage_test():

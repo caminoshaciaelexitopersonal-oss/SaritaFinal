@@ -6,7 +6,7 @@ from .serializers import (
     PromocionSerializer,
 )
 from apps.prestadores.mi_negocio.permissions import IsPrestadorOwner
-from ...modulos_genericos.productos_servicios.models import Product
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 
 class OrganizadorEventoViewSet(viewsets.ModelViewSet):
     """

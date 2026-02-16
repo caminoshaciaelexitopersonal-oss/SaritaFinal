@@ -13,6 +13,7 @@ from .models import TareaDelegada
 
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.persistencia_prestador_teniente import TenientePersistenciaPrestador
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.validacion_prestador_teniente import TenienteValidacionPrestador
+# Tenientes de Agencia y Artesano ahora consolidados en tenientes_especializados
 from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.tenienteauditoria_global import TenienteAuditoriaGlobal
 from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.operativos.tenientes_persistencia import (
     AdminTenientePersistenciaComercial,
@@ -25,7 +26,7 @@ from apps.sarita_agents.marketing.tenientes_marketing import (
     TenienteCalificacion, TenienteDolor, TenienteOferta, TenienteObjeciones, TenienteCierre
 )
 from apps.sarita_agents.agents.teniente_template import TenienteTemplate
-from apps.sarita_agents.agents.general.sarita.coroneles.operativo_especializado.tenientes_especializados import (
+from apps.sarita_agents.agents.general.sarita.coroneles.operativa_turistica.tenientes_especializados import (
     TenienteOperativoHospedaje,
     TenienteOperativoGastronomia,
     TenienteOperativoTransporte,

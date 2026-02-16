@@ -23,14 +23,12 @@ router.register(r'valoraciones', ValoracionViewSet, basename='valoracion')
 
 urlpatterns = [
     path('', include(router.urls)),
-    # Módulos especializados (Phase 4 - Consolidated)
-    path('hotel/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.hoteles.urls')),
-    path('restaurante/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.restaurantes.urls')),
-    path('transporte/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.urls')),
-
-    # Placeholders for future consolidation
-    path('guias/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.urls')),
-    path('agencias/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.urls')),
-    path('eventos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.eventos.urls')),
-    path('bares-discotecas/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.bares_discotecas.urls')),
+    # Módulos de Operativa Turística (Reestructurados Fase 16)
+    path('hotel/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.hoteles.urls')),
+    path('restaurante/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.restaurantes.urls')),
+    path('transporte/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.transporte.urls')),
+    path('guias/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.guias.urls')),
+    path('agencias/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.agencias.urls')),
+    path('eventos/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.eventos.urls')),
+    path('bares-discotecas/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.bares_discotecas.urls')),
 ]

@@ -61,9 +61,9 @@ def run_stabilization():
 
     # Fix app_labels in models
     model_files = [
-        'apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/hoteles/models.py',
-        'apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/restaurantes/models.py',
-        'apps/prestadores/mi_negocio/gestion_operativa/modulos_especializados/transporte/models.py'
+        'apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.hoteles/models.py',
+        'apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.restaurantes/models.py',
+        'apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.transporte/models.py'
     ]
     for mf in model_files:
         if os.path.exists(mf):

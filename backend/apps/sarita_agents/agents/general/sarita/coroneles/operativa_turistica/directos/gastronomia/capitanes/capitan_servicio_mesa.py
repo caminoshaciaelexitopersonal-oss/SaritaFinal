@@ -1,7 +1,7 @@
 from apps.sarita_agents.agents.capitan_template import CapitanTemplate
 from apps.sarita_agents.models import PlanTáctico
 
-from apps.sarita_agents.agents.general.sarita.coroneles.operativo_especializado.tenientes_especializados import TenienteOperativoGastronomia
+from apps.sarita_agents.agents.general.sarita.coroneles.operativa_turistica.tenientes_especializados import TenienteOperativoGastronomia
 
 class CapitanServicioMesa(CapitanTemplate):
     def _get_tenientes(self) -> dict:

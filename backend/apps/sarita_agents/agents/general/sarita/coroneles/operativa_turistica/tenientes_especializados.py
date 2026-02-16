@@ -36,7 +36,7 @@ class TenienteOperativoGastronomia(TenienteTemplate):
 class TenienteOperativoTransporte(TenienteTemplate):
     def perform_action(self, parametros: dict):
         action = parametros.get("action")
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.sargentos import SargentoTransporte
+        from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.transporte.sargentos import SargentoTransporte
         from api.models import CustomUser
 
         user_id = parametros.get("user_id")
@@ -58,7 +58,7 @@ class TenienteOperativoTransporte(TenienteTemplate):
 class TenienteOperativoNocturno(TenienteTemplate):
     def perform_action(self, parametros: dict):
         action = parametros.get("action")
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.bares_discotecas.sargentos import SargentoNocturno
+        from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.bares_discotecas.sargentos import SargentoNocturno
         from api.models import CustomUser
 
         user = CustomUser.objects.get(id=parametros.get("user_id"))
@@ -75,7 +75,7 @@ class TenienteOperativoNocturno(TenienteTemplate):
 class TenienteOperativoGuias(TenienteTemplate):
     def perform_action(self, parametros: dict):
         action = parametros.get("action")
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.sargentos import SargentoGuias
+        from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.guias.sargentos import SargentoGuias
         from api.models import CustomUser
 
         user = CustomUser.objects.get(id=parametros.get("user_id"))
@@ -90,7 +90,7 @@ class TenienteOperativoGuias(TenienteTemplate):
 class TenienteOperativoAgencia(TenienteTemplate):
     def perform_action(self, parametros: dict):
         action = parametros.get("action")
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.sargentos import SargentoAgencia
+        from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.agencias.sargentos import SargentoAgencia
         from api.models import CustomUser
 
         user_id = parametros.get("user_id")
@@ -114,7 +114,7 @@ class TenienteOperativoAgencia(TenienteTemplate):
 class TenienteOperativoArtesano(TenienteTemplate):
     def perform_action(self, parametros: dict):
         action = parametros.get("action")
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.artesanos.sargentos import SargentoArtesano
+        from apps.prestadores.mi_negocio.operativa_turistica.cadena_productiva.artesanos.sargentos import SargentoArtesano
         from api.models import CustomUser
 
         user_id = parametros.get("user_id")

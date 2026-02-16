@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from ...modulos_genericos.productos_servicios.models import Product
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
 
 class OrganizadorEvento(models.Model):
     perfil = models.OneToOneField(ProviderProfile, on_delete=models.CASCADE, related_name='organizador_eventos')

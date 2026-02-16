@@ -24,6 +24,40 @@
 #         except ProviderProfile.DoesNotExist:
 #             pass
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import Artesano
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+
+@receiver(post_save, sender=Artesano)
+def auto_activate_artisan_productive_profile(sender, instance, **kwargs):
+    """
+    Directriz 16: Aprobación gubernamental -> Activación automática del perfil productivo turístico.
+    """
+    if instance.aprobado:
+        # 1. Asegurar que el rol del usuario sea ARTESANO
+        if instance.usuario.role != 'ARTESANO':
+            instance.usuario.role = 'ARTESANO'
+            instance.usuario.save(update_fields=['role'])
+
+        # 2. Crear o Activar ProviderProfile (Vía 2)
+        profile, created = ProviderProfile.objects.get_or_create(
+            usuario=instance.usuario,
+            defaults={
+                'nombre_comercial': instance.nombre_taller,
+                'provider_type': ProviderProfile.ProviderTypes.ARTISAN,
+                'email_comercial': instance.email_contacto or instance.usuario.email,
+                'is_verified': True,
+                'is_active': True
+            }
+        )
+
+        if not created:
+            if not profile.is_verified or not profile.is_active:
+                profile.is_verified = True
+                profile.is_active = True
+                profile.save(update_fields=['is_verified', 'is_active'])
+
 
 # @receiver(post_save, sender=Resena)
 # def update_score_on_resena(sender, instance, **kwargs):
