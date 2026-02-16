@@ -35,7 +35,100 @@ class TenienteOperativoGastronomia(TenienteTemplate):
 
 class TenienteOperativoTransporte(TenienteTemplate):
     def perform_action(self, parametros: dict):
+        action = parametros.get("action")
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.sargentos import SargentoTransporte
+        from api.models import CustomUser
+
+        user_id = parametros.get("user_id")
+        user = CustomUser.objects.get(id=user_id) if user_id else None
+
+        if action == "SCHEDULE_TRANSPORT_TRIP":
+            return SargentoTransporte.programar_y_asignar(parametros, user)
+        if action == "BOOK_TRANSPORT_SEAT":
+            return SargentoTransporte.registrar_reserva_masiva(parametros, user)
+        if action == "LIQUIDATE_TRANSPORT_TRIP":
+            return SargentoTransporte.liquidar_servicio_transporte(parametros, user)
+
+        # Fallback para despacho antiguo si es necesario
         vehiculo_id = parametros.get("vehiculo_id")
         ruta_id = parametros.get("ruta_id")
         logger.info(f"TENIENTE TRANSPORTE: Despachando {vehiculo_id} en ruta {ruta_id}")
         return {"status": "SUCCESS", "entity": "Vehicle", "id": vehiculo_id}
+
+class TenienteOperativoNocturno(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        action = parametros.get("action")
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.bares_discotecas.sargentos import SargentoNocturno
+        from api.models import CustomUser
+
+        user = CustomUser.objects.get(id=parametros.get("user_id"))
+
+        if action == "PROCESS_COMMAND":
+            return SargentoNocturno.procesar_comanda(parametros, user)
+        if action == "BILL_CONSUMPTION":
+            return SargentoNocturno.facturar_mesa(parametros, user)
+        if action == "NIGHT_CASH_CLOSE":
+            return SargentoNocturno.cerrar_caja(parametros, user)
+
+        return {"status": "ERROR", "message": "Acción no reconocida"}
+
+class TenienteOperativoGuias(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        action = parametros.get("action")
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.sargentos import SargentoGuias
+        from api.models import CustomUser
+
+        user = CustomUser.objects.get(id=parametros.get("user_id"))
+
+        if action == "ASSIGN_GUIDE":
+            return SargentoGuias.asignar_y_confirmar(parametros, user)
+        if action == "LIQUIDATE_GUIDE_COMMISSION":
+            return SargentoGuias.liquidar_comision(parametros, user)
+
+        return {"status": "ERROR", "message": "Acción no reconocida"}
+
+class TenienteOperativoAgencia(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        action = parametros.get("action")
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.sargentos import SargentoAgencia
+        from api.models import CustomUser
+
+        user_id = parametros.get("user_id")
+        user = CustomUser.objects.get(id=user_id) if user_id else None
+
+        try:
+            if action == "CREATE_PACKAGE":
+                return SargentoAgencia.crear_paquete_turistico(parametros, user)
+            if action == "BOOK_PACKAGE":
+                return SargentoAgencia.reservar_paquete_consolidado(parametros, user)
+            if action == "CANCEL_PACKAGE_COMPONENT":
+                return SargentoAgencia.cancelar_componente_paquete(parametros, user)
+            if action == "LIQUIDATE_AGENCY_PACKAGE":
+                return SargentoAgencia.liquidar_agencia(parametros, user)
+        except Exception as e:
+            logger.error(f"Error en TenienteOperativoAgencia: {e}", exc_info=True)
+            return {"status": "FAILED", "error": str(e)}
+
+        return {"status": "ERROR", "message": "Acción no reconocida por Teniente Agencia"}
+
+class TenienteOperativoArtesano(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        action = parametros.get("action")
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.artesanos.sargentos import SargentoArtesano
+        from api.models import CustomUser
+
+        user_id = parametros.get("user_id")
+        user = CustomUser.objects.get(id=user_id) if user_id else None
+
+        try:
+            if action == "REGISTER_RAW_MATERIAL":
+                return SargentoArtesano.registrar_suministros(parametros, user)
+            if action == "CREATE_WORKSHOP_ORDER":
+                return SargentoArtesano.iniciar_pedido_artesanal(parametros, user)
+            if action == "UPDATE_PRODUCTION_STAGE":
+                return SargentoArtesano.avanzar_produccion(parametros, user)
+        except Exception as e:
+            logger.error(f"Error en TenienteOperativoArtesano: {e}", exc_info=True)
+            return {"status": "FAILED", "error": str(e)}
+
+        return {"status": "ERROR", "message": "Acción no reconocida por Teniente Artesano"}

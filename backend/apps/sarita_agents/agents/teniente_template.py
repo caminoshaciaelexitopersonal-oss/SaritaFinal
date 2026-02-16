@@ -59,6 +59,10 @@ class TenienteTemplate:
             tarea.save()
             log.save()
 
+    def handle_directive(self, tarea: TareaDelegada):
+        """Alias para execute_task."""
+        return self.execute_task(tarea)
+
     def perform_action(self, parametros: dict):
         """
         Este es el método que las subclases deben implementar.

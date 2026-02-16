@@ -32,4 +32,5 @@ urlpatterns = [
     path('guias/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.urls')),
     path('agencias/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.urls')),
     path('eventos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.eventos.urls')),
+    path('bares-discotecas/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.bares_discotecas.urls')),
 ]
