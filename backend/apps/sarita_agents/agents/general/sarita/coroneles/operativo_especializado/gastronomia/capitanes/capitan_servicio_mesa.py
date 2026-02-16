@@ -1,9 +1,11 @@
 from apps.sarita_agents.agents.capitan_template import CapitanTemplate
 from apps.sarita_agents.models import PlanTáctico
 
+from apps.sarita_agents.agents.general.sarita.coroneles.operativo_especializado.tenientes_especializados import TenienteOperativoGastronomia
+
 class CapitanServicioMesa(CapitanTemplate):
     def _get_tenientes(self) -> dict:
-        return {"teniente_gastronomia": "teniente_gastronomia"}
+        return {"teniente_gastronomia": TenienteOperativoGastronomia()}
 
     def plan(self, mision):
         p = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
