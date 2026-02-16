@@ -1,34 +1,49 @@
-import logging
-from apps.delivery.models import DeliveryService, DeliveryEvent, Vehicle, DeliveryCompany
+from apps.sarita_agents.agents.sargento_template import SergeantTemplate
+from .soldados import (
+    SoldadoLogistico
+)
 
-logger = logging.getLogger(__name__)
+class SargentoDeliveryBase(SergeantTemplate):
+    def _get_soldiers(self):
+        # Cada Sargento tiene exactamente 5 Soldados
+        return [SoldadoLogistico(sargento=self, id=i) for i in range(5)]
 
-class SargentoRegistroServicio:
-    """Registra la solicitud inicial de un servicio."""
-    def execute(self, params: dict):
-        logger.info("SARGENTO: Registrando solicitud de delivery.")
-        return "service-uuid"
+class SargentoAsignaciones(SargentoDeliveryBase):
+    def plan_microtasks(self, params: dict):
+        return [{"micro_action": "ASSIGN_DRIVER", "order_id": params.get("service_id"), "step": i} for i in range(5)]
 
-class SargentoValidacionPermisos:
-    """Valida los permisos institucionales de una empresa."""
-    def execute(self, company_id):
-        logger.info(f"SARGENTO: Validando permisos para empresa {company_id}")
-        return "PERMIT-VALID"
+class SargentoValidacionInventario(SargentoDeliveryBase):
+    def plan_microtasks(self, params: dict):
+        return [{"micro_action": "CHECK_INV", "order_id": params.get("service_id"), "step": i} for i in range(5)]
 
-class SargentoAsignacionVehiculo:
-    """Asocia un vehículo a un conductor o servicio."""
-    def execute(self, vehicle_id):
-        logger.info(f"SARGENTO: Verificando vehículo {vehicle_id}")
-        return "VEHICLE-OK"
+class SargentoPrioridades(SargentoDeliveryBase):
+    def plan_microtasks(self, params: dict):
+        return [{"micro_action": "SET_PRIORITY", "order_id": params.get("service_id"), "step": i} for i in range(5)]
 
-class SargentoRegistroEventoOperativo:
-    """Registra un hito en la ejecución del servicio."""
-    def execute(self, params: dict):
-        logger.info("SARGENTO: Registrando hito logístico.")
-        return "event-uuid"
+class SargentoOptimizacion(SargentoDeliveryBase):
+    def plan_microtasks(self, params: dict):
+        return [{"micro_action": "ROUTE_OPT", "step": i} for i in range(5)]
 
-class SargentoActivacionPago:
-    """Activa la liquidación via monedero al completar el servicio."""
-    def execute(self, params: dict):
-        logger.info("SARGENTO: Activando intención de pago en monedero.")
-        return "wallet-pay-intent"
+class SargentoReasignacion(SargentoDeliveryBase):
+    def plan_microtasks(self, params: dict):
+        return [{"micro_action": "REASSIGN", "step": i} for i in range(5)]
+
+class SargentoControlTiempos(SargentoDeliveryBase):
+    def plan_microtasks(self, params: dict):
+        return [{"micro_action": "TIME_TRACK", "step": i} for i in range(5)]
+
+class SargentoFlota(SargentoDeliveryBase):
+    def plan_microtasks(self, params: dict):
+        return [{"micro_action": "FLEET_AUDIT", "step": i} for i in range(5)]
+
+class SargentoIncidentesConductores(SargentoDeliveryBase):
+    def plan_microtasks(self, params: dict):
+        return [{"micro_action": "INCIDENT_LOG", "step": i} for i in range(5)]
+
+class SargentoKPIs(SargentoDeliveryBase):
+    def plan_microtasks(self, params: dict):
+        return [{"micro_action": "CALC_KPI", "provider_id": params.get("provider_id"), "step": i} for i in range(5)]
+
+class SargentoSLAs(SargentoDeliveryBase):
+    def plan_microtasks(self, params: dict):
+        return [{"micro_action": "CHECK_SLA", "step": i} for i in range(5)]

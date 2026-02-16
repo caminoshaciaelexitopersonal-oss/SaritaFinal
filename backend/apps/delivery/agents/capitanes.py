@@ -5,40 +5,33 @@ from apps.sarita_agents.models import PlanTáctico, TareaDelegada
 logger = logging.getLogger(__name__)
 
 class CapitanDeliveryBase(CapitanTemplate):
-    """Base para capitanes de delivery que permite ejecución síncrona en este entorno."""
+    """ Base síncrona para Delivery (Fase 9) """
     def delegate(self, plan: PlanTáctico):
-        logger.info(f"CAPITÁN ({self.__class__.__name__}): Ejecutando plan {plan.id} de forma síncrona.")
+        logger.info(f"CAPITÁN ({self.__class__.__name__}): Ejecutando plan {plan.id} síncronamente.")
         plan.estado = 'EN_EJECUCION'
         plan.save()
 
         from .tenientes import (
-            TenienteValidacionEmpresa,
-            TenienteHabilitacionConductor,
-            TenienteControlVehiculos,
-            TenienteAsignacionRuta,
-            TenienteControlEjecucion,
-            TenienteEvidenciasServicio,
-            TenienteValidacionServicio
+            TenienteDespacho, TenienteRutas, TenienteRepartidores,
+            TenienteSeguimiento, TenienteIndicadores
         )
 
         roster = {
-            "validacion_empresa": TenienteValidacionEmpresa(),
-            "habilitacion_conductor": TenienteHabilitacionConductor(),
-            "control_vehiculos": TenienteControlVehiculos(),
-            "asignacion_ruta": TenienteAsignacionRuta(),
-            "control_ejecucion": TenienteControlEjecucion(),
-            "evidencias_servicio": TenienteEvidenciasServicio(),
-            "validacion_servicio": TenienteValidacionServicio()
+            "despacho": TenienteDespacho(),
+            "rutas": TenienteRutas(),
+            "repartidores": TenienteRepartidores(),
+            "seguimiento": TenienteSeguimiento(),
+            "indicadores": TenienteIndicadores()
         }
 
         for _, tarea_info in plan.pasos_del_plan.items():
-            teniente_name = tarea_info.get("teniente")
-            teniente = roster.get(teniente_name)
+            teniente_key = tarea_info.get("teniente")
+            teniente = roster.get(teniente_key)
             if teniente:
                 tarea = TareaDelegada.objects.create(
                     plan_tactico=plan,
-                    teniente_asignado=teniente_name,
-                    descripcion_tarea=tarea_info.get("descripcion", "N/A"),
+                    teniente_asignado=teniente_key,
+                    descripcion_tarea=tarea_info.get("descripcion", "Tarea de Delivery"),
                     parametros=tarea_info.get("parametros", {}),
                     estado='EN_PROGRESO'
                 )
@@ -47,130 +40,57 @@ class CapitanDeliveryBase(CapitanTemplate):
         plan.estado = 'COMPLETADO'
         plan.save()
 
-class CapitanAfiliacionDelivery(CapitanDeliveryBase):
+class CapitanDespacho(CapitanDeliveryBase):
     def _get_tenientes(self) -> dict:
-        return {"validacion_empresa": "TenienteValidacionEmpresa"}
-
+        return {"despacho": "TenienteDespacho"}
     def plan(self, mision) -> PlanTáctico:
         plan = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
         plan.pasos_del_plan = {
-            "paso_1": {
-                "teniente": "validacion_empresa",
-                "descripcion": "Validar estatus legal y tributario de la empresa",
-                "parametros": mision.directiva_original.get("parameters", {})
-            }
+            "1": {"teniente": "despacho", "descripcion": "Gestionar asignación y prioridades de pedidos.", "parametros": mision.directiva_original.get("parameters", {})}
         }
         plan.save()
         return plan
 
-class CapitanCalificacionesDelivery(CapitanDeliveryBase):
+class CapitanRutas(CapitanDeliveryBase):
     def _get_tenientes(self) -> dict:
-        return {"validacion_servicio": "TenienteValidacionServicio"}
-
+        return {"rutas": "TenienteRutas"}
     def plan(self, mision) -> PlanTáctico:
         plan = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
         plan.pasos_del_plan = {
-            "paso_1": {
-                "teniente": "validacion_servicio",
-                "descripcion": "Validar estatus para calificación",
-                "parametros": mision.directiva_original.get("parameters", {})
-            }
+            "1": {"teniente": "rutas", "descripcion": "Optimizar rutas logísticas por zona.", "parametros": mision.directiva_original.get("parameters", {})}
         }
         plan.save()
         return plan
 
-class CapitanGestionConductores(CapitanDeliveryBase):
+class CapitanRepartidores(CapitanDeliveryBase):
     def _get_tenientes(self) -> dict:
-        return {"habilitacion_conductor": "TenienteHabilitacionConductor"}
-
+        return {"repartidores": "TenienteRepartidores"}
     def plan(self, mision) -> PlanTáctico:
         plan = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
         plan.pasos_del_plan = {
-            "paso_1": {
-                "teniente": "habilitacion_conductor",
-                "descripcion": "Verificar licencia y antecedentes del conductor",
-                "parametros": mision.directiva_original.get("parameters", {})
-            }
+            "1": {"teniente": "repartidores", "descripcion": "Control de disponibilidad y flota.", "parametros": mision.directiva_original.get("parameters", {})}
         }
         plan.save()
         return plan
 
-class CapitanGestionVehiculos(CapitanDeliveryBase):
+class CapitanSeguimiento(CapitanDeliveryBase):
     def _get_tenientes(self) -> dict:
-        return {"control_vehiculos": "TenienteControlVehiculos"}
-
+        return {"seguimiento": "TenienteSeguimiento"}
     def plan(self, mision) -> PlanTáctico:
         plan = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
         plan.pasos_del_plan = {
-            "paso_1": {
-                "teniente": "control_vehiculos",
-                "descripcion": "Auditar estado mecánico y documentos del vehículo",
-                "parametros": mision.directiva_original.get("parameters", {})
-            }
+            "1": {"teniente": "seguimiento", "descripcion": "Monitorear eventos en tiempo real.", "parametros": mision.directiva_original.get("parameters", {})}
         }
         plan.save()
         return plan
 
-class CapitanAsignacionServicios(CapitanDeliveryBase):
+class CapitanIndicadores(CapitanDeliveryBase):
     def _get_tenientes(self) -> dict:
-        return {"asignacion_ruta": "TenienteAsignacionRuta"}
-
+        return {"indicadores": "TenienteIndicadores"}
     def plan(self, mision) -> PlanTáctico:
         plan = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
         plan.pasos_del_plan = {
-            "paso_1": {
-                "teniente": "asignacion_ruta",
-                "descripcion": "Calcular ruta óptima y asignar conductor disponible",
-                "parametros": mision.directiva_original.get("parameters", {})
-            }
-        }
-        plan.save()
-        return plan
-
-class CapitanEjecucionOperativaDelivery(CapitanDeliveryBase):
-    def _get_tenientes(self) -> dict:
-        return {"control_ejecucion": "TenienteControlEjecucion"}
-
-    def plan(self, mision) -> PlanTáctico:
-        plan = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
-        plan.pasos_del_plan = {
-            "paso_1": {
-                "teniente": "control_ejecucion",
-                "descripcion": "Monitorear eventos de recogida y entrega",
-                "parametros": mision.directiva_original.get("parameters", {})
-            }
-        }
-        plan.save()
-        return plan
-
-class CapitanPagosLiquidacionesDelivery(CapitanDeliveryBase):
-    def _get_tenientes(self) -> dict:
-        return {"control_ejecucion": "TenienteControlEjecucion"} # Reusando o simplificando
-
-    def plan(self, mision) -> PlanTáctico:
-        plan = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
-        plan.pasos_del_plan = {
-            "paso_1": {
-                "teniente": "control_ejecucion",
-                "descripcion": "Disparar intención de pago en monedero",
-                "parametros": mision.directiva_original.get("parameters", {})
-            }
-        }
-        plan.save()
-        return plan
-
-class CapitanAuditoriaDelivery(CapitanDeliveryBase):
-    def _get_tenientes(self) -> dict:
-        return {"evidencias_servicio": "TenienteEvidenciasServicio"}
-
-    def plan(self, mision) -> PlanTáctico:
-        plan = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
-        plan.pasos_del_plan = {
-            "paso_1": {
-                "teniente": "evidencias_servicio",
-                "descripcion": "Generar reporte forense del servicio logístico",
-                "parametros": mision.directiva_original.get("parameters", {})
-            }
+            "1": {"teniente": "indicadores", "descripcion": "Generar KPIs logísticos y SLAs.", "parametros": mision.directiva_original.get("parameters", {})}
         }
         plan.save()
         return plan

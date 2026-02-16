@@ -30,45 +30,69 @@ class Vehicle(models.Model):
         MOTOCARRO = "MOTOCARRO", _("Motocarro")
         AUTO = "AUTO", _("Automóvil")
         VAN = "VAN", _("Camioneta / Van")
+        BICICLETA = "BICICLETA", _("Bicicleta")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    plate = models.CharField(max_length=20, unique=True)
+    plate = models.CharField(max_length=20, unique=True, null=True, blank=True)
     vehicle_type = models.CharField(max_length=20, choices=VehicleType.choices)
     delivery_company = models.ForeignKey(DeliveryCompany, on_delete=models.CASCADE, related_name='vehicles')
     current_driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True, related_name='current_vehicles')
     is_active = models.BooleanField(default=True)
 
+    capacity_kg = models.DecimalField(max_digits=10, decimal_places=2, default=5.0)
+
     metadata = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.plate} ({self.vehicle_type})"
+        return f"{self.plate or 'N/A'} ({self.vehicle_type})"
+
+class Ruta(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    nombre = models.CharField(max_length=255)
+    zona = models.CharField(max_length=100)
+    repartidor = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True, related_name='rutas')
+    activa = models.BooleanField(default=True)
+
+    geodata = models.JSONField(default=dict, help_text="Coordenadas de la ruta optimizada")
+    tiempo_estimado_mins = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Ruta {self.nombre} - {self.zona}"
 
 class DeliveryService(models.Model):
     class Status(models.TextChoices):
-        REQUESTED = "REQUESTED", _("Solicitado")
-        ASSIGNED = "ASSIGNED", _("Asignado")
-        IN_PROGRESS = "IN_PROGRESS", _("En Curso")
-        COMPLETED = "COMPLETED", _("Completado")
-        CANCELLED = "CANCELLED", _("Cancelado")
+        PENDIENTE = "PENDIENTE", _("Pendiente")
+        EN_PREPARACION = "EN_PREPARACION", _("En Preparación")
+        LISTO_DESPACHO = "LISTO_DESPACHO", _("Listo para Despacho")
+        EN_RUTA = "EN_RUTA", _("En Ruta")
+        ENTREGADO = "ENTREGADO", _("Entregado")
+        FALLIDO = "FALLIDO", _("Fallido")
+        REPROGRAMADO = "REPROGRAMADO", _("Reprogramado")
+        CANCELADO = "CANCELADO", _("Cancelado")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tourist = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='delivery_requests')
 
-    # Desacoplamiento de dominio via UUID
-    provider_id = models.UUIDField(null=True, blank=True, help_text="ID del ProviderProfile asociado")
+    # Tenant alignment (FASE 9)
+    provider_id = models.UUIDField(null=True, blank=True, help_text="ID del ProviderProfile (Dueño del producto)")
 
     delivery_company = models.ForeignKey(DeliveryCompany, on_delete=models.SET_NULL, null=True, blank=True)
     driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True, blank=True)
+    ruta = models.ForeignKey(Ruta, on_delete=models.SET_NULL, null=True, blank=True, related_name='pedidos')
 
     origin_address = models.CharField(max_length=500)
     destination_address = models.CharField(max_length=500)
 
+    prioridad = models.CharField(max_length=20, default='NORMAL') # ALTA, MEDIA, NORMAL
+
     estimated_price = models.DecimalField(max_digits=18, decimal_places=2, default=0)
     final_price = models.DecimalField(max_digits=18, decimal_places=2, null=True, blank=True)
+    comision_repartidor = models.DecimalField(max_digits=18, decimal_places=2, default=0)
 
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.REQUESTED)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDIENTE)
 
     wallet_transaction = models.UUIDField(null=True, blank=True, help_text="ID de la transacción en apps.wallet")
     governance_intention_id = models.CharField(max_length=255, null=True, blank=True)
@@ -86,6 +110,16 @@ class DeliveryService(models.Model):
     def __str__(self):
         return f"Delivery {self.id} - {self.status}"
 
+class EvidenciaEntrega(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    delivery = models.OneToOneField(DeliveryService, on_delete=models.CASCADE, related_name='evidencia')
+    foto = models.ImageField(upload_to='delivery/evidencias/', null=True, blank=True)
+    firma_digital = models.TextField(blank=True)
+    observaciones = models.TextField(blank=True)
+    latitud = models.FloatField(null=True, blank=True)
+    longitud = models.FloatField(null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
 class DeliveryEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     service = models.ForeignKey(DeliveryService, on_delete=models.CASCADE, related_name='events')
@@ -97,3 +131,11 @@ class DeliveryEvent(models.Model):
 
     class Meta:
         ordering = ['timestamp']
+
+class IndicadorLogistico(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    provider_id = models.UUIDField() # Tenant
+    nombre = models.CharField(max_length=255)
+    valor = models.DecimalField(max_digits=18, decimal_places=2)
+    periodo = models.CharField(max_length=20) # YYYY-MM
+    timestamp = models.DateTimeField(auto_now_add=True)

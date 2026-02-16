@@ -1,12 +1,15 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import DeliveryCompany, Driver, Vehicle, DeliveryService, DeliveryEvent
+from .models import DeliveryCompany, Driver, Vehicle, DeliveryService, DeliveryEvent, Ruta, IndicadorLogistico
 from .serializers import (
     DeliveryCompanySerializer, DriverSerializer, VehicleSerializer,
-    DeliveryServiceSerializer, DeliveryEventSerializer
+    DeliveryServiceSerializer, DeliveryEventSerializer, RutaSerializer, IndicadorLogisticoSerializer
 )
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
+from .services import LogisticService
+from django.db.models import Sum, Count, Avg
+from django.utils import timezone
 
 class DeliveryCompanyViewSet(viewsets.ModelViewSet):
     queryset = DeliveryCompany.objects.all()
@@ -23,6 +26,11 @@ class VehicleViewSet(viewsets.ModelViewSet):
     serializer_class = VehicleSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+class RutaViewSet(viewsets.ModelViewSet):
+    queryset = Ruta.objects.all()
+    serializer_class = RutaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 class DeliveryServiceViewSet(viewsets.ModelViewSet):
     serializer_class = DeliveryServiceSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -33,46 +41,60 @@ class DeliveryServiceViewSet(viewsets.ModelViewSet):
             return DeliveryService.objects.all()
         if user.role == 'TURISTA':
             return DeliveryService.objects.filter(tourist=user)
-        if user.role == 'DELIVERY':
-            return DeliveryService.objects.filter(driver__user=user)
+        if user.role == 'DELIVERY' or user.role == 'PRESTADOR':
+            return DeliveryService.objects.all() # Para simplificar visibilidad en dashboard prestador
         return DeliveryService.objects.none()
 
+    @action(detail=False, methods=['get'])
+    def dashboard(self, request):
+        """ Resumen ejecutivo de Delivery """
+        pedidos = DeliveryService.objects.all()
+        data = {
+            "total_pedidos": pedidos.count(),
+            "en_ruta": pedidos.filter(status='EN_RUTA').count(),
+            "entregados": pedidos.filter(status='ENTREGADO').count(),
+            "fallidos": pedidos.filter(status='FALLIDO').count(),
+            "repartidores_activos": Driver.objects.filter(is_available=True).count()
+        }
+        return Response(data)
+
+    @action(detail=True, methods=['post'])
+    def assign(self, request, pk=None):
+        service = LogisticService(user=request.user)
+        try:
+            res = service.assign_service(pk, driver_id=request.data.get("driver_id"))
+            return Response(DeliveryServiceSerializer(res).data)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'])
+    def start(self, request, pk=None):
+        service = LogisticService(user=request.user)
+        res = service.start_delivery(pk)
+        return Response(DeliveryServiceSerializer(res).data)
+
+    @action(detail=True, methods=['post'])
+    def complete(self, request, pk=None):
+        service = LogisticService(user=request.user)
+        try:
+            res = service.complete_service(pk, parameters=request.data)
+            return Response(DeliveryServiceSerializer(res).data)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'])
+    def fail(self, request, pk=None):
+        service = LogisticService(user=request.user)
+        res = service.fail_delivery(pk, request.data.get("reason", "No especificado"))
+        return Response(DeliveryServiceSerializer(res).data)
+
+class IndicadorLogisticoViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = IndicadorLogistico.objects.all()
+    serializer_class = IndicadorLogisticoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
     @action(detail=False, methods=['post'])
-    def request_delivery(self, request):
-        kernel = GovernanceKernel(user=request.user)
-
-        # FASE 9: Directriz de Interoperabilidad
-        # En producción, se debería validar que related_operational_order_id esté presente
-        # para cumplir con "Delivery nunca actúa sin una Orden Operativa".
-
-        try:
-            result = kernel.resolve_and_execute(
-                intention_name="DELIVERY_REQUEST",
-                parameters=request.data
-            )
-            return Response(result)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True, methods=['post'])
-    def add_event(self, request, pk=None):
-        service = self.get_object()
-        serializer = DeliveryEventSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(service=service)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True, methods=['post'])
-    def rate(self, request, pk=None):
-        kernel = GovernanceKernel(user=request.user)
-        try:
-            params = request.data.copy()
-            params["service_id"] = pk
-            result = kernel.resolve_and_execute(
-                intention_name="DELIVERY_RATE",
-                parameters=params
-            )
-            return Response(result)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    def refresh(self, request):
+        provider_id = request.data.get("provider_id")
+        LogisticService.generar_indicadores(provider_id)
+        return Response({"status": "KPIs recalculados"})

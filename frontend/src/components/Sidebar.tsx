@@ -86,6 +86,7 @@ const miNegocioNav: NavSection[] = [
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/costos', label: 'Costos', icon: FiTrendingDown },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/sst', label: 'Seguridad y Salud (SST)', icon: FiShield },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/nomina', label: 'Gestión de Nómina', icon: FiUsers },
+      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/delivery', label: 'Logística (Delivery)', icon: FiTruck },
     ],
   },
   {
