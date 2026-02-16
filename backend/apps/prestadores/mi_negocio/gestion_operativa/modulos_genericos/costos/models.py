@@ -15,6 +15,9 @@ class Costo(models.Model):
     class Tipo(models.TextChoices):
         FIJO = 'FIJO', _('Fijo')
         VARIABLE = 'VARIABLE', _('Variable')
+        INSUMOS = 'INSUMOS', _('Insumos / Materia Prima')
+        PERSONAL = 'PERSONAL', _('Mano de Obra')
+        TALLER = 'TALLER', _('Gastos de Taller/Cocina')
 
     tipo_costo = models.CharField(_("Tipo de Costo"), max_length=50, choices=Tipo.choices, default=Tipo.VARIABLE)
 

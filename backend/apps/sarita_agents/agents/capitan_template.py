@@ -50,6 +50,10 @@ class CapitanTemplate:
             "status": "PROCESSING",
             "message": f"El plan {plan.id} ha sido encolado para ejecución asíncrona."
         }
+
+    def handle_directive(self, mision: Mision):
+        """Alias para handle_order."""
+        return self.handle_order(mision)
  
 
     def plan(self, mision: Mision) -> PlanTáctico:
