@@ -29,7 +29,8 @@ from apps.sarita_agents.agents.general.sarita.coroneles.operativo_especializado.
     TenienteOperativoHospedaje,
     TenienteOperativoGastronomia,
     TenienteOperativoTransporte,
-    TenienteOperativoNocturno
+    TenienteOperativoNocturno,
+    TenienteOperativoGuias
 )
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.operativo_agencia_teniente import TenienteOperativoAgencia
 from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.operativo_artesano_teniente import TenienteOperativoArtesano
@@ -426,6 +427,7 @@ TENIENTE_MAP = {
     'teniente_gastronomia': TenienteOperativoGastronomia,
     'teniente_transporte': TenienteOperativoTransporte,
     'teniente_nocturno': TenienteOperativoNocturno,
+    'teniente_guias': TenienteOperativoGuias,
     # Fase 4.1
     'operativo_agencia': TenienteOperativoAgencia,
     'operativo_artesano': TenienteOperativoArtesano,

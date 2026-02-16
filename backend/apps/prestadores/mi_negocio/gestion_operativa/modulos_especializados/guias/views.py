@@ -1,41 +1,69 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from .models import (
+    GuiaTuristico, CertificacionGuia, LocalRutaTuristica, Itinerario,
+    GrupoTuristico, ServicioGuiado, LiquidacionGuia, IncidenciaServicio, Skill
+)
+from .serializers import *
 
-from .models import Skill, TourDetail
-from .serializers import SkillSerializer
-# Asumimos que TeamMember y su serializer existirán
-# from ..personal.models import TeamMember
-# from ..personal.serializers import TeamMemberSerializer
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.views import ProductViewSet
+class GuiaBaseViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
 
-class SkillViewSet(viewsets.ModelViewSet):
-    queryset = Skill.objects.all()
+    def get_queryset(self):
+        return self.model.objects.filter(provider=self.request.user.perfil_prestador)
+
+    def perform_create(self, serializer):
+        serializer.save(provider=self.request.user.perfil_prestador)
+
+class GuiaTuristicoViewSet(GuiaBaseViewSet):
+    model = GuiaTuristico
+    serializer_class = GuiaTuristicoSerializer
+
+class CertificacionGuiaViewSet(GuiaBaseViewSet):
+    model = CertificacionGuia
+    serializer_class = CertificacionGuiaSerializer
+
+class LocalRutaTuristicaViewSet(GuiaBaseViewSet):
+    model = LocalRutaTuristica
+    serializer_class = LocalRutaTuristicaSerializer
+
+class ItinerarioViewSet(viewsets.ModelViewSet):
+    queryset = Itinerario.objects.all()
+    serializer_class = ItinerarioSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class GrupoTuristicoViewSet(GuiaBaseViewSet):
+    model = GrupoTuristico
+    serializer_class = GrupoTuristicoSerializer
+
+class ServicioGuiadoViewSet(GuiaBaseViewSet):
+    model = ServicioGuiado
+    serializer_class = ServicioGuiadoSerializer
+
+    @action(detail=True, methods=['post'])
+    def confirmar(self, request, pk=None):
+        servicio = self.get_object()
+        # Verificar guía y certificaciones
+        if not servicio.guia_asignado:
+            return Response({'error': 'No hay guía asignado'}, status=status.HTTP_400_BAD_REQUEST)
+
+        certificaciones_validas = any(c.is_valid() for c in servicio.guia_asignado.certificaciones.all())
+        if not certificaciones_validas:
+             return Response({'error': 'El guía no tiene certificaciones válidas'}, status=status.HTTP_400_BAD_REQUEST)
+
+        servicio.estado = ServicioGuiado.Estado.CONFIRMADO
+        servicio.save()
+        return Response({'status': 'Servicio confirmado'})
+
+class LiquidacionGuiaViewSet(GuiaBaseViewSet):
+    model = LiquidacionGuia
+    serializer_class = LiquidacionGuiaSerializer
+
+class IncidenciaServicioViewSet(GuiaBaseViewSet):
+    model = IncidenciaServicio
+    serializer_class = IncidenciaServicioSerializer
+
+class SkillViewSet(GuiaBaseViewSet):
+    model = Skill
     serializer_class = SkillSerializer
-
-class TourProductViewSet(ProductViewSet):
-    """
-    Extiende el ProductViewSet para añadir lógica específica de tours.
-    """
-    @action(detail=True, methods=['get'], url_path='suggest-guides')
-    def suggest_guides(self, request, pk=None):
-        tour_product = self.get_object()
-        try:
-            required_skills = tour_product.tour_details.required_skills.all()
-
-            # Lógica para encontrar guías que cumplan con los skills.
-            # Esta es una simulación ya que TeamMember no existe aún.
-            # guides = TeamMember.objects.filter(roles__name='Guía Turístico')
-            # qualified_guides = []
-            # for guide in guides:
-            #     if required_skills.issubset(guide.skills.all()):
-            #         qualified_guides.append(guide)
-
-            # Por ahora, devolvemos una respuesta simulada
-            return Response([
-                {'id': 1, 'username': 'guia_calificado_1'},
-                {'id': 2, 'username': 'guia_calificado_2'},
-            ])
-
-        except TourDetail.DoesNotExist:
-            return Response({"error": "Este producto no es un tour configurable."}, status=status.HTTP_404_NOT_FOUND)

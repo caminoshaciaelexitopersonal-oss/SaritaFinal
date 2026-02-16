@@ -56,3 +56,18 @@ class TenienteOperativoNocturno(TenienteTemplate):
             return SargentoNocturno.cerrar_caja(parametros, user)
 
         return {"status": "ERROR", "message": "Acción no reconocida"}
+
+class TenienteOperativoGuias(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        action = parametros.get("action")
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.sargentos import SargentoGuias
+        from api.models import CustomUser
+
+        user = CustomUser.objects.get(id=parametros.get("user_id"))
+
+        if action == "ASSIGN_GUIDE":
+            return SargentoGuias.asignar_y_confirmar(parametros, user)
+        if action == "LIQUIDATE_GUIDE_COMMISSION":
+            return SargentoGuias.liquidar_comision(parametros, user)
+
+        return {"status": "ERROR", "message": "Acción no reconocida"}

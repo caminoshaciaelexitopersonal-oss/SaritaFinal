@@ -435,6 +435,29 @@ class GovernanceKernel:
                 closing = service.cierre_caja(parameters["event_id"], parameters)
                 return {"status": "SUCCESS", "agent_report": agent_result, "closing_id": str(closing.id)}
 
+        # Registro de Servicios de Dominio - Guías Turísticos (Fase 12)
+        if intention.domain == "operativo_guias":
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.sargentos import SargentoGuias
+
+            directive = {
+                "domain": "operativo_guias",
+                "action": intention.name,
+                "parameters": parameters,
+                "user_id": str(self.user.id),
+                "role": self.user.role
+            }
+
+            agent_result = sarita_orchestrator.handle_directive(directive)
+
+            if intention.name == "ASSIGN_GUIDE":
+                res = SargentoGuias.asignar_y_confirmar(parameters, self.user)
+                return {"status": "SUCCESS", "agent_report": agent_result, "details": res}
+
+            if intention.name == "LIQUIDATE_GUIDE_COMMISSION":
+                res = SargentoGuias.liquidar_comision(parameters, self.user)
+                return {"status": "SUCCESS", "agent_report": agent_result, "details": res}
+
         if intention.domain == "delivery":
             from apps.sarita_agents.orchestrator import sarita_orchestrator
 
@@ -571,6 +594,21 @@ GovernanceKernel.register_intention(GovernanceIntention(
 GovernanceKernel.register_intention(GovernanceIntention(
     name="PROCESS_COMMAND",
     domain="operativo_nocturno",
+    required_role=CustomUser.Role.PRESTADOR,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+# Dominio: Guías Turísticos (Fase 12)
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="ASSIGN_GUIDE",
+    domain="operativo_guias",
+    required_role=CustomUser.Role.PRESTADOR,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="LIQUIDATE_GUIDE_COMMISSION",
+    domain="operativo_guias",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))
