@@ -10,6 +10,7 @@ from .agents.general.sarita.coroneles.operativo_general.coronel import CoronelOp
 from .agents.general.sarita.coroneles.operativo_especializado.hospedaje.coronel import CoronelOperativoHospedaje
 from .agents.general.sarita.coroneles.operativo_especializado.gastronomia.coronel import CoronelOperativoGastronomia
 from .agents.general.sarita.coroneles.operativo_especializado.transporte.coronel import CoronelOperativoTransporte
+from .agents.general.sarita.coroneles.operativo_especializado.nocturno.coronel import CoronelOperativoNocturno
 from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
 from .agents.general.sarita.coroneles.contable.coronel import CoronelContable
 from .agents.general.sarita.coroneles.financiero.coronel import CoronelFinanciero
@@ -44,6 +45,7 @@ class SaritaOrchestrator:
             "operativo_hospedaje": CoronelOperativoHospedaje(general=self),
             "operativo_gastronomia": CoronelOperativoGastronomia(general=self),
             "operativo_transporte": CoronelOperativoTransporte(general=self),
+            "operativo_nocturno": CoronelOperativoNocturno(general=self),
             "administrador_general": AdministradorGeneralCoronel(general=self),
             "contabilidad": CoronelContable(general=self),
             "finanzas": CoronelFinanciero(general=self),

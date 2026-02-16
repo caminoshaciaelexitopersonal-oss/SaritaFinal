@@ -39,3 +39,20 @@ class TenienteOperativoTransporte(TenienteTemplate):
         ruta_id = parametros.get("ruta_id")
         logger.info(f"TENIENTE TRANSPORTE: Despachando {vehiculo_id} en ruta {ruta_id}")
         return {"status": "SUCCESS", "entity": "Vehicle", "id": vehiculo_id}
+
+class TenienteOperativoNocturno(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        action = parametros.get("action")
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.bares_discotecas.sargentos import SargentoNocturno
+        from api.models import CustomUser
+
+        user = CustomUser.objects.get(id=parametros.get("user_id"))
+
+        if action == "PROCESS_COMMAND":
+            return SargentoNocturno.procesar_comanda(parametros, user)
+        if action == "BILL_CONSUMPTION":
+            return SargentoNocturno.facturar_mesa(parametros, user)
+        if action == "NIGHT_CASH_CLOSE":
+            return SargentoNocturno.cerrar_caja(parametros, user)
+
+        return {"status": "ERROR", "message": "Acción no reconocida"}

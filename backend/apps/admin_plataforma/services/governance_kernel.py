@@ -404,6 +404,37 @@ class GovernanceKernel:
                 return {"status": "SUCCESS", "agent_report": agent_result, "wallet_id": str(wallet.id)}
 
         # Registro de Servicios de Dominio - Ejército de Agentes Delivery
+        # Registro de Servicios de Dominio - Operación Nocturna (Fase 11)
+        if intention.domain == "operativo_nocturno":
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.bares_discotecas.services import NightclubService
+
+            directive = {
+                "domain": "operativo_nocturno",
+                "action": intention.name,
+                "parameters": parameters,
+                "user_id": str(self.user.id),
+                "role": self.user.role
+            }
+
+            agent_result = sarita_orchestrator.handle_directive(directive)
+            service = NightclubService(user=self.user)
+
+            if intention.name == "PROCESS_COMMAND":
+                consumption = service.registrar_consumo(
+                    parameters["consumption_id"],
+                    parameters["items"]
+                )
+                return {"status": "SUCCESS", "agent_report": agent_result, "consumption_id": str(consumption.id)}
+
+            if intention.name == "BILL_CONSUMPTION":
+                impact = service.facturar_consumo(parameters["consumption_id"])
+                return {"status": "SUCCESS", "agent_report": agent_result, "erp_impact": impact}
+
+            if intention.name == "NIGHT_CASH_CLOSE":
+                closing = service.cierre_caja(parameters["event_id"], parameters)
+                return {"status": "SUCCESS", "agent_report": agent_result, "closing_id": str(closing.id)}
+
         if intention.domain == "delivery":
             from apps.sarita_agents.orchestrator import sarita_orchestrator
 
@@ -534,6 +565,28 @@ GovernanceKernel.register_intention(GovernanceIntention(
     domain="contable",
     required_role=CustomUser.Role.ADMIN,
     min_authority=AuthorityLevel.DELEGATED
+))
+
+# Dominio: Operación Nocturna (Fase 11)
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="PROCESS_COMMAND",
+    domain="operativo_nocturno",
+    required_role=CustomUser.Role.PRESTADOR,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="BILL_CONSUMPTION",
+    domain="operativo_nocturno",
+    required_role=CustomUser.Role.PRESTADOR,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="NIGHT_CASH_CLOSE",
+    domain="operativo_nocturno",
+    required_role=CustomUser.Role.PRESTADOR,
+    min_authority=AuthorityLevel.OPERATIONAL
 ))
 
  
