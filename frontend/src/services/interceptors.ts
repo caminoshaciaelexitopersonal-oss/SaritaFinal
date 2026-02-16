@@ -2,7 +2,8 @@ import { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 let requestCount = 0;
 let lastReset = Date.now();
-const MAX_REQUESTS_PER_MINUTE = 120; // Ajuste Fase 4.2 para permitir dashboards analíticos
+// Ajuste Fase Establecimiento: 300 req/min para evitar bloqueos en carga inicial de dashboards
+const MAX_REQUESTS_PER_MINUTE = 300;
 
 export const setupInterceptors = (httpClient: AxiosInstance) => {
   httpClient.interceptors.request.use(

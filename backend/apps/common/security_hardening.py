@@ -42,12 +42,17 @@ class SecurityHardeningMiddleware:
         key = f"rl_{user.id}_{user.role if hasattr(user, 'role') else 'anon'}"
         count = cache.get(key, 0)
 
-        # Límites por rol
-        limit = 100 # Default
+        # Límites por rol - Ajustados Fase Establecimiento
+        # Se incrementan los umbrales para evitar falsos positivos en UX
+        limit = 200 # Default (antes 100)
         if hasattr(user, 'role'):
-            if user.role == 'SUPERADMIN': limit = 500
-            elif user.role == 'PRESTADOR': limit = 200
-            elif user.role == 'TURISTA': limit = 50
+            if user.role == 'SUPERADMIN': limit = 1000
+            elif user.role == 'PRESTADOR': limit = 500
+            elif user.role == 'TURISTA': limit = 150 # Antes 50
+
+        # En modo DEBUG los límites son 5x mayores
+        if settings.DEBUG:
+            limit *= 5
 
         if count >= limit:
             return True
