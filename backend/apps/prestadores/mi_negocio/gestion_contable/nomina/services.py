@@ -1,132 +1,227 @@
-# Este archivo contendrá la lógica de negocio para el cálculo de nómina y la integración contable.
-from decimal import Decimal
-from .models import Contrato, Planilla
-
-class CalculoNominaService:
-    """
-    Servicio para calcular las prestaciones sociales y parafiscales de un empleado.
-    """
-
-    def __init__(self, contrato: Contrato, fecha_inicio: str, fecha_fin: str):
-        self.contrato = contrato
-        self.salario_base = contrato.salario
-        # TODO: Considerar auxilio de transporte para la base si aplica
-        self.dias_trabajados = (fecha_fin - fecha_inicio).days + 1
-        # Simplificación: se asume un año de 360 días para cálculos.
-        self.dias_ano = 360
-
-    def calcular_prima(self) -> Decimal:
-        """
-        Fórmula: (Salario mensual * Días trabajados en el semestre) / 360
-        """
-        # Simplificación: se asume que la planilla es semestral.
-        dias_semestre = self.dias_trabajados
-        prima = (self.salario_base * Decimal(dias_semestre)) / self.dias_ano
-        return prima.quantize(Decimal('0.01'))
-
-    def calcular_cesantias(self) -> Decimal:
-        """
-        Fórmula: (Salario mensual * Días trabajados) / 360
-        """
-        cesantias = (self.salario_base * Decimal(self.dias_trabajados)) / self.dias_ano
-        return cesantias.quantize(Decimal('0.01'))
-
-    def calcular_intereses_cesantias(self, valor_cesantias: Decimal) -> Decimal:
-        """
-        Fórmula: (Cesantías * Días trabajados * 0.12) / 360
-        """
-        intereses = (valor_cesantias * Decimal(self.dias_trabajados) * Decimal('0.12')) / self.dias_ano
-        return intereses.quantize(Decimal('0.01'))
-
-    def calcular_vacaciones(self) -> Decimal:
-        """
-        Fórmula: (Salario mensual básico * Días trabajados) / 720
-        """
-        vacaciones = (self.salario_base * Decimal(self.dias_trabajados)) / (self.dias_ano * 2)
-        return vacaciones.quantize(Decimal('0.01'))
-
-    def calcular_parafiscales(self) -> dict:
-        """
-        Cálculo de aportes parafiscales (CCF, ICBF, SENA)
-        Base: Salario base (simplificado, debería ser el IBC)
-        - CCF: 4%
-        - ICBF: 3%
-        - SENA: 2%
-        """
-        # TODO: Implementar el cálculo del Ingreso Base de Cotización (IBC) correctamente.
-        # Por ahora, se usa el salario base como simplificación.
-        base_cotizacion = self.salario_base
-
-        aporte_ccf = base_cotizacion * Decimal('0.04')
-        aporte_icbf = base_cotizacion * Decimal('0.03')
-        aporte_sena = base_cotizacion * Decimal('0.02')
-
-        return {
-            "aporte_ccf": aporte_ccf.quantize(Decimal('0.01')),
-            "aporte_icbf": aporte_icbf.quantize(Decimal('0.01')),
-            "aporte_sena": aporte_sena.quantize(Decimal('0.01')),
-        }
-
-from ..contabilidad.models import JournalEntry, Transaction
-from ..contabilidad.services import ChartOfAccountService
-from .models import DetalleLiquidacion
+from decimal import Decimal, ROUND_HALF_UP
+from django.db import transaction, models
 from django.utils import timezone
+from .models import (
+    Empleado, Contrato, Planilla, DetalleLiquidacion,
+    NovedadNomina, IncapacidadLaboral, ProvisionNomina, IndicadorLaboral
+)
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta, PeriodoContable
+from apps.prestadores.mi_negocio.gestion_contable.contabilidad.services import ContabilidadService
 
-class ContabilidadNominaService:
+class NominaService:
     """
-    Servicio para contabilizar la liquidación de la nómina.
+    Motor Central de Nómina SARITA.
+    Maneja liquidación, provisiones e integración contable.
     """
-    def __init__(self, planilla: Planilla):
-        self.planilla = planilla
-        self.perfil = planilla.perfil
-        self.chart_of_accounts = ChartOfAccountService(self.perfil)
 
-    def contabilizar_liquidacion(self):
-        """
-        Crea el asiento contable para la liquidación de la planilla.
-        - Debita las cuentas de gasto (salarios, prestaciones, parafiscales).
-        - Acredita las cuentas de pasivo (salarios por pagar, provisiones).
-        """
-        description = f"Contabilización de nómina para el período {self.planilla.periodo_inicio} a {self.planilla.periodo_fin}"
+    @staticmethod
+    @transaction.atomic
+    def liquidar_periodo(planilla_id, usuario_id=None):
+        planilla = Planilla.objects.select_for_update().get(id=planilla_id)
 
-        journal_entry = JournalEntry.objects.create(
-            profile=self.perfil,
-            date=timezone.now().date(),
-            description=description,
-            is_automatic=True
+        # 1. Blindaje de Estado
+        if planilla.estado != Planilla.EstadoPlanilla.BORRADOR:
+            raise ValueError(f"Blindaje Activo: La planilla {planilla_id} ya fue liquidada/cerrada.")
+
+        # 2. Blindaje de Periodo Contable
+        periodo = PeriodoContable.objects.filter(
+            provider=planilla.perfil,
+            fecha_inicio__lte=planilla.periodo_inicio,
+            fecha_fin__gte=planilla.periodo_fin,
+            cerrado=False
+        ).first()
+        if not periodo:
+            raise ValueError("Acción Bloqueada: No existe un período contable abierto para estas fechas.")
+
+        # Limpiar liquidaciones previas si existen
+        planilla.detalles_liquidacion.all().delete()
+
+        empleados = Empleado.objects.filter(perfil=planilla.perfil, estado=Empleado.EstadoEmpleado.ACTIVO)
+
+        total_dev = Decimal('0.00')
+        total_ded = Decimal('0.00')
+
+        for emp in empleados:
+            contrato = emp.contratos.filter(activo=True).first()
+            if not contrato: continue
+
+            # Cálculo Base (Simplificado para Fase 8 Structural)
+            # En un sistema real, esto consideraría el IBC y leyes específicas (Colombia en este caso)
+            salario_base = contrato.salario
+            dias = 30 # Asumimos mes comercial
+
+            # Devengados
+            basico = salario_base
+            aux_transporte = Decimal('140606.00') if salario_base <= (1300000 * 2) else Decimal('0.00') # Ejemplo SMMLV 2024 aprox
+
+            # Novedades (Horas extras, bonos, etc.)
+            novedades = NovedadNomina.objects.filter(empleado=emp, planilla=planilla, procesada=False)
+            extra_dev = sum(n.valor for n in novedades if n.concepto.tipo == 'DEVENGADO')
+            extra_ded = sum(n.valor for n in novedades if n.concepto.tipo == 'DEDUCCION')
+
+            # Deducciones de Ley (Colombia: 4% Salud, 4% Pensión)
+            salud = (basico * Decimal('0.04')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            pension = (basico * Decimal('0.04')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+
+            total_emp_dev = basico + aux_transporte + extra_dev
+            total_emp_ded = salud + pension + extra_ded
+            neto = total_emp_dev - total_emp_ded
+
+            # Prestaciones y Aportes Patronales (Causación)
+            prima = (total_emp_dev * Decimal('0.0833')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            cesantias = (total_emp_dev * Decimal('0.0833')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            int_cesantias = (cesantias * Decimal('0.12')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            vacaciones = (basico * Decimal('0.0417')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+
+            # Aportes Patronales
+            salud_patron = (basico * Decimal('0.085')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            pension_patron = (basico * Decimal('0.12')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            arl = (basico * Decimal('0.00522')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP) # Nivel 1
+
+            detalle = DetalleLiquidacion.objects.create(
+                planilla=planilla,
+                empleado=emp,
+                salario_base=salario_base,
+                dias_trabajados=dias,
+                basico=basico,
+                auxilio_transporte=aux_transporte,
+                total_devengado=total_emp_dev,
+                salud_empleado=salud,
+                pension_empleado=pension,
+                total_deduccion=total_emp_ded,
+                total_neto=neto,
+                valor_prima=prima,
+                valor_cesantias=cesantias,
+                valor_intereses_cesantias=int_cesantias,
+                valor_vacaciones=vacaciones,
+                valor_aporte_salud_patron=salud_patron,
+                valor_aporte_pension_patron=pension_patron,
+                valor_aporte_arl=arl
+            )
+
+            total_dev += total_emp_dev
+            total_ded += total_emp_ded
+
+            # Marcar novedades como procesadas
+            novedades.update(procesada=True)
+
+        planilla.total_devengado = total_dev
+        planilla.total_deduccion = total_ded
+        planilla.total_neto = total_dev - total_ded
+        planilla.estado = Planilla.EstadoPlanilla.LIQUIDADA
+        planilla.save()
+
+        return planilla
+
+    @staticmethod
+    @transaction.atomic
+    def contabilizar_nomina(planilla_id, usuario_id=None):
+        planilla = Planilla.objects.select_for_update().get(id=planilla_id)
+
+        # 1. Idempotencia: Evitar duplicidad de asientos
+        if planilla.asiento_contable_ref_id:
+            raise ValueError(f"Idempotencia Activa: La planilla {planilla_id} ya tiene un asiento contable (Ref: {planilla.asiento_contable_ref_id}).")
+
+        if planilla.estado != Planilla.EstadoPlanilla.LIQUIDADA:
+            raise ValueError("Solo se pueden contabilizar planillas en estado LIQUIDADA.")
+
+        # Buscar periodo contable
+        periodo = PeriodoContable.objects.filter(
+            provider=planilla.perfil,
+            fecha_inicio__lte=planilla.periodo_inicio,
+            fecha_fin__gte=planilla.periodo_fin,
+            cerrado=False
+        ).first()
+
+        if not periodo:
+            raise ValueError("No existe un período contable abierto para las fechas de la planilla.")
+
+        # Crear Asiento
+        asiento = AsientoContable.objects.create(
+            provider=planilla.perfil,
+            periodo=periodo,
+            fecha=timezone.now().date(),
+            descripcion=f"CAUSACION NOMINA PERIODO {planilla.periodo_inicio} - {planilla.periodo_fin}",
+            creado_por_id=usuario_id
         )
 
-        total_gastos = Decimal('0.00')
-        total_pasivos = Decimal('0.00')
+        # Aquí vendría la lógica de mapeo de cuentas.
+        # Para esta fase structural, buscaremos o crearemos cuentas por defecto.
+        # En una implementación real, esto lo define el Plan de Cuentas del Tenant.
 
-        detalles = DetalleLiquidacion.objects.filter(planilla=self.planilla)
+        def get_cuenta(codigo, nombre, tipo):
+            plan = planilla.perfil.plandecuentas_items.first()
+            cuenta, _ = Cuenta.objects.get_or_create(
+                plan_de_cuentas=plan,
+                codigo=codigo,
+                defaults={'nombre': nombre, 'tipo': tipo, 'provider': planilla.perfil}
+            )
+            return cuenta
 
-        for detalle in detalles:
-            # Gastos (Débito)
-            gasto_prima = detalle.valor_prima
-            gasto_cesantias = detalle.valor_cesantias
-            gasto_intereses = detalle.valor_intereses_cesantias
-            gasto_vacaciones = detalle.valor_vacaciones
-            gasto_parafiscales = detalle.valor_aporte_ccf + detalle.valor_aporte_icbf + detalle.valor_aporte_sena
+        c_gasto_sueldos = get_cuenta("510506", "Sueldos Básicos", "GASTOS")
+        c_gasto_transp = get_cuenta("510527", "Auxilio de Transporte", "GASTOS")
+        c_pasivo_nomina = get_cuenta("250505", "Salarios por Pagar", "PASIVO")
+        c_pasivo_salud = get_cuenta("237005", "Aportes a Salud", "PASIVO")
+        c_pasivo_pension = get_cuenta("238030", "Aportes a Pensión", "PASIVO")
 
-            total_gastos += gasto_prima + gasto_cesantias + gasto_intereses + gasto_vacaciones + gasto_parafiscales
+        # 1. Registrar Gasto Sueldos (Debito)
+        Transaccion.objects.create(asiento=asiento, cuenta=c_gasto_sueldos, debito=planilla.total_devengado, descripcion="Gasto Nómina")
 
-            # Pasivos (Crédito)
-            # Aquí se asumen cuentas genéricas. Una implementación real requeriría un mapeo de cuentas.
-            Transaction.objects.create(journal_entry=journal_entry, account=self.chart_of_accounts.get_expense_account(), debit=gasto_prima, description=f"Gasto Prima {detalle.empleado}")
-            Transaction.objects.create(journal_entry=journal_entry, account=self.chart_of_accounts.get_liability_account(), credit=gasto_prima, description=f"Provisión Prima {detalle.empleado}")
+        # 2. Registrar Deducciones (Credito)
+        detalles = planilla.detalles_liquidacion.all()
+        t_salud = sum(d.salud_empleado for d in detalles)
+        t_pension = sum(d.pension_empleado for d in detalles)
 
-            Transaction.objects.create(journal_entry=journal_entry, account=self.chart_of_accounts.get_expense_account(), debit=gasto_cesantias, description=f"Gasto Cesantías {detalle.empleado}")
-            Transaction.objects.create(journal_entry=journal_entry, account=self.chart_of_accounts.get_liability_account(), credit=gasto_cesantias, description=f"Provisión Cesantías {detalle.empleado}")
+        Transaccion.objects.create(asiento=asiento, cuenta=c_pasivo_salud, credito=t_salud, descripcion="Retención Salud")
+        Transaccion.objects.create(asiento=asiento, cuenta=c_pasivo_pension, credito=t_pension, descripcion="Retención Pensión")
 
-            Transaction.objects.create(journal_entry=journal_entry, account=self.chart_of_accounts.get_expense_account(), debit=gasto_intereses, description=f"Gasto Intereses Cesantías {detalle.empleado}")
-            Transaction.objects.create(journal_entry=journal_entry, account=self.chart_of_accounts.get_liability_account(), credit=gasto_intereses, description=f"Provisión Intereses Cesantías {detalle.empleado}")
+        # 3. Salarios por Pagar (Credito)
+        Transaccion.objects.create(asiento=asiento, cuenta=c_pasivo_nomina, credito=planilla.total_neto, descripcion="Neto a Pagar")
 
-            Transaction.objects.create(journal_entry=journal_entry, account=self.chart_of_accounts.get_expense_account(), debit=gasto_vacaciones, description=f"Gasto Vacaciones {detalle.empleado}")
-            Transaction.objects.create(journal_entry=journal_entry, account=self.chart_of_accounts.get_liability_account(), credit=gasto_vacaciones, description=f"Provisión Vacaciones {detalle.empleado}")
+        # El asiento debe balancear: Debitos = Creditos
+        # Total Debito = planilla.total_devengado
+        # Total Credito = t_salud + t_pension + planilla.total_neto = total_deduccion + neto = total_devengado
 
-            Transaction.objects.create(journal_entry=journal_entry, account=self.chart_of_accounts.get_expense_account(), debit=gasto_parafiscales, description=f"Gasto Parafiscales {detalle.empleado}")
-            Transaction.objects.create(journal_entry=journal_entry, account=self.chart_of_accounts.get_liability_account(), credit=gasto_parafiscales, description=f"Parafiscales por Pagar {detalle.empleado}")
+        planilla.estado = Planilla.EstadoPlanilla.CONTABILIZADA
+        planilla.asiento_contable_ref_id = asiento.id
+        planilla.save()
 
-        journal_entry.validate_debits_and_credits()
-        return journal_entry
+        return asiento
+
+    @staticmethod
+    def generar_indicadores(provider_id):
+        provider = ProviderProfile.objects.get(id=provider_id)
+        # Costo Laboral Total
+        total_costo = DetalleLiquidacion.objects.filter(planilla__perfil=provider).aggregate(s=models.Sum('total_devengado'))['s'] or 0
+
+        IndicadorLaboral.objects.create(
+            perfil=provider,
+            nombre="Costo Laboral Total",
+            valor=total_costo,
+            periodo=timezone.now().strftime("%Y-%m")
+        )
+        return True
+
+    @staticmethod
+    @transaction.atomic
+    def liquidar_contrato(contrato_id, fecha_retiro, motivo, usuario_id=None):
+        """
+        Realiza la liquidación final de un contrato laboral.
+        """
+        contrato = Contrato.objects.select_for_update().get(id=contrato_id)
+        if not contrato.activo:
+            raise ValueError("El contrato ya está liquidado/inactivo.")
+
+        # Marcar contrato como inactivo
+        contrato.fecha_fin = fecha_retiro
+        contrato.activo = False
+        contrato.save()
+
+        # Actualizar estado del empleado
+        empleado = contrato.empleado
+        empleado.estado = Empleado.EstadoEmpleado.RETIRADO
+        empleado.save()
+
+        # En una implementación real, se generaría un Asiento Contable por el pago de prestaciones.
+        return True

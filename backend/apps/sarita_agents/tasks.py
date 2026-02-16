@@ -42,6 +42,10 @@ from apps.sarita_agents.agents.general.sarita.coroneles.sg_sst.tenientes.tenient
     TenienteRiesgos, TenienteIncidentes, TenienteCapacitacion,
     TenienteInspecciones, TenienteIndicadores as TenienteIndicadoresSST
 )
+from apps.sarita_agents.agents.general.sarita.coroneles.nomina.tenientes.tenientes_nomina import (
+    TenienteLiquidacion, TenientePrestaciones, TenienteSeguridadSocial,
+    TenienteNovedades, TenienteIndicadores as TenienteIndicadoresNomina
+)
 
 # --- TENIENTES FINANCIEROS (Phase 4-F) ---
 class TenienteCACCalculator(TenienteTemplate):
@@ -437,4 +441,10 @@ TENIENTE_MAP = {
     'sst_capacitacion': TenienteCapacitacion,
     'sst_inspecciones': TenienteInspecciones,
     'sst_indicadores': TenienteIndicadoresSST,
+    # Fase 8 - Nómina
+    'nomina_liquidacion': TenienteLiquidacion,
+    'nomina_prestaciones': TenientePrestaciones,
+    'nomina_seguridad_social': TenienteSeguridadSocial,
+    'nomina_novedades': TenienteNovedades,
+    'nomina_indicadores': TenienteIndicadoresNomina,
 }

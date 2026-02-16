@@ -1,12 +1,24 @@
-import httpClient from '../httpClient';
+import httpClient from '../index';
 
 export const nominaEndpoints = {
-  getEmpleados: () => httpClient.get('/v1/mi-negocio/contable/nomina/empleados/'),
-  getPlanillas: () => httpClient.get('/v1/mi-negocio/contable/nomina/planillas/'),
-  createEmpleado: (data: any) => httpClient.post('/v1/mi-negocio/contable/nomina/empleados/', data),
-  updateEmpleado: (id: number, data: any) => httpClient.patch(`/v1/mi-negocio/contable/nomina/empleados/${id}/`, data),
-  deleteEmpleado: (id: number) => httpClient.delete(`/v1/mi-negocio/contable/nomina/empleados/${id}/`),
-  createPlanilla: (data: any) => httpClient.post('/v1/mi-negocio/contable/nomina/planillas/', data),
-  liquidarPlanilla: (id: string) => httpClient.post(`/v1/mi-negocio/contable/nomina/planillas/${id}/liquidar/`),
-  contabilizarPlanilla: (id: string) => httpClient.post(`/v1/mi-negocio/contable/nomina/planillas/${id}/contabilizar/`),
+  getDashboard: () => httpClient.get('/nomina/dashboard/'),
+  getEmpleados: () => httpClient.get('/nomina/empleados/'),
+  createEmpleado: (data: any) => httpClient.post('/nomina/empleados/', data),
+  updateEmpleado: (id: string, data: any) => httpClient.patch(`/nomina/empleados/${id}/`, data),
+  deleteEmpleado: (id: string) => httpClient.delete(`/nomina/empleados/${id}/`),
+
+  getPlanillas: () => httpClient.get('/nomina/planillas/'),
+  getPlanillaDetalle: (id: string) => httpClient.get(`/nomina/planillas/${id}/`),
+  createPlanilla: (data: any) => httpClient.post('/nomina/planillas/', data),
+  liquidarPlanilla: (id: string) => httpClient.post(`/nomina/planillas/${id}/liquidar/`),
+  contabilizarPlanilla: (id: string) => httpClient.post(`/nomina/planillas/${id}/contabilizar/`),
+
+  getNovedades: () => httpClient.get('/nomina/novedades/'),
+  createNovedad: (data: any) => httpClient.post('/nomina/novedades/', data),
+
+  getIncapacidades: () => httpClient.get('/nomina/incapacidades/'),
+  getAusencias: () => httpClient.get('/nomina/ausencias/'),
+  getIndicadores: () => httpClient.get('/nomina/indicadores/'),
+
+  getConceptos: () => httpClient.get('/nomina/conceptos/'),
 };

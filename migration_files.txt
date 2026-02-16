@@ -1,7 +1,0 @@
-0001_initial.py
-0002_procesooperativo_tareaoperativa.py
-0003_capacitacionsst_incidentelaboral_and_more.py
-0004_remove_alojamiento_perfil_remove_alojamiento_tipo_and_more.py
-0005_capacitacionsst_programada_capacitacionsst_realizada_and_more.py
-__init__.py
-__pycache__

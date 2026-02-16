@@ -58,6 +58,9 @@ urlpatterns = [
     # Alias estructural para el Dominio Contable (Fase 5.1)
     path('api/contabilidad/', include('apps.prestadores.mi_negocio.gestion_contable.contabilidad.urls')),
 
+    # Alias estructural para el Dominio de Nómina (Fase 8)
+    path('api/nomina/', include('apps.prestadores.mi_negocio.gestion_contable.nomina.urls')),
+
     # API para Inteligencia de Decisión
     path('api/admin/intelligence/', include('apps.decision_intelligence.urls')),
 

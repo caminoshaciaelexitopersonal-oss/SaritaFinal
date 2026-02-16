@@ -210,6 +210,10 @@ export function useMiNegocioApi() {
   }, [makeRequest]);
 
   // --- API Nómina ---
+  const getNominaDashboard = useCallback(async () => {
+    return makeRequest(() => nominaEndpoints.getDashboard().then(res => res.data));
+  }, [makeRequest]);
+
   const getEmpleados = useCallback(async () => {
     return makeRequest(() => nominaEndpoints.getEmpleados().then(res => res.data));
   }, [makeRequest]);
@@ -218,16 +222,20 @@ export function useMiNegocioApi() {
     return makeRequest(() => nominaEndpoints.createEmpleado(data).then(res => res.data), "Empleado creado.");
   }, [makeRequest]);
 
-  const updateEmpleado = useCallback(async (id: number, data: any) => {
+  const updateEmpleado = useCallback(async (id: string, data: any) => {
     return makeRequest(() => nominaEndpoints.updateEmpleado(id, data).then(res => res.data), "Datos de empleado actualizados.");
   }, [makeRequest]);
 
-  const deleteEmpleado = useCallback(async (id: number) => {
+  const deleteEmpleado = useCallback(async (id: string) => {
     return makeRequest(() => nominaEndpoints.deleteEmpleado(id).then(res => res.data), "Empleado eliminado.");
   }, [makeRequest]);
 
   const getPlanillas = useCallback(async () => {
     return makeRequest(() => nominaEndpoints.getPlanillas().then(res => res.data));
+  }, [makeRequest]);
+
+  const getPlanillaDetalle = useCallback(async (id: string) => {
+    return makeRequest(() => nominaEndpoints.getPlanillaDetalle(id).then(res => res.data));
   }, [makeRequest]);
 
   const createPlanilla = useCallback(async (data: any) => {
@@ -240,6 +248,18 @@ export function useMiNegocioApi() {
 
   const contabilizarPlanilla = useCallback(async (id: string) => {
     return makeRequest(() => nominaEndpoints.contabilizarPlanilla(id).then(res => res.data), "Planilla contabilizada y procesada para pago.");
+  }, [makeRequest]);
+
+  const getNominaNovedades = useCallback(async () => {
+    return makeRequest(() => nominaEndpoints.getNovedades().then(res => res.data));
+  }, [makeRequest]);
+
+  const getNominaIncapacidades = useCallback(async () => {
+    return makeRequest(() => nominaEndpoints.getIncapacidades().then(res => res.data));
+  }, [makeRequest]);
+
+  const getNominaIndicadores = useCallback(async () => {
+    return makeRequest(() => nominaEndpoints.getIndicadores().then(res => res.data));
   }, [makeRequest]);
 
   // --- API Especializada ---
@@ -316,14 +336,19 @@ export function useMiNegocioApi() {
     getSSTIndicadores,
     getSSTAlertas,
     getArchivisticaDocumentos,
+    getNominaDashboard,
     getEmpleados,
     createEmpleado,
     updateEmpleado,
     deleteEmpleado,
     getPlanillas,
+    getPlanillaDetalle,
     createPlanilla,
     liquidarPlanilla,
     contabilizarPlanilla,
+    getNominaNovedades,
+    getNominaIncapacidades,
+    getNominaIndicadores,
     getVehicles,
     getTours,
     getProcesosOperativos,
