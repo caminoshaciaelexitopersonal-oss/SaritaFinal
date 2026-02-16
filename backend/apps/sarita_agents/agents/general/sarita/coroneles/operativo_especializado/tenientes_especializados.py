@@ -35,6 +35,21 @@ class TenienteOperativoGastronomia(TenienteTemplate):
 
 class TenienteOperativoTransporte(TenienteTemplate):
     def perform_action(self, parametros: dict):
+        action = parametros.get("action")
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.sargentos import SargentoTransporte
+        from api.models import CustomUser
+
+        user_id = parametros.get("user_id")
+        user = CustomUser.objects.get(id=user_id) if user_id else None
+
+        if action == "SCHEDULE_TRANSPORT_TRIP":
+            return SargentoTransporte.programar_y_asignar(parametros, user)
+        if action == "BOOK_TRANSPORT_SEAT":
+            return SargentoTransporte.registrar_reserva_masiva(parametros, user)
+        if action == "LIQUIDATE_TRANSPORT_TRIP":
+            return SargentoTransporte.liquidar_servicio_transporte(parametros, user)
+
+        # Fallback para despacho antiguo si es necesario
         vehiculo_id = parametros.get("vehiculo_id")
         ruta_id = parametros.get("ruta_id")
         logger.info(f"TENIENTE TRANSPORTE: Despachando {vehiculo_id} en ruta {ruta_id}")
