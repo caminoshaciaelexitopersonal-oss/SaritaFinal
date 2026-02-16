@@ -65,3 +65,40 @@ class RiesgoFinancieroViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         return RiesgoFinanciero.objects.filter(provider_id=self.request.user.perfil_prestador.id)
+
+class PresupuestoViewSet(viewsets.ModelViewSet):
+    serializer_class = PresupuestoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return Presupuesto.objects.filter(provider_id=self.request.user.perfil_prestador.id)
+
+class CreditoFinancieroViewSet(viewsets.ModelViewSet):
+    serializer_class = CreditoFinancieroSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return CreditoFinanciero.objects.filter(provider_id=self.request.user.perfil_prestador.id)
+
+class IndicadorFinancieroViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = IndicadorFinancieroHistoricoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return IndicadorFinancieroHistorico.objects.filter(provider_id=self.request.user.perfil_prestador.id)
+
+class AlertaFinancieraViewSet(viewsets.ModelViewSet):
+    serializer_class = AlertaFinancieraSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return AlertaFinanciera.objects.filter(provider_id=self.request.user.perfil_prestador.id)
+
+    @action(detail=True, methods=['post'])
+    def resolver(self, request, pk=None):
+        alerta = self.get_object()
+        alerta.resuelta = True
+        alerta.save()
+        return Response({"status": "Alerta resuelta"})
+
+class LogFinancieroViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = LogFinancieroInmutableSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return LogFinancieroInmutable.objects.filter(provider_id=self.request.user.perfil_prestador.id)

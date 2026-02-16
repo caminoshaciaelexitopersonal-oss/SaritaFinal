@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 class WalletAccount(models.Model):
@@ -8,10 +9,13 @@ class WalletAccount(models.Model):
         TOURIST = "TOURIST", _("Turista")
         PROVIDER = "PROVIDER", _("Prestador")
         DELIVERY = "DELIVERY", _("Delivery")
+        EMPLOYEE = "EMPLOYEE", _("Empleado")
+        CORPORATE = "CORPORATE", _("Corporativo Interno")
 
     class Status(models.TextChoices):
         ACTIVE = "ACTIVE", _("Activo")
         FROZEN = "FROZEN", _("Congelado")
+        BLOCKED = "BLOCKED", _("Bloqueado")
         AUDITED = "AUDITED", _("En Auditoría")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -36,11 +40,19 @@ class WalletAccount(models.Model):
 
 class WalletTransaction(models.Model):
     class TransactionType(models.TextChoices):
+        RECHARGE = "RECHARGE", _("Recarga Manual")
+        AUTO_RECHARGE = "AUTO_RECHARGE", _("Recarga Automática por Venta")
         DEPOSIT = "DEPOSIT", _("Depósito")
-        PAYMENT = "PAYMENT", _("Pago")
+        PAYMENT = "PAYMENT", _("Pago / Débito por Compra")
+        TRANSFER = "TRANSFER", _("Transferencia Interna")
+        CASHBACK = "CASHBACK", _("Cashback")
+        COMMISSION = "COMMISSION", _("Comisión")
+        RETENTION = "RETENTION", _("Retención")
         REFUND = "REFUND", _("Reembolso")
-        ADJUSTMENT = "ADJUSTMENT", _("Ajuste")
+        REVERSAL = "REVERSAL", _("Reversión")
+        ADJUSTMENT = "ADJUSTMENT", _("Ajuste Administrativo")
         LIQUIDATION = "LIQUIDATION", _("Liquidación")
+        FREEZE = "FREEZE", _("Congelamiento")
 
     class Status(models.TextChoices):
         PENDING = "PENDING", _("Pendiente")
@@ -50,8 +62,11 @@ class WalletTransaction(models.Model):
         FAILED = "FAILED", _("Fallido")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    idempotency_key = models.CharField(max_length=255, unique=True, null=True, blank=True)
+
     from_wallet = models.ForeignKey(WalletAccount, on_delete=models.PROTECT, related_name='transactions_out', null=True, blank=True)
     to_wallet = models.ForeignKey(WalletAccount, on_delete=models.PROTECT, related_name='transactions_in', null=True, blank=True)
+
     amount = models.DecimalField(max_digits=18, decimal_places=2)
     type = models.CharField(max_length=20, choices=TransactionType.choices)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
@@ -62,10 +77,12 @@ class WalletTransaction(models.Model):
     description = models.TextField(blank=True)
     metadata = models.JSONField(default=dict, blank=True)
 
-    integrity_hash = models.CharField(max_length=64, null=True, blank=True, help_text="Hash encadenado para integridad forense")
+    # Seguridad Fintech
+    integrity_hash = models.CharField(max_length=64, null=True, blank=True, help_text="Hash SHA-256 encadenado")
     previous_hash = models.CharField(max_length=64, null=True, blank=True)
+    signature = models.TextField(null=True, blank=True, help_text="Firma digital interna")
 
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(default=timezone.now)
 
     class Meta:
         verbose_name = _("Transacción de Monedero")

@@ -18,7 +18,18 @@ class AdminTenientePersistenciaContable(TenienteTemplate):
     """
     def perform_action(self, parametros: dict) -> dict:
         logger.info(f"ADMIN TENIENTE (Persistencia Contable): Persistiendo en admin_contabilidad con parámetros -> {parametros}")
-        return {"status": "SUCCESS", "message": "Asiento contable registrado en el ERP administrativo."}
+
+        # FASE 4.1: Delegación a Sargento
+        from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.sargentos.sargento_contable import SargentoRegistroContable
+        sargento = SargentoRegistroContable(teniente=self)
+        sargento_report = sargento.handle_order(parametros)
+
+        return {
+            "status": "SUCCESS",
+            "message": "Asiento contable registrado en el ERP administrativo.",
+            "operational_depth": "4.1",
+            "sargento_report": sargento_report
+        }
 
 class AdminTenientePersistenciaFinanciera(TenienteTemplate):
     """
@@ -34,7 +45,18 @@ class AdminTenientePersistenciaOperativa(TenienteTemplate):
     """
     def perform_action(self, parametros: dict) -> dict:
         logger.info(f"ADMIN TENIENTE (Persistencia Operativa): Persistiendo en admin_operativa con parámetros -> {parametros}")
-        return {"status": "SUCCESS", "message": "Acción operativa registrada en el ERP administrativo."}
+
+        # FASE 4.1: Delegación a Sargento (Ejemplo con SST)
+        from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.sargentos.sargento_sst import SargentoCoordinacionSST
+        sargento = SargentoCoordinacionSST(teniente=self)
+        sargento_report = sargento.handle_order(parametros)
+
+        return {
+            "status": "SUCCESS",
+            "message": "Acción operativa registrada en el ERP administrativo.",
+            "operational_depth": "4.1",
+            "sargento_report": sargento_report
+        }
 
 class AdminTenientePersistenciaArchivistica(TenienteTemplate):
     """

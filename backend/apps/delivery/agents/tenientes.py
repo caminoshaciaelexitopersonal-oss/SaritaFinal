@@ -1,62 +1,45 @@
-import logging
 from apps.sarita_agents.agents.teniente_template import TenienteTemplate
 from .sargentos import (
-    SargentoRegistroServicio,
-    SargentoValidacionPermisos,
-    SargentoAsignacionVehiculo,
-    SargentoRegistroEventoOperativo,
-    SargentoActivacionPago
+    SargentoAsignaciones, SargentoValidacionInventario, SargentoPrioridades,
+    SargentoOptimizacion, SargentoReasignacion, SargentoControlTiempos,
+    SargentoFlota, SargentoIncidentesConductores, SargentoKPIs, SargentoSLAs
 )
 
-logger = logging.getLogger(__name__)
-
-class TenienteValidacionEmpresa(TenienteTemplate):
+class TenienteDespacho(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        sargento = SargentoValidacionPermisos()
-        res = sargento.execute(parametros.get("company_id"))
-        return {"verification": "SUCCESS", "details": res}
+        s1 = SargentoAsignaciones(teniente=self)
+        s2 = SargentoValidacionInventario(teniente=self)
+        s3 = SargentoPrioridades(teniente=self)
 
-class TenienteHabilitacionConductor(TenienteTemplate):
+        # Simulación de ejecución en cadena
+        s2.handle_order(parametros)
+        s3.handle_order(parametros)
+        return s1.handle_order(parametros)
+
+class TenienteRutas(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        return {"status": "ENABLED", "driver_id": parametros.get("driver_id")}
+        s1 = SargentoOptimizacion(teniente=self)
+        s2 = SargentoReasignacion(teniente=self)
+        s3 = SargentoControlTiempos(teniente=self)
 
-class TenienteControlVehiculos(TenienteTemplate):
+        s1.handle_order(parametros)
+        s3.handle_order(parametros)
+        return {"status": "ROUTES_OPTIMIZED"}
+
+class TenienteRepartidores(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        sargento = SargentoAsignacionVehiculo()
-        res = sargento.execute(parametros.get("vehicle_id"))
-        return {"status": "AUDITED", "vehicle": res}
+        s1 = SargentoFlota(teniente=self)
+        s2 = SargentoIncidentesConductores(teniente=self)
+        return s1.handle_order(parametros)
 
-class TenienteAsignacionRuta(TenienteTemplate):
+class TenienteSeguimiento(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        sargento = SargentoRegistroServicio()
-        service_id = sargento.execute(parametros)
-        return {"service_id": service_id, "assignment": "AUTOMATIC"}
+        # El seguimiento suele ser reactivo o consulta de estado
+        return {"tracking_status": "ACTIVE", "realtime_enabled": True}
 
-class TenienteControlEjecucion(TenienteTemplate):
+class TenienteIndicadores(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        sargento_ev = SargentoRegistroEventoOperativo()
-        sargento_pay = SargentoActivacionPago()
-
-        event_id = sargento_ev.execute(parametros)
-
-        if parametros.get("action") == "COMPLETE":
-            pay_intent = sargento_pay.execute(parametros)
-            return {"event_id": event_id, "payment_intent": pay_intent}
-
-        return {"event_id": event_id}
-
-class TenienteEvidenciasServicio(TenienteTemplate):
-    def perform_action(self, parametros: dict):
-        return {"evidence_hash": "SHA256-DELIVERY-TRACE", "audited": True}
-
-class TenienteValidacionServicio(TenienteTemplate):
-    def perform_action(self, parametros: dict):
-        # Valida que el servicio cumpla con los requisitos operativos
-        from apps.delivery.models import DeliveryService
-        service_id = parametros.get("service_id")
-        service = DeliveryService.objects.get(id=service_id)
-        return {
-            "is_valid": True,
-            "status": service.status,
-            "can_proceed": service.status not in ["CANCELLED", "COMPLETED"]
-        }
+        s1 = SargentoKPIs(teniente=self)
+        s2 = SargentoSLAs(teniente=self)
+        s2.handle_order(parametros)
+        return s1.handle_order(parametros)

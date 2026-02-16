@@ -71,6 +71,34 @@ export function useMiNegocioApi() {
     ));
   }, [makeRequest]);
 
+  const getLibroDiario = useCallback(async (fechaInicio: string, fechaFin: string) => {
+    return makeRequest(() => contableEndpoints.getLibroDiario(fechaInicio, fechaFin).then(res => res.data));
+  }, [makeRequest]);
+
+  const getLibroMayor = useCallback(async (cuentaCodigo: string, fechaInicio: string, fechaFin: string) => {
+    return makeRequest(() => contableEndpoints.getLibroMayor(cuentaCodigo, fechaInicio, fechaFin).then(res => res.data));
+  }, [makeRequest]);
+
+  const getBalanceComprobacion = useCallback(async (periodoId: string) => {
+    return makeRequest(() => contableEndpoints.getBalanceComprobacion(periodoId).then(res => res.data));
+  }, [makeRequest]);
+
+  const getEstadoResultados = useCallback(async (fechaInicio: string, fechaFin: string) => {
+    return makeRequest(() => contableEndpoints.getEstadoResultados(fechaInicio, fechaFin).then(res => res.data));
+  }, [makeRequest]);
+
+  const getBalanceGeneral = useCallback(async (fechaCorte: string) => {
+    return makeRequest(() => contableEndpoints.getBalanceGeneral(fechaCorte).then(res => res.data));
+  }, [makeRequest]);
+
+  const getFlujoCaja = useCallback(async (fechaInicio: string, fechaFin: string) => {
+    return makeRequest(() => contableEndpoints.getFlujoCaja(fechaInicio, fechaFin).then(res => res.data));
+  }, [makeRequest]);
+
+  const getConciliacionWallet = useCallback(async (providerId: string) => {
+    return makeRequest(() => contableEndpoints.getConciliacionWallet(providerId).then(res => res.data));
+  }, [makeRequest]);
+
   // --- API de Ventas ---
   const getFacturas = useCallback(async () => {
     return makeRequest(() => comercialEndpoints.getFacturasVenta().then(res =>
@@ -119,7 +147,31 @@ export function useMiNegocioApi() {
     return makeRequest(() => financieroEndpoints.getTesoreria().then(res => res.data));
   }, [makeRequest]);
 
+  const getPresupuestos = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getPresupuestos().then(res => res.data));
+  }, [makeRequest]);
+
+  const getCreditos = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getCreditos().then(res => res.data));
+  }, [makeRequest]);
+
+  const getIndicadores = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getIndicadores().then(res => res.data));
+  }, [makeRequest]);
+
+  const getAlertas = useCallback(async () => {
+    return makeRequest(() => financieroEndpoints.getAlertas().then(res => res.data));
+  }, [makeRequest]);
+
+  const resolverAlerta = useCallback(async (id: string) => {
+    return makeRequest(() => financieroEndpoints.resolverAlerta(id).then(res => res.data), "Alerta resuelta.");
+  }, [makeRequest]);
+
   // --- API SG-SST ---
+  const getSSTDashboard = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTDashboard().then(res => res.data));
+  }, [makeRequest]);
+
   const getSSTRisks = useCallback(async () => {
     return makeRequest(() => operativoEndpoints.getSSTRisks().then(res => res.data));
   }, [makeRequest]);
@@ -132,12 +184,36 @@ export function useMiNegocioApi() {
     return makeRequest(() => operativoEndpoints.reportSSTIncident(data).then(res => res.data), "Incidente reportado exitosamente.");
   }, [makeRequest]);
 
+  const getSSTPlanAnual = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTPlanAnual().then(res => res.data));
+  }, [makeRequest]);
+
+  const getSSTCapacitaciones = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTCapacitaciones().then(res => res.data));
+  }, [makeRequest]);
+
+  const getSSTInspecciones = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTInspecciones().then(res => res.data));
+  }, [makeRequest]);
+
+  const getSSTIndicadores = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTIndicadores().then(res => res.data));
+  }, [makeRequest]);
+
+  const getSSTAlertas = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getSSTAlertas().then(res => res.data));
+  }, [makeRequest]);
+
   // --- API Archivística ---
   const getArchivisticaDocumentos = useCallback(async () => {
     return makeRequest(() => archivisticaEndpoints.getDocumentos().then(res => res.data));
   }, [makeRequest]);
 
   // --- API Nómina ---
+  const getNominaDashboard = useCallback(async () => {
+    return makeRequest(() => nominaEndpoints.getDashboard().then(res => res.data));
+  }, [makeRequest]);
+
   const getEmpleados = useCallback(async () => {
     return makeRequest(() => nominaEndpoints.getEmpleados().then(res => res.data));
   }, [makeRequest]);
@@ -146,16 +222,20 @@ export function useMiNegocioApi() {
     return makeRequest(() => nominaEndpoints.createEmpleado(data).then(res => res.data), "Empleado creado.");
   }, [makeRequest]);
 
-  const updateEmpleado = useCallback(async (id: number, data: any) => {
+  const updateEmpleado = useCallback(async (id: string, data: any) => {
     return makeRequest(() => nominaEndpoints.updateEmpleado(id, data).then(res => res.data), "Datos de empleado actualizados.");
   }, [makeRequest]);
 
-  const deleteEmpleado = useCallback(async (id: number) => {
+  const deleteEmpleado = useCallback(async (id: string) => {
     return makeRequest(() => nominaEndpoints.deleteEmpleado(id).then(res => res.data), "Empleado eliminado.");
   }, [makeRequest]);
 
   const getPlanillas = useCallback(async () => {
     return makeRequest(() => nominaEndpoints.getPlanillas().then(res => res.data));
+  }, [makeRequest]);
+
+  const getPlanillaDetalle = useCallback(async (id: string) => {
+    return makeRequest(() => nominaEndpoints.getPlanillaDetalle(id).then(res => res.data));
   }, [makeRequest]);
 
   const createPlanilla = useCallback(async (data: any) => {
@@ -168,6 +248,18 @@ export function useMiNegocioApi() {
 
   const contabilizarPlanilla = useCallback(async (id: string) => {
     return makeRequest(() => nominaEndpoints.contabilizarPlanilla(id).then(res => res.data), "Planilla contabilizada y procesada para pago.");
+  }, [makeRequest]);
+
+  const getNominaNovedades = useCallback(async () => {
+    return makeRequest(() => nominaEndpoints.getNovedades().then(res => res.data));
+  }, [makeRequest]);
+
+  const getNominaIncapacidades = useCallback(async () => {
+    return makeRequest(() => nominaEndpoints.getIncapacidades().then(res => res.data));
+  }, [makeRequest]);
+
+  const getNominaIndicadores = useCallback(async () => {
+    return makeRequest(() => nominaEndpoints.getIndicadores().then(res => res.data));
   }, [makeRequest]);
 
   // --- API Especializada ---
@@ -211,6 +303,13 @@ export function useMiNegocioApi() {
     updatePerfil,
     getChartOfAccounts,
     getJournalEntries,
+    getLibroDiario,
+    getLibroMayor,
+    getBalanceComprobacion,
+    getEstadoResultados,
+    getBalanceGeneral,
+    getFlujoCaja,
+    getConciliacionWallet,
     getFacturas,
     createFacturaVenta,
     getClientes,
@@ -222,18 +321,34 @@ export function useMiNegocioApi() {
     getProyecciones,
     getRiesgos,
     getTesoreria,
+    getPresupuestos,
+    getCreditos,
+    getIndicadores,
+    getAlertas,
+    resolverAlerta,
+    getSSTDashboard,
     getSSTRisks,
     getSSTIncidents,
     reportSSTIncident,
+    getSSTPlanAnual,
+    getSSTCapacitaciones,
+    getSSTInspecciones,
+    getSSTIndicadores,
+    getSSTAlertas,
     getArchivisticaDocumentos,
+    getNominaDashboard,
     getEmpleados,
     createEmpleado,
     updateEmpleado,
     deleteEmpleado,
     getPlanillas,
+    getPlanillaDetalle,
     createPlanilla,
     liquidarPlanilla,
     contabilizarPlanilla,
+    getNominaNovedades,
+    getNominaIncapacidades,
+    getNominaIndicadores,
     getVehicles,
     getTours,
     getProcesosOperativos,

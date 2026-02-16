@@ -66,6 +66,7 @@ class PeriodoContableViewSet(BaseTenantViewSet):
 
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from .models import (
     PlanDeCuentas,
     Cuenta,
@@ -77,6 +78,7 @@ from .serializers import (
     CuentaSerializer,
     PeriodoContableSerializer,
     AsientoContableSerializer,
+    TransaccionSerializer,
 )
 from .services import ContabilidadService, ContabilidadValidationError
 
@@ -89,6 +91,75 @@ class AsientoContableViewSet(BaseTenantViewSet):
     queryset = AsientoContable.objects.all().prefetch_related('transacciones')
     serializer_class = AsientoContableSerializer
     filterset_fields = ['periodo', 'fecha']
+
+    @action(detail=False, methods=['get'])
+    def libro_diario(self, request):
+        fecha_inicio = request.query_params.get('fecha_inicio')
+        fecha_fin = request.query_params.get('fecha_fin')
+
+        if not fecha_inicio or not fecha_fin:
+            return Response({"error": "Debe proporcionar fecha_inicio y fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        asientos = ContabilidadService.obtener_libro_diario(provider, fecha_inicio, fecha_fin)
+        serializer = self.get_serializer(asientos, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def balance_comprobacion(self, request):
+        periodo_id = request.query_params.get('periodo_id')
+        if not periodo_id:
+            return Response({"error": "Debe proporcionar periodo_id"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        balance = ContabilidadService.generar_balance_comprobacion(provider, periodo_id)
+        return Response(balance)
+
+    @action(detail=False, methods=['get'])
+    def estado_resultados(self, request):
+        fecha_inicio = request.query_params.get('fecha_inicio')
+        fecha_fin = request.query_params.get('fecha_fin')
+        if not fecha_inicio or not fecha_fin:
+            return Response({"error": "Debe proporcionar fecha_inicio y fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        reporte = ContabilidadService.generar_estado_resultados(provider, fecha_inicio, fecha_fin)
+        return Response(reporte)
+
+    @action(detail=False, methods=['get'])
+    def balance_general(self, request):
+        fecha_corte = request.query_params.get('fecha_corte')
+        if not fecha_corte:
+            return Response({"error": "Debe proporcionar fecha_corte"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        reporte = ContabilidadService.generar_balance_general(provider, fecha_corte)
+        return Response(reporte)
+
+    @action(detail=False, methods=['get'])
+    def flujo_caja(self, request):
+        fecha_inicio = request.query_params.get('fecha_inicio')
+        fecha_fin = request.query_params.get('fecha_fin')
+        if not fecha_inicio or not fecha_fin:
+            return Response({"error": "Debe proporcionar fecha_inicio y fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        reporte = ContabilidadService.generar_flujo_caja(provider, fecha_inicio, fecha_fin)
+        return Response(reporte)
+
+    @action(detail=False, methods=['get'])
+    def libro_mayor(self, request):
+        cuenta_codigo = request.query_params.get('cuenta_codigo')
+        fecha_inicio = request.query_params.get('fecha_inicio')
+        fecha_fin = request.query_params.get('fecha_fin')
+
+        if not cuenta_codigo or not fecha_inicio or not fecha_fin:
+            return Response({"error": "Faltan parámetros: cuenta_codigo, fecha_inicio, fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+
+        provider = request.user.perfil_prestador
+        movimientos = ContabilidadService.obtener_libro_mayor(provider, cuenta_codigo, fecha_inicio, fecha_fin)
+        serializer = TransaccionSerializer(movimientos, many=True)
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

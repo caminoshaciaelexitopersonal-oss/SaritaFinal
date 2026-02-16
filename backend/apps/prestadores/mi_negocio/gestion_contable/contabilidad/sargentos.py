@@ -1,8 +1,9 @@
 # backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/sargentos.py
 import logging
 from django.db import transaction
-from .models import AsientoContable, Transaccion, PeriodoContable, Cuenta
+from .models import AsientoContable, Transaccion, PeriodoContable, Cuenta, PlanDeCuentas
 from django.utils import timezone
+from .services import StandardChartOfAccountsService
 from apps.audit.models import AuditLog
 from api.models import CustomUser
 
@@ -15,8 +16,22 @@ class SargentoContable:
 
     @staticmethod
     @transaction.atomic
-    def generar_asiento_partida_doble(periodo_id, fecha, descripcion, movimientos, usuario_id):
+    def generar_asiento_partida_doble(periodo_id, fecha, descripcion, movimientos, usuario_id, provider=None):
         try:
+            if not periodo_id and provider:
+                # Buscar o crear periodo vigente
+                now = timezone.now()
+                periodo, _ = PeriodoContable.objects.get_or_create(
+                    provider=provider,
+                    cerrado=False,
+                    defaults={
+                        "nombre": f"Periodo {now.year}-{now.month:02d}",
+                        "fecha_inicio": now.replace(day=1, hour=0, minute=0, second=0, microsecond=0),
+                        "fecha_fin": (now.replace(day=28) + timezone.timedelta(days=4)).replace(day=1) - timezone.timedelta(days=1)
+                    }
+                )
+                periodo_id = periodo.id
+
             periodo = PeriodoContable.objects.get(id=periodo_id)
             if periodo.cerrado:
                 raise ValueError("El periodo contable esta cerrado.")
@@ -33,7 +48,31 @@ class SargentoContable:
             total_credito = 0
 
             for mov in movimientos:
-                cuenta = Cuenta.objects.get(id=mov['cuenta_id'])
+                if 'cuenta_id' in mov:
+                    cuenta = Cuenta.objects.get(id=mov['cuenta_id'])
+                elif 'cuenta_codigo' in mov:
+                    # Buscar por código dentro del plan del provider
+                    try:
+                        cuenta = Cuenta.objects.get(
+                            plan_de_cuentas__provider=periodo.provider,
+                            codigo=mov['cuenta_codigo']
+                        )
+                    except Cuenta.DoesNotExist:
+                        # Si no existe y es una cuenta estándar, podríamos intentar inicializar
+                        if not PlanDeCuentas.objects.filter(provider=periodo.provider).exists():
+                            StandardChartOfAccountsService.inicializar_contabilidad(periodo.provider)
+                            cuenta = Cuenta.objects.get(
+                                plan_de_cuentas__provider=periodo.provider,
+                                codigo=mov['cuenta_codigo']
+                            )
+                        else:
+                            raise
+                else:
+                    raise ValueError("Debe proporcionar cuenta_id o cuenta_codigo")
+
+                if not cuenta.is_active:
+                    raise ValueError(f"La cuenta {cuenta.codigo} está inactiva.")
+
                 debito = mov.get('debito', 0)
                 credito = mov.get('credito', 0)
                 total_debito += debito
@@ -49,6 +88,19 @@ class SargentoContable:
 
             if total_debito != total_credito:
                 raise ValueError(f"Asiento descuadrado. Debito: {total_debito}, Credito: {total_credito}")
+
+            # Registro en AuditLog
+            user = CustomUser.objects.get(id=usuario_id)
+            AuditLog.objects.create(
+                user=user,
+                username=user.username,
+                action="ASIENTO_CONTABLE_CREADO",
+                details={
+                    "asiento_id": str(asiento.id),
+                    "monto_total": float(total_debito),
+                    "descripcion": descripcion
+                }
+            )
 
             logger.info(f"SARGENTO: Asiento #{asiento.id} generado exitosamente.")
             return asiento

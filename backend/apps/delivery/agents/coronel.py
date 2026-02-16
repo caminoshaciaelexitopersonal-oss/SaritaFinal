@@ -1,14 +1,11 @@
 import logging
 from apps.sarita_agents.agents.coronel_template import CoronelTemplate
 from .capitanes import (
-    CapitanAfiliacionDelivery,
-    CapitanGestionConductores,
-    CapitanGestionVehiculos,
-    CapitanAsignacionServicios,
-    CapitanEjecucionOperativaDelivery,
-    CapitanPagosLiquidacionesDelivery,
-    CapitanAuditoriaDelivery,
-    CapitanCalificacionesDelivery
+    CapitanDespacho,
+    CapitanRutas,
+    CapitanRepartidores,
+    CapitanSeguimiento,
+    CapitanIndicadores
 )
 
 logger = logging.getLogger(__name__)
@@ -19,31 +16,27 @@ class CoronelDelivery(CoronelTemplate):
 
     def _get_capitanes(self) -> dict:
         return {
-            "afiliacion": CapitanAfiliacionDelivery(self),
-            "conductores": CapitanGestionConductores(self),
-            "vehiculos": CapitanGestionVehiculos(self),
-            "asignacion": CapitanAsignacionServicios(self),
-            "ejecucion": CapitanEjecucionOperativaDelivery(self),
-            "pagos": CapitanPagosLiquidacionesDelivery(self),
-            "auditoria": CapitanAuditoriaDelivery(self),
-            "calificaciones": CapitanCalificacionesDelivery(self)
+            "despacho": CapitanDespacho(self),
+            "rutas": CapitanRutas(self),
+            "repartidores": CapitanRepartidores(self),
+            "seguimiento": CapitanSeguimiento(self),
+            "indicadores": CapitanIndicadores(self)
         }
 
-    def _select_capitan(self, mission: dict):
-        action = mission.get("action", "").lower()
-        if "afiliar" in action or "empresa" in action:
-            return self.capitanes["afiliacion"]
-        if "conductor" in action:
-            return self.capitanes["conductores"]
-        if "vehiculo" in action:
-            return self.capitanes["vehiculos"]
-        if "solicitar" in action or "asignar" in action:
-            return self.capitanes["asignacion"]
-        if "iniciar" in action or "completar" in action or "evento" in action:
-            return self.capitanes["ejecucion"]
-        if "pago" in action or "liquidar" in action:
-            return self.capitanes["pagos"]
-        if "rate" in action or "calificar" in action:
-            return self.capitanes["calificaciones"]
+    def _select_capitan(self, directive: dict):
+        # Recibe directiva_original (dict)
+        parameters = directive.get("parameters", {})
+        target = parameters.get("target_area", "").lower()
 
-        return self.capitanes["auditoria"]
+        if target == "despacho" or "asignar" in target:
+            return self.capitanes["despacho"]
+        if target == "rutas" or "ruta" in target:
+            return self.capitanes["rutas"]
+        if target == "repartidores" or "conductor" in target:
+            return self.capitanes["repartidores"]
+        if target == "seguimiento" or "track" in target:
+            return self.capitanes["seguimiento"]
+        if target == "indicadores" or "kpi" in target:
+            return self.capitanes["indicadores"]
+
+        return self.capitanes["despacho"]

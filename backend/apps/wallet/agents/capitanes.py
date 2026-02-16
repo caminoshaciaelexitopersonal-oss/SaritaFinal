@@ -19,13 +19,15 @@ class CapitanMonederoBase(CapitanTemplate):
                 TenienteValidacionSaldo,
                 TenienteAutorizacionTransferencias,
                 TenienteControlLimites,
-                TenienteEvidenciasFinancieras
+                TenienteEvidenciasFinancieras,
+                TenienteMonitoreoRiesgo
             )
             roster = {
                 "validacion_saldo": TenienteValidacionSaldo(),
                 "autorizacion_transferencias": TenienteAutorizacionTransferencias(),
                 "control_limites": TenienteControlLimites(),
-                "evidencias_financieras": TenienteEvidenciasFinancieras()
+                "evidencias_financieras": TenienteEvidenciasFinancieras(),
+                "monitoreo_riesgo": TenienteMonitoreoRiesgo()
             }
 
             teniente = roster.get(teniente_name)
@@ -52,6 +54,22 @@ class CapitanCustodiaFondos(CapitanMonederoBase):
             "paso_1": {
                 "teniente": "validacion_saldo",
                 "descripcion": "Verificar integridad de saldos en la cuenta",
+                "parametros": mision.directiva_original.get("parameters", {})
+            }
+        }
+        plan.save()
+        return plan
+
+class CapitanAntifraude(CapitanMonederoBase):
+    def _get_tenientes(self) -> dict:
+        return {"monitoreo_riesgo": "TenienteMonitoreoRiesgo"}
+
+    def plan(self, mision) -> PlanTáctico:
+        plan = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
+        plan.pasos_del_plan = {
+            "paso_1": {
+                "teniente": "monitoreo_riesgo",
+                "descripcion": "Analizar patrones de movimientos sospechosos",
                 "parametros": mision.directiva_original.get("parameters", {})
             }
         }

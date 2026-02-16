@@ -30,6 +30,22 @@ from apps.sarita_agents.agents.general.sarita.coroneles.operativo_especializado.
     TenienteOperativoGastronomia,
     TenienteOperativoTransporte
 )
+from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.operativo_agencia_teniente import TenienteOperativoAgencia
+from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.operativo_artesano_teniente import TenienteOperativoArtesano
+from apps.sarita_agents.agents.general.sarita.coroneles.contable.tenientes.teniente_registro import TenienteRegistroContable
+from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.teniente_tesoreria import TenienteTesoreria
+from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.teniente_presupuestos import TenientePresupuestos
+from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.teniente_proyecciones import TenienteProyecciones
+from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.teniente_obligaciones import TenienteObligaciones
+from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.teniente_indicadores import TenienteIndicadores
+from apps.sarita_agents.agents.general.sarita.coroneles.sg_sst.tenientes.tenientes_especializados import (
+    TenienteRiesgos, TenienteIncidentes, TenienteCapacitacion,
+    TenienteInspecciones, TenienteIndicadores as TenienteIndicadoresSST
+)
+from apps.sarita_agents.agents.general.sarita.coroneles.nomina.tenientes.tenientes_nomina import (
+    TenienteLiquidacion, TenientePrestaciones, TenienteSeguridadSocial,
+    TenienteNovedades, TenienteIndicadores as TenienteIndicadoresNomina
+)
 
 # --- TENIENTES FINANCIEROS (Phase 4-F) ---
 class TenienteCACCalculator(TenienteTemplate):
@@ -408,4 +424,27 @@ TENIENTE_MAP = {
     'teniente_hospedaje': TenienteOperativoHospedaje,
     'teniente_gastronomia': TenienteOperativoGastronomia,
     'teniente_transporte': TenienteOperativoTransporte,
+    # Fase 4.1
+    'operativo_agencia': TenienteOperativoAgencia,
+    'operativo_artesano': TenienteOperativoArtesano,
+    # Fase 5
+    'registro_contable': TenienteRegistroContable,
+    # Fase 6
+    'tesoreria': TenienteTesoreria,
+    'presupuestos': TenientePresupuestos,
+    'proyecciones': TenienteProyecciones,
+    'obligaciones': TenienteObligaciones,
+    'indicadores': TenienteIndicadores,
+    # Fase 7 - SGSST
+    'sst_riesgos': TenienteRiesgos,
+    'sst_incidentes': TenienteIncidentes,
+    'sst_capacitacion': TenienteCapacitacion,
+    'sst_inspecciones': TenienteInspecciones,
+    'sst_indicadores': TenienteIndicadoresSST,
+    # Fase 8 - Nómina
+    'nomina_liquidacion': TenienteLiquidacion,
+    'nomina_prestaciones': TenientePrestaciones,
+    'nomina_seguridad_social': TenienteSeguridadSocial,
+    'nomina_novedades': TenienteNovedades,
+    'nomina_indicadores': TenienteIndicadoresNomina,
 }

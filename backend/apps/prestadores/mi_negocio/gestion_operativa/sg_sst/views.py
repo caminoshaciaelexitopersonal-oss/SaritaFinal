@@ -1,31 +1,80 @@
-from rest_framework import viewsets, permissions
-from .models import MatrizRiesgo, IncidenteLaboral, SaludOcupacional, CapacitacionSST
-from .serializers import MatrizRiesgoSerializer, IncidenteLaboralSerializer, SaludOcupacionalSerializer, CapacitacionSSTSerializer
+from django.utils import timezone
+from rest_framework import viewsets, permissions, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .models import (
+    MatrizRiesgo, IncidenteLaboral, SaludOcupacional, CapacitacionSST,
+    PlanAnualSST, ActividadPlanSST, InspeccionSST, IndicadorSST, AlertaSST
+)
+from .serializers import (
+    MatrizRiesgoSerializer, IncidenteLaboralSerializer, SaludOcupacionalSerializer,
+    CapacitacionSSTSerializer, PlanAnualSSTSerializer, ActividadPlanSSTSerializer,
+    InspeccionSSTSerializer, IndicadorSSTSerializer, AlertaSSTSerializer
+)
 
 class IsSSTOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
+        # Permitir si es el dueño o si es superadmin
+        if request.user.is_superuser: return True
         return str(obj.provider_id) == str(request.user.perfil_prestador.id)
 
-class MatrizRiesgoViewSet(viewsets.ModelViewSet):
+class BaseSSTViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, IsSSTOwner]
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return self.model.objects.all()
+        return self.model.objects.filter(provider_id=self.request.user.perfil_prestador.id)
+
+    def perform_create(self, serializer):
+        serializer.save(provider_id=self.request.user.perfil_prestador.id)
+
+class MatrizRiesgoViewSet(BaseSSTViewSet):
+    model = MatrizRiesgo
     serializer_class = MatrizRiesgoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsSSTOwner]
-    def get_queryset(self):
-        return MatrizRiesgo.objects.filter(provider_id=self.request.user.perfil_prestador.id)
 
-class IncidenteLaboralViewSet(viewsets.ModelViewSet):
+class IncidenteLaboralViewSet(BaseSSTViewSet):
+    model = IncidenteLaboral
     serializer_class = IncidenteLaboralSerializer
-    permission_classes = [permissions.IsAuthenticated, IsSSTOwner]
-    def get_queryset(self):
-        return IncidenteLaboral.objects.filter(provider_id=self.request.user.perfil_prestador.id)
 
-class SaludOcupacionalViewSet(viewsets.ModelViewSet):
+class SaludOcupacionalViewSet(BaseSSTViewSet):
+    model = SaludOcupacional
     serializer_class = SaludOcupacionalSerializer
-    permission_classes = [permissions.IsAuthenticated, IsSSTOwner]
-    def get_queryset(self):
-        return SaludOcupacional.objects.filter(provider_id=self.request.user.perfil_prestador.id)
 
-class CapacitacionSSTViewSet(viewsets.ModelViewSet):
+class CapacitacionSSTViewSet(BaseSSTViewSet):
+    model = CapacitacionSST
     serializer_class = CapacitacionSSTSerializer
-    permission_classes = [permissions.IsAuthenticated, IsSSTOwner]
-    def get_queryset(self):
-        return CapacitacionSST.objects.filter(provider_id=self.request.user.perfil_prestador.id)
+
+class PlanAnualSSTViewSet(BaseSSTViewSet):
+    model = PlanAnualSST
+    serializer_class = PlanAnualSSTSerializer
+
+class ActividadPlanSSTViewSet(viewsets.ModelViewSet):
+    queryset = ActividadPlanSST.objects.all()
+    serializer_class = ActividadPlanSSTSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class InspeccionSSTViewSet(BaseSSTViewSet):
+    model = InspeccionSST
+    serializer_class = InspeccionSSTSerializer
+
+class IndicadorSSTViewSet(BaseSSTViewSet):
+    model = IndicadorSST
+    serializer_class = IndicadorSSTSerializer
+
+class AlertaSSTViewSet(BaseSSTViewSet):
+    model = AlertaSST
+    serializer_class = AlertaSSTSerializer
+
+class DashboardSSTViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request):
+        provider_id = request.user.perfil_prestador.id
+        return Response({
+            "indicadores": IndicadorSSTSerializer(IndicadorSST.objects.filter(provider_id=provider_id), many=True).data,
+            "alertas_activas": AlertaSSTSerializer(AlertaSST.objects.filter(provider_id=provider_id, leida=False), many=True).data,
+            "resumen": {
+                "incidentes_mes": IncidenteLaboral.objects.filter(provider_id=provider_id, fecha_hora__month=timezone.now().month).count(),
+                "cumplimiento_plan": 0 # TODO: Calcular
+            }
+        })

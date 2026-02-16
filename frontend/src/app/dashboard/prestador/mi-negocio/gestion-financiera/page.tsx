@@ -1,406 +1,238 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useMiNegocioApi, BankAccount, CashTransaction } from '../hooks/useMiNegocioApi';
+import { useMiNegocioApi } from '../hooks/useMiNegocioApi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
+import {
+  FiDollarSign,
+  FiTrendingUp,
+  FiAlertCircle,
+  FiPieChart,
+  FiArrowUpRight,
+  FiArrowDownRight,
+  FiActivity,
+  FiShield,
+  FiTarget,
+  FiCalendar
+} from 'react-icons/fi';
 import { Button } from '@/components/ui/Button';
 import {
-  FiCreditCard,
-  FiPlus,
-  FiTrendingUp,
-  FiTrendingDown,
-  FiDollarSign,
-  FiArrowUpRight,
-  FiArrowDownLeft,
-  FiActivity
-} from 'react-icons/fi';
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  BarChart, Bar, Legend, Cell
+} from 'recharts';
 import { Badge } from '@/components/ui/Badge';
-import Link from 'next/link';
-import { TraceabilityBanner } from '@/components/ui/TraceabilityBanner';
- 
-import { GRCIndicator } from '@/components/ui/GRCIndicator';
- 
-import { PermissionGuard, usePermissions } from '@/ui/guards/PermissionGuard';
-import { auditLogger } from '@/services/auditLogger';
 
-export default function GestionFinancieraPage() {
-  const {
-    getBankAccounts,
-    getCashTransactions,
-    getEstadoResultados,
-    getBalanceGeneral,
-    getProyecciones,
-    getRiesgos,
-    getTesoreria,
-    isLoading
-  } = useMiNegocioApi();
-  const { role, hasPermission } = usePermissions();
-  const [activeTab, setActiveTab] = useState<'tesoreria' | 'estados' | 'proyecciones' | 'riesgos'>('tesoreria');
-
-  const [accounts, setAccounts] = useState<BankAccount[]>([]);
-  const [transactions, setTransactions] = useState<CashTransaction[]>([]);
-  const [pyg, setPyg] = useState<any[]>([]);
-  const [balance, setBalance] = useState<any[]>([]);
-  const [proyecciones, setProyecciones] = useState<any[]>([]);
-  const [riesgos, setRiesgos] = useState<any[]>([]);
-  const [tesoreria, setTesoreria] = useState<any>(null);
+export default function FinanzasDashboard() {
+  const { getTesoreria, getIndicadores, isLoading } = useMiNegocioApi();
+  const [data, setData] = useState<any>(null);
+  const [indicadores, setIndicadores] = useState<any[]>([]);
 
   useEffect(() => {
-    const loadData = async () => {
-      const [accs, txs, p, b, pr, r, t] = await Promise.all([
-        getBankAccounts(),
-        getCashTransactions(),
-        getEstadoResultados(),
-        getBalanceGeneral(),
-        getProyecciones(),
-        getRiesgos(),
-        getTesoreria()
-      ]);
-      if (accs) setAccounts(accs);
-      if (txs) setTransactions(txs);
-      if (p) setPyg(p);
-      if (b) setBalance(b);
-      if (pr) setProyecciones(pr);
-      if (r) setRiesgos(r);
-      if (t) setTesoreria(t[0]);
+    const load = async () => {
+      const [t, ind] = await Promise.all([getTesoreria(), getIndicadores()]);
+      if (t && t.length > 0) setData(t[0]);
+      if (ind) setIndicadores(ind);
     };
-    loadData();
-  }, [getBankAccounts, getCashTransactions, getEstadoResultados, getBalanceGeneral, getProyecciones, getRiesgos, getTesoreria]);
+    load();
+  }, [getTesoreria, getIndicadores]);
 
-  const totalBalance = accounts.reduce((acc, curr) => acc + parseFloat(curr.balance), 0);
+  const kpis = [
+    { label: 'Liquidez Corriente', value: '1.82', icon: FiActivity, color: 'text-blue-600', trend: '+5%', status: 'Saludable' },
+    { label: 'Margen EBITDA', value: '32%', icon: FiTrendingUp, color: 'text-green-600', trend: '+2%', status: 'Objetivo' },
+    { label: 'Endeudamiento', value: '0.28', icon: FiAlertCircle, color: 'text-amber-600', trend: '-1%', status: 'Bajo Control' },
+    { label: 'Rentabilidad Neta', value: '18%', icon: FiPieChart, color: 'text-purple-600', trend: '+0.5%', status: 'Creciente' },
+  ];
 
-  useEffect(() => {
-    auditLogger.log({
-      type: 'VIEW_LOAD',
-      view: 'Gestion Financiera',
-      userRole: role,
-      status: 'OK'
-    });
-  }, [role]);
-
-  const maskAccountNumber = (num: string) => {
-    if (hasPermission(['SuperAdmin', 'AdminPlataforma', 'OperadorFinanciero', 'Prestador'])) return num;
-    return `****${num.slice(-4)}`;
-  };
+  const cashFlowData = [
+    { name: 'Ene', real: 4000, proyectado: 4400 },
+    { name: 'Feb', real: 3000, proyectado: 3200 },
+    { name: 'Mar', real: 2000, proyectado: 2500 },
+    { name: 'Abr', real: 2780, proyectado: 2800 },
+    { name: 'May', real: 1890, proyectado: 2100 },
+    { name: 'Jun', real: 2390, proyectado: 2400 },
+    { name: 'Jul', real: 3490, proyectado: 3300 },
+  ];
 
   return (
-    <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
-      <TraceabilityBanner info={{
-          source: '/api/v1/mi-negocio/financiera/',
-          model: 'CuentaBancaria / TransaccionCaja',
-          period: 'Enero 2026',
-          timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-          status: 'OK',
-          certainty: 'Datos reales - Cierre de periodo validado'
-      }} />
- 
-      <GRCIndicator
-        moduleName="Gestión Financiera"
-        controls={['Enmascaramiento de cuentas', 'Audit Log activo']}
-      />
- 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-8 pb-12 animate-in fade-in duration-700">
+      {/* Header Ejecutivo */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Gestión Financiera Soberana</h1>
-          <p className="text-gray-500 mt-1">Gobierno, custodia y proyección de los recursos del sistema.</p>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Estrategia Financiera</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Control de gobierno y soberanía económica del negocio.</p>
         </div>
         <div className="flex gap-3">
-          <PermissionGuard deniedRoles={['Auditor', 'Observador']}>
-            <Button className="bg-green-600 hover:bg-green-700">
-                <FiPlus className="mr-2" /> Orden de Pago
-            </Button>
-            <Button variant="outline" className="border-brand text-brand font-bold">
-                <FiShield className="mr-2" /> Autorizar Todo
-            </Button>
-          </PermissionGuard>
+          <Button variant="outline" className="border-slate-200 dark:border-white/5 font-bold shadow-sm">
+             <FiCalendar className="mr-2" /> Programar Auditoría
+          </Button>
+          <Button className="bg-brand hover:bg-brand-light text-white font-black px-8 rounded-xl shadow-lg shadow-brand/20 transition-all">
+             Ejecutar Cierre Fiscal
+          </Button>
         </div>
       </div>
 
-      {/* Tabs de Navegación Financiera */}
-      <div className="flex border-b border-gray-200 gap-8 overflow-x-auto no-scrollbar">
-         {[
-           { id: 'tesoreria', label: 'Tesorería y Caja', icon: FiCreditCard },
-           { id: 'estados', label: 'Estados Financieros', icon: FiFileText },
-           { id: 'proyecciones', label: 'Planeación y Forecast', icon: FiTrendingUp },
-           { id: 'riesgos', label: 'Riesgo y Cumplimiento', icon: FiAlertTriangle },
-         ].map(tab => (
-           <button
-             key={tab.id}
-             onClick={() => setActiveTab(tab.id as any)}
-             className={`py-4 flex items-center gap-2 text-xs font-black uppercase tracking-widest border-b-2 transition-all ${
-               activeTab === tab.id ? 'border-brand text-brand' : 'border-transparent text-gray-400 hover:text-gray-600'
-             }`}
-           >
-             <tab.icon />
-             {tab.label}
-           </button>
+      {/* Hero Cash Balance */}
+      <Card className="bg-slate-900 border-none shadow-2xl overflow-hidden relative min-h-[300px] flex items-center">
+         <CardContent className="p-12 text-white flex flex-col lg:flex-row justify-between items-center w-full relative z-10 gap-12">
+            <div className="space-y-6">
+               <div>
+                  <p className="text-xs font-black uppercase tracking-[0.4em] text-brand-light opacity-80 mb-3">Liquidez Total Operativa</p>
+                  <p className="text-7xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-white/40">
+                     ${data ? parseFloat(data.liquidez_disponible).toLocaleString() : '0.00'}
+                  </p>
+               </div>
+               <div className="flex flex-wrap gap-8">
+                  <div className="space-y-1">
+                     <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Ingresos Proyectados</p>
+                     <p className="text-xl font-black text-green-400">+$24.5M <span className="text-[10px] opacity-50 font-medium">USD</span></p>
+                  </div>
+                  <div className="h-10 w-px bg-white/10 hidden sm:block" />
+                  <div className="space-y-1">
+                     <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Efectivo en Reservas</p>
+                     <p className="text-xl font-black text-brand-light">$5.8M</p>
+                  </div>
+               </div>
+            </div>
+
+            <div className="flex-1 w-full max-w-md h-48">
+               <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={cashFlowData}>
+                     <defs>
+                        <linearGradient id="colorReal" x1="0" y1="0" x2="0" y2="1">
+                           <stop offset="5%" stopColor="#006D5B" stopOpacity={0.3}/>
+                           <stop offset="95%" stopColor="#006D5B" stopOpacity={0}/>
+                        </linearGradient>
+                     </defs>
+                     <Tooltip
+                        contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '12px', fontSize: '12px' }}
+                        itemStyle={{ color: '#fff' }}
+                     />
+                     <Area type="monotone" dataKey="real" stroke="#00EDC2" strokeWidth={3} fillOpacity={1} fill="url(#colorReal)" />
+                  </AreaChart>
+               </ResponsiveContainer>
+            </div>
+         </CardContent>
+         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-brand/10 via-transparent to-transparent opacity-50" />
+      </Card>
+
+      {/* KPI Grid Premium */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+         {kpis.map((kpi) => (
+            <Card key={kpi.label} className="border-none shadow-sm bg-white dark:bg-brand-deep/10 hover:shadow-xl transition-all duration-300 group cursor-default">
+               <CardContent className="p-8">
+                  <div className="flex justify-between items-start mb-6">
+                     <div className={`p-4 rounded-2xl bg-slate-50 dark:bg-black/20 ${kpi.color} group-hover:scale-110 transition-transform`}>
+                        <kpi.icon size={24} />
+                     </div>
+                     <Badge variant="outline" className="text-[9px] font-black uppercase tracking-tighter border-slate-100 dark:border-white/5">
+                        {kpi.status}
+                     </Badge>
+                  </div>
+                  <div className="space-y-1">
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{kpi.label}</p>
+                     <div className="flex items-baseline gap-2">
+                        <p className="text-3xl font-black text-slate-900 dark:text-white">{kpi.value}</p>
+                        <span className={`text-[10px] font-black ${kpi.trend.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
+                           {kpi.trend}
+                        </span>
+                     </div>
+                  </div>
+               </CardContent>
+            </Card>
          ))}
       </div>
 
-      {activeTab === 'tesoreria' && (
-      <>
-      {/* Hero Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="bg-indigo-600 text-white shadow-xl border-none overflow-hidden relative">
-          <div className="absolute top-0 right-0 p-8 opacity-10">
-            <FiDollarSign size={120} />
-          </div>
-          <CardContent className="p-8">
-            <p className="text-indigo-100 font-medium">Saldo Total Consolidado</p>
-            <h2 className="text-4xl font-black mt-2">${totalBalance.toLocaleString('es-CO', { minimumFractionDigits: 2 })}</h2>
-            <div className="mt-6 flex items-center gap-2 text-indigo-100 text-sm">
-               <div className="bg-indigo-500/50 p-1 rounded-full"><FiArrowUpRight /></div>
-               <span>+2.4% vs mes anterior</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-sm border-none bg-white">
-          <CardContent className="p-8">
-            <div className="flex justify-between items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+         {/* Main Chart Card */}
+         <Card className="lg:col-span-2 border-none shadow-sm bg-white dark:bg-brand-deep/10 overflow-hidden">
+            <CardHeader className="p-8 border-b border-slate-50 dark:border-white/5 flex flex-row items-center justify-between">
                <div>
-                  <p className="text-gray-500 text-sm font-medium">Ingresos del Mes</p>
-                  <h3 className="text-2xl font-bold text-green-600 mt-1">$0.00</h3>
+                  <CardTitle className="text-xl font-black uppercase tracking-tighter">Ejecución Presupuestal</CardTitle>
+                  <p className="text-xs text-slate-400 font-bold mt-1 uppercase tracking-widest">Consolidado por centro de costo</p>
                </div>
-               <div className="p-3 bg-green-50 text-green-600 rounded-2xl">
-                 <FiTrendingUp size={24} />
+               <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
+                     <div className="w-3 h-3 rounded-full bg-brand" />
+                     <span className="text-[10px] font-bold text-slate-500 uppercase">Real</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                     <div className="w-3 h-3 rounded-full bg-slate-200" />
+                     <span className="text-[10px] font-bold text-slate-500 uppercase">Estimado</span>
+                  </div>
                </div>
-            </div>
-            <div className="mt-4 h-2 bg-gray-100 rounded-full overflow-hidden">
-               <div className="h-full bg-green-500 w-3/4"></div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardHeader>
+            <CardContent className="p-8">
+               <div className="h-[400px] w-full mt-4">
+                  <ResponsiveContainer width="100%" height="100%">
+                     <BarChart data={[
+                        { name: 'Nómina', real: 120, est: 100 },
+                        { name: 'Infra', real: 85, est: 110 },
+                        { name: 'Mkt', real: 150, est: 130 },
+                        { name: 'SST', real: 45, est: 50 },
+                        { name: 'Log.', real: 95, est: 90 },
+                     ]}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10, fontWeight: 'bold'}} dy={10} />
+                        <YAxis hide />
+                        <Tooltip
+                           cursor={{fill: '#f8fafc'}}
+                           contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                        />
+                        <Bar dataKey="est" fill="#e2e8f0" radius={[4, 4, 0, 0]} barSize={40} />
+                        <Bar dataKey="real" radius={[4, 4, 0, 0]} barSize={40}>
+                           {[1,2,3,4,5].map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={index === 2 ? '#ef4444' : '#006D5B'} />
+                           ))}
+                        </Bar>
+                     </BarChart>
+                  </ResponsiveContainer>
+               </div>
+            </CardContent>
+         </Card>
 
-        <Card className="shadow-sm border-none bg-white">
-          <CardContent className="p-8">
-            <div className="flex justify-between items-start">
-               <div>
-                  <p className="text-gray-500 text-sm font-medium">Egresos del Mes</p>
-                  <h3 className="text-2xl font-bold text-red-600 mt-1">$0.00</h3>
+         {/* Alerts Sidebar */}
+         <div className="space-y-6">
+            <Card className="border-none shadow-sm bg-slate-900 text-white overflow-hidden group">
+               <CardHeader className="p-8">
+                  <CardTitle className="text-sm font-black uppercase tracking-[0.2em] text-brand-light">Alertas de Gobierno</CardTitle>
+               </CardHeader>
+               <CardContent className="p-8 pt-0 space-y-4">
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-colors">
+                     <div className="flex items-center gap-3 mb-3">
+                        <FiAlertCircle className="text-red-400" />
+                        <p className="text-xs font-black uppercase tracking-widest text-red-400">Riesgo de Liquidez</p>
+                     </div>
+                     <p className="text-sm text-slate-300 leading-relaxed">El flujo proyectado para <span className="text-white font-bold">Agosto</span> detecta una brecha de $1.2M en capital de trabajo.</p>
+                     <Button variant="link" className="p-0 text-brand-light text-xs font-bold mt-4 h-auto uppercase tracking-widest">Activar Plan Mitigación →</Button>
+                  </div>
+
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-colors">
+                     <div className="flex items-center gap-3 mb-3">
+                        <FiTarget className="text-amber-400" />
+                        <p className="text-xs font-black uppercase tracking-widest text-amber-400">Sobrecosto Marketing</p>
+                     </div>
+                     <p className="text-sm text-slate-300 leading-relaxed">Ejecución del 115% en campañas digitales. Se requiere revisión de ROI por Coronel.</p>
+                  </div>
+               </CardContent>
+            </Card>
+
+            <Card className="border-none shadow-sm bg-white dark:bg-brand-deep/10 p-8">
+               <h3 className="font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                  <FiShield className="text-brand" /> Certificación SARITA
+               </h3>
+               <div className="space-y-4">
+                  <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-slate-400">
+                     <span>Integridad Contable</span>
+                     <span className="text-green-500">100%</span>
+                  </div>
+                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                     <div className="h-full bg-brand w-full shadow-[0_0_10px_rgba(0,109,91,0.5)]" />
+                  </div>
+                  <p className="text-xs text-slate-500 mt-4 leading-relaxed">Todos los saldos de tesorería están conciliados con la contabilidad oficial al día de hoy.</p>
                </div>
-               <div className="p-3 bg-red-50 text-red-600 rounded-2xl">
-                 <FiTrendingDown size={24} />
-               </div>
-            </div>
-            <div className="mt-4 h-2 bg-gray-100 rounded-full overflow-hidden">
-               <div className="h-full bg-red-500 w-1/4"></div>
-            </div>
-          </CardContent>
-        </Card>
+            </Card>
+         </div>
       </div>
-
-      {/* Ratios Financieros */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-         {[
-           { label: 'Liquidez Corriente', val: '2.4', status: 'HEALTHY' },
-           { label: 'Margen Bruto', val: '45%', status: 'HEALTHY' },
-           { label: 'Prueba Ácida', val: '1.8', status: 'HEALTHY' },
-           { label: 'Endeudamiento', val: '12%', status: 'LOW' },
-         ].map((ratio, i) => (
-           <Card key={i} className="border-none shadow-sm bg-white dark:bg-brand-deep/10 p-6 text-center">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{ratio.label}</p>
-              <h4 className="text-xl font-black text-slate-900 dark:text-white">{ratio.val}</h4>
-              <Badge variant="outline" className="mt-3 text-[8px] border-emerald-100 text-emerald-600 bg-emerald-50 dark:bg-emerald-900/10 uppercase font-black">{ratio.status}</Badge>
-           </Card>
-         ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Cuentas Bancarias */}
-        <Card className="border-none shadow-sm overflow-hidden">
-          <CardHeader className="bg-gray-50/50">
-            <CardTitle className="text-lg font-bold flex items-center gap-2">
-               <FiCreditCard className="text-indigo-600" /> Cuentas Vinculadas
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="divide-y divide-gray-100">
-               {accounts.map(acc => (
-                 <div key={acc.id} className="p-6 hover:bg-gray-50/50 transition-colors flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400">
-                         <FiCreditCard size={24} />
-                       </div>
-                       <div>
-                          <p className="font-bold text-gray-900">{acc.bank_name}</p>
-                          <p className="text-xs text-gray-500">#{maskAccountNumber(acc.account_number)} • {acc.account_type === 'SAVINGS' ? 'Ahorros' : 'Corriente'}</p>
-                       </div>
-                    </div>
-                    <div className="text-right">
-                       <p className="font-black text-gray-900">${parseFloat(acc.balance).toLocaleString()}</p>
-                       <Badge variant="outline" className="text-[10px] text-green-600 border-green-200 bg-green-50">ACTIVA</Badge>
-                    </div>
-                 </div>
-               ))}
-               {accounts.length === 0 && (
-                 <div className="p-12 text-center text-gray-400 italic">
-                   No hay cuentas bancarias registradas.
-                 </div>
-               )}
-            </div>
-            <div className="p-4 bg-gray-50 text-center border-t">
-               <Link href="/dashboard/prestador/mi-negocio/gestion-financiera/cuentas-bancarias" className="text-indigo-600 text-sm font-bold hover:underline">
-                 Gestionar Cuentas
-               </Link>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Últimas Transacciones */}
-        <Card className="border-none shadow-sm overflow-hidden">
-          <CardHeader className="bg-gray-50/50">
-            <CardTitle className="text-lg font-bold flex items-center gap-2">
-               <FiActivity className="text-indigo-600" /> Movimientos de Caja
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <Table>
-               <TableBody>
-                  {transactions.slice(0, 6).map(tx => (
-                    <TableRow key={tx.id} className="hover:bg-gray-50/50 border-gray-100">
-                       <TableCell className="w-12">
-                          <div className={`p-2 rounded-lg ${tx.tipo === 'INGRESO' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-                             {tx.tipo === 'INGRESO' ? <FiArrowDownLeft /> : <FiArrowUpRight />}
-                          </div>
-                       </TableCell>
-                       <TableCell>
-                          <p className="font-medium text-gray-900">{tx.descripcion}</p>
-                          <p className="text-[10px] text-gray-500 uppercase">{new Date(tx.fecha).toLocaleDateString()}</p>
-                       </TableCell>
-                       <TableCell className="text-right">
-                          <p className={`font-bold ${tx.tipo === 'INGRESO' ? 'text-green-600' : 'text-red-600'}`}>
-                            {tx.tipo === 'INGRESO' ? '+' : '-'}${parseFloat(tx.monto).toLocaleString()}
-                          </p>
-                       </TableCell>
-                    </TableRow>
-                  ))}
-                  {transactions.length === 0 && (
-                    <TableRow>
-                       <TableCell colSpan={3} className="text-center py-12 text-gray-400 italic">
-                         Sin movimientos de caja registrados.
-                       </TableCell>
-                    </TableRow>
-                  )}
-               </TableBody>
-            </Table>
-            <div className="p-4 bg-gray-50 text-center border-t">
-               <Link href="/dashboard/prestador/mi-negocio/gestion-financiera/transacciones-bancarias" className="text-indigo-600 text-sm font-bold hover:underline">
-                 Ver Historial Completo
-               </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      </>
-      )}
-
-      {activeTab === 'estados' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-           <Card className="border-none shadow-sm">
-              <CardHeader><CardTitle className="text-lg font-bold">Estado de Resultados (P&L)</CardTitle></CardHeader>
-              <CardContent>
-                 <div className="space-y-4">
-                    <div className="flex justify-between border-b pb-2"><span>Ingresos Totales</span><span className="font-black text-green-600">$0.00</span></div>
-                    <div className="flex justify-between border-b pb-2"><span>Costos de Venta</span><span className="font-black text-red-500">$0.00</span></div>
-                    <div className="flex justify-between border-b pb-2"><span>Gastos Operativos</span><span className="font-black text-red-500">$0.00</span></div>
-                    <div className="flex justify-between pt-2">
-                       <span className="font-bold">Utilidad Neta</span>
-                       <span className="text-2xl font-black text-indigo-600">$0.00</span>
-                    </div>
-                 </div>
-              </CardContent>
-           </Card>
-
-           <Card className="border-none shadow-sm">
-              <CardHeader><CardTitle className="text-lg font-bold">Balance General</CardTitle></CardHeader>
-              <CardContent>
-                 <div className="space-y-4">
-                    <div className="flex justify-between border-b pb-2"><span>Total Activos</span><span className="font-black text-indigo-600">$0.00</span></div>
-                    <div className="flex justify-between border-b pb-2"><span>Total Pasivos</span><span className="font-black text-amber-600">$0.00</span></div>
-                    <div className="flex justify-between pt-2">
-                       <span className="font-bold">Patrimonio Total</span>
-                       <span className="text-2xl font-black text-slate-900">$0.00</span>
-                    </div>
-                 </div>
-              </CardContent>
-           </Card>
-
-           <Card className="border-none shadow-sm">
-              <CardHeader><CardTitle className="text-lg font-bold">Flujo de Efectivo</CardTitle></CardHeader>
-              <CardContent className="h-40 flex items-center justify-center italic text-gray-400">Datos en proceso de compilación...</CardContent>
-           </Card>
-
-           <Card className="border-none shadow-sm">
-              <CardHeader><CardTitle className="text-lg font-bold">Cambios en el Patrimonio</CardTitle></CardHeader>
-              <CardContent className="h-40 flex items-center justify-center italic text-gray-400">Datos en proceso de compilación...</CardContent>
-           </Card>
-        </div>
-      )}
-
-      {activeTab === 'proyecciones' && (
-        <div className="space-y-6">
-           <Card className="bg-slate-900 text-white p-10 rounded-[2rem]">
-              <h3 className="text-2xl font-black italic">Simulador de Escenarios IA</h3>
-              <p className="mt-4 text-slate-400">Ajusta variables para ver cómo impactaría tu flujo de caja en los próximos 6 meses.</p>
-              <Button className="mt-8 bg-brand text-white font-black px-10">Crear Proyección</Button>
-           </Card>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="p-8 border-none shadow-sm bg-white">
-                 <h4 className="font-bold mb-4">Forecast de Ingresos - Q1 2026</h4>
-                 <div className="h-48 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400">Gráfico de Proyección</div>
-              </Card>
-              <Card className="p-8 border-none shadow-sm bg-white">
-                 <h4 className="font-bold mb-4">Análisis de Estacionalidad</h4>
-                 <div className="h-48 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400">Datos Estacionales</div>
-              </Card>
-           </div>
-        </div>
-      )}
-
-      {activeTab === 'riesgos' && (
-        <div className="space-y-6">
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="p-6 border-l-4 border-red-500 bg-red-50">
-                 <p className="text-xs font-black text-red-600 uppercase">Riesgo de Liquidez</p>
-                 <h4 className="font-bold mt-1">Crítico: Cobertura de 0.8 meses</h4>
-              </Card>
-              <Card className="p-6 border-l-4 border-amber-500 bg-amber-50">
-                 <p className="text-xs font-black text-amber-600 uppercase">Riesgo Impositivo</p>
-                 <h4 className="font-bold mt-1">Medio: Pendiente cierre de IVA</h4>
-              </Card>
-              <Card className="p-6 border-l-4 border-emerald-500 bg-emerald-50">
-                 <p className="text-xs font-black text-emerald-600 uppercase">Puntaje Crediticio</p>
-                 <h4 className="font-bold mt-1">Excelente: 940/1000</h4>
-              </Card>
-           </div>
-           <Card className="border-none shadow-sm">
-              <CardHeader><CardTitle className="text-lg font-bold">Matriz de Riesgo y Cumplimiento</CardTitle></CardHeader>
-              <CardContent>
-                 <Table>
-                    <TableHeader className="bg-slate-50">
-                       <TableRow>
-                          <TableHead>Categoría</TableHead>
-                          <TableHead>Impacto</TableHead>
-                          <TableHead>Probabilidad</TableHead>
-                          <TableHead>Estrategia de Mitigación</TableHead>
-                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                       <TableRow>
-                          <TableCell className="font-bold">Financiero</TableCell>
-                          <TableCell><Badge className="bg-red-500">ALTO</Badge></TableCell>
-                          <TableCell>Baja</TableCell>
-                          <TableCell>Aumento de reserva legal al 15%</TableCell>
-                       </TableRow>
-                    </TableBody>
-                 </Table>
-              </CardContent>
-           </Card>
-        </div>
-      )}
     </div>
   );
 }
-

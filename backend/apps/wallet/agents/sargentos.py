@@ -65,4 +65,26 @@ class SargentoBitacoraSoberana:
     """Registra la acción en la bitácora de auditoría inmutable."""
     def execute(self, payload):
         logger.info("SARGENTO: Firmando entrada en bitácora soberana.")
+        # Delegar a Soldados
+        from .soldados import SoldadoAuditor
+        for i in range(5):
+            SoldadoAuditor(self, i).perform_action(payload)
         return "log-entry-uuid"
+
+class SargentoAnalisisPatrones:
+    """Analiza patrones de fraude."""
+    def execute(self, params):
+        logger.info("SARGENTO: Iniciando análisis de patrones de fraude.")
+        from .soldados import SoldadoAnalista
+        for i in range(5):
+            SoldadoAnalista(self, i).perform_action(params)
+        return True
+
+class SargentoMonitoreoAlertas:
+    """Monitorea alertas de seguridad."""
+    def execute(self, params):
+        logger.info("SARGENTO: Monitoreando alertas financieras.")
+        from .soldados import SoldadoVigilante
+        for i in range(5):
+            SoldadoVigilante(self, i).perform_action(params)
+        return True

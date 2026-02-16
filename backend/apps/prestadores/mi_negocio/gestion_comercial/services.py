@@ -133,7 +133,7 @@ class FacturacionService:
                     ]
 
                     directive_acc = {
-                        "domain": "prestadores",
+                        "domain": "contabilidad",
                         "mission": {"type": "RECOGNIZE_REVENUE"},
                         "parameters": {
                             "periodo_id": str(periodo.id),

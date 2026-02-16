@@ -6,7 +6,7 @@ import {
   FiBriefcase, FiImage, FiBookOpen, FiGrid, FiShoppingCart, FiUser, FiArchive,
   FiTrendingDown, FiDollarSign, FiHome, FiUsers, FiFileText, FiMapPin, FiSettings,
   FiBarChart2, FiShield, FiFolder, FiCamera, FiEdit, FiCalendar, FiClipboard, FiCheckSquare, FiMonitor, FiDownload,
-  FiActivity, FiZap, FiCpu, FiTrendingUp, FiClock, FiGlobe, FiTarget
+  FiActivity, FiZap, FiCpu, FiTrendingUp, FiClock, FiGlobe, FiTarget, FiCreditCard
 } from 'react-icons/fi';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -85,6 +85,8 @@ const miNegocioNav: NavSection[] = [
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/estadisticas', label: 'Estadísticas', icon: FiBarChart2 },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/genericos/costos', label: 'Costos', icon: FiTrendingDown },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/sst', label: 'Seguridad y Salud (SST)', icon: FiShield },
+      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/nomina', label: 'Gestión de Nómina', icon: FiUsers },
+      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/delivery', label: 'Logística (Delivery)', icon: FiTruck },
     ],
   },
   {
@@ -106,6 +108,15 @@ const miNegocioNav: NavSection[] = [
     ],
   },
   { title: 'Gestión Archivística', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-archivistica', label: 'Archivo Digital', icon: FiArchive }] },
+  {
+    title: 'Monedero Soberano',
+    isSubSection: true,
+    links: [
+      { href: '/dashboard/prestador/mi-negocio/monedero', label: 'Mi Monedero', icon: FiCreditCard },
+      { href: '/dashboard/prestador/mi-negocio/monedero/transferencias', label: 'Transferencias', icon: FiZap },
+      { href: '/dashboard/prestador/mi-negocio/monedero/comisiones', label: 'Comisiones', icon: FiAward },
+    ]
+  },
   { title: 'Análisis Financiero', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-financiera', label: 'Tesorería', icon: FiTrendingDown }] },
   { title: 'Gestión Contable', isSubSection: true, links: [{ href: '/dashboard/prestador/mi-negocio/gestion-contable', label: 'Libros Contables', icon: FiBookOpen }] },
 ];
@@ -254,10 +265,12 @@ export default function Sidebar() {
       <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar pb-10">
         <SidebarLink link={{ href: '/dashboard', label: 'Dashboard Central', icon: FiHome }} />
 
-        {user.role === 'PRESTADOR' && (
+        {(user.role === 'PRESTADOR' || user.role === 'ARTESANO') && (
           <div className="mt-8">
             <div className="px-4 mb-4 flex items-center justify-between group cursor-pointer" onClick={() => setIsMiNegocioOpen(!isMiNegocioOpen)}>
-               <span className="text-xs font-black text-slate-900 dark:text-white tracking-widest uppercase">Mi Negocio</span>
+               <span className="text-xs font-black text-slate-900 dark:text-white tracking-widest uppercase">
+                 {user.role === 'ARTESANO' ? 'Mi Taller' : 'Mi Negocio'}
+               </span>
                {isMiNegocioOpen ? <FiChevronDown size={14} className="text-slate-400" /> : <FiChevronRight size={14} className="text-slate-400" />}
             </div>
             {isMiNegocioOpen && (

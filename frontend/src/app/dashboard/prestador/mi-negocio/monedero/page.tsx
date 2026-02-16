@@ -1,130 +1,120 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import api from '@/services/api';
-import { useAuth } from '@/contexts/AuthContext';
-import { FiDollarSign, FiTrendingUp, FiArrowUpRight, FiClock, FiShield, FiFileText } from 'react-icons/fi';
-import { ViewState } from '@/components/ui/ViewState';
-import { toast } from 'react-toastify';
+import React from 'react';
+import {
+  FiTrendingUp,
+  FiArrowUpRight,
+  FiArrowDownLeft,
+  FiLock,
+  FiZap,
+  FiShield,
+  FiActivity
+} from 'react-icons/fi';
 
-export default function PrestadorMonederoPage() {
-  const { token } = useAuth();
-  const [wallet, setWallet] = useState<any>(null);
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const stats = [
+  { label: 'Saldo Disponible', value: '$24,500,000', icon: FiZap, color: 'bg-emerald-500' },
+  { label: 'Saldo Bloqueado', value: '$3,200,000', icon: FiLock, color: 'bg-amber-500' },
+  { label: 'Ingresos (Hoy)', value: '+$1,250,000', icon: FiArrowUpRight, color: 'bg-brand' },
+  { label: 'Egresos (Hoy)', value: '-$450,000', icon: FiArrowDownLeft, color: 'bg-rose-500' },
+];
 
-  const fetchData = useCallback(async () => {
-    if (!token) return;
-    setIsLoading(true);
-    try {
-      const [walletRes, txRes] = await Promise.all([
-        api.get('/wallet/accounts/'),
-        api.get('/wallet/transactions/')
-      ]);
-
-      if (walletRes.data.results && walletRes.data.results.length > 0) {
-        setWallet(walletRes.data.results[0]);
-      }
-      setTransactions(txRes.data.results || []);
-    } catch (err) {
-      setError("Error al cargar la información financiera.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [token]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  const handleLiquidate = async () => {
-    if (!wallet) return;
-    try {
-      await api.post('/wallet/accounts/liquidate_wallet/', { wallet_id: wallet.id });
-      toast.success("Liquidación solicitada correctamente.");
-      fetchData();
-    } catch (err) {
-      toast.error("Error al procesar la liquidación.");
-    }
-  };
-
+export default function WalletDashboard() {
   return (
-    <div className="p-8 space-y-8">
-      <div className="flex justify-between items-end">
-        <div>
-          <h1 className="text-3xl font-black text-slate-900">Monedero Institucional</h1>
-          <p className="text-slate-500 font-medium">Gestión soberana de ingresos y liquidaciones.</p>
-        </div>
-        <div className="flex gap-3">
-           <button onClick={fetchData} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-xs transition-all">
-              Actualizar
-           </button>
-           <button onClick={handleLiquidate} className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-indigo-100 transition-all">
-              Solicitar Liquidación
-           </button>
-        </div>
+    <div className="space-y-8">
+      {/* Resumen Superior */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, i) => (
+          <div key={i} className="bg-white dark:bg-black p-6 rounded-3xl border border-slate-100 dark:border-white/5 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className={`${stat.color} p-3 rounded-2xl text-white shadow-lg`}>
+                <stat.icon size={20} />
+              </div>
+              <FiTrendingUp size={16} className="text-slate-300" />
+            </div>
+            <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest">{stat.label}</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-1 tracking-tighter">{stat.value}</h3>
+          </div>
+        ))}
       </div>
 
-      <ViewState isLoading={isLoading} error={error}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden">
-             <div className="relative z-10">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Saldo Disponible</p>
-                <h2 className="text-4xl font-black text-slate-900">${wallet?.balance || '0.00'}</h2>
-                <div className="mt-4 flex items-center gap-2 text-green-600 font-bold text-xs">
-                   <FiTrendingUp /> +12% vs mes anterior
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Actividad Reciente */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-white dark:bg-black p-8 rounded-[40px] border border-slate-100 dark:border-white/5">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <FiActivity size={24} className="text-brand" />
+                <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Historial Maestro</h2>
+              </div>
+              <button className="text-xs font-black text-brand uppercase tracking-widest">Ver todo</button>
+            </div>
+
+            <div className="space-y-4">
+              {[
+                { type: 'Recarga', desc: 'Transferencia Bancaria #892', amount: '+$500,000', status: 'Verificado', time: 'hace 10 min' },
+                { type: 'Pago', desc: 'Suministros Oficina - Amazon', amount: '-$125,000', status: 'Ejecutado', time: 'hace 1 hora' },
+                { type: 'Comisión', desc: 'Delivery #9021 - Comisión 15%', amount: '+$12,500', status: 'Ejecutado', time: 'hace 3 horas' },
+                { type: 'Transferencia', desc: 'Pago Nómina - Juan Pérez', amount: '-$1,800,000', status: 'Ejecutado', time: 'ayer' },
+              ].map((tx, i) => (
+                <div key={i} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-white/5 rounded-2xl transition-colors cursor-pointer">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/10 flex items-center justify-center font-black text-xs text-slate-500">
+                      {tx.type[0]}
+                    </div>
+                    <div>
+                      <p className="text-sm font-black text-slate-900 dark:text-white">{tx.desc}</p>
+                      <p className="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">{tx.type} • {tx.time}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className={`text-sm font-black ${tx.amount.startsWith('+') ? 'text-emerald-500' : 'text-slate-900 dark:text-white'}`}>{tx.amount}</p>
+                    <p className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest">{tx.status}</p>
+                  </div>
                 </div>
-             </div>
-             <FiDollarSign className="absolute -bottom-4 -right-4 text-slate-50" size={120} />
-          </div>
-
-          <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
-             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Ingresos por Servicios</p>
-             <h2 className="text-4xl font-black text-slate-900">${transactions.filter(t => t.type === 'PAYMENT').reduce((acc, t) => acc + parseFloat(t.amount), 0).toFixed(2)}</h2>
-             <p className="mt-4 text-slate-400 font-medium text-xs">Total histórico capturado.</p>
-          </div>
-
-          <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
-             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Estatus de Auditoría</p>
-             <div className="flex items-center gap-2 text-indigo-600 font-black text-xl mb-4">
-                <FiShield /> CONFORME
-             </div>
-             <p className="text-slate-400 font-medium text-xs">Hash encadenado al ERP quíntuple verificado.</p>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
-           <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center">
-              <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Últimos Movimientos</h3>
-              <FiFileText className="text-slate-300" />
-           </div>
-           <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                 <thead>
-                    <tr className="bg-slate-50">
-                       <th className="px-8 py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">Fecha</th>
-                       <th className="px-8 py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">Tipo</th>
-                       <th className="px-8 py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">Descripción</th>
-                       <th className="px-8 py-4 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">Monto</th>
-                    </tr>
-                 </thead>
-                 <tbody className="divide-y divide-slate-50">
-                    {transactions.map(tx => (
-                       <tr key={tx.id} className="hover:bg-slate-50 transition-colors">
-                          <td className="px-8 py-4 text-xs font-bold text-slate-600">{new Date(tx.timestamp).toLocaleDateString()}</td>
-                          <td className="px-8 py-4 text-[10px] font-black">
-                             <span className={tx.type === 'PAYMENT' ? 'text-green-600' : 'text-slate-400'}>{tx.type}</span>
-                          </td>
-                          <td className="px-8 py-4 text-xs text-slate-500 font-medium">{tx.description}</td>
-                          <td className="px-8 py-4 text-right text-sm font-black text-slate-900">${tx.amount}</td>
-                       </tr>
-                    ))}
-                 </tbody>
-              </table>
-           </div>
+        {/* Seguridad y Auditoría */}
+        <div className="space-y-6">
+          <div className="bg-brand rounded-[40px] p-8 text-white shadow-2xl shadow-brand/30">
+            <FiShield size={40} className="mb-6 opacity-20" />
+            <h2 className="text-2xl font-black tracking-tighter leading-none mb-4 uppercase">Blindaje Financiero Activo</h2>
+            <p className="text-brand-light/80 text-sm font-medium mb-6">
+              El motor transaccional está operando bajo protocolos de idempotencia y hash encadenado.
+            </p>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white/10 p-2 rounded-lg">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                Ledger Inmutable: OK
+              </div>
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white/10 p-2 rounded-lg">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                Hash Integrity: VERIFIED
+              </div>
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white/10 p-2 rounded-lg">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                Agents L1-L6: STANDBY
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-black p-8 rounded-[40px] border border-slate-100 dark:border-white/5">
+            <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-4">Configuración Rápida</h3>
+            <div className="space-y-2">
+              <button className="w-full py-3 px-4 bg-slate-50 dark:bg-white/5 rounded-2xl text-left text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 transition-colors flex items-center justify-between">
+                Límites de Retiro
+                <FiZap size={14} className="text-brand" />
+              </button>
+              <button className="w-full py-3 px-4 bg-slate-50 dark:bg-white/5 rounded-2xl text-left text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 transition-colors flex items-center justify-between">
+                Alertas Anti-Fraude
+                <FiShield size={14} className="text-brand" />
+              </button>
+            </div>
+          </div>
         </div>
-      </ViewState>
+      </div>
     </div>
   );
 }

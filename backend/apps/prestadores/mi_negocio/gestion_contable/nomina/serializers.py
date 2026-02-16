@@ -1,62 +1,71 @@
 from rest_framework import serializers
-from .models import Empleado, Contrato, Planilla, NovedadNomina, ConceptoNomina, DetalleLiquidacion
+from .models import (
+    Empleado, Contrato, Planilla, NovedadNomina, ConceptoNomina,
+    DetalleLiquidacion, IncapacidadLaboral, Ausencia, ProvisionNomina,
+    IndicadorLaboral, HistorialSalarial
+)
 from decimal import Decimal
 
+class HistorialSalarialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HistorialSalarial
+        fields = '__all__'
+
 class ContratoSerializer(serializers.ModelSerializer):
+    historial_salarial = HistorialSalarialSerializer(many=True, read_only=True)
     class Meta:
         model = Contrato
-        fields = ['id', 'fecha_inicio', 'fecha_fin', 'salario', 'cargo', 'activo']
+        fields = '__all__'
 
 class EmpleadoSerializer(serializers.ModelSerializer):
     contratos = ContratoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Empleado
-        fields = ['id', 'nombre', 'apellido', 'identificacion', 'fecha_nacimiento', 'direccion', 'telefono', 'email', 'contratos']
-
-    def create(self, validated_data):
-        validated_data['perfil'] = self.context['request'].user.perfil_prestador
-        return super().create(validated_data)
+        fields = '__all__'
+        read_only_fields = ('perfil',)
 
 class ConceptoNominaSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConceptoNomina
-        fields = ['id', 'codigo', 'descripcion', 'tipo']
+        fields = '__all__'
 
 class NovedadNominaSerializer(serializers.ModelSerializer):
-    concepto = ConceptoNominaSerializer(read_only=True)
-    concepto_id = serializers.PrimaryKeyRelatedField(queryset=ConceptoNomina.objects.all(), source='concepto', write_only=True)
-
+    concepto_detalle = ConceptoNominaSerializer(source='concepto', read_only=True)
     class Meta:
         model = NovedadNomina
-        fields = ['id', 'empleado', 'concepto', 'concepto_id', 'valor', 'descripcion']
+        fields = '__all__'
+
+class DetalleLiquidacionSerializer(serializers.ModelSerializer):
+    empleado_nombre = serializers.CharField(source='empleado.nombre', read_only=True)
+    empleado_apellido = serializers.CharField(source='empleado.apellido', read_only=True)
+    class Meta:
+        model = DetalleLiquidacion
+        fields = '__all__'
 
 class PlanillaSerializer(serializers.ModelSerializer):
-    novedades = NovedadNominaSerializer(many=True, required=False)
-
+    detalles_liquidacion = DetalleLiquidacionSerializer(many=True, read_only=True)
     class Meta:
         model = Planilla
-        fields = ['id', 'periodo_inicio', 'periodo_fin', 'total_devengado', 'total_deduccion', 'total_neto', 'estado', 'novedades']
-        read_only_fields = ('total_devengado', 'total_deduccion', 'total_neto', 'estado')
+        fields = '__all__'
+        read_only_fields = ('perfil', 'total_devengado', 'total_deduccion', 'total_neto')
 
-    def create(self, validated_data):
-        novedades_data = validated_data.pop('novedades', [])
-        validated_data['perfil'] = self.context['request'].user.perfil_prestador
-        planilla = Planilla.objects.create(**validated_data)
+class IncapacidadLaboralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncapacidadLaboral
+        fields = '__all__'
 
-        total_devengado = Decimal('0.00')
-        total_deduccion = Decimal('0.00')
+class AusenciaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ausencia
+        fields = '__all__'
 
-        for novedad_data in novedades_data:
-            novedad = NovedadNomina.objects.create(planilla=planilla, **novedad_data)
-            if novedad.concepto.tipo == ConceptoNomina.TipoConcepto.DEVENGADO:
-                total_devengado += novedad.valor
-            else:
-                total_deduccion += novedad.valor
+class ProvisionNominaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProvisionNomina
+        fields = '__all__'
 
-        planilla.total_devengado = total_devengado
-        planilla.total_deduccion = total_deduccion
-        planilla.total_neto = total_devengado - total_deduccion
-        planilla.save()
-
-        return planilla
+class IndicadorLaboralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IndicadorLaboral
+        fields = '__all__'

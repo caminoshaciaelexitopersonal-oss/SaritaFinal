@@ -11,10 +11,12 @@ from .agents.general.sarita.coroneles.operativo_especializado.hospedaje.coronel 
 from .agents.general.sarita.coroneles.operativo_especializado.gastronomia.coronel import CoronelOperativoGastronomia
 from .agents.general.sarita.coroneles.operativo_especializado.transporte.coronel import CoronelOperativoTransporte
 from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
+from .agents.general.sarita.coroneles.contable.coronel import CoronelContable
+from .agents.general.sarita.coroneles.financiero.coronel import CoronelFinanciero
 from .marketing.coronel_marketing import CoronelMarketing
 from .finanzas.coronel_finanzas import CoronelFinanzas
-from .agents.general.sarita.coroneles.prestadores.capitanes.gestion_operativa.sg_sst.coronel_sst import CoronelSST
-from .agents.general.sarita.coroneles.prestadores.capitanes.gestion_contable.nomina.coronel_nomina import CoronelNomina
+from .agents.general.sarita.coroneles.sg_sst.coronel import CoronelSST
+from .agents.general.sarita.coroneles.nomina.coronel import CoronelNomina
 from apps.peace_net.coronel import PeaceNetCoronel
 from apps.wallet.agents.coronel import CoronelMonedero
 from apps.delivery.agents.coronel import CoronelDelivery
@@ -43,8 +45,10 @@ class SaritaOrchestrator:
             "operativo_gastronomia": CoronelOperativoGastronomia(general=self),
             "operativo_transporte": CoronelOperativoTransporte(general=self),
             "administrador_general": AdministradorGeneralCoronel(general=self),
+            "contabilidad": CoronelContable(general=self),
+            "finanzas": CoronelFinanciero(general=self),
             "marketing": CoronelMarketing(general=self, domain="marketing"),
-            "finanzas": CoronelFinanzas(general=self, domain="finanzas"),
+            "finanzas_marketing": CoronelFinanzas(general=self, domain="finanzas_marketing"),
             "sg_sst": CoronelSST(general=self, domain="sg_sst"),
             "nomina": CoronelNomina(general=self, domain="nomina"),
             "peace_net": PeaceNetCoronel(general=self, domain="peace_net"),

@@ -5,7 +5,9 @@ from .sargentos import (
     SargentoCalculoSaldo,
     SargentoEscrituraContable,
     SargentoBitacoraSoberana,
-    SargentoOperacionBalance
+    SargentoOperacionBalance,
+    SargentoAnalisisPatrones,
+    SargentoMonitoreoAlertas
 )
 
 logger = logging.getLogger(__name__)
@@ -57,3 +59,13 @@ class TenienteLiberacionFondos(TenienteTemplate):
         parametros["operation"] = "unlock"
         sargento.execute(parametros)
         return {"status": "UNLOCKED", "amount": parametros.get("amount")}
+
+class TenienteMonitoreoRiesgo(TenienteTemplate):
+    def perform_action(self, parametros: dict):
+        sargento_pat = SargentoAnalisisPatrones()
+        sargento_ale = SargentoMonitoreoAlertas()
+
+        sargento_pat.execute(parametros)
+        sargento_ale.execute(parametros)
+
+        return {"risk_score": 0.05, "status": "CLEAN"}

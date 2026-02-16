@@ -11,9 +11,11 @@ from .views import (
 # Creamos un router para registrar nuestros ViewSets
 router = DefaultRouter()
 router.register(r'planes-de-cuentas', PlanDeCuentasViewSet, basename='plan-de-cuentas')
+router.register(r'plan-cuentas', PlanDeCuentasViewSet, basename='plan-cuentas-alias')
 router.register(r'cuentas', CuentaViewSet, basename='cuenta')
 router.register(r'periodos', PeriodoContableViewSet, basename='periodo')
 router.register(r'asientos', AsientoContableViewSet, basename='asiento')
+router.register(r'comprobantes', AsientoContableViewSet, basename='comprobantes-alias')
 
 # Las URLs de la API son determinadas automáticamente por el router.
 urlpatterns = [

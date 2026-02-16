@@ -41,6 +41,10 @@ class CoronelTemplate:
 
         return self._package_report(report)
 
+    def handle_directive(self, mision: Mision):
+        """Alias para handle_mission para consistencia con el orquestador."""
+        return self.handle_mission(mision)
+
     def _get_capitanes(self) -> dict:
         """
         Carga los capitanes bajo el mando de este Coronel.

@@ -9,7 +9,7 @@ class PlanDeCuentas(TenantAwareModel):
     El catálogo de cuentas contables para un prestador (inquilino).
     Cada prestador tendrá su propio plan de cuentas.
     """
-    nombre = models.CharField(max_length=255, unique=True)
+    nombre = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True)
 
     def __str__(self):
@@ -37,8 +37,8 @@ class Cuenta(TenantAwareModel):
     plan_de_cuentas = models.ForeignKey(PlanDeCuentas, on_delete=models.CASCADE, related_name='cuentas')
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     nombre = models.CharField(max_length=255)
-    codigo = models.CharField(max_length=20)
-    tipo = models.CharField(max_length=20, choices=TipoCuenta.choices)
+    codigo = models.CharField(max_length=20, db_index=True)
+    tipo = models.CharField(max_length=20, choices=TipoCuenta.choices, db_index=True)
     descripcion = models.TextField(blank=True)
     saldo_inicial = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
 

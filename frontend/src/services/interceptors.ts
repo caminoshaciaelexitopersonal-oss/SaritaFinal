@@ -2,7 +2,7 @@ import { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 let requestCount = 0;
 let lastReset = Date.now();
-const MAX_REQUESTS_PER_MINUTE = 60; // Límite duro preventivo S-0.2
+const MAX_REQUESTS_PER_MINUTE = 120; // Ajuste Fase 4.2 para permitir dashboards analíticos
 
 export const setupInterceptors = (httpClient: AxiosInstance) => {
   httpClient.interceptors.request.use(

@@ -1,6 +1,17 @@
 # backend/apps/sarita_agents/serializers.py
 from rest_framework import serializers
-from .models import Mision, PlanTáctico, TareaDelegada, RegistroDeEjecucion
+from .models import Mision, PlanTáctico, TareaDelegada, RegistroDeEjecucion, MicroTarea, RegistroMicroTarea
+
+class RegistroMicroTareaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegistroMicroTarea
+        fields = '__all__'
+
+class MicroTareaSerializer(serializers.ModelSerializer):
+    logs = RegistroMicroTareaSerializer(many=True, read_only=True)
+    class Meta:
+        model = MicroTarea
+        fields = '__all__'
 
 class RegistroDeEjecucionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,6 +20,7 @@ class RegistroDeEjecucionSerializer(serializers.ModelSerializer):
 
 class TareaDelegadaSerializer(serializers.ModelSerializer):
     logs_ejecucion = RegistroDeEjecucionSerializer(many=True, read_only=True)
+    micro_tareas = MicroTareaSerializer(many=True, read_only=True)
     class Meta:
         model = TareaDelegada
         fields = '__all__'
