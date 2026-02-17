@@ -65,7 +65,7 @@ class TransportService:
             estado__in=[ScheduledTrip.TripStatus.PROGRAMADO, ScheduledTrip.TripStatus.CONFIRMADO, ScheduledTrip.TripStatus.EN_TRANSITO]
         )
         if conflicts.exists():
-            print(f"DEBUG: Conflicto Vehículo detectado. ID Existente: {conflicts.first().id}")
+            logger.debug(f"Conflicto Vehículo detectado. ID Existente: {conflicts.first().id}")
             return True
         return False
 
@@ -151,7 +151,7 @@ class TransportService:
         Realiza la liquidación financiera del viaje (Fase 13.1.5).
         """
         trip = ScheduledTrip.objects.select_for_update().get(id=trip_id, provider=self.provider)
-        print(f"DEBUG LIQUIDAR: Trip {trip.id}, Estado {trip.estado}")
+        logger.debug(f"LIQUIDAR: Trip {trip.id}, Estado {trip.estado}")
 
         if trip.estado != ScheduledTrip.TripStatus.FINALIZADO:
             raise ValueError(f"Solo se pueden liquidar viajes finalizados. Estado actual: {trip.estado}")
@@ -161,7 +161,7 @@ class TransportService:
 
         total_ingresos = trip.bookings.filter(pagado=True).aggregate(t=models.Sum('total_pago'))['t'] or Decimal('0.00')
         total_comisiones = trip.comision_conductor # Asumimos fija o calculada previamente
-        print(f"DEBUG LIQUIDAR: Ingresos={total_ingresos}, Comisiones={total_comisiones}")
+        logger.debug(f"LIQUIDAR: Ingresos={total_ingresos}, Comisiones={total_comisiones}")
 
         try:
             liq = TripLiquidation.objects.create(
@@ -171,9 +171,9 @@ class TransportService:
                 total_comisiones=total_comisiones,
                 utilidad_neta=total_ingresos - total_comisiones
             )
-            print(f"DEBUG LIQUIDAR: Liquidation creada ID {liq.id}")
+            logger.info(f"LIQUIDAR: Liquidation creada ID {liq.id}")
         except Exception as e:
-            print(f"DEBUG LIQUIDAR ERROR CREATING LIQ: {e}")
+            logger.error(f"LIQUIDAR ERROR CREATING LIQ: {e}")
             raise e
 
         trip.estado = ScheduledTrip.TripStatus.LIQUIDADO

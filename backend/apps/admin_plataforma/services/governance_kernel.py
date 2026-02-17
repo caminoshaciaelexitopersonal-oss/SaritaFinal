@@ -492,7 +492,7 @@ class GovernanceKernel:
                 return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
 
             if intention.name == "DELIVERY_COMPLETE":
-                service = delivery_service.complete_service(parameters["service_id"])
+                service = delivery_service.complete_service(parameters["service_id"], parameters=parameters)
                 return {"status": "SUCCESS", "agent_report": agent_result, "service_id": str(service.id)}
 
             if intention.name == "DELIVERY_RATE":

@@ -7,7 +7,7 @@ from .serializers import (
     DeliveryServiceSerializer, DeliveryEventSerializer, RutaSerializer, IndicadorLogisticoSerializer
 )
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
-from .services import LogisticService
+from .services import DeliveryLogisticService
 from django.db.models import Sum, Count, Avg
 from django.utils import timezone
 
@@ -60,7 +60,7 @@ class DeliveryServiceViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def assign(self, request, pk=None):
-        service = LogisticService(user=request.user)
+        service = DeliveryLogisticService(user=request.user)
         try:
             res = service.assign_service(pk, driver_id=request.data.get("driver_id"))
             return Response(DeliveryServiceSerializer(res).data)
@@ -69,13 +69,13 @@ class DeliveryServiceViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def start(self, request, pk=None):
-        service = LogisticService(user=request.user)
+        service = DeliveryLogisticService(user=request.user)
         res = service.start_delivery(pk)
         return Response(DeliveryServiceSerializer(res).data)
 
     @action(detail=True, methods=['post'])
     def complete(self, request, pk=None):
-        service = LogisticService(user=request.user)
+        service = DeliveryLogisticService(user=request.user)
         try:
             res = service.complete_service(pk, parameters=request.data)
             return Response(DeliveryServiceSerializer(res).data)
@@ -84,7 +84,7 @@ class DeliveryServiceViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def fail(self, request, pk=None):
-        service = LogisticService(user=request.user)
+        service = DeliveryLogisticService(user=request.user)
         res = service.fail_delivery(pk, request.data.get("reason", "No especificado"))
         return Response(DeliveryServiceSerializer(res).data)
 
@@ -96,5 +96,5 @@ class IndicadorLogisticoViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=['post'])
     def refresh(self, request):
         provider_id = request.data.get("provider_id")
-        LogisticService.generar_indicadores(provider_id)
+        DeliveryLogisticService.generar_indicadores(provider_id)
         return Response({"status": "KPIs recalculados"})

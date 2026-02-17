@@ -52,10 +52,12 @@ class DeliveryIntegrationTest(TestCase):
         })
         self.assertEqual(res2['status'], 'SUCCESS')
 
-        # 3. Complete Delivery (Driver)
+        # 3. Completar con Evidencia vía Kernel
         kernel_driver = GovernanceKernel(user=self.driver_user)
         res3 = kernel_driver.resolve_and_execute("DELIVERY_COMPLETE", {
-            "service_id": service_id
+            "service_id": service_id,
+            "firma": "Firma Digital ABC",
+            "observaciones": "Entregado en portería"
         })
         self.assertEqual(res3['status'], 'SUCCESS')
 
@@ -68,5 +70,5 @@ class DeliveryIntegrationTest(TestCase):
 
         # 5. Verify Service Status
         service = DeliveryService.objects.get(id=service_id)
-        self.assertEqual(service.status, DeliveryService.Status.COMPLETED)
+        self.assertEqual(service.status, DeliveryService.Status.ENTREGADO)
         self.assertIsNotNone(service.wallet_transaction)

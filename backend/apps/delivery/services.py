@@ -1,7 +1,7 @@
 import logging
 from django.shortcuts import get_object_or_404
 from decimal import Decimal
-from django.db import transaction
+from django.db import transaction, models
 from .models import DeliveryCompany, Driver, Vehicle, DeliveryService, DeliveryEvent
 from api.models import CustomUser
 from apps.wallet.services import WalletService
@@ -9,8 +9,8 @@ from apps.wallet.models import WalletAccount
 
 logger = logging.getLogger(__name__)
 
-class LogisticService:
-    """ Motor Logístico SARITA (Fase 9) """
+class DeliveryLogisticService:
+    """ Motor Logístico SARITA (Fase 9 & 18) """
     def __init__(self, user: CustomUser = None):
         self.user = user
 
@@ -21,12 +21,27 @@ class LogisticService:
                 origin_address=parameters["origin_address"],
                 destination_address=parameters["destination_address"],
                 estimated_price=parameters.get("estimated_price", 0),
+                value_declared=parameters.get("value_declared", 0),
                 governance_intention_id=intention_id,
                 status=DeliveryService.Status.PENDIENTE,
                 related_operational_order_id=parameters.get("related_operational_order_id"),
                 provider_id=parameters.get("provider_id"),
                 prioridad=parameters.get("prioridad", "NORMAL")
             )
+
+            # Crear ítems si vienen en la data
+            items_data = parameters.get("items", [])
+            for item in items_data:
+                from .models import DeliveryItem
+                DeliveryItem.objects.create(
+                    delivery=service,
+                    product_id=item.get("product_id"),
+                    description=item.get("description"),
+                    quantity=item.get("quantity", 1),
+                    weight_kg=Decimal(str(item.get("weight_kg", 0))),
+                    is_fragile=item.get("is_fragile", False),
+                    requires_cold_chain=item.get("requires_cold_chain", False)
+                )
 
             DeliveryEvent.objects.create(
                 service=service,
@@ -40,6 +55,12 @@ class LogisticService:
             return service
 
     def assign_service(self, service_id, driver_id=None):
+        # S-1.1: Soportar parámetros como dict o valor directo (Compatibilidad Kernel)
+        if isinstance(service_id, dict):
+            params = service_id
+            service_id = params.get("service_id")
+            driver_id = params.get("driver_id")
+
         service = get_object_or_404(DeliveryService, id=service_id)
 
         # Asignación Automática si no viene driver_id
@@ -80,12 +101,53 @@ class LogisticService:
         DeliveryEvent.objects.create(service=service, event_type="IN_ROUTE", description="Pedido en ruta.")
         return service
 
-    def fail_delivery(self, service_id, reason):
+    def fail_delivery(self, service_id, reason, severity='MEDIUM'):
         service = get_object_or_404(DeliveryService, id=service_id)
         service.status = DeliveryService.Status.FALLIDO
         service.save()
 
+        from .models import DeliveryIncident
+        DeliveryIncident.objects.create(
+            delivery=service,
+            description=reason,
+            severity=severity
+        )
+
         DeliveryEvent.objects.create(service=service, event_type="FAILED", description=f"Falla: {reason}")
+        return service
+
+    def report_incident(self, service_id, description, severity='MEDIUM'):
+        service = get_object_or_404(DeliveryService, id=service_id)
+        service.status = DeliveryService.Status.EN_INCIDENCIA
+        service.save()
+
+        from .models import DeliveryIncident
+        incident = DeliveryIncident.objects.create(
+            delivery=service,
+            description=description,
+            severity=severity
+        )
+
+        DeliveryEvent.objects.create(service=service, event_type="INCIDENT_REPORTED", description=description)
+        return incident
+
+    def reject_delivery(self, service_id, reason):
+        service = get_object_or_404(DeliveryService, id=service_id)
+        service.status = DeliveryService.Status.RECHAZADA
+        service.save()
+
+        from .models import DeliveryIncident
+        DeliveryIncident.objects.create(
+            delivery=service,
+            description=f"Rechazo por cliente: {reason}",
+            severity='HIGH'
+        )
+
+        DeliveryEvent.objects.create(service=service, event_type="REJECTED", description=reason)
+
+        # --- IMPACTO ERP REVERSO (Si aplica) ---
+        self._propagate_erp_impact(service, "DELIVERY_REJECTED")
+
         return service
 
     def complete_service(self, service_id, parameters=None):
@@ -94,6 +156,14 @@ class LogisticService:
         if service.status == DeliveryService.Status.ENTREGADO:
             return service
 
+        # FASE 18: Exigir evidencia obligatoria (Ruptura 3.1)
+        if not parameters or (not parameters.get("firma") and not parameters.get("foto")):
+             raise ValueError("No se puede marcar como entregado sin evidencia (Firma o Foto).")
+
+        # Verificar si hay incidencias críticas abiertas
+        if service.incidents.filter(severity='CRITICAL', is_resolved=False).exists():
+            raise ValueError("No se puede completar el servicio con incidencias críticas pendientes.")
+
         with transaction.atomic():
             service.status = DeliveryService.Status.ENTREGADO
             service.final_price = service.estimated_price
@@ -101,15 +171,14 @@ class LogisticService:
             service.comision_repartidor = service.final_price * Decimal('0.15')
             service.save()
 
-            if parameters:
-                from .models import EvidenciaEntrega
-                EvidenciaEntrega.objects.create(
-                    delivery=service,
-                    firma_digital=parameters.get("firma", ""),
-                    observaciones=parameters.get("observaciones", ""),
-                    latitud=parameters.get("latitud"),
-                    longitud=parameters.get("longitud")
-                )
+            from .models import EvidenciaEntrega
+            EvidenciaEntrega.objects.create(
+                delivery=service,
+                firma_digital=parameters.get("firma", ""),
+                observaciones=parameters.get("observaciones", ""),
+                latitud=parameters.get("latitud"),
+                longitud=parameters.get("longitud")
+            )
 
             DeliveryEvent.objects.create(
                 service=service,
@@ -121,23 +190,81 @@ class LogisticService:
                 service.driver.is_available = True
                 service.driver.save()
 
+            # --- LIQUIDACIÓN LOGÍSTICA ---
+            self.liquidate_service(service.id)
+
             # --- INTEGRACIÓN CON MONEDERO (PAGO OBLIGATORIO) ---
             self._process_payment(service)
             self._propagate_erp_impact(service, "DELIVERY_COMPLETED")
 
             return service
 
+    def liquidate_service(self, service_id):
+        """
+        Capa financiera del delivery (Fase 18).
+        """
+        service = get_object_or_404(DeliveryService, id=service_id)
+        if service.status != DeliveryService.Status.ENTREGADO:
+             raise ValueError("Solo se pueden liquidar servicios entregados.")
+
+        from .models import DeliveryLiquidation
+        if hasattr(service, 'liquidation'):
+             raise ValueError("El servicio ya ha sido liquidado.")
+
+        total = service.final_price
+        commission = service.comision_repartidor
+        platform_fee = total * Decimal('0.05') # 5% plataforma
+
+        liquidation = DeliveryLiquidation.objects.create(
+            delivery=service,
+            total_to_provider=total - commission - platform_fee,
+            total_to_driver=commission,
+            platform_fee=platform_fee,
+            is_processed=True
+        )
+        return liquidation
+
     def rate_service(self, service_id, rating, comment=""):
         service = get_object_or_404(DeliveryService, id=service_id)
-        if service.status != DeliveryService.Status.COMPLETED:
-            raise ValueError("Solo se pueden calificar servicios completados.")
+        if service.status != DeliveryService.Status.ENTREGADO:
+            raise ValueError("Solo se pueden calificar servicios entregados.")
 
         service.rating = rating
         service.tourist_comment = comment
         service.save()
 
+        # Actualizar reputación del conductor
+        if service.driver:
+            driver = service.driver
+            avg_rating = DeliveryService.objects.filter(driver=driver, rating__isnull=False).aggregate(models.Avg('rating'))['rating__avg']
+            if avg_rating:
+                driver.reputation = Decimal(str(avg_rating))
+                driver.save()
+
         logger.info(f"DELIVERY: Servicio {service_id} calificado con {rating}")
         return service
+
+    def penalize_driver(self, driver_id, amount, reason, service_id=None):
+        """
+        Aplica una penalización económica a un transportista (Fase 18).
+        """
+        from .models import DeliveryPenalty, Driver
+        driver = get_object_or_404(Driver, id=driver_id)
+
+        penalty = DeliveryPenalty.objects.create(
+            driver=driver,
+            delivery_id=service_id,
+            amount=Decimal(str(amount)),
+            reason=reason
+        )
+
+        # Impacto en reputación
+        driver.reputation -= Decimal('0.5')
+        if driver.reputation < 0: driver.reputation = 0
+        driver.save()
+
+        logger.warning(f"DELIVERY: Conductor {driver_id} penalizado con {amount}. Motivo: {reason}")
+        return penalty
 
     def _propagate_erp_impact(self, service, event_type):
         """Propaga el impacto a las 5 dimensiones del ERP."""
@@ -173,9 +300,12 @@ class LogisticService:
             return
 
         try:
-            target_wallet = WalletAccount.objects.get(user=target_user)
-        except WalletAccount.DoesNotExist:
-            logger.error(f"PAGO DELIVERY: Receptor {target_user.username} no tiene monedero.")
+            target_wallet = WalletAccount.objects.filter(user=target_user).first()
+            if not target_wallet:
+                logger.error(f"PAGO DELIVERY: Receptor {target_user.username} no tiene monedero.")
+                return
+        except Exception as e:
+            logger.error(f"PAGO DELIVERY: Error buscando monedero: {e}")
             return
 
         # Ejecutar pago via monedero gobernado
@@ -212,3 +342,6 @@ class LogisticService:
         IndicadorLogistico.objects.create(provider_id=provider_id, nombre="Costo Logístico Total", valor=costo, periodo=periodo)
 
         return True
+
+# Alias para retrocompatibilidad
+LogisticService = DeliveryLogisticService
