@@ -27,6 +27,10 @@ class TravelPackage(TenantAwareModel):
 
     class Meta(TenantAwareModel.Meta):
         app_label = 'prestadores'
+        indexes = [
+            models.Index(fields=['estado']),
+            models.Index(fields=['nombre']),
+        ]
 
 class PackageComponent(models.Model):
     """
@@ -53,8 +57,17 @@ class PackageComponent(models.Model):
     def __str__(self):
         return f"{self.tipo_servicio} - {self.proveedor.nombre_comercial}"
 
+    def delete(self, *args, **kwargs):
+        if self.package.estado in [TravelPackage.PackageStatus.CONFIRMADO, TravelPackage.PackageStatus.EN_EJECUCION, TravelPackage.PackageStatus.FINALIZADO, TravelPackage.PackageStatus.LIQUIDADO]:
+            raise ValueError("No se puede eliminar un componente de un paquete que ya ha sido confirmado o procesado.")
+        super().delete(*args, **kwargs)
+
     class Meta:
         app_label = 'prestadores'
+        indexes = [
+            models.Index(fields=['tipo_servicio', 'referencia_id']),
+            models.Index(fields=['is_active']),
+        ]
 
 class AgencyBooking(TenantAwareModel):
     """
