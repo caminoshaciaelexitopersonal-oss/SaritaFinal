@@ -28,3 +28,12 @@ class SargentoNocturno:
         service = NightclubService(user)
         closing = service.cierre_caja(parametros['event_id'], parametros)
         return {"status": "SUCCESS", "closing_id": str(closing.id)}
+
+    @staticmethod
+    def anular_consumo(parametros, user):
+        service = NightclubService(user)
+        consumption = service.anular_consumo(
+            parametros['consumption_id'],
+            parametros.get('motivo', 'Anulación por agente')
+        )
+        return {"status": "SUCCESS", "consumption_id": str(consumption.id)}

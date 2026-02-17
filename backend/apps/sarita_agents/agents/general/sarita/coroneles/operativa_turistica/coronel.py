@@ -61,7 +61,7 @@ class CoronelOperativaTuristica(CoronelTemplate):
             return self.capitanes.get("servicio_mesa")
         if m_type == "PROCESS_KITCHEN_ORDER":
             return self.capitanes.get("cocina")
-        if m_type in ["PROCESS_COMMAND", "BILL_CONSUMPTION", "NIGHT_CASH_CLOSE"]:
+        if m_type in ["PROCESS_COMMAND", "BILL_CONSUMPTION", "NIGHT_CASH_CLOSE", "VOID_CONSUMPTION"]:
             return self.capitanes.get("nocturno")
         if m_type in ["MANAGE_WORKSHOP", "REGISTER_PRODUCTION", "UPDATE_ARTISAN_INVENTORY"]:
             return self.capitanes.get("artesanos")

@@ -1,4 +1,6 @@
 import logging
+import json
+from uuid import UUID
 from typing import Dict, Any, Optional, List
 from enum import IntEnum
 from django.db import transaction
@@ -7,6 +9,12 @@ from apps.admin_plataforma.models import GovernanceAuditLog, GovernancePolicy
 from api.services import DefenseService
 
 logger = logging.getLogger(__name__)
+
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            return str(obj)
+        return super().default(obj)
 
 class AuthorityLevel(IntEnum):
     OPERATIONAL = 1
@@ -408,10 +416,13 @@ class GovernanceKernel:
         if intention.domain == "operativa_turistica":
             from apps.sarita_agents.orchestrator import sarita_orchestrator
 
+            # Convertir parámetros a formatos JSON serializables
+            safe_params = json.loads(json.dumps(parameters, cls=UUIDEncoder))
+
             directive = {
                 "domain": "operativa_turistica",
                 "mission": {"type": intention.name},
-                "parameters": parameters,
+                "parameters": safe_params,
                 "user_id": str(self.user.id),
                 "role": self.user.role
             }
@@ -512,9 +523,12 @@ class GovernanceKernel:
         Registra la acción en el log de auditoría sistémica con Hardening RC-S (Hashes).
         """
         import hashlib
-        import json
 
         try:
+             # Convertir parámetros y resultados a formatos JSON serializables (especialmente para UUIDs)
+             safe_params = json.loads(json.dumps(parameters, cls=UUIDEncoder))
+             safe_result = json.loads(json.dumps(result, cls=UUIDEncoder))
+
              # Obtener el hash del registro anterior para encadenamiento
              last_log = GovernanceAuditLog.objects.order_by('-timestamp').first()
              previous_hash = last_log.integrity_hash if last_log else "SARITA_GENESIS_BLOCK"
@@ -523,8 +537,8 @@ class GovernanceKernel:
              log_entry = GovernanceAuditLog(
                  usuario=self.user,
                  intencion=intention.name,
-                 parametros=parameters,
-                 resultado=result,
+                 parametros=safe_params,
+                 resultado=safe_result,
                  success=success,
                  error_message=error_message,
                  es_intervencion_soberana=is_sovereign,
@@ -532,13 +546,14 @@ class GovernanceKernel:
              )
 
              # Calcular Integrity Hash (RC-S Hardening)
-             payload = f"{log_entry.intencion}{json.dumps(log_entry.parametros)}{log_entry.timestamp}{previous_hash}{success}"
+             param_str = json.dumps(log_entry.parametros) # Ya es safe_params
+             payload = f"{log_entry.intencion}{param_str}{log_entry.timestamp}{previous_hash}{success}"
              log_entry.integrity_hash = hashlib.sha256(payload.encode()).hexdigest()
 
              log_entry.save()
              logger.info(f"AUDIT KERNEL (RC-S): Usuario={self.user.username}, Acción={intention.name}, Hash={log_entry.integrity_hash[:8]}")
         except Exception as e:
-            logger.error(f"Error al registrar auditoría en el Kernel: {e}")
+            logger.error(f"Error al registrar auditoría en el Kernel: {e}", exc_info=True)
 
 # --- REGISTRO DE INTENCIONES INICIALES (Fase 3.5 + Refuerzo Fase 3) ---
 
@@ -601,6 +616,13 @@ GovernanceKernel.register_intention(GovernanceIntention(
 # Dominio: Operación Nocturna (Fase 11)
 GovernanceKernel.register_intention(GovernanceIntention(
     name="PROCESS_COMMAND",
+    domain="operativa_turistica",
+    required_role=CustomUser.Role.PRESTADOR,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="VOID_CONSUMPTION",
     domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL

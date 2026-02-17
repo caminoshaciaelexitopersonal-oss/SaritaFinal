@@ -67,6 +67,8 @@ class TenienteOperativoNocturno(TenienteTemplate):
             return SargentoNocturno.procesar_comanda(parametros, user)
         if action == "BILL_CONSUMPTION":
             return SargentoNocturno.facturar_mesa(parametros, user)
+        if action == "VOID_CONSUMPTION":
+            return SargentoNocturno.anular_consumo(parametros, user)
         if action == "NIGHT_CASH_CLOSE":
             return SargentoNocturno.cerrar_caja(parametros, user)
 

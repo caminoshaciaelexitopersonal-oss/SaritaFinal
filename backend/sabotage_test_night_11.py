@@ -40,6 +40,8 @@ def run_sabotage_test_night():
             "user_id": provider_user.id
         })
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(f"✅ BLOQUEO EXITOSO (STOCK INSUFICIENTE): {e}")
 
     # 2. Manipulación de Cierre (Cerrar con consumos abiertos)
