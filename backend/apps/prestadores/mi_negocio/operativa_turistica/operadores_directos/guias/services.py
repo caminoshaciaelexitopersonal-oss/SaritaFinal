@@ -25,6 +25,15 @@ class GuideService:
         # Validación preventiva de conflictos (Fase 12.4.2)
         guia_id = data.get('guia_asignado_id')
         if guia_id:
+            # Validar estado del guía (Fase 12.1.1)
+            guia = GuiaTuristico.objects.get(id=guia_id, provider=self.provider)
+            if guia.estado != GuiaTuristico.Estado.ACTIVO:
+                raise ValueError(f"El guía no está activo (Estado: {guia.estado}).")
+
+            # Validar licencias/certificaciones (Fase 12.1.6)
+            if not self.validar_documentacion_guia(guia_id):
+                raise ValueError("El guía tiene certificaciones vencidas o no validadas.")
+
             if self._verificar_conflicto_horario(guia_id, data['fecha'], data['hora_inicio']):
                 raise ValueError("El guía ya tiene un servicio asignado en ese horario.")
 
@@ -35,20 +44,49 @@ class GuideService:
             hora_inicio=data['hora_inicio'],
             grupo_id=data['grupo_id'],
             guia_asignado_id=guia_id,
-            precio_total=data.get('precio_total', 0),
+            precio_total=Decimal(str(data.get('precio_total', 0))),
             estado=ServicioGuiado.Estado.PROGRAMADO
         )
 
         return servicio
 
-    def _verificar_conflicto_horario(self, guia_id, fecha, hora_inicio):
+    def _verificar_conflicto_horario(self, guia_id, fecha, hora_inicio, exclude_service_id=None):
         # Simplificado: asume que cada tour dura 4 horas
-        return ServicioGuiado.objects.filter(
+        qs = ServicioGuiado.objects.filter(
             guia_asignado_id=guia_id,
             fecha=fecha,
             hora_inicio=hora_inicio,
             estado__in=[ServicioGuiado.Estado.PROGRAMADO, ServicioGuiado.Estado.CONFIRMADO, ServicioGuiado.Estado.EN_CURSO]
-        ).exists()
+        )
+        if exclude_service_id:
+            qs = qs.exclude(id=exclude_service_id)
+        return qs.exists()
+
+    def validar_documentacion_guia(self, guia_id):
+        """
+        Verifica que el guía tenga al menos una certificación válida y ninguna vencida.
+        """
+        guia = GuiaTuristico.objects.get(id=guia_id, provider=self.provider)
+        certificaciones = guia.certificaciones.all()
+
+        if not certificaciones.exists():
+            return False
+
+        for cert in certificaciones:
+            if not cert.is_valid():
+                return False
+        return True
+
+    @transaction.atomic
+    def actualizar_estado_servicio(self, servicio_id, nuevo_estado):
+        servicio = ServicioGuiado.objects.select_for_update().get(id=servicio_id, provider=self.provider)
+
+        if servicio.estado == ServicioGuiado.Estado.LIQUIDADO:
+            raise ValueError("No se puede cambiar el estado de un servicio ya liquidado.")
+
+        servicio.estado = nuevo_estado
+        servicio.save()
+        return servicio
 
     @transaction.atomic
     def liquidar_servicio(self, servicio_id, data_liquidacion):

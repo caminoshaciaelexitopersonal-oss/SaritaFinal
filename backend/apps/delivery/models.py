@@ -75,8 +75,8 @@ class DeliveryService(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tourist = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='delivery_requests')
 
-    # Tenant alignment (FASE 9)
-    provider_id = models.UUIDField(null=True, blank=True, help_text="ID del ProviderProfile (Dueño del producto)")
+    # Tenant alignment
+    provider_id = models.UUIDField(null=True, blank=True, help_text="ID del ProviderProfile")
 
     delivery_company = models.ForeignKey(DeliveryCompany, on_delete=models.SET_NULL, null=True, blank=True)
     driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
@@ -91,14 +91,15 @@ class DeliveryService(models.Model):
     estimated_price = models.DecimalField(max_digits=18, decimal_places=2, default=0)
     final_price = models.DecimalField(max_digits=18, decimal_places=2, null=True, blank=True)
     comision_repartidor = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    value_declared = models.DecimalField(max_digits=18, decimal_places=2, default=0)
 
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDIENTE)
 
     wallet_transaction = models.UUIDField(null=True, blank=True, help_text="ID de la transacción en apps.wallet")
     governance_intention_id = models.CharField(max_length=255, null=True, blank=True)
 
-    # Interoperabilidad (FASE 9)
-    related_operational_order_id = models.UUIDField(null=True, blank=True, help_text="ID de la Reserva/Orden Operativa vinculada")
+    # Interoperabilidad
+    related_operational_order_id = models.UUIDField(null=True, blank=True)
 
     # Feedback
     rating = models.PositiveIntegerField(null=True, blank=True)
@@ -109,6 +110,13 @@ class DeliveryService(models.Model):
 
     def __str__(self):
         return f"Delivery {self.id} - {self.status}"
+
+class DeliveryItem(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    delivery = models.ForeignKey(DeliveryService, on_delete=models.CASCADE, related_name='items')
+    description = models.CharField(max_length=255)
+    quantity = models.PositiveIntegerField(default=1)
+    weight_kg = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
 class EvidenciaEntrega(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -131,6 +139,32 @@ class DeliveryEvent(models.Model):
 
     class Meta:
         ordering = ['timestamp']
+
+class DeliveryIncident(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    delivery = models.ForeignKey(DeliveryService, on_delete=models.CASCADE, related_name='incidents')
+    severity = models.CharField(max_length=20, default='MEDIUM') # LOW, MEDIUM, HIGH, CRITICAL
+    description = models.TextField()
+    is_resolved = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class DeliveryLiquidation(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    delivery = models.OneToOneField(DeliveryService, on_delete=models.CASCADE, related_name='liquidation')
+    total_to_provider = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    total_to_driver = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    platform_fee = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    is_processed = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class DeliveryPenalty(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='penalties')
+    delivery = models.ForeignKey(DeliveryService, on_delete=models.CASCADE, null=True, blank=True)
+    amount = models.DecimalField(max_digits=18, decimal_places=2)
+    reason = models.CharField(max_length=255)
+    applied = models.BooleanField(default=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 class IndicadorLogistico(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

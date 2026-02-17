@@ -15,7 +15,7 @@ from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
 def run_sabotage_test():
     print("⚔️ INICIANDO PRUEBAS DE SABOTAJE FASE 13.3 - TRANSPORTE")
 
-    user = CustomUser.objects.filter(username="bar_owner").first()
+    user = CustomUser.objects.filter(username="transport_owner").first()
     profile = ProviderProfile.objects.filter(usuario=user).first()
     kernel = GovernanceKernel(user)
 

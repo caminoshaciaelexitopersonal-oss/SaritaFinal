@@ -10,8 +10,18 @@ class SargentoGuias:
     @staticmethod
     def asignar_y_confirmar(parametros, user):
         service = GuideService(user)
-        # Lógica de asignación delegada
-        return {"status": "SUCCESS", "message": "Guía asignado exitosamente"}
+
+        if "servicio_id" in parametros:
+            # Re-asignación o actualización
+            servicio = service.actualizar_estado_servicio(
+                parametros['servicio_id'],
+                parametros.get('nuevo_estado', 'CONFIRMADO')
+            )
+            return {"status": "SUCCESS", "servicio_id": str(servicio.id)}
+        else:
+            # Nueva programación
+            servicio = service.programar_servicio(parametros)
+            return {"status": "SUCCESS", "servicio_id": str(servicio.id)}
 
     @staticmethod
     def liquidar_comision(parametros, user):

@@ -74,7 +74,7 @@ class TenantAwareModel(BaseModel):
     Modelo base abstracto restaurado para los datos que pertenecen a un inquilino (ProviderProfile).
     Es una dependencia interna del dominio operativo, totalmente permitida.
     """
-    provider = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="%(class)s_items")
+    provider = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name="%(class)s_items", null=True, blank=True)
 
     class Meta(BaseModel.Meta):
         abstract = True

@@ -110,6 +110,11 @@ class NightConsumption(TenantAwareModel):
     fecha_apertura = models.DateTimeField(auto_now_add=True)
     fecha_cierre = models.DateTimeField(null=True, blank=True)
 
+    def delete(self, *args, **kwargs):
+        if self.estado in [self.ConsumptionStatus.FACTURADO, self.ConsumptionStatus.PAGADO]:
+            raise ValueError("No se puede eliminar un consumo que ya ha sido facturado o pagado. Debe anularlo.")
+        super().delete(*args, **kwargs)
+
     def __str__(self):
         return f"Consumo #{self.id} - {self.mesa if self.mesa else 'Barra'}"
 

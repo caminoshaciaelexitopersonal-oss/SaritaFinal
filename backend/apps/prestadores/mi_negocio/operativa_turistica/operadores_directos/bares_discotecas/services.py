@@ -1,6 +1,6 @@
 import logging
 from decimal import Decimal
-from django.db import transaction
+from django.db import transaction, models
 from django.utils import timezone
 from .models import (
     NightEvent, NightConsumption, NightConsumptionItem,
@@ -109,13 +109,23 @@ class NightclubService:
         """
         event = NightEvent.objects.get(id=event_id, provider=self.provider)
 
+        # 1. Validar que no haya consumos ABIERTOS para el evento (Ruptura 11.3.3)
+        open_consumptions = NightConsumption.objects.filter(
+            evento=event,
+            estado=NightConsumption.ConsumptionStatus.ABIERTO
+        ).count()
+
+        if open_consumptions > 0:
+            logger.error(f"Intento de cierre de caja con {open_consumptions} consumos abiertos en evento {event_id}")
+            raise ValueError(f"No se puede cerrar caja: existen {open_consumptions} consumos abiertos.")
+
         closing = CashClosing.objects.create(
             evento=event,
             staff_cierre=self.user,
-            total_efectivo=data.get('efectivo', 0),
-            total_tarjeta=data.get('tarjeta', 0),
-            total_monedero=data.get('monedero', 0),
-            total_real=data.get('total_real', 0),
+            total_efectivo=Decimal(str(data.get('efectivo', 0))),
+            total_tarjeta=Decimal(str(data.get('tarjeta', 0))),
+            total_monedero=Decimal(str(data.get('monedero', 0))),
+            total_real=Decimal(str(data.get('total_real', 0))),
             provider=self.provider
         )
 
@@ -123,7 +133,7 @@ class NightclubService:
         total_facturado = NightConsumption.objects.filter(
             evento=event,
             estado__in=[NightConsumption.ConsumptionStatus.FACTURADO, NightConsumption.ConsumptionStatus.PAGADO]
-        ).aggregate(t=models.Sum('total'))['t'] or 0
+        ).aggregate(t=models.Sum('total'))['t'] or Decimal('0.00')
 
         closing.total_esperado = total_facturado
         closing.diferencia = closing.total_real - closing.total_esperado
@@ -131,4 +141,44 @@ class NightclubService:
 
         return closing
 
-from django.db import models # Añadido para los agregados
+    @transaction.atomic
+    def anular_consumo(self, consumption_id, motivo):
+        """
+        Anula un consumo y genera impacto reverso en el ERP si estaba facturado.
+        """
+        consumption = NightConsumption.objects.select_for_update().get(id=consumption_id, provider=self.provider)
+
+        if consumption.estado == NightConsumption.ConsumptionStatus.PAGADO:
+            raise ValueError("No se puede anular un consumo ya pagado.")
+
+        estado_anterior = consumption.estado
+        consumption.estado = NightConsumption.ConsumptionStatus.ANULADO
+        consumption.save()
+
+        # Si estaba facturado, disparar impacto reverso (Nota Crédito)
+        if estado_anterior == NightConsumption.ConsumptionStatus.FACTURADO:
+            erp_service = QuintupleERPService(user=self.user)
+            erp_service.record_impact("NIGHT_CONSUMPTION_VOID", {
+                "perfil_id": str(self.provider.id),
+                "amount": float(-consumption.total),
+                "description": f"Anulación Consumo #{consumption.id}. Motivo: {motivo}",
+                "original_consumption_id": str(consumption.id)
+            })
+
+        # Retornar items al inventario
+        for item in consumption.items.all():
+            liquor = LiquorInventory.objects.get(product=item.product, provider=self.provider)
+            liquor.stock_actual += item.cantidad
+            liquor.save()
+
+            InventoryMovement.objects.create(
+                liquor=liquor,
+                tipo=InventoryMovement.MovementType.AJUSTE,
+                cantidad=item.cantidad,
+                referencia_consumo=consumption,
+                usuario=self.user,
+                provider=self.provider,
+                justificacion=f"Anulación consumo: {motivo}"
+            )
+
+        return consumption

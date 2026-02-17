@@ -66,7 +66,7 @@ class AgencyService:
             pass
 
         n_personas = int(data_reserva['numero_personas'])
-        total_pago = package.precio_total * n_personas
+        total_pago = package.precio_total * Decimal(str(n_personas))
 
         booking = AgencyBooking.objects.create(
             provider=self.provider,
