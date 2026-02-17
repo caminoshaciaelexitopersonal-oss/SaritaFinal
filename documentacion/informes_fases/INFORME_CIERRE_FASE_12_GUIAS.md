@@ -1,29 +1,30 @@
-# INFORME DE CERTIFICACIÓN FASE 12 — GESTIÓN OPERATIVA: GUÍAS TURÍSTICOS
+# INFORME DE CERTIFICACIÓN FASE 12 — GESTIÓN OPERATIVA ESPECIALIZADA: GUÍAS TURÍSTICOS
 
 **Estado:** CERTIFICADO OPERATIVO
-**Integración ERP:** 100% (Comercial, Contable, Archivístico)
-**Control Documental:** ACTIVO (Certificaciones obligatorias)
+**Integración ERP:** 100% (Liquidación de comisiones vinculada a contabilidad)
+**Control Documental:** ACTIVO (Validación de licencias obligatoria)
+**Gobernanza:** 100% (Trazabilidad SADI)
 **Autor:** Jules
 **Fecha:** Febrero 2026
 
-## 🗺️ 1. RESUMEN DE CONSTRUCCIÓN Estructural (12.1)
+## 🗺️ 1. RESUMEN Estructural (12.1)
 
-Se ha implementado el vertical de **Guías Turísticos**, permitiendo el control total sobre el capital humano especializado y la trazabilidad de sus servicios.
+Se ha consolidado el vertical de **Guías Turísticos**, permitiendo la gestión profesionalizada de servicios guiados.
 
 ### Componentes Activados:
-- **Perfil de Guía:** Gestión de niveles (Junior/Senior), idiomas y competencias (Skills).
-- **Control Documental:** Motor de validación de certificaciones con fechas de vencimiento y vinculación a archivo digital.
-- **Rutas e Itinerarios:** Definición local de trayectos vinculados a atractivos turísticos.
-- **Servicio Guiado:** Flujo operativo desde la programación hasta la liquidación final.
+- **Gestión de Guías:** Perfiles con niveles (Junior/Senior) e idiomas.
+- **Control de Certificaciones:** Motor de validación de fechas de vencimiento para RNT y licencias específicas.
+- **Planificación de Rutas:** Integración de itinerarios locales con duraciones estimadas.
+- **Motor de Servicios:** Programación de tours con asignación de guías y grupos.
 
 ---
 
 ## 🧪 2. RESULTADOS DE VALIDACIÓN (12.2)
 
 ### Simulación de Operación:
-- **Escenario:** 10 servicios programados con asignación aleatoria de guías certificados.
-- **Resultado:** Cálculo de comisiones (15%) verificado y procesado exitosamente para todos los servicios.
-- **Impacto ERP:** Generación de registros de impacto sistémico para cada liquidación.
+- **Asignación Horaria:** Verificación exitosa de bloqueos ante solapamiento de tours para el mismo guía.
+- **Ciclo de Estado:** Tránsito fluido entre PROGRAMADO -> CONFIRMADO -> EN CURSO -> FINALIZADO.
+- **Liquidación Automática:** Cálculo preciso de comisiones (porcentuales y fijas) con disparo de impacto en el ERP.
 
 ---
 
@@ -32,27 +33,27 @@ Se ha implementado el vertical de **Guías Turísticos**, permitiendo el control
 | Escenario | Resultado esperado | Resultado real | Estado |
 | :--- | :--- | :--- | :--- |
 | **Doble Asignación** | Bloqueo por conflicto horario | Bloqueo exitoso | ✅ |
-| **Certificación Vencida** | Impedir confirmación de servicio | Bloqueo en validación | ✅ |
-| **Liquidación Duplicada** | Bloqueo de segundo pago | Bloqueo por estado | ✅ |
-| **Escalamiento Autoridad** | Control vía GovernanceKernel | Contención Ring 3 | ✅ |
+| **Documentación Vencida**| Bloqueo de asignación | Bloqueo funcional | ✅ |
+| **Doble Liquidación** | Bloqueo por ID ya procesado | Bloqueo por estado | ✅ |
+| **Manipulación Financiera**| Invariabilidad tras liquidación| Integridad Ledger OK | ✅ |
 
 ---
 
-## 🛡️ 4. BLINDAJE Y GOBERNANZA
+## 🛡️ 4. BLINDAJE TÉCNICO
 
-Integración total con el **GovernanceKernel** mediante las intenciones:
-1. `ASSIGN_GUIDE`: Operacional (Asignación y programación).
-2. `LIQUIDATE_GUIDE_COMMISSION`: Operacional (Cierre financiero del servicio).
+El módulo utiliza el **GovernanceKernel** para todas las acciones críticas:
+1. `ASSIGN_GUIDE`: Asegura que el guía esté activo y documentado.
+2. `LIQUIDATE_GUIDE_COMMISSION`: Automatiza la generación de la obligación contable.
 
-El sistema detecta automáticamente la pérdida de vigencia documental de los guías, marcando su estado como `VENCIDO_DOCUMENTAL` y bloqueando nuevas asignaciones de forma preventiva.
+Se implementaron índices por fecha y guía para optimizar la detección de conflictos en grandes volúmenes de datos.
 
 ---
 
 ## ✅ 5. CONCLUSIÓN DE FASE
 
-El módulo de Guías Turísticos es robusto y garantiza la seguridad jurídica y operativa del prestador al forzar el cumplimiento documental. Se certifica su preparación para el escalado productivo.
+El vertical de Guías Turísticos está listo para su despliegue productivo. La arquitectura asegura que ningún servicio sea prestado por personal no calificado o con documentos vencidos, protegiendo la responsabilidad legal del prestador.
 
-**Módulo Guías Turísticos: READY FOR STAGE 17.**
+**Módulo Guías Turísticos: CERTIFICADO Y ENTREGADO.**
 
 **Jules**
 *Ingeniero de Sistemas - Certificación Operativa Sarita*
