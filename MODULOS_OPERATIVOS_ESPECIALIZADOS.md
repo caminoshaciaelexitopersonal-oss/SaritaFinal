@@ -1,31 +1,41 @@
-# MODULOS OPERATIVOS ESPECIALIZADOS - SARITA
+# MODULOS OPERATIVOS ESPECIALIZADOS - SARITA (Fase 16)
 
-**Fecha:** 24 de Mayo de 2024
-**Estado:** Auditoría de Especialización
+**Fecha:** 17 de Febrero de 2026
+**Estado:** Reestructuración de Dominio `operativa_turistica`
 
 ## 1. MATRIZ DE ESPECIALIZACIÓN (VÍA 2)
 
-### 🏨 HOTELES Y ALOJAMIENTOS
+### 🏨 HOTELES Y ALOJAMIENTOS (Operador Directo)
 - **Capacidades:** Gestión de tipos de habitación (`RoomType`), amenidades y stock de unidades.
-- **Estado:** ✅ REAL. Conectado a `/v1/mi-negocio/operativa/hotel/room-types/`.
+- **Estado:** ✅ REAL. Ubicado en `operativa_turistica/operadores_directos/hoteles`.
 - **UI:** Renderiza inventario real y permite auditoría de unidades.
 
-### 🍽️ RESTAURANTES Y GASTRONOMÍA
+### 🍽️ RESTAURANTES Y GASTRONOMÍA (Operador Directo)
 - **Capacidades:** Plano de mesas interactivo, estados de ocupación (Libre/Ocupada/Sucia).
-- **Estado:** ✅ REAL. Conectado a `/v1/mi-negocio/operativa/restaurante/tables/`.
+- **Estado:** ✅ REAL. Ubicado en `operativa_turistica/operadores_directos/restaurantes`.
 - **UI:** Visualización de salón operativa.
 
-### 🗺️ GUÍAS Y TURISMO
-- **Capacidades:** Gestión de habilidades del guía y catálogo de tours.
-- **Estado:** ⚠️ INTEGRADO. Backend preparado en `modulos_especializados/guias`.
+### 🗺️ GUÍAS Y TURISMO (Operador Directo)
+- **Capacidades:** Gestión de habilidades del guía, tours y liquidación de comisiones.
+- **Estado:** ✅ REAL. Ubicado en `operativa_turistica/operadores_directos/guias`.
 - **UI:** Visualización de rutas y disponibilidad.
 
-### 🚐 TRANSPORTE Y LOGÍSTICA
-- **Capacidades:** Control de flota, mantenimiento y conductores.
-- **Estado:** 🟡 PLANTILLA OPERATIVA. UI detallada con vehículos estáticos, backend preparado para recepción de datos en `modulos_especializados/transporte`.
+### 🚐 TRANSPORTE TURÍSTICO (Operador Directo)
+- **Capacidades:** Control de flota, conductores, programación de viajes y reservas con control de capacidad.
+- **Estado:** ✅ REAL. Ubicado en `operativa_turistica/operadores_directos/transporte`.
 
-## 2. DIFERENCIACIÓN UI/UX
-- Cada tipo de negocio (Hotel, Restaurante, etc.) accede a una interfaz optimizada para su flujo crítico de trabajo, asegurando que la herramienta sea un habilitador operativo y no una carga administrativa.
+### 🎨 ARTESANOS (Cadena Productiva Turística)
+- **Capacidades:** Gestión de materias primas, órdenes de producción de taller y bitácora de consumo automático.
+- **Estado:** ✅ REAL. Ubicado en `operativa_turistica/cadena_productiva/artesanos`.
+- **Anclaje:** Activación automática tras aprobación gubernamental (Vía 1).
 
-## 3. PRÓXIMOS PASOS
-- Sincronización total de los estados de limpieza en hoteles y tiempos de preparación en cocina para restaurantes vía SADI.
+## 2. ARQUITECTURA DE DOMINIO
+La Operativa Turística se divide en dos grandes ramas para garantizar la coherencia semántica:
+1. **Operadores Directos:** Servicios que el turista consume directamente (Cama, Comida, Guía, Transporte, Agencias, Bares).
+2. **Cadena Productiva:** Actores económicos vinculados que proveen la experiencia cultural y productiva (Artesanos).
+
+## 3. GOBERNANZA INTEGRADA
+Todos los módulos están gobernados por el `CoronelOperativaTuristica` y el `GovernanceKernel`, integrando:
+- **Monedero Soberano:** Para pagos y liquidaciones.
+- **Quintuple ERP:** Para trazabilidad contable y financiera.
+- **Ejército de Agentes:** Para automatización de flujos operativos.

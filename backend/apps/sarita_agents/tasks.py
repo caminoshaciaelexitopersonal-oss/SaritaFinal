@@ -25,7 +25,7 @@ from apps.sarita_agents.marketing.tenientes_marketing import (
     TenienteCalificacion, TenienteDolor, TenienteOferta, TenienteObjeciones, TenienteCierre
 )
 from apps.sarita_agents.agents.teniente_template import TenienteTemplate
-from apps.sarita_agents.agents.general.sarita.coroneles.operativo_especializado.tenientes_especializados import (
+from apps.sarita_agents.agents.general.sarita.coroneles.operativa_turistica.directos.tenientes_especializados import (
     TenienteOperativoHospedaje,
     TenienteOperativoGastronomia,
     TenienteOperativoTransporte,
@@ -33,7 +33,7 @@ from apps.sarita_agents.agents.general.sarita.coroneles.operativo_especializado.
     TenienteOperativoGuias,
     TenienteOperativoAgencia
 )
-from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.operativo_artesano_teniente import TenienteOperativoArtesano
+from apps.sarita_agents.agents.general.sarita.coroneles.operativa_turistica.cadena_productiva.artesanos.tenientes.teniente_artesano import TenienteArtesano
 from apps.sarita_agents.agents.general.sarita.coroneles.contable.tenientes.teniente_registro import TenienteRegistroContable
 from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.teniente_tesoreria import TenienteTesoreria
 from apps.sarita_agents.agents.general.sarita.coroneles.financiero.tenientes.teniente_presupuestos import TenientePresupuestos
@@ -431,7 +431,7 @@ TENIENTE_MAP = {
     'teniente_agencia': TenienteOperativoAgencia,
     # Fase 4.1
     'operativo_agencia': TenienteOperativoAgencia,
-    'operativo_artesano': TenienteOperativoArtesano,
+    'operativo_artesano': TenienteArtesano,
     # Fase 5
     'registro_contable': TenienteRegistroContable,
     # Fase 6

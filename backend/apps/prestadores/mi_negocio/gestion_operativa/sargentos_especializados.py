@@ -22,7 +22,7 @@ class SargentoEspecializado:
         """
         Actualiza el estado de una habitación validando multi-tenancy.
         """
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.hoteles.models import Room
+        from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.hoteles.models import Room
         try:
             # S-1: Validación estricta de aislamiento (Tenant Hardening)
             habitacion = Room.objects.get(id=habitacion_id, provider_id=provider_id)

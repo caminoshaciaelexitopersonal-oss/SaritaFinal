@@ -29,7 +29,7 @@
 2. **Unificación de Mando:**
    - Se implementó el alias `handle_directive` en todos los niveles (Coronel, Capitán, Teniente) para normalizar la orquestación.
 3. **Especialización Operativa:**
-   - Activación de modelos en `apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias`.
+   - Activación de modelos en `apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.agencias`.
 
 ---
 

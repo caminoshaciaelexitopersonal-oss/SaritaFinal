@@ -9,7 +9,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'puerto_gaitan_turismo.settings'
 django.setup()
 
 from api.models import CustomUser
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.models import (
+from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.guias.models import (
     GuiaTuristico, ServicioGuiado, LocalRutaTuristica, GrupoTuristico, CertificacionGuia
 )
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
@@ -37,7 +37,7 @@ def run_sabotage_test_guides():
     )
 
     # Intentar crear segundo servicio con el mismo guía y horario vía servicio
-    from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.services import GuideService
+    from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.guias.services import GuideService
     gs = GuideService(provider_user)
 
     try:
@@ -60,7 +60,7 @@ def run_sabotage_test_guides():
     )
 
     # Intentar confirmar vía viewset action logic
-    from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.views import ServicioGuiadoViewSet
+    from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.guias.views import ServicioGuiadoViewSet
     from unittest.mock import MagicMock
 
     # Simulación de la lógica de confirmación en la vista

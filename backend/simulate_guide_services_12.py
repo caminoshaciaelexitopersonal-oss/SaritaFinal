@@ -13,7 +13,7 @@ django.setup()
 
 from api.models import CustomUser
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.models import (
+from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.guias.models import (
     GuiaTuristico, CertificacionGuia, LocalRutaTuristica, GrupoTuristico, ServicioGuiado
 )
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
