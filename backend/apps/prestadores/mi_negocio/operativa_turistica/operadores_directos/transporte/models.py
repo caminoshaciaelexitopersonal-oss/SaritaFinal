@@ -127,8 +127,17 @@ class ScheduledTrip(TenantAwareModel):
     def __str__(self):
         return f"{self.ruta.nombre} - {self.fecha_salida} {self.hora_salida}"
 
+    def delete(self, *args, **kwargs):
+        if self.estado in [self.TripStatus.LIQUIDADO, self.TripStatus.FINALIZADO]:
+            raise ValueError("No se puede eliminar un viaje que ya ha sido finalizado o liquidado.")
+        super().delete(*args, **kwargs)
+
     class Meta(TenantAwareModel.Meta):
         app_label = 'prestadores'
+        indexes = [
+            models.Index(fields=['fecha_salida', 'vehiculo']),
+            models.Index(fields=['estado']),
+        ]
 
 class TransportBooking(TenantAwareModel):
     """
@@ -144,6 +153,11 @@ class TransportBooking(TenantAwareModel):
 
     operacion_comercial_ref_id = models.UUIDField(null=True, blank=True)
 
+    def delete(self, *args, **kwargs):
+        if self.trip.estado in [ScheduledTrip.TripStatus.LIQUIDADO, ScheduledTrip.TripStatus.FINALIZADO]:
+            raise ValueError("No se puede eliminar una reserva de un viaje ya finalizado o liquidado.")
+        super().delete(*args, **kwargs)
+
     class Meta(TenantAwareModel.Meta):
         app_label = 'prestadores'
 
@@ -156,6 +170,11 @@ class PassengerManifest(models.Model):
     documento_identidad = models.CharField(max_length=50)
     edad = models.PositiveSmallIntegerField(null=True, blank=True)
     eps = models.CharField(max_length=100, blank=True)
+
+    def delete(self, *args, **kwargs):
+        if self.booking.trip.estado in [ScheduledTrip.TripStatus.LIQUIDADO, ScheduledTrip.TripStatus.FINALIZADO]:
+            raise ValueError("No se puede eliminar un pasajero de un manifiesto de un viaje ya finalizado o liquidado.")
+        super().delete(*args, **kwargs)
 
     class Meta:
         app_label = 'prestadores'

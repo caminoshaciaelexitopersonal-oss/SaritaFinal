@@ -127,28 +127,54 @@ class TransportService:
         return reserva
 
     @transaction.atomic
+    def actualizar_estado_viaje(self, trip_id, nuevo_estado):
+        """
+        Cambia el estado del viaje validando condiciones de seguridad.
+        """
+        trip = ScheduledTrip.objects.select_for_update().get(id=trip_id, provider=self.provider)
+
+        if nuevo_estado == ScheduledTrip.TripStatus.EN_TRANSITO:
+            # Validar documentos antes de iniciar (Fase 13.1.6)
+            if not self._validar_documentos_vehiculo(trip.vehiculo):
+                raise ValueError("No se puede iniciar: Vehículo con documentos vencidos.")
+
+            if trip.conductor.estado != Conductor.ConductorStatus.ACTIVO:
+                raise ValueError("No se puede iniciar: Conductor no activo.")
+
+        trip.estado = nuevo_estado
+        trip.save()
+        return trip
+
+    @transaction.atomic
     def liquidar_viaje(self, trip_id):
         """
         Realiza la liquidación financiera del viaje (Fase 13.1.5).
         """
         trip = ScheduledTrip.objects.select_for_update().get(id=trip_id, provider=self.provider)
+        print(f"DEBUG LIQUIDAR: Trip {trip.id}, Estado {trip.estado}")
 
         if trip.estado != ScheduledTrip.TripStatus.FINALIZADO:
-            raise ValueError("Solo se pueden liquidar viajes finalizados.")
+            raise ValueError(f"Solo se pueden liquidar viajes finalizados. Estado actual: {trip.estado}")
 
         if hasattr(trip, 'liquidation'):
             raise ValueError("Este viaje ya ha sido liquidado.")
 
-        total_ingresos = trip.bookings.filter(pagado=True).aggregate(t=models.Sum('total_pago'))['t'] or 0
+        total_ingresos = trip.bookings.filter(pagado=True).aggregate(t=models.Sum('total_pago'))['t'] or Decimal('0.00')
         total_comisiones = trip.comision_conductor # Asumimos fija o calculada previamente
+        print(f"DEBUG LIQUIDAR: Ingresos={total_ingresos}, Comisiones={total_comisiones}")
 
-        liq = TripLiquidation.objects.create(
-            provider=self.provider,
-            trip=trip,
-            total_ingresos=total_ingresos,
-            total_comisiones=total_comisiones,
-            utilidad_neta=total_ingresos - total_comisiones
-        )
+        try:
+            liq = TripLiquidation.objects.create(
+                provider=self.provider,
+                trip=trip,
+                total_ingresos=total_ingresos,
+                total_comisiones=total_comisiones,
+                utilidad_neta=total_ingresos - total_comisiones
+            )
+            print(f"DEBUG LIQUIDAR: Liquidation creada ID {liq.id}")
+        except Exception as e:
+            print(f"DEBUG LIQUIDAR ERROR CREATING LIQ: {e}")
+            raise e
 
         trip.estado = ScheduledTrip.TripStatus.LIQUIDADO
         trip.save()
@@ -163,7 +189,10 @@ class TransportService:
         }
         impact = erp_service.record_impact("TRANSPORT_TRIP_LIQUIDATED", payload)
 
-        liq.asiento_contable_ref_id = impact.get('contable_id')
+        contable_id = impact.get('contable_id')
+        if contable_id and not str(contable_id).startswith("ERROR"):
+            liq.asiento_contable_ref_id = contable_id
+
         liq.save()
 
         return liq
