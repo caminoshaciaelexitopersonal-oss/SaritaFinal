@@ -16,7 +16,7 @@ class CapitanNomina(CapitanTemplate):
         pasos = {
             "liquidacion_planilla": {
                 "descripcion": "Calcular devengados y deducciones para todos los contratos activos.",
-                "teniente": "admin_persistencia_contable",
+                "teniente": "nomina_liquidacion",
                 "parametros": mision.directiva_original.get("parameters", {})
             }
         }
@@ -29,7 +29,7 @@ class CapitanNomina(CapitanTemplate):
         )
 
     def _get_tenientes(self) -> dict:
-        from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.operativos.tenientes_persistencia import AdminTenientePersistenciaContable
+        from apps.sarita_agents.agents.general.sarita.coroneles.nomina.tenientes.tenientes_nomina import TenienteLiquidacion
         return {
-            "admin_persistencia_contable": AdminTenientePersistenciaContable()
+            "nomina_liquidacion": TenienteLiquidacion()
         }

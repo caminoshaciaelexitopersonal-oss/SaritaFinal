@@ -29,8 +29,10 @@ class FacturacionService:
         2. Crea Operación Comercial (Borrador).
         3. Delega a Agentes la validación y creación de contrato.
         """
+        perfil = ProviderProfileService.get_profile_by_id(perfil_id)
         # 1. Crear Operación Comercial
         operacion = OperacionComercial.objects.create(
+            provider=perfil,
             perfil_ref_id=perfil_id,
             cliente_ref_id=cliente_id,
             creado_por=usuario,
@@ -94,6 +96,7 @@ class FacturacionService:
         # 1. Crear la FacturaVenta interna
         factura = FacturaVenta.objects.create(
             operacion=operacion,
+            provider=perfil,
             perfil_ref_id=operacion.perfil_ref_id,
             cliente_ref_id=operacion.cliente_ref_id,
             numero_factura=f"FV-{operacion.id}",

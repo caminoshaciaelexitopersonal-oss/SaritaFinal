@@ -3,8 +3,9 @@ from django.db import models
 from django.db.models import Sum
 from django.conf import settings
 from decimal import Decimal
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile, TenantAwareModel
 
-class OperacionComercial(models.Model):
+class OperacionComercial(TenantAwareModel):
     class Estado(models.TextChoices):
         BORRADOR = 'BORRADOR', 'Borrador'
         CONFIRMADA = 'CONFIRMADA', 'Confirmada'
@@ -16,7 +17,7 @@ class OperacionComercial(models.Model):
         VENTA = 'VENTA', 'Venta de Productos/Servicios'
         CONTRATO = 'CONTRATO', 'Contrato'
 
-    perfil_ref_id = models.UUIDField()
+    perfil_ref_id = models.UUIDField(null=True, blank=True) # Mantenido para retrocompatibilidad
     cliente_ref_id = models.UUIDField()
     tipo_operacion = models.CharField(max_length=20, choices=TipoOperacion.choices, default=TipoOperacion.VENTA)
     estado = models.CharField(max_length=20, choices=Estado.choices, default=Estado.BORRADOR)
@@ -42,7 +43,7 @@ class ItemOperacionComercial(models.Model):
     precio_unitario = models.DecimalField(max_digits=12, decimal_places=2)
     subtotal = models.DecimalField(max_digits=12, decimal_places=2)
 
-class FacturaVenta(models.Model):
+class FacturaVenta(TenantAwareModel):
     class Estado(models.TextChoices):
         EMITIDA = 'EMITIDA', 'Emitida'
         PAGADA = 'PAGADA', 'Pagada'
@@ -54,7 +55,7 @@ class FacturaVenta(models.Model):
         RECHAZADA = 'RECHAZADA', 'Rechazada'
 
     operacion = models.OneToOneField(OperacionComercial, on_delete=models.PROTECT, related_name='factura')
-    perfil_ref_id = models.UUIDField()
+    perfil_ref_id = models.UUIDField(null=True, blank=True)
     cliente_ref_id = models.UUIDField()
     numero_factura = models.CharField(max_length=50)
     fecha_emision = models.DateField()

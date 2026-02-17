@@ -16,7 +16,7 @@ class CapitanSST(CapitanTemplate):
         pasos = {
             "actualizacion_matriz": {
                 "descripcion": "Registrar o actualizar riesgos identificados en el entorno laboral.",
-                "teniente": "admin_persistencia_operativa",
+                "teniente": "sst_riesgos",
                 "parametros": mision.directiva_original.get("parameters", {})
             }
         }
@@ -29,7 +29,7 @@ class CapitanSST(CapitanTemplate):
         )
 
     def _get_tenientes(self) -> dict:
-        from apps.sarita_agents.agents.general.sarita.coroneles.administrador_general.tenientes.operativos.tenientes_persistencia import AdminTenientePersistenciaOperativa
+        from apps.sarita_agents.agents.general.sarita.coroneles.sg_sst.tenientes.tenientes_especializados import TenienteRiesgos
         return {
-            "admin_persistencia_operativa": AdminTenientePersistenciaOperativa()
+            "sst_riesgos": TenienteRiesgos()
         }
