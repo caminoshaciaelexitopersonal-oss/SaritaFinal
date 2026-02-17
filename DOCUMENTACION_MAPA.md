@@ -22,7 +22,7 @@ Este documento centraliza la navegación por la infraestructura documental jerar
 
 ### 5. [documentacion/informes_fases/](./documentacion/informes_fases/)
 *Trazabilidad histórica de la evolución del sistema por fases.*
-* Ej: Informe de Auditoría Total, Informe Cierre Fase 11, Informe Final Programa Sarita.
+* Ej: Informe de Auditoría Total, Informe Cierre Fase 11, Informe Final Programa Sarita, **[Informe Mapa Estructural Sistémico](./documentacion/informes_fases/INFORME_MAPA_ESTRUCTURAL_SISTEMICO.md)**.
 
 ### 6. [documentacion/matrices_y_modelos/](./documentacion/matrices_y_modelos/)
 *Especificaciones técnicas, modelos de datos, mapas de riesgo y matrices de control.*

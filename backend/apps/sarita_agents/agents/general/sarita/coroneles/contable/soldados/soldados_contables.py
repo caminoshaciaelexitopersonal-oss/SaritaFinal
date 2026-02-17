@@ -55,7 +55,7 @@ class SoldadoRegistroGasto(SoldierTemplate):
 class SoldadoConciliacionWallet(SoldierTemplate):
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO CONCILIACIÓN WALLET: Cruzando datos con Wallet.")
-        from apps.wallet.models import WalletAccount
+        from apps.wallet.services import WalletService
         from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import Cuenta, Transaccion
         from django.db.models import Sum
         from decimal import Decimal
@@ -64,9 +64,12 @@ class SoldadoConciliacionWallet(SoldierTemplate):
         if not provider_id:
             return {"status": "error", "message": "Falta provider_id"}
 
-        # 1. Obtener saldo en Wallet real
-        wallet = WalletAccount.objects.filter(owner_id=provider_id, owner_type=WalletAccount.OwnerType.PROVIDER).first()
-        wallet_balance = wallet.balance if wallet else Decimal('0.00')
+        # 1. Obtener saldo en Wallet real via Service (Fase 18: Desacoplamiento)
+        wallet_service = WalletService(user=None) # Los agentes pueden no tener contexto de usuario directo
+        wallet_balance = wallet_service.get_wallet_balance(
+            owner_id=provider_id,
+            owner_type="ARTESANO" # O el tipo correspondiente, mapeado a Wallet.OwnerType
+        )
 
         # 2. Obtener saldo en cuenta contable 112505
         cuenta_puente = Cuenta.objects.filter(provider_id=provider_id, codigo='112505').first()
