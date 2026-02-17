@@ -13,7 +13,7 @@ django.setup()
 
 from api.models import CustomUser
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.models import (
+from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.transporte.models import (
     Vehicle, Conductor, TransportRoute, ScheduledTrip, TransportBooking
 )
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
@@ -33,9 +33,12 @@ def simulate_transport():
     print(f"DEBUG: Conteo tras limpieza: ScheduledTrip={ScheduledTrip.objects.count()}")
 
     # 1. Setup
-    company = Company.objects.first()
-    provider_user = CustomUser.objects.filter(username="bar_owner").first()
-    profile = ProviderProfile.objects.filter(usuario=provider_user).first()
+    company, _ = Company.objects.get_or_create(name="TransportPG", defaults={"code": "TPG"})
+    provider_user, _ = CustomUser.objects.get_or_create(username="transport_owner", defaults={"role":"PRESTADOR", "email":"transport@test.com"})
+    profile, _ = ProviderProfile.objects.get_or_create(
+        usuario=provider_user,
+        defaults={"nombre_comercial": "Transportes PG", "provider_type":"TRANSPORT", "is_active": True}
+    )
 
     # 2. Crear Vehículos
     print("--- Creando flota de vehículos... ---")

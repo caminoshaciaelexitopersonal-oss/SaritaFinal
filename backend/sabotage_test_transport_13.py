@@ -9,7 +9,7 @@ django.setup()
 
 from api.models import CustomUser
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.models import Vehicle, Conductor, TransportRoute, ScheduledTrip
+from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.transporte.models import Vehicle, Conductor, TransportRoute, ScheduledTrip
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
 
 def run_sabotage_test():

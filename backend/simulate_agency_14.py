@@ -11,7 +11,7 @@ django.setup()
 
 from api.models import CustomUser
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.models import TravelPackage, PackageComponent, AgencyBooking, AgencyLiquidation
+from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.agencias.models import TravelPackage, PackageComponent, AgencyBooking, AgencyLiquidation
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
 
 def simulate_agency():
@@ -25,12 +25,15 @@ def simulate_agency():
     TravelPackage.objects.all().delete()
 
     # 1. Setup - Usuario Agencia
-    user_agencia = CustomUser.objects.filter(username="bar_owner").first()
+    user_agencia, _ = CustomUser.objects.get_or_create(username="agency_owner", defaults={"role":"PRESTADOR", "email":"agency@test.com"})
     # Promoción temporal para liquidación
     user_agencia.is_superuser = True
     user_agencia.save()
 
-    profile_agencia = ProviderProfile.objects.filter(usuario=user_agencia).first()
+    profile_agencia, _ = ProviderProfile.objects.get_or_create(
+        usuario=user_agencia,
+        defaults={"nombre_comercial": "Agencia Central", "provider_type":"AGENCY", "is_active": True}
+    )
     kernel = GovernanceKernel(user_agencia)
 
     # 2. Setup - Otros Proveedores (Simulados)

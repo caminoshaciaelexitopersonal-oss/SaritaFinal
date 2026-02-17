@@ -7,12 +7,7 @@ from apps.admin_plataforma.models import GovernancePolicy
 from .models import Mision
 from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
 from .agents.general.sarita.coroneles.operativo_general.coronel import CoronelOperativoGeneral
-from .agents.general.sarita.coroneles.operativo_especializado.hospedaje.coronel import CoronelOperativoHospedaje
-from .agents.general.sarita.coroneles.operativo_especializado.gastronomia.coronel import CoronelOperativoGastronomia
-from .agents.general.sarita.coroneles.operativo_especializado.transporte.coronel import CoronelOperativoTransporte
-from .agents.general.sarita.coroneles.operativo_especializado.nocturno.coronel import CoronelOperativoNocturno
-from .agents.general.sarita.coroneles.operativo_especializado.guias.coronel import CoronelOperativoGuias
-from .agents.general.sarita.coroneles.operativo_especializado.agencias.coronel import CoronelOperativoAgencia
+from .agents.general.sarita.coroneles.operativa_turistica.coronel import CoronelOperativaTuristica
 from .agents.general.sarita.coroneles.administrador_general.coronel import AdministradorGeneralCoronel
 from .agents.general.sarita.coroneles.contable.coronel import CoronelContable
 from .agents.general.sarita.coroneles.financiero.coronel import CoronelFinanciero
@@ -41,15 +36,19 @@ class SaritaOrchestrator:
     def __init__(self):
         # El roster de Coroneles bajo el mando del General.
         # El 'domain' es la clave para la delegación.
+        op_turistica = CoronelOperativaTuristica(general=self)
         self.coroneles = {
             "prestadores": PrestadoresCoronel(general=self),
             "operativo_general": CoronelOperativoGeneral(general=self),
-            "operativo_hospedaje": CoronelOperativoHospedaje(general=self),
-            "operativo_gastronomia": CoronelOperativoGastronomia(general=self),
-            "operativo_transporte": CoronelOperativoTransporte(general=self),
-            "operativo_nocturno": CoronelOperativoNocturno(general=self),
-            "operativo_guias": CoronelOperativoGuias(general=self),
-            "operativo_agencia": CoronelOperativoAgencia(general=self),
+            "operativa_turistica": op_turistica,
+            # Retrocompatibilidad de dominios especializados
+            "operativo_hospedaje": op_turistica,
+            "operativo_gastronomia": op_turistica,
+            "operativo_transporte": op_turistica,
+            "operativo_nocturno": op_turistica,
+            "operativo_guias": op_turistica,
+            "operativo_agencia": op_turistica,
+
             "administrador_general": AdministradorGeneralCoronel(general=self),
             "contabilidad": CoronelContable(general=self),
             "finanzas": CoronelFinanciero(general=self),

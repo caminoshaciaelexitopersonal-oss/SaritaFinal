@@ -404,45 +404,13 @@ class GovernanceKernel:
                 return {"status": "SUCCESS", "agent_report": agent_result, "wallet_id": str(wallet.id)}
 
         # Registro de Servicios de Dominio - Ejército de Agentes Delivery
-        # Registro de Servicios de Dominio - Operación Nocturna (Fase 11)
-        if intention.domain == "operativo_nocturno":
+        # Registro de Servicios de Dominio - Operativa Turística (Fase 16 - Unificada)
+        if intention.domain == "operativa_turistica":
             from apps.sarita_agents.orchestrator import sarita_orchestrator
-            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.bares_discotecas.services import NightclubService
 
             directive = {
-                "domain": "operativo_nocturno",
-                "action": intention.name,
-                "parameters": parameters,
-                "user_id": str(self.user.id),
-                "role": self.user.role
-            }
-
-            agent_result = sarita_orchestrator.handle_directive(directive)
-            service = NightclubService(user=self.user)
-
-            if intention.name == "PROCESS_COMMAND":
-                consumption = service.registrar_consumo(
-                    parameters["consumption_id"],
-                    parameters["items"]
-                )
-                return {"status": "SUCCESS", "agent_report": agent_result, "consumption_id": str(consumption.id)}
-
-            if intention.name == "BILL_CONSUMPTION":
-                impact = service.facturar_consumo(parameters["consumption_id"])
-                return {"status": "SUCCESS", "agent_report": agent_result, "erp_impact": impact}
-
-            if intention.name == "NIGHT_CASH_CLOSE":
-                closing = service.cierre_caja(parameters["event_id"], parameters)
-                return {"status": "SUCCESS", "agent_report": agent_result, "closing_id": str(closing.id)}
-
-        # Registro de Servicios de Dominio - Guías Turísticos (Fase 12)
-        if intention.domain == "operativo_guias":
-            from apps.sarita_agents.orchestrator import sarita_orchestrator
-            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.sargentos import SargentoGuias
-
-            directive = {
-                "domain": "operativo_guias",
-                "action": intention.name,
+                "domain": "operativa_turistica",
+                "mission": {"type": intention.name},
                 "parameters": parameters,
                 "user_id": str(self.user.id),
                 "role": self.user.role
@@ -450,81 +418,29 @@ class GovernanceKernel:
 
             agent_result = sarita_orchestrator.handle_directive(directive)
 
-            if intention.name == "ASSIGN_GUIDE":
-                res = SargentoGuias.asignar_y_confirmar(parameters, self.user)
-                return {"status": "SUCCESS", "agent_report": agent_result, "details": res}
-
-            if intention.name == "LIQUIDATE_GUIDE_COMMISSION":
-                res = SargentoGuias.liquidar_comision(parameters, self.user)
-                return {"status": "SUCCESS", "agent_report": agent_result, "details": res}
-
-        # Registro de Servicios de Dominio - Transporte Turístico (Fase 13)
-        if intention.domain == "operativo_transporte":
-            from apps.sarita_agents.orchestrator import sarita_orchestrator
-            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.sargentos import SargentoTransporte
-
-            directive = {
-                "domain": "operativo_transporte",
-                "action": intention.name,
-                "parameters": parameters,
-                "user_id": str(self.user.id),
-                "role": self.user.role
-            }
-
-            agent_result = sarita_orchestrator.handle_directive(directive)
-
-            # Fase 13: El resultado ya viene de la cadena de agentes (Teniente -> Sargento)
-            # Extraemos los detalles para retrocompatibilidad con la simulación
+            # Extraemos detalles del reporte del capitán para retrocompatibilidad
             details = {}
             if "captain_report" in agent_result:
                 agent_details = agent_result["captain_report"].get("details", [])
                 if agent_details and isinstance(agent_details, list) and len(agent_details) > 0:
                     details = agent_details[0]
 
-            if details.get("status") == "FAILED":
-                raise ValueError(details.get("error", "Error en la ejecución del agente."))
-
-            return {
-                "status": "SUCCESS",
-                "agent_report": agent_result,
-                "trip_id": details.get("trip_id"),
-                "booking_id": details.get("booking_id"),
-                "details": details
-            }
-
-        # Registro de Servicios de Dominio - Agencia de Viajes (Fase 14)
-        if intention.domain == "operativo_agencia":
-            from apps.sarita_agents.orchestrator import sarita_orchestrator
-            from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.sargentos import SargentoAgencia
-
-            directive = {
-                "domain": "operativo_agencia",
-                "action": intention.name,
-                "parameters": parameters,
-                "user_id": str(self.user.id),
-                "role": self.user.role
-            }
-
-            agent_result = sarita_orchestrator.handle_directive(directive)
-
-            # Extraemos detalles para la simulación
-            details = {}
-            if "captain_report" in agent_result:
-                agent_details = agent_result["captain_report"].get("details", [])
-                if agent_details and isinstance(agent_details, list) and len(agent_details) > 0:
-                    details = agent_details[0]
-
-            if details.get("status") == "FAILED":
-                raise ValueError(details.get("error", "Error en la ejecución del agente de agencia."))
+            # S-1.1: Si la operación de negocio falló, lanzamos error para que el flujo se detenga
+            if isinstance(details, dict) and details.get("status") == "FAILED":
+                raise ValueError(details.get("error", "Error en la ejecución del agente operativo."))
 
             res = {
                 "status": "SUCCESS",
                 "agent_report": agent_result,
                 "details": details
             }
-            # Promovemos campos de detalles al nivel superior para facilidad de uso
+            # Promovemos campos de negocio al nivel superior
             if isinstance(details, dict):
-                res.update({k: v for k, v in details.items() if k not in res})
+                if "business_report" in details:
+                    res.update(details["business_report"])
+                else:
+                    # Fallback para tenientes que retornan el reporte directamente
+                    res.update({k: v for k, v in details.items() if k not in ["status", "agent_report", "details"]})
 
             return res
 
@@ -660,10 +576,32 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.DELEGATED
 ))
 
+# Dominio: Artesanos (Cadena Productiva - Fase 15/16)
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="MANAGE_WORKSHOP",
+    domain="operativa_turistica",
+    required_role=CustomUser.Role.ARTESANO,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="REGISTER_PRODUCTION",
+    domain="operativa_turistica",
+    required_role=CustomUser.Role.ARTESANO,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="UPDATE_ARTISAN_INVENTORY",
+    domain="operativa_turistica",
+    required_role=CustomUser.Role.ARTESANO,
+    min_authority=AuthorityLevel.OPERATIONAL
+))
+
 # Dominio: Operación Nocturna (Fase 11)
 GovernanceKernel.register_intention(GovernanceIntention(
     name="PROCESS_COMMAND",
-    domain="operativo_nocturno",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))
@@ -671,28 +609,28 @@ GovernanceKernel.register_intention(GovernanceIntention(
 # Dominio: Agencia de Viajes (Fase 14)
 GovernanceKernel.register_intention(GovernanceIntention(
     name="CREATE_PACKAGE",
-    domain="operativo_agencia",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
     name="BOOK_PACKAGE",
-    domain="operativo_agencia",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
     name="CANCEL_PACKAGE_COMPONENT",
-    domain="operativo_agencia",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
     name="LIQUIDATE_AGENCY_PACKAGE",
-    domain="operativo_agencia",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.DELEGATED
 ))
@@ -700,21 +638,21 @@ GovernanceKernel.register_intention(GovernanceIntention(
 # Dominio: Transporte Turístico (Fase 13)
 GovernanceKernel.register_intention(GovernanceIntention(
     name="SCHEDULE_TRANSPORT_TRIP",
-    domain="operativo_transporte",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
     name="BOOK_TRANSPORT_SEAT",
-    domain="operativo_transporte",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
     name="LIQUIDATE_TRANSPORT_TRIP",
-    domain="operativo_transporte",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.DELEGATED
 ))
@@ -722,28 +660,28 @@ GovernanceKernel.register_intention(GovernanceIntention(
 # Dominio: Guías Turísticos (Fase 12)
 GovernanceKernel.register_intention(GovernanceIntention(
     name="ASSIGN_GUIDE",
-    domain="operativo_guias",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
     name="LIQUIDATE_GUIDE_COMMISSION",
-    domain="operativo_guias",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
     name="BILL_CONSUMPTION",
-    domain="operativo_nocturno",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))
 
 GovernanceKernel.register_intention(GovernanceIntention(
     name="NIGHT_CASH_CLOSE",
-    domain="operativo_nocturno",
+    domain="operativa_turistica",
     required_role=CustomUser.Role.PRESTADOR,
     min_authority=AuthorityLevel.OPERATIONAL
 ))

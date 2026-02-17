@@ -10,7 +10,7 @@ django.setup()
 
 from api.models import CustomUser
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.models import TravelPackage, PackageComponent, AgencyBooking, AgencyLiquidation
+from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.agencias.models import TravelPackage, PackageComponent, AgencyBooking, AgencyLiquidation
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
 
 def run_sabotage_test():

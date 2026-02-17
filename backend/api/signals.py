@@ -24,6 +24,32 @@
 #         except ProviderProfile.DoesNotExist:
 #             pass
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import Artesano
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+
+@receiver(post_save, sender=Artesano)
+def activar_perfil_comercial_artesano(sender, instance, **kwargs):
+    """
+    FASE 16: Activación automática del perfil productivo turístico
+    tras la aprobación gubernamental del artesano.
+    """
+    if instance.aprobado:
+        perfil, created = ProviderProfile.objects.get_or_create(
+            usuario=instance.usuario,
+            defaults={
+                'nombre_comercial': instance.nombre_taller,
+                'provider_type': ProviderProfile.ProviderTypes.ARTISAN,
+                'is_active': True,
+                'is_verified': True
+            }
+        )
+        if not created and not perfil.is_active:
+            perfil.is_active = True
+            perfil.is_verified = True
+            perfil.save(update_fields=['is_active', 'is_verified'])
+
 
 # @receiver(post_save, sender=Resena)
 # def update_score_on_resena(sender, instance, **kwargs):
