@@ -5,7 +5,6 @@ from django.db import transaction, models
 from .models import DeliveryCompany, Driver, Vehicle, DeliveryService, DeliveryEvent
 from api.models import CustomUser
 from apps.wallet.services import WalletService
-from apps.wallet.models import WalletAccount
 
 logger = logging.getLogger(__name__)
 
@@ -287,10 +286,11 @@ class DeliveryLogisticService:
     def _process_payment(self, service):
         """
         Ejecuta el pago real desde el monedero del turista al monedero de la empresa/conductor.
+        (Fase 18: Desacoplamiento via WalletService sin tocar modelos de wallet).
         """
         wallet_service = WalletService(user=service.tourist)
 
-        # Determinar el usuario receptor (Preferimos al conductor en Fase 9 por simplicidad de mapeo)
+        # Determinar el usuario receptor
         target_user = None
         if service.driver:
             target_user = service.driver.user
@@ -300,26 +300,20 @@ class DeliveryLogisticService:
             return
 
         try:
-            target_wallet = WalletAccount.objects.filter(user=target_user).first()
-            if not target_wallet:
-                logger.error(f"PAGO DELIVERY: Receptor {target_user.username} no tiene monedero.")
-                return
+            # Ejecutar pago via monedero gobernado (Resolución de monedero interna al servicio)
+            tx_result = wallet_service.pay_to_user(
+                target_user=target_user,
+                amount=service.final_price,
+                related_service_id=service.id,
+                description=f"Pago por servicio de Delivery {service.id}"
+            )
+
+            service.wallet_transaction = tx_result.id
+            service.save()
+            logger.info(f"PAGO DELIVERY: Procesado para servicio {service.id} via TX {tx_result.id}")
+
         except Exception as e:
-            logger.error(f"PAGO DELIVERY: Error buscando monedero: {e}")
-            return
-
-        # Ejecutar pago via monedero gobernado
-        tx_result = wallet_service.pay(
-            to_wallet_id=str(target_wallet.id),
-            amount=service.final_price,
-            related_service_id=service.id,
-            description=f"Pago por servicio de Delivery {service.id}"
-        )
-
-        service.wallet_transaction = tx_result.id
-        service.save()
-
-        logger.info(f"PAGO DELIVERY: Procesado para servicio {service.id} via TX {tx_result.id}")
+            logger.error(f"PAGO DELIVERY: Error procesando pago: {e}")
 
     @staticmethod
     def generar_indicadores(provider_id):

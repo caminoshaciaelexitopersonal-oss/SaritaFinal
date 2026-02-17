@@ -167,6 +167,7 @@ WSGI_APPLICATION = "puerto_gaitan_turismo.wsgi.application"
 # Usa DATABASE_URL desde .env
 # Formato: postgresql://USER:PASSWORD@HOST:PORT/DBNAME
 # ------------------------------------------------------------------------
+# --- Configuración Multibase (Fase 18: Aislamiento de Dominios) ---
 if "DATABASE_URL" in os.environ:
     DATABASES = {
         "default": dj_database_url.config(conn_max_age=600, ssl_require=False)
@@ -176,8 +177,18 @@ else:
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
-        }
+        },
+        "wallet_db": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "wallet.sqlite3",
+        },
+        "delivery_db": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "delivery.sqlite3",
+        },
     }
+
+DATABASE_ROUTERS = ["puerto_gaitan_turismo.routers.DatabaseRouter"]
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
