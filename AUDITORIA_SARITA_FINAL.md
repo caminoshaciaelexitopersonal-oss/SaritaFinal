@@ -62,7 +62,7 @@
 | Registro -> Onboarding | **OK (Hardened)** | `TenienteCierre` ahora crea perfiles reales automáticamente. |
 | Venta -> Facturación | **OK (UBL 2.1)** | Generación de XML válida para DIAN. |
 | Pago -> Wallet | **OK (Sistémico)** | Débito y Crédito entre billeteras internas verificado. |
-| IA Agents | **100% Cobertura** | Jerarquía militar completa (N1-N6). Dominios de Gobierno y Turista integrados. |
+| IA Agents | **100% Cobertura** | Jerarquía militar completa (N1-N6). Cadenas de mando funcionales para las 3 vías. |
 
 ---
 
@@ -77,7 +77,7 @@
 
 ### 🔍 FASE 7: SISTEMA DE AGENTES (SADI/SARITA) - COBERTURA TOTAL
 - **Jerarquía:** Verificada y Robustecida (General -> Coroneles -> Capitanes -> Tenientes -> Sargentos -> Soldados).
-- **Novedad:** Se han activado los Coroneles de **Gobierno** y **Atención al Turista** en el Orquestador Central.
+- **Novedad:** Se han activado los Coroneles de **Gobierno** y **Atención al Turista** en el Orquestador Central, con su cadena de mando completa (Sargentos y Soldados) físicamente implementada.
 - **Sincronización:** Implementado el `SoldadoSincronizadorComercial` para el taller artesano.
 
 ### 🏛️ FASE 8: SUPER ADMIN Y GOBERNANZA
