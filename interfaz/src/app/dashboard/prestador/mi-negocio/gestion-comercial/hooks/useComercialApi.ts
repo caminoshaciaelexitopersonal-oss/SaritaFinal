@@ -11,9 +11,19 @@ export function useComercialApi() {
 
   const { data, error, isLoading } = useSWR<PaginatedResponse<FacturaVenta>>(basePath, fetcher);
 
+  const sendDian = async (id: string) => {
+    return api.post(`${basePath}${id}/send-dian/`);
+  };
+
+  const getDianStatus = async (id: string) => {
+    return api.get(`${basePath}${id}/dian-status/`);
+  };
+
   return {
     facturas: data?.results || [],
     isLoading,
     isError: error,
+    sendDian,
+    getDianStatus
   };
 }

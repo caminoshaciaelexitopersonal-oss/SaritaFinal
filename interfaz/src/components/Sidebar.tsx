@@ -95,6 +95,7 @@ const miNegocioNav: NavSection[] = [
     links: [
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/hoteles', label: 'Habitaciones', icon: FiBriefcase, prestadorCategoria: 'hotel' },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/restaurantes', label: 'Control de Salón', icon: FiGrid, prestadorCategoria: 'restaurante' },
+      { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/bares', label: 'Operación Nocturna', icon: FiZap, prestadorCategoria: 'bar' },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/guias', label: 'Mis Rutas', icon: FiMap, prestadorCategoria: 'guía' },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/transporte', label: 'Vehículos', icon: FiTruck, prestadorCategoria: 'transporte' },
       { href: '/dashboard/prestador/mi-negocio/gestion-operativa/especializados/agencias', label: 'Paquetes Turísticos', icon: FiBriefcase, prestadorCategoria: 'agencia' },

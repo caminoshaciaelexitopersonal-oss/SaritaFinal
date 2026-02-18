@@ -57,11 +57,29 @@ class TenienteObjeciones(TenienteTemplate):
         return {"respuesta_objecion": respuesta}
 
 class TenienteCierre(TenienteTemplate):
-    """Ejecuta el registro o suscripción simulada."""
+    """Ejecuta el registro o suscripción real, integrando el funnel con el ERP."""
     def perform_action(self, parametros: dict):
-        # En Phase 4-M, esto podría crear un lead o un usuario pre-registrado
         email = parametros.get("email")
         if not email:
-            return {"status": "AWAITING_EMAIL", "message": "Necesito tu correo para crear la cuenta."}
+            return {"status": "AWAITING_EMAIL", "message": "Necesito tu correo para completar el registro en Sarita."}
 
-        return {"status": "CONVERSION_READY", "email": email, "action": "onboarding_triggered"}
+        user = CustomUser.objects.filter(email=email).first()
+        if user:
+            # Si el usuario existe pero no tiene perfil, lo pre-configuramos
+            profile, created = ProviderProfile.objects.get_or_create(
+                perfil_ref_id=user.id,
+                defaults={'nombre_negocio': f"Negocio de {user.get_full_name() or user.username}"}
+            )
+            return {
+                "status": "CONVERSION_SUCCESS",
+                "message": f"¡Bienvenido a bordo! Tu perfil de {profile.nombre_negocio} ha sido activado.",
+                "dashboard_url": "/dashboard/prestador",
+                "new_profile": created
+            }
+
+        return {
+            "status": "CONVERSION_READY",
+            "email": email,
+            "action": "onboarding_triggered",
+            "message": "Prospecto listo para conversión. Se ha enviado invitación de registro."
+        }

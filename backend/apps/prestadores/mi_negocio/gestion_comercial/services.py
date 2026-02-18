@@ -8,7 +8,7 @@ from .domain.models import OperacionComercial, FacturaVenta, ItemFactura
 from apps.audit.models import AuditLog
 from apps.prestadores.mi_negocio.gestion_contable.services.facturacion import FacturaVentaAccountingService
 from apps.prestadores.mi_negocio.gestion_archivistica.archiving import ArchivingService
-from .dian_services import DianService
+from .dian_services import DianService, FacturacionElectronicaService
 # --- IMPORTACIÓN DE SERVICIOS DE DOMINIO OPERATIVO ---
 from apps.prestadores.mi_negocio.gestion_operativa.services import (
     ProviderProfileService,
@@ -93,13 +93,19 @@ class FacturacionService:
             # En un caso real, aquí se lanzaría una excepción para abortar la transacción
             raise ValueError("Referencias de perfil o cliente no válidas.")
 
-        # 1. Crear la FacturaVenta interna
+        # 1. Obtener Resolución para asignar Número Real
+        from .domain.models import DianResolution
+        res = DianResolution.objects.filter(provider_id=operacion.perfil_ref_id, es_vigente=True).first()
+        if not res:
+             raise ValidationError("No hay una resolución DIAN vigente configurada para este prestador.")
+
+        # 1.1 Crear la FacturaVenta interna
         factura = FacturaVenta.objects.create(
             operacion=operacion,
             provider=perfil,
             perfil_ref_id=operacion.perfil_ref_id,
             cliente_ref_id=operacion.cliente_ref_id,
-            numero_factura=f"FV-{operacion.id}",
+            numero_factura=f"{res.prefijo}{res.consecutivo_actual}",
             fecha_emision=timezone.now().date(),
             subtotal=operacion.subtotal,
             impuestos=operacion.impuestos,
@@ -116,49 +122,19 @@ class FacturacionService:
                 precio_unitario=item_op.precio_unitario,
             )
 
-        # 2. Registrar el reflejo contable vía Agentes (Fase 5)
+        # 3. Enviar a la DIAN (Infraestructura Real Multi-tenant)
         try:
-            from apps.sarita_agents.orchestrator import sarita_orchestrator
-
-            # TODO: Obtener el periodo contable activo real
-            from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import PeriodoContable, Cuenta
-            periodo = PeriodoContable.objects.filter(provider_id=operacion.perfil_ref_id, cerrado=False).first()
-
-            if periodo:
-                # Buscar cuentas base para el asiento (simplificado)
-                cuenta_cxc = Cuenta.objects.filter(plan_de_cuentas__provider_id=operacion.perfil_ref_id, codigo='1305').first()
-                cuenta_ingreso = Cuenta.objects.filter(plan_de_cuentas__provider_id=operacion.perfil_ref_id, codigo='4135').first()
-
-                if cuenta_cxc and cuenta_ingreso:
-                    movimientos = [
-                        {"cuenta_id": str(cuenta_cxc.id), "debito": float(factura.total), "descripcion": "CxC Cliente"},
-                        {"cuenta_id": str(cuenta_ingreso.id), "credito": float(factura.total), "descripcion": "Venta de servicios"}
-                    ]
-
-                    directive_acc = {
-                        "domain": "contabilidad",
-                        "mission": {"type": "RECOGNIZE_REVENUE"},
-                        "parameters": {
-                            "periodo_id": str(periodo.id),
-                            "fecha": str(factura.fecha_emision),
-                            "descripcion": f"Factura {factura.numero_factura}",
-                            "movimientos": movimientos,
-                            "usuario_id": factura.creado_por.id
-                        }
-                    }
-                    sarita_orchestrator.handle_directive(directive_acc)
-                    logger.info(f"GESTIÓN COMERCIAL: Misión de registro contable delegada para factura {factura.numero_factura}")
+            dian_log = FacturacionElectronicaService.procesar_envio_dian(factura)
+            if dian_log.success:
+                logger.info(f"Factura {factura.numero_factura} ACEPTADA por DIAN.")
+                # 3.1 Disparar Contabilidad REAL tras aceptación DIAN
+                FacturacionService._registrar_contabilidad_aceptada(factura)
+            else:
+                logger.warning(f"Factura {factura.numero_factura} RECHAZADA por DIAN: {dian_log.error_detail}")
         except Exception as e:
-            logger.error(f"Error al delegar reflejo contable de factura {factura.numero_factura}: {e}")
-
-        # 3. Enviar a la DIAN (simulado)
-        dian_response = DianService.enviar_factura(factura, cliente=cliente)
-        if dian_response["success"]:
-            factura.estado_dian = FacturaVenta.EstadoDIAN.ACEPTADA
-            factura.cufe = dian_response["cufe"]
-        else:
-            factura.estado_dian = FacturaVenta.EstadoDIAN.RECHAZADA
-        factura.dian_response_log = dian_response
+            logger.error(f"Fallo crítico en comunicación DIAN para factura {factura.numero_factura}: {str(e)}")
+            factura.estado_dian = FacturaVenta.EstadoDIAN.PENDIENTE
+            factura.save()
 
         # --- INTEGRACIÓN CON SGA VÍA AGENTES ---
         try:
@@ -212,3 +188,45 @@ class FacturacionService:
         operacion.save()
 
         return factura
+
+    @staticmethod
+    def _registrar_contabilidad_aceptada(factura: FacturaVenta):
+        """Registra el reflejo contable oficial una vez la factura es aceptada por la DIAN."""
+        try:
+            from apps.sarita_agents.orchestrator import sarita_orchestrator
+            from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import PeriodoContable, Cuenta
+
+            periodo = PeriodoContable.objects.filter(provider_id=factura.perfil_ref_id, cerrado=False).first()
+            if not periodo:
+                logger.warning(f"No se encontró periodo contable abierto para {factura.perfil_ref_id}. No se registró asiento.")
+                return
+
+            # Plan de Cuentas Real
+            cuenta_cxc = Cuenta.objects.filter(plan_de_cuentas__provider_id=factura.perfil_ref_id, codigo='1305').first()
+            cuenta_ingreso = Cuenta.objects.filter(plan_de_cuentas__provider_id=factura.perfil_ref_id, codigo='4135').first()
+            cuenta_iva = Cuenta.objects.filter(plan_de_cuentas__provider_id=factura.perfil_ref_id, codigo='2408').first()
+
+            if cuenta_cxc and cuenta_ingreso:
+                movimientos = [
+                    {"cuenta_id": str(cuenta_cxc.id), "debito": float(factura.total), "descripcion": f"CxC Cliente - Fac {factura.numero_factura}"},
+                    {"cuenta_id": str(cuenta_ingreso.id), "credito": float(factura.subtotal), "descripcion": "Ingreso por servicios"}
+                ]
+                if factura.impuestos > 0 and cuenta_iva:
+                    movimientos.append({"cuenta_id": str(cuenta_iva.id), "credito": float(factura.impuestos), "descripcion": "IVA Generado"})
+
+                directive_acc = {
+                    "domain": "contabilidad",
+                    "mission": {"type": "RECOGNIZE_REVENUE"},
+                    "parameters": {
+                        "periodo_id": str(periodo.id),
+                        "fecha": str(factura.fecha_emision),
+                        "descripcion": f"Factura Legal DIAN {factura.numero_factura}",
+                        "movimientos": movimientos,
+                        "usuario_id": factura.creado_por.id,
+                        "metadata": {"factura_id": str(factura.id), "cufe": factura.cufe}
+                    }
+                }
+                sarita_orchestrator.handle_directive(directive_acc)
+                logger.info(f"CONTABILIDAD: Registro legal disparado para factura {factura.numero_factura}")
+        except Exception as e:
+            logger.error(f"Error al registrar contabilidad legal para factura {factura.numero_factura}: {e}")

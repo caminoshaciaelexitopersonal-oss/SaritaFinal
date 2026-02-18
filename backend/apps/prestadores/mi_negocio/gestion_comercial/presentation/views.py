@@ -67,14 +67,71 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], url_path='registrar-pago')
     @transaction.atomic
     def registrar_pago(self, request, pk=None):
-        # NOTA ARQUITECTÓNICA: La lógica de pago fue eliminada de este módulo.
-        # Un servicio de aplicación debería orquestar esta llamada.
-        # 1. Validar la factura (pertenece a gestion_comercial).
-        # 2. Llamar a un servicio de pagos (pertenece a gestion_financiera).
-        # 3. El servicio de pagos crea la OrdenPago y llama al servicio de contabilidad.
+        factura = self.get_object()
+        if factura.estado == FacturaVenta.Estado.PAGADA:
+             return Response({"detail": "La factura ya está pagada."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Por ahora, esta acción queda como un placeholder para no romper la URL.
-        return Response(
-            {"message": "Endpoint de registro de pago. La lógica se implementará en el módulo correcto."},
-            status=status.HTTP_501_NOT_IMPLEMENTED
-        )
+        # Usar WalletService para ejecutar el pago real si es vía Monedero
+        from apps.wallet.services.wallet_service import WalletService
+        from apps.wallet.models import Wallet
+        import uuid
+
+        wallet_service = WalletService(user=request.user)
+        to_wallet = Wallet.objects.filter(owner_id=str(factura.perfil_ref_id)).first()
+
+        if not to_wallet:
+            return Response({"detail": "El prestador no tiene un monedero configurado para recibir pagos digitales."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Ejecutar el pago sistémico
+            tx = wallet_service.pay(
+                to_wallet_id=str(to_wallet.id),
+                amount=factura.total,
+                related_service_id=str(factura.id),
+                description=f"Pago Factura {factura.numero_factura}"
+            )
+
+            # Actualizar estado de la factura
+            factura.estado = FacturaVenta.Estado.PAGADA
+            factura.save()
+
+            # Registrar impacto en ERP Quíntuple (Automático vía WalletService._integrate_erp)
+            # El WalletService ya llama a record_impact para cada movimiento.
+
+            return Response({
+                "status": "SUCCESS",
+                "transaction_id": str(tx.id),
+                "message": "Pago procesado y conciliado en el Monedero Soberano."
+            })
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'], url_path='send-dian')
+    def send_dian(self, request, pk=None):
+        factura = self.get_object()
+        from ..dian_services import FacturacionElectronicaService
+        try:
+            log = FacturacionElectronicaService.procesar_envio_dian(factura)
+            return Response({
+                "status": "SUCCESS" if log.success else "REJECTED",
+                "message": "Documento procesado por DIAN" if log.success else log.error_detail,
+                "cufe": factura.cufe
+            })
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get'], url_path='dian-status')
+    def dian_status(self, request, pk=None):
+        factura = self.get_object()
+        return Response({
+            "id": factura.id,
+            "numero": factura.numero_factura,
+            "estado_dian": factura.get_estado_dian_display(),
+            "cufe": factura.cufe,
+            "logs": factura.dian_logs.values('timestamp', 'success', 'error_detail')[:5]
+        })
+
+    @action(detail=True, methods=['post'], url_path='resend-dian')
+    def resend_dian(self, request, pk=None):
+        return self.send_dian(request, pk)
