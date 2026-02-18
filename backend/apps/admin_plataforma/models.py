@@ -30,9 +30,138 @@ class Plan(models.Model):
     class Meta:
         app_label = 'admin_plataforma'
 
+class AgentInteraction(models.Model):
+    """
+    Registro persistente de mensajes del PCA.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    correlation_id = models.UUIDField(db_index=True)
+    sender_id = models.CharField(max_length=100)
+    interaction_type = models.CharField(max_length=50)
+    payload = models.JSONField()
+    intelligence = models.JSONField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
+class DecisionHistory(models.Model):
+    """
+    Memoria Contextual y Estratégica: Almacena el resultado histórico de decisiones.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    intention = models.CharField(max_length=255, db_index=True)
+    input_params = models.JSONField()
+    risk_score = models.FloatField()
+    consensus_score = models.FloatField()
+    final_status = models.CharField(max_length=50, db_index=True)
+    execution_time_ms = models.IntegerField(null=True, blank=True)
+    was_compensated = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    embedding = models.BinaryField(null=True, blank=True, help_text="Representación vectorial de la decisión.")
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
+class AgentPerformance(models.Model):
+    """
+    Métricas de rendimiento de agentes para ajuste dinámico de pesos.
+    """
+    agent_id = models.CharField(max_length=100, primary_key=True)
+    total_votes = models.IntegerField(default=0)
+    votes_in_consensus = models.IntegerField(default=0, help_text="Veces que votó con la decisión final exitosa.")
+    avg_confidence = models.FloatField(default=0.0)
+    current_weight_multiplier = models.FloatField(default=1.0)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
+class AdaptiveProposal(models.Model):
+    """
+    Propuestas generadas por el motor de inteligencia para optimizar el sistema.
+    """
+    TYPE_CHOICES = [
+        ('WEIGHT_ADJUST', 'Ajuste de Pesos PCA'),
+        ('WORKFLOW_OPT', 'Optimización de Workflow'),
+        ('RISK_THRESHOLD', 'Ajuste de Umbral de Riesgo'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    type = models.CharField(max_length=50, choices=TYPE_CHOICES)
+    proposal_data = models.JSONField()
+    reasoning = models.TextField()
+    is_applied = models.BooleanField(default=False)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
+class WorkflowDefinition(models.Model):
+    """
+    Define la estructura y pasos de un proceso automatizado.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    version = models.IntegerField(default=1)
+    definition = models.JSONField(help_text="Esquema JSON con pasos, dependencias y compensaciones.")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+        unique_together = ('name', 'version')
+
+    def __str__(self):
+        return f"{self.name} (v{self.version})"
+
+class WorkflowInstance(models.Model):
+    """
+    Representa una ejecución única de un workflow.
+    """
+    class State(models.TextChoices):
+        CREATED = 'CREATED', 'Created'
+        RUNNING = 'RUNNING', 'Running'
+        WAITING = 'WAITING', 'Waiting'
+        COMPLETED = 'COMPLETED', 'Completed'
+        FAILED = 'FAILED', 'Failed'
+        COMPENSATING = 'COMPENSATING', 'Compensating'
+        ROLLED_BACK = 'ROLLED_BACK', 'Rolled Back'
+        CANCELLED = 'CANCELLED', 'Cancelled'
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    definition = models.ForeignKey(WorkflowDefinition, on_delete=models.PROTECT)
+    correlation_id = models.UUIDField(db_index=True, help_text="ID del comando MCP que disparó esto.")
+    status = models.CharField(max_length=20, choices=State.choices, default=State.CREATED, db_index=True)
+    input_data = models.JSONField(default=dict)
+    output_data = models.JSONField(default=dict, null=True, blank=True)
+    started_at = models.DateTimeField(null=True, blank=True)
+    finished_at = models.DateTimeField(null=True, blank=True)
+    current_step_index = models.IntegerField(default=0)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
+class StepExecution(models.Model):
+    """
+    Registro de la ejecución de un paso individual dentro de un workflow.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    instance = models.ForeignKey(WorkflowInstance, on_delete=models.CASCADE, related_name="steps")
+    step_name = models.CharField(max_length=255)
+    status = models.CharField(max_length=20, default='PENDING')
+    attempts = models.IntegerField(default=0)
+    last_error = models.TextField(null=True, blank=True)
+    executed_at = models.DateTimeField(auto_now_add=True)
+    is_compensated = models.BooleanField(default=False)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
 class GovernanceAuditLog(models.Model):
     """
-    Registro unificado de auditoría para el núcleo de gobernanza.
+    Registro unificado de auditoría para el núcleo de gobernanza (MCP).
     Almacena cada intención procesada por el kernel.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
