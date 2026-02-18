@@ -25,9 +25,35 @@ export const operativoEndpoints = {
 
   // Módulos Especializados
   getHotelRoomTypes: () => httpClient.get('/v1/mi-negocio/operativa/hotel/room-types/'),
+  createHotelRoomType: (data: any) => httpClient.post('/v1/mi-negocio/operativa/hotel/room-types/', data),
+  updateHotelRoomType: (id: number, data: any) => httpClient.patch(`/v1/mi-negocio/operativa/hotel/room-types/${id}/`, data),
+  deleteHotelRoomType: (id: number) => httpClient.delete(`/v1/mi-negocio/operativa/hotel/room-types/${id}/`),
+
+  getHotelRooms: () => httpClient.get('/v1/mi-negocio/operativa/hotel/rooms/'),
+  createHotelRoom: (data: any) => httpClient.post('/v1/mi-negocio/operativa/hotel/rooms/', data),
+  updateHotelRoom: (id: number, data: any) => httpClient.patch(`/v1/mi-negocio/operativa/hotel/rooms/${id}/`, data),
+  deleteHotelRoom: (id: number) => httpClient.delete(`/v1/mi-negocio/operativa/hotel/rooms/${id}/`),
+
   getRestaurantTables: () => httpClient.get('/v1/mi-negocio/operativa/restaurante/tables/'),
+  createRestaurantTable: (data: any) => httpClient.post('/v1/mi-negocio/operativa/restaurante/tables/', data),
+  updateRestaurantTable: (id: number, data: any) => httpClient.patch(`/v1/mi-negocio/operativa/restaurante/tables/${id}/`, data),
+  deleteRestaurantTable: (id: number) => httpClient.delete(`/v1/mi-negocio/operativa/restaurante/tables/${id}/`),
+
+  getKitchenStations: () => httpClient.get('/v1/mi-negocio/operativa/restaurante/stations/'),
+  createKitchenStation: (data: any) => httpClient.post('/v1/mi-negocio/operativa/restaurante/stations/', data),
+  deleteKitchenStation: (id: number) => httpClient.delete(`/v1/mi-negocio/operativa/restaurante/stations/${id}/`),
+
   getVehicles: () => httpClient.get('/v1/mi-negocio/operativa/transporte/vehicles/'),
+  createVehicle: (data: any) => httpClient.post('/v1/mi-negocio/operativa/transporte/vehicles/', data),
+  deleteVehicle: (id: number) => httpClient.delete(`/v1/mi-negocio/operativa/transporte/vehicles/${id}/`),
+
   getTours: () => httpClient.get('/v1/mi-negocio/operativa/guias/tours/'),
+
+  // Agencias
+  getTravelPackages: () => httpClient.get('/v1/mi-negocio/operativa/agencias/packages/'),
+  createTravelPackage: (data: any) => httpClient.post('/v1/mi-negocio/operativa/agencias/packages/', data),
+  deleteTravelPackage: (id: number) => httpClient.delete(`/v1/mi-negocio/operativa/agencias/packages/${id}/`),
+
   getProcesosOperativos: () => httpClient.get('/v1/mi-negocio/operativa/procesos/'),
   updateProcesoEstado: (id: string, nuevo_estado: string) => httpClient.post(`/v1/mi-negocio/operativa/procesos/${id}/avanzar_estado/`, { nuevo_estado }),
 

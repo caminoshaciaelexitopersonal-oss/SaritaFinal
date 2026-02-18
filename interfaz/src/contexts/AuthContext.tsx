@@ -126,7 +126,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.removeItem('authToken');
     }
     // La redirección se manejará en las páginas o layouts que lo requieran.
-  }, []);
+  }, [clearEntity]);
+
+  const completeLogin = useCallback((key: string, userData: User) => {
+    setToken(key);
+    setUser(userData);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('authToken', key);
+    }
+    setMfaRequired(false);
+    toast.success(`¡Bienvenido, ${userData.username}!`);
+
+    switch (userData.role) {
+      case 'TURISTA':
+        router.push('/mi-viaje');
+        break;
+      case 'PRESTADOR':
+      case 'ARTESANO':
+      case 'ADMIN':
+      case 'FUNCIONARIO_DIRECTIVO':
+      case 'FUNCIONARIO_PROFESIONAL':
+        router.push('/dashboard');
+        break;
+      default:
+        router.push('/');
+    }
+  }, [router]);
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -197,36 +222,9 @@ useEffect(() => {
       };
       const response = await api.post<{ key: string; user: User }>('/auth/login/', payload);
 
-      // La respuesta ahora debe contener la clave (token) y el objeto de usuario
       if (response.data && response.data.key && response.data.user) {
-        const { key, user } = response.data;
-        setToken(key);
-        setUser(user);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('authToken', key);
-        }
-        setMfaRequired(false);
-        toast.success(`¡Bienvenido, ${user.username}!`);
-
-        // Redirección centralizada después de un login exitoso
-        // (Asumiendo que esta lógica se quiere mantener aquí)
-        switch (user.role) {
-          case 'TURISTA':
-            router.push('/mi-viaje');
-            break;
-          case 'PRESTADOR':
-          case 'ARTESANO':
-          case 'ADMIN':
-          case 'FUNCIONARIO_DIRECTIVO':
-          case 'FUNCIONARIO_PROFESIONAL':
-            router.push('/dashboard');
-            break;
-          default:
-            router.push('/');
-        }
-
+        completeLogin(response.data.key, response.data.user);
       } else {
-        // Lógica de MFA (si aplica) o manejo de errores
         setMfaRequired(true);
         setLoginCredentials({ identifier, password });
       }

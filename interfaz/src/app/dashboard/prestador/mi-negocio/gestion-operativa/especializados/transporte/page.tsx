@@ -16,17 +16,34 @@ import {
 import { Badge } from '@/components/ui/Badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 
+import { toast } from 'react-toastify';
+import Modal from '@/components/ui/Modal';
+import { useForm } from 'react-hook-form';
+
 export default function TransportePage() {
-  const { getVehicles, isLoading } = useMiNegocioApi();
+  const { getVehicles, createVehicle, deleteVehicle, isLoading } = useMiNegocioApi();
   const [vehicles, setVehicles] = useState<any[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { register, handleSubmit, reset } = useForm();
+
+  const loadData = async () => {
+    const data = await getVehicles();
+    if (data) setVehicles(data.results || []);
+  };
 
   useEffect(() => {
-    const loadData = async () => {
-      const data = await getVehicles();
-      if (data) setVehicles(data.results || []);
-    };
     loadData();
   }, [getVehicles]);
+
+  const onSubmit = async (data: any) => {
+    const res = await createVehicle(data);
+    if (res) {
+        toast.success("Vehículo vinculado con éxito");
+        loadData();
+        setIsModalOpen(false);
+        reset();
+    }
+  };
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
@@ -35,7 +52,10 @@ export default function TransportePage() {
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight uppercase italic">Gestión de Flota y Logística</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-2 text-lg">Control de vehículos, rutas de transporte y asignación de conductores.</p>
         </div>
-        <Button className="bg-brand text-white font-black px-8 py-6 rounded-2xl shadow-xl shadow-brand/20">
+        <Button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-brand text-white font-black px-8 py-6 rounded-2xl shadow-xl shadow-brand/20"
+        >
            <FiPlus className="mr-2" /> Vincular Vehículo
         </Button>
       </div>
@@ -102,6 +122,21 @@ export default function TransportePage() {
                              {v.status === 'AVAILABLE' ? 'DISPONIBLE' : 'EN SERVICIO'}
                           </Badge>
                        </TableCell>
+                       <TableCell className="text-right px-8">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-500 font-bold"
+                            onClick={async () => {
+                                if(window.confirm("¿Desvincular vehículo?")) {
+                                    await deleteVehicle(v.id);
+                                    loadData();
+                                }
+                            }}
+                          >
+                              Eliminar
+                          </Button>
+                       </TableCell>
                     </TableRow>
                   ))}
                   {vehicles.length === 0 && !isLoading && (
@@ -115,6 +150,35 @@ export default function TransportePage() {
             </Table>
          </CardContent>
       </Card>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Vincular Nuevo Vehículo">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div>
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Placa</label>
+                <input {...register('placa', { required: true })} className="w-full p-4 border rounded-2xl dark:bg-brand-deep mt-2" placeholder="ABC-123" />
+            </div>
+            <div>
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Nombre / Modelo</label>
+                <input {...register('nombre', { required: true })} className="w-full p-4 border rounded-2xl dark:bg-brand-deep mt-2" placeholder="Camioneta Ford" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className="text-xs font-black uppercase tracking-widest text-slate-400">Tipo</label>
+                    <select {...register('tipo_vehiculo', { required: true })} className="w-full p-4 border rounded-2xl dark:bg-brand-deep mt-2">
+                        <option value="VAN">Van</option>
+                        <option value="BUS">Bus</option>
+                        <option value="SUV">SUV</option>
+                        <option value="OTRO">Otro</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="text-xs font-black uppercase tracking-widest text-slate-400">Capacidad</label>
+                    <input type="number" {...register('capacidad', { required: true })} className="w-full p-4 border rounded-2xl dark:bg-brand-deep mt-2" placeholder="12" />
+                </div>
+            </div>
+            <Button type="submit" className="w-full bg-brand text-white font-black py-5 rounded-2xl shadow-xl">Vincular a Flota</Button>
+        </form>
+      </Modal>
     </div>
   );
 }

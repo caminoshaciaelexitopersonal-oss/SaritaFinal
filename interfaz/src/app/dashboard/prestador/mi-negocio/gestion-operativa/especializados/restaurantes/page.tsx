@@ -33,9 +33,32 @@ const statusConfig = {
     DIRTY: { bg: 'bg-slate-400', text: 'SUCIA' },
 };
 
+import { useMiNegocioApi } from '../../../hooks/useMiNegocioApi';
+import { toast } from 'react-toastify';
+import Modal from '@/components/ui/Modal';
+import { useForm } from 'react-hook-form';
+
 export default function RestaurantFloorPlanPage() {
-    const { data: tables, error, isLoading } = useSWR<RestaurantTable[]>('/v1/mi-negocio/operativa/restaurante/tables/', fetcher);
+    const { createRestaurantTable, deleteRestaurantTable } = useMiNegocioApi();
+    const { data: tables, mutate, isLoading } = useSWR<RestaurantTable[]>('/v1/mi-negocio/operativa/restaurante/tables/', fetcher);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const { register, handleSubmit, reset } = useForm();
+
+    const onSubmit = async (data: any) => {
+        const res = await createRestaurantTable({
+            ...data,
+            pos_x: 100, // Por defecto
+            pos_y: 100
+        });
+        if (res) {
+            toast.success("Mesa registrada");
+            mutate();
+            setIsModalOpen(false);
+            reset();
+        }
+    };
 
     return (
         <div className="space-y-10 animate-in zoom-in-95 duration-700">
@@ -48,7 +71,10 @@ export default function RestaurantFloorPlanPage() {
                    <Button variant="outline" onClick={() => setIsEditMode(!isEditMode)} className="border-slate-200 dark:border-white/10 font-bold h-12">
                       <FiLayout className="mr-2" /> {isEditMode ? 'Guardar Layout' : 'Editar Plano'}
                    </Button>
-                   <Button className="bg-brand text-white font-black h-12 px-8 shadow-xl shadow-brand/20">
+                   <Button
+                      onClick={() => setIsModalOpen(true)}
+                      className="bg-brand text-white font-black h-12 px-8 shadow-xl shadow-brand/20"
+                    >
                       <FiPlus className="mr-2" /> Nueva Mesa
                    </Button>
                 </div>
@@ -92,10 +118,22 @@ export default function RestaurantFloorPlanPage() {
                      {tables?.map(table => (
                         <div
                             key={table.id}
-                            className={`absolute w-32 h-32 rounded-3xl shadow-2xl flex flex-col justify-center items-center text-white p-4 transition-all hover:scale-105 active:scale-95
+                            className={`absolute w-32 h-32 rounded-3xl shadow-2xl flex flex-col justify-center items-center text-white p-4 transition-all hover:scale-105 active:scale-95 group/table
                                        ${statusConfig[table.status].bg} ${isEditMode ? 'cursor-move ring-4 ring-white/50' : 'cursor-pointer'}`}
                             style={{ left: `${table.pos_x}px`, top: `${table.pos_y}px` }}
                         >
+                            <button
+                                onClick={async (e) => {
+                                    e.stopPropagation();
+                                    if(window.confirm("¿Eliminar mesa?")) {
+                                        await deleteRestaurantTable(table.id);
+                                        mutate();
+                                    }
+                                }}
+                                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover/table:opacity-100 transition-opacity"
+                            >
+                                <FiPlus className="rotate-45" size={12} />
+                            </button>
                             <span className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Mesa</span>
                             <span className="text-3xl font-black tracking-tighter">{table.table_number}</span>
                             <Badge variant="outline" className="mt-2 bg-white/20 border-none text-[8px] font-black">{table.capacity} PAX</Badge>
@@ -110,6 +148,20 @@ export default function RestaurantFloorPlanPage() {
                   </div>
                </div>
             </div>
+
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Registrar Nueva Mesa">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    <div>
+                        <label className="text-xs font-black uppercase tracking-widest text-slate-400">Identificador / Número</label>
+                        <input {...register('table_number', { required: true })} className="w-full p-4 border rounded-2xl dark:bg-brand-deep mt-2" placeholder="Ej: M-01" />
+                    </div>
+                    <div>
+                        <label className="text-xs font-black uppercase tracking-widest text-slate-400">Capacidad (PAX)</label>
+                        <input type="number" {...register('capacity', { required: true })} className="w-full p-4 border rounded-2xl dark:bg-brand-deep mt-2" placeholder="4" />
+                    </div>
+                    <Button type="submit" className="w-full bg-brand text-white font-black py-5 rounded-2xl shadow-xl">Confirmar Registro</Button>
+                </form>
+            </Modal>
         </div>
     );
 }
