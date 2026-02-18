@@ -7,6 +7,8 @@ from django.utils import timezone
 from .models import GovernanceAuditLog, GovernancePolicy
 from .pca_core import PCAController
 from .wpa_core import WorkflowEngine
+from .memory_service import MemoryService
+from .adaptive_engine import AdaptiveEngine
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +45,8 @@ class MCPCore:
         self.audit_module = AuditModule()
         self.pca_controller = PCAController()
         self.wpa_engine = WorkflowEngine()
+        self.memory = MemoryService()
+        self.adaptive = AdaptiveEngine()
 
     def execute_command(self, command_name, params, user=None, metadata=None):
         """
@@ -59,9 +63,13 @@ class MCPCore:
                 result.status = MCPState.REJECTED
                 return result
 
-            # 2. Evaluación Estratégica
+            # 2. Evaluación Estratégica con Memoria
+            historical_insights = self.memory.get_contextual_insights(command_name, params)
+            prediction = self.adaptive.predict_command_risk(command_name, params, historical_insights)
+
             evaluation = self.evaluation_engine.evaluate(command_name, params, user)
-            result.risk_score = evaluation['risk_score']
+            # Combinar riesgo estático con predictivo
+            result.risk_score = max(evaluation['risk_score'], prediction['predictive_score'])
 
             # 2.1 Coordinación de Inteligencia vía PCA
             pca_consensus = self.pca_controller.coordinate_intelligence(id_global, command_name, params)
@@ -106,8 +114,9 @@ class MCPCore:
             result.errors.append(str(e))
 
         finally:
-            # 4. Auditoría Final Inmutable
+            # 4. Auditoría Final Inmutable y Registro en Memoria
             self.audit_module.log(id_global, command_name, params, result)
+            self.memory.record_execution(id_global, command_name, params, result)
             result.status = MCPState.AUDITED
 
         return result

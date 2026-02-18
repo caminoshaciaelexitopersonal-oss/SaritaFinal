@@ -30,6 +30,59 @@ class Plan(models.Model):
     class Meta:
         app_label = 'admin_plataforma'
 
+class DecisionHistory(models.Model):
+    """
+    Memoria Contextual y Estratégica: Almacena el resultado histórico de decisiones.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    intention = models.CharField(max_length=255, db_index=True)
+    input_params = models.JSONField()
+    risk_score = models.FloatField()
+    consensus_score = models.FloatField()
+    final_status = models.CharField(max_length=50, db_index=True)
+    execution_time_ms = models.IntegerField(null=True, blank=True)
+    was_compensated = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    embedding = models.BinaryField(null=True, blank=True, help_text="Representación vectorial de la decisión.")
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
+class AgentPerformance(models.Model):
+    """
+    Métricas de rendimiento de agentes para ajuste dinámico de pesos.
+    """
+    agent_id = models.CharField(max_length=100, primary_key=True)
+    total_votes = models.IntegerField(default=0)
+    votes_in_consensus = models.IntegerField(default=0, help_text="Veces que votó con la decisión final exitosa.")
+    avg_confidence = models.FloatField(default=0.0)
+    current_weight_multiplier = models.FloatField(default=1.0)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
+class AdaptiveProposal(models.Model):
+    """
+    Propuestas generadas por el motor de inteligencia para optimizar el sistema.
+    """
+    TYPE_CHOICES = [
+        ('WEIGHT_ADJUST', 'Ajuste de Pesos PCA'),
+        ('WORKFLOW_OPT', 'Optimización de Workflow'),
+        ('RISK_THRESHOLD', 'Ajuste de Umbral de Riesgo'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    type = models.CharField(max_length=50, choices=TYPE_CHOICES)
+    proposal_data = models.JSONField()
+    reasoning = models.TextField()
+    is_applied = models.BooleanField(default=False)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
 class WorkflowDefinition(models.Model):
     """
     Define la estructura y pasos de un proceso automatizado.
