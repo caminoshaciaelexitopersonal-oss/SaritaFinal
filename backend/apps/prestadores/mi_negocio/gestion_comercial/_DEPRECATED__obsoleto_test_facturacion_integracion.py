@@ -57,8 +57,8 @@ class FacturacionIntegracionTests(APITestCase):
         url = reverse('mi_negocio:factura-venta-list')
         data = {
             'cliente_id': self.cliente.id,
-            'numero_factura': 'FV-001',
-            'fecha_emision': '2024-01-01',
+            'number': 'FV-001',
+            'issue_date': '2024-01-01',
             'items': [
                 {
                     'producto_id': self.servicio.id,
@@ -87,8 +87,8 @@ class FacturacionIntegracionTests(APITestCase):
         url = reverse('mi_negocio:factura-venta-list')
         data = {
             'cliente_id': self.cliente.id,
-            'numero_factura': 'FV-002',
-            'fecha_emision': '2024-01-02',
+            'number': 'FV-002',
+            'issue_date': '2024-01-02',
             'items': [
                 {
                     'producto_id': self.producto_inv.id,
@@ -122,8 +122,8 @@ class FacturacionIntegracionTests(APITestCase):
         url = reverse('mi_negocio:factura-venta-list')
         data = {
             'cliente_id': self.cliente.id,
-            'numero_factura': 'FV-003',
-            'fecha_emision': '2024-01-03',
+            'number': 'FV-003',
+            'issue_date': '2024-01-03',
             'items': [
                 {
                     'producto_id': self.servicio.id,
@@ -167,8 +167,8 @@ class FacturacionIntegracionTests(APITestCase):
         url = reverse('mi_negocio:factura-venta-list')
         data = {
             'cliente_id': self.cliente.id,
-            'numero_factura': 'FV-004',
-            'fecha_emision': '2024-01-04',
+            'number': 'FV-004',
+            'issue_date': '2024-01-04',
             'items': [
                 {
                     'producto_id': self.producto_inv.id,

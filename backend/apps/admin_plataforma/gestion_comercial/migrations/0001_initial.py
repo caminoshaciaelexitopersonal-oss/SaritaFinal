@@ -27,8 +27,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("perfil_ref_id", models.UUIDField()),
-                ("numero_factura", models.CharField(max_length=50)),
-                ("fecha_emision", models.DateField()),
+                ("number", models.CharField(max_length=50)),
+                ("issue_date", models.DateField()),
             ],
             options={
                 "verbose_name": "Factura de Venta (Admin)",

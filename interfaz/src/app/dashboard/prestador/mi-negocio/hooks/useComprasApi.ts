@@ -16,8 +16,8 @@ interface FacturaCompra {
     id: number;
     proveedor: number;
     proveedor_nombre: string;
-    numero_factura: string;
-    fecha_emision: string;
+    number: string;
+    issue_date: string;
     fecha_vencimiento?: string;
     subtotal: string;
     impuestos: string;

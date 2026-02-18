@@ -106,7 +106,7 @@ class FacturacionElectronicaService:
     <cbc:ProfileID>DIAN 2.1</cbc:ProfileID>
  
     <cbc:ID>{resolution.prefijo}{resolution.consecutivo_actual}</cbc:ID>
-    <cbc:IssueDate>{factura.fecha_emision}</cbc:IssueDate>
+    <cbc:IssueDate>{factura.issue_date}</cbc:IssueDate>
     <cbc:InvoiceTypeCode>01</cbc:InvoiceTypeCode>
     <cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>
     <cac:ExternalReference>
@@ -132,7 +132,7 @@ class FacturacionElectronicaService:
  
     def calculate_cufe(factura, software_config):
         """Calcula el CUFE dinámico usando el Software PIN."""
-        seed = f"{factura.numero_factura}{factura.total}{software_config.pin}{datetime.now().date()}"
+        seed = f"{factura.number}{factura.total}{software_config.pin}{datetime.now().date()}"
         return hashlib.sha384(seed.encode('utf-8')).hexdigest()
 
     @staticmethod

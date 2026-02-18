@@ -59,7 +59,7 @@ const FacturasVentaPage = () => {
                     <TableRow key={factura.id}>
                       <TableCell>#{factura.id}</TableCell>
                       <TableCell>{factura.cliente_nombre || 'N/A'}</TableCell>
-                      <TableCell>{factura.fecha_emision}</TableCell>
+                      <TableCell>{factura.issue_date}</TableCell>
                       <TableCell>{factura.estado}</TableCell>
                       <TableCell className="text-right">${Number(factura.total).toFixed(2)}</TableCell>
                     </TableRow>

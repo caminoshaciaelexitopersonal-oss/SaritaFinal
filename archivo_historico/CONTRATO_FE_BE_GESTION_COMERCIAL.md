@@ -39,7 +39,7 @@ Se ha verificado el flujo de manejo de errores desde el backend hasta el fronten
 *   **Respuesta del Backend (`400 Bad Request`):**
     ```json
     {
-        "numero_factura": [
+        "number": [
             "Este campo es requerido."
         ]
     }

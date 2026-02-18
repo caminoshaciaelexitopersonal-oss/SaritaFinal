@@ -36,8 +36,8 @@ class ContabilidadServiceTests(TestCase):
     def test_crear_asiento_balanceado_exitoso(self):
         """Verifica que un asiento contable balanceado se crea correctamente."""
         transacciones_data = [
-            {'cuenta_id': self.cuenta_caja.id, 'debito': '100.00', 'credito': '0.00'},
-            {'cuenta_id': self.cuenta_ingresos.id, 'debito': '0.00', 'credito': '100.00'},
+            {'cuenta_id': self.cuenta_caja.id, 'debit': '100.00', 'credit': '0.00'},
+            {'cuenta_id': self.cuenta_ingresos.id, 'debit': '0.00', 'credit': '100.00'},
         ]
 
         asiento = ContabilidadService.crear_asiento_completo(
@@ -53,8 +53,8 @@ class ContabilidadServiceTests(TestCase):
         self.assertEqual(AsientoContable.objects.count(), 1)
         self.assertEqual(asiento.transacciones.count(), 2)
 
-        total_debito = sum(t.debito for t in asiento.transacciones.all())
-        total_credito = sum(t.credito for t in asiento.transacciones.all())
+        total_debito = sum(t.debit for t in asiento.transacciones.all())
+        total_credito = sum(t.credit for t in asiento.transacciones.all())
 
         self.assertEqual(total_debito, Decimal('100.00'))
         self.assertEqual(total_credito, Decimal('100.00'))
@@ -62,8 +62,8 @@ class ContabilidadServiceTests(TestCase):
     def test_crear_asiento_no_balanceado_falla(self):
         """Verifica que el servicio rechaza un asiento no balanceado."""
         transacciones_data = [
-            {'cuenta_id': self.cuenta_caja.id, 'debito': '100.00', 'credito': '0.00'},
-            {'cuenta_id': self.cuenta_ingresos.id, 'debito': '0.00', 'credito': '99.00'}, # Desbalance
+            {'cuenta_id': self.cuenta_caja.id, 'debit': '100.00', 'credit': '0.00'},
+            {'cuenta_id': self.cuenta_ingresos.id, 'debit': '0.00', 'credit': '99.00'}, # Desbalance
         ]
 
         with self.assertRaises(ContabilidadValidationError) as cm:
@@ -82,8 +82,8 @@ class ContabilidadServiceTests(TestCase):
     def test_crear_asiento_sin_valor_falla(self):
         """Verifica que el servicio rechaza un asiento con valor cero."""
         transacciones_data = [
-            {'cuenta_id': self.cuenta_caja.id, 'debito': '0.00', 'credito': '0.00'},
-            {'cuenta_id': self.cuenta_ingresos.id, 'debito': '0.00', 'credito': '0.00'},
+            {'cuenta_id': self.cuenta_caja.id, 'debit': '0.00', 'credit': '0.00'},
+            {'cuenta_id': self.cuenta_ingresos.id, 'debit': '0.00', 'credit': '0.00'},
         ]
 
         with self.assertRaises(ContabilidadValidationError):
@@ -108,8 +108,8 @@ class ContabilidadServiceTests(TestCase):
         )
 
         transacciones_data = [
-            {'cuenta_id': self.cuenta_caja.id, 'debito': '50.00', 'credito': '0.00'},
-            {'cuenta_id': cuenta_ajena.id, 'debito': '0.00', 'credito': '50.00'}, # Cuenta de otro provider
+            {'cuenta_id': self.cuenta_caja.id, 'debit': '50.00', 'credit': '0.00'},
+            {'cuenta_id': cuenta_ajena.id, 'debit': '0.00', 'credit': '50.00'}, # Cuenta de otro provider
         ]
 
         with self.assertRaises(ContabilidadValidationError) as cm:

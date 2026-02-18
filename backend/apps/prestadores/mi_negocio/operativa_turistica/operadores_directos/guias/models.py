@@ -72,7 +72,7 @@ class CertificacionGuia(TenantAwareModel):
     guia = models.ForeignKey(GuiaTuristico, on_delete=models.CASCADE, related_name='certificaciones')
     tipo_certificacion = models.CharField(max_length=100)
     entidad_emisora = models.CharField(max_length=150)
-    fecha_emision = models.DateField()
+    issue_date = models.DateField()
     fecha_vencimiento = models.DateField()
     documento_adjunto_ref_id = models.UUIDField(null=True, blank=True) # Ref a Gestión Archivística
     estado_validacion = models.CharField(

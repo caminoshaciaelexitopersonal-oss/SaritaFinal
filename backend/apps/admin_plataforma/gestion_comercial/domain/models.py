@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from apps.core_erp.base.base_models import BaseInvoice
 
 class OperacionComercial(models.Model):
     class Estado(models.TextChoices):
@@ -35,11 +36,9 @@ class ItemOperacionComercial(models.Model):
     class Meta:
         app_label = 'admin_comercial'
 
-class FacturaVenta(models.Model):
+class FacturaVenta(BaseInvoice):
     operacion = models.OneToOneField(OperacionComercial, on_delete=models.PROTECT, related_name='admin_factura')
     perfil_ref_id = models.UUIDField()
-    numero_factura = models.CharField(max_length=50)
-    fecha_emision = models.DateField()
 
     class Meta:
         app_label = 'admin_comercial'

@@ -47,9 +47,9 @@ const FacturasCompraPage = () => {
               <TableBody>
                 {facturas.length > 0 ? facturas.map((factura) => (
                     <TableRow key={factura.id}>
-                      <TableCell>#{factura.numero_factura}</TableCell>
+                      <TableCell>#{factura.number}</TableCell>
                       <TableCell>{factura.proveedor_nombre || 'N/A'}</TableCell>
-                      <TableCell>{factura.fecha_emision}</TableCell>
+                      <TableCell>{factura.issue_date}</TableCell>
                       <TableCell>{factura.estado}</TableCell>
                       <TableCell className="text-right">${Number(factura.total).toFixed(2)}</TableCell>
                     </TableRow>

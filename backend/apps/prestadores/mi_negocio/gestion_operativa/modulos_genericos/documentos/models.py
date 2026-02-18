@@ -14,7 +14,7 @@ class DocumentoOperativo(TenantAwareModel):
 
     nombre = models.CharField(max_length=255)
     tipo = models.CharField(max_length=50, choices=TipoDocumento.choices, default=TipoDocumento.OTRO)
-    fecha_emision = models.DateField()
+    issue_date = models.DateField()
     fecha_vencimiento = models.DateField(null=True, blank=True)
     hash_archivistica = models.CharField(max_length=64, help_text="Hash SHA-256 de referencia en Gestión Archivística")
 

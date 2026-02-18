@@ -22,7 +22,7 @@ class AdminFacturaVentaListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FacturaVenta
-        fields = ['id', 'numero_factura', 'fecha_emision', 'total', 'estado', 'estado_display']
+        fields = ['id', 'number', 'issue_date', 'total', 'estado', 'estado_display']
         read_only_fields = fields
 
 class AdminFacturaVentaDetailSerializer(serializers.ModelSerializer):
@@ -36,7 +36,7 @@ class AdminFacturaVentaDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = FacturaVenta
         fields = [
-            'id', 'numero_factura', 'fecha_emision',
+            'id', 'number', 'issue_date',
             'subtotal', 'impuestos', 'total',
             'estado', 'estado_display', 'items'
         ]
@@ -54,7 +54,7 @@ class AdminFacturaVentaWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = FacturaVenta
         fields = [
-            'id', 'numero_factura', 'fecha_emision', 'operacion', 'items'
+            'id', 'number', 'issue_date', 'operacion', 'items'
         ]
 
 class AdminReciboCajaSerializer(serializers.ModelSerializer):

@@ -15,8 +15,8 @@ interface ItemFactura {
 interface FacturaVenta {
     id: number;
     cliente: { id: number; nombre: string; };
-    numero_factura: string;
-    fecha_emision: string;
+    number: string;
+    issue_date: string;
     total: string;
     estado: string;
     items: ItemFactura[];
@@ -37,7 +37,7 @@ export const useComercialApi = () => {
     // --- Facturas de Venta ---
     const { data: facturas, error: facturasError, mutate: mutateFacturas } = useSWR('/v1/mi-negocio/comercial/facturas-venta/', fetcher);
 
-    const createFactura = useCallback(async (data: { cliente_id: number; numero_factura: string; fecha_emision: string; fecha_vencimiento?: string; items: ItemFactura[] }) => {
+    const createFactura = useCallback(async (data: { cliente_id: number; number: string; issue_date: string; fecha_vencimiento?: string; items: ItemFactura[] }) => {
         await api.post('/v1/mi-negocio/comercial/facturas-venta/', data);
         mutateFacturas();
     }, [api, mutateFacturas]);

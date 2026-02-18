@@ -28,8 +28,8 @@ def crear_asiento_contable_factura_compra(sender, instance, created, **kwargs):
         # 1. Crear la cabecera del asiento contable
         journal_entry = JournalEntry.objects.create(
             perfil=instance.perfil,
-            entry_date=instance.fecha_emision,
-            description=f"Asiento automático por Factura de Compra #{instance.numero_factura} de {instance.proveedor.nombre}",
+            entry_date=instance.issue_date,
+            description=f"Asiento automático por Factura de Compra #{instance.number} de {instance.proveedor.nombre}",
             entry_type="COMPRA",
             user=instance.creado_por,
             origin_document=instance

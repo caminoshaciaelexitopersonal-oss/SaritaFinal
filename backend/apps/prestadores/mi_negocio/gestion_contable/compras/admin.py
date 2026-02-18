@@ -9,7 +9,7 @@ class ProveedorAdmin(admin.ModelAdmin):
 
 @admin.register(FacturaCompra)
 class FacturaCompraAdmin(admin.ModelAdmin):
-    list_display = ('numero_factura', 'proveedor', 'fecha_emision', 'total', 'estado', 'perfil')
-    search_fields = ('numero_factura', 'proveedor__nombre')
-    list_filter = ('estado', 'fecha_emision', 'perfil')
-    date_hierarchy = 'fecha_emision'
+    list_display = ('number', 'proveedor', 'issue_date', 'total', 'estado', 'perfil')
+    search_fields = ('number', 'proveedor__nombre')
+    list_filter = ('estado', 'issue_date', 'perfil')
+    date_hierarchy = 'issue_date'

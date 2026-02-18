@@ -143,7 +143,7 @@ class Migration(migrations.Migration):
                 ("is_active", models.BooleanField(db_index=True, default=True)),
                 ("tipo_certificacion", models.CharField(max_length=100)),
                 ("entidad_emisora", models.CharField(max_length=150)),
-                ("fecha_emision", models.DateField()),
+                ("issue_date", models.DateField()),
                 ("fecha_vencimiento", models.DateField()),
                 ("documento_adjunto_ref_id", models.UUIDField(blank=True, null=True)),
                 (

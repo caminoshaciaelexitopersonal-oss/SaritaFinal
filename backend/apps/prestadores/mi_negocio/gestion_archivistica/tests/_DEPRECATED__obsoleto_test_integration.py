@@ -90,7 +90,7 @@ class ArchivingIntegrationTest(TestCase):
 
         # 3.4 Verificar el hash del contenido
         factura_content = {
-            "numero_factura": factura.numero_factura,
+            "number": factura.number,
             "cliente": factura.cliente.nombre,
             "total": str(factura.total),
             "cufe": factura.cufe

@@ -27,14 +27,14 @@ class ContractValidationTests(APITestCase):
         facturas_path = '/api/v1/mi-negocio/comercial/facturas-venta/'
         self.assertIn(facturas_path, schema['paths'], "El endpoint de facturas no está en el esquema.")
 
-        # 2. El método POST debe requerir 'cliente_id' y 'numero_factura'
+        # 2. El método POST debe requerir 'cliente_id' y 'number'
         post_operation = schema['paths'][facturas_path]['post']
         request_body_schema = post_operation['requestBody']['content']['application/json']['schema']
         component_name = request_body_schema['$ref'].split('/')[-1]
         write_serializer_schema = schema['components']['schemas'][component_name]
 
         self.assertIn('cliente_id', write_serializer_schema['required'])
-        self.assertIn('numero_factura', write_serializer_schema['required'])
+        self.assertIn('number', write_serializer_schema['required'])
 
         # 3. El método POST NO debe permitir enviar 'total' (debe ser readOnly)
         self.assertTrue(

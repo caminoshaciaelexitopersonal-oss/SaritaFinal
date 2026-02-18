@@ -73,9 +73,9 @@ const FacturasVentaPage = () => {
                 {facturas.length > 0 ? (
                   facturas.map((factura: any) => (
                     <TableRow key={factura.id}>
-                      <TableCell className="font-mono">{factura.numero_factura || `#${factura.id}`}</TableCell>
+                      <TableCell className="font-mono">{factura.number || `#${factura.id}`}</TableCell>
                       <TableCell>{factura.cliente_nombre || 'N/A'}</TableCell>
-                      <TableCell>{factura.fecha_emision}</TableCell>
+                      <TableCell>{factura.issue_date}</TableCell>
                       <TableCell>
                         {factura.estado_dian === 'ACEPTADA' ? (
                           <Badge variant="success"><ShieldCheck className="w-3 h-3 mr-1" />Aceptada</Badge>

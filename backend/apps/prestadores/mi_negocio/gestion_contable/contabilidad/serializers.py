@@ -14,7 +14,7 @@ class TransaccionSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Transaccion
-        fields = ['id', 'cuenta', 'debito', 'credito', 'descripcion']
+        fields = ['id', 'cuenta', 'debit', 'credit', 'description']
 
 
 class AsientoContableSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class AsientoContableSerializer(serializers.ModelSerializer):
     Serializador para un asiento contable.
     Incluye transacciones anidadas para proporcionar una vista completa.
     """
-    transacciones = TransaccionSerializer(many=True)
+    transactions = TransaccionSerializer(many=True)
     creado_por = serializers.StringRelatedField()
 
     class Meta:
@@ -30,10 +30,10 @@ class AsientoContableSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'periodo',
-            'fecha',
-            'descripcion',
+            'date',
+            'description',
             'creado_por',
-            'transacciones',
+            'transactions',
         ]
 
 
@@ -48,10 +48,10 @@ class CuentaSerializer(serializers.ModelSerializer):
         model = Cuenta
         fields = [
             'id',
-            'nombre',
-            'codigo',
-            'tipo',
-            'descripcion',
+            'name',
+            'code',
+            'account_type',
+            'description',
             'saldo_inicial',
             'parent',
             'children',
@@ -71,7 +71,7 @@ class PlanDeCuentasSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PlanDeCuentas
-        fields = ['id', 'nombre', 'descripcion', 'provider', 'cuentas']
+        fields = ['id', 'name', 'description', 'provider', 'cuentas']
 
     def get_cuentas(self, obj):
         """ Filtra para obtener solo las cuentas raíz. """
@@ -85,4 +85,4 @@ class PeriodoContableSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = PeriodoContable
-        fields = ['id', 'nombre', 'fecha_inicio', 'fecha_fin', 'cerrado', 'provider']
+        fields = ['id', 'name', 'start_date', 'end_date', 'is_closed', 'provider']

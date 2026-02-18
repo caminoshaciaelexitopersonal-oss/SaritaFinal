@@ -53,7 +53,7 @@ export default function VentasPage() {
                 <TableRow key={factura.id}>
                   <TableCell>#{factura.id}</TableCell>
                   <TableCell>{factura.cliente_nombre}</TableCell>
-                  <TableCell>{format(new Date(factura.fecha_emision), 'dd/MM/yyyy')}</TableCell>
+                  <TableCell>{format(new Date(factura.issue_date), 'dd/MM/yyyy')}</TableCell>
                   <TableCell>${factura.total}</TableCell>
                   <TableCell>
                     <Badge>{factura.estado}</Badge>

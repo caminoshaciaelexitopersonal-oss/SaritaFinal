@@ -6,15 +6,15 @@ from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.mode
 # Apuntar al modelo de Producto unificado en gestion_operativa
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product as ProductoUnificado
 
-class Almacen(models.Model):
+from apps.core_erp.base.base_models import BaseWarehouse, BaseInventoryMovement
+
+class Almacen(BaseWarehouse):
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='almacenes')
-    nombre = models.CharField(max_length=100)
-    ubicacion = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return self.nombre
+        return self.name
 
-class MovimientoInventario(models.Model):
+class MovimientoInventario(BaseInventoryMovement):
     class TipoMovimiento(models.TextChoices):
         ENTRADA = 'ENTRADA', 'Entrada'
         SALIDA = 'SALIDA', 'Salida'
@@ -25,9 +25,7 @@ class MovimientoInventario(models.Model):
     producto = models.ForeignKey(ProductoUnificado, on_delete=models.CASCADE, related_name='movimientos_inventario')
     almacen = models.ForeignKey(Almacen, on_delete=models.PROTECT, related_name='movimientos')
     tipo_movimiento = models.CharField(max_length=20, choices=TipoMovimiento.choices)
-    cantidad = models.DecimalField(max_digits=18, decimal_places=2)
-    fecha = models.DateTimeField(auto_now_add=True)
-    descripcion = models.TextField(blank=True)
+    description = models.TextField(blank=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
 
     def __str__(self):

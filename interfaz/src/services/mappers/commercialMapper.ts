@@ -9,9 +9,9 @@ export const commercialMapper = {
 
   mapFacturaToUI: (factura: any) => ({
     id: factura.id,
-    code: factura.numero_factura,
+    code: factura.number,
     client: factura.cliente_nombre,
-    date: new Date(factura.fecha_emision).toLocaleDateString(),
+    date: new Date(factura.issue_date).toLocaleDateString(),
     total: `$${parseFloat(factura.total).toLocaleString()}`,
     status: factura.estado_display
   })

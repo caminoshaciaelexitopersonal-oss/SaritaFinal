@@ -166,8 +166,8 @@ class Migration(migrations.Migration):
                 ),
                 ("perfil_ref_id", models.UUIDField()),
                 ("cliente_ref_id", models.UUIDField()),
-                ("numero_factura", models.CharField(max_length=50)),
-                ("fecha_emision", models.DateField()),
+                ("number", models.CharField(max_length=50)),
+                ("issue_date", models.DateField()),
                 (
                     "documento_archivistico_ref_id",
                     models.UUIDField(blank=True, null=True),

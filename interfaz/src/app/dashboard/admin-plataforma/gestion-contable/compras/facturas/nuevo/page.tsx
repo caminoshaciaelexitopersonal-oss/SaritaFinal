@@ -15,8 +15,8 @@ import { useEffect, useState } from 'react';
 
 const facturaCompraSchema = z.object({
   proveedor: z.coerce.number().min(1, 'Seleccione un proveedor.'),
-  numero_factura: z.string().min(1, 'El número de factura es requerido.'),
-  fecha_emision: z.string().min(1, 'La fecha es requerida.'),
+  number: z.string().min(1, 'El número de factura es requerido.'),
+  issue_date: z.string().min(1, 'La fecha es requerida.'),
   fecha_vencimiento: z.string().optional(),
   total: z.coerce.number().positive('El total debe ser un número positivo.'),
   // subtotal e impuestos se pueden calcular o simplificar a solo total por ahora
@@ -32,7 +32,7 @@ const NuevaFacturaCompraPage = () => {
   const form = useForm<FacturaCompraFormValues>({
     resolver: zodResolver(facturaCompraSchema),
     defaultValues: {
-      fecha_emision: new Date().toISOString().split('T')[0],
+      issue_date: new Date().toISOString().split('T')[0],
     },
   });
 
@@ -77,10 +77,10 @@ const NuevaFacturaCompraPage = () => {
                   <FormMessage />
                 </FormItem>
               )} />
-              <FormField name="numero_factura" control={form.control} render={({ field }) => (
+              <FormField name="number" control={form.control} render={({ field }) => (
                 <FormItem><FormLabel>Número de Factura</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
               )} />
-              <FormField name="fecha_emision" control={form.control} render={({ field }) => (
+              <FormField name="issue_date" control={form.control} render={({ field }) => (
                 <FormItem><FormLabel>Fecha de Emisión</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField name="fecha_vencimiento" control={form.control} render={({ field }) => (
