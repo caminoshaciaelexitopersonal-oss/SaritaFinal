@@ -5,6 +5,9 @@ export const operativoEndpoints = {
   updatePerfil: (data: any) => httpClient.patch('/v1/mi-negocio/operativa/perfil/update-me/', data),
   getClientes: () => httpClient.get('/v1/mi-negocio/operativa/clientes/'),
   getProductosServicios: () => httpClient.get('/v1/mi-negocio/operativa/productos-servicios/'),
+  createProductoServicio: (data: any) => httpClient.post('/v1/mi-negocio/operativa/productos-servicios/', data),
+  updateProductoServicio: (id: number, data: any) => httpClient.patch(`/v1/mi-negocio/operativa/productos-servicios/${id}/`, data),
+  deleteProductoServicio: (id: number) => httpClient.delete(`/v1/mi-negocio/operativa/productos-servicios/${id}/`),
   getReservas: () => httpClient.get('/v1/mi-negocio/operativa/reservas/'),
 
   // SG-SST (Actualizado Fase 7)

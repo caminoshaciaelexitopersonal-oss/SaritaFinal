@@ -118,6 +118,18 @@ export function useMiNegocioApi() {
     return makeRequest(() => operativoEndpoints.getProductosServicios().then(res => res.data));
   }, [makeRequest]);
 
+  const createProducto = useCallback(async (data: any) => {
+    return makeRequest(() => operativoEndpoints.createProductoServicio(data).then(res => res.data), "Producto creado.");
+  }, [makeRequest]);
+
+  const updateProducto = useCallback(async (id: number, data: any) => {
+    return makeRequest(() => operativoEndpoints.updateProductoServicio(id, data).then(res => res.data), "Producto actualizado.");
+  }, [makeRequest]);
+
+  const deleteProducto = useCallback(async (id: number) => {
+    return makeRequest(() => operativoEndpoints.deleteProductoServicio(id).then(res => res.data), "Producto eliminado.");
+  }, [makeRequest]);
+
   // --- API Financiera ---
   const getBankAccounts = useCallback(async () => {
     return makeRequest(() => financieroEndpoints.getBankAccounts().then(res => res.data));
@@ -314,6 +326,9 @@ export function useMiNegocioApi() {
     createFacturaVenta,
     getClientes,
     getProductos,
+    createProducto,
+    updateProducto,
+    deleteProducto,
     getBankAccounts,
     getCashTransactions,
     getEstadoResultados,

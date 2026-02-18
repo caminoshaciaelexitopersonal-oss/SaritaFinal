@@ -22,7 +22,7 @@ const productoSchema = z.object({
 type ProductoFormValues = z.infer<typeof productoSchema>;
 
 const ProductosPage = () => {
-  const { getProductos, createProducto, updateProducto, isLoading } = useMiNegocioApi();
+  const { getProductos, createProducto, updateProducto, deleteProducto, isLoading } = useMiNegocioApi();
   const [productos, setProductos] = useState<Producto[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProducto, setEditingProducto] = useState<Producto | null>(null);
@@ -116,9 +116,17 @@ const ProductosPage = () => {
                   <TableCell>{p.nombre}</TableCell>
                   <TableCell>{p.descripcion}</TableCell>
                   <TableCell className="text-right">${Number(p.precio_venta).toFixed(2)}</TableCell>
-                   <TableCell>
+                   <TableCell className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={() => { setEditingProducto(p); setIsDialogOpen(true); }}>
                       Editar
+                    </Button>
+                    <Button variant="destructive" size="sm" onClick={async () => {
+                      if(window.confirm('¿Eliminar producto?')) {
+                        const res = await deleteProducto(p.id);
+                        if(res) { toast.success('Producto eliminado'); fetchProductos(); }
+                      }
+                    }}>
+                      Eliminar
                     </Button>
                   </TableCell>
                 </TableRow>
