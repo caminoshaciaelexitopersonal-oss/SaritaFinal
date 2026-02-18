@@ -6,6 +6,7 @@ from django.db import transaction
 from django.utils import timezone
 from .models import GovernanceAuditLog, GovernancePolicy
 from .pca_core import PCAController
+from .wpa_core import WorkflowEngine
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,7 @@ class MCPCore:
         self.orchestration_engine = OrchestrationEngine()
         self.audit_module = AuditModule()
         self.pca_controller = PCAController()
+        self.wpa_engine = WorkflowEngine()
 
     def execute_command(self, command_name, params, user=None, metadata=None):
         """
@@ -70,16 +72,33 @@ class MCPCore:
                 result.errors.append("Riesgo no permitido")
                 return result
 
-            # 3. Orquestación
+            # 3. Orquestación y Ejecución vía WPA
             result.status = MCPState.ORCHESTRATING
-            orch_result = self.orchestration_engine.run(command_name, params, evaluation['plan'])
 
-            if orch_result['success']:
-                result.status = MCPState.EXECUTED
+            # Mapear comando a un workflow (Simulado para el ejemplo)
+            workflow_name = f"WF_{command_name}"
+
+            wpa_instance_id = self.wpa_engine.launch_workflow(workflow_name, id_global, params)
+
+            if wpa_instance_id:
+                from .models import WorkflowInstance
+                final_instance = WorkflowInstance.objects.get(id=wpa_instance_id)
+
+                if final_instance.status == WorkflowInstance.State.COMPLETED:
+                    result.status = MCPState.EXECUTED
+                elif final_instance.status == WorkflowInstance.State.ROLLED_BACK:
+                    result.status = MCPState.ROLLED_BACK
+                else:
+                    result.status = MCPState.FAILING
             else:
-                result.status = MCPState.FAILING
-                self.orchestration_engine.rollback(id_global, orch_result['failed_step'])
-                result.status = MCPState.ROLLED_BACK
+                # Fallback a la orquestación legacy si no hay workflow definido
+                orch_result = self.orchestration_engine.run(command_name, params, evaluation['plan'])
+                if orch_result['success']:
+                    result.status = MCPState.EXECUTED
+                else:
+                    result.status = MCPState.FAILING
+                    self.orchestration_engine.rollback(id_global, orch_result['failed_step'])
+                    result.status = MCPState.ROLLED_BACK
 
         except Exception as e:
             logger.error(f"Error crítico en MCP Core: {str(e)}")

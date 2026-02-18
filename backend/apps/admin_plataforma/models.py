@@ -30,6 +30,67 @@ class Plan(models.Model):
     class Meta:
         app_label = 'admin_plataforma'
 
+class WorkflowDefinition(models.Model):
+    """
+    Define la estructura y pasos de un proceso automatizado.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    version = models.IntegerField(default=1)
+    definition = models.JSONField(help_text="Esquema JSON con pasos, dependencias y compensaciones.")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+        unique_together = ('name', 'version')
+
+    def __str__(self):
+        return f"{self.name} (v{self.version})"
+
+class WorkflowInstance(models.Model):
+    """
+    Representa una ejecución única de un workflow.
+    """
+    class State(models.TextChoices):
+        CREATED = 'CREATED', 'Created'
+        RUNNING = 'RUNNING', 'Running'
+        WAITING = 'WAITING', 'Waiting'
+        COMPLETED = 'COMPLETED', 'Completed'
+        FAILED = 'FAILED', 'Failed'
+        COMPENSATING = 'COMPENSATING', 'Compensating'
+        ROLLED_BACK = 'ROLLED_BACK', 'Rolled Back'
+        CANCELLED = 'CANCELLED', 'Cancelled'
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    definition = models.ForeignKey(WorkflowDefinition, on_delete=models.PROTECT)
+    correlation_id = models.UUIDField(db_index=True, help_text="ID del comando MCP que disparó esto.")
+    status = models.CharField(max_length=20, choices=State.choices, default=State.CREATED, db_index=True)
+    input_data = models.JSONField(default=dict)
+    output_data = models.JSONField(default=dict, null=True, blank=True)
+    started_at = models.DateTimeField(null=True, blank=True)
+    finished_at = models.DateTimeField(null=True, blank=True)
+    current_step_index = models.IntegerField(default=0)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
+class StepExecution(models.Model):
+    """
+    Registro de la ejecución de un paso individual dentro de un workflow.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    instance = models.ForeignKey(WorkflowInstance, on_delete=models.CASCADE, related_name="steps")
+    step_name = models.CharField(max_length=255)
+    status = models.CharField(max_length=20, default='PENDING')
+    attempts = models.IntegerField(default=0)
+    last_error = models.TextField(null=True, blank=True)
+    executed_at = models.DateTimeField(auto_now_add=True)
+    is_compensated = models.BooleanField(default=False)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
 class GovernanceAuditLog(models.Model):
     """
     Registro unificado de auditoría para el núcleo de gobernanza (MCP).
