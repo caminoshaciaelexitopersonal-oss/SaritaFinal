@@ -12,13 +12,16 @@ logger = logging.getLogger(__name__)
 
 class FacturacionElectronicaService:
     """
+ 
     Servicio Real de Facturación Electrónica DIAN.
     Gestiona la generación, firma y envío de documentos UBL 2.1.
+ 
     """
 
     @staticmethod
     def procesar_envio_dian(factura: FacturaVenta):
         """
+ 
         Orquesta el flujo E2E de envío a la DIAN para un inquilino específico.
         """
         provider_id = factura.perfil_ref_id
@@ -76,6 +79,7 @@ class FacturacionElectronicaService:
     def generate_xml_dian(factura, resolution, software_config):
         """Genera el XML estructurado bajo el estándar UBL 2.1."""
         # Lógica de construcción de XML (basada en el motor anterior pero con datos reales de resolución)
+ 
         items_xml = ""
         for i, item in enumerate(factura.items.all()):
             items_xml += f"""
@@ -100,6 +104,7 @@ class FacturacionElectronicaService:
     <cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
     <cbc:CustomizationID>10</cbc:CustomizationID>
     <cbc:ProfileID>DIAN 2.1</cbc:ProfileID>
+ 
     <cbc:ID>{resolution.prefijo}{resolution.consecutivo_actual}</cbc:ID>
     <cbc:IssueDate>{factura.fecha_emision}</cbc:IssueDate>
     <cbc:InvoiceTypeCode>01</cbc:InvoiceTypeCode>
@@ -112,6 +117,7 @@ class FacturacionElectronicaService:
             <cac:PartyName><cbc:Name>Prestador ID {factura.perfil_ref_id}</cbc:Name></cac:PartyName>
         </cac:Party>
     </cac:AccountingSupplierParty>
+ 
     <cac:LegalMonetaryTotal>
         <cbc:LineExtensionAmount currencyID="COP">{factura.subtotal}</cbc:LineExtensionAmount>
         <cbc:TaxExclusiveAmount currencyID="COP">{factura.subtotal}</cbc:TaxExclusiveAmount>
@@ -123,6 +129,7 @@ class FacturacionElectronicaService:
         return xml_template
 
     @staticmethod
+ 
     def calculate_cufe(factura, software_config):
         """Calcula el CUFE dinámico usando el Software PIN."""
         seed = f"{factura.numero_factura}{factura.total}{software_config.pin}{datetime.now().date()}"
@@ -170,3 +177,4 @@ class DianService(FacturacionElectronicaService):
             "cufe": factura.cufe,
             "message": "Procesado integralmente" if log.success else log.error_detail
         }
+ 

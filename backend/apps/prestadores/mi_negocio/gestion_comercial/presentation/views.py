@@ -106,6 +106,7 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+ 
 
     @action(detail=True, methods=['post'], url_path='send-dian')
     def send_dian(self, request, pk=None):
@@ -135,3 +136,4 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], url_path='resend-dian')
     def resend_dian(self, request, pk=None):
         return self.send_dian(request, pk)
+ 
