@@ -1,0 +1,154 @@
+import uuid
+import logging
+import hashlib
+from datetime import datetime
+from django.db import transaction
+from django.utils import timezone
+from .models import GovernanceAuditLog, GovernancePolicy
+
+logger = logging.getLogger(__name__)
+
+class MCPState:
+    RECEIVED = "RECEIVED"
+    VALIDATED = "VALIDATED"
+    EVALUATING = "EVALUATING"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+    ORCHESTRATING = "ORCHESTRATING"
+    EXECUTED = "EXECUTED"
+    FAILING = "FAILING"
+    ROLLED_BACK = "ROLLED_BACK"
+    AUDITED = "AUDITED"
+
+class MCPCommandResult:
+    def __init__(self, id_global, status, risk_score=0.0):
+        self.id_global = id_global
+        self.status = status
+        self.risk_score = risk_score
+        self.timestamp = timezone.now()
+        self.history = []
+        self.errors = []
+
+class MCPCore:
+    """
+    Núcleo de Control Principal (MCP) - Orquestador Estratégico.
+    Centraliza la validación, evaluación de riesgo y orquestación de comandos.
+    """
+
+    def __init__(self):
+        self.evaluation_engine = EvaluationEngine()
+        self.orchestration_engine = OrchestrationEngine()
+        self.audit_module = AuditModule()
+
+    def execute_command(self, command_name, params, user=None, metadata=None):
+        """
+        Punto de entrada principal para la ejecución de comandos orquestados.
+        """
+        id_global = uuid.uuid4()
+        result = MCPCommandResult(id_global, MCPState.RECEIVED)
+
+        logger.info(f"MCP: Recibiendo comando {command_name} (ID: {id_global})")
+
+        try:
+            # 1. Validación de Firma y Esquema (Gateway)
+            if not self._validate_gateway(command_name, params, metadata):
+                result.status = MCPState.REJECTED
+                return result
+
+            # 2. Evaluación Estratégica
+            evaluation = self.evaluation_engine.evaluate(command_name, params, user)
+            result.risk_score = evaluation['risk_score']
+
+            if not evaluation['approved']:
+                result.status = MCPState.REJECTED
+                result.errors.append("Riesgo no permitido")
+                return result
+
+            # 3. Orquestación
+            result.status = MCPState.ORCHESTRATING
+            orch_result = self.orchestration_engine.run(command_name, params, evaluation['plan'])
+
+            if orch_result['success']:
+                result.status = MCPState.EXECUTED
+            else:
+                result.status = MCPState.FAILING
+                self.orchestration_engine.rollback(id_global, orch_result['failed_step'])
+                result.status = MCPState.ROLLED_BACK
+
+        except Exception as e:
+            logger.error(f"Error crítico en MCP Core: {str(e)}")
+            result.status = MCPState.FAILING
+            result.errors.append(str(e))
+
+        finally:
+            # 4. Auditoría Final Inmutable
+            self.audit_module.log(id_global, command_name, params, result)
+            result.status = MCPState.AUDITED
+
+        return result
+
+    def _validate_gateway(self, command, params, metadata):
+        # TODO: Implementar validación de firma HMAC y esquema JSON
+        return True
+
+class EvaluationEngine:
+    """
+    Motor encargado de calcular el riesgo y generar el plan de acción.
+    """
+    def evaluate(self, command, params, user):
+        # Simulación de evaluación de riesgo
+        risk_score = 0.1 # Bajo por defecto en este stub
+
+        # Consultar políticas de gobernanza
+        policies = GovernancePolicy.objects.filter(is_active=True)
+        for policy in policies:
+            if command not in policy.affected_intentions:
+                continue
+            if policy.type == 'THRESHOLD' and params.get('amount', 0) > policy.config.get('limit', 999999):
+                risk_score = 0.8 # Alto riesgo
+
+        return {
+            'risk_score': risk_score,
+            'approved': risk_score < 0.7,
+            'plan': ['step1', 'step2'] # Secuencia de ejecución
+        }
+
+class OrchestrationEngine:
+    """
+    Ejecutor de workflows y gestor de rollbacks.
+    """
+    def run(self, command, params, plan):
+        # Simulación de ejecución de pasos
+        logger.info(f"Orquestando plan: {plan}")
+        return {'success': True}
+
+    def rollback(self, id_global, failed_step):
+        logger.warning(f"Iniciando ROLLBACK para {id_global} desde el paso {failed_step}")
+        # Lógica de compensación
+
+class AuditModule:
+    """
+    Módulo de persistencia inmutable de decisiones.
+    """
+    def log(self, id_global, intention, params, result, success=True, error=""):
+        # Obtener el hash del último registro para encadenamiento
+        last_log = GovernanceAuditLog.objects.order_by('-timestamp').first()
+        prev_hash = last_log.integrity_hash if last_log else "0"*64
+
+        # Crear el log
+        log_entry = GovernanceAuditLog.objects.create(
+            id=id_global,
+            intencion=intention,
+            parametros=params,
+            resultado={'status': result.status, 'risk': result.risk_score},
+            success=success or (result.status == MCPState.EXECUTED),
+            error_message=error or ", ".join(result.errors),
+            previous_hash=prev_hash
+        )
+
+        # Calcular hash de integridad (SHA-256)
+        content = f"{id_global}|{intention}|{prev_hash}|{result.status}"
+        log_entry.integrity_hash = hashlib.sha256(content.encode()).hexdigest()
+        log_entry.save()
+
+        logger.info(f"MCP Auditor: Registro {id_global} guardado con hash {log_entry.integrity_hash[:8]}...")

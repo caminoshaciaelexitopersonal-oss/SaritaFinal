@@ -32,7 +32,7 @@ class Plan(models.Model):
 
 class GovernanceAuditLog(models.Model):
     """
-    Registro unificado de auditoría para el núcleo de gobernanza.
+    Registro unificado de auditoría para el núcleo de gobernanza (MCP).
     Almacena cada intención procesada por el kernel.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
