@@ -118,6 +118,18 @@ export function useMiNegocioApi() {
     return makeRequest(() => operativoEndpoints.getProductosServicios().then(res => res.data));
   }, [makeRequest]);
 
+  const createProducto = useCallback(async (data: any) => {
+    return makeRequest(() => operativoEndpoints.createProductoServicio(data).then(res => res.data), "Producto creado.");
+  }, [makeRequest]);
+
+  const updateProducto = useCallback(async (id: number, data: any) => {
+    return makeRequest(() => operativoEndpoints.updateProductoServicio(id, data).then(res => res.data), "Producto actualizado.");
+  }, [makeRequest]);
+
+  const deleteProducto = useCallback(async (id: number) => {
+    return makeRequest(() => operativoEndpoints.deleteProductoServicio(id).then(res => res.data), "Producto eliminado.");
+  }, [makeRequest]);
+
   // --- API Financiera ---
   const getBankAccounts = useCallback(async () => {
     return makeRequest(() => financieroEndpoints.getBankAccounts().then(res => res.data));
@@ -275,6 +287,78 @@ export function useMiNegocioApi() {
     return makeRequest(() => operativoEndpoints.getProcesosOperativos().then(res => res.data));
   }, [makeRequest]);
 
+  // --- API Hotelera ---
+  const getHotelRoomTypes = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getHotelRoomTypes().then(res => res.data));
+  }, [makeRequest]);
+
+  const createHotelRoomType = useCallback(async (data: any) => {
+    return makeRequest(() => operativoEndpoints.createHotelRoomType(data).then(res => res.data), "Tipo de habitación creado.");
+  }, [makeRequest]);
+
+  const updateHotelRoomType = useCallback(async (id: number, data: any) => {
+    return makeRequest(() => operativoEndpoints.updateHotelRoomType(id, data).then(res => res.data), "Tipo de habitación actualizado.");
+  }, [makeRequest]);
+
+  const deleteHotelRoomType = useCallback(async (id: number) => {
+    return makeRequest(() => operativoEndpoints.deleteHotelRoomType(id).then(res => res.data), "Tipo de habitación eliminado.");
+  }, [makeRequest]);
+
+  const getHotelRooms = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getHotelRooms().then(res => res.data));
+  }, [makeRequest]);
+
+  const createHotelRoom = useCallback(async (data: any) => {
+    return makeRequest(() => operativoEndpoints.createHotelRoom(data).then(res => res.data), "Habitación creada.");
+  }, [makeRequest]);
+
+  const updateHotelRoom = useCallback(async (id: number, data: any) => {
+    return makeRequest(() => operativoEndpoints.updateHotelRoom(id, data).then(res => res.data), "Habitación actualizada.");
+  }, [makeRequest]);
+
+  const deleteHotelRoom = useCallback(async (id: number) => {
+    return makeRequest(() => operativoEndpoints.deleteHotelRoom(id).then(res => res.data), "Habitación eliminada.");
+  }, [makeRequest]);
+
+  // --- API Restaurante ---
+  const getRestaurantTables = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getRestaurantTables().then(res => res.data));
+  }, [makeRequest]);
+
+  const createRestaurantTable = useCallback(async (data: any) => {
+    return makeRequest(() => operativoEndpoints.createRestaurantTable(data).then(res => res.data), "Mesa creada.");
+  }, [makeRequest]);
+
+  const deleteRestaurantTable = useCallback(async (id: number) => {
+    return makeRequest(() => operativoEndpoints.deleteRestaurantTable(id).then(res => res.data), "Mesa eliminada.");
+  }, [makeRequest]);
+
+  // --- API Agencias ---
+  const getTravelPackages = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getTravelPackages().then(res => res.data));
+  }, [makeRequest]);
+
+  const createTravelPackage = useCallback(async (data: any) => {
+    return makeRequest(() => operativoEndpoints.createTravelPackage(data).then(res => res.data), "Paquete creado.");
+  }, [makeRequest]);
+
+  const deleteTravelPackage = useCallback(async (id: number) => {
+    return makeRequest(() => operativoEndpoints.deleteTravelPackage(id).then(res => res.data), "Paquete eliminado.");
+  }, [makeRequest]);
+
+  // --- API Transporte ---
+  const getVehicles = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getVehicles().then(res => res.data));
+  }, [makeRequest]);
+
+  const createVehicle = useCallback(async (data: any) => {
+    return makeRequest(() => operativoEndpoints.createVehicle(data).then(res => res.data), "Vehículo vinculado.");
+  }, [makeRequest]);
+
+  const deleteVehicle = useCallback(async (id: number) => {
+    return makeRequest(() => operativoEndpoints.deleteVehicle(id).then(res => res.data), "Vehículo eliminado.");
+  }, [makeRequest]);
+
   const updateProcesoEstado = useCallback(async (id: string, nuevo_estado: string) => {
     return makeRequest(() => operativoEndpoints.updateProcesoEstado(id, nuevo_estado).then(res => res.data), "Estado operativo actualizado.");
   }, [makeRequest]);
@@ -314,6 +398,9 @@ export function useMiNegocioApi() {
     createFacturaVenta,
     getClientes,
     getProductos,
+    createProducto,
+    updateProducto,
+    deleteProducto,
     getBankAccounts,
     getCashTransactions,
     getEstadoResultados,
@@ -350,8 +437,24 @@ export function useMiNegocioApi() {
     getNominaIncapacidades,
     getNominaIndicadores,
     getVehicles,
+    createVehicle,
+    deleteVehicle,
     getTours,
     getProcesosOperativos,
+    getHotelRoomTypes,
+    createHotelRoomType,
+    updateHotelRoomType,
+    deleteHotelRoomType,
+    getHotelRooms,
+    createHotelRoom,
+    updateHotelRoom,
+    deleteHotelRoom,
+    getRestaurantTables,
+    createRestaurantTable,
+    deleteRestaurantTable,
+    getTravelPackages,
+    createTravelPackage,
+    deleteTravelPackage,
     updateProcesoEstado,
     getOrdenesOperativas,
     updateOrdenEstado,
