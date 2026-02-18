@@ -1,17 +1,32 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useMiNegocioApi, FacturaVenta } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
+import { useComercialApi } from '../hooks/useComercialApi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Send, ShieldCheck } from 'lucide-react';
 
 const FacturasVentaPage = () => {
   const { getFacturasVenta, isLoading } = useMiNegocioApi();
+  const { sendDian } = useComercialApi();
   const [facturas, setFacturas] = useState<FacturaVenta[]>([]);
+
+  const handleSendDian = async (id: string) => {
+    try {
+      await sendDian(id);
+      toast.success('Enviado a la DIAN correctamente.');
+      // Refresh
+      const data = await getFacturasVenta();
+      if (data) setFacturas(data);
+    } catch (e) {
+      toast.error('Error al enviar a la DIAN.');
+    }
+  };
 
   useEffect(() => {
     const fetchFacturas = async () => {
@@ -49,19 +64,35 @@ const FacturasVentaPage = () => {
                   <TableHead>Número</TableHead>
                   <TableHead>Cliente</TableHead>
                   <TableHead>Fecha Emisión</TableHead>
-                  <TableHead>Estado</TableHead>
+                  <TableHead>Estado DIAN</TableHead>
                   <TableHead className="text-right">Total</TableHead>
+                  <TableHead className="text-center">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {facturas.length > 0 ? (
-                  facturas.map((factura) => (
+                  facturas.map((factura: any) => (
                     <TableRow key={factura.id}>
-                      <TableCell>#{factura.id}</TableCell>
+                      <TableCell className="font-mono">{factura.numero_factura || `#${factura.id}`}</TableCell>
                       <TableCell>{factura.cliente_nombre || 'N/A'}</TableCell>
                       <TableCell>{factura.fecha_emision}</TableCell>
-                      <TableCell>{factura.estado}</TableCell>
+                      <TableCell>
+                        {factura.estado_dian === 'ACEPTADA' ? (
+                          <Badge variant="success"><ShieldCheck className="w-3 h-3 mr-1" />Aceptada</Badge>
+                        ) : factura.estado_dian === 'RECHAZADA' ? (
+                          <Badge variant="destructive">Rechazada</Badge>
+                        ) : (
+                          <Badge variant="outline">Pendiente</Badge>
+                        )}
+                      </TableCell>
                       <TableCell className="text-right">${Number(factura.total).toFixed(2)}</TableCell>
+                      <TableCell className="text-center">
+                        {factura.estado_dian !== 'ACEPTADA' && (
+                          <Button variant="ghost" size="sm" onClick={() => handleSendDian(factura.id)}>
+                            <Send className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (

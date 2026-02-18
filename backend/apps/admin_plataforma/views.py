@@ -73,3 +73,31 @@ class SuscripcionViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
 
         service = GestionPlataformaService(admin_user=self.request.user)
         service.asignar_suscripcion(cliente_profile=cliente, plan=plan, fecha_inicio=fecha_inicio)
+
+class SupervisionDianViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Panel de Supervisión DIAN para el Super Administrador.
+    Permite ver el estado de facturación de todos los prestadores en tiempo real.
+    """
+    permission_classes = [IsSuperAdmin]
+
+    def list(self, request):
+        from apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta
+        from django.db.models import Count
+
+        stats = FacturaVenta.objects.values('estado_dian').annotate(total=Count('id'))
+        last_invoices = FacturaVenta.objects.select_related('operacion').order_by('-id')[:20]
+
+        return Response({
+            "resumen_ejecutivo": stats,
+            "ultimas_facturas": [
+                {
+                    "id": f.id,
+                    "numero": f.numero_factura,
+                    "tenant_id": f.perfil_ref_id,
+                    "estado_dian": f.estado_dian,
+                    "total": f.total,
+                    "cufe": f.cufe
+                } for f in last_invoices
+            ]
+        })

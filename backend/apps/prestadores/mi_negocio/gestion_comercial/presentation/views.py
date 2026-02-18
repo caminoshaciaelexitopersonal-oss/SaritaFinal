@@ -106,3 +106,34 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+ 
+
+    @action(detail=True, methods=['post'], url_path='send-dian')
+    def send_dian(self, request, pk=None):
+        factura = self.get_object()
+        from ..dian_services import FacturacionElectronicaService
+        try:
+            log = FacturacionElectronicaService.procesar_envio_dian(factura)
+            return Response({
+                "status": "SUCCESS" if log.success else "REJECTED",
+                "message": "Documento procesado por DIAN" if log.success else log.error_detail,
+                "cufe": factura.cufe
+            })
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get'], url_path='dian-status')
+    def dian_status(self, request, pk=None):
+        factura = self.get_object()
+        return Response({
+            "id": factura.id,
+            "numero": factura.numero_factura,
+            "estado_dian": factura.get_estado_dian_display(),
+            "cufe": factura.cufe,
+            "logs": factura.dian_logs.values('timestamp', 'success', 'error_detail')[:5]
+        })
+
+    @action(detail=True, methods=['post'], url_path='resend-dian')
+    def resend_dian(self, request, pk=None):
+        return self.send_dian(request, pk)
+ 

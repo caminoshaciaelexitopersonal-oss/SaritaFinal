@@ -122,3 +122,51 @@ class OrdenOperativa(models.Model):
     fecha_programada = models.DateTimeField()
     estado = models.CharField(max_length=20, choices=EstadoOrden.choices, default=EstadoOrden.PENDIENTE)
     responsable_ref_id = models.UUIDField(null=True, blank=True)
+
+# --- MODELOS FACTURACIÓN ELECTRÓNICA DIAN (FASE INTEGRAL) ---
+
+class DianResolution(TenantAwareModel):
+    numero_resolucion = models.CharField(max_length=100)
+    prefijo = models.CharField(max_length=10)
+    desde = models.PositiveIntegerField()
+    hasta = models.PositiveIntegerField()
+    consecutivo_actual = models.PositiveIntegerField()
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    es_vigente = models.BooleanField(default=True)
+
+    class Meta(TenantAwareModel.Meta):
+        verbose_name = "Resolución DIAN"
+        verbose_name_plural = "Resoluciones DIAN"
+
+class DianCertificate(TenantAwareModel):
+    nombre = models.CharField(max_length=255)
+    archivo_p12 = models.FileField(upload_to='certificates/dian/')
+    password_encrypted = models.CharField(max_length=512) # Almacenado encriptado
+    fecha_vencimiento = models.DateField()
+    es_activo = models.BooleanField(default=True)
+
+    class Meta(TenantAwareModel.Meta):
+        verbose_name = "Certificado Digital DIAN"
+
+class DianSoftwareConfig(TenantAwareModel):
+    class Ambiente(models.TextChoices):
+        PRUEBAS = 'PRUEBAS', 'Pruebas / Habilitación'
+        PRODUCCION = 'PRODUCCION', 'Producción'
+
+    software_id = models.UUIDField()
+    pin = models.CharField(max_length=10)
+    ambiente = models.CharField(max_length=20, choices=Ambiente.choices, default=Ambiente.PRUEBAS)
+    test_set_id = models.CharField(max_length=255, null=True, blank=True) # Para habilitación
+
+    class Meta(TenantAwareModel.Meta):
+        verbose_name = "Configuración Software DIAN"
+
+class DianStatusLog(models.Model):
+    factura = models.ForeignKey(FacturaVenta, on_delete=models.CASCADE, related_name='dian_logs')
+    timestamp = models.DateTimeField(auto_now_add=True)
+    request_xml = models.TextField()
+    response_xml = models.TextField()
+    estado_v_previa = models.JSONField() # Resultado de validación previa
+    success = models.BooleanField()
+    error_detail = models.TextField(null=True, blank=True)
