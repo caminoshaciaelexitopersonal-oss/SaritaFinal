@@ -30,6 +30,21 @@ class Plan(models.Model):
     class Meta:
         app_label = 'admin_plataforma'
 
+class AgentInteraction(models.Model):
+    """
+    Registro persistente de mensajes del PCA.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    correlation_id = models.UUIDField(db_index=True)
+    sender_id = models.CharField(max_length=100)
+    interaction_type = models.CharField(max_length=50)
+    payload = models.JSONField()
+    intelligence = models.JSONField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
 class DecisionHistory(models.Model):
     """
     Memoria Contextual y Estratégica: Almacena el resultado histórico de decisiones.

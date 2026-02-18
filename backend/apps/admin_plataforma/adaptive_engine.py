@@ -44,7 +44,9 @@ class AdaptiveEngine:
         """
         Calcula un Risk Score Predictivo basado en la memoria semántica.
         """
-        base_risk = historical_insights.get('predicted_failure_risk', 0.0) if isinstance(historical_insights, dict) else 0.0
+        is_dict = isinstance(historical_insights, dict)
+        base_risk = historical_insights.get('predicted_failure_risk', 0.0) if is_dict else 0.0
+        precedents = historical_insights.get('precedents_count', 0) if is_dict else 0
 
         # Ajuste por anomalías en parámetros
         if params.get('amount', 0) > 10000:
@@ -53,7 +55,7 @@ class AdaptiveEngine:
         return {
             "predictive_score": min(1.0, base_risk),
             "confidence": 0.85,
-            "justification": f"Basado en {historical_insights.get('precedents_count', 0)} casos similares."
+            "justification": f"Basado en {precedents} casos similares."
         }
 
     def optimize_workflows(self):

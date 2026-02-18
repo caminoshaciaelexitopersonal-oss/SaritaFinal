@@ -3,7 +3,7 @@ import logging
 import hashlib
 from datetime import datetime
 from django.utils import timezone
-from .models import GovernanceAuditLog
+from .models import GovernanceAuditLog, AgentInteraction
 
 logger = logging.getLogger(__name__)
 
@@ -46,20 +46,23 @@ class PCAMessage:
 class PCABroker:
     """
     Message Broker interno para la coordinación de agentes.
-    Valida contratos y persiste interacciones.
+    Valida contratos y persiste interacciones en base de datos.
     """
-    def __init__(self):
-        self.interactions_log = []
-
     def dispatch(self, message: PCAMessage):
         """
-        Enruta un mensaje y lo registra para auditoría.
+        Enruta un mensaje y lo registra de forma persistente.
         """
-        msg_dict = message.to_dict()
-        self.interactions_log.append(msg_dict)
+        AgentInteraction.objects.create(
+            id=message.message_id,
+            correlation_id=message.correlation_id,
+            sender_id=message.sender['agent_id'],
+            interaction_type=message.interaction_type,
+            payload=message.payload,
+            intelligence=message.intelligence
+        )
 
         # En un sistema real, aquí se enviaría a una cola (Redis/RabbitMQ)
-        logger.info(f"PCA Broker: Mensaje {message.message_id} despachado de {message.sender['agent_id']}")
+        logger.info(f"PCA Broker: Mensaje {message.message_id} persistido y despachado de {message.sender['agent_id']}")
         return True
 
 class ConsensusEngine:

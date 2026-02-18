@@ -75,9 +75,16 @@ class MCPCore:
             pca_consensus = self.pca_controller.coordinate_intelligence(id_global, command_name, params)
             logger.info(f"MCP: Consenso PCA recibido: {pca_consensus['approved']} (Score: {pca_consensus['score']})")
 
+            # 2.2 Gestión Avanzada de Riesgo (Fase 7)
+            risk_level = self._classify_risk(result.risk_score)
+            if not self._enforce_risk_policy(risk_level, pca_consensus, user):
+                result.status = MCPState.REJECTED
+                result.errors.append(f"Bloqueo por política de seguridad: Riesgo {risk_level}")
+                return result
+
             if not evaluation['approved'] or not pca_consensus['approved']:
                 result.status = MCPState.REJECTED
-                result.errors.append("Riesgo no permitido")
+                result.errors.append("Riesgo no permitido o consenso insuficiente")
                 return result
 
             # 3. Orquestación y Ejecución vía WPA
@@ -120,6 +127,31 @@ class MCPCore:
             result.status = MCPState.AUDITED
 
         return result
+
+    def _classify_risk(self, score):
+        """
+        Clasifica el riesgo en niveles empresariales (Fase 7).
+        """
+        if score < 0.3: return "BAJO"
+        if score < 0.6: return "MEDIO"
+        if score < 0.8: return "ALTO"
+        return "CRÍTICO"
+
+    def _enforce_risk_policy(self, level, consensus, user):
+        """
+        Aplica políticas de control basadas en el nivel de riesgo.
+        """
+        if level == "BAJO":
+            return True
+        if level == "MEDIO":
+            return consensus['score'] > 0.6 # Requiere consenso más fuerte
+        if level == "ALTO":
+            return consensus['score'] > 0.8 # Requiere casi unanimidad
+        if level == "CRÍTICO":
+            # Requiere revisión humana (En prod se activaría un flag de WAITING_HUMAN)
+            logger.warning("MCP: Riesgo CRÍTICO detectado. Requiere intervención soberana.")
+            return False
+        return False
 
     def _validate_gateway(self, command, params, metadata):
         """
