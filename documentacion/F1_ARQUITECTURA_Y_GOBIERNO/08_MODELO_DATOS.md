@@ -27,9 +27,11 @@
 - **Logs de Auditoría:** 7 años mínimo.
 - **Datos de Sesión:** 30 días.
 
-## 6. Modelo de Auditoría (Shadow Tables)
-Para entidades críticas (Finanzas, Contratos), se mantiene una tabla de auditoría `*_history` que registra:
-- `timestamp` del cambio.
-- `user_id` que realizó el cambio.
-- `action` (INSERT, UPDATE, DELETE).
-- `old_value` / `new_value` (en formato JSON).
+## 6. Modelo de Auditoría (Shadow Tables / Audit Log)
+Para entidades críticas y el núcleo de gobernanza, se mantiene un registro de auditoría que incluye:
+- `timestamp` del evento.
+- `usuario_id` que realizó la acción.
+- `intencion` (Nombre del comando o acción).
+- `parametros` (Input en formato JSON).
+- `resultado` (Output en formato JSON).
+- `integrity_hash` / `previous_hash` (Encadenamiento SHA-256).
