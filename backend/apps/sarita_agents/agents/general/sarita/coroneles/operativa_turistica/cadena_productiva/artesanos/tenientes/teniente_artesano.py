@@ -25,6 +25,11 @@ class TenienteArtesano(TenienteTemplate):
             business_report = BusinessSargentoArtesano.actualizar_produccion(parametros, user)
         elif mission_type == "UPDATE_ARTISAN_INVENTORY":
             business_report = BusinessSargentoArtesano.registrar_entrada_inventario(parametros, user)
+        elif mission_type == "SYNC_PRODUCTION_CATALOG":
+            # Soldado especializado para sincronizar con la Vía Comercial
+            from ..soldados.soldados_artesanos import SoldadoSincronizadorComercial
+            soldado = SoldadoSincronizadorComercial()
+            business_report = soldado.perform_action(parametros)
 
         # 2. Ejecución de Tareas de IA (Simuladas/Agentes)
         sargento_agente = SargentoGestionTallerArtesano(teniente=self)

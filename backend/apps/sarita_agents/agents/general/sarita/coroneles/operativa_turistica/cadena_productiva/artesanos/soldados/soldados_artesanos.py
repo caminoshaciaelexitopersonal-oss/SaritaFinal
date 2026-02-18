@@ -29,3 +29,10 @@ class SoldadoMonitoreoVentasArtesano(SoldierTemplate):
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO ARTESANO: Monitoreando ventas del taller.")
         return {"action": "monitored", "trend": "up"}
+
+class SoldadoSincronizadorComercial(SoldierTemplate):
+    """Sincroniza el inventario de producción con el catálogo comercial."""
+    def perform_action(self, params: dict):
+        logger.info(f"SOLDADO ARTESANO: Sincronizando producción con catálogo comercial.")
+        # Aquí iría la lógica para actualizar el producto comercial basado en WorkshopOrder terminada
+        return {"status": "SYNCED", "linked_products": 1}
