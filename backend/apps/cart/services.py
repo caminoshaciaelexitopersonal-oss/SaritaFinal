@@ -1,7 +1,7 @@
 
 from django.conf import settings
 from .models import Cart, CartItem
-from apps.admin_plataforma.models import Plan
+from apps.comercial.models import Plan
 
 class CartService:
     """

@@ -11,7 +11,7 @@ from ..models import PricingRule
 from apps.core_erp.billing.billing_engine import BillingEngine as CoreBillingEngine
 from apps.core_erp.accounting.accounting_engine import AccountingEngine
 from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta, OperacionComercial
-from apps.admin_plataforma.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta, PeriodoContable
+from apps.admin_plataforma.gestion_contable.contabilidad.models import AdminJournalEntry, AdminAccountingTransaction, AdminAccount, AdminFiscalPeriod
 
 logger = logging.getLogger(__name__)
 
@@ -114,9 +114,9 @@ class BillingEngine:
 
         # 1. Obtener Periodo Contable
         period_name = invoice.issue_date.strftime("%Y-%m")
-        periodo = PeriodoContable.objects.filter(name=period_name).first()
+        periodo = AdminFiscalPeriod.objects.filter(name=period_name).first()
         if not periodo:
-            periodo = PeriodoContable.objects.create(
+            periodo = AdminFiscalPeriod.objects.create(
                 name=period_name,
                 start_date=invoice.issue_date.replace(day=1),
                 end_date=invoice.issue_date,
@@ -124,8 +124,8 @@ class BillingEngine:
             )
 
         # 2. Crear Asiento
-        asiento = AsientoContable.objects.create(
-            periodo=periodo,
+        asiento = AdminJournalEntry.objects.create(
+            period=periodo,
             date=invoice.issue_date,
             description=f"Facturación SaaS {invoice.number}",
             reference=str(invoice.id),
@@ -134,20 +134,20 @@ class BillingEngine:
         )
 
         # 3. Crear Transacciones (CxC y Ventas)
-        cuenta_ingresos = Cuenta.objects.filter(code="413501").first()
-        cuenta_clientes = Cuenta.objects.filter(code="130505").first()
+        cuenta_ingresos = AdminAccount.objects.filter(code="413501").first()
+        cuenta_clientes = AdminAccount.objects.filter(code="130505").first()
 
         if cuenta_ingresos and cuenta_clientes:
-            Transaccion.objects.create(
-                asiento=asiento,
-                cuenta=cuenta_clientes,
+            AdminAccountingTransaction.objects.create(
+                journal_entry=asiento,
+                account=cuenta_clientes,
                 debit=invoice.total_amount,
                 credit=0,
                 description="CxC suscripción"
             )
-            Transaccion.objects.create(
-                asiento=asiento,
-                cuenta=cuenta_ingresos,
+            AdminAccountingTransaction.objects.create(
+                journal_entry=asiento,
+                account=cuenta_ingresos,
                 debit=0,
                 credit=invoice.total_amount,
                 description="Ingresos por suscripciones"

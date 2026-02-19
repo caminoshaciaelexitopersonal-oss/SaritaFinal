@@ -2,7 +2,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from apps.admin_plataforma.models import Plan
+from apps.comercial.models import Plan
 
 class Cart(models.Model):
     """

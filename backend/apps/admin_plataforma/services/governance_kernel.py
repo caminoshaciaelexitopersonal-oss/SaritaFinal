@@ -242,13 +242,37 @@ class GovernanceKernel:
             raise PermissionError(f"Nivel de autoridad insuficiente. Requerido: {intention.min_authority.name}")
 
         if self.user.role != intention.required_role:
+             # Verificar si tiene un permiso global que lo habilite a pesar del rol tradicional
+             if self._has_global_permission(intention):
+                 return True
              raise PermissionError(f"El usuario no tiene el rol '{intention.required_role}' requerido para '{intention.name}'.")
 
         return True
 
+    def _has_global_permission(self, intention: GovernanceIntention) -> bool:
+        """FASE 2: Verifica si el usuario posee el permiso global requerido para la intención."""
+        if not hasattr(self.user, 'global_roles'):
+            return False
+
+        # El permiso se busca por dominio e intención específica
+        return self.user.global_roles.filter(
+            permissions__domain=intention.domain,
+            permissions__codename=intention.name
+        ).exists()
+
     def _get_user_authority_level(self) -> AuthorityLevel:
         if self.user.is_superuser:
             return AuthorityLevel.SOVEREIGN
+
+        # Nueva lógica: Priorizar nivel de autoridad definido en GlobalRoles
+        if hasattr(self.user, 'global_roles'):
+            max_auth = self.user.global_roles.aggregate(models.Max('authority_level'))['authority_level__max']
+            if max_auth:
+                if max_auth >= 3: return AuthorityLevel.SOVEREIGN
+                if max_auth == 2: return AuthorityLevel.DELEGATED
+                return AuthorityLevel.OPERATIONAL
+
+        # Fallback a roles tradicionales
         if self.user.role in [CustomUser.Role.ADMIN, CustomUser.Role.FUNCIONARIO_DIRECTIVO]:
             return AuthorityLevel.DELEGATED
         return AuthorityLevel.OPERATIONAL
@@ -508,12 +532,12 @@ class GovernanceKernel:
 
         if intention.name == "PLATFORM_CREATE_PLAN":
             plan = service.crear_plan(
-                nombre=parameters["nombre"],
-                precio=parameters["precio"],
-                frecuencia=parameters["frecuencia"],
-                descripcion=parameters.get("descripcion", "")
+                name=parameters["name"],
+                monthly_price=parameters["monthly_price"],
+                code=parameters["code"],
+                description=parameters.get("description", "")
             )
-            return {"status": "SUCCESS", "id": plan.id, "message": f"Plan '{plan.nombre}' creado.", "instance": plan}
+            return {"status": "SUCCESS", "id": plan.id, "message": f"Plan '{plan.name}' creado.", "instance": plan}
 
         # Futuras intenciones se mapean aquí
         return {"status": "SUCCESS", "message": f"Intención '{intention.name}' procesada correctamente."}
@@ -562,7 +586,7 @@ GovernanceKernel.register_intention(GovernanceIntention(
     name="PLATFORM_CREATE_PLAN",
     domain="plataforma",
     required_role=CustomUser.Role.ADMIN,
-    required_params=["nombre", "precio", "frecuencia"],
+    required_params=["name", "monthly_price", "code"],
     min_authority=AuthorityLevel.DELEGATED
 ))
 

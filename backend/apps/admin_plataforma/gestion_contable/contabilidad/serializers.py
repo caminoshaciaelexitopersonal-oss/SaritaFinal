@@ -1,27 +1,27 @@
 from rest_framework import serializers
 from apps.admin_plataforma.gestion_contable.contabilidad.models import (
-    PlanDeCuentas, Cuenta, PeriodoContable, AsientoContable, Transaccion
+    AdminChartOfAccounts, AdminAccount, AdminFiscalPeriod, AdminJournalEntry, AdminAccountingTransaction
 )
 
 class AdminPlanDeCuentasSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PlanDeCuentas
+        model = AdminChartOfAccounts
         fields = '__all__'
         read_only_fields = ['provider']
 
 class AdminCuentaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cuenta
+        model = AdminAccount
         fields = '__all__'
 
 class AdminPeriodoContableSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PeriodoContable
+        model = AdminFiscalPeriod
         fields = '__all__'
         read_only_fields = ['provider']
 
 class AdminAsientoContableSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AsientoContable
+        model = AdminJournalEntry
         fields = '__all__'
         read_only_fields = ['provider']

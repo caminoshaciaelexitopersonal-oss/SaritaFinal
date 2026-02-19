@@ -3,7 +3,7 @@ from decimal import Decimal
 from apps.orders.services import OrderService
 from .models import Payment
 from apps.cart.models import Cart
-from apps.admin_plataforma.models import Suscripcion
+from apps.comercial.models import Subscription
 from datetime import timedelta
 
 class PaymentService:

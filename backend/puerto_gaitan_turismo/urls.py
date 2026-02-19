@@ -61,6 +61,9 @@ urlpatterns = [
     # Alias estructural para el Dominio de Nómina (Fase 8)
     path('api/nomina/', include('apps.prestadores.mi_negocio.gestion_contable.nomina.urls')),
 
+    # API para la Torre de Control del Holding
+    path('api/admin/control-tower/', include('apps.admin_control_tower.urls')),
+
     # API para Inteligencia de Decisión
     path('api/admin/intelligence/', include('apps.decision_intelligence.urls')),
 

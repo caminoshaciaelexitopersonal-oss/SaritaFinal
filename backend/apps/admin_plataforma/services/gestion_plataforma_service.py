@@ -2,7 +2,7 @@
 from django.db import transaction
 from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from api.models import CustomUser
-from apps.admin_plataforma.models import Plan, Suscripcion
+from apps.comercial.models import Plan, Subscription
 from decimal import Decimal
 from datetime import date, timedelta
 
@@ -47,12 +47,26 @@ class GestionPlataformaService:
         return profile
 
     @transaction.atomic
-    def crear_plan(self, nombre: str, precio: Decimal, frecuencia: str, **kwargs) -> Plan:
-        """Crea un nuevo plan de suscripción."""
+    def crear_plan(self, name: str, monthly_price: Decimal, **kwargs) -> Plan:
+        """Crea un nuevo plan de suscripción unificado."""
         plan = Plan.objects.create(
-            nombre=nombre,
-            precio=precio,
-            frecuencia=frecuencia,
+            name=name,
+            monthly_price=monthly_price,
             **kwargs
         )
         return plan
+
+    @transaction.atomic
+    def asignar_suscripcion(self, perfil_ref_id, plan: Plan, start_date=None) -> Subscription:
+        """Asigna una suscripción a un prestador."""
+        if not start_date:
+            start_date = date.today()
+
+        subscription = Subscription.objects.create(
+            perfil_ref_id=perfil_ref_id,
+            tenant_id=str(perfil_ref_id), # Simplificación para Phase 2
+            plan=plan,
+            start_date=start_date,
+            status=Subscription.Status.ACTIVE
+        )
+        return subscription
