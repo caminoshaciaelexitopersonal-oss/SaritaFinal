@@ -5,6 +5,8 @@ from api.permissions import IsSuperAdmin
 from .services.consolidation_engine import ConsolidationEngine
 from .services.forecasting_engine import ForecastingEngine
 from .predictive_intelligence.risk_score import RiskScoreManager
+from apps.global_orchestration.global_consolidation import GlobalConsolidation
+from apps.global_orchestration.currency_engine import CurrencyEngine
 
 class GlobalDashboardView(APIView):
     """
@@ -22,7 +24,16 @@ class GlobalDashboardView(APIView):
 
         forecast = ForecastingEngine.project_revenue(months=6)
 
+        global_summary = GlobalConsolidation.get_global_revenue()
+        regional_data = GlobalConsolidation.revenue_by_region()
+
         data = {
+            "holding_global": {
+                "total_mrr": global_summary['global_mrr'],
+                "total_arr": global_summary['global_arr'],
+                "entities": global_summary['entities_count'],
+                "regional_breakdown": regional_data
+            },
             "saas": saas_metrics,
             "financial_summary": {
                 "balance_sheet": financials,

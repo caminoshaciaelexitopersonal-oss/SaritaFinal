@@ -101,6 +101,7 @@ INSTALLED_APPS = [
     "apps.admin_plataforma.gestion_operativa.apps.AdminGestionOperativaConfig",
     "apps.comercial.apps.ComercialConfig",
     "apps.admin_control_tower.apps.AdminControlTowerConfig",
+    "apps.global_orchestration.apps.GlobalOrchestrationConfig",
 
     "apps.sadi_agent.apps.SadiAgentConfig",
     "apps.sarita_agents.apps.SaritaAgentsConfig",
