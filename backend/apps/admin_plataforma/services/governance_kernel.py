@@ -624,6 +624,23 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.DELEGATED
 ))
 
+# Dominio: Autonomía Adaptativa (Fase 5)
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="ADAPTIVE_PRICING_ADJUSTMENT",
+    domain="comercial",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["plan_code", "new_price"],
+    min_authority=AuthorityLevel.DELEGATED
+))
+
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="SYSTEMIC_EVOLUTION_STEP",
+    domain="governance",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["evolution_type", "parameters"],
+    min_authority=AuthorityLevel.SOVEREIGN
+))
+
 # Dominio: Artesanos (Cadena Productiva - Fase 15/16)
 GovernanceKernel.register_intention(GovernanceIntention(
     name="MANAGE_WORKSHOP",

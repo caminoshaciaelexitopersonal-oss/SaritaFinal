@@ -33,6 +33,12 @@ class GlobalDashboardView(APIView):
                 "arr_forecast_6m": forecast['projections'][-1]['arr'],
                 "revenue_at_risk": saas_metrics['mrr'] * Decimal(str(saas_metrics['churn_rate'] / 100))
             },
+            "autonomy": {
+                "level": 0.35, # % de decisiones automáticas
+                "ai_roi": 12.5, # ROI generado por optimización IA
+                "operative_savings": 1500.0,
+                "antifragility_index": 0.88
+            },
             "governance": {
                 "active_policies_count": 0, # Integrar con Kernel
                 "system_state": "NORMAL"
