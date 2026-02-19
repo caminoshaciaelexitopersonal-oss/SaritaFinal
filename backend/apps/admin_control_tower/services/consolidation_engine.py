@@ -5,6 +5,8 @@ from apps.admin_plataforma.gestion_contable.contabilidad.models import (
     AdminJournalEntry, AdminAccountingTransaction, AdminAccount, AdminFiscalPeriod
 )
 from apps.comercial.models import Subscription, Plan
+from apps.comercial.saas_metrics.revenue_metrics import RevenueMetrics
+from apps.comercial.saas_metrics.churn_analysis import ChurnAnalysis
 
 logger = logging.getLogger(__name__)
 
@@ -71,20 +73,16 @@ class ConsolidationEngine:
     @staticmethod
     def get_saas_metrics():
         """
-        Calcula KPIs de SaaS (MRR, ARR, Churn).
+        Calcula KPIs de SaaS (MRR, ARR, Churn, LTV, ARPU).
         """
-        active_subs = Subscription.objects.filter(status=Subscription.Status.ACTIVE)
-
-        mrr = Decimal('0.00')
-        for sub in active_subs:
-            if sub.billing_cycle == Subscription.BillingCycle.MONTHLY:
-                mrr += sub.plan.monthly_price
-            else:
-                mrr += sub.plan.yearly_price / 12
+        mrr = RevenueMetrics.calculate_mrr()
+        churn = ChurnAnalysis.calculate_churn_rate()
 
         return {
             "mrr": mrr,
             "arr": mrr * 12,
-            "active_tenants": active_subs.count(),
-            "churn_rate": 0.0, # Placeholder para lógica futura
+            "active_tenants": Subscription.objects.filter(status=Subscription.Status.ACTIVE).count(),
+            "churn_rate": churn,
+            "arpu": RevenueMetrics.calculate_arpu(),
+            "ltv": RevenueMetrics.calculate_ltv(churn)
         }

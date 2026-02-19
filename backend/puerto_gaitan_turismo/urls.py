@@ -27,6 +27,9 @@ urlpatterns = [
     # Nueva API para el panel de administración de la plataforma
     path('api/admin/plataforma/', include('apps.admin_plataforma.urls')),
 
+    # API Comercial Unificada (Fase 3)
+    path('api/comercial/', include('apps.comercial.urls')),
+
     # APIs para la gobernanza del contenido web (Funnel y páginas públicas)
     path('api/web/', include('apps.web_funnel.urls')),
  

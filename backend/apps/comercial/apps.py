@@ -8,3 +8,4 @@ class ComercialConfig(AppConfig):
 
     def ready(self):
         import apps.comercial.signals.subscription_signals
+        import apps.comercial.signals.handlers
