@@ -1,0 +1,2 @@
+backend/apps/admin_plataforma/adaptive_engine.py
+backend/apps/admin_plataforma/gestion_comercial/funnels/runtime/engine.py
