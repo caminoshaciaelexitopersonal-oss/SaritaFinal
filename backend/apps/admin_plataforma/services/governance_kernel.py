@@ -615,6 +615,15 @@ GovernanceKernel.register_intention(GovernanceIntention(
     min_authority=AuthorityLevel.DELEGATED
 ))
 
+# Dominio: Optimización Predictiva (Fase 4)
+GovernanceKernel.register_intention(GovernanceIntention(
+    name="OPTIMIZE_TENANT_RETENTION",
+    domain="comercial",
+    required_role=CustomUser.Role.ADMIN,
+    required_params=["tenant_id", "action"],
+    min_authority=AuthorityLevel.DELEGATED
+))
+
 # Dominio: Artesanos (Cadena Productiva - Fase 15/16)
 GovernanceKernel.register_intention(GovernanceIntention(
     name="MANAGE_WORKSHOP",
