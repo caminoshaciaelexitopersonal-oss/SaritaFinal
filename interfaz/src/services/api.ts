@@ -38,9 +38,9 @@ export interface Location {
 
 export interface FacturaVenta {
     id: string;
-    numero_factura: string;
+    number: string;
     cliente_nombre: string;
-    fecha_emision: string;
+    issue_date: string;
     total: string;
     estado_display: string;
 }

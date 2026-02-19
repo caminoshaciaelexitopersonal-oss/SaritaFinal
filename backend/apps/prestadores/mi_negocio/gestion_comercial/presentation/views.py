@@ -88,7 +88,7 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
                 to_wallet_id=str(to_wallet.id),
                 amount=factura.total,
                 related_service_id=str(factura.id),
-                description=f"Pago Factura {factura.numero_factura}"
+                description=f"Pago Factura {factura.number}"
             )
 
             # Actualizar estado de la factura
@@ -127,7 +127,7 @@ class FacturaVentaViewSet(viewsets.ModelViewSet):
         factura = self.get_object()
         return Response({
             "id": factura.id,
-            "numero": factura.numero_factura,
+            "numero": factura.number,
             "estado_dian": factura.get_estado_dian_display(),
             "cufe": factura.cufe,
             "logs": factura.dian_logs.values('timestamp', 'success', 'error_detail')[:5]

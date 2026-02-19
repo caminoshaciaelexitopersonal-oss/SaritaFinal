@@ -10,26 +10,26 @@ class ContabilidadValidationError(Exception):
 
 class ContabilidadService:
     @staticmethod
-    def crear_asiento_completo(provider, fecha, descripcion, periodo, creado_por, transacciones_data):
+    def crear_asiento_completo(provider, date, description, periodo, creado_por, transacciones_data):
         """
         Crea un asiento contable y sus transacciones de forma atómica.
         Valida que el asiento esté balanceado (débitos == créditos).
 
         :param provider: El perfil del prestador (inquilino).
-        :param fecha: La fecha del asiento.
-        :param descripcion: Descripción del asiento.
+        :param date: La date del asiento.
+        :param description: Descripción del asiento.
         :param periodo: El periodo contable al que pertenece.
         :param creado_por: El usuario que crea el asiento.
         :param transacciones_data: Una lista de diccionarios, cada uno representando una transacción.
-                                 Ej: [{'cuenta_id': 1, 'debito': 100, 'credito': 0}, ...]
+                                 Ej: [{'cuenta_id': 1, 'debit': 100, 'credit': 0}, ...]
         """
-        total_debito = sum(Decimal(t.get('debito', 0)) for t in transacciones_data)
-        total_credito = sum(Decimal(t.get('credito', 0)) for t in transacciones_data)
+        total_debit = sum(Decimal(t.get('debit', 0)) for t in transacciones_data)
+        total_credit = sum(Decimal(t.get('credit', 0)) for t in transacciones_data)
 
-        if total_debito != total_credito:
-            raise ContabilidadValidationError(f"El asiento no está balanceado. Débitos: {total_debito}, Créditos: {total_credito}")
+        if total_debit != total_credit:
+            raise ContabilidadValidationError(f"El asiento no está balanceado. Débitos: {total_debit}, Créditos: {total_credit}")
 
-        if total_debito == 0:
+        if total_debit == 0:
             raise ContabilidadValidationError("El asiento debe tener un valor de débito y crédito mayor a cero.")
 
         try:
@@ -37,8 +37,8 @@ class ContabilidadService:
                 # Crear el asiento
                 asiento = AsientoContable.objects.create(
                     provider=provider,
-                    fecha=fecha,
-                    descripcion=descripcion,
+                    date=date,
+                    description=description,
                     periodo=periodo,
                     creado_por=creado_por
                 )
@@ -51,9 +51,9 @@ class ContabilidadService:
                     Transaccion.objects.create(
                         asiento=asiento,
                         cuenta=cuenta,
-                        debito=Decimal(t_data.get('debito', 0)),
-                        credito=Decimal(t_data.get('credito', 0)),
-                        descripcion=t_data.get('descripcion', '')
+                        debit=Decimal(t_data.get('debit', 0)),
+                        credit=Decimal(t_data.get('credit', 0)),
+                        description=t_data.get('description', '')
                     )
 
             return asiento
@@ -85,27 +85,27 @@ class ContabilidadService:
             periodo.cerrado = True
             periodo.save()
 
-            return {"status": "success", "message": f"El período {periodo.nombre} ha sido cerrado exitosamente."}
+            return {"status": "success", "message": f"El período {periodo.name} ha sido cerrado exitosamente."}
 
         except PeriodoContable.DoesNotExist:
             raise ContabilidadValidationError("El período no existe, ya está cerrado o no pertenece a tu negocio.")
 
     @staticmethod
-    def obtener_libro_diario(provider, fecha_inicio, fecha_fin):
+    def obtener_libro_diario(provider, start_date, end_date):
         """Genera el Libro Diario para un rango de fechas."""
         return AsientoContable.objects.filter(
             provider=provider,
-            fecha__range=[fecha_inicio, fecha_fin]
-        ).prefetch_related('transacciones', 'transacciones__cuenta').order_by('fecha', 'id')
+            date__range=[start_date, end_date]
+        ).prefetch_related('transactions', 'transactions__cuenta').order_by('date', 'id')
 
     @staticmethod
-    def obtener_libro_mayor(provider, cuenta_codigo, fecha_inicio, fecha_fin):
+    def obtener_libro_mayor(provider, cuenta_code, start_date, end_date):
         """Genera los movimientos de una cuenta específica (Libro Mayor)."""
         return Transaccion.objects.filter(
             asiento__provider=provider,
-            cuenta__codigo__startswith=cuenta_codigo,
-            asiento__fecha__range=[fecha_inicio, fecha_fin]
-        ).select_related('asiento', 'cuenta').order_by('asiento__fecha')
+            cuenta__code__startswith=cuenta_code,
+            asiento__date__range=[start_date, end_date]
+        ).select_related('asiento', 'cuenta').order_by('asiento__date')
 
     @staticmethod
     def generar_balance_comprobacion(provider, periodo_id):
@@ -118,66 +118,66 @@ class ContabilidadService:
                 asiento__periodo_id=periodo_id,
                 cuenta=cuenta
             ).aggregate(
-                total_debito=Sum('debito'),
-                total_credito=Sum('credito')
+                total_debit=Sum('debit'),
+                total_credit=Sum('credit')
             )
 
-            debito = movimientos['total_debito'] or Decimal('0.00')
-            credito = movimientos['total_credito'] or Decimal('0.00')
+            debit = movimientos['total_debit'] or Decimal('0.00')
+            credit = movimientos['total_credit'] or Decimal('0.00')
 
-            if debito > 0 or credito > 0 or cuenta.saldo_inicial > 0:
+            if debit > 0 or credit > 0 or cuenta.saldo_inicial > 0:
                 balance.append({
-                    "codigo": cuenta.codigo,
-                    "nombre": cuenta.nombre,
+                    "code": cuenta.code,
+                    "name": cuenta.name,
                     "saldo_inicial": cuenta.saldo_inicial,
-                    "debitos": debito,
-                    "creditos": credito,
-                    "nuevo_saldo": cuenta.saldo_inicial + debito - credito
+                    "debits": debit,
+                    "credits": credit,
+                    "nuevo_saldo": cuenta.saldo_inicial + debit - credit
                 })
         return balance
 
     @staticmethod
-    def generar_estado_resultados(provider, fecha_inicio, fecha_fin):
+    def generar_estado_resultados(provider, start_date, end_date):
         """
         Genera el Estado de Resultados (P&L): Ingresos - Gastos.
         """
         # Cuentas de Ingresos (Clase 4) y Gastos (Clase 5)
-        cuentas_ingresos = Cuenta.objects.filter(provider=provider, codigo__startswith='4')
-        cuentas_gastos = Cuenta.objects.filter(provider=provider, codigo__startswith='5')
+        cuentas_ingresos = Cuenta.objects.filter(provider=provider, code__startswith='4')
+        cuentas_gastos = Cuenta.objects.filter(provider=provider, code__startswith='5')
 
         total_ingresos = Decimal('0.00')
         detalles_ingresos = []
         for c in cuentas_ingresos:
             val = Transaccion.objects.filter(
                 asiento__provider=provider,
-                asiento__fecha__range=[fecha_inicio, fecha_fin],
+                asiento__date__range=[start_date, end_date],
                 cuenta=c
-            ).aggregate(saldo=Sum('credito') - Sum('debito'))['saldo'] or Decimal('0.00')
+            ).aggregate(saldo=Sum('credit') - Sum('debit'))['saldo'] or Decimal('0.00')
             if val != 0:
                 total_ingresos += val
-                detalles_ingresos.append({"cuenta": c.nombre, "valor": val})
+                detalles_ingresos.append({"cuenta": c.name, "valor": val})
 
         total_gastos = Decimal('0.00')
         detalles_gastos = []
         for c in cuentas_gastos:
             val = Transaccion.objects.filter(
                 asiento__provider=provider,
-                asiento__fecha__range=[fecha_inicio, fecha_fin],
+                asiento__date__range=[start_date, end_date],
                 cuenta=c
-            ).aggregate(saldo=Sum('debito') - Sum('credito'))['saldo'] or Decimal('0.00')
+            ).aggregate(saldo=Sum('debit') - Sum('credit'))['saldo'] or Decimal('0.00')
             if val != 0:
                 total_gastos += val
-                detalles_gastos.append({"cuenta": c.nombre, "valor": val})
+                detalles_gastos.append({"cuenta": c.name, "valor": val})
 
         return {
-            "periodo": f"{fecha_inicio} a {fecha_fin}",
+            "periodo": f"{start_date} a {end_date}",
             "ingresos": {"total": total_ingresos, "detalles": detalles_ingresos},
             "gastos": {"total": total_gastos, "detalles": detalles_gastos},
             "utilidad_neta": total_ingresos - total_gastos
         }
 
     @staticmethod
-    def generar_balance_general(provider, fecha_corte):
+    def generar_balance_general(provider, cutoff_date):
         """
         Genera el Balance General: Activos = Pasivos + Patrimonio.
         """
@@ -191,7 +191,7 @@ class ContabilidadService:
         total_secciones = {}
 
         for seccion, prefijo in tipos.items():
-            cuentas = Cuenta.objects.filter(provider=provider, codigo__startswith=prefijo)
+            cuentas = Cuenta.objects.filter(provider=provider, code__startswith=prefijo)
             total_seccion = Decimal('0.00')
             detalles = []
 
@@ -199,9 +199,9 @@ class ContabilidadService:
                 # El saldo acumulado incluye el saldo inicial + todos los movimientos hasta la fecha de corte
                 movimientos = Transaccion.objects.filter(
                     asiento__provider=provider,
-                    asiento__fecha__lte=fecha_corte,
+                    asiento__date__lte=cutoff_date,
                     cuenta=cuenta
-                ).aggregate(d=Sum('debito'), c=Sum('credito'))
+                ).aggregate(d=Sum('debit'), c=Sum('credit'))
 
                 deb = movimientos['d'] or Decimal('0.00')
                 cre = movimientos['c'] or Decimal('0.00')
@@ -214,41 +214,41 @@ class ContabilidadService:
 
                 if saldo != 0:
                     total_seccion += saldo
-                    detalles.append({"cuenta": cuenta.nombre, "codigo": cuenta.codigo, "saldo": saldo})
+                    detalles.append({"cuenta": cuenta.name, "code": cuenta.code, "saldo": saldo})
 
             balance[seccion] = detalles
             total_secciones[seccion] = total_seccion
 
         return {
-            "fecha_corte": fecha_corte,
+            "cutoff_date": cutoff_date,
             "balance": balance,
             "totales": total_secciones,
             "diferencia_ecuacion": total_secciones["ACTIVO"] - (total_secciones["PASIVO"] + total_secciones["PATRIMONIO"])
         }
 
     @staticmethod
-    def generar_flujo_caja(provider, fecha_inicio, fecha_fin):
+    def generar_flujo_caja(provider, start_date, end_date):
         """
         Genera un reporte de Flujo de Caja simplificado basado en cuentas de efectivo (Clase 11).
         """
-        cuentas_efectivo = Cuenta.objects.filter(provider=provider, codigo__startswith='11')
+        cuentas_efectivo = Cuenta.objects.filter(provider=provider, code__startswith='11')
 
         entradas = Transaccion.objects.filter(
             asiento__provider=provider,
-            asiento__fecha__range=[fecha_inicio, fecha_fin],
+            asiento__date__range=[start_date, end_date],
             cuenta__in=cuentas_efectivo,
-            debito__gt=0
-        ).aggregate(total=Sum('debito'))['total'] or Decimal('0.00')
+            debit__gt=0
+        ).aggregate(total=Sum('debit'))['total'] or Decimal('0.00')
 
         salidas = Transaccion.objects.filter(
             asiento__provider=provider,
-            asiento__fecha__range=[fecha_inicio, fecha_fin],
+            asiento__date__range=[start_date, end_date],
             cuenta__in=cuentas_efectivo,
-            credito__gt=0
-        ).aggregate(total=Sum('credito'))['total'] or Decimal('0.00')
+            credit__gt=0
+        ).aggregate(total=Sum('credit'))['total'] or Decimal('0.00')
 
         return {
-            "periodo": f"{fecha_inicio} a {fecha_fin}",
+            "periodo": f"{start_date} a {end_date}",
             "entradas_efectivo": entradas,
             "salidas_efectivo": salidas,
             "flujo_neto": entradas - salidas
@@ -264,8 +264,8 @@ class StandardChartOfAccountsService:
         # 1. Crear Plan de Cuentas
         plan, _ = PlanDeCuentas.objects.get_or_create(
             provider=provider,
-            nombre=f"Plan Contable Estándar - {provider.nombre_comercial}",
-            defaults={"descripcion": "Plan de cuentas generado automáticamente por SARITA."}
+            name=f"Plan Contable Estándar - {provider.name_comercial}",
+            defaults={"description": "Plan de cuentas generado automáticamente por SARITA."}
         )
 
         # 2. Cuentas Maestras
@@ -302,18 +302,18 @@ class StandardChartOfAccountsService:
         ]
 
         cuentas_creadas = {}
-        for codigo, nombre, tipo, parent_code in estructura:
+        for code, name, account_type, parent_code in estructura:
             parent = cuentas_creadas.get(parent_code)
             cuenta, _ = Cuenta.objects.get_or_create(
                 plan_de_cuentas=plan,
-                codigo=codigo,
+                code=code,
                 defaults={
-                    "nombre": nombre,
-                    "tipo": tipo,
+                    "name": name,
+                    "account_type": account_type,
                     "parent": parent,
                     "provider": provider
                 }
             )
-            cuentas_creadas[codigo] = cuenta
+            cuentas_creadas[code] = cuenta
 
         return plan

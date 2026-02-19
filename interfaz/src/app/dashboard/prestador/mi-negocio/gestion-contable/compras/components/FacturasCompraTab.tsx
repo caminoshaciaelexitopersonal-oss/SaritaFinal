@@ -23,7 +23,7 @@ export default function FacturasCompraTab() {
 
   const filteredFacturas = facturas.filter(f =>
     f.proveedor_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    f.numero_factura.toLowerCase().includes(searchTerm.toLowerCase())
+    f.number.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const fetchFacturas = useCallback(async () => {
@@ -109,8 +109,8 @@ export default function FacturasCompraTab() {
           {filteredFacturas.map((f) => (
             <TableRow key={f.id}>
               <TableCell>{f.proveedor_nombre}</TableCell>
-              <TableCell>{f.numero_factura}</TableCell>
-              <TableCell>{new Date(f.fecha_emision).toLocaleDateString()}</TableCell>
+              <TableCell>{f.number}</TableCell>
+              <TableCell>{new Date(f.issue_date).toLocaleDateString()}</TableCell>
               <TableCell>${f.total}</TableCell>
               <TableCell>{getStatusBadge(f.estado)}</TableCell>
               <TableCell>
@@ -131,7 +131,7 @@ export default function FacturasCompraTab() {
       )}
 
       {isPayModalOpen && selectedFactura && (
-        <Modal title={`Pagar Factura #${selectedFactura.numero_factura}`} isOpen={isPayModalOpen} onClose={() => setIsPayModalOpen(false)}>
+        <Modal title={`Pagar Factura #${selectedFactura.number}`} isOpen={isPayModalOpen} onClose={() => setIsPayModalOpen(false)}>
           <div className="space-y-4">
             <p>Seleccione la cuenta bancaria para realizar el pago de <strong>${selectedFactura.total}</strong>.</p>
             <Select onValueChange={setCuentaPagoSeleccionada}>

@@ -105,8 +105,8 @@ class FacturacionService:
             provider=perfil,
             perfil_ref_id=operacion.perfil_ref_id,
             cliente_ref_id=operacion.cliente_ref_id,
-            numero_factura=f"{res.prefijo}{res.consecutivo_actual}",
-            fecha_emision=timezone.now().date(),
+            number=f"{res.prefijo}{res.consecutivo_actual}",
+            issue_date=timezone.now().date(),
             subtotal=operacion.subtotal,
             impuestos=operacion.impuestos,
             total=operacion.total,
@@ -126,13 +126,13 @@ class FacturacionService:
         try:
             dian_log = FacturacionElectronicaService.procesar_envio_dian(factura)
             if dian_log.success:
-                logger.info(f"Factura {factura.numero_factura} ACEPTADA por DIAN.")
+                logger.info(f"Factura {factura.number} ACEPTADA por DIAN.")
                 # 3.1 Disparar Contabilidad REAL tras aceptación DIAN
                 FacturacionService._registrar_contabilidad_aceptada(factura)
             else:
-                logger.warning(f"Factura {factura.numero_factura} RECHAZADA por DIAN: {dian_log.error_detail}")
+                logger.warning(f"Factura {factura.number} RECHAZADA por DIAN: {dian_log.error_detail}")
         except Exception as e:
-            logger.error(f"Fallo crítico en comunicación DIAN para factura {factura.numero_factura}: {str(e)}")
+            logger.error(f"Fallo crítico en comunicación DIAN para factura {factura.number}: {str(e)}")
             factura.estado_dian = FacturaVenta.EstadoDIAN.PENDIENTE
             factura.save()
 
@@ -141,7 +141,7 @@ class FacturacionService:
             from apps.sarita_agents.orchestrator import sarita_orchestrator
 
             factura_content = {
-                "numero_factura": factura.numero_factura,
+                "number": factura.number,
                 "cliente": cliente.nombre,
                 "total": str(factura.total),
                 "cufe": factura.cufe
@@ -157,15 +157,15 @@ class FacturacionService:
                     "process_code": 'FACT',
                     "document_type_code": 'FV',
                     "document_content": json.dumps(factura_content).encode('utf-8'),
-                    "original_filename": f"{factura.numero_factura}.json",
+                    "original_filename": f"{factura.number}.json",
                     "document_metadata": {'source_model': 'FacturaVenta', 'source_id': str(factura.id)},
                 }
             }
             sarita_orchestrator.handle_directive(directive)
-            logger.info(f"GESTIÓN COMERCIAL: Misión de archivado delegada para factura {factura.numero_factura}")
+            logger.info(f"GESTIÓN COMERCIAL: Misión de archivado delegada para factura {factura.number}")
 
         except Exception as e:
-            logger.error(f"Error al delegar archivado de factura {factura.numero_factura}: {e}")
+            logger.error(f"Error al delegar archivado de factura {factura.number}: {e}")
 
         factura.save()
 
@@ -177,7 +177,7 @@ class FacturacionService:
             action=AuditLog.Action.INVOICE_GENERATED,
             details={
                 "factura_id": str(factura.id),
-                "numero_factura": factura.numero_factura,
+                "number": factura.number,
                 "total": str(factura.total),
                 "operacion_id": str(operacion.id)
             }
@@ -208,7 +208,7 @@ class FacturacionService:
 
             if cuenta_cxc and cuenta_ingreso:
                 movimientos = [
-                    {"cuenta_id": str(cuenta_cxc.id), "debito": float(factura.total), "descripcion": f"CxC Cliente - Fac {factura.numero_factura}"},
+                    {"cuenta_id": str(cuenta_cxc.id), "debito": float(factura.total), "descripcion": f"CxC Cliente - Fac {factura.number}"},
                     {"cuenta_id": str(cuenta_ingreso.id), "credito": float(factura.subtotal), "descripcion": "Ingreso por servicios"}
                 ]
                 if factura.impuestos > 0 and cuenta_iva:
@@ -219,14 +219,14 @@ class FacturacionService:
                     "mission": {"type": "RECOGNIZE_REVENUE"},
                     "parameters": {
                         "periodo_id": str(periodo.id),
-                        "fecha": str(factura.fecha_emision),
-                        "descripcion": f"Factura Legal DIAN {factura.numero_factura}",
+                        "fecha": str(factura.issue_date),
+                        "descripcion": f"Factura Legal DIAN {factura.number}",
                         "movimientos": movimientos,
                         "usuario_id": factura.creado_por.id,
                         "metadata": {"factura_id": str(factura.id), "cufe": factura.cufe}
                     }
                 }
                 sarita_orchestrator.handle_directive(directive_acc)
-                logger.info(f"CONTABILIDAD: Registro legal disparado para factura {factura.numero_factura}")
+                logger.info(f"CONTABILIDAD: Registro legal disparado para factura {factura.number}")
         except Exception as e:
-            logger.error(f"Error al registrar contabilidad legal para factura {factura.numero_factura}: {e}")
+            logger.error(f"Error al registrar contabilidad legal para factura {factura.number}: {e}")

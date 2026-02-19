@@ -230,9 +230,9 @@ export default function GestionComercialPage() {
                     <TableBody>
                       {facturas.map((f: any) => (
                         <TableRow key={f.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-slate-50 dark:border-white/5">
-                          <TableCell className="font-mono text-xs font-black text-brand px-8">{f.numero_factura}</TableCell>
+                          <TableCell className="font-mono text-xs font-black text-brand px-8">{f.number}</TableCell>
                           <TableCell className="font-bold text-slate-700 dark:text-slate-200">{f.cliente_nombre}</TableCell>
-                          <TableCell className="text-xs text-slate-500">{new Date(f.fecha_emision).toLocaleDateString()}</TableCell>
+                          <TableCell className="text-xs text-slate-500">{new Date(f.issue_date).toLocaleDateString()}</TableCell>
                           <TableCell className="text-center">
                              <Badge variant="outline" className="text-[8px] font-black border-indigo-100 text-indigo-400 uppercase">Dato Financiero</Badge>
                           </TableCell>

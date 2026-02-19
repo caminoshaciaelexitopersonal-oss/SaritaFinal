@@ -93,9 +93,9 @@ export default function AdminGestionComercialPage() {
                <TableBody>
                   {(facturas || []).map((factura: any) => (
                     <TableRow key={factura.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-slate-50 dark:border-white/5">
-                      <TableCell className="font-mono text-xs font-black text-brand px-8">{factura.numero_factura}</TableCell>
+                      <TableCell className="font-mono text-xs font-black text-brand px-8">{factura.number}</TableCell>
                       <TableCell className="font-bold text-slate-700 dark:text-slate-200">{factura.cliente_nombre}</TableCell>
-                      <TableCell className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{new Date(factura.fecha_emision).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{new Date(factura.issue_date).toLocaleDateString()}</TableCell>
                       <TableCell className="text-right font-black text-slate-900 dark:text-white px-8">${parseFloat(factura.total).toLocaleString()}</TableCell>
                     </TableRow>
                   ))}

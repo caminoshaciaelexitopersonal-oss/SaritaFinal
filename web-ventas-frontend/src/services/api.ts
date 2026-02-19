@@ -505,9 +505,9 @@ export const createHechoHistorico = async (data: FormData): Promise<HechoHistori
 
 export interface FacturaVenta {
   id: number;
-  numero_factura: string;
+  number: string;
   cliente_nombre: string;
-  fecha_emision: string;
+  issue_date: string;
   total: number;
   estado: string;
   estado_display: string;
@@ -851,9 +851,9 @@ export const getPublicHabitaciones = async (hotelId: number): Promise<Habitacion
 
 export interface FacturaVenta {
   id: number;
-  numero_factura: string;
+  number: string;
   cliente_nombre: string;
-  fecha_emision: string;
+  issue_date: string;
   total: number;
   estado: string;
   estado_display: string;

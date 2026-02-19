@@ -12,16 +12,16 @@ import { useMiNegocioApi, Proveedor, FacturaCompra } from '@/app/dashboard/prest
 
 // const formSchema = z.object({
 //   proveedor: z.string().min(1, { message: "Debe seleccionar un proveedor." }),
-//   numero_factura: z.string().min(1, { message: "El número es requerido." }),
-//   fecha_emision: z.string().min(1, { message: "La fecha es requerida." }),
+//   number: z.string().min(1, { message: "El número es requerido." }),
+//   issue_date: z.string().min(1, { message: "La fecha es requerida." }),
 //   total: z.coerce.number().positive(),
 // });
 
 // type FormValues = z.infer<typeof formSchema>;
 interface FormValues {
   proveedor: string;
-  numero_factura: string;
-  fecha_emision: string;
+  number: string;
+  issue_date: string;
   total: number;
 }
 
@@ -47,8 +47,8 @@ export default function FacturaCompraForm({ onSubmit, initialData, isSubmitting 
     // resolver: zodResolver(formSchema),
     defaultValues: {
       proveedor: initialData?.proveedor?.toString() || '',
-      numero_factura: initialData?.numero_factura || '',
-      fecha_emision: initialData?.fecha_emision || '',
+      number: initialData?.number || '',
+      issue_date: initialData?.issue_date || '',
       total: parseFloat(initialData?.total || '0'),
     },
   });
@@ -76,7 +76,7 @@ export default function FacturaCompraForm({ onSubmit, initialData, isSubmitting 
         />
         <FormField
           control={form.control}
-          name="numero_factura"
+          name="number"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Número de Factura</FormLabel>
@@ -87,7 +87,7 @@ export default function FacturaCompraForm({ onSubmit, initialData, isSubmitting 
         />
         <FormField
           control={form.control}
-          name="fecha_emision"
+          name="issue_date"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Fecha de Emisión</FormLabel>

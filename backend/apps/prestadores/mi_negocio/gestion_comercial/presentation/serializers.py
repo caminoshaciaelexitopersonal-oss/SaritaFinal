@@ -60,7 +60,7 @@ class FacturaVentaListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FacturaVenta
-        fields = ['id', 'numero_factura', 'cliente_nombre', 'fecha_emision', 'total', 'estado', 'estado_display']
+        fields = ['id', 'number', 'cliente_nombre', 'issue_date', 'total', 'estado', 'estado_display']
         read_only_fields = fields
 
 class FacturaVentaDetailSerializer(serializers.ModelSerializer):
@@ -81,7 +81,7 @@ class FacturaVentaDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = FacturaVenta
         fields = [
-            'id', 'numero_factura', 'cliente', 'fecha_emision',
+            'id', 'number', 'cliente', 'issue_date',
             'subtotal', 'impuestos', 'total',
             'estado', 'estado_display', 'items'
         ]
@@ -97,7 +97,7 @@ class FacturaVentaWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = FacturaVenta
         fields = [
-            'id', 'cliente_id', 'numero_factura', 'fecha_emision',
+            'id', 'cliente_id', 'number', 'issue_date',
             'operacion', 'creado_por', 'items', 'total'
         ]
         read_only_fields = ('total',)

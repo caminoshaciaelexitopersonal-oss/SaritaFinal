@@ -17,15 +17,15 @@ def registrar_ejecucion_compra(sender, instance, created, **kwargs):
             # Placeholder: Asumimos una cuenta de gasto genérica.
             partida = PartidaPresupuestal.objects.get(
                 presupuesto__perfil=instance.perfil,
-                presupuesto__ano_fiscal=instance.fecha_emision.year,
+                presupuesto__ano_fiscal=instance.issue_date.year,
                 cuenta_contable__code='5195' # Gasto - Diversos
             )
 
             EjecucionPresupuestal.objects.create(
                 partida=partida,
-                fecha=instance.fecha_emision,
+                fecha=instance.issue_date,
                 monto=instance.total,
-                descripcion=f"Factura de Compra No. {instance.numero_factura}",
+                descripcion=f"Factura de Compra No. {instance.number}",
                 origin_document=instance
             )
             partida.monto_ejecutado += instance.total

@@ -128,8 +128,8 @@ class QuintupleERPService:
             asiento = AsientoContable.objects.create(
                 provider_id=perfil_id,
                 periodo=periodo,
-                fecha=timezone.now().date(),
-                descripcion=f"Impacto Automático SARITA - {event_type} - {payload.get('description', '')}",
+                date=timezone.now().date(),
+                description=f"Impacto Automático SARITA - {event_type} - {payload.get('description', '')}",
                 creado_por=self.user
             )
             return str(asiento.id)
@@ -150,10 +150,10 @@ class QuintupleERPService:
             if event_type == "LIQUIDATION" and perfil_id:
                 orden = OrdenPago.objects.create(
                     perfil_ref_id=perfil_id,
-                    monto=Decimal(str(payload.get("amount", 0))),
-                    fecha_pago=timezone.now().date(),
-                    concepto=f"Liquidación Monedero - {event_type}",
-                    estado=OrdenPago.EstadoPago.PENDIENTE
+                    amount=Decimal(str(payload.get("amount", 0))),
+                    payment_date=timezone.now().date(),
+                    concept=f"Liquidación Monedero - {event_type}",
+                    status=OrdenPago.EstadoPago.PENDIENTE
                 )
                 return str(orden.id)
             return None

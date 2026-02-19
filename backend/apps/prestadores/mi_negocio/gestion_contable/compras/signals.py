@@ -28,8 +28,8 @@ def crear_asiento_contable_factura_compra(sender, instance, created, **kwargs):
         # 1. Crear la cabecera del asiento contable
         asiento = AsientoContable.objects.create(
             provider=provider,
-            fecha=instance.fecha_emision,
-            descripcion=f"Asiento por Factura #{instance.numero_factura} de {instance.proveedor.nombre}",
+            fecha=instance.issue_date,
+            descripcion=f"Asiento por Factura #{instance.number} de {instance.proveedor.nombre}",
             # El 'periodo' se debería determinar programáticamente.
             creado_por=instance.creado_por,
         )

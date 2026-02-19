@@ -25,7 +25,7 @@ const itemSchema = z.object({
 
 const facturaSchema = z.object({
   cliente_id: z.coerce.number().min(1, 'Seleccione un cliente.'),
-  fecha_emision: z.string().min(1, 'La fecha es requerida.'),
+  issue_date: z.string().min(1, 'La fecha es requerida.'),
   fecha_vencimiento: z.string().optional(),
   items: z.array(itemSchema).min(1, 'Debe haber al menos un ítem en la factura.'),
 });
@@ -41,7 +41,7 @@ const NuevaFacturaPage = () => {
   const form = useForm<FacturaFormValues>({
     resolver: zodResolver(facturaSchema),
     defaultValues: {
-      fecha_emision: new Date().toISOString().split('T')[0],
+      issue_date: new Date().toISOString().split('T')[0],
       fecha_vencimiento: new Date().toISOString().split('T')[0],
       items: [{ producto_id: '', descripcion: '', cantidad: 1, precio_unitario: 0 }],
     },
@@ -106,7 +106,7 @@ const NuevaFacturaPage = () => {
                   <FormMessage />
                 </FormItem>
               )} />
-              <FormField name="fecha_emision" control={form.control} render={({ field }) => (
+              <FormField name="issue_date" control={form.control} render={({ field }) => (
                 <FormItem><FormLabel>Fecha de Emisión</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField name="fecha_vencimiento" control={form.control} render={({ field }) => (

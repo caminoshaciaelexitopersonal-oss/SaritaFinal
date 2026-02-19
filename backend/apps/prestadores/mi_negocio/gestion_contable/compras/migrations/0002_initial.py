@@ -43,6 +43,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name="facturacompra",
-            unique_together={("perfil", "proveedor", "numero_factura")},
+            unique_together={("perfil", "proveedor", "number")},
         ),
     ]

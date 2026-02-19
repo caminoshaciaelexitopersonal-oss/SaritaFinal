@@ -28,6 +28,8 @@ class DatabaseRouter:
         # Sin embargo, para aislamiento lógico seguimos esta directriz.
         if obj1._meta.app_label in ['wallet', 'delivery'] and obj2._meta.app_label == 'api':
             return True
+        if obj2._meta.app_label in ['wallet', 'delivery'] and obj1._meta.app_label == 'api':
+            return True
 
         return None
 

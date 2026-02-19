@@ -46,7 +46,7 @@ def simulate_guide_services():
             tipo_certificacion="Guía Profesional",
             defaults={
                 "entidad_emisora": "Ministerio de Turismo",
-                "fecha_emision": timezone.now().date() - timezone.timedelta(days=100),
+                "issue_date": timezone.now().date() - timezone.timedelta(days=100),
                 "fecha_vencimiento": timezone.now().date() + timezone.timedelta(days=365),
                 "estado_validacion": "VALIDADO"
             }

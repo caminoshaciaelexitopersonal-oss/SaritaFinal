@@ -20,15 +20,15 @@ class FacturaVentaAccountingService:
 
         asiento = AsientoContable.objects.create(
             provider=provider,
-            fecha=factura.fecha_emision,
-            descripcion=f"Venta según Factura No. {factura.numero_factura}",
+            date=factura.issue_date,
+            description=f"Venta según Factura No. {factura.number}",
             creado_por=factura.creado_por,
         )
 
-        Transaccion.objects.create(asiento=asiento, cuenta=cuenta_cxc, debito=factura.total)
-        Transaccion.objects.create(asiento=asiento, cuenta=cuenta_ingresos, credito=factura.subtotal)
+        Transaccion.objects.create(asiento=asiento, cuenta=cuenta_cxc, debit=factura.total_amount)
+        Transaccion.objects.create(asiento=asiento, cuenta=cuenta_ingresos, credit=factura.subtotal)
         if factura.impuestos > 0:
-            Transaccion.objects.create(asiento=asiento, cuenta=cuenta_iva, credito=factura.impuestos)
+            Transaccion.objects.create(asiento=asiento, cuenta=cuenta_iva, credit=factura.impuestos)
 
         # El método clean() no es necesario aquí a menos que haya validaciones complejas en el modelo.
         return asiento

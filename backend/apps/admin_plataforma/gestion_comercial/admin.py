@@ -12,7 +12,7 @@ class OperacionComercialAdmin(admin.ModelAdmin):
 
 @admin.register(FacturaVenta)
 class FacturaVentaAdmin(admin.ModelAdmin):
-    list_display = ('numero_factura', 'fecha_emision')
+    list_display = ('number', 'issue_date')
 
 @admin.register(ReciboCaja)
 class ReciboCajaAdmin(admin.ModelAdmin):

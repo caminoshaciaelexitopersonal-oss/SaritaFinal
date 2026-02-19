@@ -68,7 +68,7 @@ export default function NuevaVentaPage() {
 
     const facturaData = {
       cliente: Number(selectedCliente),
-      fecha_emision: fechaEmision,
+      issue_date: fechaEmision,
       fecha_vencimiento: fechaVencimiento,
       items: items.map(item => ({
         producto: item.producto!,

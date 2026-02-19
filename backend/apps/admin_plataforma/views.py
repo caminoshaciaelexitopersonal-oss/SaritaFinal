@@ -93,7 +93,7 @@ class SupervisionDianViewSet(viewsets.ReadOnlyModelViewSet):
             "ultimas_facturas": [
                 {
                     "id": f.id,
-                    "numero": f.numero_factura,
+                    "numero": f.number,
                     "tenant_id": f.perfil_ref_id,
                     "estado_dian": f.estado_dian,
                     "total": f.total,

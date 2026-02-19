@@ -12,12 +12,12 @@ class TesoreriaCentralAdmin(admin.ModelAdmin):
 
 @admin.register(CuentaBancaria)
 class CuentaBancariaAdmin(admin.ModelAdmin):
-    list_display = ('banco', 'numero_cuenta', 'saldo_actual', 'activa')
+    list_display = ('bank_name', 'account_number', 'balance', 'is_active')
 
 @admin.register(OrdenPago)
 class OrdenPagoAdmin(admin.ModelAdmin):
-    list_display = ('concepto', 'monto', 'estado', 'fecha_pago')
-    list_filter = ('estado', 'fecha_pago')
+    list_display = ('concept', 'amount', 'status', 'payment_date')
+    list_filter = ('status', 'payment_date')
 
 @admin.register(EstadoResultados)
 class EstadoResultadosAdmin(admin.ModelAdmin):

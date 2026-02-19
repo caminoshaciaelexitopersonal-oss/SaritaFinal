@@ -33,7 +33,7 @@ class FacturaVentaAPITests(APITestCase):
     def test_create_factura_with_items(self):
         data = {
             "cliente": self.cliente.id,
-            "fecha_emision": date.today().isoformat(),
+            "issue_date": date.today().isoformat(),
             "fecha_vencimiento": (date.today() + timedelta(days=30)).isoformat(),
             "items": [
                 {"producto": self.producto1.id, "cantidad": 2, "precio_unitario": "10.00"},

@@ -17,7 +17,7 @@ class FacturaCompraSerializer(serializers.ModelSerializer):
     class Meta:
         model = FacturaCompra
         fields = [
-            'id', 'proveedor', 'proveedor_nombre', 'numero_factura', 'fecha_emision',
+            'id', 'proveedor', 'proveedor_nombre', 'number', 'issue_date',
             'fecha_vencimiento', 'subtotal', 'impuestos', 'total', 'estado',
             'notas', 'creado_por', 'creado_en'
         ]
@@ -34,16 +34,16 @@ class FacturaCompraSerializer(serializers.ModelSerializer):
         # La validación se aplica solo en la creación (POST)
         if not self.instance:
             proveedor = data.get('proveedor')
-            numero_factura = data.get('numero_factura')
+            number = data.get('number')
             perfil = self.context['request'].user.perfil_prestador
 
             if FacturaCompra.objects.filter(
                 perfil=perfil,
                 proveedor=proveedor,
-                numero_factura=numero_factura
+                number=number
             ).exists():
                 raise serializers.ValidationError(
-                    f"Ya existe una factura con el número '{numero_factura}' para este proveedor."
+                    f"Ya existe una factura con el número '{number}' para este proveedor."
                 )
         return data
 

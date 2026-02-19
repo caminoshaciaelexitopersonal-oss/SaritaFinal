@@ -45,8 +45,8 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("numero_factura", models.CharField(max_length=50)),
-                ("fecha_emision", models.DateField()),
+                ("number", models.CharField(max_length=50)),
+                ("issue_date", models.DateField()),
                 ("fecha_vencimiento", models.DateField(blank=True, null=True)),
                 (
                     "subtotal",
@@ -85,7 +85,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "ordering": ["-fecha_emision"],
+                "ordering": ["-issue_date"],
             },
         ),
     ]

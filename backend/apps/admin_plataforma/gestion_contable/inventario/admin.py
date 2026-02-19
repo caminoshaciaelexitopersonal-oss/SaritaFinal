@@ -7,7 +7,7 @@ class CategoriaProductoAdmin(admin.ModelAdmin):
 
 @admin.register(Almacen)
 class AlmacenAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'ubicacion')
+    list_display = ('name', 'location')
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
@@ -15,4 +15,4 @@ class ProductoAdmin(admin.ModelAdmin):
 
 @admin.register(MovimientoInventario)
 class MovimientoInventarioAdmin(admin.ModelAdmin):
-    list_display = ('producto', 'tipo_movimiento', 'cantidad', 'fecha')
+    list_display = ('producto', 'tipo_movimiento', 'quantity', 'date')

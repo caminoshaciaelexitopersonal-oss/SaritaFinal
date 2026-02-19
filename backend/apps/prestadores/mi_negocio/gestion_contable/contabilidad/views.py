@@ -52,7 +52,7 @@ class CuentaViewSet(BaseTenantViewSet):
     """
     queryset = Cuenta.objects.all()
     serializer_class = CuentaSerializer
-    filterset_fields = ['plan_de_cuentas', 'tipo', 'parent']
+    filterset_fields = ['plan_de_cuentas', 'account_type', 'parent']
 
 
 class PeriodoContableViewSet(BaseTenantViewSet):
@@ -61,7 +61,7 @@ class PeriodoContableViewSet(BaseTenantViewSet):
     """
     queryset = PeriodoContable.objects.all()
     serializer_class = PeriodoContableSerializer
-    filterset_fields = ['cerrado']
+    filterset_fields = ['is_closed']
 
 
 from rest_framework import viewsets, permissions, status
@@ -88,20 +88,20 @@ class AsientoContableViewSet(BaseTenantViewSet):
     API endpoint para los Asientos Contables.
     La creación se gestiona a través del ContabilidadService para asegurar la integridad.
     """
-    queryset = AsientoContable.objects.all().prefetch_related('transacciones')
+    queryset = AsientoContable.objects.all().prefetch_related('transactions')
     serializer_class = AsientoContableSerializer
-    filterset_fields = ['periodo', 'fecha']
+    filterset_fields = ['periodo', 'date']
 
     @action(detail=False, methods=['get'])
     def libro_diario(self, request):
-        fecha_inicio = request.query_params.get('fecha_inicio')
-        fecha_fin = request.query_params.get('fecha_fin')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
 
-        if not fecha_inicio or not fecha_fin:
-            return Response({"error": "Debe proporcionar fecha_inicio y fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+        if not start_date or not end_date:
+            return Response({"error": "Debe proporcionar start_date y end_date"}, status=status.HTTP_400_BAD_REQUEST)
 
         provider = request.user.perfil_prestador
-        asientos = ContabilidadService.obtener_libro_diario(provider, fecha_inicio, fecha_fin)
+        asientos = ContabilidadService.obtener_libro_diario(provider, start_date, end_date)
         serializer = self.get_serializer(asientos, many=True)
         return Response(serializer.data)
 
@@ -117,47 +117,47 @@ class AsientoContableViewSet(BaseTenantViewSet):
 
     @action(detail=False, methods=['get'])
     def estado_resultados(self, request):
-        fecha_inicio = request.query_params.get('fecha_inicio')
-        fecha_fin = request.query_params.get('fecha_fin')
-        if not fecha_inicio or not fecha_fin:
-            return Response({"error": "Debe proporcionar fecha_inicio y fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+        if not start_date or not end_date:
+            return Response({"error": "Debe proporcionar start_date y end_date"}, status=status.HTTP_400_BAD_REQUEST)
 
         provider = request.user.perfil_prestador
-        reporte = ContabilidadService.generar_estado_resultados(provider, fecha_inicio, fecha_fin)
+        reporte = ContabilidadService.generar_estado_resultados(provider, start_date, end_date)
         return Response(reporte)
 
     @action(detail=False, methods=['get'])
     def balance_general(self, request):
-        fecha_corte = request.query_params.get('fecha_corte')
-        if not fecha_corte:
-            return Response({"error": "Debe proporcionar fecha_corte"}, status=status.HTTP_400_BAD_REQUEST)
+        cutoff_date = request.query_params.get('cutoff_date')
+        if not cutoff_date:
+            return Response({"error": "Debe proporcionar cutoff_date"}, status=status.HTTP_400_BAD_REQUEST)
 
         provider = request.user.perfil_prestador
-        reporte = ContabilidadService.generar_balance_general(provider, fecha_corte)
+        reporte = ContabilidadService.generar_balance_general(provider, cutoff_date)
         return Response(reporte)
 
     @action(detail=False, methods=['get'])
     def flujo_caja(self, request):
-        fecha_inicio = request.query_params.get('fecha_inicio')
-        fecha_fin = request.query_params.get('fecha_fin')
-        if not fecha_inicio or not fecha_fin:
-            return Response({"error": "Debe proporcionar fecha_inicio y fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+        if not start_date or not end_date:
+            return Response({"error": "Debe proporcionar start_date y end_date"}, status=status.HTTP_400_BAD_REQUEST)
 
         provider = request.user.perfil_prestador
-        reporte = ContabilidadService.generar_flujo_caja(provider, fecha_inicio, fecha_fin)
+        reporte = ContabilidadService.generar_flujo_caja(provider, start_date, end_date)
         return Response(reporte)
 
     @action(detail=False, methods=['get'])
     def libro_mayor(self, request):
-        cuenta_codigo = request.query_params.get('cuenta_codigo')
-        fecha_inicio = request.query_params.get('fecha_inicio')
-        fecha_fin = request.query_params.get('fecha_fin')
+        cuenta_code = request.query_params.get('cuenta_code')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
 
-        if not cuenta_codigo or not fecha_inicio or not fecha_fin:
-            return Response({"error": "Faltan parámetros: cuenta_codigo, fecha_inicio, fecha_fin"}, status=status.HTTP_400_BAD_REQUEST)
+        if not cuenta_code or not start_date or not end_date:
+            return Response({"error": "Faltan parámetros: cuenta_code, start_date, end_date"}, status=status.HTTP_400_BAD_REQUEST)
 
         provider = request.user.perfil_prestador
-        movimientos = ContabilidadService.obtener_libro_mayor(provider, cuenta_codigo, fecha_inicio, fecha_fin)
+        movimientos = ContabilidadService.obtener_libro_mayor(provider, cuenta_code, start_date, end_date)
         serializer = TransaccionSerializer(movimientos, many=True)
         return Response(serializer.data)
 
@@ -167,7 +167,7 @@ class AsientoContableViewSet(BaseTenantViewSet):
 
         # Extraer los datos validados
         validated_data = serializer.validated_data
-        transacciones_data = validated_data.pop('transacciones')
+        transactions_data = validated_data.pop('transactions')
 
         try:
             if not hasattr(request.user, 'perfil_prestador'):
@@ -177,7 +177,7 @@ class AsientoContableViewSet(BaseTenantViewSet):
             asiento = ContabilidadService.crear_asiento_completo(
                 provider=request.user.perfil_prestador,
                 creado_por=request.user,
-                transacciones_data=transacciones_data,
+                transacciones_data=transactions_data,
                 **validated_data
             )
 

@@ -272,14 +272,14 @@ components:
         id:
           type: integer
           readOnly: true
-        numero_factura:
+        number:
           type: string
           readOnly: true
         cliente:
           allOf:
           - $ref: '#/components/schemas/Cliente'
           readOnly: true
-        fecha_emision:
+        issue_date:
           type: string
           format: date
           readOnly: true
@@ -327,12 +327,12 @@ components:
       - cliente
       - estado
       - estado_display
-      - fecha_emision
+      - issue_date
       - fecha_vencimiento
       - id
       - impuestos
       - items
-      - numero_factura
+      - number
       - subtotal
       - tasa_impuesto_aplicada
       - total
@@ -344,13 +344,13 @@ components:
         id:
           type: integer
           readOnly: true
-        numero_factura:
+        number:
           type: string
           readOnly: true
         cliente_nombre:
           type: string
           readOnly: true
-        fecha_emision:
+        issue_date:
           type: string
           format: date
           readOnly: true
@@ -370,9 +370,9 @@ components:
       - cliente_nombre
       - estado
       - estado_display
-      - fecha_emision
+      - issue_date
       - id
-      - numero_factura
+      - number
       - total
     FacturaVentaWrite:
       type: object
@@ -391,10 +391,10 @@ components:
         cliente_id:
           type: integer
           writeOnly: true
-        numero_factura:
+        number:
           type: string
           maxLength: 50
-        fecha_emision:
+        issue_date:
           type: string
           format: date
         fecha_vencimiento:
@@ -438,11 +438,11 @@ components:
       required:
       - cliente_id
       - estado
-      - fecha_emision
+      - issue_date
       - id
       - impuestos
       - items
-      - numero_factura
+      - number
       - subtotal
       - total
       - total_pagado
@@ -529,10 +529,10 @@ components:
         cliente_id:
           type: integer
           writeOnly: true
-        numero_factura:
+        number:
           type: string
           maxLength: 50
-        fecha_emision:
+        issue_date:
           type: string
           format: date
         fecha_vencimiento:

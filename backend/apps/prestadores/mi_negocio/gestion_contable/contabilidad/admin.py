@@ -17,28 +17,28 @@ class TransaccionInline(admin.TabularInline):
 class AsientoContableAdmin(admin.ModelAdmin):
     """Configuración del Admin para Asientos Contables."""
     inlines = [TransaccionInline]
-    list_display = ('id', 'fecha', 'descripcion', 'periodo', 'creado_por')
-    search_fields = ('descripcion',)
-    list_filter = ('fecha', 'periodo')
+    list_display = ('id', 'date', 'description', 'periodo', 'creado_por')
+    search_fields = ('description',)
+    list_filter = ('date', 'periodo')
 
 @admin.register(Cuenta)
 class CuentaAdmin(admin.ModelAdmin):
     """Configuración del Admin para Cuentas Contables."""
-    list_display = ('codigo', 'nombre', 'tipo', 'plan_de_cuentas', 'parent')
-    search_fields = ('codigo', 'nombre')
-    list_filter = ('tipo', 'plan_de_cuentas')
+    list_display = ('code', 'name', 'account_type', 'plan_de_cuentas', 'parent')
+    search_fields = ('code', 'name')
+    list_filter = ('account_type', 'plan_de_cuentas')
 
 @admin.register(PlanDeCuentas)
 class PlanDeCuentasAdmin(admin.ModelAdmin):
     """Configuración del Admin para Planes de Cuentas."""
-    list_display = ('nombre', 'provider', 'descripcion')
-    search_fields = ('nombre',)
+    list_display = ('name', 'provider', 'description')
+    search_fields = ('name',)
 
 @admin.register(PeriodoContable)
 class PeriodoContableAdmin(admin.ModelAdmin):
     """Configuración del Admin para Períodos Contables."""
-    list_display = ('nombre', 'fecha_inicio', 'fecha_fin', 'cerrado', 'provider')
-    list_filter = ('cerrado',)
+    list_display = ('name', 'start_date', 'end_date', 'is_closed', 'provider')
+    list_filter = ('is_closed',)
 
 # Nota: Transaccion se gestiona a través del inline en AsientoContableAdmin,
 # pero también se puede registrar para acceso directo si se desea.

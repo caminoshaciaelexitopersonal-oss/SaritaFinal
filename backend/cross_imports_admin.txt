@@ -1,0 +1,9 @@
+apps/admin_plataforma/views.py:        from apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta
+apps/admin_plataforma/gestion_comercial/_obsoleto_tests.py:from apps.prestadores.models import Perfil, CategoriaPrestador
+apps/admin_plataforma/services/observer.py:from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+apps/admin_plataforma/services/quintuple_erp.py:            from apps.prestadores.mi_negocio.gestion_comercial.domain.models import OperacionComercial
+apps/admin_plataforma/services/quintuple_erp.py:            from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva
+apps/admin_plataforma/services/quintuple_erp.py:            from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, PeriodoContable
+apps/admin_plataforma/services/quintuple_erp.py:            from apps.prestadores.mi_negocio.gestion_financiera.models import OrdenPago
+apps/admin_plataforma/services/quintuple_erp.py:            from apps.prestadores.mi_negocio.gestion_archivistica.models import Document, DocumentType, Process, ProcessType
+apps/admin_plataforma/services/interoperability_bridge.py:from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva

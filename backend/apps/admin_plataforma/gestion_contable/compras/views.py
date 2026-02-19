@@ -51,8 +51,8 @@ class FacturaCompraViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
 
         journal_entry = JournalEntry.objects.create(
             perfil=perfil,
-            entry_date=factura.fecha_emision,
-            description=f"Compra según Factura No. {factura.numero_factura} de {factura.proveedor.nombre}",
+            entry_date=factura.issue_date,
+            description=f"Compra según Factura No. {factura.number} de {factura.proveedor.nombre}",
             entry_type="COMPRA",
             user=self.request.user,
             origin_document=factura
@@ -82,10 +82,10 @@ class FacturaCompraViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
         # 1. Crear la transacción de egreso en el módulo financiero
         TransaccionBancaria.objects.create(
             cuenta=cuenta_bancaria,
-            fecha=factura.fecha_emision, # O usar la fecha actual: timezone.now().date()
+            fecha=factura.issue_date, # O usar la fecha actual: timezone.now().date()
             tipo=TransaccionBancaria.TipoTransaccion.EGRESO,
             monto=factura.total,
-            descripcion=f"Pago de Factura #{factura.numero_factura} a {factura.proveedor.nombre}",
+            descripcion=f"Pago de Factura #{factura.number} a {factura.proveedor.nombre}",
             creado_por=request.user
         )
 
@@ -98,8 +98,8 @@ class FacturaCompraViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
 
         journal_entry = JournalEntry.objects.create(
             perfil=factura.perfil,
-            entry_date=factura.fecha_emision, # O fecha actual
-            description=f"Pago de Factura #{factura.numero_factura}",
+            entry_date=factura.issue_date, # O fecha actual
+            description=f"Pago de Factura #{factura.number}",
             entry_type="PAGO_COMPRA",
             user=request.user,
             origin_document=factura

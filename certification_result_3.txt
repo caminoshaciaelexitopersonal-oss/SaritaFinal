@@ -1,0 +1,94 @@
+(0.007) SELECT "comercial_lead"."id", "comercial_lead"."name", "comercial_lead"."email", "comercial_lead"."phone", "comercial_lead"."source", "comercial_lead"."status", "comercial_lead"."score", "comercial_lead"."estimated_value", "comercial_lead"."created_at", "comercial_lead"."updated_at" FROM "comercial_lead"; args=(); alias=default
+(0.007) SELECT "comercial_lead"."id", "comercial_lead"."name", "comercial_lead"."email", "comercial_lead"."phone", "comercial_lead"."source", "comercial_lead"."status", "comercial_lead"."score", "comercial_lead"."estimated_value", "comercial_lead"."created_at", "comercial_lead"."updated_at" FROM "comercial_lead"; args=(); alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) COMMIT; args=None; alias=default
+(0.000) COMMIT; args=None; alias=default
+(0.000) SELECT "comercial_plan"."id", "comercial_plan"."name", "comercial_plan"."code", "comercial_plan"."monthly_price", "comercial_plan"."storage_limit_gb", "comercial_plan"."is_active" FROM "comercial_plan"; args=(); alias=default
+(0.000) SELECT "comercial_plan"."id", "comercial_plan"."name", "comercial_plan"."code", "comercial_plan"."monthly_price", "comercial_plan"."storage_limit_gb", "comercial_plan"."is_active" FROM "comercial_plan"; args=(); alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) COMMIT; args=None; alias=default
+(0.000) COMMIT; args=None; alias=default
+(0.000) SELECT "comercial_subscription"."id", "comercial_subscription"."tenant_id", "comercial_subscription"."plan_id", "comercial_subscription"."status", "comercial_subscription"."billing_cycle", "comercial_subscription"."next_billing_date" FROM "comercial_subscription"; args=(); alias=default
+(0.000) SELECT "comercial_subscription"."id", "comercial_subscription"."tenant_id", "comercial_subscription"."plan_id", "comercial_subscription"."status", "comercial_subscription"."billing_cycle", "comercial_subscription"."next_billing_date" FROM "comercial_subscription"; args=(); alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) COMMIT; args=None; alias=default
+(0.000) COMMIT; args=None; alias=default
+(0.000) SELECT "api_customuser"."id", "api_customuser"."password", "api_customuser"."last_login", "api_customuser"."is_superuser", "api_customuser"."username", "api_customuser"."first_name", "api_customuser"."last_name", "api_customuser"."email", "api_customuser"."is_staff", "api_customuser"."is_active", "api_customuser"."date_joined", "api_customuser"."is_agent", "api_customuser"."agent_domain", "api_customuser"."role", "api_customuser"."origen", "api_customuser"."pais_origen" FROM "api_customuser" WHERE "api_customuser"."email" = 'admin@sarita.com' LIMIT 21; args=('admin@sarita.com',); alias=default
+(0.000) SELECT "api_customuser"."id", "api_customuser"."password", "api_customuser"."last_login", "api_customuser"."is_superuser", "api_customuser"."username", "api_customuser"."first_name", "api_customuser"."last_name", "api_customuser"."email", "api_customuser"."is_staff", "api_customuser"."is_active", "api_customuser"."date_joined", "api_customuser"."is_agent", "api_customuser"."agent_domain", "api_customuser"."role", "api_customuser"."origen", "api_customuser"."pais_origen" FROM "api_customuser" WHERE "api_customuser"."email" = 'admin@sarita.com' LIMIT 21; args=('admin@sarita.com',); alias=default
+(0.000) SELECT "admin_operativa_providerprofile"."id", "admin_operativa_providerprofile"."fecha_creacion", "admin_operativa_providerprofile"."fecha_actualizacion", "admin_operativa_providerprofile"."usuario_id", "admin_operativa_providerprofile"."nombre_negocio", "admin_operativa_providerprofile"."nit" FROM "admin_operativa_providerprofile" WHERE "admin_operativa_providerprofile"."usuario_id" = 1 LIMIT 21; args=(1,); alias=default
+(0.000) SELECT "admin_operativa_providerprofile"."id", "admin_operativa_providerprofile"."fecha_creacion", "admin_operativa_providerprofile"."fecha_actualizacion", "admin_operativa_providerprofile"."usuario_id", "admin_operativa_providerprofile"."nombre_negocio", "admin_operativa_providerprofile"."nit" FROM "admin_operativa_providerprofile" WHERE "admin_operativa_providerprofile"."usuario_id" = 1 LIMIT 21; args=(1,); alias=default
+(0.000) SELECT "admin_contabilidad_plandecuentas"."id", "admin_contabilidad_plandecuentas"."fecha_creacion", "admin_contabilidad_plandecuentas"."fecha_actualizacion", "admin_contabilidad_plandecuentas"."organization_id", "admin_contabilidad_plandecuentas"."name", "admin_contabilidad_plandecuentas"."description" FROM "admin_contabilidad_plandecuentas" WHERE ("admin_contabilidad_plandecuentas"."name" = 'PGC 2024 SaaS' AND "admin_contabilidad_plandecuentas"."organization_id" = 1) LIMIT 21; args=('PGC 2024 SaaS', 1); alias=default
+(0.000) SELECT "admin_contabilidad_plandecuentas"."id", "admin_contabilidad_plandecuentas"."fecha_creacion", "admin_contabilidad_plandecuentas"."fecha_actualizacion", "admin_contabilidad_plandecuentas"."organization_id", "admin_contabilidad_plandecuentas"."name", "admin_contabilidad_plandecuentas"."description" FROM "admin_contabilidad_plandecuentas" WHERE ("admin_contabilidad_plandecuentas"."name" = 'PGC 2024 SaaS' AND "admin_contabilidad_plandecuentas"."organization_id" = 1) LIMIT 21; args=('PGC 2024 SaaS', 1); alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.001) INSERT INTO "admin_contabilidad_plandecuentas" ("fecha_creacion", "fecha_actualizacion", "organization_id", "name", "description") VALUES ('2026-02-19 16:18:37.268800', '2026-02-19 16:18:37.268944', 1, 'PGC 2024 SaaS', '') RETURNING "admin_contabilidad_plandecuentas"."id"; args=('2026-02-19 16:18:37.268800', '2026-02-19 16:18:37.268944', 1, 'PGC 2024 SaaS', ''); alias=default
+(0.001) INSERT INTO "admin_contabilidad_plandecuentas" ("fecha_creacion", "fecha_actualizacion", "organization_id", "name", "description") VALUES ('2026-02-19 16:18:37.268800', '2026-02-19 16:18:37.268944', 1, 'PGC 2024 SaaS', '') RETURNING "admin_contabilidad_plandecuentas"."id"; args=('2026-02-19 16:18:37.268800', '2026-02-19 16:18:37.268944', 1, 'PGC 2024 SaaS', ''); alias=default
+(0.003) COMMIT; args=None; alias=default
+(0.003) COMMIT; args=None; alias=default
+(0.000) SELECT "admin_contabilidad_cuenta"."id", "admin_contabilidad_cuenta"."created_at", "admin_contabilidad_cuenta"."updated_at", "admin_contabilidad_cuenta"."code", "admin_contabilidad_cuenta"."name", "admin_contabilidad_cuenta"."account_type", "admin_contabilidad_cuenta"."is_active", "admin_contabilidad_cuenta"."fecha_creacion", "admin_contabilidad_cuenta"."fecha_actualizacion", "admin_contabilidad_cuenta"."organization_id", "admin_contabilidad_cuenta"."plan_de_cuentas_id", "admin_contabilidad_cuenta"."parent_id", "admin_contabilidad_cuenta"."saldo_inicial" FROM "admin_contabilidad_cuenta" WHERE ("admin_contabilidad_cuenta"."code" = '130505' AND "admin_contabilidad_cuenta"."organization_id" = 1) LIMIT 21; args=('130505', 1); alias=default
+(0.000) SELECT "admin_contabilidad_cuenta"."id", "admin_contabilidad_cuenta"."created_at", "admin_contabilidad_cuenta"."updated_at", "admin_contabilidad_cuenta"."code", "admin_contabilidad_cuenta"."name", "admin_contabilidad_cuenta"."account_type", "admin_contabilidad_cuenta"."is_active", "admin_contabilidad_cuenta"."fecha_creacion", "admin_contabilidad_cuenta"."fecha_actualizacion", "admin_contabilidad_cuenta"."organization_id", "admin_contabilidad_cuenta"."plan_de_cuentas_id", "admin_contabilidad_cuenta"."parent_id", "admin_contabilidad_cuenta"."saldo_inicial" FROM "admin_contabilidad_cuenta" WHERE ("admin_contabilidad_cuenta"."code" = '130505' AND "admin_contabilidad_cuenta"."organization_id" = 1) LIMIT 21; args=('130505', 1); alias=default
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: admin_contabilidad_cuenta.created_at
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/backend/apps/comercial/tests/certification_fase_1.py", line 188, in <module>
+    setup_holding_environment()
+  File "/app/backend/apps/comercial/tests/certification_fase_1.py", line 49, in setup_holding_environment
+    Cuenta.objects.get_or_create(code="130505", organization=org, defaults={"name": "Clientes Nacionales (SaaS)", "plan_de_cuentas": plan_contable})
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/query.py", line 946, in get_or_create
+    return self.get(**kwargs), False
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/query.py", line 629, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/query.py", line 366, in __len__
+    self._fetch_all()
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: admin_contabilidad_cuenta.created_at
+DEBUG: Antes de importar api.signals
+DEBUG: Antes de importar api.signals
+DEBUG: Después de importar api.signals
+DEBUG: Después de importar api.signals
+--- 🛠 SETUP AMBIENTE HOLDING ---
+❌ FALLO CRÍTICO EN LA CERTIFICACIÓN: no such column: admin_contabilidad_cuenta.created_at

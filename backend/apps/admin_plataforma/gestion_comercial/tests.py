@@ -60,8 +60,8 @@ class FacturaVentaAPITests(APITestCase):
         """
         data = {
             "cliente_id": self.cliente.id,
-            "numero_factura": "FV-001",
-            "fecha_emision": "2026-01-10",
+            "number": "FV-001",
+            "issue_date": "2026-01-10",
             "items": [
                 {
                     "producto_id": str(self.producto.id),
@@ -76,7 +76,7 @@ class FacturaVentaAPITests(APITestCase):
 
         # 1. Verificar la respuesta de la API
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['numero_factura'], "FV-001")
+        self.assertEqual(response.data['number'], "FV-001")
         self.assertEqual(Decimal(response.data['total']), Decimal("200.00")) # Total calculado
         self.assertEqual(response.data['estado'], "BORRADOR") # Estado inicial
 
@@ -93,8 +93,8 @@ class FacturaVentaAPITests(APITestCase):
         """
         data = {
             "cliente_id": self.cliente.id,
-            "numero_factura": "FV-002",
-            "fecha_emision": "2026-01-11",
+            "number": "FV-002",
+            "issue_date": "2026-01-11",
             "total": "9999.99",  # Campo prohibido
             "items": [
                 {
@@ -122,8 +122,8 @@ class FacturaVentaAPITests(APITestCase):
         FacturaVenta.objects.create(
             perfil=self.profile,
             cliente=self.cliente,
-            numero_factura="FV-LIST-01",
-            fecha_emision="2026-01-12",
+            number="FV-LIST-01",
+            issue_date="2026-01-12",
             creado_por=self.user,
             total=100
         )
@@ -135,8 +135,8 @@ class FacturaVentaAPITests(APITestCase):
         FacturaVenta.objects.create(
             perfil=other_profile,
             cliente=other_cliente,
-            numero_factura="FV-OTHER-01",
-            fecha_emision="2026-01-12",
+            number="FV-OTHER-01",
+            issue_date="2026-01-12",
             creado_por=other_user,
             total=50
         )
@@ -146,4 +146,4 @@ class FacturaVentaAPITests(APITestCase):
         # Verificar que la respuesta es correcta y solo contiene 1 factura
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
-        self.assertEqual(response.data['results'][0]['numero_factura'], "FV-LIST-01")
+        self.assertEqual(response.data['results'][0]['number'], "FV-LIST-01")

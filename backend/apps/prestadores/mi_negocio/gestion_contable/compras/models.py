@@ -24,8 +24,8 @@ class FacturaCompra(models.Model):
 
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='facturas_compra')
     proveedor = models.ForeignKey(Proveedor, on_delete=models.PROTECT, related_name='facturas')
-    numero_factura = models.CharField(max_length=50)
-    fecha_emision = models.DateField()
+    number = models.CharField(max_length=50)
+    issue_date = models.DateField()
     fecha_vencimiento = models.DateField(null=True, blank=True)
     subtotal = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
     impuestos = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
@@ -36,8 +36,8 @@ class FacturaCompra(models.Model):
     creado_en = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-fecha_emision']
-        unique_together = ('perfil', 'proveedor', 'numero_factura')
+        ordering = ['-issue_date']
+        unique_together = ('perfil', 'proveedor', 'number')
 
     def __str__(self):
-        return f"Factura {self.numero_factura} de {self.proveedor.nombre}"
+        return f"Factura {self.number} de {self.proveedor.nombre}"

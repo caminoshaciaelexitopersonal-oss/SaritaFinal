@@ -43,7 +43,9 @@ class ItemOperacionComercial(models.Model):
     precio_unitario = models.DecimalField(max_digits=12, decimal_places=2)
     subtotal = models.DecimalField(max_digits=12, decimal_places=2)
 
-class FacturaVenta(TenantAwareModel):
+from apps.core_erp.base.base_models import BaseInvoice
+
+class FacturaVenta(BaseInvoice, TenantAwareModel):
     class Estado(models.TextChoices):
         EMITIDA = 'EMITIDA', 'Emitida'
         PAGADA = 'PAGADA', 'Pagada'
@@ -57,13 +59,9 @@ class FacturaVenta(TenantAwareModel):
     operacion = models.OneToOneField(OperacionComercial, on_delete=models.PROTECT, related_name='factura')
     perfil_ref_id = models.UUIDField(null=True, blank=True)
     cliente_ref_id = models.UUIDField()
-    numero_factura = models.CharField(max_length=50)
-    fecha_emision = models.DateField()
     subtotal = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     impuestos = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    estado = models.CharField(max_length=20, choices=Estado.choices, default=Estado.EMITIDA)
     estado_dian = models.CharField(max_length=20, choices=EstadoDIAN.choices, default=EstadoDIAN.PENDIENTE)
     cufe = models.CharField(max_length=255, null=True, blank=True)
     dian_response_log = models.JSONField(null=True, blank=True)
@@ -72,7 +70,7 @@ class FacturaVenta(TenantAwareModel):
     def recalcular_totales(self):
         totales = self.items.aggregate(total=Sum('subtotal'))
         self.subtotal = totales['total'] or 0
-        self.total = self.subtotal
+        self.total_amount = self.subtotal
         self.save()
 
 class ItemFactura(models.Model):

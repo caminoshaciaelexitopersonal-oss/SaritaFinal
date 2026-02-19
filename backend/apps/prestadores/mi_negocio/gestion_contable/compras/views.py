@@ -49,8 +49,8 @@
 #
 #         journal_entry = JournalEntry.objects.create(
 #             perfil=perfil,
-#             entry_date=factura.fecha_emision,
-#             description=f"Compra según Factura No. {factura.numero_factura} de {factura.proveedor.nombre}",
+#             entry_date=factura.issue_date,
+#             description=f"Compra según Factura No. {factura.number} de {factura.proveedor.nombre}",
 #             entry_type="COMPRA",
 #             user=self.request.user,
 #             origin_document=factura
@@ -82,7 +82,7 @@
 #             perfil=request.user.perfil_prestador,
 #             cuenta_bancaria_origen=cuenta_bancaria,
 #             monto=factura.total,
-#             concepto=f"Pago de Factura #{factura.numero_factura} a {factura.proveedor.nombre}",
+#             concepto=f"Pago de Factura #{factura.number} a {factura.proveedor.nombre}",
 #             estado=OrdenPago.EstadoPago.PAGADA
 #         )
 #
@@ -95,8 +95,8 @@
 #
 #         journal_entry = JournalEntry.objects.create(
 #             perfil=factura.perfil,
-#             entry_date=factura.fecha_emision, # O fecha actual
-#             description=f"Pago de Factura #{factura.numero_factura}",
+#             entry_date=factura.issue_date, # O fecha actual
+#             description=f"Pago de Factura #{factura.number}",
 #             entry_type="PAGO_COMPRA",
 #             user=request.user,
 #             origin_document=factura
