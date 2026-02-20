@@ -7,6 +7,8 @@ from .services.forecasting_engine import ForecastingEngine
 from .predictive_intelligence.risk_score import RiskScoreManager
 from apps.global_orchestration.global_consolidation import GlobalConsolidation
 from apps.global_orchestration.currency_engine import CurrencyEngine
+from apps.institutional_layer.services.valuation_engine import ValuationEngine
+from apps.institutional_layer.services.investor_reporting_engine import InvestorReportingEngine
 
 class GlobalDashboardView(APIView):
     """
@@ -27,12 +29,21 @@ class GlobalDashboardView(APIView):
         global_summary = GlobalConsolidation.get_global_revenue()
         regional_data = GlobalConsolidation.revenue_by_region()
 
+        valuation = ValuationEngine.calculate_valuation()
+        investor_metrics = InvestorReportingEngine.get_board_deck_metrics()
+
         data = {
             "holding_global": {
                 "total_mrr": global_summary['global_mrr'],
                 "total_arr": global_summary['global_arr'],
                 "entities": global_summary['entities_count'],
                 "regional_breakdown": regional_data
+            },
+            "institutional": {
+                "current_valuation": valuation['valuation_base'],
+                "rule_of_40": investor_metrics['rule_of_40'],
+                "runway_months": investor_metrics['runway_months'],
+                "ltv_cac_ratio": investor_metrics['ltv_cac_ratio']
             },
             "saas": saas_metrics,
             "financial_summary": {

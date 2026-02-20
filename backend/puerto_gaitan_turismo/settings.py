@@ -102,6 +102,7 @@ INSTALLED_APPS = [
     "apps.comercial.apps.ComercialConfig",
     "apps.admin_control_tower.apps.AdminControlTowerConfig",
     "apps.global_orchestration.apps.GlobalOrchestrationConfig",
+    "apps.institutional_layer.apps.InstitutionalLayerConfig",
 
     "apps.sadi_agent.apps.SadiAgentConfig",
     "apps.sarita_agents.apps.SaritaAgentsConfig",
