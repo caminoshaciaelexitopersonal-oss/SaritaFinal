@@ -1,0 +1,310 @@
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:228: UserWarning: app_settings.USERNAME_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['username']['required']
+  required=allauth_account_settings.USERNAME_REQUIRED,
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:230: UserWarning: app_settings.EMAIL_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['email']['required']
+  email = serializers.EmailField(required=allauth_account_settings.EMAIL_REQUIRED)
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/dj_rest_auth/registration/serializers.py:288: UserWarning: app_settings.EMAIL_REQUIRED is deprecated, use: app_settings.SIGNUP_FIELDS['email']['required']
+  email = serializers.EmailField(required=allauth_account_settings.EMAIL_REQUIRED)
+/app/backend/apps/prestadores/mi_negocio/gestion_comercial/ai/services/ai_manager/providers/gemini_provider.py:2: FutureWarning:
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+KERNEL: Intención 'PLATFORM_CREATE_PLAN' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_SUSPEND_USER' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'ERP_CONFIRM_SALE' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ERP_GENERATE_BALANCE' registrada en el dominio 'contable'.
+KERNEL: Intención 'OPTIMIZE_TENANT_RETENTION' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ADAPTIVE_PRICING_ADJUSTMENT' registrada en el dominio 'comercial'.
+KERNEL: Intención 'SYSTEMIC_EVOLUTION_STEP' registrada en el dominio 'governance'.
+KERNEL: Intención 'MANAGE_WORKSHOP' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'REGISTER_PRODUCTION' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'UPDATE_ARTISAN_INVENTORY' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'PROCESS_COMMAND' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'VOID_CONSUMPTION' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'CREATE_PACKAGE' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'BOOK_PACKAGE' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'CANCEL_PACKAGE_COMPONENT' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'LIQUIDATE_AGENCY_PACKAGE' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'SCHEDULE_TRANSPORT_TRIP' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'BOOK_TRANSPORT_SEAT' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'LIQUIDATE_TRANSPORT_TRIP' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'ASSIGN_GUIDE' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'LIQUIDATE_GUIDE_COMMISSION' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'BILL_CONSUMPTION' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'NIGHT_CASH_CLOSE' registrada en el dominio 'operativa_turistica'.
+KERNEL: Intención 'WALLET_DEPOSIT' registrada en el dominio 'wallet'.
+KERNEL: Intención 'WALLET_PAY' registrada en el dominio 'wallet'.
+KERNEL: Intención 'WALLET_REFUND' registrada en el dominio 'wallet'.
+KERNEL: Intención 'WALLET_LIQUIDATE' registrada en el dominio 'wallet'.
+KERNEL: Intención 'WALLET_FREEZE' registrada en el dominio 'wallet'.
+KERNEL: Intención 'DELIVERY_REQUEST' registrada en el dominio 'delivery'.
+KERNEL: Intención 'DELIVERY_ASSIGN' registrada en el dominio 'delivery'.
+KERNEL: Intención 'DELIVERY_COMPLETE' registrada en el dominio 'delivery'.
+KERNEL: Intención 'DELIVERY_RATE' registrada en el dominio 'delivery'.
+KERNEL: Intención 'VEHICLE_REGISTER' registrada en el dominio 'delivery'.
+KERNEL: Intención 'GENERATE_LEGACY_BUNDLE' registrada en el dominio 'governance'.
+KERNEL: Intención 'PLATFORM_TRANSFER_OWNERSHIP' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'SYSTEM_EVOLUTION_HARDENING' registrada en el dominio 'governance'.
+KERNEL: Intención 'QUERY_META_STANDARD' registrada en el dominio 'governance'.
+KERNEL: Intención 'PUBLIC_BUDGET_OPTIMIZATION' registrada en el dominio 'hacienda'.
+KERNEL: Intención 'TERRITORIAL_IMPACT_SIMULATION' registrada en el dominio 'planeacion'.
+KERNEL: Intención 'CIVIL_DEFENSE_ALERT' registrada en el dominio 'seguridad_civil'.
+KERNEL: Intención 'LAND_USE_AUDIT' registrada en el dominio 'gestion_territorial'.
+KERNEL: Intención 'ERP_CREATE_VOUCHER' registrada en el dominio 'contable'.
+KERNEL: Intención 'ERP_VIEW_SALES_STATS' registrada en el dominio 'comercial'.
+KERNEL: Intención 'PRIORITIZE_CRITICAL_LEADS' registrada en el dominio 'comercial'.
+KERNEL: Intención 'OPTIMIZE_MARKETING_BUDGET' registrada en el dominio 'comercial'.
+KERNEL: Intención 'ERP_VIEW_CASH_FLOW' registrada en el dominio 'financiero'.
+KERNEL: Intención 'ERP_MANAGE_RESOURCES' registrada en el dominio 'operativo'.
+KERNEL: Intención 'ERP_SEARCH_DOCUMENT' registrada en el dominio 'archivistico'.
+KERNEL: Intención 'PLATFORM_UPDATE_PLAN' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_OPTIMIZE_RESOURCES' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_UPDATE_WEB_CMS' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'PLATFORM_UPDATE_LEGAL' registrada en el dominio 'plataforma'.
+KERNEL: Intención 'ONBOARDING_PRESTADOR' registrada en el dominio 'prestadores'.
+KERNEL: Intención 'AUDITORIA_GLOBAL' registrada en el dominio 'administrador_general'.
+CAPITÁN (CapitanAgencia): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDespachoFlota): Inicializado. Tenientes listos.
+CAPITÁN (CapitanMonitoreoRutas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionGuias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionHabitaciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCheckInCheckOut): Inicializado. Tenientes listos.
+CAPITÁN (CapitanServicioMesa): Inicializado. Tenientes listos.
+CAPITÁN (CapitanOperacionCocina): Inicializado. Tenientes listos.
+CAPITÁN (CapitanOperacionNocturna): Inicializado. Tenientes listos.
+CAPITÁN (CapitanArtesanos): Inicializado. Tenientes listos.
+CORONEL (operativa_turistica): Inicializado. Capitanes listos.
+CAPITÁN (CapitanMarketing): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPublicidadYAdquisicionDeTraficoADS): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionOperativaDeContenidosComerciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProduccionYAutomatizacionAudiovisual): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSEOTuristico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRecomendacionesSADI): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAlianzasComerciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConversion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmbudosConversion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanImplementacionTecnicaDeEmbudosYCRM): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPasarelaPagos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCotizacionesDinamicas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVentaConversacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanContratacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFirmaDigital): Inicializado. Tenientes listos.
+CAPITÁN (CapitanKYCVerificacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLegalidadYPrivacidad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRelacionClientes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanMensajeriaYEnviosMasivos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFidelizacionLealtad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSoporteViajero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPostventaFeedback): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoComercial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanInteligenciaAnaliticaYOptimizacion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaVentas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPrevencionFraude): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialEstrategico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionComercialGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialHotelero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialGastronomico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialTuristicoTours): Inicializado. Tenientes listos.
+CAPITÁN (CapitanComercialTransporte): Inicializado. Tenientes listos.
+CAPITÁN (CapitanOnboardingPrestador): Inicializado. Tenientes listos.
+CAPITÁN (CapitanArchivistico): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIntegridadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRetencionNormativa): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBusquedaDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapturaYCreacionDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoNormativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionDocumentalGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPoliticasRetencion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSeguridadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTrazabilidadDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosLegales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosContables): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosNomina): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosPublicos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDocumentosConfidenciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConservacionHistorica): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDisposicionFinal): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNotarizacionBlockchain): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionOperativaGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanControlOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCalidadYCumplimiento): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujosSecuenciales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujosParalelos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanValidacionOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEnrutamientoOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPriorizacionTareas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAsignacionTareas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTransicionesEstado): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBloqueosOperativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionReintentos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFallbackOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEscalamientoExcepciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanContabilidadGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAsientosAutomaticos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCierreContable): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaContable): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReconocimientoIngresos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanImpuestosIVA): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProvisionesContables): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConciliacionAutomatica): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReportesNormativos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionFinanciera): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujoCaja): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRatiosYFormulasFinancieras): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTesoreria): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCustodiaFondos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLiquidez): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPagos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanDistribucion): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReservas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProyecciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCumplimientoFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEstadoResultados): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBalanceGeneral): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFlujoEfectivo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCambiosPatrimonio): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConciliacionBancaria): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProvisionesFinancieras): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIncidentesSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNormativoSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIdentificacionPeligros): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvaluacionRiesgos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSaludOcupacional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRiesgoPsicosocial): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEmergencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCapacitacionSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVigilanciaSST): Inicializado. Tenientes listos.
+CAPITÁN (CapitanNomina): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLiquidacionContratos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLegalLaboral): Inicializado. Tenientes listos.
+CORONEL (prestadores): Inicializado. Capitanes listos.
+CAPITÁN (CapitanCreacionOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTransicionesEstado): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCancelacionOrdenes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanVinculacionContrato): Inicializado. Tenientes listos.
+CAPITÁN (CapitanValidacionDisponibilidad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAsignacionRecursos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConsumoInventario): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBloqueoAgotamiento): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionTurnos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanExcepcionesHorario): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRegistroCostosReales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCostosManoObra): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCostosInsumos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanImpactoContableOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvidenciaDocumental): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEvidenciaVisual): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIntegridadEvidencia): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSLAOperativo): Inicializado. Tenientes listos.
+CAPITÁN (CapitanProductividadAgentes): Inicializado. Tenientes listos.
+CAPITÁN (CapitanConfiguracionCapacidad): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionIncidencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanFeedbackPostServicio): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReprogramacionEmergencia): Inicializado. Tenientes listos.
+CORONEL (operativo_general): Inicializado. Capitanes listos.
+CAPITÁN (CapitanAuditoriaGlobal): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanVentas): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanContabilidad): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanFinanciero): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanOperativo): Inicializado. Tenientes listos.
+CAPITÁN (AdminCapitanArchivistico): Inicializado. Tenientes listos.
+CORONEL (administrador_general): Inicializado. Capitanes listos.
+CAPITÁN (CapitanContable): Inicializado. Tenientes listos.
+CORONEL (contabilidad): Inicializado. Capitanes listos.
+CAPITÁN (CapitanTesoreriaYPlaneacion): Inicializado. Tenientes listos.
+CORONEL (finanzas): Inicializado. Capitanes listos.
+CAPITÁN (CapitanEmbudo): Inicializado. Tenientes listos.
+CORONEL (marketing): Inicializado. Capitanes listos.
+CAPITÁN (CapitanCAC): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLTV): Inicializado. Tenientes listos.
+CAPITÁN (CapitanROI): Inicializado. Tenientes listos.
+CORONEL (finanzas_marketing): Inicializado. Capitanes listos.
+CAPITÁN (CapitanSeguridad): Inicializado. Tenientes listos.
+CORONEL (sg_sst): Inicializado. Capitanes listos.
+CAPITÁN (CapitanGestionLaboral): Inicializado. Tenientes listos.
+CORONEL (nomina): Inicializado. Capitanes listos.
+CORONEL (peace_net): Inicializado. Capitanes listos.
+CAPITÁN (CapitanCustodiaFondos): Inicializado. Tenientes listos.
+CAPITÁN (CapitanTransferencias): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPagosServicios): Inicializado. Tenientes listos.
+CAPITÁN (CapitanLiquidaciones): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAuditoriaFinanciera): Inicializado. Tenientes listos.
+CAPITÁN (CapitanAntifraude): Inicializado. Tenientes listos.
+CORONEL (wallet): Inicializado. Capitanes listos.
+CAPITÁN (CapitanDespacho): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRutas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRepartidores): Inicializado. Tenientes listos.
+CAPITÁN (CapitanSeguimiento): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIndicadores): Inicializado. Tenientes listos.
+CORONEL (delivery): Inicializado. Capitanes listos.
+CAPITÁN (CapitanInteroperabilidad): Inicializado. Tenientes listos.
+CORONEL (interop): Inicializado. Capitanes listos.
+CAPITÁN (CapitanExperienciaTurista): Inicializado. Tenientes listos.
+CAPITÁN (CapitanReservasTurista): Inicializado. Tenientes listos.
+CAPITÁN (CapitanBusquedaServicios): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPqrs): Inicializado. Tenientes listos.
+CAPITÁN (CapitanGestionPerfil): Inicializado. Tenientes listos.
+CAPITÁN (CapitanContextoViaje): Inicializado. Tenientes listos.
+CORONEL (clientes_turistas): Inicializado. Capitanes listos.
+CAPITÁN (CapitanTurismoLocal): Inicializado. Tenientes listos.
+CAPITÁN (CapitanControlPrestadores): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEventosLocales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPlanificacionRegional): Inicializado. Tenientes listos.
+CAPITÁN (CapitanRutasTuristicas): Inicializado. Tenientes listos.
+CAPITÁN (CapitanCoordinacionMunicipal): Inicializado. Tenientes listos.
+CAPITÁN (CapitanPoliticasNacionales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanIndicadoresNacionales): Inicializado. Tenientes listos.
+CAPITÁN (CapitanEstandaresCertificaciones): Inicializado. Tenientes listos.
+CORONEL (gubernamental): Inicializado. Capitanes listos.
+GENERAL SARITA: Orquestador inicializado. Coroneles listos para recibir órdenes.
+System check identified some issues:
+
+WARNINGS:
+?: (account.W001) ACCOUNT_LOGIN_METHODS conflicts with ACCOUNT_SIGNUP_FIELDS
+?: (staticfiles.W004) The directory '/app/backend/static' in the STATICFILES_DIRS setting does not exist.
+?: (urls.W005) URL namespace 'sadi_agent' isn't unique. You may not be able to reverse all URLs in this namespace
+(0.000)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+(0.000)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+(0.000)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=delivery_db
+(0.000)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=delivery_db
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=delivery_db
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=delivery_db
+(0.000)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=wallet_db
+(0.000)
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=wallet_db
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=wallet_db
+(0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=wallet_db
+DEBUG: Antes de importar api.signals
+DEBUG: Antes de importar api.signals
+DEBUG: Después de importar api.signals
+DEBUG: Después de importar api.signals
+Initializing AI providers...
+Warning: No AI providers initialized. Falling back to DummyProvider.
+Field 'created_at' on model 'facturaventa' not migrated: it is impossible to add a field with 'auto_now_add=True' without specifying a default.

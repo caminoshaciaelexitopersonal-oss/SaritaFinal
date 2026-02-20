@@ -4,7 +4,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from django.utils import timezone
 from api.models import CustomUser
-from apps.admin_plataforma.models import Plan
+from apps.comercial.models import Plan, Subscription
 from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from django.contrib.contenttypes.models import ContentType
 
@@ -22,30 +22,30 @@ class AdminPlataformaAPITestCase(TestCase):
         """Asegura que un admin puede crear un nuevo plan."""
         url = '/api/admin/plataforma/planes/'
         data = {
-            'nombre': 'Plan Básico',
-            'descripcion': 'Un plan básico para prestadores.',
-            'precio': '99.99',
-            'frecuencia': 'MENSUAL',
-            'tipo_usuario_objetivo': 'PRESTADOR'
+            'name': 'Plan Básico',
+            'code': 'BASIC-01',
+            'description': 'Un plan básico para prestadores.',
+            'monthly_price': '99.99',
+            'target_user_type': 'PROVIDER'
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Plan.objects.count(), 1)
-        self.assertEqual(Plan.objects.get().nombre, 'Plan Básico')
+        self.assertEqual(Plan.objects.get().name, 'Plan Básico')
 
     def test_admin_can_create_suscripcion(self):
         """Asegura que un admin puede crear una suscripción para un cliente."""
-        plan = Plan.objects.create(nombre='Plan Test', precio=100, frecuencia='ANUAL', tipo_usuario_objetivo='PRESTADOR')
+        plan = Plan.objects.create(name='Plan Test', code='TEST-01', monthly_price=100, target_user_type='PROVIDER')
 
         url = '/api/admin/plataforma/suscripciones/'
         data = {
             'plan_id': plan.pk,
-            'cliente_id': self.prestador_profile.pk,
-            'fecha_inicio': timezone.now().date().isoformat(),
+            'cliente_id': str(self.prestador_profile.pk),
+            'start_date': timezone.now().date().isoformat(),
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(self.prestador_profile.suscripciones_como_cliente.count(), 1)
+        self.assertEqual(Subscription.objects.filter(perfil_ref_id=self.prestador_profile.pk).count(), 1)
 
     def test_non_admin_cannot_access_planes(self):
         """Asegura que un usuario no-admin no puede acceder a los endpoints de planes."""

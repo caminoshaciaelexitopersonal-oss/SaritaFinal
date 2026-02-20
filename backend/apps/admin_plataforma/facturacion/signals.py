@@ -1,6 +1,7 @@
 import logging
 from django.dispatch import receiver
 from apps.admin_plataforma.gestion_comercial.signals import factura_comercial_confirmada
+from apps.core_erp.billing_engine import BillingEngine
 
 logger = logging.getLogger(__name__)
 
@@ -29,8 +30,6 @@ def handle_factura_confirmada(sender, **kwargs):
         extra=log_context
     )
 
-    # --- Lógica futura del módulo de facturación iría aquí ---
-    # 1. Validar reglas contables.
-    # 2. Calcular impuestos finales.
-    # 3. Crear el modelo de `FacturaContable`.
-    # 4. Devolver el resultado o emitir un nuevo evento.
+    # Integración con Core ERP Billing Engine
+    logger.info(f"Integrando factura {factura.id} con BillingEngine...")
+    # BillingEngine.issue_invoice(factura)

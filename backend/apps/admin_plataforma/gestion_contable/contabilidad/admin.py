@@ -1,32 +1,32 @@
 from django.contrib import admin
 from .models import (
-    PlanDeCuentas,
-    Cuenta,
-    PeriodoContable,
-    AsientoContable,
-    Transaccion,
+    AdminChartOfAccounts,
+    AdminAccount,
+    AdminFiscalPeriod,
+    AdminJournalEntry,
+    AdminAccountingTransaction,
 )
 
-class TransaccionInline(admin.TabularInline):
-    model = Transaccion
+class AdminAccountingTransactionInline(admin.TabularInline):
+    model = AdminAccountingTransaction
     extra = 1
 
-@admin.register(AsientoContable)
-class AsientoContableAdmin(admin.ModelAdmin):
-    inlines = [TransaccionInline]
-    list_display = ('id', 'date', 'description', 'creado_por')
+@admin.register(AdminJournalEntry)
+class AdminJournalEntryAdmin(admin.ModelAdmin):
+    inlines = [AdminAccountingTransactionInline]
+    list_display = ('id', 'date', 'description', 'created_by')
     search_fields = ('description',)
     list_filter = ('date',)
 
-@admin.register(PlanDeCuentas)
-class PlanDeCuentasAdmin(admin.ModelAdmin):
+@admin.register(AdminChartOfAccounts)
+class AdminChartOfAccountsAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
     search_fields = ('name',)
 
-@admin.register(Cuenta)
-class CuentaAdmin(admin.ModelAdmin):
+@admin.register(AdminAccount)
+class AdminAccountAdmin(admin.ModelAdmin):
     list_display = ('code', 'name', 'account_type')
     search_fields = ('code', 'name')
     list_filter = ('account_type',)
 
-admin.site.register(PeriodoContable)
+admin.site.register(AdminFiscalPeriod)

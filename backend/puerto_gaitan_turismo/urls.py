@@ -27,6 +27,9 @@ urlpatterns = [
     # Nueva API para el panel de administración de la plataforma
     path('api/admin/plataforma/', include('apps.admin_plataforma.urls')),
 
+    # API Comercial Unificada (Fase 3)
+    path('api/comercial/', include('apps.comercial.urls')),
+
     # APIs para la gobernanza del contenido web (Funnel y páginas públicas)
     path('api/web/', include('apps.web_funnel.urls')),
  
@@ -60,6 +63,9 @@ urlpatterns = [
 
     # Alias estructural para el Dominio de Nómina (Fase 8)
     path('api/nomina/', include('apps.prestadores.mi_negocio.gestion_contable.nomina.urls')),
+
+    # API para la Torre de Control del Holding
+    path('api/admin/control-tower/', include('apps.admin_control_tower.urls')),
 
     # API para Inteligencia de Decisión
     path('api/admin/intelligence/', include('apps.decision_intelligence.urls')),

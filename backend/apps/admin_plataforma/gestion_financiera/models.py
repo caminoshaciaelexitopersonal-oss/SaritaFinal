@@ -1,5 +1,5 @@
 from django.db import models
-from apps.core_erp.base.base_models import BaseBankAccount, BaseBankTransaction, BasePaymentOrder
+from apps.core_erp.base_models import BaseBankAccount, BasePayment as BaseBankTransaction, BasePaymentOrder
 
 class CuentaBancaria(BaseBankAccount):
     perfil_ref_id = models.UUIDField()

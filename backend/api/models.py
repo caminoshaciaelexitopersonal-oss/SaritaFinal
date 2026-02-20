@@ -97,6 +97,7 @@ class CustomUser(AbstractUser):
 
     base_role = Role.TURISTA
     role = models.CharField(_("Rol"), max_length=50, choices=Role.choices)
+    global_roles = models.ManyToManyField('GlobalRole', related_name="users", blank=True)
 
     # --- Campos de Caracterización del Turista ---
     class Origen(models.TextChoices):
@@ -624,6 +625,43 @@ class HomePageComponent(models.Model):
         verbose_name_plural = "Componentes de Página de Inicio"
         ordering = ['order']
 
+
+class GlobalPermission(models.Model):
+    """
+    Representa un permiso granular dentro del ecosistema Sarita, desacoplado del sistema de auth de Django.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    codename = models.CharField(max_length=100, unique=True, help_text="Ej: 'view_global_stats'")
+    domain = models.CharField(max_length=100, help_text="Dominio sistémico (ej: comercial, contable, operativa)")
+    module = models.CharField(max_length=100, help_text="Módulo específico (ej: billing, inventory)")
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"[{self.domain.upper()}] {self.name}"
+
+    class Meta:
+        verbose_name = "Permiso Global"
+        verbose_name_plural = "Permisos Globales"
+        unique_together = ('domain', 'module', 'codename')
+
+class GlobalRole(models.Model):
+    """
+    Roles transversales que definen la autoridad de un usuario o agente en múltiples dominios.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+    permissions = models.ManyToManyField(GlobalPermission, related_name="roles", blank=True)
+    is_system_role = models.BooleanField(default=False, help_text="Si es true, no puede ser eliminado.")
+    authority_level = models.IntegerField(default=1, help_text="Nivel jerárquico (1: Operativo, 2: Delegado, 3: Soberano)")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Rol Global"
+        verbose_name_plural = "Roles Globales"
 
 class SiteConfiguration(models.Model):
     nombre_entidad_principal = models.CharField(_("Nombre de la Entidad Principal"), max_length=100, default='Alcaldía de', help_text="Primera línea del nombre de la entidad (ej. 'Alcaldía de')")

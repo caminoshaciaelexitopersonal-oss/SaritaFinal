@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from decimal import Decimal
-from apps.core_erp.accounting.accounting_engine import AccountingEngine
+from apps.core_erp.accounting_engine import AccountingEngine
 from unittest.mock import MagicMock
 
 class AccountingEngineTest(TestCase):

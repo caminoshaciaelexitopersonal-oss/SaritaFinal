@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAdminUser
 from drf_spectacular.utils import extend_schema
 from .services.gestion_plataforma_service import GestionPlataformaService
 from .services.governance_kernel import GovernanceKernel
-from .models import Plan, Suscripcion
+from apps.comercial.models import Plan, Subscription
 from .serializers import PlanSerializer, SuscripcionSerializer
 from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.serializers import PerfilSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
@@ -62,17 +62,17 @@ class SuscripcionViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     """
     ViewSet para la gestión de Suscripciones de clientes a planes.
     """
-    queryset = Suscripcion.objects.all()
+    queryset = Subscription.objects.all()
     serializer_class = SuscripcionSerializer
     permission_classes = [IsAdminUser]
 
     def perform_create(self, serializer):
         plan = serializer.validated_data['plan']
-        cliente = serializer.validated_data['cliente']
-        fecha_inicio = serializer.validated_data['fecha_inicio']
+        perfil_ref_id = serializer.validated_data['perfil_ref_id']
+        start_date = serializer.validated_data.get('start_date')
 
         service = GestionPlataformaService(admin_user=self.request.user)
-        service.asignar_suscripcion(cliente_profile=cliente, plan=plan, fecha_inicio=fecha_inicio)
+        service.asignar_suscripcion(perfil_ref_id=perfil_ref_id, plan=plan, start_date=start_date)
 
 class SupervisionDianViewSet(viewsets.ReadOnlyModelViewSet):
     """
