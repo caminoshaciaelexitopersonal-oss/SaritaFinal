@@ -103,6 +103,8 @@ INSTALLED_APPS = [
     "apps.admin_control_tower.apps.AdminControlTowerConfig",
     "apps.global_orchestration.apps.GlobalOrchestrationConfig",
     "apps.institutional_layer.apps.InstitutionalLayerConfig",
+    "apps.commercial_engine.apps.CommercialEngineConfig",
+    "apps.treasury.apps.TreasuryConfig",
     "apps.capital_markets_layer.apps.CapitalMarketsLayerConfig",
 
     "apps.sadi_agent.apps.SadiAgentConfig",

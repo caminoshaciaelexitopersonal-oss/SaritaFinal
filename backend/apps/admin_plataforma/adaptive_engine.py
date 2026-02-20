@@ -72,3 +72,32 @@ class AdaptiveEngine:
                     proposal_data={"intention": fw['intention'], "action": "REVIEW_TIMEOUTS"},
                     reasoning=f"La intención {fw['intention']} ha fallado {fw['count']} veces. Se recomienda revisar tiempos de respuesta de servicios dependientes."
                 )
+
+    def generate_strategic_insights(self):
+        """
+        Bloque 5: Inteligencia Operativa Real.
+        Analiza KPIs reales para generar propuestas estratégicas.
+        """
+        from apps.comercial.saas_metrics.revenue_metrics import RevenueMetrics
+        from apps.comercial.saas_metrics.churn_analysis import ChurnAnalysis
+
+        mrr = RevenueMetrics.calculate_mrr()
+        churn = ChurnAnalysis.calculate_churn_rate()
+
+        insights = []
+
+        if churn > 5.0:
+            insights.append({
+                "type": "CHURN_ALERT",
+                "severity": "HIGH",
+                "message": f"Churn rate crítico detectado: {churn:.2f}%. Se requiere optimización de retención."
+            })
+
+        if mrr > 10000:
+             insights.append({
+                "type": "GROWTH_MILESTONE",
+                "severity": "LOW",
+                "message": "Objetivo de MRR mensual superado. Considerar expansión de SPV."
+            })
+
+        return insights
