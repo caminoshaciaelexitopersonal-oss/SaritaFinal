@@ -25,8 +25,8 @@ class AdminChartOfAccountsAdmin(admin.ModelAdmin):
 
 @admin.register(AdminAccount)
 class AdminAccountAdmin(admin.ModelAdmin):
-    list_display = ('code', 'name', 'account_type')
+    list_display = ('code', 'name', 'type')
     search_fields = ('code', 'name')
-    list_filter = ('account_type',)
+    list_filter = ('type',)
 
 admin.site.register(AdminFiscalPeriod)

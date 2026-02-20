@@ -5,18 +5,26 @@ class SaaSPlan(models.Model):
     """
     Modelo único de Plan para el ecosistema SaaS.
     """
-    class Frecuencia(models.TextChoices):
-        MENSUAL = 'MENSUAL', 'Mensual'
-        ANUAL = 'ANUAL', 'Anual'
+    class BillingType(models.TextChoices):
+        FLAT = 'FLAT', 'Flat Fee'
+        USAGE = 'USAGE', 'Usage Based'
+        HYBRID = 'HYBRID', 'Hybrid'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True)
-    monthly_price = models.DecimalField(max_digits=12, decimal_places=2)
-    yearly_price = models.DecimalField(max_digits=12, decimal_places=2)
 
-    # Límites
+    monthly_price = models.DecimalField(max_digits=12, decimal_places=2)
+    annual_price = models.DecimalField(max_digits=12, decimal_places=2)
+
+    # Billing Logic
+    billing_type = models.CharField(max_length=20, choices=BillingType.choices, default=BillingType.FLAT)
+    included_usage = models.IntegerField(default=0, help_text="Units included in flat fee.")
+    overage_price = models.DecimalField(max_digits=12, decimal_places=4, default=0.00)
+    trial_days = models.IntegerField(default=14)
+
+    # Resource Limits
     user_limit = models.IntegerField(default=1)
     storage_limit_gb = models.IntegerField(default=5)
 

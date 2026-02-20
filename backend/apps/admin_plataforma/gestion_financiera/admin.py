@@ -7,7 +7,7 @@ class CuentaBancariaAdmin(admin.ModelAdmin):
 
 @admin.register(TransaccionBancaria)
 class TransaccionBancariaAdmin(admin.ModelAdmin):
-    list_display = ('cuenta', 'amount', 'date')
+    list_display = ('cuenta', 'amount', 'payment_date')
 
 @admin.register(OrdenPago)
 class OrdenPagoAdmin(admin.ModelAdmin):

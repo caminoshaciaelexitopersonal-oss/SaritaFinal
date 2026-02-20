@@ -2,7 +2,7 @@
 
 import django.db.models.deletion
 from django.db import migrations, models
-
+import uuid
 
 class Migration(migrations.Migration):
 
@@ -14,24 +14,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="CuentaBancaria",
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
+                ("id", models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("bank_name", models.CharField(max_length=100)),
+                ("account_number", models.CharField(max_length=50)),
+                ("account_type", models.CharField(max_length=50)),
+                ("balance", models.DecimalField(decimal_places=2, default=0.0, max_digits=18)),
+                ("is_active", models.BooleanField(default=True)),
                 ("perfil_ref_id", models.UUIDField()),
-                ("banco", models.CharField(max_length=100)),
-                ("numero_cuenta", models.CharField(max_length=50, unique=True)),
-                ("tipo_cuenta", models.CharField(max_length=50)),
-                (
-                    "saldo_actual",
-                    models.DecimalField(decimal_places=2, default=0.0, max_digits=18),
-                ),
-                ("activa", models.BooleanField(default=True)),
             ],
             options={
                 "verbose_name": "Cuenta Bancaria (Admin)",
@@ -40,32 +31,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="OrdenPago",
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
+                ("id", models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("payment_date", models.DateField()),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=18)),
+                ("concept", models.CharField(max_length=255)),
+                ("status", models.CharField(max_length=20)),
                 ("perfil_ref_id", models.UUIDField()),
                 ("cuenta_bancaria_ref_id", models.UUIDField()),
-                ("fecha_pago", models.DateField()),
-                ("monto", models.DecimalField(decimal_places=2, max_digits=18)),
-                ("concepto", models.CharField(max_length=255)),
-                (
-                    "estado",
-                    models.CharField(
-                        choices=[
-                            ("PENDIENTE", "Pendiente"),
-                            ("PAGADA", "Pagada"),
-                            ("CANCELADA", "Cancelada"),
-                        ],
-                        default="PENDIENTE",
-                        max_length=20,
-                    ),
-                ),
             ],
             options={
                 "verbose_name": "Orden de Pago (Admin)",
@@ -74,18 +48,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="TransaccionBancaria",
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("fecha", models.DateTimeField(auto_now_add=True)),
-                ("monto", models.DecimalField(decimal_places=2, max_digits=18)),
-                ("descripcion", models.CharField(max_length=255)),
+                ("id", models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("payment_date", models.DateField()),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=18)),
+                ("method", models.CharField(max_length=50)),
+                ("reference", models.CharField(blank=True, max_length=100)),
+                ("bank_fees", models.DecimalField(decimal_places=2, default=0.0, max_digits=18)),
                 (
                     "cuenta",
                     models.ForeignKey(
