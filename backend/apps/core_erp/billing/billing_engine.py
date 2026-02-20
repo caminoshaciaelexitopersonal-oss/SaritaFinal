@@ -1,9 +1,38 @@
 from django.core.exceptions import ValidationError
 
+from django.utils import timezone
+from .models import Invoice, InvoiceItem
+
 class BillingEngine:
     """
     Motor de facturación centralizado.
     """
+
+    @staticmethod
+    def create_invoice(company, invoice_data):
+        """
+        Crea una factura para una empresa.
+        """
+        invoice = Invoice.objects.create(
+            client_id=company.id,
+            number=f"INV-{timezone.now().strftime('%Y%m%d%H%M%S')}",
+            issue_date=timezone.now().date(),
+            due_date=(timezone.now() + timezone.timedelta(days=30)).date(),
+            status='PENDING'
+        )
+
+        InvoiceItem.objects.create(
+            invoice=invoice,
+            description=invoice_data['concept'],
+            quantity=1,
+            unit_price=invoice_data['amount'],
+            subtotal=invoice_data['amount']
+        )
+
+        BillingEngine.calculate_totals(invoice)
+        BillingEngine.validate_invoice(invoice)
+
+        return invoice
 
     @staticmethod
     def calculate_totals(invoice):

@@ -100,6 +100,9 @@ INSTALLED_APPS = [
     "apps.admin_plataforma.gestion_contable.nomina.apps.AdminNominaConfig",
     "apps.admin_plataforma.gestion_operativa.apps.AdminGestionOperativaConfig",
     "apps.comercial.apps.ComercialConfig",
+    "apps.commercial_engine.apps.CommercialEngineConfig",
+    "apps.core_erp.accounting.apps.AccountingConfig",
+    "apps.core_erp.billing.apps.BillingConfig",
 
     "apps.sadi_agent.apps.SadiAgentConfig",
     "apps.sarita_agents.apps.SaritaAgentsConfig",
