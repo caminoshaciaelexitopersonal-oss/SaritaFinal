@@ -88,6 +88,9 @@ urlpatterns = [
     # API para Tratados Operativos (Z-OPERATIONAL-TREATIES)
     path('api/v1/operational-treaties/', include("apps.operational_treaties.urls")),
 
+    # API para Inteligencia Operativa (Fase 5)
+    path('api/operational-intelligence/', include('apps.operational_intelligence.urls')),
+
     # API para Custodia de Legado (Fase Legado)
     path('api/v1/legacy/', include("legacy_custody.urls")),
 ]
