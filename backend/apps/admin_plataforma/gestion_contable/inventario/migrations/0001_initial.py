@@ -3,7 +3,7 @@
 import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
-
+import uuid
 
 class Migration(migrations.Migration):
 
@@ -18,17 +18,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Almacen",
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("nombre", models.CharField(max_length=100)),
-                ("ubicacion", models.CharField(blank=True, max_length=255)),
+                ("id", models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("name", models.CharField(max_length=100)),
+                ("location", models.CharField(blank=True, max_length=255)),
                 (
                     "perfil",
                     models.ForeignKey(
@@ -38,19 +32,16 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={
+                "app_label": "admin_inventario",
+            },
         ),
         migrations.CreateModel(
             name="CategoriaProducto",
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
+                ("id", models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
                 ("nombre", models.CharField(max_length=100)),
                 (
                     "perfil",
@@ -61,19 +52,16 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={
+                "app_label": "admin_inventario",
+            },
         ),
         migrations.CreateModel(
             name="Producto",
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
+                ("id", models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
                 ("nombre", models.CharField(max_length=200)),
                 ("sku", models.CharField(blank=True, max_length=50)),
                 (
@@ -106,19 +94,16 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={
+                "app_label": "admin_inventario",
+            },
         ),
         migrations.CreateModel(
             name="MovimientoInventario",
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
+                ("id", models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
                 (
                     "tipo_movimiento",
                     models.CharField(
@@ -126,8 +111,9 @@ class Migration(migrations.Migration):
                         max_length=20,
                     ),
                 ),
-                ("cantidad", models.DecimalField(decimal_places=2, max_digits=18)),
-                ("fecha", models.DateTimeField(auto_now_add=True)),
+                ("quantity", models.DecimalField(decimal_places=2, max_digits=18)),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                ("description", models.TextField(blank=True)),
                 (
                     "almacen",
                     models.ForeignKey(
@@ -153,5 +139,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={
+                "app_label": "admin_inventario",
+            },
         ),
     ]

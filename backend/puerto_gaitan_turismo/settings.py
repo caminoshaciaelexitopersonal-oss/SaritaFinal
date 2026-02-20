@@ -104,6 +104,7 @@ INSTALLED_APPS = [
     "apps.global_orchestration.apps.GlobalOrchestrationConfig",
     "apps.institutional_layer.apps.InstitutionalLayerConfig",
     "apps.commercial_engine.apps.CommercialEngineConfig",
+    "apps.usage_billing.apps.UsageBillingConfig",
     "apps.treasury.apps.TreasuryConfig",
     "apps.capital_markets_layer.apps.CapitalMarketsLayerConfig",
 
