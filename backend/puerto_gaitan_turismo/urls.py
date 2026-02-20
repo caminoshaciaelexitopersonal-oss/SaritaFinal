@@ -30,6 +30,9 @@ urlpatterns = [
     # API Comercial Unificada (Fase 3)
     path('api/comercial/', include('apps.comercial.urls')),
 
+    # Motor Comercial SaaS (Fase 2)
+    path('api/commercial-engine/', include('apps.commercial_engine.urls')),
+
     # APIs para la gobernanza del contenido web (Funnel y páginas públicas)
     path('api/web/', include('apps.web_funnel.urls')),
  

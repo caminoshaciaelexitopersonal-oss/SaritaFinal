@@ -1,84 +1,180 @@
 import logging
-from datetime import date, timedelta
-from .models import SaaSPlan, SaaSSubscription
+from datetime import timedelta
+from django.utils import timezone
+from django.db import transaction
+from .models import SaaSSubscription, SaaSInvoice, SaaSInvoiceLine
+from .plan_model import SaaSPlan
 from apps.core_erp.billing_engine import BillingEngine
-from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta, OperacionComercial
+from apps.core_erp.event_bus import EventBus
 
 logger = logging.getLogger(__name__)
 
 class SubscriptionEngine:
     """
-    Gestiona el ciclo de vida de las suscripciones SaaS.
+    Gestiona el ciclo de vida de las suscripciones SaaS y su facturación automática.
     """
 
-    @staticmethod
-    def create_subscription(lead, plan):
+    @classmethod
+    @transaction.atomic
+    def activate_subscription(cls, company_id, plan_id, billing_cycle='MONTHLY'):
+        """
+        Activa una nueva suscripción para una empresa.
+        """
+        plan = SaaSPlan.objects.get(id=plan_id)
+
+        # 1. Determinar Fechas y MRR
+        start_date = timezone.now().date()
+        if billing_cycle == 'MONTHLY':
+            renewal_date = start_date + timedelta(days=30)
+            mrr = plan.monthly_price
+        else:
+            renewal_date = start_date + timedelta(days=365)
+            mrr = plan.monthly_price # El MRR sigue siendo mensual aunque pague anual
+
+        # 2. Crear Suscripción
         subscription = SaaSSubscription.objects.create(
-            tenant_id=lead.company_name.lower().replace(" ", "_"),
+            company_id=company_id,
             plan=plan,
-            next_billing_date=date.today() + timedelta(days=30)
+            status=SaaSSubscription.Status.ACTIVE,
+            renewal_date=renewal_date,
+            billing_cycle=billing_cycle,
+            mrr=mrr
         )
 
-        # Generar Factura Inicial Automática
-        SubscriptionEngine._generate_initial_invoice(subscription)
+        # 3. Generar Factura Inicial
+        invoice = cls.generate_invoice(subscription)
+
+        # 4. Emitir Evento
+        EventBus.emit('SUBSCRIPTION_ACTIVATED', {
+            'subscription_id': str(subscription.id),
+            'company_id': str(company_id),
+            'plan_name': plan.name,
+            'mrr': float(mrr)
+        })
 
         return subscription
 
-    @staticmethod
-    def _generate_initial_invoice(subscription):
-        # Crear Operación Comercial (Adapter a admin_comercial)
-        operacion = OperacionComercial.objects.create(
-            perfil_ref_id=subscription.id, # Placeholder
-            cliente_ref_id=subscription.id, # Placeholder
-            total=subscription.plan.monthly_price,
-            estado=OperacionComercial.Estado.CONFIRMADA
+    @classmethod
+    def generate_invoice(cls, subscription: SaaSSubscription):
+        """
+        Crea la factura para el periodo actual de la suscripción.
+        """
+        amount = subscription.plan.monthly_price if subscription.billing_cycle == 'MONTHLY' else subscription.plan.annual_price
+
+        invoice = SaaSInvoice.objects.create(
+            subscription=subscription,
+            company_id=subscription.company_id,
+            number=f"INV-SAAS-{timezone.now().strftime('%Y%m%d')}-{subscription.id.hex[:6].upper()}",
+            issue_date=timezone.now().date(),
+            due_date=timezone.now().date() + timedelta(days=5),
+            total_amount=0 # Se calcula abajo
         )
 
-        invoice = FacturaVenta.objects.create(
-            operacion=operacion,
-            number=f"SaaS-{subscription.tenant_id.upper()}-001",
-            issue_date=date.today(),
-            total_amount=subscription.plan.monthly_price,
-            status='DRAFT'
+        SaaSInvoiceLine.objects.create(
+            invoice=invoice,
+            description=f"Suscripción SaaS - Plan {subscription.plan.name} ({subscription.billing_cycle})",
+            quantity=1,
+            unit_price=amount,
+            subtotal=amount
         )
 
-        # Validar y Emitir vía Core ERP
+        # Usar BillingEngine del Core para cálculos
         BillingEngine.issue_invoice(invoice)
 
-        # Impacto Contable (Debe ser automático en SaaS Real)
-        SubscriptionEngine._create_accounting_impact(invoice)
+        # Generar Impacto Contable en el ERP del Admin
+        cls.create_accounting_impact(invoice)
 
         return invoice
 
-    @staticmethod
-    def _create_accounting_impact(invoice):
-        from apps.core_erp.accounting_engine import AccountingEngine
+    @classmethod
+    def create_accounting_impact(cls, invoice: SaaSInvoice):
+        """
+        Crea el asiento contable en el ERP del Super Admin para la factura emitida.
+        Impacto: 130505 (CXC Clientes) DB vs 413501 (Ingresos SaaS) CR
+        """
         from apps.admin_plataforma.gestion_contable.contabilidad.models import (
             AdminJournalEntry, AdminAccountingTransaction, AdminAccount, AdminFiscalPeriod
         )
+        from apps.core_erp.accounting_engine import AccountingEngine
 
-        # 1. Obtener/Crear Periodo
-        period_name = invoice.issue_date.strftime("%Y-%m")
-        period, _ = AdminFiscalPeriod.objects.get_or_create(
-            name=period_name,
-            defaults={'start_date': invoice.issue_date.replace(day=1), 'end_date': invoice.issue_date}
+        # 1. Obtener Periodo Fiscal Abierto
+        period = AdminFiscalPeriod.objects.filter(status='open').first()
+        if not period:
+             # Fallback: crear uno para propósitos de la demo si no existe (solo en desarrollo)
+             # Intentar obtener el perfil de la holding primero
+             from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+             from api.models import CustomUser
+             admin_user = CustomUser.objects.filter(is_superuser=True).first()
+             holding_profile, _ = ProviderProfile.objects.get_or_create(
+                 nombre_negocio="Sarita Holding",
+                 defaults={'usuario': admin_user}
+             )
+
+             period = AdminFiscalPeriod.objects.create(
+                 period_start=timezone.now().date().replace(day=1),
+                 period_end=timezone.now().date().replace(day=28), # simplificado
+                 status='open',
+                 organization=holding_profile
+             )
+
+        # 1.5 Obtener/Crear Perfil de la Holding (Sarita) y Plan de Cuentas
+        from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+        from apps.admin_plataforma.gestion_contable.contabilidad.models import AdminChartOfAccounts
+        from api.models import CustomUser
+
+        # Intentar obtener el superusuario para asociarlo al perfil de la holding
+        admin_user = CustomUser.objects.filter(is_superuser=True).first()
+
+        holding_profile, _ = ProviderProfile.objects.get_or_create(
+            nombre_negocio="Sarita Holding",
+            defaults={'usuario': admin_user}
         )
 
-        # 2. Crear Asiento
+        chart, _ = AdminChartOfAccounts.objects.get_or_create(
+            name="Plan Contable Holding Sarita",
+            organization=holding_profile
+        )
+
+        # 2. Obtener/Crear Cuentas Mandatarias en Admin
+        cxc_account, _ = AdminAccount.objects.get_or_create(
+            code='130505',
+            chart_of_accounts=chart,
+            defaults={'name': 'Cuentas por Cobrar Clientes SaaS', 'type': 'asset', 'organization': holding_profile}
+        )
+        income_account, _ = AdminAccount.objects.get_or_create(
+            code='413501',
+            chart_of_accounts=chart,
+            defaults={'name': 'Ingresos Suscripciones SaaS', 'type': 'income', 'organization': holding_profile}
+        )
+
+        # 3. Crear Asiento
         entry = AdminJournalEntry.objects.create(
-            period=period,
             date=invoice.issue_date,
-            description=f"Facturación Automática SaaS - {invoice.number}",
-            reference=invoice.number
+            period=period,
+            reference=invoice.number,
+            description=f"Reconocimiento de ingreso SaaS - {invoice.subscription.company_id}",
+            organization=holding_profile
         )
 
-        # 3. Transacciones (CxC vs Ingresos)
-        # Placeholder para códigos de cuenta reales
-        acct_receivable, _ = AdminAccount.objects.get_or_create(code="130505", defaults={"name": "Clientes SaaS", "account_type": "ASSET"})
-        acct_revenue, _ = AdminAccount.objects.get_or_create(code="413501", defaults={"name": "Ingresos SaaS", "account_type": "REVENUE"})
+        # Línea de CXC (Débito)
+        AdminAccountingTransaction.objects.create(
+            journal_entry=entry,
+            account=cxc_account,
+            account_code=cxc_account.code,
+            debit=invoice.total_amount,
+            credit=0
+        )
 
-        AdminAccountingTransaction.objects.create(journal_entry=entry, account=acct_receivable, debit=invoice.total_amount, credit=0)
-        AdminAccountingTransaction.objects.create(journal_entry=entry, account=acct_revenue, debit=0, credit=invoice.total_amount)
+        # Línea de Ingreso (Crédito)
+        AdminAccountingTransaction.objects.create(
+            journal_entry=entry,
+            account=income_account,
+            account_code=income_account.code,
+            debit=0,
+            credit=invoice.total_amount
+        )
 
-        # 4. Postear vía Engine
-        AccountingEngine.post_entry(entry)
+        # 4. Postear Asiento vía Core Engine
+        AccountingEngine.post_journal_entry(entry)
+
+        logger.info(f"Impacto contable generado para factura {invoice.number}")
