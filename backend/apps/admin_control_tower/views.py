@@ -9,6 +9,8 @@ from apps.global_orchestration.global_consolidation import GlobalConsolidation
 from apps.global_orchestration.currency_engine import CurrencyEngine
 from apps.institutional_layer.services.valuation_engine import ValuationEngine
 from apps.institutional_layer.services.investor_reporting_engine import InvestorReportingEngine
+from apps.capital_markets_layer.services.capital_structure_engine import CapitalStructureEngine
+from apps.capital_markets_layer.services.exit_strategy_engine import ExitStrategyEngine
 
 class GlobalDashboardView(APIView):
     """
@@ -60,6 +62,11 @@ class GlobalDashboardView(APIView):
                 "ai_roi": 12.5, # ROI generado por optimización IA
                 "operative_savings": 1500.0,
                 "antifragility_index": 0.88
+            },
+            "capital_markets": {
+                "ownership": CapitalStructureEngine.calculate_current_ownership()[:5], # Top 5 holders
+                "exit_strategy": ExitStrategyEngine.get_exit_recommendation(),
+                "listing_readiness": "85%"
             },
             "governance": {
                 "active_policies_count": 0, # Integrar con Kernel
