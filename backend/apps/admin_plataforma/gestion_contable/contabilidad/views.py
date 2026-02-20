@@ -8,6 +8,7 @@ from .serializers import (
     AdminPlanDeCuentasSerializer, AdminCuentaSerializer,
     AdminPeriodoContableSerializer, AdminAsientoContableSerializer
 )
+from apps.core_erp.accounting_engine import AccountingEngine
 
 class PlanDeCuentasViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = AdminChartOfAccounts.objects.all()
@@ -33,3 +34,7 @@ class AsientoContableViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = AdminJournalEntry.objects.all()
     serializer_class = AdminAsientoContableSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+
+    def perform_create(self, serializer):
+        entry = serializer.save()
+        AccountingEngine.post_journal_entry(entry)

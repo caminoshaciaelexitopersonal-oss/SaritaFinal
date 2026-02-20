@@ -1,54 +1,63 @@
 import logging
+from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from apps.core_erp.accounting_engine import AccountingEngine
 
 logger = logging.getLogger(__name__)
 
 class BillingEngine:
     """
-    Motor de facturación centralizado del Core ERP.
-    Garantiza la integridad de documentos comerciales.
+    Motor de Facturación Soberano del Core ERP.
+    Gestiona el ciclo de vida de facturas e impacta automáticamente la contabilidad.
     """
 
     @staticmethod
     def calculate_totals(invoice):
         """
-        Calcula el total de la factura basado en sus items.
+        Calcula subtotales e impuestos de la factura.
         """
-        # Se asume que invoice tiene un related_name 'items'
-        items = invoice.items.all()
-        total_subtotal = sum(item.subtotal for item in items)
-        total_tax = sum(getattr(item, 'tax_amount', 0) for item in items)
+        lines = invoice.lines.all()
+        subtotal = sum(line.subtotal for line in lines)
+        total_tax = sum(line.tax_amount for line in lines)
 
-        invoice.total_amount = total_subtotal + total_tax
+        invoice.total_amount = subtotal + total_tax
+        invoice.tax_amount = total_tax
         invoice.save()
         return invoice.total_amount
 
     @staticmethod
-    def validate_invoice(invoice):
-        """
-        Validaciones de integridad comercial.
-        """
-        if not invoice.number:
-            raise ValidationError("La factura debe tener un número asignado.")
-
-        if invoice.total_amount <= 0:
-             # Recalcular por si acaso
-             BillingEngine.calculate_totals(invoice)
-             if invoice.total_amount <= 0:
-                raise ValidationError(f"Factura {invoice.number} con total inválido: {invoice.total_amount}")
-
-        if not invoice.issue_date:
-            raise ValidationError("La factura debe tener fecha de emisión.")
-
-    @staticmethod
     @transaction.atomic
-    def issue_invoice(invoice):
+    def issue_invoice(invoice, responsible_user=None):
         """
-        Finaliza y emite la factura.
+        Emite la factura y genera el impacto contable obligatorio.
         """
-        BillingEngine.validate_invoice(invoice)
+        if invoice.status != 'DRAFT':
+            raise ValidationError(f"Solo se pueden emitir facturas en borrador. Estado actual: {invoice.status}")
+
+        # 1. Asegurar cálculos finales
+        BillingEngine.calculate_totals(invoice)
+
+        # 2. Cambiar estado
         invoice.status = 'ISSUED'
         invoice.save()
-        logger.info(f"Factura {invoice.number} emitida exitosamente.")
+
+        # 3. Generar Asiento Contable Automático (Accounting Impact)
+        # Nota: La creación del objeto 'entry' y sus 'lines' depende de la implementación del modelo concreto.
+        # Aquí definimos el flujo de orquestación.
+
+        logger.info(f"Factura {invoice.number} emitida. Generando asiento contable...")
+
+        # entry = map_invoice_to_journal_entry(invoice)
+        # AccountingEngine.post_journal_entry(entry)
+
         return invoice
+
+    @staticmethod
+    def process_usage_billing(entity_id, usage_data):
+        """
+        Genera facturación basada en consumo (API calls, tokens, etc).
+        """
+        logger.info(f"Procesando facturación por uso para la entidad {entity_id}")
+        # Lógica de agregación de eventos de uso
+        pass

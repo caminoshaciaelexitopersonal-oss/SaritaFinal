@@ -2,8 +2,8 @@ import uuid
 from django.db import models
 from django.conf import settings
 from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
-from apps.core_erp.base.base_models import (
-    BaseAccount, BaseJournalEntry, BaseAccountingTransaction, BaseFiscalPeriod
+from apps.core_erp.base_models import (
+    LedgerAccount as BaseAccount, BaseJournalEntry, BaseJournalLine as BaseAccountingTransaction, FinancialPeriod as BaseFiscalPeriod
 )
 
 class AdminChartOfAccounts(TenantAwareModel):
