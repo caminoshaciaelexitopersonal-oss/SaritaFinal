@@ -21,6 +21,11 @@ def check_prohibited_imports():
             'path': 'prestadores/mi_negocio',
             'prohibited': 'apps.admin_plataforma',
             'message': 'Mi Negocio (Tenant) intentó importar desde Admin Plataforma.'
+        },
+        {
+            'path': 'sarita_agents',
+            'prohibited': 'apps.prestadores.mi_negocio',
+            'message': 'Sarita Agents intentó importar directamente desde Mi Negocio (Usar EventBus/Interfaces).'
         }
     ]
 
