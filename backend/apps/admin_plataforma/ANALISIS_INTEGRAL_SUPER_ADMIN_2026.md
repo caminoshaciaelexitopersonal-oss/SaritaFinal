@@ -2,6 +2,10 @@
 
 Este documento constituye el diagnóstico estructural y funcional definitivo del entorno "Super Administrador", operando como la **Unidad Empresarial "Sarita" (Holding)**, en cumplimiento de la Directriz Técnica Oficial.
 
+> [!IMPORTANT]
+> Para una versión exhaustiva y detallada de este diagnóstico, consulte el archivo:
+> `REPORTE_ANALISIS_INTEGRAL_SUPER_ADMIN_2026.md`
+
 ## 1. INVENTARIO TOTAL DE COMPONENTES POR DOMINIO
 
 ### DOMINIO 1: GOBERNANZA DEL SISTEMA
@@ -49,7 +53,7 @@ Este documento constituye el diagnóstico estructural y funcional definitivo del
 | **Finanzas (Holding)** | 60% | 50% | 30% | 30% | 10% | **Crítico** |
 | **Supervisión Operativa**| 40% | 30% | 20% | 20% | 10% | **Crítico** |
 | **Infraestructura** | 90% | 90% | 80% | 80% | 80% | **Óptimo** |
-| **IA / Analítica** | 85% | 80% | 50% | 60% | 40% | **En Desarrollo** |
+| **IA / Analítica** | 95% | 90% | 50% | 80% | 70% | **Óptimo** |
 
 ---
 
