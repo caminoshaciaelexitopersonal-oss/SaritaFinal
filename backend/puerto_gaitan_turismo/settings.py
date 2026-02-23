@@ -123,6 +123,7 @@ INSTALLED_APPS = [
     "apps.operational_treaties.apps.OperationalTreatiesConfig",
     "apps.governance_live.apps.GovernanceLiveConfig",
     "apps.operational_intelligence.apps.OperationalIntelligenceConfig",
+    "apps.autonomous_operations.apps.AutonomousOperationsConfig",
     "legacy_custody.apps.LegacyCustodyConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
