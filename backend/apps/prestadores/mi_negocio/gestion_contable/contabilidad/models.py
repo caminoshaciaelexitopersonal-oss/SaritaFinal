@@ -49,12 +49,12 @@ class PeriodoContable(BaseFiscalPeriod, TenantAwareModel):
     Define un período fiscal (ej. Enero 2024) para registrar transacciones.
     """
     def __str__(self):
-        return self.name
+        return f"{self.period_start} - {self.period_end}"
 
     class Meta:
         verbose_name = "Período Contable"
         verbose_name_plural = "Períodos Contables"
-        unique_together = ('provider', 'start_date', 'end_date')
+        unique_together = ('provider', 'period_start', 'period_end')
 
 
 class AsientoContable(BaseJournalEntry, TenantAwareModel):

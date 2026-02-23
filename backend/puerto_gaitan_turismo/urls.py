@@ -30,6 +30,9 @@ urlpatterns = [
     # API Comercial Unificada (Fase 3)
     path('api/comercial/', include('apps.comercial.urls')),
 
+    # Motor Comercial SaaS (Fase 2)
+    path('api/commercial-engine/', include('apps.commercial_engine.urls')),
+
     # APIs para la gobernanza del contenido web (Funnel y páginas públicas)
     path('api/web/', include('apps.web_funnel.urls')),
  
@@ -84,6 +87,9 @@ urlpatterns = [
 
     # API para Tratados Operativos (Z-OPERATIONAL-TREATIES)
     path('api/v1/operational-treaties/', include("apps.operational_treaties.urls")),
+
+    # API para Inteligencia Operativa (Fase 5)
+    path('api/operational-intelligence/', include('apps.operational_intelligence.urls')),
 
     # API para Custodia de Legado (Fase Legado)
     path('api/v1/legacy/', include("legacy_custody.urls")),

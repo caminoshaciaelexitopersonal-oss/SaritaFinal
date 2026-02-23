@@ -46,10 +46,16 @@ class BillingEngine:
         # Nota: La creación del objeto 'entry' y sus 'lines' depende de la implementación del modelo concreto.
         # Aquí definimos el flujo de orquestación.
 
-        logger.info(f"Factura {invoice.number} emitida. Generando asiento contable...")
+        logger.info(f"Factura {invoice.number} emitida.")
 
-        # entry = map_invoice_to_journal_entry(invoice)
-        # AccountingEngine.post_journal_entry(entry)
+        # El impacto contable se delega al orquestador que conoce los modelos concretos
+        # o se dispara vía eventos. Emitimos el evento para que Accounting pueda reaccionar.
+        from apps.core_erp.event_bus import EventBus
+        EventBus.emit(EventBus.INVOICE_CREATED, {
+            'invoice_id': str(invoice.id),
+            'total_amount': float(invoice.total_amount),
+            'company_id': str(getattr(invoice, 'company_id', ''))
+        })
 
         return invoice
 

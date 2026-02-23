@@ -24,9 +24,9 @@ class AsientoContableAdmin(admin.ModelAdmin):
 @admin.register(Cuenta)
 class CuentaAdmin(admin.ModelAdmin):
     """Configuración del Admin para Cuentas Contables."""
-    list_display = ('code', 'name', 'account_type', 'plan_de_cuentas', 'parent')
+    list_display = ('code', 'name', 'type', 'plan_de_cuentas', 'parent')
     search_fields = ('code', 'name')
-    list_filter = ('account_type', 'plan_de_cuentas')
+    list_filter = ('type', 'plan_de_cuentas')
 
 @admin.register(PlanDeCuentas)
 class PlanDeCuentasAdmin(admin.ModelAdmin):
@@ -37,8 +37,8 @@ class PlanDeCuentasAdmin(admin.ModelAdmin):
 @admin.register(PeriodoContable)
 class PeriodoContableAdmin(admin.ModelAdmin):
     """Configuración del Admin para Períodos Contables."""
-    list_display = ('name', 'start_date', 'end_date', 'is_closed', 'provider')
-    list_filter = ('is_closed',)
+    list_display = ('id', 'period_start', 'period_end', 'status', 'provider')
+    list_filter = ('status',)
 
 # Nota: Transaccion se gestiona a través del inline en AsientoContableAdmin,
 # pero también se puede registrar para acceso directo si se desea.

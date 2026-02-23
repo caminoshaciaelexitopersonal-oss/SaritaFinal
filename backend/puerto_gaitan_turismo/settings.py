@@ -104,6 +104,8 @@ INSTALLED_APPS = [
     "apps.global_orchestration.apps.GlobalOrchestrationConfig",
     "apps.institutional_layer.apps.InstitutionalLayerConfig",
     "apps.commercial_engine.apps.CommercialEngineConfig",
+    "apps.usage_billing.apps.UsageBillingConfig",
+    "apps.treasury_automation.apps.TreasuryAutomationConfig",
     "apps.treasury.apps.TreasuryConfig",
     "apps.capital_markets_layer.apps.CapitalMarketsLayerConfig",
 
@@ -120,6 +122,12 @@ INSTALLED_APPS = [
     "apps.peace_net.apps.PeaceNetConfig",
     "apps.operational_treaties.apps.OperationalTreatiesConfig",
     "apps.governance_live.apps.GovernanceLiveConfig",
+    "apps.operational_intelligence.apps.OperationalIntelligenceConfig",
+    "apps.autonomous_operations.apps.AutonomousOperationsConfig",
+    "apps.corporate_structure.apps.CorporateStructureConfig",
+    "apps.capital_architecture.apps.CapitalArchitectureConfig",
+    "apps.strategic_treasury.apps.StrategicTreasuryConfig",
+    "apps.expansion_engine.apps.ExpansionEngineConfig",
     "legacy_custody.apps.LegacyCustodyConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
