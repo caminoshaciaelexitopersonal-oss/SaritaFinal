@@ -124,6 +124,10 @@ INSTALLED_APPS = [
     "apps.governance_live.apps.GovernanceLiveConfig",
     "apps.operational_intelligence.apps.OperationalIntelligenceConfig",
     "apps.autonomous_operations.apps.AutonomousOperationsConfig",
+    "apps.corporate_structure.apps.CorporateStructureConfig",
+    "apps.capital_architecture.apps.CapitalArchitectureConfig",
+    "apps.strategic_treasury.apps.StrategicTreasuryConfig",
+    "apps.expansion_engine.apps.ExpansionEngineConfig",
     "legacy_custody.apps.LegacyCustodyConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
