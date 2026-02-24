@@ -8,7 +8,7 @@ from .services.gestion_plataforma_service import GestionPlataformaService
 from .services.governance_kernel import GovernanceKernel
 from apps.comercial.models import Plan, Subscription
 from .serializers import PlanSerializer, SuscripcionSerializer
-from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.serializers import PerfilSerializer
+from apps.domain_business.operativa.presentation.serializers import PerfilSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 

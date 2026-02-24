@@ -1,6 +1,6 @@
 
 from django.db import transaction
-from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.domain_business.operativa.models import ProviderProfile
 from api.models import CustomUser
 from apps.comercial.models import Plan, Subscription
 from decimal import Decimal

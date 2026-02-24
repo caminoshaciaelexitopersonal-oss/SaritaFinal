@@ -5,7 +5,7 @@ from django.db import transaction
 
 from apps.audit.services import AuditLogger
 from apps.audit.models import AuditLog
-from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.domain_business.operativa.models import ProviderProfile
 from ..models import Document, DocumentVersion, Process, DocumentType
 from ..tasks.processing_tasks import start_file_processing_flow
 

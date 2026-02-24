@@ -20,8 +20,8 @@ from apps.comercial.engines.funnel_engine import FunnelEngine
 from apps.comercial.services.subscription_service import SubscriptionService
 from apps.comercial.services.dashboard_service import DashboardService
 from apps.admin_plataforma.gestion_contable.contabilidad.models import Cuenta, PlanDeCuentas, AsientoContable, Transaccion, PeriodoContable
-from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta
-from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.domain_business.comercial.models import FacturaVenta
+from apps.domain_business.operativa.models import ProviderProfile
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
 

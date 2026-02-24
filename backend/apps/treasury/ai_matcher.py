@@ -1,4 +1,4 @@
-from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta
+from apps.domain_business.comercial.models import FacturaVenta
 
 class AIMatcher:
     """
