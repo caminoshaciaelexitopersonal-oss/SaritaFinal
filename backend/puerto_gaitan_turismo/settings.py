@@ -61,6 +61,8 @@ INSTALLED_APPS = [
     "modeltranslation",
     # Mis Apps
     "api.apps.ApiConfig",
+    "apps.core_erp.apps.CoreErpConfig",
+    "apps.domain_business.apps.DomainBusinessConfig",
     "apps.prestadores.apps.PrestadoresConfig",
 
     # Módulos de "Mi Negocio"
