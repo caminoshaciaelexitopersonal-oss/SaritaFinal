@@ -1,10 +1,10 @@
 from django.db import models
 from django.conf import settings
-from apps.core_erp.base_models import BaseErpModel
+from apps.core_erp.base_models import BaseErpModel, TenantAwareModel
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
-class ProviderProfile(BaseErpModel):
+class ProviderProfile(TenantAwareModel):
     class ProviderTypes(models.TextChoices):
         RESTAURANT = 'RESTAURANT', 'Restaurante'
         HOTEL = 'HOTEL', 'Hotel'
@@ -19,7 +19,6 @@ class ProviderProfile(BaseErpModel):
         on_delete=models.CASCADE,
         related_name='domain_profile'
     )
-    company_id = models.UUIDField(null=True, blank=True)
     commercial_name = models.CharField(max_length=255)
     provider_type = models.CharField(max_length=20, choices=ProviderTypes.choices, default=ProviderTypes.HOTEL)
     is_verified = models.BooleanField(default=False)
@@ -28,14 +27,13 @@ class ProviderProfile(BaseErpModel):
         verbose_name = "Provider Profile"
         app_label = 'domain_business'
 
-class Reservation(BaseErpModel):
+class Reservation(TenantAwareModel):
     class Status(models.TextChoices):
         PENDING = 'PENDING', 'Pending'
         CONFIRMED = 'CONFIRMED', 'Confirmed'
         CANCELLED = 'CANCELLED', 'Cancelled'
         COMPLETED = 'COMPLETED', 'Completed'
 
-    organization_id = models.UUIDField()
     customer_id = models.UUIDField()
 
     # Generic Link to the item being reserved
@@ -53,7 +51,7 @@ class Reservation(BaseErpModel):
         verbose_name = "Reservation"
         app_label = 'domain_business'
 
-class AdditionalService(BaseErpModel):
+class AdditionalService(TenantAwareModel):
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name='additional_services')
     service_id = models.UUIDField()
     quantity = models.PositiveIntegerField(default=1)

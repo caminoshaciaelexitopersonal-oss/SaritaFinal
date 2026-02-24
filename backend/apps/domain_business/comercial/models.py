@@ -1,8 +1,8 @@
 from django.db import models
 from django.conf import settings
-from apps.core_erp.base_models import BaseErpModel, BaseInvoice
+from apps.core_erp.base_models import BaseErpModel, BaseInvoice, TenantAwareModel
 
-class CommercialOperation(BaseErpModel):
+class CommercialOperation(TenantAwareModel):
     class Status(models.TextChoices):
         DRAFT = 'DRAFT', 'Draft'
         CONFIRMED = 'CONFIRMED', 'Confirmed'
@@ -15,7 +15,6 @@ class CommercialOperation(BaseErpModel):
         SALE = 'SALE', 'Sale'
         CONTRACT = 'CONTRACT', 'Contract'
 
-    organization_id = models.UUIDField(null=True, blank=True)
     customer_id = models.UUIDField()
     operation_type = models.CharField(max_length=20, choices=OperationType.choices, default=OperationType.SALE)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
@@ -28,7 +27,7 @@ class CommercialOperation(BaseErpModel):
         verbose_name = "Commercial Operation"
         app_label = 'domain_business'
 
-class OperationItem(BaseErpModel):
+class OperationItem(TenantAwareModel):
     operation = models.ForeignKey(CommercialOperation, on_delete=models.CASCADE, related_name='items')
     product_id = models.UUIDField()
     description = models.CharField(max_length=255)
@@ -39,21 +38,20 @@ class OperationItem(BaseErpModel):
     class Meta:
         app_label = 'domain_business'
 
-class SalesInvoice(BaseInvoice, BaseErpModel):
+class SalesInvoice(BaseInvoice):
     class TaxStatus(models.TextChoices):
         PENDING = 'PENDING', 'Pending'
         ACCEPTED = 'ACCEPTED', 'Accepted'
         REJECTED = 'REJECTED', 'Rejected'
 
     operation = models.OneToOneField(CommercialOperation, on_delete=models.PROTECT, related_name='invoice')
-    organization_id = models.UUIDField(null=True, blank=True)
     tax_status = models.CharField(max_length=20, choices=TaxStatus.choices, default=TaxStatus.PENDING)
     fiscal_code = models.CharField(max_length=255, null=True, blank=True) # CUFE equivalent
 
     class Meta:
         app_label = 'domain_business'
 
-class InvoiceItem(BaseErpModel):
+class InvoiceItem(TenantAwareModel):
     invoice = models.ForeignKey(SalesInvoice, on_delete=models.CASCADE, related_name='items')
     product_id = models.UUIDField()
     description = models.CharField(max_length=255)

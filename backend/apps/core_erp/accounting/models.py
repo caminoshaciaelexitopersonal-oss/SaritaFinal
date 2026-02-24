@@ -1,13 +1,12 @@
 from django.db import models
 from django.conf import settings
 from apps.core_erp.base_models import (
-    BaseErpModel, LedgerAccount as BaseAccount, BaseJournalEntry,
-    BaseJournalLine as BaseJournalLineBase, FinancialPeriod as BaseFinancialPeriod
+    BaseErpModel, TenantAwareModel, LedgerAccount as BaseAccount,
+    BaseJournalEntry, BaseJournalLine as BaseJournalLineBase,
+    FinancialPeriod as BaseFinancialPeriod
 )
 
-class AccountingTenantModel(BaseErpModel):
-    tenant_id = models.UUIDField(db_index=True)
-
+class AccountingTenantModel(TenantAwareModel):
     class Meta:
         abstract = True
 
@@ -16,7 +15,7 @@ class ChartOfAccounts(AccountingTenantModel):
     description = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.name} ({self.tenant_id})"
+        return f"{self.name} ({self.tenant})"
 
     class Meta:
         app_label = 'core_erp'
@@ -52,7 +51,7 @@ class JournalEntry(BaseJournalEntry, AccountingTenantModel):
         app_label = 'core_erp'
         verbose_name = "Journal Entry"
 
-class LedgerEntry(BaseErpModel):
+class LedgerEntry(TenantAwareModel):
     journal_entry = models.ForeignKey(JournalEntry, on_delete=models.CASCADE, related_name='lines')
     account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='ledger_entries')
     debit_amount = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)

@@ -23,7 +23,8 @@ class JournalService:
         Creates a new journal entry with multiple lines.
         """
         # 1. Resolve Fiscal Period
-        period = FiscalPeriod.objects.filter(
+        # Using plain_objects to bypass automatic filtering as we have the explicit tenant_id
+        period = FiscalPeriod.plain_objects.filter(
             tenant_id=tenant_id,
             period_start__lte=entry_date,
             period_end__gte=entry_date,
@@ -48,12 +49,13 @@ class JournalService:
             account = line['account']
             if isinstance(account, str):
                 # Resolve by code if string
-                account = Account.objects.get(
+                account = Account.plain_objects.get(
                     tenant_id=tenant_id,
                     code=account
                 )
 
             LedgerEntry.objects.create(
+                tenant_id=tenant_id,  # Mandatory for isolation
                 journal_entry=entry,
                 account=account,
                 debit_amount=line.get('debit', line.get('debit_amount', 0)),

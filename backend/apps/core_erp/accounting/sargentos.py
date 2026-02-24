@@ -11,7 +11,7 @@ class DomainSargentoContable:
     """
 
     @staticmethod
-    def generar_asiento_partida_doble(organization_id, date, description, movimientos, user_id=None):
+    def generar_asiento_partida_doble(tenant_id, date, description, movimientos, user_id=None):
         try:
             # Mapping legacy format to core format
             lines_data = []
@@ -25,7 +25,7 @@ class DomainSargentoContable:
 
             # Create Entry
             entry = JournalService.create_entry(
-                organization_id=organization_id,
+                tenant_id=tenant_id,
                 entry_date=date,
                 description=description,
                 lines_data=lines_data
