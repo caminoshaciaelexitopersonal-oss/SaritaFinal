@@ -16,6 +16,7 @@ class PostingRules:
             # Compatibility with old types
             "SALE": PostingRules.rule_sale,
             "LIQUIDATION": PostingRules.rule_liquidation,
+            "MANUAL_ENTRY": PostingRules.rule_manual_entry,
         }
 
         rule_func = rules.get(event_type)
@@ -127,3 +128,19 @@ class PostingRules:
             {'account': '111005', 'debit_amount': amount, 'credit_amount': 0, 'description': payload.get('description', '')},
             {'account': '112505', 'debit_amount': 0, 'credit_amount': amount, 'description': payload.get('description', '')}
         ]
+
+    @staticmethod
+    def rule_manual_entry(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Allows posting manual entries via LedgerEngine for testing.
+        payload['lines'] = [ {'account': '...', 'debit': 100, 'credit': 0}, ... ]
+        """
+        lines = []
+        for line in payload.get('lines', []):
+            lines.append({
+                'account': line['account'],
+                'debit_amount': Decimal(str(line.get('debit', 0))),
+                'credit_amount': Decimal(str(line.get('credit', 0))),
+                'description': line.get('description', payload.get('reference', 'Manual Entry'))
+            })
+        return lines

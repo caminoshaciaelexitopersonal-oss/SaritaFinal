@@ -66,3 +66,45 @@ class ReportsEngine:
             "equity": equity_total,
             "check": asset_total - (liability_total + equity_total)
         }
+
+    @staticmethod
+    def get_trial_balance(tenant_id, cutoff_date):
+        """
+        Generates a detailed Trial Balance with all accounts.
+        """
+        accounts = Account.plain_objects.filter(tenant_id=tenant_id)
+        lines = []
+        for account in accounts:
+            entries = LedgerEntry.objects.filter(
+                journal_entry__tenant_id=tenant_id,
+                journal_entry__date__lte=cutoff_date,
+                journal_entry__is_posted=True,
+                account=account
+            ).aggregate(
+                debit=Sum('debit_amount'),
+                credit=Sum('credit_amount')
+            )
+
+            debit = entries['debit'] or Decimal('0.00')
+            credit = entries['credit'] or Decimal('0.00')
+
+            # Asset (1) and Expense (5) use Debit - Credit
+            if account.code.startswith(('1', '5')):
+                balance = debit - credit
+            else:
+                balance = credit - debit
+
+            if debit != 0 or credit != 0:
+                lines.append({
+                    'account_code': account.code,
+                    'account_name': account.name,
+                    'debit': debit,
+                    'credit': credit,
+                    'balance': balance
+                })
+
+        return {
+            'tenant_id': tenant_id,
+            'cutoff_date': cutoff_date,
+            'lines': lines
+        }

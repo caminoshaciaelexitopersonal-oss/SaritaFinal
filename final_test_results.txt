@@ -1,0 +1,92 @@
+Suscriptor registrado para el evento: LEAD_QUALIFIED
+Suscriptor registrado para el evento: SUBSCRIPTION_ACTIVATED
+Suscriptor registrado para el evento: LEAD_CONVERTED
+COMMERCIAL ENGINE: Suscriptores de eventos registrados.
+Suscriptor registrado para el evento: USAGE_CYCLE_CLOSED
+Suscriptor registrado para el evento: BANK_TRANSACTION_IMPORTED
+Suscriptor registrado para el evento: BANK_TRANSACTION_IMPORTED
+Suscriptor registrado para el evento: BANK_TRANSACTION_IMPORTED
+Suscriptor registrado para el evento: PAYMENT_RECONCILED
+TREASURY AUTOMATION: Orquestación de eventos configurada.
+Suscriptor registrado para el evento: SUBSCRIPTION_ACTIVATED
+Suscriptor registrado para el evento: SUBSCRIPTION_CANCELLED
+Suscriptor registrado para el evento: PLAN_UPGRADED
+Suscriptor registrado para el evento: PLAN_DOWNGRADED
+Suscriptor registrado para el evento: USAGE_BILLED
+Suscriptor registrado para el evento: PAYMENT_RECONCILED
+Suscriptor registrado para el evento: INVOICE_CREATED
+Suscriptor registrado para el evento: USAGE_RECORDED
+OPERATIONAL INTELLIGENCE: DataCollector initialized.
+/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py:98: RuntimeWarning: Accessing the database during app initialization is discouraged. To fix this warning, avoid executing queries in AppConfig.ready() or when your app modules are imported.
+  warnings.warn(self.APPS_NOT_READY_WARNING_MSG, category=RuntimeWarning)
+(0.001) SELECT "autonomous_operations_autonomousagent"."id", "autonomous_operations_autonomousagent"."agent_code", "autonomous_operations_autonomousagent"."name", "autonomous_operations_autonomousagent"."domain", "autonomous_operations_autonomousagent"."status", "autonomous_operations_autonomousagent"."autonomy_level", "autonomous_operations_autonomousagent"."risk_level", "autonomous_operations_autonomousagent"."last_execution", "autonomous_operations_autonomousagent"."performance_score", "autonomous_operations_autonomousagent"."created_at" FROM "autonomous_operations_autonomousagent" WHERE "autonomous_operations_autonomousagent"."agent_code" = 'pricing-optimizer' LIMIT 21; args=('pricing-optimizer',); alias=default
+(0.001) SELECT "autonomous_operations_autonomousagent"."id", "autonomous_operations_autonomousagent"."agent_code", "autonomous_operations_autonomousagent"."name", "autonomous_operations_autonomousagent"."domain", "autonomous_operations_autonomousagent"."status", "autonomous_operations_autonomousagent"."autonomy_level", "autonomous_operations_autonomousagent"."risk_level", "autonomous_operations_autonomousagent"."last_execution", "autonomous_operations_autonomousagent"."performance_score", "autonomous_operations_autonomousagent"."created_at" FROM "autonomous_operations_autonomousagent" WHERE "autonomous_operations_autonomousagent"."agent_code" = 'pricing-optimizer' LIMIT 21; args=('pricing-optimizer',); alias=default
+(0.000) INSERT INTO "core_erp_holdingentity" ("id", "created_at", "updated_at", "name", "base_currency", "reporting_standard") VALUES ('f4aee9ac994a44a9acf3c30005ec1f79', '2026-02-24 21:20:44.864893', '2026-02-24 21:20:44.864947', 'Sarita Holding', 'COP', 'IFRS'); args=('f4aee9ac994a44a9acf3c30005ec1f79', '2026-02-24 21:20:44.864893', '2026-02-24 21:20:44.864947', 'Sarita Holding', 'COP', 'IFRS'); alias=default
+(0.000) INSERT INTO "core_erp_holdingentity" ("id", "created_at", "updated_at", "name", "base_currency", "reporting_standard") VALUES ('f4aee9ac994a44a9acf3c30005ec1f79', '2026-02-24 21:20:44.864893', '2026-02-24 21:20:44.864947', 'Sarita Holding', 'COP', 'IFRS'); args=('f4aee9ac994a44a9acf3c30005ec1f79', '2026-02-24 21:20:44.864893', '2026-02-24 21:20:44.864947', 'Sarita Holding', 'COP', 'IFRS'); alias=default
+DEBUG: Antes de importar api.signals
+DEBUG: Antes de importar api.signals
+DEBUG: Después de importar api.signals
+DEBUG: Después de importar api.signals
+Starting Financial Consolidation Test...
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: core_erp_holdingentity
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/backend/scripts/test_financial_consolidation.py", line 107, in <module>
+    test_consolidation()
+  File "/app/backend/scripts/test_financial_consolidation.py", line 22, in test_consolidation
+    holding = HoldingEntity.objects.create(name="Sarita Holding", base_currency="COP")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/query.py", line 663, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/base.py", line 902, in save
+    self.save_base(
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/base.py", line 1008, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/base.py", line 1169, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/base.py", line 1210, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/query.py", line 1868, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: core_erp_holdingentity

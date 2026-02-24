@@ -137,9 +137,11 @@ class LedgerEngine:
         return LedgerEngine.post_entry(reversal.id)
 
     @staticmethod
-    def get_trial_balance(tenant_id: str):
+    def get_trial_balance(tenant_id: str, cutoff_date=None):
         """
         Genera un balance de prueba consolidando saldos de cuentas.
         """
+        if cutoff_date is None:
+            cutoff_date = timezone.now().date()
         from .reports_engine import ReportsEngine
-        return ReportsEngine.get_balance_sheet(tenant_id, timezone.now().date())
+        return ReportsEngine.get_trial_balance(tenant_id, cutoff_date)
