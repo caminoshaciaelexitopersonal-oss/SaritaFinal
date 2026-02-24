@@ -1,7 +1,8 @@
 from apps.domain_business.comercial.models import (
     CommercialOperation as OperacionComercial,
     OperationItem as ItemOperacionComercial,
-    SalesInvoice as FacturaVenta
+    SalesInvoice as FacturaVenta,
+    InvoiceItem as ItemFactura
 )
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
 from django.db import models

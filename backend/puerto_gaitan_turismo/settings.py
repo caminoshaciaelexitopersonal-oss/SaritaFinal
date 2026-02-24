@@ -92,7 +92,6 @@ INSTALLED_APPS = [
 
     # App para el panel de administración de la plataforma
     "apps.admin_plataforma.apps.AdminPlataformaConfig",
-    "apps.admin_plataforma.gestion_comercial.apps.AdminGestionComercialConfig",
     "apps.admin_plataforma.gestion_financiera.apps.AdminGestionFinancieraConfig",
     "apps.admin_plataforma.gestion_archivistica.apps.AdminGestionArchivisticaConfig",
     "apps.admin_plataforma.gestion_contable.contabilidad.apps.AdminContabilidadConfig",

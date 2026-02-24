@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from apps.core_erp.base_models import BaseErpModel
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey

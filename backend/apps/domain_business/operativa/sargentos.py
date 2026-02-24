@@ -1,5 +1,5 @@
 import logging
-from ..models import Reservation
+from .models import Reservation
 
 logger = logging.getLogger(__name__)
 

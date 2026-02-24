@@ -2,7 +2,7 @@ import logging
 from datetime import date
 from typing import List, Dict, Any
 from django.db import transaction
-from .models import JournalEntry, JournalLine, Account, FiscalPeriod
+from .models import JournalEntry, LedgerEntry, Account, FiscalPeriod
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,7 @@ class JournalService:
     @staticmethod
     @transaction.atomic
     def create_entry(
-        organization_id: str,
+        tenant_id: str,
         entry_date: date,
         description: str,
         lines_data: List[Dict[str, Any]],
@@ -24,20 +24,19 @@ class JournalService:
         """
         # 1. Resolve Fiscal Period
         period = FiscalPeriod.objects.filter(
-            organization_id=organization_id,
+            tenant_id=tenant_id,
             period_start__lte=entry_date,
             period_end__gte=entry_date,
             status='open'
         ).first()
 
         if not period:
-            logger.error(f"No open fiscal period found for {entry_date} (Org: {organization_id})")
-            # In some cases we might want to auto-create, but usually it's a configuration error
+            logger.error(f"No open fiscal period found for {entry_date} (Tenant: {tenant_id})")
             raise ValueError(f"No open fiscal period found for date {entry_date}")
 
         # 2. Create the Header
         entry = JournalEntry.objects.create(
-            organization_id=organization_id,
+            tenant_id=tenant_id,
             date=entry_date,
             description=description,
             reference=reference,
@@ -50,15 +49,15 @@ class JournalService:
             if isinstance(account, str):
                 # Resolve by code if string
                 account = Account.objects.get(
-                    chart_of_accounts__organization_id=organization_id,
+                    tenant_id=tenant_id,
                     code=account
                 )
 
-            JournalLine.objects.create(
+            LedgerEntry.objects.create(
                 journal_entry=entry,
                 account=account,
-                debit=line.get('debit', 0),
-                credit=line.get('credit', 0),
+                debit_amount=line.get('debit', line.get('debit_amount', 0)),
+                credit_amount=line.get('credit', line.get('credit_amount', 0)),
                 description=line.get('description', description)
             )
 

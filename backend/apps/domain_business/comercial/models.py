@@ -9,6 +9,8 @@ class CommercialOperation(BaseErpModel):
         INVOICED = 'INVOICED', 'Invoiced'
         VOIDED = 'VOIDED', 'Voided'
 
+    Estado = Status # Compatibility Alias
+
     class OperationType(models.TextChoices):
         SALE = 'SALE', 'Sale'
         CONTRACT = 'CONTRACT', 'Contract'
@@ -50,3 +52,20 @@ class SalesInvoice(BaseInvoice, BaseErpModel):
 
     class Meta:
         app_label = 'domain_business'
+
+class InvoiceItem(BaseErpModel):
+    invoice = models.ForeignKey(SalesInvoice, on_delete=models.CASCADE, related_name='items')
+    product_id = models.UUIDField()
+    description = models.CharField(max_length=255)
+    quantity = models.PositiveIntegerField()
+    unit_price = models.DecimalField(max_digits=18, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=18, decimal_places=2)
+
+    class Meta:
+        app_label = 'domain_business'
+
+# Compatibility Aliases
+OperacionComercial = CommercialOperation
+ItemOperacionComercial = OperationItem
+FacturaVenta = SalesInvoice
+ItemFactura = InvoiceItem

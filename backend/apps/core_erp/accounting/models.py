@@ -6,7 +6,7 @@ from apps.core_erp.base_models import (
 )
 
 class AccountingTenantModel(BaseErpModel):
-    organization_id = models.UUIDField(db_index=True)
+    tenant_id = models.UUIDField(db_index=True)
 
     class Meta:
         abstract = True
@@ -16,15 +16,17 @@ class ChartOfAccounts(AccountingTenantModel):
     description = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.name} ({self.organization_id})"
+        return f"{self.name} ({self.tenant_id})"
 
     class Meta:
         app_label = 'core_erp'
         verbose_name = "Chart of Accounts"
 
 class Account(BaseAccount, AccountingTenantModel):
+    # BaseAccount has code, name, type, parent_account
     chart_of_accounts = models.ForeignKey(ChartOfAccounts, on_delete=models.CASCADE, related_name='accounts')
     initial_balance = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         app_label = 'core_erp'
@@ -39,17 +41,25 @@ class FiscalPeriod(BaseFinancialPeriod, AccountingTenantModel):
         verbose_name = "Fiscal Period"
 
 class JournalEntry(BaseJournalEntry, AccountingTenantModel):
+    # BaseJournalEntry has date, reference, description, is_posted
     period = models.ForeignKey(FiscalPeriod, on_delete=models.PROTECT, related_name='entries')
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    event_type = models.CharField(max_length=100, null=True, blank=True)
+    is_reversal = models.BooleanField(default=False)
+    reversed_entry_id = models.UUIDField(null=True, blank=True)
 
     class Meta:
         app_label = 'core_erp'
         verbose_name = "Journal Entry"
 
-class JournalLine(BaseJournalLineBase, BaseErpModel):
+class LedgerEntry(BaseErpModel):
     journal_entry = models.ForeignKey(JournalEntry, on_delete=models.CASCADE, related_name='lines')
-    account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='journal_lines')
+    account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='ledger_entries')
+    debit_amount = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+    credit_amount = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+    currency = models.CharField(max_length=3, default='COP')
+    description = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         app_label = 'core_erp'
-        verbose_name = "Journal Line"
+        verbose_name = "Ledger Entry"

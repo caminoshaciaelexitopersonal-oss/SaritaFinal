@@ -1,14 +1,41 @@
 from dataclasses import dataclass, field
 from typing import Dict, Any, Optional
-from apps.core_erp.events.erp_events import DomainEvent
+import uuid
+from datetime import datetime
+
+@dataclass
+class DomainEvent:
+    event_id: uuid.UUID = field(default_factory=uuid.uuid4)
+    timestamp: datetime = field(default_factory=datetime.now)
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 @dataclass
 class AccountingEvent(DomainEvent):
     """Base class for accounting-related events."""
-    organization_id: str = ""
+    tenant_id: str = ""
 
 @dataclass
-class JournalEntryPosted(AccountingEvent):
+class ReservationConfirmed(AccountingEvent):
+    total_amount: float = 0.0
+    commission_rate: float = 0.10
+    reference: str = ""
+
+@dataclass
+class PaymentReceived(AccountingEvent):
+    amount: float = 0.0
+    reference: str = ""
+
+@dataclass
+class ProviderPaid(AccountingEvent):
+    amount: float = 0.0
+    reference: str = ""
+
+@dataclass
+class ReservationCancelled(AccountingEvent):
+    original_journal_id: str = ""
+
+@dataclass
+class FinancialPosted(AccountingEvent):
     entry_id: str = ""
     total_amount: float = 0.0
 

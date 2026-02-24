@@ -1,7 +1,7 @@
 from apps.core_erp.accounting.models import (
     Account as CoreAccount,
     JournalEntry as CoreJournalEntry,
-    JournalLine as CoreJournalLine,
+    LedgerEntry as CoreJournalLine,
     FiscalPeriod as CoreFiscalPeriod,
     ChartOfAccounts as CoreChartOfAccounts
 )
