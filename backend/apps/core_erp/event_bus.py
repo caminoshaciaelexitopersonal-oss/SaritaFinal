@@ -53,3 +53,4 @@ class EventBus:
         Limpia todos los suscriptores (útil para tests).
         """
         cls._subscribers = {}
+# Architectural stabilization 2026

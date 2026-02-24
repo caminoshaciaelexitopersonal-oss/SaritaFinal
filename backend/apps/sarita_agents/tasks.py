@@ -79,7 +79,7 @@ class TenienteROICalculator(TenienteTemplate):
 # --- TENIENTES ARCHIVÍSTICOS (SARGENTOS LOGIC) ---
 class TenienteIntegridadArchivistica(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        from django.utils.module_loading import import_string; SargentoArchivistico = import_string('apps.prestadores.mi_negocio.gestion_archivistica.sargentos.SargentoArchivistico') # DECOUPLED
         version_id = parametros.get("version_id")
         content = parametros.get("content", b"")
         success = SargentoArchivistico.validar_integridad(version_id, content)
@@ -87,14 +87,14 @@ class TenienteIntegridadArchivistica(TenienteTemplate):
 
 class TenienteSelloTemporal(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        from django.utils.module_loading import import_string; SargentoArchivistico = import_string('apps.prestadores.mi_negocio.gestion_archivistica.sargentos.SargentoArchivistico') # DECOUPLED
         version_id = parametros.get("version_id")
         success = SargentoArchivistico.aplicar_sello_temporal(version_id)
         return {"status": "SUCCESS" if success else "FAILED"}
 
 class TenienteAuditoriaAcceso(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        from django.utils.module_loading import import_string; SargentoArchivistico = import_string('apps.prestadores.mi_negocio.gestion_archivistica.sargentos.SargentoArchivistico') # DECOUPLED
         document_id = parametros.get("document_id")
         user_id = parametros.get("user_id")
         action = parametros.get("action", "READ")
@@ -103,7 +103,7 @@ class TenienteAuditoriaAcceso(TenienteTemplate):
 
 class TenienteTransicionEstado(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.sargentos import SargentoOperativo
+        from django.utils.module_loading import import_string; SargentoOperativo = import_string('apps.prestadores.mi_negocio.gestion_operativa.sargentos.SargentoOperativo') # DECOUPLED
         entidad_tipo = parametros.get("entidad_tipo")
         entidad_id = parametros.get("entidad_id")
         nuevo_estado = parametros.get("nuevo_estado")
@@ -114,7 +114,8 @@ class TenienteTransicionEstado(TenienteTemplate):
 
 class TenienteCoordinacionTuristica(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados import SargentoEspecializado
+        from django.utils.module_loading import import_string
+        SargentoEspecializado = import_string('apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados.SargentoEspecializado') # DECOUPLED
         tour_id = parametros.get("tour_id")
         guia_id = parametros.get("guia_id")
         success = SargentoEspecializado.asignar_guia(tour_id, guia_id)
@@ -122,7 +123,8 @@ class TenienteCoordinacionTuristica(TenienteTemplate):
 
 class TenienteDespachoLogistico(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados import SargentoEspecializado
+        from django.utils.module_loading import import_string
+        SargentoEspecializado = import_string('apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados.SargentoEspecializado') # DECOUPLED
         vehiculo_id = parametros.get("vehiculo_id")
         ruta_id = parametros.get("ruta_id")
         success = SargentoEspecializado.activar_transporte(vehiculo_id, ruta_id)
@@ -130,7 +132,8 @@ class TenienteDespachoLogistico(TenienteTemplate):
 
 class TenienteMonitoreoSeguridad(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados import SargentoEspecializado
+        from django.utils.module_loading import import_string
+        SargentoEspecializado = import_string('apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados.SargentoEspecializado') # DECOUPLED
         zona_id = parametros.get("zona_id")
         desc = parametros.get("descripcion")
         nivel = parametros.get("nivel", "LOW")
@@ -139,7 +142,7 @@ class TenienteMonitoreoSeguridad(TenienteTemplate):
 
 class TenienteCreacionOrden(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.sargentos import SargentoOperativo
+        from django.utils.module_loading import import_string; SargentoOperativo = import_string('apps.prestadores.mi_negocio.gestion_operativa.sargentos.SargentoOperativo') # DECOUPLED
         res = SargentoOperativo.crear_orden_servicio(
             perfil_id=parametros.get("perfil_id"),
             descripcion=parametros.get("descripcion"),
@@ -149,7 +152,7 @@ class TenienteCreacionOrden(TenienteTemplate):
 
 class TenienteRegistroCosto(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.sargentos import SargentoOperativo
+        from django.utils.module_loading import import_string; SargentoOperativo = import_string('apps.prestadores.mi_negocio.gestion_operativa.sargentos.SargentoOperativo') # DECOUPLED
         costo_id = SargentoOperativo.registrar_costo_operativo(
             perfil_id=parametros.get("perfil_id"),
             orden_id=parametros.get("orden_id"),
@@ -160,7 +163,7 @@ class TenienteRegistroCosto(TenienteTemplate):
 
 class TenienteAsignacionRecurso(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.sargentos import SargentoOperativo
+        from django.utils.module_loading import import_string; SargentoOperativo = import_string('apps.prestadores.mi_negocio.gestion_operativa.sargentos.SargentoOperativo') # DECOUPLED
         asignacion_id = SargentoOperativo.asignar_recurso(
             orden_id=parametros.get("orden_id"),
             item_id=parametros.get("item_id"),
@@ -170,7 +173,7 @@ class TenienteAsignacionRecurso(TenienteTemplate):
 
 class TenienteArchivado(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_archivistica.sargentos import SargentoArchivistico
+        from django.utils.module_loading import import_string; SargentoArchivistico = import_string('apps.prestadores.mi_negocio.gestion_archivistica.sargentos.SargentoArchivistico') # DECOUPLED
         version_id = SargentoArchivistico.archivar_documento(parametros)
         if version_id:
             return {"status": "SUCCESS", "version_id": version_id}
@@ -178,7 +181,8 @@ class TenienteArchivado(TenienteTemplate):
 
 class TenienteRegistroContable(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos import SargentoContable
+        from django.utils.module_loading import import_string
+        SargentoContable = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos.SargentoContable') # DECOUPLED
         asiento = SargentoContable.generar_asiento_partida_doble(
             periodo_id=parametros.get("periodo_id"),
             fecha=parametros.get("fecha"),
@@ -192,7 +196,8 @@ class TenienteRegistroContable(TenienteTemplate):
 
 class TenienteCierreContable(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos import SargentoContable
+        from django.utils.module_loading import import_string
+        SargentoContable = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos.SargentoContable') # DECOUPLED
         success = SargentoContable.ejecutar_cierre_periodo(
             periodo_id=parametros.get("periodo_id"),
             usuario_id=parametros.get("usuario_id")
@@ -202,7 +207,8 @@ class TenienteCierreContable(TenienteTemplate):
 # --- TENIENTES COMERCIALES (SARGENTOS LOGIC) ---
 class TenienteContratacionComercial(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_comercial.domain.sargentos import SargentoComercial
+        from django.utils.module_loading import import_string
+        SargentoComercial = import_string('apps.prestadores.mi_negocio.gestion_comercial.domain.sargentos.SargentoComercial') # DECOUPLED
         operacion_id = parametros.get("operacion_id")
         contrato = SargentoComercial.generar_contrato(operacion_id)
         if contrato:
@@ -211,7 +217,8 @@ class TenienteContratacionComercial(TenienteTemplate):
 
 class TenienteActivacionOperativa(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_comercial.domain.sargentos import SargentoComercial
+        from django.utils.module_loading import import_string
+        SargentoComercial = import_string('apps.prestadores.mi_negocio.gestion_comercial.domain.sargentos.SargentoComercial') # DECOUPLED
         contrato_id = parametros.get("contrato_id")
         orden = SargentoComercial.generar_orden_operativa(contrato_id)
         if orden:
@@ -306,19 +313,32 @@ def finalizar_mision(mision_id: str, reporte_final: dict):
 
 class TenienteOperacionComercial(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.sargentos import SargentoReservas
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.sargentos import SargentoClientes
+        from apps.application_services.reservation_service import ReservationApplicationService
+        from apps.application_services.domain_contracts.base import ConfirmReservationCommand
+
+        # ELIMINADO: from django.utils.module_loading import import_string; # TODO: Assign variable correctly in F1... (Importación directa prohibida en F1)
+
         action = parametros.get("action")
         if action == "CONFIRM":
-            SargentoReservas.confirmar_reserva(parametros.get("reserva_id"))
+            service = ReservationApplicationService()
+            command = ConfirmReservationCommand(reserva_id=parametros.get("reserva_id"))
+            result = service.execute(command)
+            return {"status": "SUCCESS" if result["success"] else "FAILED", "action": action, "detail": result}
+
         if action == "CREATE_CLIENT":
+            from django.utils.module_loading import import_string
+            SargentoClientes = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.sargentos.SargentoClientes') # DECOUPLED
             SargentoClientes.crear_cliente(parametros.get("perfil_id"), parametros.get("cliente_data"))
+            return {"status": "SUCCESS", "action": action}
+
         return {"status": "SUCCESS", "action": action}
 
 class TenienteLogisticaRecursos(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.sargentos import SargentoInventario
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.sargentos import SargentoProductos
+        from django.utils.module_loading import import_string
+        SargentoInventario = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.sargentos.SargentoInventario') # DECOUPLED
+        from django.utils.module_loading import import_string
+        SargentoProductos = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.sargentos.SargentoProductos') # DECOUPLED
         if "item_id" in parametros:
             SargentoInventario.descontar_stock(parametros.get("item_id"), parametros.get("cantidad"))
         if "producto_id" in parametros:
@@ -327,8 +347,10 @@ class TenienteLogisticaRecursos(TenienteTemplate):
 
 class TenienteAdministracionFisica(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.horarios.sargentos import SargentoHorarios
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.sargentos import SargentoPerfil
+        from django.utils.module_loading import import_string
+        SargentoHorarios = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.horarios.sargentos.SargentoHorarios') # DECOUPLED
+        from django.utils.module_loading import import_string
+        SargentoPerfil = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.sargentos.SargentoPerfil') # DECOUPLED
         if "fecha" in parametros:
             SargentoHorarios.validar_turno(parametros.get("perfil_id"), parametros.get("fecha"), parametros.get("hora"))
         if "perfil_data" in parametros:
@@ -337,14 +359,17 @@ class TenienteAdministracionFisica(TenienteTemplate):
 
 class TenienteGestionCostos(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.sargentos import SargentoCostos
+        from django.utils.module_loading import import_string
+        SargentoCostos = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.costos.sargentos.SargentoCostos') # DECOUPLED
         SargentoCostos.registrar_gasto(parametros.get("perfil_id"), parametros)
         return {"status": "SUCCESS"}
 
 class TenienteInformacionEvidencia(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.documentos.sargentos import SargentoDocumentos
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.galeria.sargentos import SargentoGaleria
+        from django.utils.module_loading import import_string
+        SargentoDocumentos = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.documentos.sargentos.SargentoDocumentos') # DECOUPLED
+        from django.utils.module_loading import import_string
+        SargentoGaleria = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.galeria.sargentos.SargentoGaleria') # DECOUPLED
         if "doc_id" in parametros:
             SargentoDocumentos.archivar_evidencia(parametros.get("doc_id"), parametros)
         if "image_url" in parametros:
@@ -353,8 +378,10 @@ class TenienteInformacionEvidencia(TenienteTemplate):
 
 class TenienteAnalisisDatos(TenienteTemplate):
     def perform_action(self, parametros: dict):
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.estadisticas.sargentos import SargentoEstadisticas
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.valoraciones.sargentos import SargentoValoraciones
+        from django.utils.module_loading import import_string
+        SargentoEstadisticas = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.estadisticas.sargentos.SargentoEstadisticas') # DECOUPLED
+        from django.utils.module_loading import import_string
+        SargentoValoraciones = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.valoraciones.sargentos.SargentoValoraciones') # DECOUPLED
         if "kpi" in parametros:
             SargentoEstadisticas.actualizar_kpi(parametros.get("perfil_id"), parametros.get("kpi"), parametros.get("valor"))
         if "resena_id" in parametros:

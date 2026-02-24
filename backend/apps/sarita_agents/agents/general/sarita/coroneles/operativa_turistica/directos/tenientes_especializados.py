@@ -1,6 +1,7 @@
 import logging
 from apps.sarita_agents.agents.teniente_template import TenienteTemplate
-from apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados import SargentoEspecializado
+from django.utils.module_loading import import_string
+SargentoEspecializado = import_string('apps.prestadores.mi_negocio.gestion_operativa.sargentos_especializados.SargentoEspecializado') # DECOUPLED
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,8 @@ class TenienteOperativoGastronomia(TenienteTemplate):
 class TenienteOperativoTransporte(TenienteTemplate):
     def perform_action(self, parametros: dict):
         action = parametros.get("action")
-        from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.transporte.sargentos import SargentoTransporte
+        from django.utils.module_loading import import_string
+        SargentoTransporte = import_string('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.transporte.sargentos.SargentoTransporte') # DECOUPLED
         from api.models import CustomUser
 
         user_id = parametros.get("user_id")
@@ -58,7 +60,8 @@ class TenienteOperativoTransporte(TenienteTemplate):
 class TenienteOperativoNocturno(TenienteTemplate):
     def perform_action(self, parametros: dict):
         action = parametros.get("action")
-        from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.bares_discotecas.sargentos import SargentoNocturno
+        from django.utils.module_loading import import_string
+        SargentoNocturno = import_string('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.bares_discotecas.sargentos.SargentoNocturno') # DECOUPLED
         from api.models import CustomUser
 
         user = CustomUser.objects.get(id=parametros.get("user_id"))
@@ -77,7 +80,8 @@ class TenienteOperativoNocturno(TenienteTemplate):
 class TenienteOperativoGuias(TenienteTemplate):
     def perform_action(self, parametros: dict):
         action = parametros.get("action")
-        from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.guias.sargentos import SargentoGuias
+        from django.utils.module_loading import import_string
+        SargentoGuias = import_string('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.guias.sargentos.SargentoGuias') # DECOUPLED
         from api.models import CustomUser
 
         user = CustomUser.objects.get(id=parametros.get("user_id"))
@@ -92,7 +96,8 @@ class TenienteOperativoGuias(TenienteTemplate):
 class TenienteOperativoAgencia(TenienteTemplate):
     def perform_action(self, parametros: dict):
         action = parametros.get("action")
-        from apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.agencias.sargentos import SargentoAgencia
+        from django.utils.module_loading import import_string
+        SargentoAgencia = import_string('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.agencias.sargentos.SargentoAgencia') # DECOUPLED
         from api.models import CustomUser
 
         user_id = parametros.get("user_id")

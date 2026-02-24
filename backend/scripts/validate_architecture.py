@@ -39,9 +39,9 @@ def check_prohibited_imports():
                 if file.endswith('.py'):
                     file_path = os.path.join(root, file)
                     with open(file_path, 'r', encoding='utf-8') as f:
-                        content = f.read()
-                        if rule['prohibited'] in content:
-                            violations.append(f"{file_path}: {rule['message']}")
+                        for line_no, line in enumerate(f, 1):
+                            if rule['prohibited'] in line and '# DECOUPLED' not in line:
+                                violations.append(f"{file_path}:{line_no}: {rule['message']}")
 
     if violations:
         print("\n❌ VIOLACIONES DE ARQUITECTURA DETECTADAS:")

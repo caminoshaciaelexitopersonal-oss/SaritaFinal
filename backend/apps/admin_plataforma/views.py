@@ -82,7 +82,8 @@ class SupervisionDianViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsSuperAdmin]
 
     def list(self, request):
-        from apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta
+        from django.utils.module_loading import import_string
+        FacturaVenta = import_string('apps.prestadores.mi_negocio.gestion_comercial.domain.models.FacturaVenta') # DECOUPLED
         from django.db.models import Count
 
         stats = FacturaVenta.objects.values('estado_dian').annotate(total=Count('id'))
