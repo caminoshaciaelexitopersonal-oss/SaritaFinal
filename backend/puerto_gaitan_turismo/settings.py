@@ -103,6 +103,7 @@ INSTALLED_APPS = [
     "apps.comercial.apps.ComercialConfig",
     "apps.admin_control_tower.apps.AdminControlTowerConfig",
     "apps.control_tower.apps.ControlTowerConfig",
+    "apps.enterprise.apps.EnterpriseConfig",
     "apps.global_orchestration.apps.GlobalOrchestrationConfig",
     "apps.institutional_layer.apps.InstitutionalLayerConfig",
     "apps.commercial_engine.apps.CommercialEngineConfig",

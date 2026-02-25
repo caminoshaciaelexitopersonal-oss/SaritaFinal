@@ -73,18 +73,28 @@ class MonitoringService:
         today = timezone.now().date()
         pnl = ReportsEngine.get_p_and_l(tenant_id, today, today)
 
-        KPI.objects.create(
+        revenue_kpi = KPI.objects.create(
             tenant_id=tenant_id,
             name="DAILY_REVENUE",
             category=KPI.MetricType.FINANCIAL,
             value=pnl['income'],
             unit="COP"
         )
+        EventBus.emit("KPI_UPDATED", {
+            "tenant_id": str(tenant_id),
+            "name": "DAILY_REVENUE",
+            "value": str(revenue_kpi.value)
+        })
 
-        KPI.objects.create(
+        profit_kpi = KPI.objects.create(
             tenant_id=tenant_id,
             name="DAILY_NET_PROFIT",
             category=KPI.MetricType.FINANCIAL,
             value=pnl['net_profit'],
             unit="COP"
         )
+        EventBus.emit("KPI_UPDATED", {
+            "tenant_id": str(tenant_id),
+            "name": "DAILY_NET_PROFIT",
+            "value": str(profit_kpi.value)
+        })
