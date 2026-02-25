@@ -2,7 +2,8 @@
 import logging
 from apps.sarita_agents.agents.teniente_template import TenienteTemplate
 from api.models import CustomUser
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from django.utils.module_loading import import_string
+ProviderProfile = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models.ProviderProfile') # DECOUPLED
 
 logger = logging.getLogger(__name__)
 

@@ -85,7 +85,10 @@ class SoldadoValidadorRubros(SoldierTemplate):
 class SoldadoAlertaSobrecosto(SoldierTemplate):
     def perform_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Disparando alertas de desviación.")
-        from apps.prestadores.mi_negocio.gestion_financiera.models import Presupuesto, LineaPresupuesto, AlertaFinanciera
+        from django.utils.module_loading import import_string
+        Presupuesto = import_string('apps.prestadores.mi_negocio.gestion_financiera.models.Presupuesto') # DECOUPLED
+        LineaPresupuesto = import_string('apps.prestadores.mi_negocio.gestion_financiera.models.LineaPresupuesto') # DECOUPLED
+        AlertaFinanciera = import_string('apps.prestadores.mi_negocio.gestion_financiera.models.AlertaFinanciera') # DECOUPLED
 
         provider_id = params.get('provider_id')
         if not provider_id: return {"status": "FAILED"}
@@ -113,8 +116,11 @@ class SoldadoAlertaSobrecosto(SoldierTemplate):
 class SoldadoRegistroCredito(SoldierTemplate):
     def perform_action(self, params: dict):
         logger.info("SOLDADO OBLIGACIONES: Registrando nuevo crédito.")
-        from apps.prestadores.mi_negocio.gestion_financiera.models import CreditoFinanciero, CuotaCredito
-        from apps.prestadores.mi_negocio.gestion_financiera.services import FinanzasService
+        from django.utils.module_loading import import_string
+        CreditoFinanciero = import_string('apps.prestadores.mi_negocio.gestion_financiera.models.CreditoFinanciero') # DECOUPLED
+        CuotaCredito = import_string('apps.prestadores.mi_negocio.gestion_financiera.models.CuotaCredito') # DECOUPLED
+        from django.utils.module_loading import import_string
+        FinanzasService = import_string('apps.prestadores.mi_negocio.gestion_financiera.services.FinanzasService') # DECOUPLED
         from decimal import Decimal
         from django.utils import timezone
         from dateutil.relativedelta import relativedelta
@@ -192,8 +198,10 @@ class SoldadoGeneradorReportePredictivo(SoldierTemplate):
 
 class SoldadoKPI(SoldierTemplate):
     def perform_action(self, params: dict):
-        from apps.prestadores.mi_negocio.gestion_financiera.services import FinanzasService
-        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+        from django.utils.module_loading import import_string
+        FinanzasService = import_string('apps.prestadores.mi_negocio.gestion_financiera.services.FinanzasService') # DECOUPLED
+        from django.utils.module_loading import import_string
+        ProviderProfile = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models.ProviderProfile') # DECOUPLED
 
         provider_id = params.get('provider_id')
         if provider_id:

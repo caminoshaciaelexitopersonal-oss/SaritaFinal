@@ -11,7 +11,7 @@ class PaymentStatusEngine:
     @staticmethod
     @transaction.atomic
     def mark_as_paid(invoice, bank_tx):
-        from apps.admin_plataforma.gestion_comercial.domain.models import ReciboCaja
+        from apps.domain_business.comercial.models import ReciboCaja
 
         # 1. Crear Recibo de Caja (Adapter a admin_comercial)
         ReciboCaja.objects.create(

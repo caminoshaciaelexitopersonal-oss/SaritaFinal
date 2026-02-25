@@ -6,7 +6,7 @@ from .models import (
     TravelPackage, PackageComponent, AgencyBooking,
     AgencyLiquidation, ProviderCommission, PackageIncident
 )
-from apps.admin_plataforma.services.quintuple_erp import QuintupleERPService
+from apps.core_erp.event_bus import EventBus
 
 logger = logging.getLogger(__name__)
 
@@ -78,17 +78,18 @@ class AgencyService:
             status=AgencyBooking.BookingStatus.CONFIRMED
         )
 
-        # IMPACTO ERP (Consolidado)
-        erp_service = QuintupleERPService(user=self.user)
-        impact = erp_service.record_impact("AGENCY_PACKAGE_BOOKING", {
-            "booking_id": str(booking.id),
-            "amount": float(total_pago),
-            "description": f"Reserva Paquete: {package.nombre}"
+        # IMPACTO ERP (Decoupled vía EventBus)
+        EventBus.emit("ERP_IMPACT_REQUESTED", {
+            "event_type": "AGENCY_PACKAGE_BOOKING",
+            "payload": {
+                "booking_id": str(booking.id),
+                "amount": float(total_pago),
+                "description": f"Reserva Paquete: {package.nombre}"
+            },
+            "user_id": self.user.id
         })
 
-        booking.asiento_contable_id = impact.get('contable_id')
-        booking.save()
-
+        # El asiento_contable_id se actualizará asíncronamente vía evento de respuesta
         return booking
 
     @transaction.atomic
@@ -123,12 +124,15 @@ class AgencyService:
             nivel_gravedad='MEDIUM'
         )
 
-        # 4. Impacto ERP (Nota Crédito / Ajuste)
-        erp_service = QuintupleERPService(user=self.user)
-        erp_service.record_impact("AGENCY_BOOKING_ADJUSTMENT", {
-            "booking_id": str(booking.id),
-            "amount_adjusted": float(-valor_a_descontar * booking.numero_personas),
-            "reason": "Partial component cancellation"
+        # 4. Impacto ERP (Nota Crédito / Ajuste) - Decoupled
+        EventBus.emit("ERP_IMPACT_REQUESTED", {
+            "event_type": "AGENCY_BOOKING_ADJUSTMENT",
+            "payload": {
+                "booking_id": str(booking.id),
+                "amount_adjusted": float(-valor_a_descontar * booking.numero_personas),
+                "reason": "Partial component cancellation"
+            },
+            "user_id": self.user.id
         })
 
         return booking

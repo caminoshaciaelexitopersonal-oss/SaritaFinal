@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.domain_business.operativa.models import ProviderProfile
 
 class CategoriaProducto(models.Model):
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='admin_categorias_inventario')

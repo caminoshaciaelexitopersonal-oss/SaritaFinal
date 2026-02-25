@@ -5,7 +5,7 @@ import uuid
 from apps.companies.models import Company
 from apps.api.models import CustomUser
 from ..models import Document, DocumentVersion, Process, DocumentType, ProcessType
-from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import Perfil
+from apps.domain_business.operativa.models import Perfil
 
 # --- FÁBRICAS DE ENTIDADES BASE ---
 class CompanyFactory(DjangoModelFactory):

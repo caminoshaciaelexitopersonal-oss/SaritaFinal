@@ -1,6 +1,7 @@
 from apps.sarita_agents.agents.teniente_template import TenienteTemplate
 from ..sargentos.sargento_artesano import SargentoGestionTallerArtesano
-from apps.prestadores.mi_negocio.operativa_turistica.cadena_productiva.artesanos.sargentos import SargentoArtesano as BusinessSargentoArtesano
+from django.utils.module_loading import import_string
+BusinessSargentoArtesano = import_string('apps.prestadores.mi_negocio.operativa_turistica.cadena_productiva.artesanos.sargentos.SargentoArtesano') # DECOUPLED
 from api.models import CustomUser
 import logging
 

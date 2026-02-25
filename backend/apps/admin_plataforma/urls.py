@@ -16,10 +16,10 @@ urlpatterns = [
     path('doctrina/', MetaStandardView.as_view(), name='meta-standard'),
 
  
-    # ERP SISTÉMICO - ACOPLAMIENTO FUNCIONAL TOTAL FASE 1
-    # Todos los módulos ahora importan de apps.prestadores y usan SystemicERPViewSetMixin
-    path('operativa/', include('apps.admin_plataforma.gestion_operativa.modulos_genericos.urls')),
-    path('comercial/', include('apps.admin_plataforma.gestion_comercial.urls')),
+    # ERP SISTÉMICO - CONSOLIDACIÓN FASE 2
+    # Los módulos clonados han sido eliminados. Se usan los dominios consolidados en domain_business.
+    path('operativa/', include('apps.domain_business.operativa.urls')),
+    path('comercial/', include('apps.domain_business.comercial.urls')),
     path('archivistica/', include('apps.admin_plataforma.gestion_archivistica.urls')),
     path('financiera/', include('apps.admin_plataforma.gestion_financiera.urls')),
     path('contabilidad/', include('apps.admin_plataforma.gestion_contable.contabilidad.urls')),

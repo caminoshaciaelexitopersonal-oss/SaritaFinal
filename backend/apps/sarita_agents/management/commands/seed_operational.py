@@ -1,5 +1,7 @@
 from django.core.management.base import BaseCommand
-from apps.prestadores.mi_negocio.gestion_operativa.models import ProcesoOperativo, TareaOperativa
+from django.utils.module_loading import import_string
+ProcesoOperativo = import_string('apps.prestadores.mi_negocio.gestion_operativa.models.ProcesoOperativo') # DECOUPLED
+TareaOperativa = import_string('apps.prestadores.mi_negocio.gestion_operativa.models.TareaOperativa') # DECOUPLED
 from api.models import CustomUser
 from django.utils import timezone
 

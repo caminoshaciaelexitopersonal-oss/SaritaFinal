@@ -6,7 +6,7 @@ from .models import (
     Vehicle, Conductor, ScheduledTrip, TransportBooking,
     TripLiquidation, TransportIncident, PassengerManifest
 )
-from apps.admin_plataforma.services.quintuple_erp import QuintupleERPService
+from apps.core_erp.event_bus import EventBus
 
 logger = logging.getLogger(__name__)
 
@@ -179,21 +179,18 @@ class TransportService:
         trip.estado = ScheduledTrip.TripStatus.LIQUIDADO
         trip.save()
 
-        # IMPACTO ERP
-        erp_service = QuintupleERPService(user=self.user)
+        # IMPACTO ERP - Decoupled F1
         payload = {
             "perfil_id": str(self.provider.id),
             "amount": float(total_ingresos),
             "description": f"Liquidación Viaje {trip.ruta.nombre} - {trip.fecha_salida}",
             "trip_id": str(trip.id)
         }
-        impact = erp_service.record_impact("TRANSPORT_TRIP_LIQUIDATED", payload)
-
-        contable_id = impact.get('contable_id')
-        if contable_id and not str(contable_id).startswith("ERROR"):
-            liq.asiento_contable_ref_id = contable_id
-
-        liq.save()
+        EventBus.emit("ERP_IMPACT_REQUESTED", {
+            "event_type": "TRANSPORT_TRIP_LIQUIDATED",
+            "payload": payload,
+            "user_id": self.user.id
+        })
 
         return liq
 

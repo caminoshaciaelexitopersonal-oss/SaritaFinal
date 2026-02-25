@@ -1,8 +1,10 @@
 # backend/apps/sarita_agents/management/commands/test_commercial_flow.py
 from django.core.management.base import BaseCommand
-from apps.prestadores.mi_negocio.gestion_comercial.services import FacturacionService
+from django.utils.module_loading import import_string
+FacturacionService = import_string('apps.prestadores.mi_negocio.gestion_comercial.services.FacturacionService') # DECOUPLED
 from api.models import CustomUser
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from django.utils.module_loading import import_string
+ProviderProfile = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models.ProviderProfile') # DECOUPLED
 import uuid
 
 class Command(BaseCommand):

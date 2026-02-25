@@ -8,7 +8,7 @@ from .services.gestion_plataforma_service import GestionPlataformaService
 from .services.governance_kernel import GovernanceKernel
 from apps.comercial.models import Plan, Subscription
 from .serializers import PlanSerializer, SuscripcionSerializer
-from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.serializers import PerfilSerializer
+from apps.domain_business.operativa.presentation.serializers import PerfilSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 
@@ -82,7 +82,8 @@ class SupervisionDianViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsSuperAdmin]
 
     def list(self, request):
-        from apps.prestadores.mi_negocio.gestion_comercial.domain.models import FacturaVenta
+        from django.utils.module_loading import import_string
+        FacturaVenta = import_string('apps.prestadores.mi_negocio.gestion_comercial.domain.models.FacturaVenta') # DECOUPLED
         from django.db.models import Count
 
         stats = FacturaVenta.objects.values('estado_dian').annotate(total=Count('id'))

@@ -10,7 +10,7 @@ from ..models import UsageMetric
 from ..models import PricingRule
 from apps.core_erp.billing_engine import BillingEngine as CoreBillingEngine
 from apps.core_erp.accounting_engine import AccountingEngine
-from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta, OperacionComercial
+from apps.domain_business.comercial.models import FacturaVenta, OperacionComercial
 from apps.admin_plataforma.gestion_contable.contabilidad.models import AdminJournalEntry, AdminAccountingTransaction, AdminAccount, AdminFiscalPeriod
 
 logger = logging.getLogger(__name__)

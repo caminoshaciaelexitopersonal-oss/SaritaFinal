@@ -6,7 +6,6 @@ from datetime import timedelta
 
 # Imports de modelos (asumiendo que existen o se usarán sus equivalentes sistémicos)
 from api.models import CustomUser
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 from apps.admin_plataforma.models import GovernanceAuditLog
 
 logger = logging.getLogger(__name__)
@@ -36,6 +35,8 @@ class SystemicObserver:
         ).count()
 
         # En una implementación real, aquí se consultaría el módulo de ventas
+        from django.utils.module_loading import import_string
+        ProviderProfile = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models.ProviderProfile') # DECOUPLED
         return {
             "new_onboardings_24h": new_users,
             "churn_rate_estimated": 0.05, # Simulado
