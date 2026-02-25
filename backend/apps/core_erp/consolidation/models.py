@@ -1,4 +1,5 @@
 from django.db import models
+ 
 from apps.core_erp.base_models import TenantAwareModel, BaseErpModel
 
 class IntercompanyMatch(BaseErpModel):
@@ -33,3 +34,4 @@ class ConsolidatedReportSnapshot(TenantAwareModel):
     class Meta:
         app_label = 'core_erp'
         verbose_name = "Consolidated Report Snapshot"
+ 
