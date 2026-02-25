@@ -36,5 +36,10 @@ python manage.py sqlmigrate admin_payroll 0001
 - El **EventBus** es ahora el mediador obligatorio para impactos financieros.
 - Se debe verificar que el listener en `admin_contabilidad` esté correctamente registrado en el `ready()` de su `AppConfig`.
 
+## 5. REQUERIMIENTOS DE FASE B (LEDGER ENGINE)
+- El **LedgerEngine** ahora requiere que cada asiento sea validado y "posteado" formalmente.
+- No se deben crear `LedgerEntry` sin pasar por el `post_entry`, ya que este método genera el hash de integridad y firma inmutable.
+- Los nuevos campos `amount_base` y `amount_transaction` se autocalculan durante el posteo si no se proveen.
+
 ---
 **Estrategia definida por Jules.**

@@ -31,15 +31,18 @@ def handle_financial_impact_request(payload):
                 AdminAccountingTransaction.objects.create(
                     entry=journal_entry,
                     account=account,
-                    debit=Decimal(impact.get('debit', '0.00')),
-                    credit=Decimal(impact.get('credit', '0.00')),
+                    debit_amount=Decimal(impact.get('debit', '0.00')),
+                    credit_amount=Decimal(impact.get('credit', '0.00')),
                     description=payload.get('description')
                 )
             except AdminChartOfAccounts.DoesNotExist:
                 logger.error(f"Account {account_code} not found for tenant {tenant_id}")
-                # In a real system, this might trigger an alert or a suspense account entry
 
-        logger.info(f"Journal Entry {journal_entry.id} created successfully via EventBus")
+        # Phase B: Formal Posting (Finalizes balance validation, hashing, and multi-currency)
+        from apps.core_erp.accounting.ledger_engine import LedgerEngine
+        LedgerEngine.post_entry(journal_entry.id)
+
+        logger.info(f"Journal Entry {journal_entry.id} posted successfully via EventBus")
 
     except Exception as e:
         logger.error(f"Failed to process financial impact: {e}")

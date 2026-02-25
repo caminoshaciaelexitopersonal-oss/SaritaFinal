@@ -27,6 +27,11 @@ class Account(BaseAccount, AccountingTenantModel):
     initial_balance = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
     is_active = models.BooleanField(default=True)
 
+    # Phase B: IFRS and Consolidation mapping
+    ifrs_mapping = models.CharField(max_length=50, null=True, blank=True)
+    consolidation_code = models.CharField(max_length=50, null=True, blank=True)
+    is_consolidation_account = models.BooleanField(default=False)
+
     class Meta:
         app_label = 'core_erp'
         unique_together = ('chart_of_accounts', 'code')
@@ -50,6 +55,12 @@ class JournalEntry(BaseJournalEntry, AccountingTenantModel):
     rule_version = models.CharField(max_length=10, default="1.0")
     financial_event_id = models.CharField(max_length=255, db_index=True, null=True, blank=True)
 
+    # Phase B: Multi-Currency and Audit Hardening
+    base_currency = models.CharField(max_length=3, default='COP')
+    posted_at = models.DateTimeField(null=True, blank=True)
+    system_hash = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+    immutable_signature = models.TextField(null=True, blank=True)
+
     class Meta:
         app_label = 'core_erp'
         verbose_name = "Journal Entry"
@@ -59,7 +70,12 @@ class LedgerEntry(TenantAwareModel):
     account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='ledger_entries')
     debit_amount = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
     credit_amount = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+
+    # Phase B: Transaction vs Base Amounts
     currency = models.CharField(max_length=3, default='COP')
+    amount_transaction = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+    amount_base = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+
     description = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:

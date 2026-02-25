@@ -25,21 +25,21 @@ class ReportsEngine:
         """
         Generates Profit and Loss report (Income - Expenses).
         """
-        # Cuentas de Ingresos (4) y Gastos (5)
         read_db = ReportsEngine.get_read_db()
 
+        # Grouping by Account Type
         income_total = LedgerEntry.objects.using(read_db).filter(
             journal_entry__tenant_id=tenant_id,
             journal_entry__date__range=[start_date, end_date],
             journal_entry__is_posted=True,
-            account__code__startswith='4'
+            account__type='income'
         ).aggregate(balance=Sum('credit_amount') - Sum('debit_amount'))['balance'] or Decimal('0.00')
 
         expense_total = LedgerEntry.objects.using(read_db).filter(
             journal_entry__tenant_id=tenant_id,
             journal_entry__date__range=[start_date, end_date],
             journal_entry__is_posted=True,
-            account__code__startswith='5'
+            account__type='expense'
         ).aggregate(balance=Sum('debit_amount') - Sum('credit_amount'))['balance'] or Decimal('0.00')
 
         return {
@@ -59,21 +59,21 @@ class ReportsEngine:
             journal_entry__tenant_id=tenant_id,
             journal_entry__date__lte=cutoff_date,
             journal_entry__is_posted=True,
-            account__code__startswith='1'
+            account__type='asset'
         ).aggregate(balance=Sum('debit_amount') - Sum('credit_amount'))['balance'] or Decimal('0.00')
 
         liability_total = LedgerEntry.objects.using(read_db).filter(
             journal_entry__tenant_id=tenant_id,
             journal_entry__date__lte=cutoff_date,
             journal_entry__is_posted=True,
-            account__code__startswith='2'
+            account__type='liability'
         ).aggregate(balance=Sum('credit_amount') - Sum('debit_amount'))['balance'] or Decimal('0.00')
 
         equity_total = LedgerEntry.objects.using(read_db).filter(
             journal_entry__tenant_id=tenant_id,
             journal_entry__date__lte=cutoff_date,
             journal_entry__is_posted=True,
-            account__code__startswith='3'
+            account__type='equity'
         ).aggregate(balance=Sum('credit_amount') - Sum('debit_amount'))['balance'] or Decimal('0.00')
 
         return {
@@ -81,6 +81,28 @@ class ReportsEngine:
             "liabilities": liability_total,
             "equity": equity_total,
             "check": asset_total - (liability_total + equity_total)
+        }
+
+    @staticmethod
+    def get_cash_flow(tenant_id, start_date, end_date):
+        """
+        Generates Cash Flow report using the Indirect Method.
+        Phase B Implementation.
+        """
+        pnl = ReportsEngine.get_p_and_l(tenant_id, start_date, end_date)
+        net_income = pnl['net_profit']
+
+        # In a real IFRS implementation, we would calculate deltas in Assets/Liabilities
+        # Simplified for Phase B prototype:
+        return {
+            "operating_activities": {
+                "net_income": net_income,
+                "depreciation_adjustments": Decimal('0.00'),
+                "changes_in_working_capital": Decimal('0.00')
+            },
+            "investing_activities": Decimal('0.00'),
+            "financing_activities": Decimal('0.00'),
+            "net_increase_cash": net_income
         }
 
     @staticmethod
