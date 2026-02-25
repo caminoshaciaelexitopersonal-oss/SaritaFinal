@@ -30,6 +30,7 @@ urlpatterns = [
     path('budget/', include('apps.admin_plataforma.gestion_contable.presupuesto.urls')),
     path('projects/', include('apps.admin_plataforma.gestion_contable.proyectos.urls')),
     path('company/', include('apps.admin_plataforma.gestion_contable.empresa.urls')),
+    path('control-tower/', include('apps.control_tower.urls')),
     path('defense-predictive/', include('apps.defense_predictive.urls')),
     path('defense-deception/', include('apps.defense_deception.urls')),
  
