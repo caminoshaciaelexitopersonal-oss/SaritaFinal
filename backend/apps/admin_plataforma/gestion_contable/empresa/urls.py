@@ -1,11 +1,7 @@
-# from django.urls import path, include
-# from rest_framework.routers import DefaultRouter
-# from .views import InventarioViewSet, CostoViewSet
+from rest_framework.routers import DefaultRouter
+from .views import AdminCompanyViewSet
 
-# router = DefaultRouter()
-# router.register(r'inventarios', InventarioViewSet)
-# router.register(r'costos', CostoViewSet)
+router = DefaultRouter()
+router.register(r'profile', AdminCompanyViewSet, basename='admin-company')
 
-# urlpatterns = [
-#     path('', include(router.urls)),
-# ]
+urlpatterns = router.urls

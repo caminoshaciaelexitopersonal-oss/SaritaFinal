@@ -1,48 +1,28 @@
 from rest_framework import viewsets, permissions
-from apps.admin_plataforma.gestion_contable.inventario.models import CategoriaProducto, Almacen, Producto, MovimientoInventario
+from .models import ProductCategory, Warehouse, Product, InventoryMovement
 from .serializers import (
+    ProductCategorySerializer, WarehouseSerializer,
+    ProductSerializer, InventoryMovementSerializer
+)
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
-    CategoriaProductoSerializer,
-    AlmacenSerializer,
-    ProductoSerializer,
-    MovimientoInventarioSerializer
-)
 
-class IsPrestadorOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        # El perfil está en el objeto directamente o a través de una relación
-        if hasattr(obj, 'perfil'):
-            return obj.perfil == request.user.perfil_prestador
-        if hasattr(obj, 'producto') and hasattr(obj.producto, 'perfil'):
-             return obj.producto.perfil == request.user.perfil_prestador
-        return False
-
-class CategoriaProductoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-    serializer_class = CategoriaProductoSerializer
+class ProductCategoryViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = ProductCategory.objects.all()
+    serializer_class = ProductCategorySerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
-    def get_queryset(self):
-        return CategoriaProducto.objects.filter(perfil=self.request.user.perfil_prestador)
-
-class AlmacenViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-    serializer_class = AlmacenSerializer
+class WarehouseViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = Warehouse.objects.all()
+    serializer_class = WarehouseSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
-    def get_queryset(self):
-        return Almacen.objects.filter(perfil=self.request.user.perfil_prestador)
-
-class ProductoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-    serializer_class = ProductoSerializer
+class ProductViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
-    def get_queryset(self):
-        return Producto.objects.filter(perfil=self.request.user.perfil_prestador)
-
-class MovimientoInventarioViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-    serializer_class = MovimientoInventarioSerializer
+class InventoryMovementViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = InventoryMovement.objects.all()
+    serializer_class = InventoryMovementSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
-
-    def get_queryset(self):
-        # Filtra movimientos basados en los productos del perfil del usuario
-        return MovimientoInventario.objects.filter(producto__perfil=self.request.user.perfil_prestador)

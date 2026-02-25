@@ -1,30 +1,23 @@
 from rest_framework import serializers
-from apps.admin_plataforma.gestion_contable.proyectos.models import Proyecto, IngresoProyecto, CostoProyecto
+from .models import Project, ProjectIncome, ProjectCost
 
-class IngresoProyectoSerializer(serializers.ModelSerializer):
+class ProjectIncomeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = IngresoProyecto
-        fields = ['id', 'descripcion', 'monto', 'fecha', 'factura']
+        model = ProjectIncome
+        fields = ['id', 'project', 'date', 'amount', 'description']
 
-class CostoProyectoSerializer(serializers.ModelSerializer):
+class ProjectCostSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CostoProyecto
-        fields = ['id', 'descripcion', 'monto', 'fecha', 'factura_compra']
+        model = ProjectCost
+        fields = ['id', 'project', 'date', 'amount', 'description', 'category']
 
-class ProyectoSerializer(serializers.ModelSerializer):
-    ingresos = IngresoProyectoSerializer(many=True, read_only=True)
-    costos = CostoProyectoSerializer(many=True, read_only=True)
-    total_ingresos = serializers.DecimalField(max_digits=18, decimal_places=2, read_only=True)
-    total_costos = serializers.DecimalField(max_digits=18, decimal_places=2, read_only=True)
-    rentabilidad = serializers.DecimalField(max_digits=18, decimal_places=2, read_only=True)
+class ProjectSerializer(serializers.ModelSerializer):
+    incomes = ProjectIncomeSerializer(many=True, read_only=True)
+    costs = ProjectCostSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Proyecto
+        model = Project
         fields = [
-            'id', 'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin', 'presupuesto',
-            'estado', 'ingresos', 'costos', 'total_ingresos', 'total_costos', 'rentabilidad'
+            'id', 'name', 'description', 'start_date', 'end_date',
+            'budget_allocated', 'status', 'incomes', 'costs'
         ]
-
-    def create(self, validated_data):
-        validated_data['perfil'] = self.context['request'].user.perfil_prestador
-        return super().create(validated_data)

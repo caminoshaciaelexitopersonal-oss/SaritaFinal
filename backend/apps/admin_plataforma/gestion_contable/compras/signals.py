@@ -1,53 +1,20 @@
-# backend/apps/prestadores/mi_negocio/gestion_contable/compras/signals.py
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from decimal import Decimal
+from .models import PurchaseInvoice
+from apps.core_erp.event_bus import EventBus
 
-from .models import FacturaCompra
-from apps.admin_plataforma.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
-
-@receiver(post_save, sender=FacturaCompra)
-def crear_asiento_contable_factura_compra(sender, instance, created, **kwargs):
-    """
-    Crea automáticamente el asiento contable cuando se crea una nueva Factura de Compra.
-    """
-    if created:
-        # Asumimos códigos de cuenta estándar. En un sistema real, esto sería configurable.
-        # Por ejemplo, una cuenta de 'Cuentas por Pagar Proveedores' y una de 'Gastos Generales'.
-        try:
-            cuenta_por_pagar_code = '210501' # Pasivo - Cuentas por Pagar Nacionales
-            cuenta_gasto_code = '510506'    # Gasto - Sueldos y Salarios (Ejemplo, debería ser una cuenta de compra/gasto)
-
-            cuenta_por_pagar = ChartOfAccount.objects.get(code=cuenta_por_pagar_code)
-            cuenta_gasto = ChartOfAccount.objects.get(code=cuenta_gasto_code)
-        except ChartOfAccount.DoesNotExist:
-            # Si las cuentas no existen, no podemos crear el asiento.
-            # En un entorno real, esto debería registrar un error.
-            return
-
-        # 1. Crear la cabecera del asiento contable
-        journal_entry = JournalEntry.objects.create(
-            perfil=instance.perfil,
-            entry_date=instance.issue_date,
-            description=f"Asiento automático por Factura de Compra #{instance.number} de {instance.proveedor.nombre}",
-            entry_type="COMPRA",
-            user=instance.creado_por,
-            origin_document=instance
-        )
-
-        # 2. Crear las transacciones de débito y crédito
-        # Crédito a la cuenta por pagar (aumenta el pasivo)
-        Transaction.objects.create(
-            journal_entry=journal_entry,
-            account=cuenta_por_pagar,
-            credit=instance.total,
-            debit=Decimal('0.00')
-        )
-
-        # Débito a la cuenta de gasto (aumenta el gasto)
-        Transaction.objects.create(
-            journal_entry=journal_entry,
-            account=cuenta_gasto,
-            debit=instance.total,
-            credit=Decimal('0.00')
-        )
+@receiver(post_save, sender=PurchaseInvoice)
+def request_purchase_financial_impact(sender, instance, created, **kwargs):
+    if created and instance.status == 'APPROVED':
+        payload = {
+            "tenant_id": str(instance.tenant_id),
+            "event_type": "PURCHASE_INVOICE_APPROVED",
+            "date": str(instance.issue_date or instance.created_at.date()),
+            "description": f"Purchase: {instance.supplier.name} - Inv {instance.number}",
+            "reference": f"PUR-{instance.id}",
+            "impacts": [
+                {"account_code": "510101", "debit": str(instance.total_amount), "credit": "0.00"},
+                {"account_code": "220501", "debit": "0.00", "credit": str(instance.total_amount)}
+            ]
+        }
+        EventBus.emit("FINANCIAL_IMPACT_REQUESTED", payload)

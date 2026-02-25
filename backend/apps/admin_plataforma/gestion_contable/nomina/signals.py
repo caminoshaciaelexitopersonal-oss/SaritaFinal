@@ -1,65 +1,32 @@
-# backend/apps/prestadores/mi_negocio/gestion_contable/nomina/signals.py
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from .models import PayrollRun
+from apps.core_erp.event_bus import EventBus
+from apps.core_erp.contracts.financial_contract import JournalEntryDTO, JournalEntryLineDTO
 from decimal import Decimal
 
-from .models import Planilla
-from apps.admin_plataforma.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
-
-@receiver(post_save, sender=Planilla)
-def crear_asiento_contable_planilla(sender, instance, created, **kwargs):
+@receiver(post_save, sender=PayrollRun)
+def request_payroll_financial_impact(sender, instance, created, **kwargs):
+    """
+    Emits an event for financial impact instead of creating models directly.
+    Achieves Domain Isolation (Stage 3).
+    """
     if created:
-        try:
-            # Se asume que las cuentas existen para el perfil. Es crucial que el plan de cuentas se cree al crear un perfil.
-            cuenta_gasto_salarios = ChartOfAccount.objects.get(perfil=instance.perfil, code='510506') # Gasto - Sueldos
-            cuenta_por_pagar_salarios = ChartOfAccount.objects.get(perfil=instance.perfil, code='250501') # Pasivo - Salarios por pagar
-            cuenta_deducciones_por_pagar = ChartOfAccount.objects.get(perfil=instance.perfil, code='237005') # Pasivo - Aportes y retenciones de nómina
-        except ChartOfAccount.DoesNotExist:
-            # Si alguna cuenta esencial no existe, no se puede crear el asiento.
-            # Se podría loggear un error aquí para notificar al administrador.
-            return
+        # Create DTO for the impact
+        # Note: We still need to know which accounts to use, or the listener handles it.
+        # Standard: Domain provides the 'intent' and 'amounts', Accounting handles the 'posting'.
 
-        # Determinar el usuario que crea el asiento.
-        user = None
-        if instance.novedades.exists():
-            first_novedad = instance.novedades.first()
-            if hasattr(first_novedad, 'empleado') and hasattr(first_novedad.empleado, 'creado_por'):
-                 user = first_novedad.empleado.creado_por
+        payload = {
+            "tenant_id": str(instance.tenant_id),
+            "event_type": "PAYROLL_RUN_FINALIZED",
+            "date": str(instance.period_end or instance.created_at.date()),
+            "description": f"Payroll Journal Entry: Period {instance.period_start} to {instance.period_end}",
+            "reference": f"PAYROLL-RUN-{instance.id}",
+            "impacts": [
+                {"account_code": "510506", "debit": str(instance.total_earnings), "credit": "0.00"},
+                {"account_code": "250501", "debit": "0.00", "credit": str(instance.net_total)},
+                {"account_code": "237005", "debit": "0.00", "credit": str(instance.total_deductions)}
+            ]
+        }
 
-        if not user:
-            # Si no se puede determinar un usuario, se aborta la creación del asiento.
-            return
-
-        journal_entry = JournalEntry.objects.create(
-            perfil=instance.perfil,
-            entry_date=instance.periodo_fin,
-            description=f"Asiento de nómina para el periodo {instance.periodo_inicio} a {instance.periodo_fin}",
-            entry_type="NOMINA",
-            user=user,
-            origin_document=instance
-        )
-
-        # Débito a la cuenta de gasto por el total devengado
-        Transaction.objects.create(
-            journal_entry=journal_entry,
-            account=cuenta_gasto_salarios,
-            debit=instance.total_devengado,
-            credit=Decimal('0.00')
-        )
-
-        # Crédito a la cuenta por pagar por el total neto
-        Transaction.objects.create(
-            journal_entry=journal_entry,
-            account=cuenta_por_pagar_salarios,
-            debit=Decimal('0.00'),
-            credit=instance.total_neto
-        )
-
-        # Crédito a la cuenta de deducciones para balancear el asiento
-        if instance.total_deducciones > 0:
-            Transaction.objects.create(
-                journal_entry=journal_entry,
-                account=cuenta_deducciones_por_pagar,
-                debit=Decimal('0.00'),
-                credit=instance.total_deducciones
-            )
+        EventBus.emit("FINANCIAL_IMPACT_REQUESTED", payload)

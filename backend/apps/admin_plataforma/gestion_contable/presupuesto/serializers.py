@@ -1,20 +1,20 @@
 from rest_framework import serializers
-from apps.admin_plataforma.gestion_contable.presupuesto.models import Presupuesto, PartidaPresupuestal, EjecucionPresupuestal
+from .models import Budget, BudgetItem, BudgetExecution
 
-class PresupuestoSerializer(serializers.ModelSerializer):
+class BudgetSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Presupuesto
-        fields = ['id', 'nombre', 'ano_fiscal', 'total_ingresos_presupuestado', 'total_gastos_presupuestado']
+        model = Budget
+        fields = [
+            'id', 'name', 'fiscal_year',
+            'total_estimated_income', 'total_estimated_expenses', 'is_active'
+        ]
 
-class PartidaPresupuestalSerializer(serializers.ModelSerializer):
-    cuenta_contable_nombre = serializers.CharField(source='cuenta_contable.name', read_only=True)
-
+class BudgetItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PartidaPresupuestal
-        fields = ['id', 'presupuesto', 'cuenta_contable', 'cuenta_contable_nombre', 'tipo', 'monto_presupuestado', 'monto_ejecutado']
-        read_only_fields = ('monto_ejecutado',)
+        model = BudgetItem
+        fields = ['id', 'budget', 'account_code', 'type', 'estimated_amount', 'executed_amount']
 
-class EjecucionPresupuestalSerializer(serializers.ModelSerializer):
+class BudgetExecutionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = EjecucionPresupuestal
-        fields = ['id', 'partida', 'fecha', 'monto', 'descripcion']
+        model = BudgetExecution
+        fields = ['id', 'item', 'date', 'amount', 'description', 'reference_id']

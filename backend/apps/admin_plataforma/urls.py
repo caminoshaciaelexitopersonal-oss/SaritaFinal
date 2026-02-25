@@ -23,6 +23,13 @@ urlpatterns = [
     path('archivistica/', include('apps.admin_plataforma.gestion_archivistica.urls')),
     path('financiera/', include('apps.admin_plataforma.gestion_financiera.urls')),
     path('contabilidad/', include('apps.admin_plataforma.gestion_contable.contabilidad.urls')),
+    path('payroll/', include('apps.admin_plataforma.gestion_contable.nomina.urls')),
+    path('fixed-assets/', include('apps.admin_plataforma.gestion_contable.activos_fijos.urls')),
+    path('procurement/', include('apps.admin_plataforma.gestion_contable.compras.urls')),
+    path('inventory/', include('apps.admin_plataforma.gestion_contable.inventario.urls')),
+    path('budget/', include('apps.admin_plataforma.gestion_contable.presupuesto.urls')),
+    path('projects/', include('apps.admin_plataforma.gestion_contable.proyectos.urls')),
+    path('company/', include('apps.admin_plataforma.gestion_contable.empresa.urls')),
     path('defense-predictive/', include('apps.defense_predictive.urls')),
     path('defense-deception/', include('apps.defense_deception.urls')),
  

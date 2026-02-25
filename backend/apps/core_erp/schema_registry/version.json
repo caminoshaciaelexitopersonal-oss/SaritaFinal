@@ -1,0 +1,18 @@
+{
+  "last_standardization_sync": "2026-05-20",
+  "global_schema_version": "v2.1",
+  "compliant_modules": [
+    "admin_payroll",
+    "admin_fixed_assets",
+    "admin_procurement",
+    "admin_inventory",
+    "admin_budget",
+    "admin_projects",
+    "admin_company",
+    "admin_contabilidad"
+  ],
+  "naming_standard": "Technical English",
+  "primary_key_standard": "UUID v4",
+  "isolation_standard": "TenantAwareModel",
+  "communication_standard": "Event-Driven (EventBus)"
+}
