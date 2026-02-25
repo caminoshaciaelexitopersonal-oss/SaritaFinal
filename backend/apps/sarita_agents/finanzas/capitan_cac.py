@@ -2,7 +2,7 @@
 import logging
 from ..agents.capitan_template import CapitanTemplate
 from apps.sarita_agents.models import Mision, PlanTáctico
-from apps.finanzas.models import FinancialEventRecord
+from apps.finanzas.models import FinancialEventRecord # DECOUPLED (TODO: Move to FinancialService)
 from django.db.models import Sum
 
 logger = logging.getLogger(__name__)

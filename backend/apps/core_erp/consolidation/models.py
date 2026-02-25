@@ -63,6 +63,7 @@ class ConsolidatedReportSnapshot(BaseErpModel):
     tenants_included = models.JSONField()
     data = models.JSONField()
     method_applied = models.CharField(max_length=50)
+    correlation_id = models.CharField(max_length=100, db_index=True, null=True, blank=True)
 
     class Meta:
         app_label = 'core_erp'

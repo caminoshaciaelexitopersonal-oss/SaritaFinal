@@ -37,15 +37,44 @@ class EventBus:
     def emit(cls, event_type, payload):
         """
         Dispara un evento y notifica a todos sus suscriptores.
+        Incluye auditoría automática y propagación de correlation_id.
         """
-        logger.info(f"Emitiendo evento ERP: {event_type}")
+        from .observability.middleware import get_correlation_id
+        from .models import EventAuditLog
+        import uuid
+
+        correlation_id = get_correlation_id()
+        tenant_id = payload.get('tenant_id')
+
+        logger.info(f"Emitiendo evento ERP: {event_type} (CID: {correlation_id})")
+
+        # 1. Crear Registro de Auditoría (Fase 5.3)
+        audit_entry = EventAuditLog.objects.create(
+            event_type=event_type,
+            correlation_id=correlation_id,
+            tenant_id=tenant_id,
+            payload=payload,
+            status='EMITTED'
+        )
+
         subscribers = cls._subscribers.get(event_type, [])
+        success_count = 0
 
         for callback in subscribers:
             try:
+                # Inyectar correlation_id si es necesario (propagación)
+                payload['_correlation_id'] = correlation_id
                 callback(payload)
+                success_count += 1
             except Exception as e:
                 logger.error(f"Error procesando suscriptor de {event_type}: {str(e)}")
+                audit_entry.status = 'PARTIAL_FAILURE'
+                audit_entry.error_details = (audit_entry.error_details or "") + f"\nCallback error: {str(e)}"
+
+        if success_count == len(subscribers):
+            audit_entry.status = 'PROCESSED'
+
+        audit_entry.save()
 
     @classmethod
     def clear_subscribers(cls):

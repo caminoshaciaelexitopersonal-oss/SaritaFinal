@@ -46,6 +46,8 @@ class JournalEntry(BaseJournalEntry, AccountingTenantModel):
     event_type = models.CharField(max_length=100, null=True, blank=True)
     is_reversal = models.BooleanField(default=False)
     reversed_entry_id = models.UUIDField(null=True, blank=True)
+    correlation_id = models.CharField(max_length=100, db_index=True, null=True, blank=True)
+    rule_version = models.CharField(max_length=10, default="1.0")
 
     class Meta:
         app_label = 'core_erp'

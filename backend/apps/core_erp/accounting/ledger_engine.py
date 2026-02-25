@@ -56,6 +56,8 @@ class LedgerEngine:
 
         # 2. Generar JournalEntry y Líneas LedgerEntry vía JournalService
         # JournalService.create_entry is allowed here as it's part of the accounting core
+        from ..observability.middleware import get_correlation_id
+
         entry = JournalService.create_entry(
             tenant_id=str(tenant_id),
             entry_date=timezone.now().date(),
@@ -65,6 +67,8 @@ class LedgerEngine:
         )
 
         entry.event_type = event_type
+        entry.correlation_id = payload.get('_correlation_id') or get_correlation_id()
+        entry.rule_version = PostingRules.VERSION
         entry.save()
 
         # 3. Validar y Postear definitivamente

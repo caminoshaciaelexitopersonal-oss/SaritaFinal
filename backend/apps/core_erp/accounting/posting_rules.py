@@ -6,6 +6,7 @@ class PostingRules:
     Motor Declarativo de Reglas Contables.
     Define cómo los eventos de negocio impactan el libro mayor.
     """
+    VERSION = "1.0"
 
     @staticmethod
     def get_rule_for_event(event_type: str, payload: Dict[str, Any]) -> List[Dict[str, Any]]:
