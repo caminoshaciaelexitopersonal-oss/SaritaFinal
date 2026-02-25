@@ -4,7 +4,7 @@ Este documento constituye el diagnóstico estructural y funcional definitivo del
 
 > [!IMPORTANT]
 > Para una versión exhaustiva y detallada de este diagnóstico, consulte el archivo:
-> `REPORTE_ANALISIS_INTEGRAL_SUPER_ADMIN_2026.md`
+> `REPORTE_DIAGNOSTICO_ESTRUCTURAL_SISTEMICO_2026.md`
 
 ## 1. INVENTARIO TOTAL DE COMPONENTES POR DOMINIO
 
