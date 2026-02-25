@@ -34,3 +34,23 @@ class DecisionLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = DecisionLog
         fields = '__all__'
+
+class ScenarioSimulationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScenarioSimulation
+        fields = '__all__'
+
+class RollingForecastSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RollingForecast
+        fields = '__all__'
+
+class RiskExposureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RiskExposure
+        fields = '__all__'
+
+class DecisionRuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EnterpriseDecisionRule
+        fields = '__all__'

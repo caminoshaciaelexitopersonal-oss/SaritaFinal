@@ -6,6 +6,14 @@ class EnterpriseConfig(AppConfig):
     verbose_name = 'Enterprise Operating System Core'
 
     def ready(self):
-        # Registration of Enterprise-level listeners
+        # 1. Policy & Governance Handlers
         from .application.policy_service import PolicyEvaluationService
         PolicyEvaluationService.register_handlers()
+
+        # 2. Decision Engine Handlers
+        from .application.decision_engine_handler import register_decision_handlers
+        register_decision_handlers()
+
+        # 3. Intelligence & Forecast Handlers
+        from .application.strategic_handler import register_strategic_handlers
+        register_strategic_handlers()

@@ -4,10 +4,13 @@ from .domain.strategic_objective import StrategicObjective
 from .domain.budget import CorporateBudget
 from .domain.workflow import EnterpriseWorkflow
 from .domain.logs import DecisionLog
+from .domain.intelligence import ScenarioSimulation, RollingForecast
+from .domain.decision_engine import RiskExposure, EnterpriseDecisionRule
 from .serializers import (
     EnterprisePolicySerializer, StrategicObjectiveSerializer,
     CorporateBudgetSerializer, EnterpriseWorkflowSerializer,
-    DecisionLogSerializer
+    DecisionLogSerializer, ScenarioSimulationSerializer,
+    RollingForecastSerializer, RiskExposureSerializer, DecisionRuleSerializer
 )
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
@@ -35,4 +38,24 @@ class EnterpriseWorkflowViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
 class DecisionLogViewSet(SystemicERPViewSetMixin, viewsets.ReadOnlyModelViewSet):
     queryset = DecisionLog.objects.all()
     serializer_class = DecisionLogSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+
+class ScenarioSimulationViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = ScenarioSimulation.objects.all()
+    serializer_class = ScenarioSimulationSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+
+class RollingForecastViewSet(SystemicERPViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = RollingForecast.objects.all()
+    serializer_class = RollingForecastSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+
+class RiskExposureViewSet(SystemicERPViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = RiskExposure.objects.all()
+    serializer_class = RiskExposureSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+
+class DecisionRuleViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = EnterpriseDecisionRule.objects.all()
+    serializer_class = DecisionRuleSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
