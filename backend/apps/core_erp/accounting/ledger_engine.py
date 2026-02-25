@@ -41,21 +41,35 @@ class LedgerEngine:
     def post_event(event_type: str, payload: dict):
         """
         Método Central: Procesa un evento de negocio y genera el impacto contable real.
+        Garantiza idempotencia y atomicidad estricta.
+        Incluye monitoreo de performance (Fase 6.6).
         """
+        import time
+        start_time = time.time()
         logger.info(f"LedgerEngine: Procesando evento {event_type}")
 
         tenant_id = payload.get("tenant_id") or payload.get("organization_id")
         if not tenant_id:
              raise ValueError("tenant_id es obligatorio en el payload del evento contable.")
 
-        # 1. Obtener regla desde posting_rules
+        # 1. Verificación de Idempotencia (Fase 6.1.2)
+        financial_event_id = payload.get("financial_event_id") or payload.get("reference")
+        if financial_event_id:
+            existing = JournalEntry.objects.filter(
+                tenant_id=tenant_id,
+                financial_event_id=financial_event_id
+            ).first()
+            if existing:
+                logger.warning(f"Evento {financial_event_id} ya procesado. Omitiendo duplicado.")
+                return existing
+
+        # 2. Obtener regla desde posting_rules
         lines_data = PostingRules.get_rule_for_event(event_type, payload)
         if not lines_data:
             logger.info(f"No hay reglas contables definidas para el evento {event_type}. Saltando.")
             return None
 
-        # 2. Generar JournalEntry y Líneas LedgerEntry vía JournalService
-        # JournalService.create_entry is allowed here as it's part of the accounting core
+        # 3. Generar JournalEntry y Líneas LedgerEntry vía JournalService
         from ..observability.middleware import get_correlation_id
 
         entry = JournalService.create_entry(
@@ -67,18 +81,24 @@ class LedgerEngine:
         )
 
         entry.event_type = event_type
+        entry.financial_event_id = financial_event_id
         entry.correlation_id = payload.get('_correlation_id') or get_correlation_id()
         entry.rule_version = PostingRules.VERSION
         entry.save()
 
-        # 3. Validar y Postear definitivamente
-        return LedgerEngine.post_entry(entry.id)
+        # 4. Validar y Postear definitivamente
+        result = LedgerEngine.post_entry(entry.id)
+
+        duration = time.time() - start_time
+        logger.info(f"LedgerEngine: Evento {event_type} procesado en {duration:.4f}s")
+        return result
 
     @staticmethod
     @transaction.atomic
     def post_entry(entry_id: str):
         """
         Realiza la contabilización definitiva de un asiento.
+        Implementa protección contra race conditions bloqueando filas críticas.
         """
         entry = JournalEntry.objects.select_for_update().get(id=entry_id)
         if entry.is_posted:
@@ -87,7 +107,12 @@ class LedgerEngine:
         if entry.period.status != 'open':
             raise FiscalPeriodClosedError(f"Periodo fiscal {entry.period.id} está cerrado.")
 
-        # Validaciones de Integridad
+        # 1. Bloqueo de Cuentas para consistencia (Fase 6.1.3)
+        account_ids = entry.lines.values_list('account_id', flat=True)
+        # Forzar select_for_update en cuentas involucradas
+        list(Account.plain_objects.select_for_update().filter(id__in=account_ids))
+
+        # 2. Validaciones de Integridad
         LedgerEngine.validate_balance(entry)
 
         # Verificar que todas las cuentas estén activas
@@ -97,6 +122,7 @@ class LedgerEngine:
             if str(line.account.tenant_id) != str(entry.tenant_id):
                 raise TenantMismatchError(f"Cuenta {line.account.code} no pertenece al tenant {entry.tenant_id}")
 
+        # 3. Posteo Final
         entry.is_posted = True
         entry.save()
 

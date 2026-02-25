@@ -20,40 +20,54 @@ class ConsolidationEngine:
     5. ConsolidationApplier
     """
 
-    def generate_consolidated_trial_balance(self, holding_id: str, period: str = None) -> Dict[str, Any]:
+    def generate_consolidated_trial_balance(self, holding_id: str, period: str = None, use_cache: bool = True) -> Dict[str, Any]:
         """
         Flujo maestro de consolidación.
+        Implementa optimizaciones: incremental snapshots y cache inteligente (Fase 6.4).
         """
         holding = self._load_holding(holding_id)
-        tenants_memberships = self._collect_tenants(holding)
 
+        # 1. Intento de recuperación desde Cache/Snapshot (Fase 6.4.3)
+        if use_cache and period:
+            from .models import ConsolidatedReportSnapshot
+            cached = ConsolidatedReportSnapshot.objects.filter(
+                holding=holding,
+                report_type='TRIAL_BALANCE',
+                period=period
+            ).order_by('-generated_at').first()
+            if cached:
+                logger.info(f"Consolidación recuperada desde Snapshot para el periodo {period}")
+                return cached.data
+
+        tenants_memberships = self._collect_tenants(holding)
         individual_balances = []
         cutoff_date = timezone.now().date() # Simplificado para el periodo
 
-        for membership in tenants_memberships:
-            tenant = membership.tenant
+        # 2. Procesamiento Paralelo (Simulado con hilos para escalabilidad)
+        # En prod se usaría Celery chords o multiproc.
+        import concurrent.futures
 
+        def get_tenant_data(membership):
+            tenant = membership.tenant
             # 1. Obtener trial balance individual
             tb = LedgerEngine.get_trial_balance(str(tenant.id), cutoff_date)
-
-            # 2. Convertir moneda (CurrencyTranslator)
+            # 2. Convertir moneda
             translated_tb = self._translate_currency(
-                tb,
-                from_currency=tenant.currency,
-                to_currency=holding.base_currency,
-                period=period
+                tb, from_currency=tenant.currency, to_currency=holding.base_currency, period=period
+            )
+            # 3. Aplicar método
+            return self._apply_consolidation_method(
+                translated_tb, membership.ownership_percentage, membership.consolidation_method
             )
 
-            # 3. Aplicar método de consolidación (ConsolidationApplier)
-            weighted_tb = self._apply_consolidation_method(
-                translated_tb,
-                membership.ownership_percentage,
-                membership.consolidation_method
-            )
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            future_to_tenant = {executor.submit(get_tenant_data, m): m for m in tenants_memberships}
+            for future in concurrent.futures.as_completed(future_to_tenant):
+                res = future.result()
+                if res:
+                    individual_balances.append(res)
 
-            individual_balances.append(weighted_tb)
-
-        # 4. Agregación (TrialBalanceAggregator)
+        # 3. Agregación (TrialBalanceAggregator)
         aggregated = self._aggregate_balances(individual_balances)
 
         # 5. Eliminación Intercompany (IntercompanyEliminator)
@@ -70,7 +84,7 @@ class ConsolidationEngine:
             raise ValueError(f"El holding {holding.name} no tiene tenants asociados.")
         return list(memberships)
 
-    def _translate_currency(self, tb: Dict[str, Any], from_currency: str, to_currency: str, period: str) -> Dict[str, Any]:
+    def _translate_currency(self, tb: Dict[str, Any], from_currency: str, to_currency: str, period: str = None) -> Dict[str, Any]:
         if from_currency == to_currency:
             return tb
 
