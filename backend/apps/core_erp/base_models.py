@@ -92,6 +92,11 @@ class LedgerAccount(TenantAwareModel):
     type = models.CharField(max_length=20, choices=ACCOUNT_TYPES, null=True)
     parent_account = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='sub_accounts')
 
+    # Blueprint Alignment: Global + Local Mapping
+    ifrs_code = models.CharField(max_length=50, null=True, blank=True)
+    local_gaap_code = models.CharField(max_length=50, null=True, blank=True)
+    consolidation_mapping = models.CharField(max_length=100, null=True, blank=True)
+
     class Meta:
         abstract = True
 
@@ -187,7 +192,12 @@ class BaseAuditTrail(TenantAwareModel):
     action = models.CharField(max_length=100, null=True, blank=True)
     entity_type = models.CharField(max_length=50, null=True, blank=True)
     entity_id = models.UUIDField(null=True)
-    payload = models.JSONField(null=True)
+    payload = models.JSONField(null=True) # Full state snapshot
+
+    # Blueprint Alignment: Inmutable Audit with Delta
+    previous_value = models.JSONField(null=True, blank=True)
+    new_value = models.JSONField(null=True, blank=True)
+
     user_id = models.CharField(max_length=100, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     previous_hash = models.CharField(max_length=64, null=True, blank=True)

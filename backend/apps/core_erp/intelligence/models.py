@@ -1,36 +1,32 @@
 from django.db import models
-from apps.core_erp.base_models import BaseErpModel
+from apps.core_erp.base_models import TenantAwareModel
 
-class FinancialProjection(BaseErpModel):
+class FinancialProjection(TenantAwareModel):
     """
-    Predicciones de flujo de caja y obligaciones fiscales.
+    Blueprint Alignment: Forecasted financial metrics.
     """
-    class ProjectionType(models.TextChoices):
-        CASH_FLOW = 'CASH_FLOW', 'Cash Flow Forecast'
-        TAX_LIABILITY = 'TAX_LIABILITY', 'Tax Liability Projection'
-        REVENUE = 'REVENUE', 'Revenue Prediction'
-
-    tenant = models.ForeignKey('core_erp.Tenant', on_delete=models.CASCADE)
-    projection_type = models.CharField(max_length=20, choices=ProjectionType.choices)
+    projection_type = models.CharField(max_length=50) # REVENUE, CASHFLOW, CHURN
     target_date = models.DateField()
-    estimated_amount = models.DecimalField(max_digits=18, decimal_places=2)
-    confidence_score = models.DecimalField(max_digits=3, decimal_places=2, help_text="0.00 to 1.00")
-    model_version = models.CharField(max_length=50)
-    parameters_used = models.JSONField()
+    predicted_value = models.DecimalField(max_digits=18, decimal_places=2)
+    confidence_interval_low = models.DecimalField(max_digits=18, decimal_places=2, null=True)
+    confidence_interval_high = models.DecimalField(max_digits=18, decimal_places=2, null=True)
+    model_version = models.CharField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         app_label = 'core_erp'
+        verbose_name = "Financial Projection"
 
-class StrategicScenario(BaseErpModel):
+class SimulationScenario(TenantAwareModel):
     """
-    Motor de Simulación Estratégica.
+    Blueprint Alignment: 'What-if' strategic scenarios.
     """
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    base_snapshot_date = models.DateField()
-    variables = models.JSONField(help_text="Parámetros de simulación (e.g. nuevo impuesto, cambio FX)")
-    simulated_kpis = models.JSONField(null=True)
+    description = models.TextField()
+    parameters = models.JSONField() # e.g. {"tax_increase": 0.05, "fx_drop": 0.10}
+    results = models.JSONField(null=True) # Projected impact
     created_by = models.CharField(max_length=100)
 
     class Meta:
         app_label = 'core_erp'
+        verbose_name = "Simulation Scenario"
