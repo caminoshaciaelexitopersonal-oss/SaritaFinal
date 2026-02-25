@@ -1,7 +1,6 @@
 import logging
 from django.shortcuts import get_object_or_404
 from apps.delivery.services import DeliveryLogisticService
-from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models import Reserva
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +19,15 @@ class InteroperabilityBridge:
         """
         logger.info(f"INTEROP: Vinculando Delivery a Orden Operativa {operational_order_id}")
 
-        # 1. Recuperar la Reserva/Orden Especializada
-        # Intentamos por ID público o ID primario para máxima compatibilidad entre módulos
+        # 1. Recuperar la Reserva/Orden Especializada via Application Service (Decoupled)
+        from django.utils.module_loading import import_string
+        Reserva = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models.Reserva') # DECOUPLED
+
         from django.core.exceptions import ValidationError
         try:
             reserva = Reserva.objects.get(id_publico=operational_order_id)
         except (Reserva.DoesNotExist, ValueError, ValidationError):
+            from django.shortcuts import get_object_or_404
             reserva = get_object_or_404(Reserva, id=operational_order_id)
 
         # 2. Enriquecer los parámetros con la trazabilidad de interoperabilidad

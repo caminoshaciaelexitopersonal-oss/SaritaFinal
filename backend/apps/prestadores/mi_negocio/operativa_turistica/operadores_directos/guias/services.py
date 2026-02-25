@@ -5,7 +5,7 @@ from django.utils import timezone
 from .models import (
     GuiaTuristico, ServicioGuiado, LiquidacionGuia, IncidenciaServicio, CertificacionGuia
 )
-from apps.admin_plataforma.services.quintuple_erp import QuintupleERPService
+from apps.core_erp.event_bus import EventBus
 
 logger = logging.getLogger(__name__)
 
@@ -110,8 +110,7 @@ class GuideService:
         servicio.estado = ServicioGuiado.Estado.LIQUIDADO
         servicio.save()
 
-        # IMPACTO ERP (Comercial y Contable)
-        erp_service = QuintupleERPService(user=self.user)
+        # IMPACTO ERP (Comercial y Contable) - Decoupled F1
         payload = {
             "perfil_id": str(self.provider.id),
             "amount": float(servicio.precio_total),
@@ -119,9 +118,13 @@ class GuideService:
             "comision_guia": float(servicio.comision_guia)
         }
 
-        impact = erp_service.record_impact("GUIDED_SERVICE_COMPLETED", payload)
+        EventBus.emit("ERP_IMPACT_REQUESTED", {
+            "event_type": "GUIDED_SERVICE_COMPLETED",
+            "payload": payload,
+            "user_id": self.user.id
+        })
 
-        return impact
+        return {"status": "SUCCESS", "message": "Impact requested via EventBus"}
 
     @transaction.atomic
     def reportar_incidencia(self, servicio_id, descripcion, gravedad):

@@ -1,35 +1,13 @@
+# backend/apps/admin_plataforma/facturacion/signals.py
 import logging
+from django.db.models.signals import post_save
 from django.dispatch import receiver
-from apps.admin_plataforma.gestion_comercial.signals import factura_comercial_confirmada
-from apps.core_erp.billing_engine import BillingEngine
+# Redirigido a domain_business
+from apps.domain_business.comercial.models import SalesInvoice
 
 logger = logging.getLogger(__name__)
 
-@receiver(factura_comercial_confirmada)
-def handle_factura_confirmada(sender, **kwargs):
-    """
-    Receptor de la señal que se activa cuando una factura comercial es confirmada.
-    Este es el punto de entrada para el módulo de facturación.
-    """
-    factura = kwargs.get('factura')
-    if not factura:
-        return
-
-    log_context = {
-        "user_id": factura.creado_por.id,
-        "profile_id": factura.perfil.id,
-        "action": "PROCESS_COMMERCIAL_INVOICE",
-        "invoice_id": factura.id,
-        "source_module": "gestion_comercial",
-        "destination_module": "facturacion",
-    }
-
-    logger.info(
-        f"Señal 'factura_comercial_confirmada' recibida para la Factura ID: {factura.id}. "
-        f"Iniciando procesamiento en el módulo de facturación.",
-        extra=log_context
-    )
-
-    # Integración con Core ERP Billing Engine
-    logger.info(f"Integrando factura {factura.id} con BillingEngine...")
-    # BillingEngine.issue_invoice(factura)
+@receiver(post_save, sender=SalesInvoice)
+def handle_invoice_consolidated(sender, instance, created, **kwargs):
+    if created:
+        logger.info(f"FACTURACION: Nueva factura consolidada detectada: {instance.id}")

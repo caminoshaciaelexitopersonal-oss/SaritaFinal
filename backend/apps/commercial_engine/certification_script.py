@@ -15,7 +15,7 @@ from apps.commercial_engine.pipeline_engine import PipelineEngine
 from apps.commercial_engine.usage_logic import SaaSUsageBillingEngine
 from apps.treasury.bank_connector import BankConnector
 from apps.treasury.reconciliation_engine import ReconciliationEngine
-from apps.admin_plataforma.gestion_comercial.domain.models import FacturaVenta
+from apps.domain_business.comercial.models import FacturaVenta
 
 def run_certification():
     print("🚀 Iniciando Certificación Operativa SaaS...")

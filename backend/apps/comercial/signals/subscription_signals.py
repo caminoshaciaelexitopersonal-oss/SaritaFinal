@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from ..models import Subscription
-from apps.admin_plataforma.gestion_comercial.domain.models import OperacionComercial, ItemOperacionComercial, FacturaVenta
+from apps.domain_business.comercial.models import OperacionComercial, ItemOperacionComercial, FacturaVenta
 from decimal import Decimal
 import uuid
 

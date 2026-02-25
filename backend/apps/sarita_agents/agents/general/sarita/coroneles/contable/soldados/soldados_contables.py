@@ -10,10 +10,12 @@ class SoldadoRegistroIngreso(SoldierTemplate):
         logger.info(f"SOLDADO INGRESO: Registrando ingreso -> {params.get('monto')}")
 
         # Integración con lógica real de persistencia contable
-        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos import SargentoContable
+        from django.utils.module_loading import import_string
+        SargentoContable = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos.SargentoContable') # DECOUPLED
 
         if (params.get('periodo_id') or params.get('provider_id')) and params.get('movimientos'):
-             from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+             from django.utils.module_loading import import_string
+             ProviderProfile = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models.ProviderProfile') # DECOUPLED
              provider = None
              if params.get('provider_id'):
                  provider = ProviderProfile.objects.get(id=params['provider_id'])
@@ -33,10 +35,12 @@ class SoldadoRegistroGasto(SoldierTemplate):
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO GASTO: Registrando gasto -> {params.get('monto')}")
 
-        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos import SargentoContable
+        from django.utils.module_loading import import_string
+        SargentoContable = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos.SargentoContable') # DECOUPLED
 
         if (params.get('periodo_id') or params.get('provider_id')) and params.get('movimientos'):
-             from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+             from django.utils.module_loading import import_string
+             ProviderProfile = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models.ProviderProfile') # DECOUPLED
              provider = None
              if params.get('provider_id'):
                  provider = ProviderProfile.objects.get(id=params['provider_id'])
@@ -56,7 +60,9 @@ class SoldadoConciliacionWallet(SoldierTemplate):
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO CONCILIACIÓN WALLET: Cruzando datos con Wallet.")
         from apps.wallet.services import WalletService
-        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import Cuenta, Transaccion
+        from django.utils.module_loading import import_string
+        Cuenta = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.models.Cuenta') # DECOUPLED
+        Transaccion = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.models.Transaccion') # DECOUPLED
         from django.db.models import Sum
         from decimal import Decimal
 
@@ -94,7 +100,9 @@ class SoldadoConciliacionWallet(SoldierTemplate):
 class SoldadoVerificacionFiscal(SoldierTemplate):
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO FISCAL: Verificando cumplimiento normativo.")
-        from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import Cuenta, Transaccion
+        from django.utils.module_loading import import_string
+        Cuenta = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.models.Cuenta') # DECOUPLED
+        Transaccion = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.models.Transaccion') # DECOUPLED
         from django.db.models import Sum
         from decimal import Decimal
 

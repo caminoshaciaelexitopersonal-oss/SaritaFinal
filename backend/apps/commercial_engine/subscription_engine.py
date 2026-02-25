@@ -102,7 +102,7 @@ class SubscriptionEngine:
         if not period:
              # Fallback: crear uno para propósitos de la demo si no existe (solo en desarrollo)
              # Intentar obtener el perfil de la holding primero
-             from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+             from apps.domain_business.operativa.models import ProviderProfile
              from api.models import CustomUser
              admin_user = CustomUser.objects.filter(is_superuser=True).first()
              holding_profile, _ = ProviderProfile.objects.get_or_create(
@@ -118,7 +118,7 @@ class SubscriptionEngine:
              )
 
         # 1.5 Obtener/Crear Perfil de la Holding (Sarita) y Plan de Cuentas
-        from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+        from apps.domain_business.operativa.models import ProviderProfile
         from apps.admin_plataforma.gestion_contable.contabilidad.models import AdminChartOfAccounts
         from api.models import CustomUser
 

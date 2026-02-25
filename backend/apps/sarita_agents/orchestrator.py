@@ -2,8 +2,7 @@
 
 import logging
 from django.utils import timezone
-from apps.admin_plataforma.models import GovernancePolicy
-from .models import Mision
+from apps.application_services.governance_service import GovernanceService
 from .agents.general.sarita.coroneles.prestadores.coronel import PrestadoresCoronel
 from .agents.general.sarita.coroneles.operativo_general.coronel import CoronelOperativoGeneral
 from .agents.general.sarita.coroneles.operativa_turistica.coronel import CoronelOperativaTuristica
@@ -63,47 +62,37 @@ class SaritaOrchestrator:
         logger.info("GENERAL SARITA: Orquestador inicializado. Coroneles listos para recibir órdenes.")
 
     def start_mission(self, directive: dict, idempotency_key=None):
-        if idempotency_key and Mision.objects.filter(idempotency_key=idempotency_key).exists():
-            raise ValueError("Directiva duplicada.")
-
-        mision = Mision.objects.create(
-            idempotency_key=idempotency_key,
-            directiva_original=directive,
-            dominio=directive.get("domain"),
-            estado='EN_COLA'
-        )
-        return mision
+        return GovernanceService.create_mission(directive, idempotency_key)
 
     def execute_mission(self, mision_id: str):
-        attack_mode = GovernancePolicy.objects.filter(name__in=["KILL_SWITCH_AGENTS", "SYSTEM_ATTACK_MODE"], is_active=True).exists()
-        if attack_mode:
+        if GovernanceService.is_autonomy_suspended():
             logger.error(f"S-0: Misión {mision_id} RECHAZADA. Autonomía suspendida por estado de defensa.")
             return
 
         try:
-            mision = Mision.objects.get(id=mision_id)
-        except Mision.DoesNotExist:
+            mision = GovernanceService.get_mission(mision_id)
+        except Exception:
             logger.error(f"CRITICAL: Misión con ID {mision_id} no encontrada para ejecutar.")
             return
 
         if not self._validate_mission_integrity(mision):
-            mision.estado = 'FALLIDA'
-            mision.resultado_final = {"error": "Fallo de integridad en la directiva de la misión."}
-            mision.save()
+            GovernanceService.update_mission_status(
+                mision_id, 'FALLIDA',
+                {"error": "Fallo de integridad en la directiva de la misión."}
+            )
             return
 
         logger.info(f"GENERAL SARITA: Ejecutando misión {mision.id}")
-        mision.estado = 'EN_PROGRESO'
-        mision.save()
+        GovernanceService.update_mission_status(mision_id, 'EN_PROGRESO')
 
         domain = mision.dominio
         coronel = self.coroneles.get(domain)
 
         if not coronel:
-            mision.estado = 'FALLIDA'
-            mision.resultado_final = {"error": f"No se encontró un Coronel para el dominio '{domain}'."}
-            mision.timestamp_fin = timezone.now()
-            mision.save()
+            GovernanceService.update_mission_status(
+                mision_id, 'FALLIDA',
+                {"error": f"No se encontró un Coronel para el dominio '{domain}'."}
+            )
             logger.error(f"Misión {mision.id} falló: No se encontró Coronel para el dominio '{domain}'.")
             return
 
@@ -113,10 +102,11 @@ class SaritaOrchestrator:
     def handle_directive(self, directive: dict):
         mision = self.start_mission(directive)
         self.execute_mission(mision.id)
-        mision.refresh_from_db()
-        return mision.resultado_final or {"status": "EN_COLA", "mision_id": str(mision.id)}
+        # We fetch the mission again via service to get the final state
+        updated_mision = GovernanceService.get_mission(str(mision.id))
+        return updated_mision.resultado_final or {"status": "EN_COLA", "mision_id": str(mision.id)}
 
-    def _validate_mission_integrity(self, mision: Mision) -> bool:
+    def _validate_mission_integrity(self, mision) -> bool:
         if mision.dominio != mision.directiva_original.get("domain"):
             logger.error(f"S-0: Violación de integridad detectada en misión {mision.id}.")
             return False

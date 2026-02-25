@@ -1,7 +1,7 @@
 import logging
 import uuid
 from ..models import Subscription
-from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.domain_business.operativa.models import ProviderProfile
 from api.models import CustomUser
 
 logger = logging.getLogger(__name__)

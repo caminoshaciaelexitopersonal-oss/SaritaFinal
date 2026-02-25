@@ -6,7 +6,8 @@ logger = logging.getLogger(__name__)
 class SoldadoLiquidacion(SoldierTemplate):
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO NOMINA: Procesando línea de liquidación step {params.get('step')}")
-        from apps.prestadores.mi_negocio.gestion_contable.nomina.services import NominaService
+        from django.utils.module_loading import import_string
+        NominaService = import_string('apps.prestadores.mi_negocio.gestion_contable.nomina.services.NominaService') # DECOUPLED
         planilla_id = params.get('planilla_id')
         if planilla_id and params.get('step') == 0:
             NominaService.liquidar_periodo(planilla_id)

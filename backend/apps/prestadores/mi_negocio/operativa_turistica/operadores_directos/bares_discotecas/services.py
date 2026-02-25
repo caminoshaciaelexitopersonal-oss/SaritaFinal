@@ -6,7 +6,7 @@ from .models import (
     NightEvent, NightConsumption, NightConsumptionItem,
     LiquorInventory, InventoryMovement, CashClosing, EventLiquidation
 )
-from apps.admin_plataforma.services.quintuple_erp import QuintupleERPService
+from apps.core_erp.event_bus import EventBus
 
 logger = logging.getLogger(__name__)
 
@@ -88,8 +88,7 @@ class NightclubService:
         consumption.fecha_cierre = timezone.now()
         consumption.save()
 
-        # IMPACTO ERP (Vía 2 - Comercial & Contable)
-        erp_service = QuintupleERPService(user=self.user)
+        # IMPACTO ERP (Vía 2 - Comercial & Contable) - Decoupled F1
         payload = {
             "perfil_id": str(self.provider.id),
             "amount": float(consumption.total),
@@ -97,10 +96,14 @@ class NightclubService:
             "cliente_id": str(consumption.cliente_ref_id) if consumption.cliente_ref_id else None
         }
 
-        # Esto genera Factura + Asiento Contable + Registro Archivístico
-        impact = erp_service.record_impact("NIGHT_CONSUMPTION", payload)
+        # Esto genera Factura + Asiento Contable + Registro Archivístico vía suscriptores del bus
+        EventBus.emit("ERP_IMPACT_REQUESTED", {
+            "event_type": "NIGHT_CONSUMPTION",
+            "payload": payload,
+            "user_id": self.user.id
+        })
 
-        return impact
+        return {"status": "SUCCESS", "message": "Impact requested"}
 
     @transaction.atomic
     def cierre_caja(self, event_id, data):
@@ -155,14 +158,17 @@ class NightclubService:
         consumption.estado = NightConsumption.ConsumptionStatus.ANULADO
         consumption.save()
 
-        # Si estaba facturado, disparar impacto reverso (Nota Crédito)
+        # Si estaba facturado, disparar impacto reverso (Nota Crédito) - Decoupled F1
         if estado_anterior == NightConsumption.ConsumptionStatus.FACTURADO:
-            erp_service = QuintupleERPService(user=self.user)
-            erp_service.record_impact("NIGHT_CONSUMPTION_VOID", {
-                "perfil_id": str(self.provider.id),
-                "amount": float(-consumption.total),
-                "description": f"Anulación Consumo #{consumption.id}. Motivo: {motivo}",
-                "original_consumption_id": str(consumption.id)
+            EventBus.emit("ERP_IMPACT_REQUESTED", {
+                "event_type": "NIGHT_CONSUMPTION_VOID",
+                "payload": {
+                    "perfil_id": str(self.provider.id),
+                    "amount": float(-consumption.total),
+                    "description": f"Anulación Consumo #{consumption.id}. Motivo: {motivo}",
+                    "original_consumption_id": str(consumption.id)
+                },
+                "user_id": self.user.id
             })
 
         # Retornar items al inventario

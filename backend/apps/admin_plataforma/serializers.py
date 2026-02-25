@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 from apps.comercial.models import Plan, Subscription
-from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.domain_business.operativa.models import ProviderProfile
 
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:

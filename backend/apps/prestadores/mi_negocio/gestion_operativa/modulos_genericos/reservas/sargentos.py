@@ -1,10 +1,6 @@
-import logging
-from .models import Reserva
-logger = logging.getLogger(__name__)
+from apps.domain_business.operativa.sargentos import DomainSargentoReservas
+
 class SargentoReservas:
     @staticmethod
     def confirmar_reserva(reserva_id):
-        reserva = Reserva.objects.get(id=reserva_id)
-        reserva.estado = 'CONFIRMADA'
-        reserva.save()
-        logger.info(f"SARGENTO: Reserva {reserva_id} confirmada.")
+        DomainSargentoReservas.confirm_reservation(reserva_id)

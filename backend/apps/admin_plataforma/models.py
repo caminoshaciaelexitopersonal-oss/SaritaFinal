@@ -2,7 +2,7 @@
 import uuid
 from django.db import models
 from django.conf import settings
-from apps.admin_plataforma.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from apps.domain_business.operativa.models import ProviderProfile
 
 class AgentInteraction(models.Model):
     """
