@@ -11,6 +11,21 @@ class Tenant(BaseErpModel):
     currency = models.CharField(max_length=3, default='COP')
     is_active = models.BooleanField(default=True)
 
+ 
+    # Blueprint Alignment: Consolidation Method
+    CONSOLIDATION_METHODS = [
+        ('FULL', 'Global Integration (Full)'),
+        ('PROPORTIONAL', 'Proportional Participation'),
+        ('EQUITY', 'Equity Method'),
+        ('NONE', 'No Consolidation'),
+    ]
+    consolidation_method = models.CharField(
+        max_length=20,
+        choices=CONSOLIDATION_METHODS,
+        default='NONE'
+    )
+
+ 
     # Soporte opcional para jerarquía Holding
     parent_company = models.ForeignKey(
         'self',
