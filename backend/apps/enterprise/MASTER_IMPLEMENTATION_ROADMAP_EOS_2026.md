@@ -46,6 +46,11 @@ Transformar el blueprint estratégico y la arquitectura conceptual de la platafo
 *   **Legal Structuring:** Configuración de Subholdings regionales y Treasury Hubs (Ph 14).
 *   **Global Compliance Grid:** Automatización de reportes país-por-país (Ph 13).
 
+### FASE 9: Capital Markets Integration (60+ meses)
+*   **CSOE Implementation:** Optimización dinámica de WACC y estructura de capital (Ph 16).
+*   **Autonomous Issuance:** Motores de emisión de bonos y gestión de equity.
+*   **Structured Finance:** Securitización de activos operativos global.
+
 ---
 
 ## 3. ARQUITECTURA CLOUD CONCRETA

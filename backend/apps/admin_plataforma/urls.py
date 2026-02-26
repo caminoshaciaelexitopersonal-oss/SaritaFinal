@@ -33,6 +33,7 @@ urlpatterns = [
     path('control-tower/', include('apps.control_tower.urls')),
     path('enterprise/', include('apps.enterprise.urls')),
     path('global-holding/', include('apps.global_holding.urls')),
+    path('capital-markets/', include('apps.capital_markets.urls')),
     path('defense-predictive/', include('apps.defense_predictive.urls')),
     path('defense-deception/', include('apps.defense_deception.urls')),
  
