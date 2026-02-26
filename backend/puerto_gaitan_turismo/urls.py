@@ -99,6 +99,9 @@ urlpatterns = [
 
     # FASE 19: Corporate Sovereign Infrastructure (CSI)
     path('api/v1/sovereign-infrastructure/', include('apps.sovereign_infrastructure.urls')),
+
+    # FASE 20: Meta-Economic Autonomous Network (MAN)
+    path('api/v1/meta-economic-network/', include('apps.meta_economic_network.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo
