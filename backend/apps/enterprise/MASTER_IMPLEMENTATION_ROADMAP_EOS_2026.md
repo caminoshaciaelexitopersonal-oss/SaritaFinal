@@ -40,6 +40,12 @@ Transformar el blueprint estratégico y la arquitectura conceptual de la platafo
 *   **Tax Optimization:** Motor dinámico de precios de transferencia y eficiencia fiscal.
 *   **Macro Simulation:** Integración de feeds macroeconómicos para stress testing continuo.
 
+### FASE 8: Global Sovereign Infrastructure (36-60 meses)
+*   **Multi-Region Topology:** Despliegue activo-activo en 5 continentes (Ph 11).
+*   **Math Optimization:** Implementación del modelo RAROC global (Ph 12).
+*   **Legal Structuring:** Configuración de Subholdings regionales y Treasury Hubs (Ph 14).
+*   **Global Compliance Grid:** Automatización de reportes país-por-país (Ph 13).
+
 ---
 
 ## 3. ARQUITECTURA CLOUD CONCRETA
