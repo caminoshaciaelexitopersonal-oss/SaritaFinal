@@ -15,6 +15,7 @@ class EnterprisePolicy(TenantAwareModel):
         ESCALATE = 'ESCALATE', 'Escalate to CFO'
         ADJUST_BUDGET = 'ADJUST_BUDGET', 'Adjust Budget'
         WORKFLOW = 'WORKFLOW', 'Trigger Corrective Workflow'
+        OPTIMIZE = 'OPTIMIZE', 'Self-Optimize Policy'
 
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -26,6 +27,11 @@ class EnterprisePolicy(TenantAwareModel):
 
     action_on_breach = models.CharField(max_length=50, choices=Action.choices, default=Action.ALERT)
     action_params = models.JSONField(default=dict, blank=True)
+
+    # Phase 9: Autonomous Enterprise
+    autonomy_level = models.IntegerField(default=0, help_text="0: Alert, 1: Recommend, 2: Execute (Confirm), 3: Auto-Execute, 4: Adjust Rules, 5: Strategic Optimization")
+    dynamic_threshold_model = models.CharField(max_length=100, blank=True, null=True, help_text="ML model name for dynamic thresholds")
+    escalation_matrix = models.JSONField(default=dict, blank=True)
 
     is_active = models.BooleanField(default=True)
 

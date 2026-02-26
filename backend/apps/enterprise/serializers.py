@@ -4,6 +4,7 @@ from .domain.strategic_objective import StrategicObjective
 from .domain.budget import CorporateBudget
 from .domain.workflow import EnterpriseWorkflow, WorkflowStep
 from .domain.logs import DecisionLog, PolicyEvaluationLog
+from .domain.autonomous import LearningLoopRecord, AutonomousActionRecord, CashOptimizationProposal, SelfHealingAudit
 
 class EnterprisePolicySerializer(serializers.ModelSerializer):
     class Meta:
@@ -53,4 +54,24 @@ class RiskExposureSerializer(serializers.ModelSerializer):
 class DecisionRuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = EnterpriseDecisionRule
+        fields = '__all__'
+
+class LearningLoopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LearningLoopRecord
+        fields = '__all__'
+
+class AutonomousActionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AutonomousActionRecord
+        fields = '__all__'
+
+class CashProposalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CashOptimizationProposal
+        fields = '__all__'
+
+class SelfHealingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SelfHealingAudit
         fields = '__all__'

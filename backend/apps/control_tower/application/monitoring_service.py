@@ -83,7 +83,8 @@ class MonitoringService:
         EventBus.emit("KPI_UPDATED", {
             "tenant_id": str(tenant_id),
             "name": "DAILY_REVENUE",
-            "value": str(revenue_kpi.value)
+            "value": str(revenue_kpi.value),
+            "correlation_id": str(revenue_kpi.id)
         })
 
         profit_kpi = KPI.objects.create(
@@ -96,5 +97,6 @@ class MonitoringService:
         EventBus.emit("KPI_UPDATED", {
             "tenant_id": str(tenant_id),
             "name": "DAILY_NET_PROFIT",
-            "value": str(profit_kpi.value)
+            "value": str(profit_kpi.value),
+            "correlation_id": str(profit_kpi.id)
         })

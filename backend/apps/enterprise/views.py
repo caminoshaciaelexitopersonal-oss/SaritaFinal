@@ -6,11 +6,13 @@ from .domain.workflow import EnterpriseWorkflow
 from .domain.logs import DecisionLog
 from .domain.intelligence import ScenarioSimulation, RollingForecast
 from .domain.decision_engine import RiskExposure, EnterpriseDecisionRule
+from .domain.autonomous import LearningLoopRecord, AutonomousActionRecord, CashOptimizationProposal, SelfHealingAudit
 from .serializers import (
     EnterprisePolicySerializer, StrategicObjectiveSerializer,
     CorporateBudgetSerializer, EnterpriseWorkflowSerializer,
     DecisionLogSerializer, ScenarioSimulationSerializer,
-    RollingForecastSerializer, RiskExposureSerializer, DecisionRuleSerializer
+    RollingForecastSerializer, RiskExposureSerializer, DecisionRuleSerializer,
+    LearningLoopSerializer, AutonomousActionSerializer, CashProposalSerializer, SelfHealingSerializer
 )
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
@@ -58,4 +60,24 @@ class RiskExposureViewSet(SystemicERPViewSetMixin, viewsets.ReadOnlyModelViewSet
 class DecisionRuleViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
     queryset = EnterpriseDecisionRule.objects.all()
     serializer_class = DecisionRuleSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+
+class LearningLoopViewSet(SystemicERPViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = LearningLoopRecord.objects.all()
+    serializer_class = LearningLoopSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+
+class AutonomousActionViewSet(SystemicERPViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = AutonomousActionRecord.objects.all()
+    serializer_class = AutonomousActionSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+
+class CashProposalViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = CashOptimizationProposal.objects.all()
+    serializer_class = CashProposalSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
+
+class SelfHealingViewSet(SystemicERPViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = SelfHealingAudit.objects.all()
+    serializer_class = SelfHealingSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]

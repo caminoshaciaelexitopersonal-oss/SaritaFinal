@@ -50,7 +50,8 @@ class PolicyEvaluationService:
             )
 
             if is_breached:
-                PolicyEvaluationService._execute_policy_action(tenant_id, value, policy)
+                from .adaptive_policy_service import AdaptivePolicyService
+                AdaptivePolicyService.execute_policy(tenant_id, value, policy, payload.get('correlation_id'))
 
     @staticmethod
     def _check_breach(value, policy):

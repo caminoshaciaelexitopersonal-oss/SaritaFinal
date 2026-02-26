@@ -119,11 +119,15 @@ class LedgerEngine:
 
     @staticmethod
     @transaction.atomic
-    def post_entry(entry_id: str):
+    def post_entry(entry_id):
         """
         Realiza la contabilización definitiva de un asiento.
         Implementa protección contra race conditions bloqueando filas críticas.
+        Supports both ID and object (handles conversion).
         """
+        if hasattr(entry_id, 'id'):
+            entry_id = entry_id.id
+
         entry = JournalEntry.objects.select_for_update().get(id=entry_id)
         if entry.is_posted:
             return entry
