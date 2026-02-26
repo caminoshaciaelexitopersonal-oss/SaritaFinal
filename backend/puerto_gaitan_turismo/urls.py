@@ -102,6 +102,9 @@ urlpatterns = [
 
     # FASE 20: Meta-Economic Autonomous Network (MAN)
     path('api/v1/meta-economic-network/', include('apps.meta_economic_network.urls')),
+
+    # FASE 21: State-Integrated Economic Infrastructure (SIEI)
+    path('api/v1/state-integration/', include('apps.state_integration.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

@@ -140,6 +140,7 @@ INSTALLED_APPS = [
     "apps.economic_ecosystem.apps.EconomicEcosystemConfig",
     "apps.sovereign_infrastructure.apps.SovereignInfrastructureConfig",
     "apps.meta_economic_network.apps.MetaEconomicNetworkConfig",
+    "apps.state_integration.apps.StateIntegrationConfig",
     "legacy_custody.apps.LegacyCustodyConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
