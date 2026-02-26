@@ -111,6 +111,9 @@ urlpatterns = [
 
     # FASE 23: Global Digital Economic Infrastructure (GDEI)
     path('api/v1/global-digital-infrastructure/', include('apps.global_digital_infrastructure.urls')),
+
+    # FASE 24: Public-Private Macroeconomic Coordination (PPMCF)
+    path('api/v1/macroeconomic-coordination/', include('apps.macroeconomic_coordination.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

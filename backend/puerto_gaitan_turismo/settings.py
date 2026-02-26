@@ -143,6 +143,7 @@ INSTALLED_APPS = [
     "apps.state_integration.apps.StateIntegrationConfig",
     "apps.transnational_governance.apps.TransnationalGovernanceConfig",
     "apps.global_digital_infrastructure.apps.GlobalDigitalInfrastructureConfig",
+    "apps.macroeconomic_coordination.apps.MacroeconomicCoordinationConfig",
     "legacy_custody.apps.LegacyCustodyConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
