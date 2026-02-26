@@ -105,6 +105,9 @@ urlpatterns = [
 
     # FASE 21: State-Integrated Economic Infrastructure (SIEI)
     path('api/v1/state-integration/', include('apps.state_integration.urls')),
+
+    # FASE 22: Hybrid Transnational Governance (HTG)
+    path('api/v1/transnational-governance/', include('apps.transnational_governance.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

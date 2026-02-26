@@ -141,6 +141,7 @@ INSTALLED_APPS = [
     "apps.sovereign_infrastructure.apps.SovereignInfrastructureConfig",
     "apps.meta_economic_network.apps.MetaEconomicNetworkConfig",
     "apps.state_integration.apps.StateIntegrationConfig",
+    "apps.transnational_governance.apps.TransnationalGovernanceConfig",
     "legacy_custody.apps.LegacyCustodyConfig",
 
     # "apps.downloads.apps.DownloadsConfig",
