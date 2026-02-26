@@ -27,19 +27,19 @@ class ReportsEngine:
         """
         read_db = ReportsEngine.get_read_db()
 
-        # Grouping by Account Type
+        # Grouping by Account Type (Normalized to Technical Directive)
         income_total = LedgerEntry.objects.using(read_db).filter(
             journal_entry__tenant_id=tenant_id,
             journal_entry__date__range=[start_date, end_date],
             journal_entry__is_posted=True,
-            account__type='income'
+            account__type='REVENUE'
         ).aggregate(balance=Sum('credit_amount') - Sum('debit_amount'))['balance'] or Decimal('0.00')
 
         expense_total = LedgerEntry.objects.using(read_db).filter(
             journal_entry__tenant_id=tenant_id,
             journal_entry__date__range=[start_date, end_date],
             journal_entry__is_posted=True,
-            account__type='expense'
+            account__type='EXPENSE'
         ).aggregate(balance=Sum('debit_amount') - Sum('credit_amount'))['balance'] or Decimal('0.00')
 
         return {
@@ -59,21 +59,21 @@ class ReportsEngine:
             journal_entry__tenant_id=tenant_id,
             journal_entry__date__lte=cutoff_date,
             journal_entry__is_posted=True,
-            account__type='asset'
+            account__type='ASSET'
         ).aggregate(balance=Sum('debit_amount') - Sum('credit_amount'))['balance'] or Decimal('0.00')
 
         liability_total = LedgerEntry.objects.using(read_db).filter(
             journal_entry__tenant_id=tenant_id,
             journal_entry__date__lte=cutoff_date,
             journal_entry__is_posted=True,
-            account__type='liability'
+            account__type='LIABILITY'
         ).aggregate(balance=Sum('credit_amount') - Sum('debit_amount'))['balance'] or Decimal('0.00')
 
         equity_total = LedgerEntry.objects.using(read_db).filter(
             journal_entry__tenant_id=tenant_id,
             journal_entry__date__lte=cutoff_date,
             journal_entry__is_posted=True,
-            account__type='equity'
+            account__type='EQUITY'
         ).aggregate(balance=Sum('credit_amount') - Sum('debit_amount'))['balance'] or Decimal('0.00')
 
         return {

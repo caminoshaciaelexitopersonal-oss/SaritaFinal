@@ -36,8 +36,9 @@ Con la finalización de la **Fase 8**, la plataforma "Sarita" ha evolucionado de
 
 ---
 
-## 4. PRÓXIMOS PASOS (FASE 9+)
-1.  **Modelos ML Avanzados:** Entrenamiento de modelos de predicción de churn y revenue específicos por país.
+## 4. PRÓXIMOS PASOS (FASE 8.1 / 9+)
+1.  **Implementación Productiva (Fase 8.1):** Ejecución del roadmap de infraestructura cloud y estabilización productiva. Ver: `MASTER_IMPLEMENTATION_ROADMAP_EOS_2026.md`.
+2.  **Modelos ML Avanzados:** Entrenamiento de modelos de predicción de churn y revenue específicos por país.
 2.  **Expansión Multi-Jurisdicción:** Configuración nativa de reglas fiscales automáticas para nuevos mercados.
 3.  **Governance Dashboard 360:** Interfaz inmersiva para el Board of Directors con visualización de simulaciones.
 
