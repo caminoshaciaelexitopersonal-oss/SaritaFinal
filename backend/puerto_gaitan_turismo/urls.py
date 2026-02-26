@@ -108,6 +108,9 @@ urlpatterns = [
 
     # FASE 22: Hybrid Transnational Governance (HTG)
     path('api/v1/transnational-governance/', include('apps.transnational_governance.urls')),
+
+    # FASE 23: Global Digital Economic Infrastructure (GDEI)
+    path('api/v1/global-digital-infrastructure/', include('apps.global_digital_infrastructure.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo
