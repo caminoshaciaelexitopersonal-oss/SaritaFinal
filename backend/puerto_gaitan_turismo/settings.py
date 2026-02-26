@@ -138,6 +138,7 @@ INSTALLED_APPS = [
     "apps.strategic_treasury.apps.StrategicTreasuryConfig",
     "apps.expansion_engine.apps.ExpansionEngineConfig",
     "apps.economic_ecosystem.apps.EconomicEcosystemConfig",
+    "apps.sovereign_infrastructure.apps.SovereignInfrastructureConfig",
     "legacy_custody.apps.LegacyCustodyConfig",
 
     # "apps.downloads.apps.DownloadsConfig",

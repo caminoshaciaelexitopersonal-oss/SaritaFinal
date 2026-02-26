@@ -96,6 +96,9 @@ urlpatterns = [
 
     # FASE 18: Autonomous Economic Ecosystem (EOE)
     path('api/v1/economic-ecosystem/', include('apps.economic_ecosystem.urls')),
+
+    # FASE 19: Corporate Sovereign Infrastructure (CSI)
+    path('api/v1/sovereign-infrastructure/', include('apps.sovereign_infrastructure.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo
