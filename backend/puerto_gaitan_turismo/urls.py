@@ -93,6 +93,9 @@ urlpatterns = [
 
     # API para Custodia de Legado (Fase Legado)
     path('api/v1/legacy/', include("legacy_custody.urls")),
+
+    # FASE 18: Autonomous Economic Ecosystem (EOE)
+    path('api/v1/economic-ecosystem/', include('apps.economic_ecosystem.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo
