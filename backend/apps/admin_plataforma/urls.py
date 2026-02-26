@@ -32,6 +32,7 @@ urlpatterns = [
     path('company/', include('apps.admin_plataforma.gestion_contable.empresa.urls')),
     path('control-tower/', include('apps.control_tower.urls')),
     path('enterprise/', include('apps.enterprise.urls')),
+    path('global-holding/', include('apps.global_holding.urls')),
     path('defense-predictive/', include('apps.defense_predictive.urls')),
     path('defense-deception/', include('apps.defense_deception.urls')),
  

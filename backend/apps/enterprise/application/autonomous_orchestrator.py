@@ -1,4 +1,5 @@
 import logging
+import uuid
 from decimal import Decimal
 from django.utils import timezone
 from ..domain.autonomous import CashOptimizationProposal
@@ -22,8 +23,8 @@ class CashOptimizationEngine:
 
         proposal = CashOptimizationProposal.objects.create(
             tenant_id=tenant_id,
-            source_entity_id=timezone.uuid4(), # Mock entity
-            target_entity_id=timezone.uuid4(), # Mock entity
+            source_entity_id=uuid.uuid4(), # Mock entity
+            target_entity_id=uuid.uuid4(), # Mock entity
             suggested_amount=Decimal('10000.00'),
             currency='USD',
             reasoning="Liquidity surplus in Entity A exceeds 20% of MTD target. Entity B shows potential runway gap in 45 days.",

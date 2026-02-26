@@ -1,5 +1,7 @@
 import logging
+import uuid
 from django.db import transaction
+from django.utils import timezone
 from ..domain.autonomous import SelfHealingAudit
 from apps.core_erp.accounting.models import JournalEntry, LedgerEntry
 from apps.core_erp.accounting.ledger_engine import LedgerEngine
@@ -46,7 +48,7 @@ class SelfHealingService:
             SelfHealingAudit.objects.create(
                 tenant_id=tenant_id,
                 issue_type="ORPHANED_LINES",
-                target_id=timezone.uuid4(), # Batch ID
+                target_id=uuid.uuid4(), # Batch ID
                 action_taken="DELETE_ORPHANS",
                 result=f"Deleted {count} orphaned ledger lines without parent journal."
             )

@@ -35,6 +35,11 @@ Transformar el blueprint estratégico y la arquitectura conceptual de la platafo
 *   **AI/ML:** Modelos predictivos financieros avanzados y Data Lake completo.
 *   **Global Compliance:** Soporte multi-jurisdicción y optimización de performance global.
 
+### FASE 7: Autonomous Global Holding (24-36 meses)
+*   **Capital Allocation:** Automatización de rebalanceo de equity intercompany.
+*   **Tax Optimization:** Motor dinámico de precios de transferencia y eficiencia fiscal.
+*   **Macro Simulation:** Integración de feeds macroeconómicos para stress testing continuo.
+
 ---
 
 ## 3. ARQUITECTURA CLOUD CONCRETA
