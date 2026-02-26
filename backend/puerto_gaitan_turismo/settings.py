@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     "apps.enterprise.apps.EnterpriseConfig",
     "apps.global_holding.apps.GlobalHoldingConfig",
     "apps.capital_markets.apps.CapitalMarketsConfig",
+    "apps.tokenization.apps.TokenizationConfig",
     "apps.global_orchestration.apps.GlobalOrchestrationConfig",
     "apps.institutional_layer.apps.InstitutionalLayerConfig",
     "apps.commercial_engine.apps.CommercialEngineConfig",

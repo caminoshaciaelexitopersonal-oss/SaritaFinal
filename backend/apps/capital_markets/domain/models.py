@@ -12,6 +12,10 @@ class CapitalStructure(TenantAwareModel):
     total_equity = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     total_debt = models.DecimalField(max_digits=20, decimal_places=2, default=0)
 
+    # Phase 17: Tokenized Capital
+    tokenized_equity = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    tokenized_debt = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+
     internal_credit_rating = models.CharField(max_length=10, default='BBB')
     target_leverage = models.DecimalField(max_digits=5, decimal_places=4, default=0.4)
 

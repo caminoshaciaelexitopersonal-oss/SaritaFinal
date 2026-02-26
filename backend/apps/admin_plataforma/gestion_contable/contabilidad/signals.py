@@ -1,7 +1,7 @@
 import logging
 from decimal import Decimal
 from apps.core_erp.event_bus import EventBus
-from .models import AdminJournalEntry, AdminAccountingTransaction, AdminChartOfAccounts
+from .models import AdminJournalEntry, AdminAccountingTransaction, AdminAccount
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ def handle_financial_impact_request(payload):
         for impact in impacts:
             account_code = impact.get('account_code')
             try:
-                account = AdminChartOfAccounts.objects.get(tenant_id=tenant_id, code=account_code)
+                account = AdminAccount.objects.get(tenant_id=tenant_id, code=account_code)
                 AdminAccountingTransaction.objects.create(
                     entry=journal_entry,
                     account=account,
@@ -35,7 +35,7 @@ def handle_financial_impact_request(payload):
                     credit_amount=Decimal(impact.get('credit', '0.00')),
                     description=payload.get('description')
                 )
-            except AdminChartOfAccounts.DoesNotExist:
+            except AdminAccount.DoesNotExist:
                 logger.error(f"Account {account_code} not found for tenant {tenant_id}")
 
         # Phase B: Formal Posting (Finalizes balance validation, hashing, and multi-currency)

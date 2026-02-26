@@ -11,7 +11,7 @@ class AdminChartOfAccounts(CoreChartOfAccounts):
     class Meta:
         proxy = True
         app_label = 'admin_contabilidad'
-        verbose_name = "Admin Ledger Entry"
+        verbose_name = "Admin Chart of Accounts"
 
 class AdminAccount(CoreAccount):
     class Meta:
