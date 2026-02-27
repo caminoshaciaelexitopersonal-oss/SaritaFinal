@@ -117,6 +117,9 @@ urlpatterns = [
 
     # FASE 25: Global Integrated Financial Stability (GIFSA)
     path('api/v1/financial-stability/', include('apps.financial_stability.urls')),
+
+    # EOS Activation: Enterprise Operating System Core
+    path('api/v1/enterprise-core/', include('apps.enterprise_core.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

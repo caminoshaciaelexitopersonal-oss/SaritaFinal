@@ -8,3 +8,7 @@ class CoreErpConfig(AppConfig):
     def ready(self):
         from .accounting.handlers import StandardAccountingHandlers
         StandardAccountingHandlers.register_all()
+
+        # EOS Activation: Automated Consolidation
+        from .consolidation.event_processor import ConsolidationEventProcessor
+        ConsolidationEventProcessor.start_listening()
