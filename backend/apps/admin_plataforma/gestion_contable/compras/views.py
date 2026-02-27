@@ -1,150 +1,44 @@
-import csv
+from rest_framework import viewsets, permissions, decorators, response
 from django.http import HttpResponse
-from rest_framework import viewsets, permissions, status, serializers
-from rest_framework.decorators import action
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from decimal import Decimal
-
-# Modelos locales
-from apps.admin_plataforma.gestion_contable.compras.models import Proveedor, FacturaCompra
-from .serializers import ProveedorSerializer, FacturaCompraSerializer
-
-# Modelos de otros módulos para integración
-from apps.admin_plataforma.gestion_financiera.models import CuentaBancaria, TransaccionBancaria
-from apps.admin_plataforma.gestion_contable.contabilidad.models import JournalEntry, Transaction, ChartOfAccount
+from .models import Supplier, PurchaseInvoice
+from .serializers import SupplierSerializer, PurchaseInvoiceSerializer
+from .services import ProcurementService
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 
-
-class IsPrestadorOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        # Para Proveedor y FacturaCompra, el perfil está directamente en el objeto.
-        return obj.perfil == request.user.perfil_prestador
-
-class ProveedorViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-    serializer_class = ProveedorSerializer
+class SupplierViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = Supplier.objects.all()
+    serializer_class = SupplierSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
-    def get_queryset(self):
-        return Proveedor.objects.filter(perfil=self.request.user.perfil_prestador)
-
-class FacturaCompraViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-    serializer_class = FacturaCompraSerializer
+class PurchaseInvoiceViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = PurchaseInvoice.objects.all()
+    serializer_class = PurchaseInvoiceSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
-    def get_queryset(self):
-        return FacturaCompra.objects.filter(perfil=self.request.user.perfil_prestador)
-
-    def perform_create(self, serializer):
-        perfil = self.request.user.perfil_prestador
-        factura = serializer.save(perfil=perfil, creado_por=self.request.user)
-
-        # --- Creación del Asiento Contable de la Compra ---
-        try:
-            cuenta_gasto = ChartOfAccount.objects.get(code__startswith='5105', perfil=perfil) # Asumimos una cuenta de gasto
-            cuenta_cxp = ChartOfAccount.objects.get(code__startswith='2105', perfil=perfil) # Cuentas por Pagar
-        except ChartOfAccount.DoesNotExist:
-            raise serializers.ValidationError(
-                "No se encontraron las cuentas contables requeridas para registrar la compra (Gastos '5105' o Cuentas por Pagar '2105')."
-            )
-
-        journal_entry = JournalEntry.objects.create(
-            perfil=perfil,
-            entry_date=factura.issue_date,
-            description=f"Compra según Factura No. {factura.number} de {factura.proveedor.nombre}",
-            entry_type="COMPRA",
-            user=self.request.user,
-            origin_document=factura
+    @decorators.action(detail=False, methods=['post'], url_path='massive-payment')
+    def massive_payment(self, request):
+        """
+        Generates payment CSV for selected invoices.
+        """
+        invoice_ids = request.data.get('invoice_ids', [])
+        csv_content = ProcurementService.generate_massive_payment_file(
+            request.tenant_id, invoice_ids
         )
 
-        # Débito a Gasto/Inventario
-        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_gasto, debit=factura.total)
-        # Crédito a Cuentas por Pagar
-        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_cxp, credit=factura.total)
-
-    @action(detail=True, methods=['post'], url_path='pagar')
-    def pagar_factura(self, request, pk=None):
-        factura = self.get_object()
-        cuenta_bancaria_id = request.data.get('cuenta_bancaria_id')
-
-        if not cuenta_bancaria_id:
-            return Response({"error": "Debe proporcionar el ID de la cuenta bancaria para el pago."}, status=status.HTTP_400_BAD_REQUEST)
-
-        if factura.estado != FacturaCompra.Estado.POR_PAGAR:
-            return Response({"error": "La factura no está en estado 'Por Pagar'."}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            cuenta_bancaria = CuentaBancaria.objects.get(id=cuenta_bancaria_id, perfil=request.user.perfil_prestador)
-        except CuentaBancaria.DoesNotExist:
-            return Response({"error": "La cuenta bancaria no existe o no pertenece a su perfil."}, status=status.HTTP_404_NOT_FOUND)
-
-        # 1. Crear la transacción de egreso en el módulo financiero
-        TransaccionBancaria.objects.create(
-            cuenta=cuenta_bancaria,
-            fecha=factura.issue_date, # O usar la fecha actual: timezone.now().date()
-            tipo=TransaccionBancaria.TipoTransaccion.EGRESO,
-            monto=factura.total,
-            descripcion=f"Pago de Factura #{factura.number} a {factura.proveedor.nombre}",
-            creado_por=request.user
-        )
-
-        # 2. Crear el asiento contable del pago
-        try:
-            cuenta_por_pagar = ChartOfAccount.objects.get(code='210501') # Pasivo
-            cuenta_banco = ChartOfAccount.objects.get(code='111005')    # Activo - Bancos
-        except ChartOfAccount.DoesNotExist:
-            return Response({"error": "Cuentas contables para el pago no configuradas."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        journal_entry = JournalEntry.objects.create(
-            perfil=factura.perfil,
-            entry_date=factura.issue_date, # O fecha actual
-            description=f"Pago de Factura #{factura.number}",
-            entry_type="PAGO_COMPRA",
-            user=request.user,
-            origin_document=factura
-        )
-        # Débito a Cuentas por Pagar (disminuye el pasivo)
-        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_por_pagar, debit=factura.total)
-        # Crédito a Bancos (disminuye el activo)
-        Transaction.objects.create(journal_entry=journal_entry, account=cuenta_banco, credit=factura.total)
-
-        # 3. Actualizar el estado de la factura
-        factura.estado = FacturaCompra.Estado.PAGADA
-        factura.save()
-
-        return Response({"status": "Factura pagada exitosamente."}, status=status.HTTP_200_OK)
-
-class GenerarPagoMasivoProveedoresView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        factura_ids = request.data.get('factura_ids', [])
-        if not factura_ids:
-            return Response({"error": "No se proporcionaron IDs de facturas."}, status=status.HTTP_400_BAD_REQUEST)
-
-        perfil = request.user.perfil_prestador
-        facturas = FacturaCompra.objects.filter(id__in=factura_ids, perfil=perfil, estado=FacturaCompra.Estado.POR_PAGAR)
-
-        if not facturas.exists():
-            return Response({"error": "Ninguna de las facturas seleccionadas es válida para pago."}, status=status.HTTP_404_NOT_FOUND)
-
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="pagos_masivos.csv"'
-
-        writer = csv.writer(response)
-        writer.writerow(['ID Factura', 'Proveedor', 'Identificacion Proveedor', 'Monto a Pagar', 'Numero Cuenta', 'Banco'])
-
-        for factura in facturas:
-            # Asumimos que el proveedor tiene un número de cuenta guardado en el campo 'notas' para este ejemplo
-            # En una implementación real, esto debería estar en un modelo de 'InformacionBancariaProveedor'
-            writer.writerow([
-                factura.id,
-                factura.proveedor.nombre,
-                factura.proveedor.identificacion,
-                factura.total,
-                "CTA-EJEMPLO-123", # Placeholder
-                "BANCO-EJEMPLO" # Placeholder
-            ])
-
+        response = HttpResponse(csv_content, content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="massive_payment.csv"'
         return response
+
+    @decorators.action(detail=True, methods=['post'], url_path='pay')
+    def process_payment(self, request, pk=None):
+        """
+        Registers individual payment.
+        """
+        invoice = ProcurementService.process_supplier_payment(
+            request.tenant_id,
+            pk,
+            request.data.get('amount'),
+            request.data.get('bank_reference')
+        )
+        return response.Response({"status": "PAID", "invoice_id": invoice.id})

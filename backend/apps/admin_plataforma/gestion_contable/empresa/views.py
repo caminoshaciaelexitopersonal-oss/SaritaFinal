@@ -1,13 +1,15 @@
-# from rest_framework import viewsets
+from rest_framework import viewsets, permissions
+from .models import AdminCompany
+from rest_framework import serializers
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
-# from apps.admin_plataforma.gestion_contable.empresa.models import Inventario, Costo
-# from .serializers import InventarioSerializer, CostoSerializer
 
-# class InventarioViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-#     queryset = Inventario.objects.all()
-#     serializer_class = InventarioSerializer
+class AdminCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminCompany
+        fields = '__all__'
 
-# class CostoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-#     queryset = Costo.objects.all()
-#     serializer_class = CostoSerializer
+class AdminCompanyViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = AdminCompany.objects.all()
+    serializer_class = AdminCompanySerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]

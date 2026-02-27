@@ -1,4 +1,6 @@
 import logging
+import hashlib
+import json
 from decimal import Decimal
 from django.db import transaction
 from django.utils import timezone
@@ -17,6 +19,28 @@ class LedgerEngine:
     Motor Contable Soberano del Core ERP.
     Único componente autorizado para crear asientos, validar doble partida e impactar balances.
     """
+
+    @staticmethod
+    def calculate_hash(entry: JournalEntry):
+        """
+        Calcula un hash SHA-256 de los datos del asiento para garantizar integridad.
+        """
+        data = {
+            "id": str(entry.id),
+            "tenant_id": str(entry.tenant_id),
+            "date": str(entry.date),
+            "lines": [
+                {
+                    "account": line.account.code,
+                    "debit": str(line.debit_amount),
+                    "credit": str(line.credit_amount),
+                    "currency": line.currency
+                }
+                for line in entry.lines.all().order_by('id')
+            ]
+        }
+        encoded = json.dumps(data, sort_keys=True).encode()
+        return hashlib.sha256(encoded).hexdigest()
 
     @staticmethod
     def validate_balance(entry: JournalEntry):
@@ -95,11 +119,15 @@ class LedgerEngine:
 
     @staticmethod
     @transaction.atomic
-    def post_entry(entry_id: str):
+    def post_entry(entry_id):
         """
         Realiza la contabilización definitiva de un asiento.
         Implementa protección contra race conditions bloqueando filas críticas.
+        Supports both ID and object (handles conversion).
         """
+        if hasattr(entry_id, 'id'):
+            entry_id = entry_id.id
+
         entry = JournalEntry.objects.select_for_update().get(id=entry_id)
         if entry.is_posted:
             return entry
@@ -122,11 +150,27 @@ class LedgerEngine:
             if str(line.account.tenant_id) != str(entry.tenant_id):
                 raise TenantMismatchError(f"Cuenta {line.account.code} no pertenece al tenant {entry.tenant_id}")
 
-        # 3. Posteo Final
+        # 3. Multi-Currency Logic (Phase B)
+        # Standardize transaction vs base amounts
+        exchange_rate = getattr(entry, 'exchange_rate', Decimal('1.0'))
+        for line in entry.lines.all():
+            # If not explicitly set, use debit/credit as transaction amount
+            if not line.amount_transaction:
+                line.amount_transaction = line.debit_amount if line.debit_amount > 0 else line.credit_amount
+
+            line.amount_base = line.amount_transaction * exchange_rate
+            line.save()
+
+        # 4. Audit Integrity Hardening (Phase B)
+        entry.system_hash = LedgerEngine.calculate_hash(entry)
+        entry.immutable_signature = f"LEDGER-SIG-{entry.system_hash[:16]}-{timezone.now().timestamp()}"
+        entry.posted_at = timezone.now()
+
+        # 5. Posteo Final
         entry.is_posted = True
         entry.save()
 
-        logger.info(f"JournalEntry {entry.id} posteado exitosamente.")
+        logger.info(f"JournalEntry {entry.id} posteado exitosamente con Hash: {entry.system_hash}")
         return entry
 
     @staticmethod

@@ -60,6 +60,8 @@ class JournalService:
                 account=account,
                 debit_amount=line.get('debit', line.get('debit_amount', 0)),
                 credit_amount=line.get('credit', line.get('credit_amount', 0)),
+                currency=line.get('currency', entry.currency),
+                amount_transaction=line.get('amount_transaction', 0),
                 description=line.get('description', description)
             )
 

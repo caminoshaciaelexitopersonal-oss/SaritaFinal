@@ -1,27 +1,25 @@
 from rest_framework import serializers
-from apps.admin_plataforma.gestion_contable.activos_fijos.models import CategoriaActivo, ActivoFijo, CalculoDepreciacion
+from .models import AssetCategory, FixedAsset, DepreciationCalculation
 
-class CategoriaActivoSerializer(serializers.ModelSerializer):
+class AssetCategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = CategoriaActivo
-        fields = ['id', 'nombre', 'descripcion']
+        model = AssetCategory
+        fields = ['id', 'name', 'useful_life_months']
 
-class ActivoFijoSerializer(serializers.ModelSerializer):
-    categoria_nombre = serializers.CharField(source='categoria.nombre', read_only=True)
+class FixedAssetSerializer(serializers.ModelSerializer):
+    category_detail = AssetCategorySerializer(source='category', read_only=True)
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=AssetCategory.objects.all(), source='category', write_only=True
+    )
 
     class Meta:
-        model = ActivoFijo
+        model = FixedAsset
         fields = [
-            'id', 'nombre', 'categoria', 'categoria_nombre', 'descripcion', 'fecha_adquisicion',
-            'costo_adquisicion', 'valor_residual', 'vida_util_meses', 'metodo_depreciacion',
-            'depreciacion_acumulada', 'valor_en_libros'
+            'id', 'category_detail', 'category_id', 'name',
+            'acquisition_date', 'acquisition_value', 'current_value'
         ]
-        read_only_fields = ('depreciacion_acumulada', 'valor_en_libros')
 
-class CalculoDepreciacionSerializer(serializers.ModelSerializer):
-    creado_por = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
+class DepreciationCalculationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CalculoDepreciacion
-        fields = ['id', 'activo', 'fecha', 'monto', 'creado_por', 'creado_en']
-        read_only_fields = ('creado_en',)
+        model = DepreciationCalculation
+        fields = ['id', 'asset', 'calculation_date', 'amount', 'accumulated_depreciation']

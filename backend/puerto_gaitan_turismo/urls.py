@@ -93,6 +93,30 @@ urlpatterns = [
 
     # API para Custodia de Legado (Fase Legado)
     path('api/v1/legacy/', include("legacy_custody.urls")),
+
+    # FASE 18: Autonomous Economic Ecosystem (EOE)
+    path('api/v1/economic-ecosystem/', include('apps.economic_ecosystem.urls')),
+
+    # FASE 19: Corporate Sovereign Infrastructure (CSI)
+    path('api/v1/sovereign-infrastructure/', include('apps.sovereign_infrastructure.urls')),
+
+    # FASE 20: Meta-Economic Autonomous Network (MAN)
+    path('api/v1/meta-economic-network/', include('apps.meta_economic_network.urls')),
+
+    # FASE 21: State-Integrated Economic Infrastructure (SIEI)
+    path('api/v1/state-integration/', include('apps.state_integration.urls')),
+
+    # FASE 22: Hybrid Transnational Governance (HTG)
+    path('api/v1/transnational-governance/', include('apps.transnational_governance.urls')),
+
+    # FASE 23: Global Digital Economic Infrastructure (GDEI)
+    path('api/v1/global-digital-infrastructure/', include('apps.global_digital_infrastructure.urls')),
+
+    # FASE 24: Public-Private Macroeconomic Coordination (PPMCF)
+    path('api/v1/macroeconomic-coordination/', include('apps.macroeconomic_coordination.urls')),
+
+    # FASE 25: Global Integrated Financial Stability (GIFSA)
+    path('api/v1/financial-stability/', include('apps.financial_stability.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

@@ -1,34 +1,20 @@
 from rest_framework import viewsets, permissions
-from apps.admin_plataforma.gestion_contable.proyectos.models import Proyecto, IngresoProyecto, CostoProyecto
-from .serializers import ProyectoSerializer, IngresoProyectoSerializer, CostoProyectoSerializer
+from .models import Project, ProjectIncome, ProjectCost
+from .serializers import ProjectSerializer, ProjectIncomeSerializer, ProjectCostSerializer
 from apps.admin_plataforma.mixins import SystemicERPViewSetMixin
 from api.permissions import IsSuperAdmin
 
-class IsPrestadorOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if hasattr(obj, 'perfil'):
-            return obj.perfil == request.user.perfil_prestador
-        if hasattr(obj, 'proyecto') and hasattr(obj.proyecto, 'perfil'):
-             return obj.proyecto.perfil == request.user.perfil_prestador
-        return False
-
-class ProyectoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-    serializer_class = ProyectoSerializer
+class ProjectViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
-    def get_queryset(self):
-        return Proyecto.objects.filter(perfil=self.request.user.perfil_prestador)
-
-class IngresoProyectoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-    serializer_class = IngresoProyectoSerializer
+class ProjectIncomeViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = ProjectIncome.objects.all()
+    serializer_class = ProjectIncomeSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
 
-    def get_queryset(self):
-        return IngresoProyecto.objects.filter(proyecto__perfil=self.request.user.perfil_prestador)
-
-class CostoProyectoViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
-    serializer_class = CostoProyectoSerializer
+class ProjectCostViewSet(SystemicERPViewSetMixin, viewsets.ModelViewSet):
+    queryset = ProjectCost.objects.all()
+    serializer_class = ProjectCostSerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperAdmin]
-
-    def get_queryset(self):
-        return CostoProyecto.objects.filter(proyecto__perfil=self.request.user.perfil_prestador)

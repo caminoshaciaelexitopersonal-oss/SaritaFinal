@@ -81,11 +81,11 @@ class FinancialPeriod(TenantAwareModel):
 
 class LedgerAccount(TenantAwareModel):
     ACCOUNT_TYPES = [
-        ('asset', 'Asset'),
-        ('liability', 'Liability'),
-        ('equity', 'Equity'),
-        ('income', 'Income'),
-        ('expense', 'Expense'),
+        ('ASSET', 'Asset'),
+        ('LIABILITY', 'Liability'),
+        ('EQUITY', 'Equity'),
+        ('REVENUE', 'Revenue'),
+        ('EXPENSE', 'Expense'),
     ]
     code = models.CharField(max_length=20, null=True, blank=True)
     name = models.CharField(max_length=255, null=True, blank=True)

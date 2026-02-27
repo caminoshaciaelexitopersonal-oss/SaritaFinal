@@ -11,6 +11,7 @@ class PostingRules:
     @staticmethod
     def get_rule_for_event(event_type: str, payload: Dict[str, Any]) -> List[Dict[str, Any]]:
         rules = {
+            "RESERVATION_CONFIRMED": PostingRules.rule_reservation_confirmed,
             "ReservationConfirmed": PostingRules.rule_reservation_confirmed,
             "PaymentReceived": PostingRules.rule_payment_received,
             "ProviderPaid": PostingRules.rule_provider_paid,
@@ -28,16 +29,22 @@ class PostingRules:
     @staticmethod
     def rule_reservation_confirmed(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
         """
-        Flujo de Reserva Confirmada:
-        - Accounts Receivable (130505): Debit $1,000 (Cliente debe)
-        - Revenue - Commission (413501): Credit $100 (Ganancia Plataforma)
-        - Payable to Provider (233505): Credit $900 (Deuda con el prestador)
+        Flujo de Reserva Confirmada (Phase B Flow):
+        - Accounts Receivable (130505): Debit Total
+        - Revenue - Commission (413501): Credit Commission
+        - Tax Payable (240801): Credit Tax
+        - Payable to Provider (233505): Credit Net to Provider
         """
         total = Decimal(str(payload.get('total_amount', 0)))
-        commission_rate = Decimal(str(payload.get('commission_rate', 0.10)))
+        commission = Decimal(str(payload.get('commission', 0)))
+        tax = Decimal(str(payload.get('tax', 0)))
 
-        commission = total * commission_rate
-        provider_payable = total - commission
+        # If not provided, use default rate logic
+        if commission == 0 and tax == 0:
+            commission_rate = Decimal(str(payload.get('commission_rate', 0.10)))
+            commission = total * commission_rate
+
+        provider_net = total - commission - tax
 
         description = f"Reserva {payload.get('reference', 'N/A')}"
 
@@ -55,9 +62,15 @@ class PostingRules:
                 'description': f"Ingreso Comisión - {description}"
             },
             {
+                'account': '240801',
+                'debit_amount': 0,
+                'credit_amount': tax,
+                'description': f"IVA por Pagar - {description}"
+            },
+            {
                 'account': '233505',
                 'debit_amount': 0,
-                'credit_amount': provider_payable,
+                'credit_amount': provider_net,
                 'description': f"CxP Proveedor - {description}"
             }
         ]

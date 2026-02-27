@@ -1,9 +1,9 @@
 from rest_framework.routers import DefaultRouter
-from .views import ProyectoViewSet, IngresoProyectoViewSet, CostoProyectoViewSet
+from .views import ProjectViewSet, ProjectIncomeViewSet, ProjectCostViewSet
 
 router = DefaultRouter()
-router.register(r'proyectos', ProyectoViewSet, basename='proyecto')
-router.register(r'ingresos', IngresoProyectoViewSet, basename='ingreso-proyecto')
-router.register(r'costos', CostoProyectoViewSet, basename='costo-proyecto')
+router.register(r'projects', ProjectViewSet, basename='project')
+router.register(r'incomes', ProjectIncomeViewSet, basename='project-income')
+router.register(r'costs', ProjectCostViewSet, basename='project-cost')
 
 urlpatterns = router.urls
