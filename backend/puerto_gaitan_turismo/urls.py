@@ -114,6 +114,9 @@ urlpatterns = [
 
     # FASE 24: Public-Private Macroeconomic Coordination (PPMCF)
     path('api/v1/macroeconomic-coordination/', include('apps.macroeconomic_coordination.urls')),
+
+    # FASE 25: Global Integrated Financial Stability (GIFSA)
+    path('api/v1/financial-stability/', include('apps.financial_stability.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo
