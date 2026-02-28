@@ -190,3 +190,53 @@ class GovernancePolicy(models.Model):
     def __str__(self):
         return f"{self.name} ({self.get_type_display()})"
 
+class GovernanceIntention(models.Model):
+    """
+    Formal lifecycle record for any high-level business intention.
+    Used for predictive validation and auditable execution.
+    """
+    class Status(models.TextChoices):
+        RECEIVED = 'RECEIVED', 'Received'
+        VALIDATING = 'VALIDATING', 'Validating'
+        APPROVED = 'APPROVED', 'Approved'
+        REJECTED = 'REJECTED', 'Rejected'
+        EXECUTING = 'EXECUTING', 'Executing'
+        COMPLETED = 'COMPLETED', 'Completed'
+        FAILED = 'FAILED', 'Failed'
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    origin_domain = models.CharField(max_length=100)
+    trigger_event = models.CharField(max_length=100)
+    requested_action = models.JSONField()
+
+    risk_score = models.FloatField(default=0.0)
+    validation_status = models.CharField(max_length=20, choices=Status.choices, default=Status.RECEIVED)
+
+    execution_result = models.JSONField(null=True, blank=True)
+    hash_chain = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    __schema_version__ = "v2.1"
+
+    class Meta:
+        app_label = 'admin_plataforma'
+
+class GovernancePolicyVersion(models.Model):
+    """
+    Versioning for Governance policies to allow rollbacks and audit of regulatory changes.
+    """
+    policy = models.ForeignKey(GovernancePolicy, on_delete=models.CASCADE, related_name='versions')
+    version_number = models.IntegerField()
+    config_snapshot = models.JSONField()
+
+    reason_for_change = models.TextField()
+    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    __schema_version__ = "v2.1"
+
+    class Meta:
+        app_label = 'admin_plataforma'
+        unique_together = ('policy', 'version_number')

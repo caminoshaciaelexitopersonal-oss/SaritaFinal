@@ -12,3 +12,7 @@ class CoreErpConfig(AppConfig):
         # EOS Activation: Automated Consolidation
         from .consolidation.event_processor import ConsolidationEventProcessor
         ConsolidationEventProcessor.start_listening()
+
+        # Hardening 100%: Tenant Lifecycle
+        from .tenancy.lifecycle_engine import TenantLifecycleEngine
+        TenantLifecycleEngine.start_listening()

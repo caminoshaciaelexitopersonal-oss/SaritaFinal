@@ -27,6 +27,10 @@ class Alert(TenantAwareModel):
     source_event = models.CharField(max_length=100, null=True, blank=True)
     correlation_id = models.UUIDField(null=True, blank=True)
 
+    # Severity Classification Engine enhancements
+    impact_score = models.FloatField(default=0.0, help_text="Estimated impact 0-100")
+    domain_affected = models.CharField(max_length=100, null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     resolved_at = models.DateTimeField(null=True, blank=True)
 

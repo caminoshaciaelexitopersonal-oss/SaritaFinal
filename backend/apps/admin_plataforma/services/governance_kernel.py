@@ -130,11 +130,35 @@ class GovernanceKernel:
         logger.error(f"KERNEL: Mandato RECHAZADO para '{signal_type}' con {node_id}. Sin tratado habilitante.")
         return False
 
-    def resolve_and_execute(self, intention_name: str, parameters: Dict[str, Any], bypass_policy: bool = False) -> Dict[str, Any]:
+    def resolve_and_execute(self, intention_name: str, parameters: Dict[str, Any], bypass_policy: bool = False, stress_mode: bool = False) -> Dict[str, Any]:
         """
         Punto de entrada único para ejecutar intenciones.
+        Hardening 100%: Formal Intention Lifecycle + Predictive Validation.
         """
+        from apps.admin_plataforma.models import GovernanceIntention as GIM
+
         logger.info(f"KERNEL: Recibida intención '{intention_name}' de usuario {self.user.username}")
+
+        # 1. Initialize Formal Intention record
+        formal_intention = GIM.objects.create(
+            origin_domain=self._registry.get(intention_name).domain if intention_name in self._registry else 'unknown',
+            trigger_event=f"MANUAL_REQUEST_{intention_name}",
+            requested_action={"intention": intention_name, "parameters": parameters},
+            validation_status=GIM.Status.VALIDATING
+        )
+
+        # 2. Predictive Risk Pre-validation (Domain 7 Integration)
+        try:
+            from apps.enterprise_core.services.risk_evaluator import RiskEvaluator
+            risk_score = RiskEvaluator().calculate_systemic_risk() # Simulating predictive check
+            formal_intention.risk_score = float(risk_score)
+
+            if risk_score > 0.8 and not self.user.is_superuser:
+                 formal_intention.validation_status = GIM.Status.REJECTED
+                 formal_intention.save()
+                 raise PermissionError(f"RIESGO EXTREMO DETECTADO ({risk_score}): Operación suspendida por Gobernanza Predictiva.")
+        except ImportError:
+            logger.warning("KERNEL: RiskEvaluator not available for pre-validation.")
 
         # 0. EVALUACIÓN DE LEGADO (FASE LEGADO) - PRIORIDAD MÁXIMA
         intention_obj = self._registry.get(intention_name)
@@ -208,8 +232,24 @@ class GovernanceKernel:
 
         # 5. Coordinar y Ejecutar
         try:
+            if stress_mode:
+                logger.warning(f"STRESS MODE: Simulando ejecución de '{intention_name}'.")
+                formal_intention.validation_status = GIM.Status.COMPLETED
+                formal_intention.execution_result = {"mode": "STRESS_SIMULATION", "status": "SUCCESS"}
+                formal_intention.save()
+                return formal_intention.execution_result
+
+            formal_intention.validation_status = GIM.Status.EXECUTING
+            formal_intention.save()
+
             with transaction.atomic():
                 result = self._dispatch(intention, parameters)
+
+                # Cierre de Ciclo Formal
+                formal_intention.validation_status = GIM.Status.COMPLETED
+                formal_intention.execution_result = result
+                self._chain_intention_hash(formal_intention)
+                formal_intention.save()
 
                 # 4. Auditoría Sistémica Unificada
                 self._log_audit(intention, parameters, result)
@@ -217,8 +257,23 @@ class GovernanceKernel:
                 return result
         except Exception as e:
             logger.error(f"KERNEL: Error ejecutando '{intention_name}': {str(e)}")
+            formal_intention.validation_status = GIM.Status.FAILED
+            formal_intention.execution_result = {"error": str(e)}
+            formal_intention.save()
             self._log_audit(intention, parameters, {}, success=False, error_message=str(e))
             raise e
+
+    def _chain_intention_hash(self, intention):
+        """Hardening RC-S: Encriptación encadenada de intenciones."""
+        import hashlib
+        import json
+        from apps.admin_plataforma.models import GovernanceIntention
+
+        last_intention = GovernanceIntention.objects.exclude(id=intention.id).order_by('-timestamp').first()
+        prev_hash = last_intention.hash_chain if last_intention else "GOVERNANCE_GENESIS"
+
+        payload = f"{intention.id}{intention.requested_action}{intention.validation_status}{prev_hash}"
+        intention.hash_chain = hashlib.sha256(payload.encode()).hexdigest()
 
     def _validate_contract(self, intention: GovernanceIntention, parameters: Dict[str, Any]):
         """

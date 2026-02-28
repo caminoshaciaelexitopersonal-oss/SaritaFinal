@@ -44,4 +44,14 @@ class ForecastEngine:
             )
 
         logger.info(f"Forecasts generated for 12 months based on MRR {mrr}")
+
+        # EOS Activation: Decision Engine Integration
+        from apps.core_erp.event_bus import EventBus
+        EventBus.emit("STRATEGIC_SIGNAL_EMITTED", {
+            "source": "ForecastEngine",
+            "type": "REVENUE_TREND",
+            "value": float(net_growth),
+            "metadata": {"growth": float(growth_rate), "churn": float(churn_rate)}
+        })
+
         return True
