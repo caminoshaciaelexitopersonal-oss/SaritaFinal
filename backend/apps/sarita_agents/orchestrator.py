@@ -100,11 +100,66 @@ class SaritaOrchestrator:
         coronel.handle_mission(mision)
 
     def handle_directive(self, directive: dict):
+        # EOS Activation: Zero-Touch Onboarding specialized handling
+        if directive.get("action") == "ZERO_TOUCH_ONBOARDING":
+            return self._orchestrate_onboarding(directive)
+
         mision = self.start_mission(directive)
         self.execute_mission(mision.id)
         # We fetch the mission again via service to get the final state
         updated_mision = GovernanceService.get_mission(str(mision.id))
         return updated_mision.resultado_final or {"status": "EN_COLA", "mision_id": str(mision.id)}
+
+    def _orchestrate_onboarding(self, directive: dict):
+        """
+        EOS Core Flow: Lead Qualified -> Automated Provisioning.
+        100% Orchestrated, no manual steps.
+        Flow: Lead -> Subscription -> Tenant -> Plan -> Budget -> Ledger -> Monitoring.
+        """
+        from apps.core_erp.event_bus import EventBus
+        company_name = directive.get('company_name')
+        logger.warning(f"GENERAL SARITA: Initiating Zero-Touch Onboarding for {company_name}")
+
+        try:
+            # 1. Confirm Subscription (Commercial Domain)
+            sub_res = self.handle_directive({
+                "domain": "comercial",
+                "action": "ERP_CONFIRM_SALE",
+                "parameters": directive
+            })
+
+            # 2. Provision Tenant (Core ERP Domain)
+            tenant_res = self.handle_directive({
+                "domain": "prestadores",
+                "action": "ONBOARDING_PRESTADOR",
+                "parameters": directive
+            })
+            tenant_id = tenant_res.get("tenant_id")
+
+            # 3. Apply Plan & Templates (Infrastructure)
+            EventBus.emit("TENANT_PROVISIONED", {
+                "tenant_id": tenant_id,
+                "plan_code": directive.get("plan_code"),
+                "initialize_ledger": True,
+                "activate_monitoring": True
+            })
+
+            # 4. Initialize Budget & First Snapshot
+            self.handle_directive({
+                "domain": "contable",
+                "action": "ERP_GENERATE_BALANCE", # Force initial snapshot
+                "parameters": {"tenant_id": tenant_id, "initial": True}
+            })
+
+            return {
+                "status": "SUCCESS",
+                "onboarding_phase": "COMPLETED",
+                "tenant_id": tenant_id,
+                "message": f"EOS Activated for {company_name}. Monitoring live."
+            }
+        except Exception as e:
+            logger.error(f"EOS ONBOARDING CRITICAL FAILURE: {e}")
+            return {"status": "FAILED", "error": str(e)}
 
     def _validate_mission_integrity(self, mision) -> bool:
         if mision.dominio != mision.directiva_original.get("domain"):

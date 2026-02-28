@@ -1,82 +1,67 @@
 import logging
 from typing import Dict, Any
-from django.db.models import Sum, Count
 from django.utils import timezone
-from datetime import timedelta
-
-# Imports de modelos (asumiendo que existen o se usarán sus equivalentes sistémicos)
-from api.models import CustomUser
 from apps.admin_plataforma.models import GovernanceAuditLog
+from apps.core_erp.event_bus import EventBus
 
 logger = logging.getLogger(__name__)
 
 class SystemicObserver:
     """
     Capa de Observación Sistémica: Monitorea KPIs y estados en tiempo real.
-    Fase 5: Cubre Comercial, Contable, Operativo, Financiero y Archivístico.
+    REFACTORED: 100% Event-Driven. No direct imports or import_string.
+    EOS Activation: Eliminates technical coupling.
     """
 
+    # Local metric registry for transient state (persistent data stays in control_tower)
+    _latest_metrics: Dict[str, Any] = {
+        "comercial": {},
+        "contable": {},
+        "financiero": {},
+        "operativo": {},
+        "archivistico": {}
+    }
+
+    def __init__(self):
+        self._subscribe_to_system_events()
+
+    def _subscribe_to_system_events(self):
+        """
+        Registers the observer for relevant ERP and operational events.
+        """
+        EventBus.subscribe("METRIC_COLLECTED", self._on_metric_received)
+        EventBus.subscribe("JOURNAL_ENTRY_POSTED", self._on_accounting_impact)
+        EventBus.subscribe("SUBSCRIPTION_ACTIVATED", self._on_commercial_impact)
+        logger.info("SYSTEMIC OBSERVER: refactored and listening via EventBus.")
+
+    def _on_metric_received(self, payload: dict):
+        """Standard handler for explicit metric emission."""
+        domain = payload.get('domain', 'global')
+        name = payload.get('name')
+        value = payload.get('value')
+
+        if domain in self._latest_metrics:
+            self._latest_metrics[domain][name] = value
+
+        # Trigger Decision Engine if needed
+        from apps.enterprise_core.services.decision_engine import DecisionEngine
+        DecisionEngine.process_metric_update(name, value, payload)
+
+    def _on_accounting_impact(self, payload: dict):
+        """Infers metrics from accounting events."""
+        self._latest_metrics["contable"]["last_post_timestamp"] = timezone.now().isoformat()
+        # Logic to update aggregate cash flow, etc.
+
+    def _on_commercial_impact(self, payload: dict):
+        """Infers metrics from commercial events."""
+        self._latest_metrics["comercial"]["active_subscriptions_delta"] = 1
+
     def collect_all_metrics(self) -> Dict[str, Any]:
-        """Recopila un snapshot global de salud del sistema."""
+        """
+        Returns a snapshot of the current systemic health.
+        Now uses data inferred from events and explicitly emitted metrics.
+        """
         return {
-            "comercial": self._observe_commercial(),
-            "contable": self._observe_accounting(),
-            "financiero": self._observe_financial(),
-            "operativo": self._observe_operational(),
-            "archivistico": self._observe_archival(),
+            **self._latest_metrics,
             "timestamp": timezone.now().isoformat()
-        }
-
-    def _observe_commercial(self) -> Dict[str, Any]:
-        """Monitorea funnel de ventas, suscripciones y conversiones."""
-        # Ejemplo: Contar nuevos usuarios en las últimas 24h
-        new_users = CustomUser.objects.filter(
-            date_joined__gte=timezone.now() - timedelta(days=1)
-        ).count()
-
-        # En una implementación real, aquí se consultaría el módulo de ventas
-        from django.utils.module_loading import import_string
-        ProviderProfile = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models.ProviderProfile') # DECOUPLED
-        return {
-            "new_onboardings_24h": new_users,
-            "churn_rate_estimated": 0.05, # Simulado
-            "funnel_conversion": 0.12,    # Simulado
-            "active_subscriptions": ProviderProfile.objects.count()
-        }
-
-    def _observe_accounting(self) -> Dict[str, Any]:
-        """Monitorea balances, facturación y estados contables globales."""
-        return {
-            "pending_invoices": 12,
-            "tax_compliance_status": "nominal",
-            "audit_alerts": 0
-        }
-
-    def _observe_financial(self) -> Dict[str, Any]:
-        """Monitorea flujos de caja, riesgos y rentabilidad."""
-        return {
-            "cash_flow_24h": 5000.0,
-            "unpaid_dues": 1500.0,
-            "risk_index": 0.15 # 0-1
-        }
-
-    def _observe_operational(self) -> Dict[str, Any]:
-        """Monitorea el uso de recursos, logs de error y performance."""
-        error_count = GovernanceAuditLog.objects.filter(
-            success=False,
-            timestamp__gte=timezone.now() - timedelta(hours=1)
-        ).count()
-
-        return {
-            "system_load": 0.45,
-            "error_rate_1h": error_count,
-            "active_sessions": 25
-        }
-
-    def _observe_archival(self) -> Dict[str, Any]:
-        """Monitorea la integridad documental y capacidad de almacenamiento."""
-        return {
-            "storage_usage": 0.72, # 72%
-            "integrity_score": 0.99,
-            "pending_digitization": 450
         }

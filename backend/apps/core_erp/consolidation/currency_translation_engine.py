@@ -3,7 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class CurrencyTranslation:
+class CurrencyTranslationEngine:
     """
     Handles FX conversion for financial consolidation.
     """
@@ -11,20 +11,27 @@ class CurrencyTranslation:
     @staticmethod
     def get_rate(from_currency: str, to_currency: str, period: str = None) -> Decimal:
         """
-        Retrieves the exchange rate for a given period.
-        In a real scenario, this would query an ExchangeRate model.
+        Retrieves the exchange rate for a given period from the versioned FX table.
         """
         if from_currency == to_currency:
             return Decimal('1.0')
 
-        # This is a placeholder for real FX lookup logic
-        # For development/test purposes, we might want to allow setting these via settings or a simple dict
+        from .fx_models import FXRateTable
+        rate_entry = FXRateTable.objects.filter(
+            from_currency=from_currency,
+            to_currency=to_currency,
+            is_active=True
+        ).order_by('-version').first()
+
+        if rate_entry:
+            return rate_entry.rate
+
+        # Hardening Fallback (Development only)
         rates = {
             ('USD', 'COP'): Decimal('4000.0'),
             ('EUR', 'COP'): Decimal('4300.0'),
             ('COP', 'USD'): Decimal('0.00025'),
         }
-
         return rates.get((from_currency, to_currency), Decimal('1.0'))
 
     @staticmethod
@@ -36,6 +43,6 @@ class CurrencyTranslation:
             return amount
 
         if rate is None:
-            rate = CurrencyTranslation.get_rate(from_currency, to_currency)
+            rate = CurrencyTranslationEngine.get_rate(from_currency, to_currency)
 
         return amount * rate

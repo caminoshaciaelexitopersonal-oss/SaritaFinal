@@ -71,6 +71,26 @@ class SaaSInvoice(BaseInvoice):
     class Meta:
         app_label = 'commercial_engine'
 
+class CustomerHealthIndex(models.Model):
+    """
+    EOS Activation: Integrated health index for churn prediction.
+    Integrates Usage, Support, Billing, and Churn Risk.
+    """
+    company_id = models.UUIDField(unique=True, db_index=True)
+    health_score = models.FloatField(help_text="0.0 to 100.0")
+
+    usage_component = models.FloatField()
+    billing_component = models.FloatField()
+    churn_risk_component = models.FloatField()
+
+    last_updated = models.DateTimeField(auto_now=True)
+
+    __schema_version__ = "v2.1"
+
+    class Meta:
+        app_label = 'commercial_engine'
+        verbose_name = "Customer Health Index"
+
 class CommercialKPI(models.Model):
     """
     Snapshots de métricas clave para el dashboard estratégico.

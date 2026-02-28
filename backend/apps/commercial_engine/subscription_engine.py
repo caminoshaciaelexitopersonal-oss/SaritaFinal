@@ -16,11 +16,17 @@ class SubscriptionEngine:
 
     @classmethod
     @transaction.atomic
-    def activate_subscription(cls, company_id, plan_id, billing_cycle='MONTHLY'):
+    def activate_subscription(cls, company_id, plan_id, billing_cycle='MONTHLY', lead_id=None):
         """
         Activa una nueva suscripción para una empresa.
+        Hardening 100%: Automated lead-to-tenant conversion.
         """
         plan = SaaSPlan.objects.get(id=plan_id)
+        if lead_id:
+            from .lead_model import SaaSLead
+            lead = SaaSLead.objects.get(id=lead_id)
+            lead.status = SaaSLead.Status.CONVERTED
+            lead.save()
 
         # 1. Determinar Fechas y MRR
         start_date = timezone.now().date()
@@ -49,7 +55,15 @@ class SubscriptionEngine:
             'subscription_id': str(subscription.id),
             'company_id': str(company_id),
             'plan_name': plan.name,
+            'plan_code': plan.code,
             'mrr': float(mrr)
+        })
+
+        # 5. Trigger Automated Onboarding
+        EventBus.emit('TENANT_PROVISIONING_REQUESTED', {
+            'tenant_id': str(company_id),
+            'name': plan.name, # Using plan name as default for provisioned profile
+            'plan_code': plan.code
         })
 
         return subscription

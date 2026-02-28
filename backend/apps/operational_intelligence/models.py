@@ -38,8 +38,17 @@ class RevenueForecast(models.Model):
     projected_revenue = models.DecimalField(max_digits=20, decimal_places=2)
     projected_cashflow = models.DecimalField(max_digits=20, decimal_places=2)
     confidence_interval = models.DecimalField(max_digits=5, decimal_places=2)
+
+    # Explainability Layer
+    variables_used = models.JSONField(default=dict)
+    weight_estimation = models.JSONField(default=dict)
+
     algorithm_version = models.CharField(max_length=50)
+    dataset_reference = models.CharField(max_length=255, null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
+
+    __schema_version__ = "v2.1"
 
 class UnitEconomics(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -62,6 +71,13 @@ class IntelligenceAuditLog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     engine_name = models.CharField(max_length=100)
+
+    # Model Maturity Metrics
+    model_version = models.CharField(max_length=50, default="1.0.0")
+    accuracy_score = models.FloatField(null=True, blank=True)
+
     input_dataset_hash = models.CharField(max_length=64)
     output_result_summary = models.JSONField()
     execution_time_ms = models.IntegerField()
+
+    __schema_version__ = "v2.1"

@@ -11,6 +11,15 @@ class Tenant(BaseErpModel):
     currency = models.CharField(max_length=3, default='COP')
     is_active = models.BooleanField(default=True)
 
+    class State(models.TextChoices):
+        PROVISIONING = 'PROVISIONING', 'Provisioning'
+        ACTIVE = 'ACTIVE', 'Active'
+        SUSPENDED = 'SUSPENDED', 'Suspended'
+        GRACE = 'GRACE', 'Grace Period'
+        ARCHIVED = 'ARCHIVED', 'Archived'
+
+    state = models.CharField(max_length=20, choices=State.choices, default=State.PROVISIONING)
+
  
     # Blueprint Alignment: Consolidation Method
     CONSOLIDATION_METHODS = [
