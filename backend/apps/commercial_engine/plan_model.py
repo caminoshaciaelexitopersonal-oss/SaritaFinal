@@ -34,6 +34,23 @@ class SaaSPlan(models.Model):
     def __str__(self):
         return f"{self.name} ({self.code})"
 
+class SaaSPlanVersion(models.Model):
+    """
+    Versioning for SaaS plans to track price changes and limit adjustments.
+    """
+    plan = models.ForeignKey(SaaSPlan, on_delete=models.CASCADE, related_name='versions')
+    version_number = models.IntegerField()
+    config_snapshot = models.JSONField()
+
+    effective_from = models.DateTimeField(auto_now_add=True)
+    reason = models.TextField(blank=True)
+
+    __schema_version__ = "v2.1"
+
+    class Meta:
+        app_label = 'commercial_engine'
+        unique_together = ('plan', 'version_number')
+
     class Meta:
         verbose_name = "Plan SaaS"
         verbose_name_plural = "Planes SaaS"

@@ -21,6 +21,9 @@ class KPI(TenantAwareModel):
     timestamp = models.DateTimeField(auto_now_add=True)
     meta_data = models.JSONField(default=dict, blank=True)
 
+    # Versioning for thresholds or methodology
+    methodology_version = models.CharField(max_length=50, default="v1.0")
+
     class Meta:
         app_label = 'control_tower'
         verbose_name = "KPI Snapshot"

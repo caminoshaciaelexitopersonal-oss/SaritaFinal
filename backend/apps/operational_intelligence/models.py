@@ -71,6 +71,13 @@ class IntelligenceAuditLog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     engine_name = models.CharField(max_length=100)
+
+    # Model Maturity Metrics
+    model_version = models.CharField(max_length=50, default="1.0.0")
+    accuracy_score = models.FloatField(null=True, blank=True)
+
     input_dataset_hash = models.CharField(max_length=64)
     output_result_summary = models.JSONField()
     execution_time_ms = models.IntegerField()
+
+    __schema_version__ = "v2.1"
