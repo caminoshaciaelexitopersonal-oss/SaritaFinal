@@ -5,7 +5,7 @@ from django.db import transaction
 
 logger = logging.getLogger(__name__)
 
-class IntercompanyEliminator:
+class IntercompanyEngine:
     """
     Automates the detection and elimination of intercompany balances.
     """
@@ -53,7 +53,7 @@ class IntercompanyEliminator:
             )
 
             for match in pending_matches:
-                IntercompanyEliminator._create_elimination_entry(match)
+                IntercompanyEngine._create_elimination_entry(match)
                 match.status = 'ELIMINATED'
                 match.save()
 

@@ -44,8 +44,8 @@ class SystemicObserver:
             self._latest_metrics[domain][name] = value
 
         # Trigger Decision Engine if needed
-        from apps.enterprise_core.decision_engine import EnterpriseDecisionEngine
-        EnterpriseDecisionEngine.process_metric_update(name, value, payload)
+        from apps.enterprise_core.services.decision_engine import DecisionEngine
+        DecisionEngine.process_metric_update(name, value, payload)
 
     def _on_accounting_impact(self, payload: dict):
         """Infers metrics from accounting events."""

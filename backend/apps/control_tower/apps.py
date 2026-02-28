@@ -12,3 +12,7 @@ class ControlTowerConfig(AppConfig):
 
         # Signals for Alert Dispatching
         import apps.control_tower.signals
+
+        # EOS Activation: Metric Registry & Listener
+        from .metric_listener import MetricListener
+        MetricListener.start_listening()

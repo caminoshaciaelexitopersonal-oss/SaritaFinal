@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions, serializers, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import StrategicRule, DecisionProposal
-from .decision_engine import EnterpriseDecisionEngine
+from .services.decision_engine import DecisionEngine
 
 class StrategicRuleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,6 +22,7 @@ class DecisionProposalViewSet(viewsets.ModelViewSet):
     queryset = DecisionProposal.objects.all()
     serializer_class = DecisionProposalSerializer
     permission_classes = [permissions.IsAdminUser]
+    filterset_fields = ['governance_status', 'risk_category', 'tenant_id', 'origin_metric']
 
     @action(detail=True, methods=['post'])
     def approve_and_execute(self, request, pk=None):
@@ -31,7 +32,7 @@ class DecisionProposalViewSet(viewsets.ModelViewSet):
         proposal = self.get_object()
 
         try:
-            result = EnterpriseDecisionEngine.execute_proposal(
+            result = DecisionEngine.execute_proposal(
                 proposal_id=str(proposal.id),
                 user=request.user
             )

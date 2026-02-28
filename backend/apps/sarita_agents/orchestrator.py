@@ -114,49 +114,51 @@ class SaritaOrchestrator:
         """
         EOS Core Flow: Lead Qualified -> Automated Provisioning.
         100% Orchestrated, no manual steps.
+        Flow: Lead -> Subscription -> Tenant -> Plan -> Budget -> Ledger -> Monitoring.
         """
-        logger.warning(f"GENERAL SARITA: Initiating Zero-Touch Onboarding for {directive.get('company_name')}")
+        from apps.core_erp.event_bus import EventBus
+        company_name = directive.get('company_name')
+        logger.warning(f"GENERAL SARITA: Initiating Zero-Touch Onboarding for {company_name}")
 
         try:
-            # Multi-mission sequence
-            # 1. Create Tenant (Domain: 'prestadores')
-            tenant_mision = self.handle_directive({
-                "domain": "prestadores",
-                "action": "ONBOARDING_PRESTADOR",
-                "parameters": {
-                    "name": directive.get("company_name"),
-                    "email": directive.get("email"),
-                    "plan": directive.get("plan_code")
-                }
-            })
-
-            tenant_id = tenant_mision.get("tenant_id")
-
-            # 2. Activate Subscription (Domain: 'comercial')
-            self.handle_directive({
+            # 1. Confirm Subscription (Commercial Domain)
+            sub_res = self.handle_directive({
                 "domain": "comercial",
                 "action": "ERP_CONFIRM_SALE",
-                "parameters": {
-                    "tenant_id": tenant_id,
-                    "plan_code": directive.get("plan_code")
-                }
+                "parameters": directive
             })
 
-            # 3. Provision Infrastructure (Domain: 'interop')
+            # 2. Provision Tenant (Core ERP Domain)
+            tenant_res = self.handle_directive({
+                "domain": "prestadores",
+                "action": "ONBOARDING_PRESTADOR",
+                "parameters": directive
+            })
+            tenant_id = tenant_res.get("tenant_id")
+
+            # 3. Apply Plan & Templates (Infrastructure)
+            EventBus.emit("TENANT_PROVISIONED", {
+                "tenant_id": tenant_id,
+                "plan_code": directive.get("plan_code"),
+                "initialize_ledger": True,
+                "activate_monitoring": True
+            })
+
+            # 4. Initialize Budget & First Snapshot
             self.handle_directive({
-                "domain": "interop",
-                "action": "QUERY_META_STANDARD", # Mock for infra provisioning
-                "parameters": {"tenant_id": tenant_id}
+                "domain": "contable",
+                "action": "ERP_GENERATE_BALANCE", # Force initial snapshot
+                "parameters": {"tenant_id": tenant_id, "initial": True}
             })
 
             return {
                 "status": "SUCCESS",
                 "onboarding_phase": "COMPLETED",
                 "tenant_id": tenant_id,
-                "message": "EOS Activation successful. Tenant is live."
+                "message": f"EOS Activated for {company_name}. Monitoring live."
             }
         except Exception as e:
-            logger.error(f"ZERO-TOUCH FAILED: {e}")
+            logger.error(f"EOS ONBOARDING CRITICAL FAILURE: {e}")
             return {"status": "FAILED", "error": str(e)}
 
     def _validate_mission_integrity(self, mision) -> bool:

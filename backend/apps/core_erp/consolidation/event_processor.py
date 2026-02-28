@@ -1,7 +1,7 @@
 import logging
 from apps.core_erp.event_bus import EventBus
-from .intercompany_elimination import IntercompanyEliminator
-from .consolidation_snapshot import SnapshotGenerator
+from .intercompany_engine import IntercompanyEngine
+from .consolidation_snapshot_engine import SnapshotGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class ConsolidationEventProcessor:
         logger.info(f"EOS CONSOLIDATION: Processing posting event for tenant {tenant_id}")
 
         # 1. Real-time intercompany detection
-        IntercompanyEliminator.detect_and_match(entry_id)
+        IntercompanyEngine.detect_and_match(entry_id)
 
         # 2. Incremental snapshot update (or queue full rebuild)
         SnapshotGenerator.trigger_incremental(tenant_id)

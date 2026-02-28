@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 class SnapshotGenerator:
     """
     Generates consolidated snapshots for holding entities.
+    Part of the Consolidation Snapshot Engine.
     """
 
     @staticmethod

@@ -3,7 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class CurrencyTranslation:
+class CurrencyTranslationEngine:
     """
     Handles FX conversion for financial consolidation.
     """
@@ -36,6 +36,6 @@ class CurrencyTranslation:
             return amount
 
         if rate is None:
-            rate = CurrencyTranslation.get_rate(from_currency, to_currency)
+            rate = CurrencyTranslationEngine.get_rate(from_currency, to_currency)
 
         return amount * rate

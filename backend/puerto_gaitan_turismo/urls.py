@@ -120,6 +120,7 @@ urlpatterns = [
 
     # EOS Activation: Enterprise Operating System Core
     path('api/v1/enterprise-core/', include('apps.enterprise_core.urls')),
+    path('api/enterprise/', include('apps.enterprise_core.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

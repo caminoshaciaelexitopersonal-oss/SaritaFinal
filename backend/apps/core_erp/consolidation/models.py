@@ -14,6 +14,8 @@ class IntercompanyMatch(BaseErpModel):
     status = models.CharField(max_length=20, default='PENDING') # PENDING, MATCHED, ELIMINATED
     elimination_entry_id = models.UUIDField(null=True, blank=True)
 
+    __schema_version__ = "v2.1"
+
     class Meta:
         app_label = 'core_erp'
         verbose_name = "Intercompany Match"
@@ -30,6 +32,8 @@ class ConsolidatedReportSnapshot(TenantAwareModel):
     data = models.JSONField() # Consolidated Trial Balance or Financial Statement
     is_certified = models.BooleanField(default=False)
     certified_by = models.CharField(max_length=100, null=True, blank=True)
+
+    __schema_version__ = "v2.1"
 
     class Meta:
         app_label = 'core_erp'
