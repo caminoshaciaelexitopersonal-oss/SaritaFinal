@@ -15,20 +15,13 @@ class InteroperabilityBridge:
     def link_delivery_to_specialized_order(self, operational_order_id, delivery_parameters, intention_id=None):
         """
         Directriz de Interoperabilidad: Delivery nunca actúa sin una Orden Operativa.
-        Este método asegura que toda solicitud de delivery esté anclada a una intención operativa previa.
+        Hardening 100%: Replaced import_string with Service Contract.
         """
         logger.info(f"INTEROP: Vinculando Delivery a Orden Operativa {operational_order_id}")
 
-        # 1. Recuperar la Reserva/Orden Especializada via Application Service (Decoupled)
-        from django.utils.module_loading import import_string
-        Reserva = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.reservas.models.Reserva') # DECOUPLED
-
-        from django.core.exceptions import ValidationError
-        try:
-            reserva = Reserva.objects.get(id_publico=operational_order_id)
-        except (Reserva.DoesNotExist, ValueError, ValidationError):
-            from django.shortcuts import get_object_or_404
-            reserva = get_object_or_404(Reserva, id=operational_order_id)
+        # 1. Use the Unified Service Layer (Contracts)
+        from apps.prestadores.mi_negocio.gestion_operativa.services import ReservaService
+        reserva = ReservaService.get_reserva_by_id(operational_order_id)
 
         # 2. Enriquecer los parámetros con la trazabilidad de interoperabilidad
         # Usamos id_publico (UUID) para el vínculo interoperable

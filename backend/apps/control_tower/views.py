@@ -56,5 +56,22 @@ class ExecutiveDashboardView(views.APIView):
             "recent_alerts": alerts[:5]
         }
 
-        serializer = ExecutiveDashboardSerializer(data)
-        return response.Response(serializer.data)
+        # ViewModel Integration (Phase 2)
+        from .view_models.executive_snapshot import ExecutiveSnapshot
+        from .view_models.intention_feed import IntentionFeed
+        from .view_models.systemic_risk_view import SystemicRiskView
+
+        snapshot = ExecutiveSnapshot.get_latest()
+
+        data.update({
+            "executive_summary": {
+                "active_proposals": snapshot.active_proposals,
+                "infra_status": snapshot.infra_status,
+                "systemic_risk_score": snapshot.systemic_risk
+            },
+            "risk_heatmap": SystemicRiskView.get_risk_context(),
+            "governance_feed": IntentionFeed.get_recent_intentions(limit=10)
+        })
+
+        # Note: We return the data directly as it's a multi-viewModel composite
+        return response.Response(data)

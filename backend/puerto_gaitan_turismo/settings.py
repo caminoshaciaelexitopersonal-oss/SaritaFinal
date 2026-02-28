@@ -147,6 +147,7 @@ INSTALLED_APPS = [
     "apps.financial_stability.apps.FinancialStabilityConfig",
     "apps.enterprise_core.apps.EnterpriseCoreConfig",
     "apps.enterprise_governance.apps.EnterpriseGovernanceConfig",
+    "apps.saas.apps.SaasOrchestrationConfig",
     "legacy_custody.apps.LegacyCustodyConfig",
 
     # "apps.downloads.apps.DownloadsConfig",

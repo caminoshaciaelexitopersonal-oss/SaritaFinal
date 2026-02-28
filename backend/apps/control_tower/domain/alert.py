@@ -30,6 +30,8 @@ class Alert(TenantAwareModel):
     # Severity Classification Engine enhancements
     impact_score = models.FloatField(default=0.0, help_text="Estimated impact 0-100")
     domain_affected = models.CharField(max_length=100, null=True, blank=True)
+    financial_exposure = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
+    confidence_score = models.FloatField(default=0.95)
 
     created_at = models.DateTimeField(auto_now_add=True)
     resolved_at = models.DateTimeField(null=True, blank=True)
