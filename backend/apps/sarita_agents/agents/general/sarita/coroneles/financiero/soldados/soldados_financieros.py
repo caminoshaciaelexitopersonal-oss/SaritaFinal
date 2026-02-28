@@ -1,6 +1,6 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/financiero/soldados/soldados_financieros.py
 
-from apps.sarita_agents.agents.soldado_template import SoldierTemplate
+from apps.sarita_agents.agents.soldado_n6_oro_v2 import SoldadoN6OroV2
 import logging
 from django.db import models
 
@@ -8,81 +8,141 @@ logger = logging.getLogger(__name__)
 
 # --- SOLDADOS DE TESORERÍA ---
 
-class SoldadoRegistroIngresos(SoldierTemplate):
+class SoldadoRegistroIngresos(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Registrando ingresos reales.")
         return {"action": "income_logged"}
 
-class SoldadoRegistroEgresos(SoldierTemplate):
+class SoldadoRegistroEgresos(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Registrando egresos reales.")
         return {"action": "expense_logged"}
 
-class SoldadoVerificadorSoportes(SoldierTemplate):
+class SoldadoVerificadorSoportes(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Verificando soportes físicos/digitales.")
         return {"action": "documents_verified"}
 
-class SoldadoValidadorTransacciones(SoldierTemplate):
+class SoldadoValidadorTransacciones(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Validando integridad de transacciones.")
         return {"action": "transactions_validated"}
 
-class SoldadoConsolidadorDiario(SoldierTemplate):
+class SoldadoConsolidadorDiario(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Consolidando cierre diario de caja.")
         return {"action": "daily_consolidated"}
 
 # --- SOLDADOS DE CONCILIACIÓN ---
 
-class SoldadoDescargaExtractos(SoldierTemplate):
+class SoldadoDescargaExtractos(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO CONCILIACIÓN: Descargando extractos bancarios.")
         return {"action": "statements_downloaded"}
 
-class SoldadoCruceAutomatico(SoldierTemplate):
+class SoldadoCruceAutomatico(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO CONCILIACIÓN: Ejecutando algoritmo de cruce.")
         return {"action": "auto_match_executed"}
 
-class SoldadoIdentificadorDiferencias(SoldierTemplate):
+class SoldadoIdentificadorDiferencias(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO CONCILIACIÓN: Marcando partidas conciliatorias.")
         return {"action": "discrepancies_identified"}
 
-class SoldadoAjustadorContable(SoldierTemplate):
+class SoldadoAjustadorContable(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO CONCILIACIÓN: Sugiriendo asientos de ajuste.")
         return {"action": "adjustments_suggested"}
 
-class SoldadoAuditorConciliacion(SoldierTemplate):
+class SoldadoAuditorConciliacion(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO CONCILIACIÓN: Certificando conciliación bancaria.")
         return {"action": "reconciliation_certified"}
 
 # --- SOLDADOS DE PRESUPUESTO ---
 
-class SoldadoInputMetas(SoldierTemplate):
+class SoldadoInputMetas(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Cargando metas mensuales.")
         return {"action": "targets_loaded"}
 
-class SoldadoTrackingGasto(SoldierTemplate):
+class SoldadoTrackingGasto(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Seguimiento de ejecución de gasto.")
         return {"action": "expense_tracked"}
 
-class SoldadoAnalistaVarianza(SoldierTemplate):
+class SoldadoAnalistaVarianza(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Calculando varianza presupuestal.")
         return {"action": "variance_calculated"}
 
-class SoldadoValidadorRubros(SoldierTemplate):
+class SoldadoValidadorRubros(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Validando rubros presupuestales.")
         return {"action": "categories_validated"}
 
-class SoldadoAlertaSobrecosto(SoldierTemplate):
+class SoldadoAlertaSobrecosto(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Disparando alertas de desviación.")
         from django.utils.module_loading import import_string
@@ -113,7 +173,11 @@ class SoldadoAlertaSobrecosto(SoldierTemplate):
 
 # --- SOLDADOS DE OBLIGACIONES ---
 
-class SoldadoRegistroCredito(SoldierTemplate):
+class SoldadoRegistroCredito(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         logger.info("SOLDADO OBLIGACIONES: Registrando nuevo crédito.")
         from django.utils.module_loading import import_string
@@ -156,47 +220,87 @@ class SoldadoRegistroCredito(SoldierTemplate):
             return {"status": "SUCCESS", "credito_id": str(credito.id), "cuotas": len(tabla)}
         return {"action": "idle"}
 
-class SoldadoCalculadorAmortizacion(SoldierTemplate):
+class SoldadoCalculadorAmortizacion(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         return {"action": "amortization_calculated"}
 
-class SoldadoTrackingPagos(SoldierTemplate):
+class SoldadoTrackingPagos(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         return {"action": "payments_tracked"}
 
-class SoldadoAnalistaRiesgoCredito(SoldierTemplate):
+class SoldadoAnalistaRiesgoCredito(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         return {"action": "risk_analyzed"}
 
-class SoldadoAuditorDeuda(SoldierTemplate):
+class SoldadoAuditorDeuda(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         return {"action": "debt_audited"}
 
 # --- SOLDADOS DE PROYECCIONES ---
 
-class SoldadoRecoleccionHistorica(SoldierTemplate):
+class SoldadoRecoleccionHistorica(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         return {"action": "history_collected"}
 
-class SoldadoModeladoEscenarios(SoldierTemplate):
+class SoldadoModeladoEscenarios(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         return {"action": "scenarios_modeled"}
 
-class SoldadoValidacionIA(SoldierTemplate):
+class SoldadoValidacionIA(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         return {"action": "ai_validated"}
 
-class SoldadoAjusteTendencia(SoldierTemplate):
+class SoldadoAjusteTendencia(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         return {"action": "trends_adjusted"}
 
-class SoldadoGeneradorReportePredictivo(SoldierTemplate):
+class SoldadoGeneradorReportePredictivo(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         return {"action": "predictive_report_generated"}
 
 # --- SOLDADOS DE INDICADORES ---
 
-class SoldadoKPI(SoldierTemplate):
+class SoldadoKPI(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         from django.utils.module_loading import import_string
         FinanzasService = import_string('apps.prestadores.mi_negocio.gestion_financiera.services.FinanzasService') # DECOUPLED
