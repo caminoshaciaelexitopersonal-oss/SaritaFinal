@@ -1,74 +1,69 @@
 from django.db import models
-from apps.core_erp.base_models import BaseErpModel
+from apps.core_erp.base_models import BaseErpModel, TenantAwareModel
 
-class Jurisdiction(BaseErpModel):
-    """
-    Representa una jurisdicción fiscal (País/Estado).
-    """
-    country_code = models.CharField(max_length=2, unique=True) # ISO 3166-1 alpha-2
+class Country(BaseErpModel):
+    """Bloque 3.1: Tabla de Países"""
     name = models.CharField(max_length=100)
-    currency = models.CharField(max_length=3)
-    tax_framework = models.CharField(max_length=50, default='STANDARD')
-    accounting_standard = models.CharField(max_length=20, default='IFRS')
-    is_active = models.BooleanField(default=True)
-
-    class Meta:
-        app_label = 'core_erp'
-        verbose_name = "Jurisdiction"
+    iso_code = models.CharField(max_length=10, unique=True)
+    currency_code = models.CharField(max_length=10)
 
     def __str__(self):
-        return f"{self.name} ({self.country_code})"
+        return f"{self.name} ({self.iso_code})"
 
-class TaxRule(BaseErpModel):
-    """
-    Reglas fiscales versionables por jurisdicción.
-    """
-    class TaxType(models.TextChoices):
-        VAT = 'VAT', 'Value Added Tax'
-        GST = 'GST', 'Goods and Services Tax'
-        WITHHOLDING = 'WITHHOLDING', 'Withholding Tax'
-        CORPORATE = 'CORPORATE', 'Corporate Income Tax'
-        HOTEL = 'HOTEL', 'Hotel/Tourism Tax'
-
-    jurisdiction = models.ForeignKey(Jurisdiction, on_delete=models.CASCADE, related_name='rules')
-    tax_type = models.CharField(max_length=20, choices=TaxType.choices)
+class Jurisdiction(BaseErpModel):
+    """Bloque 3.2: Tabla de Jurisdicciones"""
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='jurisdictions')
     name = models.CharField(max_length=100)
-    rate = models.DecimalField(max_digits=5, decimal_places=4)
-    version = models.CharField(max_length=10, default='1.0')
+    level = models.CharField(max_length=50, choices=[('NATIONAL', 'National'), ('REGIONAL', 'Regional'), ('MUNICIPAL', 'Municipal')])
+
+    def __str__(self):
+        return f"{self.name} - {self.level}"
+
+class Tax(TenantAwareModel):
+    """Bloque 3.3: Tabla de Impuestos"""
+    code = models.CharField(max_length=50, db_index=True)
+    name = models.CharField(max_length=150)
+    tax_type = models.CharField(max_length=50) # IVA, RET, ISR, ICA
+    jurisdiction = models.ForeignKey(Jurisdiction, on_delete=models.CASCADE, related_name='taxes')
+    deductible = models.BooleanField(default=False)
+    withholding = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
     effective_from = models.DateField()
     effective_to = models.DateField(null=True, blank=True)
-    legal_reference = models.CharField(max_length=255, blank=True)
-    is_active = models.BooleanField(default=True)
 
     class Meta:
-        app_label = 'core_erp'
-        verbose_name = "Tax Rule"
+        unique_together = ('code', 'tenant')
 
-class RegulatoryCalendar(BaseErpModel):
-    """
-    Calendario regulatorio para cumplimiento automático.
-    """
-    jurisdiction = models.ForeignKey(Jurisdiction, on_delete=models.CASCADE)
-    event_name = models.CharField(max_length=255)
-    deadline_day = models.IntegerField(help_text="Día del mes o relativo")
-    frequency = models.CharField(max_length=20, default='MONTHLY')
-    responsible_role = models.CharField(max_length=100, default='TAX_OFFICER')
+class TaxRate(BaseErpModel):
+    """Bloque 3.4: Tabla de Tasas"""
+    tax = models.ForeignKey(Tax, on_delete=models.CASCADE, related_name='rates')
+    rate = models.DecimalField(max_digits=10, decimal_places=6)
+    effective_from = models.DateField()
+    effective_to = models.DateField(null=True, blank=True)
 
-    class Meta:
-        app_label = 'core_erp'
-        verbose_name = "Regulatory Calendar"
+class TaxRule(BaseErpModel):
+    """Bloque 3.5: Tabla de Reglas"""
+    tax = models.ForeignKey(Tax, on_delete=models.CASCADE, related_name='rules')
+    document_type = models.CharField(max_length=50)
+    entity_type = models.CharField(max_length=50)
+    minimum_base = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    maximum_base = models.DecimalField(max_digits=18, decimal_places=2, null=True, blank=True)
+    condition_expression = models.TextField(blank=True)
+    priority = models.IntegerField(default=0)
 
-class TaxAuditTrail(BaseErpModel):
-    """
-    Trazabilidad total de cálculos fiscales.
-    """
-    transaction_reference = models.CharField(max_length=100)
-    jurisdiction = models.ForeignKey(Jurisdiction, on_delete=models.SET_NULL, null=True)
-    rule_applied = models.ForeignKey(TaxRule, on_delete=models.SET_NULL, null=True)
+class TaxTransaction(TenantAwareModel):
+    """Bloque 3.6: Tabla de Transacciones Fiscales"""
+    document_id = models.UUIDField(db_index=True)
+    tax = models.ForeignKey(Tax, on_delete=models.PROTECT)
     base_amount = models.DecimalField(max_digits=18, decimal_places=2)
     tax_amount = models.DecimalField(max_digits=18, decimal_places=2)
-    calculation_path = models.JSONField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    rate_applied = models.DecimalField(max_digits=10, decimal_places=6)
 
-    class Meta:
-        app_label = 'core_erp'
+    # Audit Integrity (Fase Z)
+    integrity_hash = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+
+class TaxAccountMapping(TenantAwareModel):
+    """Bloque 3.7: Mapeo Contable"""
+    tax = models.ForeignKey(Tax, on_delete=models.CASCADE, related_name='account_mappings')
+    debit_account = models.CharField(max_length=50)
+    credit_account = models.CharField(max_length=50)

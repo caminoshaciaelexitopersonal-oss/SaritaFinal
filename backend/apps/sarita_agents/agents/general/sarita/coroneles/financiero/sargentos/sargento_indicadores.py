@@ -3,7 +3,11 @@
 from apps.sarita_agents.agents.sargento_template import SergeantTemplate
 from ..soldados.soldados_financieros import SoldierTemplate
 
-class SoldadoKPI(SoldierTemplate):
+class SoldadoKPI(SoldadoN6OroV2):
+    domain = "financiero"
+    aggregate_root = "Placeholder"
+    required_permissions = ["financiero.execute"]
+
     def perform_action(self, params: dict):
         return {"status": "SUCCESS", "kpi": params.get("kpi_name")}
 

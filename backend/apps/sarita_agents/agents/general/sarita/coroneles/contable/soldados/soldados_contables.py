@@ -1,11 +1,15 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/contable/soldados/soldados_contables.py
 
-from apps.sarita_agents.agents.soldado_template import SoldierTemplate
+from apps.sarita_agents.agents.soldado_n6_oro_v2 import SoldadoN6OroV2
 import logging
 
 logger = logging.getLogger(__name__)
 
-class SoldadoRegistroIngreso(SoldierTemplate):
+class SoldadoRegistroIngreso(SoldadoN6OroV2):
+    domain = "contable"
+    aggregate_root = "Placeholder"
+    required_permissions = ["contable.execute"]
+
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO INGRESO: Registrando ingreso -> {params.get('monto')}")
 
@@ -31,7 +35,11 @@ class SoldadoRegistroIngreso(SoldierTemplate):
 
         return {"action": "income_registered", "amount": params.get('monto')}
 
-class SoldadoRegistroGasto(SoldierTemplate):
+class SoldadoRegistroGasto(SoldadoN6OroV2):
+    domain = "contable"
+    aggregate_root = "Placeholder"
+    required_permissions = ["contable.execute"]
+
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO GASTO: Registrando gasto -> {params.get('monto')}")
 
@@ -56,7 +64,11 @@ class SoldadoRegistroGasto(SoldierTemplate):
 
         return {"action": "expense_registered", "amount": params.get('monto')}
 
-class SoldadoConciliacionWallet(SoldierTemplate):
+class SoldadoConciliacionWallet(SoldadoN6OroV2):
+    domain = "contable"
+    aggregate_root = "Placeholder"
+    required_permissions = ["contable.execute"]
+
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO CONCILIACIÓN WALLET: Cruzando datos con Wallet.")
         from apps.wallet.services import WalletService
@@ -97,7 +109,11 @@ class SoldadoConciliacionWallet(SoldierTemplate):
             "status": "OK" if diferencia == 0 else "DISCREPANCY"
         }
 
-class SoldadoVerificacionFiscal(SoldierTemplate):
+class SoldadoVerificacionFiscal(SoldadoN6OroV2):
+    domain = "contable"
+    aggregate_root = "Placeholder"
+    required_permissions = ["contable.execute"]
+
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO FISCAL: Verificando cumplimiento normativo.")
         from django.utils.module_loading import import_string
@@ -123,7 +139,11 @@ class SoldadoVerificacionFiscal(SoldierTemplate):
             "status": "CLEAR" if total_pasivos >= 0 else "DEBT_DETECTED"
         }
 
-class SoldadoCierreParcial(SoldierTemplate):
+class SoldadoCierreParcial(SoldadoN6OroV2):
+    domain = "contable"
+    aggregate_root = "Placeholder"
+    required_permissions = ["contable.execute"]
+
     def perform_action(self, params: dict):
         logger.info(f"SOLDADO CIERRE: Ejecutando cierre parcial de periodo.")
         return {"action": "partial_close_executed", "period": params.get('periodo')}
