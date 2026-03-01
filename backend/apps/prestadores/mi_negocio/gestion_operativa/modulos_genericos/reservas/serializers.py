@@ -39,11 +39,31 @@ class ReservaSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         servicios_data = validated_data.pop('servicios_adicionales', [])
-        # TODO: Lógica para calcular costo_total basado en costo_base, impuestos y servicios
-        # validated_data['costo_total'] = validated_data.get('costo_base', 0) + validated_data.get('impuestos', 0)
+
+        # Endurecimiento N6: Cálculo Determinístico de Costos
+        precio_total = Decimal('0.00')
+        # Si el producto está vinculado, obtener precio base
+        # (Aquí se asume que precio_total ya viene calculado del frontend o se valida)
+        # Para el endurecimiento, aseguramos que la suma de servicios adicionales sea correcta.
+
+        servicios_suma = sum(Decimal(str(s.get('precio_unitario', 0))) * s.get('cantidad', 1) for s in servicios_data)
+
+        # Nota: Reserva original ya trae un precio_total (base)
+        base = Decimal(str(validated_data.get('precio_total', 0)))
+        validated_data['precio_total'] = base + servicios_suma
+
         reserva = Reserva.objects.create(**validated_data)
         for servicio_data in servicios_data:
             ReservaServicioAdicional.objects.create(reserva=reserva, **servicio_data)
+
+        # Emisión de Evento para Contabilidad (Fase 3 Bridge)
+        from apps.core_erp.event_bus import EventBus
+        EventBus.emit("RESERVATION_CREATED", {
+            "tenant_id": str(reserva.perfil_id),
+            "total_amount": float(reserva.precio_total),
+            "reference": str(reserva.id_publico)
+        })
+
         return reserva
 
     def get_related_deliveries(self, obj):

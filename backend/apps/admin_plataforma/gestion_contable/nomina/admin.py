@@ -1,18 +1,18 @@
 from django.contrib import admin
-from .models import Empleado, Contrato, ConceptoNomina, Planilla, NovedadNomina, DetalleLiquidacion
+from .models import Employee, EmploymentContract, PayrollConcept, PayrollRun, PayrollNews, PayrollDetail
 
-@admin.register(Empleado)
-class EmpleadoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'documento')
+@admin.register(Employee)
+class EmployeeAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'tax_id')
 
-@admin.register(Contrato)
-class ContratoAdmin(admin.ModelAdmin):
-    list_display = ('empleado', 'fecha_inicio', 'salario_base')
+@admin.register(EmploymentContract)
+class EmploymentContractAdmin(admin.ModelAdmin):
+    list_display = ('employee', 'start_date', 'base_salary')
 
-@admin.register(Planilla)
-class PlanillaAdmin(admin.ModelAdmin):
-    list_display = ('anio', 'mes')
+@admin.register(PayrollRun)
+class PayrollRunAdmin(admin.ModelAdmin):
+    list_display = ('year', 'month')
 
-admin.site.register(ConceptoNomina)
-admin.site.register(NovedadNomina)
-admin.site.register(DetalleLiquidacion)
+admin.site.register(PayrollConcept)
+admin.site.register(PayrollNews)
+admin.site.register(PayrollDetail)

@@ -70,11 +70,20 @@ class DashboardSSTViewSet(viewsets.ViewSet):
 
     def list(self, request):
         provider_id = request.user.perfil_prestador.id
+
+        # Cálculo de cumplimiento real (N6 logic)
+        plan_activo = PlanAnualSST.objects.filter(provider_id=provider_id, estado='ACTIVO').first()
+        cumplimiento = 0
+        if plan_activo:
+            total_acts = plan_activo.actividades.count()
+            completadas = plan_activo.actividades.filter(completada=True).count()
+            cumplimiento = (completadas / total_acts * 100) if total_acts > 0 else 0
+
         return Response({
             "indicadores": IndicadorSSTSerializer(IndicadorSST.objects.filter(provider_id=provider_id), many=True).data,
             "alertas_activas": AlertaSSTSerializer(AlertaSST.objects.filter(provider_id=provider_id, leida=False), many=True).data,
             "resumen": {
                 "incidentes_mes": IncidenteLaboral.objects.filter(provider_id=provider_id, fecha_hora__month=timezone.now().month).count(),
-                "cumplimiento_plan": 0 # TODO: Calcular
+                "cumplimiento_plan": round(cumplimiento, 2)
             }
         })

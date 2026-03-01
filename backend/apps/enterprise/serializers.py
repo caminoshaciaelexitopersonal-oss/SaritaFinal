@@ -5,6 +5,8 @@ from .domain.budget import CorporateBudget
 from .domain.workflow import EnterpriseWorkflow, WorkflowStep
 from .domain.logs import DecisionLog, PolicyEvaluationLog
 from .domain.autonomous import LearningLoopRecord, AutonomousActionRecord, CashOptimizationProposal, SelfHealingAudit
+from .domain.intelligence import ScenarioSimulation, RollingForecast
+from .domain.decision_engine import RiskExposure, EnterpriseDecisionRule
 
 class EnterprisePolicySerializer(serializers.ModelSerializer):
     class Meta:

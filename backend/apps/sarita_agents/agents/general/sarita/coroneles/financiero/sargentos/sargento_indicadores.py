@@ -1,15 +1,7 @@
 # backend/apps/sarita_agents/agents/general/sarita/coroneles/financiero/sargentos/sargento_indicadores.py
 
 from apps.sarita_agents.agents.sargento_template import SergeantTemplate
-from ..soldados.soldados_financieros import SoldierTemplate
-
-class SoldadoKPI(SoldadoN6OroV2):
-    domain = "financiero"
-    aggregate_root = "Placeholder"
-    required_permissions = ["financiero.execute"]
-
-    def perform_action(self, params: dict):
-        return {"status": "SUCCESS", "kpi": params.get("kpi_name")}
+from ..soldados.soldados_financieros import SoldadoKPI
 
 class SargentoIndicadores(SergeantTemplate):
     """

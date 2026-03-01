@@ -1,27 +1,27 @@
 from django.contrib import admin
-from .models import Proyecto, IngresoProyecto, CostoProyecto
+from .models import Project, ProjectIncome, ProjectCost
 
-class IngresoProyectoInline(admin.TabularInline):
-    model = IngresoProyecto
+class ProjectIncomeInline(admin.TabularInline):
+    model = ProjectIncome
     extra = 1
 
-class CostoProyectoInline(admin.TabularInline):
-    model = CostoProyecto
+class ProjectCostInline(admin.TabularInline):
+    model = ProjectCost
     extra = 1
 
-@admin.register(Proyecto)
-class ProyectoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'fecha_inicio', 'estado', 'presupuesto', 'perfil')
-    search_fields = ('nombre',)
-    list_filter = ('estado', 'perfil')
-    inlines = [IngresoProyectoInline, CostoProyectoInline]
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('name', 'start_date', 'status', 'budget_allocated')
+    search_fields = ('name',)
+    list_filter = ('status',)
+    inlines = [ProjectIncomeInline, ProjectCostInline]
 
-@admin.register(IngresoProyecto)
-class IngresoProyectoAdmin(admin.ModelAdmin):
-    list_display = ('proyecto', 'descripcion', 'monto', 'fecha')
-    search_fields = ('proyecto__nombre', 'descripcion')
+@admin.register(ProjectIncome)
+class ProjectIncomeAdmin(admin.ModelAdmin):
+    list_display = ('project', 'description', 'amount', 'date')
+    search_fields = ('project__name', 'description')
 
-@admin.register(CostoProyecto)
-class CostoProyectoAdmin(admin.ModelAdmin):
-    list_display = ('proyecto', 'descripcion', 'monto', 'fecha')
-    search_fields = ('proyecto__nombre', 'descripcion')
+@admin.register(ProjectCost)
+class ProjectCostAdmin(admin.ModelAdmin):
+    list_display = ('project', 'description', 'amount', 'date')
+    search_fields = ('project__name', 'description')

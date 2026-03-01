@@ -1,18 +1,18 @@
 from django.contrib import admin
-from .models import CategoriaProducto, Producto, Almacen, MovimientoInventario
+from .models import ProductCategory, Warehouse, Product, InventoryMovement
 
-@admin.register(CategoriaProducto)
-class CategoriaProductoAdmin(admin.ModelAdmin):
-    list_display = ('nombre',)
+@admin.register(ProductCategory)
+class ProductCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
 
-@admin.register(Almacen)
-class AlmacenAdmin(admin.ModelAdmin):
+@admin.register(Warehouse)
+class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('name', 'location')
 
-@admin.register(Producto)
-class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'sku', 'stock_actual')
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'sku', 'current_stock')
 
-@admin.register(MovimientoInventario)
-class MovimientoInventarioAdmin(admin.ModelAdmin):
-    list_display = ('producto', 'tipo_movimiento', 'quantity', 'date')
+@admin.register(InventoryMovement)
+class InventoryMovementAdmin(admin.ModelAdmin):
+    list_display = ('product', 'movement_type', 'quantity', 'date')

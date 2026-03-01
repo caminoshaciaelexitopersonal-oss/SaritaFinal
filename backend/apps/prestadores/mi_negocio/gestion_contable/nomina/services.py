@@ -9,6 +9,23 @@ from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.mode
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.models import AsientoContable, Transaccion, Cuenta, PeriodoContable
 from apps.prestadores.mi_negocio.gestion_contable.contabilidad.services import ContabilidadService
 
+class NormativaNomina:
+    """
+    Parámetros de Ley Colombiana 2024/2025.
+    """
+    SMMLV = Decimal('1300000.00')
+    AUX_TRANSPORTE = Decimal('162000.00')
+    SALUD_EMPLEADO = Decimal('0.04')
+    PENSION_EMPLEADO = Decimal('0.04')
+    SALUD_PATRON = Decimal('0.085')
+    PENSION_PATRON = Decimal('0.12')
+    ARL_CLASE_1 = Decimal('0.00522')
+    PRIMA_PROVISION = Decimal('0.0833')
+    CESANTIAS_PROVISION = Decimal('0.0833')
+    INT_CESANTIAS_PROVISION = Decimal('0.12') # 12% anual sobre cesantías
+    VACACIONES_PROVISION = Decimal('0.0417')
+    CAJA_COMPENSACION = Decimal('0.04')
+
 class NominaService:
     """
     Motor Central de Nómina SARITA.
@@ -46,45 +63,53 @@ class NominaService:
             contrato = emp.contratos.filter(activo=True).first()
             if not contrato: continue
 
-            # Cálculo Base (Simplificado para Fase 8 Structural)
-            # En un sistema real, esto consideraría el IBC y leyes específicas (Colombia en este caso)
+            # 1. Validación de Entradas e IBC (Ingreso Base de Cotización)
             salario_base = contrato.salario
-            dias = 30 # Asumimos mes comercial
+            # Días reales trabajados (Descontando ausencias no justificadas e incapacidades)
+            # Simplificado para esta fase, pero ya no es un 30 estático.
+            ausencias_dias = Ausencia.objects.filter(empleado=emp, justificada=False).count() # Placeholder dias
+            dias = 30 - ausencias_dias
 
-            # Devengados
-            basico = salario_base
-            aux_transporte = Decimal('140606.00') if salario_base <= (1300000 * 2) else Decimal('0.00') # Ejemplo SMMLV 2024 aprox
+            basico_proporcional = (salario_base / Decimal('30')) * Decimal(dias)
 
-            # Novedades (Horas extras, bonos, etc.)
+            # 2. Devengados Determinísticos
+            aux_transporte = NormativaNomina.AUX_TRANSPORTE if salario_base <= (NormativaNomina.SMMLV * 2) else Decimal('0.00')
+            if dias < 30:
+                aux_transporte = (aux_transporte / Decimal('30')) * Decimal(dias)
+
             novedades = NovedadNomina.objects.filter(empleado=emp, planilla=planilla, procesada=False)
             extra_dev = sum(n.valor for n in novedades if n.concepto.tipo == 'DEVENGADO')
             extra_ded = sum(n.valor for n in novedades if n.concepto.tipo == 'DEDUCCION')
 
-            # Deducciones de Ley (Colombia: 4% Salud, 4% Pensión)
-            salud = (basico * Decimal('0.04')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
-            pension = (basico * Decimal('0.04')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            total_emp_dev = basico_proporcional + aux_transporte + extra_dev
 
-            total_emp_dev = basico + aux_transporte + extra_dev
+            # 3. Deducciones Reales (Salud 4%, Pensión 4%)
+            ibc = total_emp_dev - aux_transporte # Simplificación IBC
+            salud = (ibc * NormativaNomina.SALUD_EMPLEADO).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            pension = (ibc * NormativaNomina.PENSION_EMPLEADO).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+
             total_emp_ded = salud + pension + extra_ded
             neto = total_emp_dev - total_emp_ded
 
-            # Prestaciones y Aportes Patronales (Causación)
-            prima = (total_emp_dev * Decimal('0.0833')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
-            cesantias = (total_emp_dev * Decimal('0.0833')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
-            int_cesantias = (cesantias * Decimal('0.12')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
-            vacaciones = (basico * Decimal('0.0417')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            # 4. Prestaciones Sociales (Causación Determinística)
+            # La base de prima y cesantías incluye el auxilio de transporte
+            prima = (total_emp_dev * NormativaNomina.PRIMA_PROVISION).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            cesantias = (total_emp_dev * NormativaNomina.CESANTIAS_PROVISION).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            int_cesantias = (cesantias * NormativaNomina.INT_CESANTIAS_PROVISION).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            vacaciones = (basico_proporcional * NormativaNomina.VACACIONES_PROVISION).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
 
-            # Aportes Patronales
-            salud_patron = (basico * Decimal('0.085')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
-            pension_patron = (basico * Decimal('0.12')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
-            arl = (basico * Decimal('0.00522')).quantize(Decimal('1.'), rounding=ROUND_HALF_UP) # Nivel 1
+            # 5. Aportes Patronales (Carga Prestacional)
+            # Nota: Muchas empresas están exentas de salud patronal si tienen <10 empleados
+            salud_patron = (ibc * NormativaNomina.SALUD_PATRON).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            pension_patron = (ibc * NormativaNomina.PENSION_PATRON).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
+            arl = (ibc * NormativaNomina.ARL_CLASE_1).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)
 
             detalle = DetalleLiquidacion.objects.create(
                 planilla=planilla,
                 empleado=emp,
                 salario_base=salario_base,
                 dias_trabajados=dias,
-                basico=basico,
+                basico=basico_proporcional,
                 auxilio_transporte=aux_transporte,
                 total_devengado=total_emp_dev,
                 salud_empleado=salud,
@@ -111,6 +136,14 @@ class NominaService:
         planilla.total_neto = total_dev - total_ded
         planilla.estado = Planilla.EstadoPlanilla.LIQUIDADA
         planilla.save()
+
+        # 6. Emisión de Evento de Dominio (Fase 1 Compliance)
+        from apps.core_erp.event_bus import EventBus
+        EventBus.emit("PAYROLL_LIQUIDATED", {
+            "planilla_id": str(planilla.id),
+            "total_neto": float(planilla.total_neto),
+            "tenant_id": str(planilla.perfil.id)
+        })
 
         return planilla
 
@@ -161,25 +194,40 @@ class NominaService:
 
         c_gasto_sueldos = get_cuenta("510506", "Sueldos Básicos", "GASTOS")
         c_gasto_transp = get_cuenta("510527", "Auxilio de Transporte", "GASTOS")
+
         c_pasivo_nomina = get_cuenta("250505", "Salarios por Pagar", "PASIVO")
         c_pasivo_salud = get_cuenta("237005", "Aportes a Salud", "PASIVO")
         c_pasivo_pension = get_cuenta("238030", "Aportes a Pensión", "PASIVO")
 
-        # 1. Registrar Gasto Sueldos (Debito)
-        Transaccion.objects.create(asiento=asiento, cuenta=c_gasto_sueldos, debito=planilla.total_devengado, descripcion="Gasto Nómina")
+        # Cuentas de Provisiones (Pasivos Estimados)
+        c_pasivo_prima = get_cuenta("261005", "Provisión Prima de Servicios", "PASIVO")
+        c_pasivo_cesantias = get_cuenta("261010", "Provisión Cesantías", "PASIVO")
 
-        # 2. Registrar Deducciones (Credito)
         detalles = planilla.detalles_liquidacion.all()
-        t_salud = sum(d.salud_empleado for d in detalles)
-        t_pension = sum(d.pension_empleado for d in detalles)
 
-        Transaccion.objects.create(asiento=asiento, cuenta=c_pasivo_salud, credito=t_salud, descripcion="Retención Salud")
-        Transaccion.objects.create(asiento=asiento, cuenta=c_pasivo_pension, credito=t_pension, descripcion="Retención Pensión")
+        # 1. Registro de Gastos y Devengados (DEBITOS)
+        total_basicos = sum(d.basico for d in detalles)
+        total_aux_transp = sum(d.auxilio_transporte for d in detalles)
 
-        # 3. Salarios por Pagar (Credito)
-        Transaccion.objects.create(asiento=asiento, cuenta=c_pasivo_nomina, credito=planilla.total_neto, descripcion="Neto a Pagar")
+        Transaccion.objects.create(asiento=asiento, cuenta=c_gasto_sueldos, debito=total_basicos, descripcion="Gasto Sueldos")
+        if total_aux_transp > 0:
+            Transaccion.objects.create(asiento=asiento, cuenta=c_gasto_transp, debito=total_aux_transp, descripcion="Gasto Aux. Transporte")
 
-        # El asiento debe balancear: Debitos = Creditos
+        # 2. Registro de Deducciones de Empleados (CREDITOS)
+        t_salud_emp = sum(d.salud_empleado for d in detalles)
+        t_pension_emp = sum(d.pension_empleado for d in detalles)
+
+        Transaccion.objects.create(asiento=asiento, cuenta=c_pasivo_salud, credito=t_salud_emp, descripcion="Deducción Salud Emp.")
+        Transaccion.objects.create(asiento=asiento, cuenta=c_pasivo_pension, credito=t_pension_emp, descripcion="Deducción Pensión Emp.")
+
+        # 3. Neto a Pagar (CREDITO)
+        Transaccion.objects.create(asiento=asiento, cuenta=c_pasivo_nomina, credito=planilla.total_neto, descripcion="Neto a Pagar Nómina")
+
+        # 4. Causación de Provisiones Sociales (Opcional en causación de nómina, pero recomendado)
+        t_prima = sum(d.valor_prima for d in detalles)
+        t_cesantias = sum(d.valor_cesantias for d in detalles)
+
+        # El asiento debe balancear matemáticamente: Debitos = Creditos
         # Total Debito = planilla.total_devengado
         # Total Credito = t_salud + t_pension + planilla.total_neto = total_deduccion + neto = total_devengado
 

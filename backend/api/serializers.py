@@ -1074,9 +1074,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 
-class CustomTokenSerializer(serializers.ModelSerializer):
+class CustomTokenSerializer(serializers.Serializer):
+    access = serializers.CharField()
+    refresh = serializers.CharField()
     user = CustomUserDetailSerializer(read_only=True)
-
-    class Meta:
-        model = Token
-        fields = ('key', 'user')

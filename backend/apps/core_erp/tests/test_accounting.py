@@ -14,7 +14,8 @@ class AccountingEngineTest(TestCase):
         entry = MagicMock()
         t1 = MagicMock(debit=Decimal('100.00'), credit=Decimal('0.00'))
         t2 = MagicMock(debit=Decimal('0.00'), credit=Decimal('100.00'))
-        entry.transactions.all.return_value = [t1, t2]
+        entry.lines.all.return_value = [t1, t2]
+        del entry.transactions
 
         self.assertTrue(AccountingEngine.validate_balance(entry))
 
@@ -23,7 +24,8 @@ class AccountingEngineTest(TestCase):
         entry = MagicMock()
         t1 = MagicMock(debit=Decimal('100.00'), credit=Decimal('0.00'))
         t2 = MagicMock(debit=Decimal('0.00'), credit=Decimal('50.00'))
-        entry.transactions.all.return_value = [t1, t2]
+        entry.lines.all.return_value = [t1, t2]
+        del entry.transactions
 
         with self.assertRaises(ValidationError):
             AccountingEngine.validate_balance(entry)
@@ -31,13 +33,14 @@ class AccountingEngineTest(TestCase):
     def test_post_entry_already_posted(self):
         entry = MagicMock(is_posted=True)
         with self.assertRaises(ValidationError):
-            AccountingEngine.post_entry(entry)
+            AccountingEngine.post_journal_entry(entry)
 
     def test_validate_balance_complex(self):
         entry = MagicMock()
         t1 = MagicMock(debit=Decimal('100.00'), credit=Decimal('0.00'))
         t2 = MagicMock(debit=Decimal('0.00'), credit=Decimal('60.00'))
         t3 = MagicMock(debit=Decimal('0.00'), credit=Decimal('40.00'))
-        entry.transactions.all.return_value = [t1, t2, t3]
+        entry.lines.all.return_value = [t1, t2, t3]
+        del entry.transactions
 
         self.assertTrue(AccountingEngine.validate_balance(entry))

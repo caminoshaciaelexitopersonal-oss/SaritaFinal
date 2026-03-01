@@ -21,24 +21,29 @@ class LedgerEngine:
     """
 
     @staticmethod
-    def calculate_hash(entry: JournalEntry):
+    def calculate_hash(entry: JournalEntry, previous_hash: str = None):
         """
         Calcula un hash SHA-256 de los datos del asiento para garantizar integridad.
+        Implementa Chained Hashing: El hash actual depende del hash del asiento anterior.
         """
+        lines_data = [
+            {
+                "account": line.account.code,
+                "debit": str(line.debit_amount),
+                "credit": str(line.credit_amount),
+                "currency": line.currency
+            }
+            for line in entry.lines.all().order_by('id')
+        ]
+
         data = {
             "id": str(entry.id),
             "tenant_id": str(entry.tenant_id),
             "date": str(entry.date),
-            "lines": [
-                {
-                    "account": line.account.code,
-                    "debit": str(line.debit_amount),
-                    "credit": str(line.credit_amount),
-                    "currency": line.currency
-                }
-                for line in entry.lines.all().order_by('id')
-            ]
+            "lines": lines_data,
+            "previous_hash": previous_hash or "GENESIS_SARITA_2026"
         }
+
         encoded = json.dumps(data, sort_keys=True).encode()
         return hashlib.sha256(encoded).hexdigest()
 
@@ -161,9 +166,17 @@ class LedgerEngine:
             line.amount_base = line.amount_transaction * exchange_rate
             line.save()
 
-        # 4. Audit Integrity Hardening (Phase B)
-        entry.system_hash = LedgerEngine.calculate_hash(entry)
-        entry.immutable_signature = f"LEDGER-SIG-{entry.system_hash[:16]}-{timezone.now().timestamp()}"
+        # 4. Audit Integrity Hardening (Phase B) - Chained Hashing
+        # Obtener el hash del último asiento posteado para este tenant
+        last_entry = JournalEntry.objects.filter(
+            tenant_id=entry.tenant_id,
+            is_posted=True
+        ).exclude(id=entry.id).order_by('-posted_at', '-id').first()
+
+        previous_hash = last_entry.system_hash if last_entry else None
+
+        entry.system_hash = LedgerEngine.calculate_hash(entry, previous_hash=previous_hash)
+        entry.immutable_signature = f"LEDGER-SIG-CHAIN-{entry.system_hash[:16]}-{timezone.now().timestamp()}"
         entry.posted_at = timezone.now()
 
         # 5. Posteo Final
