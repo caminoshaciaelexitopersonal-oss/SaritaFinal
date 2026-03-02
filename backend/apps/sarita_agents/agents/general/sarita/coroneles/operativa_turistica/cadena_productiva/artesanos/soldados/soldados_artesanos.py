@@ -7,12 +7,25 @@ logger = logging.getLogger(__name__)
 
 class SoldadoRegistroInventarioArtesano(SoldadoN6OroV2):
     domain = "artesanos"
-    aggregate_root = "Placeholder"
+    aggregate_root = "InventoryItem"
     required_permissions = ["artesanos.execute"]
+    event_name = "INVENTORY_ADJUSTED"
 
-    def perform_action(self, params: dict):
-        logger.info(f"SOLDADO ARTESANO: Registrando inventario -> {params.get('item')}")
-        return {"action": "stock_updated", "item": params.get('item')}
+    def perform_atomic_action(self, params: dict):
+        logger.info(f"SOLDADO ARTESANO: Registrando inventario -> {params.get('item_id')}")
+        from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.inventario.services import InventarioService
+
+        item_id = params.get('item_id')
+        change = params.get('cantidad', 0)
+
+        item = InventarioService.update_stock(
+            item_id=item_id,
+            change=change,
+            user_id=params.get('user_id'),
+            reason=params.get('motivo', 'Registro de producción artesanal')
+        )
+
+        return item
 
 class SoldadoValidacionPedidoArtesano(SoldadoN6OroV2):
     domain = "artesanos"

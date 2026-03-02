@@ -246,6 +246,7 @@ class PrestadoresCoronel(CoronelTemplate):
             "CERRAR_CONTRATO": "contratacion",
             "VALIDAR_CUMPLIMIENTO_COMERCIAL": "cumplimiento_comercial",
             "AVANZAR_LEAD": "conversion",
+            "ISSUE_INVOICE": "facturacion_general",
             "ANALISIS_ESTRATEGICO_COMERCIAL": "comercial_estrategico",
             # Archivístico
             "ARCHIVE_LEAL_DOC": "documentos_legales",
@@ -264,7 +265,7 @@ class PrestadoresCoronel(CoronelTemplate):
             # Operativo Especializado (Delegado a CoronelOperativaTuristica vía Orchestrator)
             # Contable
             "RECOGNIZE_REVENUE": "reconocimiento_ingresos",
-            "CALCULATE_TAX": "impuestos_iva",
+            "CALCULATE_TAX": "gestion_impuestos_general",
             "MONTHLY_CLOSE": "cierre_contable",
             "GENERATE_FINANCIAL_REPORT": "reportes_normativos",
             "AUDIT_TREASURY": "tesoreria",
@@ -277,12 +278,14 @@ class PrestadoresCoronel(CoronelTemplate):
             "GENERATE_P_L": "estado_resultados",
             "GENERATE_BALANCE": "balance_general",
             "GENERATE_CASH_FLOW": "flujo_efectivo",
+            "MANAGE_RECEIVABLES": "cartera_general",
             "GENERATE_EQUITY_CHANGE": "cambios_patrimonio",
             "IDENTIFY_HAZARDS": "sst_peligros",
             "EVALUATE_SST_RISK": "sst_evaluacion",
             "REGISTER_SST_INCIDENT": "sst_incidentes",
             "MANAGE_SST_EMERGENCY": "sst_emergencias",
             "AUDIT_SST_COMPLIANCE": "sst_normativo",
+            "ADJUST_INVENTORY": "control_inventario_general", # Reusing or mapping to specialized
         }
 
         cap_key = mapping.get(m_type)

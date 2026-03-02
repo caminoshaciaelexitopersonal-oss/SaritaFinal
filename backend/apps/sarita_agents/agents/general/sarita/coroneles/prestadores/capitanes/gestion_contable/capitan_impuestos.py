@@ -11,22 +11,20 @@ class CapitanImpuestos(CapitanTemplate):
 
 
     def _get_tenientes(self) -> Dict[str, Any]:
-        return {}
-    def plan(self):
-        """
-        El corazón del Capitán. Aquí es donde defines el plan táctico.
-        Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
-        """
+        from ...tenientes.teniente_impuestos import TenienteImpuestos
+        return {
+            "gestion_impuestos": TenienteImpuestos()
+        }
 
-        # 1. Crear el Plan Táctico
-        plan_tactico = self.get_or_create_plan_tactico(
-            nombre="Plan de Ejecución para CapitanImpuestos",
-            descripcion=f"Este plan detalla los pasos para cumplir el objetivo: {self.objective}"
-        )
-
-        # 2. Definir y Delegar Tareas (EJEMPLO - DEBE SER IMPLEMENTADO)
-        # self.delegar_tarea(plan_tactico=plan_tactico, nombre_teniente="...", descripcion="...", parametros_especificos={...})
-
-        # 3. Lanzar la Ejecución del Plan
-        self.lanzar_ejecucion_plan()
+    def plan(self, mision):
+        p = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
+        p.pasos_del_plan = {
+            "1": {
+                "teniente": "gestion_impuestos",
+                "descripcion": "Cálculo y registro de obligaciones tributarias.",
+                "parametros": mision.directiva_original.get("parameters", {})
+            }
+        }
+        p.save()
+        return p
 

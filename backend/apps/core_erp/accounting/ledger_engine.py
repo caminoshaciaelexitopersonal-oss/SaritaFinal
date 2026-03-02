@@ -156,14 +156,24 @@ class LedgerEngine:
                 raise TenantMismatchError(f"Cuenta {line.account.code} no pertenece al tenant {entry.tenant_id}")
 
         # 3. Multi-Currency Logic (Phase B)
-        # Standardize transaction vs base amounts
+        # Standardize transaction vs base amounts using FXEngine
+        from ..fx.fx_engine import FXEngine
+
         exchange_rate = getattr(entry, 'exchange_rate', Decimal('1.0'))
+        # Si no se especificó tasa manual, intentar resolver vía motor
+        if exchange_rate == Decimal('1.0') and entry.currency != entry.base_currency:
+            try:
+                exchange_rate = FXEngine.get_rate(entry.currency, entry.base_currency)
+            except ValueError:
+                logger.warning(f"FX Engine: No se encontró tasa para {entry.currency}/{entry.base_currency}. Usando 1.0")
+
         for line in entry.lines.all():
             # If not explicitly set, use debit/credit as transaction amount
             if not line.amount_transaction:
                 line.amount_transaction = line.debit_amount if line.debit_amount > 0 else line.credit_amount
 
-            line.amount_base = line.amount_transaction * exchange_rate
+            # Convert to base currency for financial reporting
+            line.amount_base = (line.amount_transaction * exchange_rate).quantize(Decimal('1.00'))
             line.save()
 
         # 4. Audit Integrity Hardening (Phase B) - Chained Hashing

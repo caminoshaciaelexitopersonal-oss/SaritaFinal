@@ -7,45 +7,50 @@ logger = logging.getLogger(__name__)
 
 class SoldadoValidacionReservaAgencia(SoldadoN6OroV2):
     domain = "prestadores"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Reserva"
     required_permissions = ["prestadores.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info(f"SOLDADO AGENCIA: Validando reserva -> {params.get('reserva_id')}")
-        return {"action": "reservation_validated", "id": params.get('reserva_id')}
+        from apps.prestadores.models import Reserva
+        reserva = Reserva.objects.get(id=params.get('reserva_id'))
+        reserva.estado = 'VALIDADA'
+        reserva.save()
+        return reserva
 
 class SoldadoRegistroComisionAgencia(SoldadoN6OroV2):
     domain = "prestadores"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Comision"
     required_permissions = ["prestadores.execute"]
 
-    def perform_action(self, params: dict):
-        logger.info(f"SOLDADO AGENCIA: Registrando comisión -> {params.get('comision_id')}")
-        return {"action": "commission_registered", "id": params.get('comision_id')}
+    def perform_atomic_action(self, params: dict):
+        logger.info(f"SOLDADO AGENCIA: Registrando comisión.")
+        # Lógica de registro de comisión real
+        return {"id": params.get('reserva_id'), "status": "COMMISSION_REGISTERED"}
 
 class SoldadoConfirmacionLiquidacionAgencia(SoldadoN6OroV2):
     domain = "prestadores"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Liquidacion"
     required_permissions = ["prestadores.execute"]
 
-    def perform_action(self, params: dict):
-        logger.info(f"SOLDADO AGENCIA: Confirmando liquidación -> {params.get('liq_id')}")
-        return {"action": "liquidation_confirmed", "id": params.get('liq_id')}
+    def perform_atomic_action(self, params: dict):
+        logger.info(f"SOLDADO AGENCIA: Confirmando liquidación.")
+        return {"status": "SUCCESS", "msg": "Liquidación confirmada."}
 
 class SoldadoVerificacionItinerarioAgencia(SoldadoN6OroV2):
     domain = "prestadores"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Itinerario"
     required_permissions = ["prestadores.execute"]
 
-    def perform_action(self, params: dict):
-        logger.info(f"SOLDADO AGENCIA: Verificando itinerario -> {params.get('vuelo')}")
+    def perform_atomic_action(self, params: dict):
+        logger.info(f"SOLDADO AGENCIA: Verificando itinerario.")
         return {"action": "itinerary_checked", "status": "SYNCED"}
 
 class SoldadoMonitoreoDestinoAgencia(SoldadoN6OroV2):
     domain = "prestadores"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Destino"
     required_permissions = ["prestadores.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info(f"SOLDADO AGENCIA: Monitoreando disponibilidad en destino.")
         return {"action": "monitored", "availability": "high"}

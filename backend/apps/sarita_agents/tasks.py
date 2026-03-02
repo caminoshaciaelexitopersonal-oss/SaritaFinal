@@ -48,6 +48,10 @@ from apps.sarita_agents.agents.general.sarita.coroneles.nomina.tenientes.tenient
     TenienteLiquidacion, TenientePrestaciones, TenienteSeguridadSocial,
     TenienteNovedades, TenienteIndicadores as TenienteIndicadoresNomina
 )
+from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.teniente_inventario import TenienteInventario
+from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.teniente_facturacion import TenienteFacturacion
+from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.teniente_impuestos import TenienteImpuestos
+from apps.sarita_agents.agents.general.sarita.coroneles.prestadores.tenientes.teniente_cartera import TenienteCartera
 
 # --- TENIENTES FINANCIEROS (Phase 4-F) ---
 class TenienteCACCalculator(TenienteTemplate):
@@ -479,4 +483,9 @@ TENIENTE_MAP = {
     'nomina_seguridad_social': TenienteSeguridadSocial,
     'nomina_novedades': TenienteNovedades,
     'nomina_indicadores': TenienteIndicadoresNomina,
+    # Inventarios
+    'control_inventario': TenienteInventario,
+    'gestion_facturacion': TenienteFacturacion,
+    'gestion_impuestos': TenienteImpuestos,
+    'gestion_cartera': TenienteCartera,
 }
