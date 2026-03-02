@@ -184,6 +184,21 @@ class LedgerEngine:
         entry.save()
 
         logger.info(f"JournalEntry {entry.id} posteado exitosamente con Hash: {entry.system_hash}")
+
+        # 6. Emisión de Evento de Omnisciencia (Fase 4)
+        from apps.core_erp.event_bus import EventBus
+        EventBus.emit(
+            "AsientoGenerado",
+            {
+                "entity_id": str(entry.tenant_id),
+                "entry_id": str(entry.id),
+                "description": entry.description,
+                "total_debit": float(sum(line.debit_amount for line in entry.lines.all())),
+                "system_hash": entry.system_hash
+            },
+            severity="info"
+        )
+
         return entry
 
     @staticmethod

@@ -5,5 +5,5 @@ from apps.core_erp.accounting.models import ChartOfAccounts, Account, FiscalPeri
 from apps.core_erp.taxation.models import Jurisdiction, TaxRule, Tax, TaxRate, TaxTransaction, TaxAccountMapping
 from apps.core_erp.consolidation.models import IntercompanyMatch, ConsolidatedReportSnapshot
 from apps.core_erp.intelligence.models import FinancialProjection, SimulationScenario
-from .outbox_models import OutboxEvent
+from .outbox_models import OutboxEvent, EventAuditLog
  

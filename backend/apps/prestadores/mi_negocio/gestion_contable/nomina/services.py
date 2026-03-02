@@ -137,13 +137,18 @@ class NominaService:
         planilla.estado = Planilla.EstadoPlanilla.LIQUIDADA
         planilla.save()
 
-        # 6. Emisión de Evento de Dominio (Fase 1 Compliance)
+        # 6. Emisión de Evento de Omnisciencia (Fase 4)
         from apps.core_erp.event_bus import EventBus
-        EventBus.emit("PAYROLL_LIQUIDATED", {
-            "planilla_id": str(planilla.id),
-            "total_neto": float(planilla.total_neto),
-            "tenant_id": str(planilla.perfil.id)
-        })
+        EventBus.emit(
+            "NóminaLiquidada",
+            {
+                "entity_id": str(planilla.perfil.id),
+                "planilla_id": str(planilla.id),
+                "total_neto": float(planilla.total_neto),
+                "periodo": f"{planilla.periodo_inicio} - {planilla.periodo_fin}"
+            },
+            severity="info"
+        )
 
         return planilla
 

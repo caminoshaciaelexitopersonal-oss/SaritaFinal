@@ -187,6 +187,20 @@ class FacturacionService:
         operacion.estado = OperacionComercial.Estado.FACTURADA
         operacion.save()
 
+        # 6. Emisión de Evento de Omnisciencia (Fase 4)
+        from apps.core_erp.event_bus import EventBus
+        EventBus.emit(
+            "VentaCreada",
+            {
+                "entity_id": str(perfil.id),
+                "invoice_number": factura.number,
+                "total": float(factura.total),
+                "client_name": cliente.nombre
+            },
+            severity="info",
+            user_id=str(factura.creado_por.id)
+        )
+
         return factura
 
     @staticmethod

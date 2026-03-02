@@ -28,14 +28,29 @@ class InventarioService:
             tenant_id=item.tenant_id
         )
 
-        # 3. Emisión de Evento Contable (Fase 3)
+        # 3. Emisión de Evento Contable y Omnisciencia (Fase 4)
         from apps.core_erp.event_bus import EventBus
+        EventBus.emit(
+            "InventarioAjustado",
+            {
+                "entity_id": str(item.tenant_id),
+                "item_id": str(item.id),
+                "item_name": item.nombre_item,
+                "change": float(change),
+                "new_quantity": float(item.cantidad),
+                "reason": reason
+            },
+            severity="warning" if item.cantidad < item.punto_reorden else "info",
+            user_id=str(user_id) if user_id else None
+        )
+
+        # Evento específico para el Ledger (Retrocompatibilidad)
         EventBus.emit("INVENTORY_ADJUSTED", {
             "tenant_id": str(item.tenant_id),
             "item_id": str(item.id),
             "change": float(change),
             "reason": reason,
-            "cost_impact": 0.0 # TODO: Conectar con motor de costeo real
+            "cost_impact": 0.0
         })
 
         logger.info(f"Inventario actualizado: {item.nombre_item} ({old_qty} -> {item.cantidad})")

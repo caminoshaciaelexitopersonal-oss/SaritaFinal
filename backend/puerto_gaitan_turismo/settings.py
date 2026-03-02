@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "daphne",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "anymail",
     "django_filters",
+    "channels",
     "modeltranslation",
     # Mis Apps
     "api.apps.ApiConfig",
@@ -198,6 +200,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "puerto_gaitan_turismo.wsgi.application"
+ASGI_APPLICATION = "puerto_gaitan_turismo.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379/0')],
+        },
+    },
+}
 
 # Database
 # ------------------------------------------------------------------------
