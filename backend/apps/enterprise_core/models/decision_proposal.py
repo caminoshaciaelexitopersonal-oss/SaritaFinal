@@ -35,6 +35,11 @@ class DecisionProposal(TenantAwareModel):
     executed = models.BooleanField(default=False)
     execution_result = models.JSONField(null=True, blank=True)
 
+    # Phase 5: Strategic Metadata
+    autonomy_level_applied = models.IntegerField(default=1)
+    agent_id = models.CharField(max_length=100, default='EOS-CORE-ENGINE')
+    policy_reference = models.CharField(max_length=100, null=True, blank=True)
+
     correlation_id = models.UUIDField(default=uuid.uuid4, db_index=True)
 
     # Audit SHA-256 Chaining

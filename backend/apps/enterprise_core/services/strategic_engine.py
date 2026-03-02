@@ -12,7 +12,8 @@ class StrategicEngine:
 
     @staticmethod
     def get_matching_rules(metric_name: str, value: Any) -> List[StrategicRule]:
-        active_rules = StrategicRule.objects.filter(trigger_metric=metric_name, is_active=True)
+        # Usar plain_objects para evitar filtros de tenant en este contexto global si aplica
+        active_rules = StrategicRule.plain_objects.filter(trigger_metric=metric_name, is_active=True)
         matching = []
         for rule in active_rules:
             if StrategicEngine._evaluate_condition(rule.condition_expression, value):

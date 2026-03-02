@@ -44,3 +44,16 @@ class StrategicRuleViewSet(viewsets.ModelViewSet):
     queryset = StrategicRule.objects.all()
     serializer_class = StrategicRuleSerializer
     permission_classes = [permissions.IsAdminUser]
+
+class SimulationViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAdminUser]
+
+    @action(detail=False, methods=['post'])
+    def simulate(self, request):
+        from .services.simulation_service import SimulationService
+        data = request.data
+        result = SimulationService.simulate_scenario(
+            data.get('base_metrics', {}),
+            data.get('variables', {})
+        )
+        return Response(result)

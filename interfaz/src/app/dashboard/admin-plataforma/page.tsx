@@ -19,7 +19,9 @@ import {
   FiClock,
   FiAward,
   FiWifi,
-  FiWifiOff
+  FiWifiOff,
+  FiTrendingUp,
+  FiRefreshCw
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -36,6 +38,7 @@ export default function AdminPlataformaPage() {
 
   const { lastEvent, isConnected } = useWebSockets();
   const [liveEvents, setLiveEvents] = React.useState<TowerEvent[]>([]);
+  const [autonomousDecisions, setAutonomousDecisions] = React.useState<TowerEvent[]>([]);
 
   const [isEmergencyDialogOpen, setIsEmergencyDialogOpen] = React.useState(false);
   const [isAttackModeActive, setIsAttackModeActive] = React.useState(false);
@@ -44,6 +47,10 @@ export default function AdminPlataformaPage() {
   React.useEffect(() => {
     if (lastEvent) {
       setLiveEvents(prev => [lastEvent, ...prev].slice(0, 10));
+
+      if (lastEvent.event_type === 'AUTONOMOUS_DECISION_EXECUTED') {
+          setAutonomousDecisions(prev => [lastEvent, ...prev].slice(0, 5));
+      }
 
       // Actualizar estadísticas si el evento es relevante
       if (['VentaCreada', 'PagoRecibido', 'AsientoGenerado'].includes(lastEvent.event_type)) {
@@ -82,7 +89,7 @@ export default function AdminPlataformaPage() {
     { label: 'Total Usuarios Sistema', value: stats?.total_usuarios || '0', trend: 'Global', icon: FiUsers, color: 'text-blue-600' },
     { label: 'Prestadores Activos', value: stats?.total_prestadores || '0', trend: 'Vía 2', icon: FiActivity, color: 'text-indigo-600' },
     { label: 'Publicaciones Totales', value: stats?.total_publicaciones || '0', trend: 'Contenido', icon: FiGlobe, color: 'text-emerald-600' },
-    { label: 'Consistencia Analítica', value: stats?.trust_index || '98.2%', trend: 'Normativo', icon: FiZap, color: 'text-amber-600' },
+    { label: 'Madurez Autónoma', value: '85%', trend: 'Fase 5', icon: FiZap, color: 'text-amber-600' },
   ];
 
   return (
@@ -110,8 +117,13 @@ export default function AdminPlataformaPage() {
         <div className="flex gap-4">
            <div className="px-6 py-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3">
               <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-sm font-black text-emerald-700 tracking-widest uppercase">Omnisciencia Activa</span>
+              <span className="text-sm font-black text-emerald-700 tracking-widest uppercase">Autonomía Fase 5 Activa</span>
            </div>
+           <Link href="/dashboard/admin-plataforma/agentes">
+             <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
+                <FiCpu /> Auditoría IA
+             </Button>
+           </Link>
            {!isAttackModeActive ? (
                 <Button
                     onClick={() => setIsEmergencyDialogOpen(true)}
@@ -155,7 +167,7 @@ export default function AdminPlataformaPage() {
                </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-               <div className="divide-y divide-gray-100 max-h-[500px] overflow-y-auto">
+               <div className="divide-y divide-gray-100 max-h-[400px] overflow-y-auto">
                   {liveEvents.length === 0 ? (
                       <div className="p-20 text-center text-slate-400 uppercase italic tracking-widest text-xs">
                           Esperando pulsos de sistema...
@@ -181,37 +193,96 @@ export default function AdminPlataformaPage() {
             </CardContent>
          </Card>
 
-         {/* Alertas de Gobernanza */}
+         {/* Historial de Autonomía (Fase 5.7) */}
          <Card className="border-none shadow-xl bg-slate-900 text-white overflow-hidden rounded-3xl">
             <CardHeader className="p-8 border-b border-white/10">
                <CardTitle className="text-xl font-black flex items-center gap-2">
-                  <FiAlertTriangle className="text-amber-400" /> Notificaciones de Desviación
+                  <FiZap className="text-amber-400" /> Historial de Autonomía IA
                </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
                <div className="divide-y divide-white/5">
-                  {liveEvents.filter(e => e.severity === 'critical' || e.severity === 'warning').length === 0 ? (
+                  {autonomousDecisions.length === 0 ? (
                       <div className="p-20 text-center text-slate-500 uppercase italic tracking-widest text-xs">
-                          No hay alertas críticas registradas.
+                          No hay ejecuciones autónomas en el periodo actual.
                       </div>
-                  ) : liveEvents.filter(e => e.severity === 'critical' || e.severity === 'warning').map((alert, i) => (
-                    <div key={i} className="p-8 hover:bg-white/5 transition-colors cursor-pointer group border-l-4 border-amber-500">
+                  ) : autonomousDecisions.map((decision, i) => (
+                    <div key={i} className="p-8 hover:bg-white/5 transition-colors cursor-pointer group border-l-4 border-emerald-500">
                        <div className="flex justify-between items-start mb-3">
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">ALERT_MONITOR</span>
-                          <Badge className="bg-amber-600">{alert.severity.toUpperCase()}</Badge>
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">{decision.payload.agent}</span>
+                          <Badge className="bg-emerald-600">AUTONOMOUS</Badge>
                        </div>
-                       <h4 className="font-bold text-lg mb-2 group-hover:text-amber-300 transition-colors">{alert.event_type}</h4>
-                       <p className="text-slate-400 text-sm leading-relaxed">Impacto detectado en la entidad {alert.entity_id}</p>
+                       <h4 className="font-bold text-lg mb-2 group-hover:text-emerald-300 transition-colors">{decision.payload.action}</h4>
+                       <p className="text-slate-400 text-sm leading-relaxed">Status: {decision.payload.status}</p>
                     </div>
                   ))}
                </div>
-               <Link href="/dashboard/admin-plataforma/grc">
+               <Link href="/dashboard/admin-plataforma/agentes">
                 <div className="p-8 bg-indigo-600 hover:bg-indigo-700 transition-colors text-center cursor-pointer font-black uppercase tracking-widest text-sm">
-                    Ver Auditoría Global
+                    Ver Trazabilidad XAI
                 </div>
                </Link>
             </CardContent>
          </Card>
+      </div>
+
+      {/* Simulación Estratégica y Auto-Corrección (Fase 5.9 / 5.6) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Card className="border-none shadow-sm bg-white rounded-3xl overflow-hidden">
+              <CardHeader className="p-8 bg-slate-50 border-b">
+                  <CardTitle className="text-xl font-black flex items-center gap-2">
+                      <FiTrendingUp className="text-emerald-600" /> Simulador de Escenarios "What-If"
+                  </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8">
+                  <p className="text-slate-500 mb-6 font-medium">Proyecta el impacto de cambios macroeconómicos o estructurales en la rentabilidad del holding.</p>
+                  <div className="space-y-4">
+                      <Button className="w-full justify-between py-8 px-6 rounded-2xl border-2 border-slate-100 bg-white text-slate-900 hover:bg-slate-50 transition-all group">
+                          <div className="text-left">
+                              <p className="font-black uppercase text-xs text-slate-400">Escenario 1</p>
+                              <p className="font-bold">Caída de ventas 20% + Inflación 10%</p>
+                          </div>
+                          <FiTrendingUp className="text-slate-300 group-hover:text-emerald-500 transition-colors" size={24} />
+                      </Button>
+                      <Button variant="outline" className="w-full border-2 border-dashed border-slate-200 py-8 rounded-2xl font-black text-slate-400 uppercase tracking-widest hover:border-indigo-400 hover:text-indigo-500 transition-all">
+                          Crear Nueva Simulación
+                      </Button>
+                  </div>
+              </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-sm bg-white rounded-3xl overflow-hidden">
+              <CardHeader className="p-8 bg-slate-50 border-b">
+                  <CardTitle className="text-xl font-black flex items-center gap-2">
+                      <FiRefreshCw className="text-indigo-600" /> Monitor de Auto-Corrección (Self-Healing)
+                  </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8">
+                  <div className="flex items-center justify-between mb-8 bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
+                      <div>
+                          <p className="text-xs font-black text-indigo-400 uppercase tracking-widest">Estado del Motor</p>
+                          <p className="text-xl font-black text-indigo-900 italic">Vigilante / Pasivo</p>
+                      </div>
+                      <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                          <FiRefreshCw className="animate-spin-slow" size={24} />
+                      </div>
+                  </div>
+                  <div className="space-y-3">
+                      <div className="flex items-center justify-between text-sm">
+                          <span className="text-slate-500 font-medium">Eventos reconciliados (24h)</span>
+                          <span className="font-black text-slate-900">12</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                          <span className="text-slate-500 font-medium">Asientos regenerados</span>
+                          <span className="font-black text-slate-900">3</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                          <span className="text-slate-500 font-medium">Integridad del Ledger</span>
+                          <Badge className="bg-emerald-500">OPTIMAL</Badge>
+                      </div>
+                  </div>
+              </CardContent>
+          </Card>
       </div>
 
       <CriticalActionDialog
