@@ -48,22 +48,47 @@ class JournalEntry(BaseJournalEntry, AccountingTenantModel):
     # BaseJournalEntry has date, reference, description, is_posted
     period = models.ForeignKey(FiscalPeriod, on_delete=models.PROTECT, related_name='entries')
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    event_type = models.CharField(max_length=100, null=True, blank=True)
+    event_type = models.CharField(max_length=100) # Mandatory in Phase 3
     is_reversal = models.BooleanField(default=False)
     reversed_entry_id = models.UUIDField(null=True, blank=True)
     correlation_id = models.CharField(max_length=100, db_index=True, null=True, blank=True)
     rule_version = models.CharField(max_length=10, default="1.0")
     financial_event_id = models.CharField(max_length=255, db_index=True, null=True, blank=True)
 
-    # Phase B: Multi-Currency and Audit Hardening
+    # Phase 3: Irreversible Posting & Chained Hash
     base_currency = models.CharField(max_length=3, default='COP')
     posted_at = models.DateTimeField(null=True, blank=True)
     system_hash = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+    previous_hash = models.CharField(max_length=64, null=True, blank=True)
     immutable_signature = models.TextField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.pk and self.is_posted:
+            # Phase 3.5: Irreversibility - No editing posted entries
+            raise PermissionError("Posted journal entries cannot be modified. Use reversal instead.")
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # Phase 3.5: Irreversibility - No physical deletion
+        raise PermissionError("Journal entries cannot be physically deleted. Use reversal to invalidate.")
 
     class Meta:
         app_label = 'core_erp'
         verbose_name = "Journal Entry"
+        ordering = ['posted_at', 'id']
+
+class AccountingAuditLog(AccountingTenantModel):
+    """
+    Tabla de auditoría obligatoria para acciones contables (Fase 3.11).
+    """
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    action = models.CharField(max_length=100) # Ej: POST, REVERSE
+    reference_entry = models.ForeignKey(JournalEntry, on_delete=models.SET_NULL, null=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    integrity_hash = models.CharField(max_length=64) # SHA256(Entry + User + Action)
+
+    class Meta:
+        app_label = 'core_erp'
 
 class LedgerEntry(TenantAwareModel):
     journal_entry = models.ForeignKey(JournalEntry, on_delete=models.CASCADE, related_name='lines')
@@ -77,6 +102,16 @@ class LedgerEntry(TenantAwareModel):
     amount_base = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
 
     description = models.CharField(max_length=255, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.journal_entry.is_posted:
+            raise PermissionError("Lines of posted journal entries cannot be modified.")
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self.journal_entry.is_posted:
+            raise PermissionError("Lines of posted journal entries cannot be deleted.")
+        super().delete(*args, **kwargs)
 
     class Meta:
         app_label = 'core_erp'
