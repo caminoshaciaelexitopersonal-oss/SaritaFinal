@@ -60,6 +60,17 @@ class BillingEngine:
         return invoice
 
     @staticmethod
+    def validate_invoice(invoice):
+        """
+        Validación básica de integridad de la factura.
+        """
+        if not invoice.number:
+            raise ValidationError("La factura debe tener un número asignado.")
+        if invoice.total_amount <= 0:
+            raise ValidationError("El monto total de la factura debe ser mayor a cero.")
+        return True
+
+    @staticmethod
     def process_usage_billing(entity_id, usage_data):
         """
         Genera facturación basada en consumo (API calls, tokens, etc).

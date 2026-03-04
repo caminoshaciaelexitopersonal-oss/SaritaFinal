@@ -16,3 +16,7 @@ class CoreErpConfig(AppConfig):
         # Hardening 100%: Tenant Lifecycle
         from .tenancy.lifecycle_engine import TenantLifecycleEngine
         TenantLifecycleEngine.start_listening()
+
+        # Phase 4: Security Monitoring
+        from api.signals import register_security_monitors
+        register_security_monitors()

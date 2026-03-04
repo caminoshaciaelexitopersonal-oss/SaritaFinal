@@ -3,6 +3,7 @@ from dj_rest_auth.views import (
     LoginView, LogoutView, PasswordChangeView, PasswordResetConfirmView,
     PasswordResetView,
 )
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 from .views import CustomUserDetailsView
 
 urlpatterns = [
@@ -19,4 +20,8 @@ urlpatterns = [
         name="password_reset_confirm",
     ),
     path("password/change/", PasswordChangeView.as_view(), name="rest_password_change"),
+
+    # JWT URLs
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]

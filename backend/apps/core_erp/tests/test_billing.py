@@ -9,7 +9,7 @@ class BillingEngineTest(TestCase):
         invoice = MagicMock()
         item1 = MagicMock(subtotal=Decimal('100.00'), tax_amount=Decimal('19.00'))
         item2 = MagicMock(subtotal=Decimal('50.00'), tax_amount=Decimal('0.00'))
-        invoice.items.all.return_value = [item1, item2]
+        invoice.lines.all.return_value = [item1, item2]
 
         total = BillingEngine.calculate_totals(invoice)
         # 100 + 50 (subtotal) + 19 (tax) = 169

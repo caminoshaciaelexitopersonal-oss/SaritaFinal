@@ -30,11 +30,11 @@ class ReporteIVAView(APIView):
             account__code__startswith='2408'
         ).aggregate(total=Sum('credit'))['total'] or Decimal('0.00')
 
-        # IVA Descontable (Compras) - Asumimos cuenta 1105 (simplificación)
+        # IVA Descontable (Compras) - Cuenta 240810 (Estándar PUC Colombia para descontables)
         iva_descontable = Transaction.objects.filter(
             journal_entry__perfil=request.user.perfil_prestador,
             journal_entry__entry_date__range=(periodo.fecha_inicio, periodo.fecha_fin),
-            account__code__startswith='1105' # Esto debería ser una cuenta de IVA en compras
+            account__code__startswith='240810'
         ).aggregate(total=Sum('debit'))['total'] or Decimal('0.00')
 
         saldo_a_pagar = iva_generado - iva_descontable

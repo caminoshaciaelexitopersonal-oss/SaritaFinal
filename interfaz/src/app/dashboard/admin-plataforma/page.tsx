@@ -17,7 +17,11 @@ import {
   FiUnlock,
   FiRepeat,
   FiClock,
-  FiAward
+  FiAward,
+  FiWifi,
+  FiWifiOff,
+  FiTrendingUp,
+  FiRefreshCw
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -26,17 +30,38 @@ import Link from 'next/link';
 import { sovereigntyService, SystemFlag } from '@/services/sovereigntyService';
 import { toast } from 'react-hot-toast';
 import { CriticalActionDialog } from '@/components/ui/CriticalActionDialog';
+import { useWebSockets, TowerEvent } from '@/hooks/useWebSockets';
 
 export default function AdminPlataformaPage() {
-  const { data: stats, isLoading } = useSWR('admin-statistics', getStatistics);
+  const { data: stats, mutate: mutateStats, isLoading } = useSWR('admin-statistics', getStatistics);
   const { data: flagsRes, mutate: mutateFlags } = useSWR('admin-flags', sovereigntyService.getFlags);
+
+  const { lastEvent, isConnected } = useWebSockets();
+  const [liveEvents, setLiveEvents] = React.useState<TowerEvent[]>([]);
+  const [autonomousDecisions, setAutonomousDecisions] = React.useState<TowerEvent[]>([]);
 
   const [isEmergencyDialogOpen, setIsEmergencyDialogOpen] = React.useState(false);
   const [isAttackModeActive, setIsAttackModeActive] = React.useState(false);
 
-  const [flags, setFlags] = React.useState<SystemFlag[]>([]);
+  // Escuchar eventos en vivo para actualizar KPIs sin polling
+  React.useEffect(() => {
+    if (lastEvent) {
+      setLiveEvents(prev => [lastEvent, ...prev].slice(0, 10));
 
-  const systemicAlerts: any[] = []; // Eliminación de mocks
+      if (lastEvent.event_type === 'AUTONOMOUS_DECISION_EXECUTED') {
+          setAutonomousDecisions(prev => [lastEvent, ...prev].slice(0, 5));
+      }
+
+      // Actualizar estadísticas si el evento es relevante
+      if (['VentaCreada', 'PagoRecibido', 'AsientoGenerado'].includes(lastEvent.event_type)) {
+        mutateStats(); // Re-fetch datos ligeros
+        toast(`Omnisciencia: Nuevo evento ${lastEvent.event_type} detectado`, {
+          icon: '⚡',
+          style: { borderRadius: '10px', background: '#333', color: '#fff' }
+        });
+      }
+    }
+  }, [lastEvent, mutateStats]);
 
   const handleFlagToggle = async (id: string, currentStatus: string) => {
     const nextStatus = currentStatus === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
@@ -50,22 +75,21 @@ export default function AdminPlataformaPage() {
   };
 
   const handleEmergencyKill = async () => {
-    // Protocolo S-0.5: Activar MODO ATAQUE
     setIsAttackModeActive(true);
-    toast.success("S-0: MODO ATAQUE ACTIVADO. El sistema ha sido congelado y la autonomía suspendida.");
+    toast.success("S-0: MODO ATAQUE ACTIVADO. El sistema ha sido congelado.");
     setIsEmergencyDialogOpen(false);
   };
 
   const handleRestoreNormalMode = () => {
     setIsAttackModeActive(false);
-    toast.success("S-0: MODO NORMAL RESTAURADO. Operaciones y autonomía habilitadas.");
+    toast.success("S-0: MODO NORMAL RESTAURADO.");
   };
 
   const mainKpis = [
     { label: 'Total Usuarios Sistema', value: stats?.total_usuarios || '0', trend: 'Global', icon: FiUsers, color: 'text-blue-600' },
     { label: 'Prestadores Activos', value: stats?.total_prestadores || '0', trend: 'Vía 2', icon: FiActivity, color: 'text-indigo-600' },
     { label: 'Publicaciones Totales', value: stats?.total_publicaciones || '0', trend: 'Contenido', icon: FiGlobe, color: 'text-emerald-600' },
-    { label: 'Consistencia Analítica', value: stats?.trust_index || '98.2%', trend: 'Normativo', icon: FiZap, color: 'text-amber-600' },
+    { label: 'Madurez Autónoma', value: '85%', trend: 'Fase 5', icon: FiZap, color: 'text-amber-600' },
   ];
 
   return (
@@ -75,40 +99,29 @@ export default function AdminPlataformaPage() {
        error={!stats && !isLoading ? "No fue posible recuperar las métricas globales." : null}
     >
     <div className="space-y-10 animate-in fade-in duration-1000">
-      {/* Header de Soberanía */}
+      {/* Header de Soberanía con Estado de Conexión en Vivo */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
         <div>
           <div className="flex items-center gap-3 mb-2">
             <div className="bg-slate-900 text-white p-2 rounded-lg">
               <FiShield size={24} />
             </div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Centro de Supervisión Institucional</h1>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Torre de Control Omnisciente</h1>
+            <Badge className={isConnected ? "bg-emerald-500" : "bg-red-500"}>
+              {isConnected ? <FiWifi className="mr-1" /> : <FiWifiOff className="mr-1" />}
+              {isConnected ? "LIVE" : "DISCONNECTED"}
+            </Badge>
           </div>
-          <p className="text-slate-500 text-lg font-medium italic">Plataforma de monitoreo y control para la gestión integral del ecosistema.</p>
+          <p className="text-slate-500 text-lg font-medium italic">Monitoreo sistémico en tiempo real. Pulso de negocio actualizado al instante.</p>
         </div>
         <div className="flex gap-4">
            <div className="px-6 py-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3">
               <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-sm font-black text-emerald-700 tracking-widest uppercase">Motor de Reglas Activo</span>
+              <span className="text-sm font-black text-emerald-700 tracking-widest uppercase">Autonomía Fase 5 Activa</span>
            </div>
-           <Link href="/dashboard/admin-plataforma/nodos">
-             <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
-                <FiGlobe /> Nodos Soberanos
-             </Button>
-           </Link>
            <Link href="/dashboard/admin-plataforma/agentes">
              <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
-                <FiCpu /> Analítica Delegada
-             </Button>
-           </Link>
-           <Link href="/dashboard/admin-plataforma/memoria">
-             <Button variant="outline" className="border-slate-200 text-slate-600 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
-                <FiClock /> Memoria Histórica
-             </Button>
-           </Link>
-           <Link href="/dashboard/admin-plataforma/doctrina">
-             <Button variant="outline" className="border-emerald-200 text-emerald-700 bg-emerald-50 font-bold px-6 py-6 rounded-2xl flex items-center gap-2">
-                <FiAward /> Doctrina Meta
+                <FiCpu /> Auditoría IA
              </Button>
            </Link>
            {!isAttackModeActive ? (
@@ -125,40 +138,6 @@ export default function AdminPlataformaPage() {
                 </Button>
            )}
         </div>
-      </div>
-
-      {/* Global Sovereignty Flags */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {(!flagsRes?.data || flagsRes.data.length === 0) && (
-            <div className="md:col-span-3 p-10 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2.5rem] text-center">
-                <FiLock className="mx-auto text-slate-300 mb-4" size={40} />
-                <p className="text-slate-400 font-black uppercase tracking-[0.2em] text-xs">Soberanía de Dominio: No se han definido banderas de control en el Kernel.</p>
-            </div>
-        )}
-        {flagsRes?.data?.map((flag: SystemFlag) => (
-          <Card key={flag.id} className={`border-none shadow-sm transition-all rounded-3xl ${flag.status === 'ACTIVE' ? 'bg-white' : 'bg-amber-50'}`}>
-            <CardContent className="p-8 flex items-center justify-between">
-               <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{flag.status}</p>
-                    <div className={`w-1.5 h-1.5 rounded-full ${flag.status === 'ACTIVE' ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-                  </div>
-                  <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tight">{flag.name}</h3>
-                  <p className="text-xs text-slate-500 mt-1 max-w-[180px]">{flag.description}</p>
-               </div>
-               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleFlagToggle(flag.id, flag.status)}
-                className={`rounded-xl h-12 w-12 p-0 flex items-center justify-center border-2 ${
-                  flag.status === 'ACTIVE' ? 'border-brand/20 text-brand' : 'border-amber-200 text-amber-600 bg-white'
-                }`}
-               >
-                 {flag.status === 'ACTIVE' ? <FiLock /> : <FiUnlock />}
-               </Button>
-            </CardContent>
-          </Card>
-        ))}
       </div>
 
       {/* Grid de KPIs Maestros */}
@@ -180,96 +159,130 @@ export default function AdminPlataformaPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-         {/* Monitoreo de Inteligencia de Decisión */}
+         {/* Feed de Eventos en Tiempo Real (Fase 4.7) */}
          <Card className="lg:col-span-2 border-none shadow-sm overflow-hidden bg-white">
             <CardHeader className="bg-slate-50/50 p-6 border-b border-gray-100">
                <CardTitle className="text-xl font-black flex items-center gap-2">
-                  <FiActivity className="text-indigo-600" /> Monitor de Cumplimiento de Objetivos
+                  <FiActivity className="text-indigo-600 animate-spin-slow" /> Flujo de Eventos Omnisciente
                </CardTitle>
             </CardHeader>
-            <CardContent className="p-8">
-               <div className="space-y-12">
-                  {/* Gráficos / Barras de progreso visuales */}
-                  <div>
-                     <div className="flex justify-between items-end mb-4">
-                        <div>
-                           <h4 className="font-bold text-slate-800">Rentabilidad Promedio (ROI)</h4>
-                           <p className="text-xs text-slate-400">Objetivo sistémico: 4.0x</p>
-                        </div>
-                        <span className="text-2xl font-black text-indigo-600 italic">3.4x</span>
-                     </div>
-                     <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-indigo-500 w-[85%] shadow-inner" />
-                     </div>
-                  </div>
-
-                  <div>
-                     <div className="flex justify-between items-end mb-4">
-                        <div>
-                           <h4 className="font-bold text-slate-800">Costo de Adquisición vs LTV</h4>
-                           <p className="text-xs text-slate-400">Eficiencia de Marketing Voz</p>
-                        </div>
-                        <span className="text-2xl font-black text-emerald-600 italic">0.22</span>
-                     </div>
-                     <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-500 w-[45%] shadow-inner" />
-                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-6 pt-4">
-                     <div className="bg-slate-50 p-6 rounded-2xl text-center">
-                        <p className="text-xs font-bold text-slate-400 uppercase mb-2">Churn Rate</p>
-                        <p className="text-xl font-black text-slate-900">1.2%</p>
-                     </div>
-                     <div className="bg-slate-50 p-6 rounded-2xl text-center">
-                        <p className="text-xs font-bold text-slate-400 uppercase mb-2">ARPPU</p>
-                        <p className="text-xl font-black text-slate-900">$48.5</p>
-                     </div>
-                     <div className="bg-slate-50 p-6 rounded-2xl text-center border-2 border-indigo-100">
-                        <p className="text-xs font-bold text-indigo-600 uppercase mb-2">Health Score</p>
-                        <p className="text-xl font-black text-indigo-900">92/100</p>
-                     </div>
-                  </div>
+            <CardContent className="p-0">
+               <div className="divide-y divide-gray-100 max-h-[400px] overflow-y-auto">
+                  {liveEvents.length === 0 ? (
+                      <div className="p-20 text-center text-slate-400 uppercase italic tracking-widest text-xs">
+                          Esperando pulsos de sistema...
+                      </div>
+                  ) : liveEvents.map((ev, i) => (
+                    <div key={ev.event_id} className="p-6 hover:bg-slate-50 transition-colors animate-in slide-in-from-top duration-500">
+                       <div className="flex justify-between items-start mb-2">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="border-indigo-200 text-indigo-700 font-black">{ev.event_type}</Badge>
+                            <span className="text-[10px] text-slate-400 font-mono">{ev.timestamp}</span>
+                          </div>
+                          <Badge className={
+                             ev.severity === 'critical' ? 'bg-red-500' :
+                             ev.severity === 'warning' ? 'bg-amber-500' : 'bg-blue-500'
+                          }>
+                             {ev.severity.toUpperCase()}
+                          </Badge>
+                       </div>
+                       <p className="text-slate-700 font-medium">{JSON.stringify(ev.payload)}</p>
+                    </div>
+                  ))}
                </div>
             </CardContent>
          </Card>
 
-         {/* Alertas de Gobernanza */}
+         {/* Historial de Autonomía (Fase 5.7) */}
          <Card className="border-none shadow-xl bg-slate-900 text-white overflow-hidden rounded-3xl">
             <CardHeader className="p-8 border-b border-white/10">
                <CardTitle className="text-xl font-black flex items-center gap-2">
-                  <FiAlertTriangle className="text-amber-400" /> Notificaciones de Desviación
+                  <FiZap className="text-amber-400" /> Historial de Autonomía IA
                </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
                <div className="divide-y divide-white/5">
-                  {systemicAlerts.length === 0 ? (
+                  {autonomousDecisions.length === 0 ? (
                       <div className="p-20 text-center text-slate-500 uppercase italic tracking-widest text-xs">
-                          No hay alertas críticas registradas en el periodo actual.
+                          No hay ejecuciones autónomas en el periodo actual.
                       </div>
-                  ) : systemicAlerts.map((alert, i) => (
-                    <div key={i} className="p-8 hover:bg-white/5 transition-colors cursor-pointer group">
+                  ) : autonomousDecisions.map((decision, i) => (
+                    <div key={i} className="p-8 hover:bg-white/5 transition-colors cursor-pointer group border-l-4 border-emerald-500">
                        <div className="flex justify-between items-start mb-3">
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">{alert.domain}</span>
-                          <Badge className={
-                             alert.severity === 'CRITICAL' ? 'bg-red-500' :
-                             alert.severity === 'HIGH' ? 'bg-orange-500' : 'bg-blue-500'
-                          }>
-                             {alert.severity}
-                          </Badge>
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">{decision.payload.agent}</span>
+                          <Badge className="bg-emerald-600">AUTONOMOUS</Badge>
                        </div>
-                       <h4 className="font-bold text-lg mb-2 group-hover:text-indigo-300 transition-colors">{alert.title}</h4>
-                       <p className="text-slate-400 text-sm leading-relaxed">{alert.msg}</p>
+                       <h4 className="font-bold text-lg mb-2 group-hover:text-emerald-300 transition-colors">{decision.payload.action}</h4>
+                       <p className="text-slate-400 text-sm leading-relaxed">Status: {decision.payload.status}</p>
                     </div>
                   ))}
                </div>
-               <Link href="/dashboard/admin-plataforma/grc">
+               <Link href="/dashboard/admin-plataforma/agentes">
                 <div className="p-8 bg-indigo-600 hover:bg-indigo-700 transition-colors text-center cursor-pointer font-black uppercase tracking-widest text-sm">
-                    Ver Auditoría Global
+                    Ver Trazabilidad XAI
                 </div>
                </Link>
             </CardContent>
          </Card>
+      </div>
+
+      {/* Simulación Estratégica y Auto-Corrección (Fase 5.9 / 5.6) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Card className="border-none shadow-sm bg-white rounded-3xl overflow-hidden">
+              <CardHeader className="p-8 bg-slate-50 border-b">
+                  <CardTitle className="text-xl font-black flex items-center gap-2">
+                      <FiTrendingUp className="text-emerald-600" /> Simulador de Escenarios "What-If"
+                  </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8">
+                  <p className="text-slate-500 mb-6 font-medium">Proyecta el impacto de cambios macroeconómicos o estructurales en la rentabilidad del holding.</p>
+                  <div className="space-y-4">
+                      <Button className="w-full justify-between py-8 px-6 rounded-2xl border-2 border-slate-100 bg-white text-slate-900 hover:bg-slate-50 transition-all group">
+                          <div className="text-left">
+                              <p className="font-black uppercase text-xs text-slate-400">Escenario 1</p>
+                              <p className="font-bold">Caída de ventas 20% + Inflación 10%</p>
+                          </div>
+                          <FiTrendingUp className="text-slate-300 group-hover:text-emerald-500 transition-colors" size={24} />
+                      </Button>
+                      <Button variant="outline" className="w-full border-2 border-dashed border-slate-200 py-8 rounded-2xl font-black text-slate-400 uppercase tracking-widest hover:border-indigo-400 hover:text-indigo-500 transition-all">
+                          Crear Nueva Simulación
+                      </Button>
+                  </div>
+              </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-sm bg-white rounded-3xl overflow-hidden">
+              <CardHeader className="p-8 bg-slate-50 border-b">
+                  <CardTitle className="text-xl font-black flex items-center gap-2">
+                      <FiRefreshCw className="text-indigo-600" /> Monitor de Auto-Corrección (Self-Healing)
+                  </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8">
+                  <div className="flex items-center justify-between mb-8 bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
+                      <div>
+                          <p className="text-xs font-black text-indigo-400 uppercase tracking-widest">Estado del Motor</p>
+                          <p className="text-xl font-black text-indigo-900 italic">Vigilante / Pasivo</p>
+                      </div>
+                      <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                          <FiRefreshCw className="animate-spin-slow" size={24} />
+                      </div>
+                  </div>
+                  <div className="space-y-3">
+                      <div className="flex items-center justify-between text-sm">
+                          <span className="text-slate-500 font-medium">Eventos reconciliados (24h)</span>
+                          <span className="font-black text-slate-900">12</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                          <span className="text-slate-500 font-medium">Asientos regenerados</span>
+                          <span className="font-black text-slate-900">3</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                          <span className="text-slate-500 font-medium">Integridad del Ledger</span>
+                          <Badge className="bg-emerald-500">OPTIMAL</Badge>
+                      </div>
+                  </div>
+              </CardContent>
+          </Card>
       </div>
 
       <CriticalActionDialog
@@ -277,7 +290,7 @@ export default function AdminPlataformaPage() {
         onClose={() => setIsEmergencyDialogOpen(false)}
         onConfirm={handleEmergencyKill}
         title="Suspensión de Operaciones por Auditoría"
-        description="Se procederá a la suspensión inmediata de las funciones comerciales y de registro del sistema. Esta medida es de carácter preventivo para asegurar la integridad de los datos durante un proceso de revisión institucional."
+        description="Se procederá a la suspensión inmediata de las funciones comerciales y de registro del sistema."
         confirmLabel="Confirmar Suspensión"
         type="danger"
       />

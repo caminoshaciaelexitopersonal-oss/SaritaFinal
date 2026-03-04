@@ -22,4 +22,11 @@ class SargentoConciliaciones(SergeantTemplate):
         ]
 
     def plan_microtasks(self, params: dict):
-        return [{"type": "RECONCILIATION", "provider_id": params.get("provider_id")} for _ in range(5)]
+        common = {"provider_id": params.get("provider_id")}
+        return [
+            {**common, "type": "EXTRACTOS"},
+            {**common, "type": "CRUCE"},
+            {**common, "type": "DIFERENCIAS"},
+            {**common, "type": "AJUSTE"},
+            {**common, "type": "CERTIFICACION"}
+        ]

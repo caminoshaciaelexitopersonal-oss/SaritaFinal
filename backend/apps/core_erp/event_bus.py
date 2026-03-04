@@ -1,4 +1,5 @@
 import logging
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -38,28 +39,63 @@ class EventBus:
         logger.info(f"Suscriptor registrado para el evento: {event_type}")
 
     @classmethod
-    def emit(cls, event_type, payload):
+    def emit(cls, event_type, payload, severity='info', user_id=None):
         """
         Dispara un evento y notifica a todos sus suscriptores.
-        Implementa separación síncrono/asíncrono y reintentos (Fase 6.2).
+        Implementa la estructura estándar de Omnisciencia (Fase 4).
         """
         from .observability.middleware import get_correlation_id
         from .models import EventAuditLog
         import time
+        import uuid
 
         correlation_id = get_correlation_id()
-        tenant_id = payload.get('tenant_id')
+        tenant_id = payload.get('tenant_id') or payload.get('entity_id')
+        event_id = str(uuid.uuid4())
 
-        logger.info(f"Emitiendo evento ERP: {event_type} (CID: {correlation_id})")
+        logger.info(f"Omnisciencia: Emitiendo evento {event_type} (ID: {event_id})")
 
-        # 1. Auditoría Inmediata
+        # 1. Auditoría Inmediata (Histórico de Eventos)
         audit_entry = EventAuditLog.objects.create(
+            id=event_id,
             event_type=event_type,
             correlation_id=correlation_id,
             tenant_id=tenant_id,
             payload=payload,
+            severity=severity,
             status='EMITTED'
         )
+
+        # Preparar payload estandarizado para WebSockets
+        standard_payload = {
+            "event_id": event_id,
+            "event_type": event_type,
+            "timestamp": timezone.now().isoformat(),
+            "entity_id": tenant_id,
+            "user_id": user_id,
+            "payload": payload,
+            "severity": severity
+        }
+
+        # 2. Propagar a WebSockets (Fase 4.2)
+        try:
+            from asgiref.sync import async_to_sync
+            from channels.layers import get_channel_layer
+            channel_layer = get_channel_layer()
+            if channel_layer:
+                # Enviar a grupo global de superadmin
+                async_to_sync(channel_layer.group_send)(
+                    "sarita_tower_global",
+                    {"type": "broadcast_event", "event": standard_payload}
+                )
+                # Enviar a grupo específico de la entidad
+                if tenant_id:
+                    async_to_sync(channel_layer.group_send)(
+                        f"sarita_entity_{tenant_id}",
+                        {"type": "broadcast_event", "event": standard_payload}
+                    )
+        except Exception as e:
+            logger.error(f"WebSocket propagation failed: {e}")
 
         subscribers = cls._subscribers.get(event_type, [])
 

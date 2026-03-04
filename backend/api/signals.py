@@ -24,6 +24,26 @@
 #         except ProviderProfile.DoesNotExist:
 #             pass
 
+
+def register_security_monitors():
+    from django.contrib.auth.signals import user_login_failed
+    from apps.core_erp.event_bus import EventBus
+
+    @receiver(user_login_failed)
+    def track_failed_login(sender, credentials, request, **kwargs):
+        """
+        Omnisciencia: Monitoreo de intentos de login fallidos (Fase 4.4.2).
+        """
+        EventBus.emit(
+            "IntentoFallidoLogin",
+            {
+                "username": credentials.get('username'),
+                "ip": request.META.get('REMOTE_ADDR') if request else "unknown",
+                "user_agent": request.META.get('HTTP_USER_AGENT') if request else "unknown"
+            },
+            severity="warning"
+        )
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Artesano

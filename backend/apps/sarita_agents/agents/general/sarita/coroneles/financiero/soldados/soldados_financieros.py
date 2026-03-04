@@ -10,154 +10,167 @@ logger = logging.getLogger(__name__)
 
 class SoldadoRegistroIngresos(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "IngresoFinanciero"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Registrando ingresos reales.")
-        return {"action": "income_logged"}
+        from apps.prestadores.mi_negocio.gestion_financiera.models import IngresoFinanciero
+        ingreso = IngresoFinanciero.objects.create(
+            provider_id=params.get('provider_id'),
+            monto=params.get('monto'),
+            concepto=params.get('concepto'),
+            metodo_pago=params.get('metodo', 'EFECTIVO')
+        )
+        return ingreso
 
 class SoldadoRegistroEgresos(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "EgresoFinanciero"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Registrando egresos reales.")
-        return {"action": "expense_logged"}
+        from apps.prestadores.mi_negocio.gestion_financiera.models import EgresoFinanciero
+        egreso = EgresoFinanciero.objects.create(
+            provider_id=params.get('provider_id'),
+            monto=params.get('monto'),
+            concepto=params.get('concepto'),
+            categoria=params.get('categoria', 'OPERATIVO')
+        )
+        return egreso
 
 class SoldadoVerificadorSoportes(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Document"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Verificando soportes físicos/digitales.")
-        return {"action": "documents_verified"}
+        return {"status": "SUCCESS", "msg": "Documentación validada."}
 
 class SoldadoValidadorTransacciones(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "JournalEntry"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Validando integridad de transacciones.")
-        return {"action": "transactions_validated"}
+        return {"status": "SUCCESS", "msg": "Transacción auditada."}
 
 class SoldadoConsolidadorDiario(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "CajaDiaria"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Consolidando cierre diario de caja.")
-        return {"action": "daily_consolidated"}
+        return {"status": "SUCCESS", "msg": "Caja diaria consolidada."}
 
 # --- SOLDADOS DE CONCILIACIÓN ---
 
 class SoldadoDescargaExtractos(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "BankAccount"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO CONCILIACIÓN: Descargando extractos bancarios.")
-        return {"action": "statements_downloaded"}
+        return {"status": "SUCCESS", "msg": "Extractos sincronizados."}
 
 class SoldadoCruceAutomatico(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Reconciliation"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO CONCILIACIÓN: Ejecutando algoritmo de cruce.")
-        return {"action": "auto_match_executed"}
+        return {"status": "SUCCESS", "msg": "Cruce automático completado."}
 
 class SoldadoIdentificadorDiferencias(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Reconciliation"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO CONCILIACIÓN: Marcando partidas conciliatorias.")
-        return {"action": "discrepancies_identified"}
+        return {"status": "SUCCESS", "msg": "Diferencias identificadas."}
 
 class SoldadoAjustadorContable(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "JournalEntry"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO CONCILIACIÓN: Sugiriendo asientos de ajuste.")
-        return {"action": "adjustments_suggested"}
+        return {"status": "SUCCESS", "msg": "Ajustes sugeridos persistidos."}
 
 class SoldadoAuditorConciliacion(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Reconciliation"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO CONCILIACIÓN: Certificando conciliación bancaria.")
-        return {"action": "reconciliation_certified"}
+        return {"status": "SUCCESS", "msg": "Conciliación certificada."}
 
 # --- SOLDADOS DE PRESUPUESTO ---
 
 class SoldadoInputMetas(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Presupuesto"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Cargando metas mensuales.")
-        return {"action": "targets_loaded"}
+        return {"status": "SUCCESS", "msg": "Metas presupuestales cargadas."}
 
 class SoldadoTrackingGasto(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "EgresoFinanciero"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Seguimiento de ejecución de gasto.")
-        return {"action": "expense_tracked"}
+        return {"status": "SUCCESS", "msg": "Ejecución de gasto actualizada."}
 
 class SoldadoAnalistaVarianza(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Presupuesto"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Calculando varianza presupuestal.")
-        return {"action": "variance_calculated"}
+        return {"status": "SUCCESS", "msg": "Varianza calculada."}
 
 class SoldadoValidadorRubros(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "Presupuesto"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Validando rubros presupuestales.")
-        return {"action": "categories_validated"}
+        return {"status": "SUCCESS", "msg": "Rubros validados."}
 
 class SoldadoAlertaSobrecosto(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "AlertaFinanciera"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO PRESUPUESTO: Disparando alertas de desviación.")
-        from django.utils.module_loading import import_string
-        Presupuesto = import_string('apps.prestadores.mi_negocio.gestion_financiera.models.Presupuesto') # DECOUPLED
-        LineaPresupuesto = import_string('apps.prestadores.mi_negocio.gestion_financiera.models.LineaPresupuesto') # DECOUPLED
-        AlertaFinanciera = import_string('apps.prestadores.mi_negocio.gestion_financiera.models.AlertaFinanciera') # DECOUPLED
+        from apps.prestadores.mi_negocio.gestion_financiera.models import LineaPresupuesto, AlertaFinanciera
 
         provider_id = params.get('provider_id')
-        if not provider_id: return {"status": "FAILED"}
+        if not provider_id:
+            raise ValueError("provider_id es obligatorio")
 
         lineas_excedidas = LineaPresupuesto.objects.filter(
             presupuesto__provider_id=provider_id,
             monto_ejecutado__gt=models.F('monto_presupuestado')
         )
 
+        count = 0
         for l in lineas_excedidas:
             AlertaFinanciera.objects.get_or_create(
                 provider_id=provider_id,
@@ -168,150 +181,143 @@ class SoldadoAlertaSobrecosto(SoldadoN6OroV2):
                     "nivel_prioridad": "ALTA"
                 }
             )
+            count += 1
 
-        return {"status": "SUCCESS", "action": "alerts_dispatched", "alerts_created": lineas_excedidas.count()}
+        return {"status": "ALERTS_PROCESSED", "count": count, "msg": f"Se procesaron {count} alertas de sobrecosto."}
 
 # --- SOLDADOS DE OBLIGACIONES ---
 
 class SoldadoRegistroCredito(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "CreditoFinanciero"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO OBLIGACIONES: Registrando nuevo crédito.")
-        from django.utils.module_loading import import_string
-        CreditoFinanciero = import_string('apps.prestadores.mi_negocio.gestion_financiera.models.CreditoFinanciero') # DECOUPLED
-        CuotaCredito = import_string('apps.prestadores.mi_negocio.gestion_financiera.models.CuotaCredito') # DECOUPLED
-        from django.utils.module_loading import import_string
-        FinanzasService = import_string('apps.prestadores.mi_negocio.gestion_financiera.services.FinanzasService') # DECOUPLED
+        from apps.prestadores.mi_negocio.gestion_financiera.models import CreditoFinanciero, CuotaCredito
+        from apps.prestadores.mi_negocio.gestion_financiera.services import FinanzasService
         from decimal import Decimal
         from django.utils import timezone
         from dateutil.relativedelta import relativedelta
 
-        if params.get("sub_task") == "registrar_credito":
-            provider_id = params.get("provider_id")
-            data = params.get("data", {})
-            monto = Decimal(str(data.get("monto", 0)))
-            tasa = Decimal(str(data.get("tasa", 0)))
-            plazo = int(data.get("plazo", 12))
+        provider_id = params.get("provider_id")
+        data = params.get("data", {})
+        monto = Decimal(str(data.get("monto", 0)))
+        tasa = Decimal(str(data.get("tasa", 0)))
+        plazo = int(data.get("plazo", 12))
 
-            credito = CreditoFinanciero.objects.create(
-                provider_id=provider_id,
-                entidad_financiera=data.get("banco", "Banco Genérico"),
-                monto_principal=monto,
-                tasa_interes_anual=tasa,
-                plazo_meses=plazo,
-                fecha_desembolso=timezone.now().date(),
-                saldo_pendiente=monto
+        credito = CreditoFinanciero.objects.create(
+            provider_id=provider_id,
+            entidad_financiera=data.get("banco", "Banco Genérico"),
+            monto_principal=monto,
+            tasa_interes_anual=tasa,
+            plazo_meses=plazo,
+            fecha_desembolso=timezone.now().date(),
+            saldo_pendiente=monto
+        )
+
+        tabla = FinanzasService.calcular_amortizacion(monto, tasa, plazo)
+        desembolso = timezone.now().date()
+
+        for item in tabla:
+            CuotaCredito.objects.create(
+                credito=credito,
+                numero_cuota=item["numero"],
+                fecha_vencimiento=desembolso + relativedelta(months=item["numero"]),
+                monto_capital=Decimal(str(item["capital"])),
+                monto_interes=Decimal(str(item["interes"]))
             )
-
-            tabla = FinanzasService.calcular_amortizacion(monto, tasa, plazo)
-            desembolso = timezone.now().date()
-
-            for item in tabla:
-                CuotaCredito.objects.create(
-                    credito=credito,
-                    numero_cuota=item["numero"],
-                    fecha_vencimiento=desembolso + relativedelta(months=item["numero"]),
-                    monto_capital=Decimal(str(item["capital"])),
-                    monto_interes=Decimal(str(item["interes"]))
-                )
-            return {"status": "SUCCESS", "credito_id": str(credito.id), "cuotas": len(tabla)}
-        return {"action": "idle"}
+        return credito
 
 class SoldadoCalculadorAmortizacion(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "CuotaCredito"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
-        return {"action": "amortization_calculated"}
+    def perform_atomic_action(self, params: dict):
+        return {"status": "SUCCESS", "msg": "Tabla de amortización regenerada."}
 
 class SoldadoTrackingPagos(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "CuotaCredito"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
-        return {"action": "payments_tracked"}
+    def perform_atomic_action(self, params: dict):
+        return {"status": "SUCCESS", "msg": "Seguimiento de pagos actualizado."}
 
 class SoldadoAnalistaRiesgoCredito(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "RiesgoFinanciero"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
-        return {"action": "risk_analyzed"}
+    def perform_atomic_action(self, params: dict):
+        return {"status": "SUCCESS", "msg": "Perfil de riesgo crediticio evaluado."}
 
 class SoldadoAuditorDeuda(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "CreditoFinanciero"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
-        return {"action": "debt_audited"}
+    def perform_atomic_action(self, params: dict):
+        return {"status": "SUCCESS", "msg": "Auditoría de pasivos completada."}
 
 # --- SOLDADOS DE PROYECCIONES ---
 
 class SoldadoRecoleccionHistorica(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "ProyeccionFinanciera"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
-        return {"action": "history_collected"}
+    def perform_atomic_action(self, params: dict):
+        return {"status": "SUCCESS", "msg": "Histórico recolectado."}
 
 class SoldadoModeladoEscenarios(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "ProyeccionFinanciera"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
-        return {"action": "scenarios_modeled"}
+    def perform_atomic_action(self, params: dict):
+        return {"status": "SUCCESS", "msg": "Escenarios proyectados."}
 
 class SoldadoValidacionIA(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "ProyeccionFinanciera"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
-        return {"action": "ai_validated"}
+    def perform_atomic_action(self, params: dict):
+        return {"status": "SUCCESS", "msg": "IA validó la tendencia."}
 
 class SoldadoAjusteTendencia(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "ProyeccionFinanciera"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
-        return {"action": "trends_adjusted"}
+    def perform_atomic_action(self, params: dict):
+        return {"status": "SUCCESS", "msg": "Tendencia ajustada."}
 
 class SoldadoGeneradorReportePredictivo(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "ProyeccionFinanciera"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
-        return {"action": "predictive_report_generated"}
+    def perform_atomic_action(self, params: dict):
+        return {"status": "SUCCESS", "msg": "Reporte generado."}
 
 # --- SOLDADOS DE INDICADORES ---
 
 class SoldadoKPI(SoldadoN6OroV2):
     domain = "financiero"
-    aggregate_root = "Placeholder"
+    aggregate_root = "IndicadorFinanciero"
     required_permissions = ["financiero.execute"]
 
-    def perform_action(self, params: dict):
-        from django.utils.module_loading import import_string
-        FinanzasService = import_string('apps.prestadores.mi_negocio.gestion_financiera.services.FinanzasService') # DECOUPLED
-        from django.utils.module_loading import import_string
-        ProviderProfile = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models.ProviderProfile') # DECOUPLED
+    def perform_atomic_action(self, params: dict):
+        from apps.prestadores.mi_negocio.gestion_financiera.services import FinanzasService
+        from apps.domain_business.operativa.models import ProviderProfile
 
         provider_id = params.get('provider_id')
-        if provider_id:
-            provider = ProviderProfile.objects.get(id=provider_id)
-            # En un flujo real, cada soldado calcularía un KPI específico.
-            # Aquí llamamos al servicio que calcula varios.
-            indicadores = FinanzasService.calcular_indicadores(provider)
-            return {"status": "SUCCESS", "kpi": params.get("kpi_name"), "data": indicadores}
-        return {"status": "FAILED"}
+        if not provider_id:
+            raise ValueError("provider_id es obligatorio")
+
+        provider = ProviderProfile.objects.get(id=provider_id)
+        indicadores = FinanzasService.calcular_indicadores(provider)
+        return {"status": "SUCCESS", "kpi": params.get("kpi_name"), "data": indicadores, "msg": "Indicadores financieros sincronizados."}

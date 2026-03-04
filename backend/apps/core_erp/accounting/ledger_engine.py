@@ -21,26 +21,23 @@ class LedgerEngine:
     """
 
     @staticmethod
-    def calculate_hash(entry: JournalEntry):
+    def calculate_hash(entry: JournalEntry, previous_hash: str = None):
         """
         Calcula un hash SHA-256 de los datos del asiento para garantizar integridad.
+        Fase 3.6: hash_actual = SHA256(id + fecha + referencia + total + hash_anterior)
         """
-        data = {
-            "id": str(entry.id),
-            "tenant_id": str(entry.tenant_id),
-            "date": str(entry.date),
-            "lines": [
-                {
-                    "account": line.account.code,
-                    "debit": str(line.debit_amount),
-                    "credit": str(line.credit_amount),
-                    "currency": line.currency
-                }
-                for line in entry.lines.all().order_by('id')
-            ]
-        }
-        encoded = json.dumps(data, sort_keys=True).encode()
-        return hashlib.sha256(encoded).hexdigest()
+        total_debit = sum(line.debit_amount for line in entry.lines.all())
+
+        # Estructura obligatoria Fase 3.6
+        payload = (
+            f"{entry.id}"
+            f"{entry.date}"
+            f"{entry.reference or ''}"
+            f"{total_debit}"
+            f"{previous_hash or 'GENESIS_SARITA_2026'}"
+        )
+
+        return hashlib.sha256(payload.encode()).hexdigest()
 
     @staticmethod
     def validate_balance(entry: JournalEntry):
@@ -151,35 +148,88 @@ class LedgerEngine:
                 raise TenantMismatchError(f"Cuenta {line.account.code} no pertenece al tenant {entry.tenant_id}")
 
         # 3. Multi-Currency Logic (Phase B)
-        # Standardize transaction vs base amounts
+        # Standardize transaction vs base amounts using FXEngine
+        from ..fx.fx_engine import FXEngine
+
         exchange_rate = getattr(entry, 'exchange_rate', Decimal('1.0'))
+        # Si no se especificó tasa manual, intentar resolver vía motor
+        if exchange_rate == Decimal('1.0') and entry.currency != entry.base_currency:
+            try:
+                exchange_rate = FXEngine.get_rate(entry.currency, entry.base_currency)
+            except ValueError:
+                logger.warning(f"FX Engine: No se encontró tasa para {entry.currency}/{entry.base_currency}. Usando 1.0")
+
         for line in entry.lines.all():
             # If not explicitly set, use debit/credit as transaction amount
             if not line.amount_transaction:
                 line.amount_transaction = line.debit_amount if line.debit_amount > 0 else line.credit_amount
 
-            line.amount_base = line.amount_transaction * exchange_rate
+            # Convert to base currency for financial reporting
+            line.amount_base = (line.amount_transaction * exchange_rate).quantize(Decimal('1.00'))
             line.save()
 
-        # 4. Audit Integrity Hardening (Phase B)
-        entry.system_hash = LedgerEngine.calculate_hash(entry)
-        entry.immutable_signature = f"LEDGER-SIG-{entry.system_hash[:16]}-{timezone.now().timestamp()}"
+        # 4. Audit Integrity Hardening (Phase B) - Chained Hashing
+        # Obtener el hash del último asiento posteado para este tenant
+        last_entry = JournalEntry.objects.filter(
+            tenant_id=entry.tenant_id,
+            is_posted=True
+        ).exclude(id=entry.id).order_by('-posted_at', '-id').first()
+
+        previous_hash = last_entry.system_hash if last_entry else "GENESIS_SARITA_2026"
+        entry.previous_hash = previous_hash
+
+        entry.system_hash = LedgerEngine.calculate_hash(entry, previous_hash=previous_hash)
+        entry.immutable_signature = f"LEDGER-SIG-CHAIN-{entry.system_hash[:16]}-{timezone.now().timestamp()}"
         entry.posted_at = timezone.now()
 
         # 5. Posteo Final
         entry.is_posted = True
         entry.save()
 
+        # 5.1 Registro en Auditoría Inmutable (Fase 3.11)
+        from .models import AccountingAuditLog
+        from django.contrib.auth import get_user_model
+
+        system_user = get_user_model().objects.filter(is_superuser=True).first()
+        user_to_log = entry.created_by if entry.created_by else system_user
+
+        audit_payload = f"{entry.id}{user_to_log.id if user_to_log else 'system'}{entry.system_hash}"
+        AccountingAuditLog.objects.create(
+            tenant_id=entry.tenant_id,
+            user=user_to_log,
+            action="POST",
+            reference_entry=entry,
+            integrity_hash=hashlib.sha256(audit_payload.encode()).hexdigest()
+        )
+
         logger.info(f"JournalEntry {entry.id} posteado exitosamente con Hash: {entry.system_hash}")
+
+        # 6. Emisión de Evento de Omnisciencia (Fase 4)
+        from apps.core_erp.event_bus import EventBus
+        EventBus.emit(
+            "AsientoGenerado",
+            {
+                "entity_id": str(entry.tenant_id),
+                "entry_id": str(entry.id),
+                "description": entry.description,
+                "total_debit": float(sum(line.debit_amount for line in entry.lines.all())),
+                "system_hash": entry.system_hash
+            },
+            severity="info"
+        )
+
         return entry
 
     @staticmethod
     @transaction.atomic
     def reverse_entry(journal_entry_id: str, reason: str = "Reversión automática"):
         """
-        Genera un contra-asiento para anular una operación. Inmutabilidad total.
+        Genera un contra-asiento para anular una operación. Inmutabilidad total (Fase 3.5.2).
         """
-        original = JournalEntry.objects.get(id=journal_entry_id)
+        original = JournalEntry.objects.select_for_update().get(id=journal_entry_id)
+
+        if not original.is_posted:
+             raise ValueError("No se puede reversar un asiento que no ha sido posteado.")
 
         if original.is_reversal:
             raise DuplicateReversalError("No se puede reversar un asiento que ya es una reversión.")
@@ -193,22 +243,73 @@ class LedgerEngine:
             period=original.period,
             date=timezone.now().date(),
             description=f"REVERSIÓN de {original.id}: {reason}",
-            reference=original.reference,
+            reference=f"REV-{original.reference or original.id}",
+            event_type=f"REVERSAL_{original.event_type}",
             is_reversal=True,
-            reversed_entry_id=original.id
+            reversed_entry_id=original.id,
+            created_by=original.created_by
         )
 
         # Invertir Débitos y Créditos de las líneas
         for line in original.lines.all():
             LedgerEntry.objects.create(
+                tenant_id=original.tenant_id,
                 journal_entry=reversal,
                 account=line.account,
                 debit_amount=line.credit_amount,
                 credit_amount=line.debit_amount,
+                amount_transaction=line.amount_transaction,
+                currency=line.currency,
                 description=f"Rev: {line.description}"
             )
 
+        # Registro en Auditoría
+        from .models import AccountingAuditLog
+        audit_payload = f"{reversal.id}{original.id}REVERSE"
+        AccountingAuditLog.objects.create(
+            tenant_id=reversal.tenant_id,
+            user=original.created_by,
+            action="REVERSE",
+            reference_entry=reversal,
+            integrity_hash=hashlib.sha256(audit_payload.encode()).hexdigest()
+        )
+
         return LedgerEngine.post_entry(reversal.id)
+
+    @staticmethod
+    def validate_ledger_integrity(tenant_id: str):
+        """
+        Fase 3.7: Script de Validación Automática de Integridad.
+        Recorre todos los asientos, recalcula hashes y verifica la cadena.
+        """
+        entries = JournalEntry.objects.filter(tenant_id=tenant_id, is_posted=True).order_by('posted_at', 'id')
+
+        previous_hash = "GENESIS_SARITA_2026"
+        errors = []
+
+        for entry in entries:
+            # 1. Verificar cadena
+            if entry.previous_hash != previous_hash:
+                errors.append(f"Ruptura de cadena en asiento {entry.id}. Esperado: {previous_hash}, Real: {entry.previous_hash}")
+
+            # 2. Recalcular hash
+            recalculated = LedgerEngine.calculate_hash(entry, previous_hash=entry.previous_hash)
+            if entry.system_hash != recalculated:
+                errors.append(f"Hash inválido en asiento {entry.id}. Datos alterados.")
+
+            # 3. Verificar balance
+            try:
+                LedgerEngine.validate_balance(entry)
+            except Exception as e:
+                errors.append(f"Desbalance en asiento {entry.id}: {str(e)}")
+
+            previous_hash = entry.system_hash
+
+        return {
+            "is_valid": len(errors) == 0,
+            "errors": errors,
+            "entries_count": entries.count()
+        }
 
     @staticmethod
     def get_trial_balance(tenant_id: str, cutoff_date=None):

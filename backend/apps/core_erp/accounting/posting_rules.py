@@ -11,12 +11,15 @@ class PostingRules:
     @staticmethod
     def get_rule_for_event(event_type: str, payload: Dict[str, Any]) -> List[Dict[str, Any]]:
         rules = {
+            "RESERVATION_CREATED": PostingRules.rule_reservation_created,
             "RESERVATION_CONFIRMED": PostingRules.rule_reservation_confirmed,
-            "ReservationConfirmed": PostingRules.rule_reservation_confirmed,
-            "PaymentReceived": PostingRules.rule_payment_received,
-            "ProviderPaid": PostingRules.rule_provider_paid,
-            # Compatibility with old types
-            "SALE": PostingRules.rule_sale,
+            "RESERVATION_CANCELLED": PostingRules.rule_reservation_cancelled,
+            "PAYMENT_RECEIVED": PostingRules.rule_payment_received,
+            "PAYROLL_LIQUIDATED": PostingRules.rule_payroll_liquidated,
+            "INVENTORY_ADJUSTED": PostingRules.rule_inventory_adjusted,
+            "PURCHASE_ORDER_POSTED": PostingRules.rule_purchase_order_posted,
+            "ASSET_DEPRECIATED": PostingRules.rule_asset_depreciated,
+            "SALE_COMPLETED": PostingRules.rule_sale,
             "LIQUIDATION": PostingRules.rule_liquidation,
         }
 
@@ -123,6 +126,84 @@ class PostingRules:
                 'credit_amount': amount,
                 'description': description
             }
+        ]
+
+    @staticmethod
+    def rule_reservation_created(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Registro de Cuenta por Cobrar al Cliente por Reserva Creada.
+        """
+        total = Decimal(str(payload.get('total_amount', 0)))
+        ref = payload.get('reference', 'N/A')
+        return [
+            {'account': '130505', 'debit_amount': total, 'credit_amount': 0, 'description': f"CxC Cliente - Reserva {ref}"},
+            {'account': '280505', 'debit_amount': 0, 'credit_amount': total, 'description': f"Anticipos Clientes - Reserva {ref}"}
+        ]
+
+    @staticmethod
+    def rule_reservation_cancelled(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Reversión de Reserva por Cancelación.
+        """
+        total = Decimal(str(payload.get('total_amount', 0)))
+        ref = payload.get('reference', 'N/A')
+        return [
+            {'account': '280505', 'debit_amount': total, 'credit_amount': 0, 'description': f"Rev. Anticipo - Reserva {ref}"},
+            {'account': '130505', 'debit_amount': 0, 'credit_amount': total, 'description': f"Rev. CxC - Reserva {ref}"}
+        ]
+
+    @staticmethod
+    def rule_payroll_liquidated(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Impacto de Gasto de Nómina.
+        """
+        net_pay = Decimal(str(payload.get('net_pay', 0)))
+        ref = payload.get('reference', 'N/A')
+        return [
+            {'account': '510506', 'debit_amount': net_pay, 'credit_amount': 0, 'description': f"Gasto Salario - {ref}"},
+            {'account': '250505', 'debit_amount': 0, 'credit_amount': net_pay, 'description': f"Salarios por Pagar - {ref}"}
+        ]
+
+    @staticmethod
+    def rule_inventory_adjusted(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Ajuste de Inventario (Físico vs Sistema).
+        """
+        val = Decimal(str(payload.get('adjustment_value', 0)))
+        ref = payload.get('reference', 'N/A')
+        if val > 0: # Entrada
+             return [
+                {'account': '143505', 'debit_amount': val, 'credit_amount': 0, 'description': f"Ajuste (+) Inv - {ref}"},
+                {'account': '425050', 'debit_amount': 0, 'credit_amount': val, 'description': f"Ingreso por Ajuste - {ref}"}
+             ]
+        else: # Salida
+             return [
+                {'account': '519595', 'debit_amount': abs(val), 'credit_amount': 0, 'description': f"Gasto por Ajuste - {ref}"},
+                {'account': '143505', 'debit_amount': 0, 'credit_amount': abs(val), 'description': f"Ajuste (-) Inv - {ref}"}
+             ]
+
+    @staticmethod
+    def rule_purchase_order_posted(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Registro de Compra de Mercancía.
+        """
+        total = Decimal(str(payload.get('total_amount', 0)))
+        ref = payload.get('reference', 'N/A')
+        return [
+            {'account': '143501', 'debit_amount': total, 'credit_amount': 0, 'description': f"Compra Mercancía - {ref}"},
+            {'account': '220505', 'debit_amount': 0, 'credit_amount': total, 'description': f"CxP Proveedores Nac - {ref}"}
+        ]
+
+    @staticmethod
+    def rule_asset_depreciated(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Depreciación Mensual de Activos Fijos.
+        """
+        val = Decimal(str(payload.get('depreciation_amount', 0)))
+        ref = payload.get('reference', 'N/A')
+        return [
+            {'account': '516005', 'debit_amount': val, 'credit_amount': 0, 'description': f"Gasto Depreciación - {ref}"},
+            {'account': '159205', 'debit_amount': 0, 'credit_amount': val, 'description': f"Deprec. Acumulada - {ref}"}
         ]
 
     # --- Compatibility Rules ---

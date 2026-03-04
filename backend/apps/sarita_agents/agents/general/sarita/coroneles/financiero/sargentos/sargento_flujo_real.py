@@ -22,4 +22,17 @@ class SargentoFlujoReal(SergeantTemplate):
         ]
 
     def plan_microtasks(self, params: dict):
-        return [{"type": "CASH_FLOW_REAL", "provider_id": params.get("provider_id")} for _ in range(5)]
+        common = {
+            "provider_id": params.get("provider_id"),
+            "monto": params.get("monto"),
+            "concepto": params.get("concepto"),
+            "metodo": params.get("metodo"),
+            "categoria": params.get("categoria")
+        }
+        return [
+            {**common, "type": "INGRESO"},
+            {**common, "type": "EGRESO"},
+            {**common, "type": "SOPORTES"},
+            {**common, "type": "VALIDACION"},
+            {**common, "type": "CONSOLIDACION"}
+        ]

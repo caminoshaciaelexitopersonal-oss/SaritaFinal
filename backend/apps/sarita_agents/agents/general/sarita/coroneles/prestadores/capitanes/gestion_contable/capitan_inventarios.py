@@ -11,22 +11,21 @@ class CapitanInventarios(CapitanTemplate):
 
 
     def _get_tenientes(self) -> Dict[str, Any]:
-        return {}
-    def plan(self):
-        """
-        El corazón del Capitán. Aquí es donde defines el plan táctico.
-        Debes crear un PlanTáctico y luego delegar Tareas a los Tenientes.
-        """
+        from ...tenientes.teniente_inventario import TenienteInventario
+        return {
+            "control_inventario": TenienteInventario()
+        }
 
-        # 1. Crear el Plan Táctico
-        plan_tactico = self.get_or_create_plan_tactico(
-            nombre="Plan de Ejecución para CapitanInventarios",
-            descripcion=f"Este plan detalla los pasos para cumplir el objetivo: {self.objective}"
-        )
+    def plan(self, mision):
+        p = self.coronel.get_or_create_plan_tactico(mision, self.__class__.__name__)
 
-        # 2. Definir y Delegar Tareas (EJEMPLO - DEBE SER IMPLEMENTADO)
-        # self.delegar_tarea(plan_tactico=plan_tactico, nombre_teniente="...", descripcion="...", parametros_especificos={...})
-
-        # 3. Lanzar la Ejecución del Plan
-        self.lanzar_ejecucion_plan()
+        p.pasos_del_plan = {
+            "1": {
+                "teniente": "control_inventario",
+                "descripcion": "Gestión de movimientos y control de stock.",
+                "parametros": mision.directiva_original.get("parameters", {})
+            }
+        }
+        p.save()
+        return p
 

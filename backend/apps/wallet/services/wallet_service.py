@@ -175,6 +175,21 @@ class WalletService(WalletInterface):
         transaccion.estado = WalletTransaccion.Status.COMPLETADA
         transaccion.save()
         self._integrate_erp(transaccion)
+
+        # 6. Emisión de Evento de Omnisciencia (Fase 4)
+        from apps.core_erp.event_bus import EventBus
+        EventBus.emit(
+            "PagoRecibido",
+            {
+                "entity_id": str(transaccion.metadata.get('entity_id', 'holding')),
+                "transaction_id": str(transaccion.id),
+                "amount": float(transaccion.monto_total),
+                "reference": transaccion.referencia_operativa
+            },
+            severity="info",
+            user_id=str(self.user.id) if self.user else None
+        )
+
         return transaccion
 
     def deposit(self, wallet_id, amount, description="Depósito", intention_id=None):

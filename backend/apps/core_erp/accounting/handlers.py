@@ -28,11 +28,15 @@ class StandardAccountingHandlers:
         Registers all standard financial handlers in the EventBus.
         """
         standard_events = [
+            'RESERVATION_CREATED',
             'RESERVATION_CONFIRMED',
-            'ReservationConfirmed',
-            'PaymentReceived',
-            'ProviderPaid',
-            'SALE',
+            'RESERVATION_CANCELLED',
+            'PAYMENT_RECEIVED',
+            'SALE_COMPLETED',
+            'PURCHASE_ORDER_POSTED',
+            'PAYROLL_LIQUIDATED',
+            'INVENTORY_ADJUSTED',
+            'ASSET_DEPRECIATED',
             'LIQUIDATION'
         ]
 

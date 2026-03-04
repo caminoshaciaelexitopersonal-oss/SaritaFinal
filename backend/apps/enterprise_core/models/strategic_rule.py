@@ -10,7 +10,10 @@ class StrategicRule(TenantAwareModel):
     condition_expression = models.CharField(max_length=255, help_text="Logic expression e.g. 'metric < 1000'")
     risk_weight = models.FloatField(default=1.0, help_text="Impact of this rule on overall risk score")
     recommended_action = models.CharField(max_length=255, help_text="Intent name to be executed via GovernanceKernel")
-    auto_execute = models.BooleanField(default=False)
+
+    # Phase 5: Autonomy Levels
+    autonomy_level = models.IntegerField(default=1, help_text="0: Suggestion, 1: Human Approval, 2: Auto under Threshold, 3: Full Autonomy")
+    impact_threshold = models.DecimalField(max_digits=20, decimal_places=2, default=1000.00, help_text="Max financial impact for auto-execution")
 
     is_active = models.BooleanField(default=True)
 

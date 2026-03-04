@@ -14,6 +14,10 @@ class TenienteRegistroContable(TenienteTemplate):
     def perform_action(self, parametros: dict) -> dict:
         logger.info(f"TENIENTE REGISTRO: Validando consistencia de datos contables.")
 
+        # EOS Activation: Asegurar que el tenant_id esté presente para el Ledger Core
+        if not parametros.get('tenant_id') and parametros.get('provider_id'):
+            parametros['tenant_id'] = parametros['provider_id']
+
         # Delegación al Sargento de Asientos
         sargento = SargentoAsientosContables(teniente=self)
         sargento_report = sargento.handle_order(parametros)

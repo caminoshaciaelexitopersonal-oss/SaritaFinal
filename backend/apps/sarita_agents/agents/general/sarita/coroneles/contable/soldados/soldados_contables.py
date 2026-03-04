@@ -7,69 +7,60 @@ logger = logging.getLogger(__name__)
 
 class SoldadoRegistroIngreso(SoldadoN6OroV2):
     domain = "contable"
-    aggregate_root = "Placeholder"
+    aggregate_root = "JournalEntry"
     required_permissions = ["contable.execute"]
+    event_name = "ACCOUNTING_ENTRY_POSTED"
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info(f"SOLDADO INGRESO: Registrando ingreso -> {params.get('monto')}")
 
-        # Integración con lógica real de persistencia contable
-        from django.utils.module_loading import import_string
-        SargentoContable = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos.SargentoContable') # DECOUPLED
+        from apps.core_erp.accounting.sargentos import DomainSargentoContable
 
-        if (params.get('periodo_id') or params.get('provider_id')) and params.get('movimientos'):
-             from django.utils.module_loading import import_string
-             ProviderProfile = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models.ProviderProfile') # DECOUPLED
-             provider = None
-             if params.get('provider_id'):
-                 provider = ProviderProfile.objects.get(id=params['provider_id'])
+        tenant_id = params.get('tenant_id')
+        if not tenant_id:
+            raise ValueError("tenant_id es obligatorio para registro contable.")
 
-             SargentoContable.generar_asiento_partida_doble(
-                 periodo_id=params.get('periodo_id'),
-                 fecha=params.get('fecha'),
-                 descripcion=params.get('descripcion', 'Registro de Ingreso via Agente'),
-                 movimientos=params['movimientos'],
-                 usuario_id=params.get('usuario_id'),
-                 provider=provider
-             )
+        entry = DomainSargentoContable.generar_asiento_partida_doble(
+            tenant_id=tenant_id,
+            date=params.get('fecha'),
+            description=params.get('descripcion', 'Registro de Ingreso via Agente'),
+            movimientos=params.get('movimientos', []),
+            user_id=params.get('user_id')
+        )
 
-        return {"action": "income_registered", "amount": params.get('monto')}
+        return entry
 
 class SoldadoRegistroGasto(SoldadoN6OroV2):
     domain = "contable"
-    aggregate_root = "Placeholder"
+    aggregate_root = "JournalEntry"
     required_permissions = ["contable.execute"]
+    event_name = "ACCOUNTING_ENTRY_POSTED"
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info(f"SOLDADO GASTO: Registrando gasto -> {params.get('monto')}")
 
-        from django.utils.module_loading import import_string
-        SargentoContable = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.sargentos.SargentoContable') # DECOUPLED
+        from apps.core_erp.accounting.sargentos import DomainSargentoContable
 
-        if (params.get('periodo_id') or params.get('provider_id')) and params.get('movimientos'):
-             from django.utils.module_loading import import_string
-             ProviderProfile = import_string('apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models.ProviderProfile') # DECOUPLED
-             provider = None
-             if params.get('provider_id'):
-                 provider = ProviderProfile.objects.get(id=params['provider_id'])
+        tenant_id = params.get('tenant_id')
+        if not tenant_id:
+            raise ValueError("tenant_id es obligatorio para registro contable.")
 
-             SargentoContable.generar_asiento_partida_doble(
-                 periodo_id=params.get('periodo_id'),
-                 fecha=params.get('fecha'),
-                 descripcion=params.get('descripcion', 'Registro de Gasto via Agente'),
-                 movimientos=params['movimientos'],
-                 usuario_id=params.get('usuario_id'),
-                 provider=provider
-             )
+        entry = DomainSargentoContable.generar_asiento_partida_doble(
+            tenant_id=tenant_id,
+            date=params.get('fecha'),
+            description=params.get('descripcion', 'Registro de Gasto via Agente'),
+            movimientos=params.get('movimientos', []),
+            user_id=params.get('user_id')
+        )
 
-        return {"action": "expense_registered", "amount": params.get('monto')}
+        return entry
 
 class SoldadoConciliacionWallet(SoldadoN6OroV2):
     domain = "contable"
-    aggregate_root = "Placeholder"
+    aggregate_root = "WalletReconciliation"
     required_permissions = ["contable.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info(f"SOLDADO CONCILIACIÓN WALLET: Cruzando datos con Wallet.")
         from apps.wallet.services import WalletService
         from django.utils.module_loading import import_string
@@ -111,28 +102,27 @@ class SoldadoConciliacionWallet(SoldadoN6OroV2):
 
 class SoldadoVerificacionFiscal(SoldadoN6OroV2):
     domain = "contable"
-    aggregate_root = "Placeholder"
+    aggregate_root = "TaxCompliance"
     required_permissions = ["contable.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info(f"SOLDADO FISCAL: Verificando cumplimiento normativo.")
-        from django.utils.module_loading import import_string
-        Cuenta = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.models.Cuenta') # DECOUPLED
-        Transaccion = import_string('apps.prestadores.mi_negocio.gestion_contable.contabilidad.models.Transaccion') # DECOUPLED
+        from apps.core_erp.accounting.models import Account, LedgerEntry
         from django.db.models import Sum
         from decimal import Decimal
 
-        provider_id = params.get('provider_id')
+        tenant_id = params.get('tenant_id')
         # Buscar cuentas de pasivos (2) para ver obligaciones
-        cuentas_pasivos = Cuenta.objects.filter(provider_id=provider_id, codigo__startswith='2')
+        cuentas_pasivos = Account.plain_objects.filter(tenant_id=tenant_id, code__startswith='2')
         total_pasivos = Decimal('0.00')
         for c in cuentas_pasivos:
-            movs = Transaccion.objects.filter(cuenta=c).aggregate(d=Sum('debito'), cr=Sum('credito'))
+            movs = LedgerEntry.objects.filter(account=c).aggregate(d=Sum('debit_amount'), cr=Sum('credit_amount'))
             d = movs['d'] or Decimal('0.00')
             cr = movs['cr'] or Decimal('0.00')
-            total_pasivos += (c.saldo_inicial + cr - d)
+            total_pasivos += (c.initial_balance + cr - d)
 
         return {
+            "id": tenant_id,
             "action": "tax_verified",
             "compliance": True,
             "total_obligations": float(total_pasivos),
@@ -141,9 +131,16 @@ class SoldadoVerificacionFiscal(SoldadoN6OroV2):
 
 class SoldadoCierreParcial(SoldadoN6OroV2):
     domain = "contable"
-    aggregate_root = "Placeholder"
+    aggregate_root = "FiscalPeriod"
     required_permissions = ["contable.execute"]
 
-    def perform_action(self, params: dict):
+    def perform_atomic_action(self, params: dict):
         logger.info(f"SOLDADO CIERRE: Ejecutando cierre parcial de periodo.")
-        return {"action": "partial_close_executed", "period": params.get('periodo')}
+        from apps.core_erp.accounting.models import FiscalPeriod
+        periodo = FiscalPeriod.plain_objects.get(id=params.get('periodo_id'))
+        # Lógica de pre-cierre o validación
+        return {
+            "id": str(periodo.id),
+            "status": "PARTIAL_CLOSE_VERIFIED",
+            "period": str(periodo)
+        }
