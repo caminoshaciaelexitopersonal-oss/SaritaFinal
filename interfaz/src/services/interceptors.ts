@@ -25,6 +25,9 @@ export const setupInterceptors = (httpClient: AxiosInstance) => {
       }
 
       if (typeof window !== 'undefined') {
+        // Telemetría: Registrar tiempo de inicio
+        config.metadata = { startTime: Date.now() };
+
         const token = localStorage.getItem('token') || localStorage.getItem('authToken');
         if (token) {
           config.headers.Authorization = `Token ${token}`;
@@ -48,7 +51,17 @@ export const setupInterceptors = (httpClient: AxiosInstance) => {
   );
 
   httpClient.interceptors.response.use(
-    (response) => response,
+    (response) => {
+      // Telemetría: Calcular latencia del cliente
+      const startTime = (response.config as any).metadata?.startTime;
+      if (startTime) {
+        const duration = Date.now() - startTime;
+        if (duration > 1000) {
+            console.warn(`S-0.3: Latencia elevada detectada en cliente: ${response.config.url} (${duration}ms)`);
+        }
+      }
+      return response;
+    },
     (error: AxiosError) => {
       const status = error.response?.status;
 

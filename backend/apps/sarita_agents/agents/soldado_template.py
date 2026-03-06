@@ -21,23 +21,39 @@ class SoldierTemplate:
 
     def handle_directive(self, directive: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Integración sistémica Fase 4.1.
+        Integración sistémica Fase 4.1 (Observabilidad).
         """
-        logger.info(f"SOLDADO ({self.__class__.__name__}): Ejecutando microtarea.")
+        from apps.common.observability.middleware import get_correlation_id
+
+        logger.info(
+            f"SOLDADO ({self.__class__.__name__}): Ejecutando microtarea.",
+            extra={"extra_fields": {"correlation_id": get_correlation_id(), "agent_level": "N6"}}
+        )
 
         try:
             result = self.perform_action(directive)
+
+            logger.info(
+                f"SOLDADO ({self.__class__.__name__}): Microtarea completada.",
+                extra={"extra_fields": {"status": "SUCCESS", "correlation_id": get_correlation_id()}}
+            )
+
             return {
                 "status": "SUCCESS",
                 "soldier": self.__class__.__name__,
-                "result": result
+                "result": result,
+                "correlation_id": get_correlation_id()
             }
         except Exception as e:
-            logger.error(f"SOLDADO ({self.__class__.__name__}): Fallo en ejecución -> {str(e)}")
+            logger.error(
+                f"SOLDADO ({self.__class__.__name__}): Fallo en ejecución -> {str(e)}",
+                extra={"extra_fields": {"status": "FAILED", "correlation_id": get_correlation_id()}}
+            )
             return {
                 "status": "FAILED",
                 "soldier": self.__class__.__name__,
-                "error": str(e)
+                "error": str(e),
+                "correlation_id": get_correlation_id()
             }
 
     def perform_action(self, params: Dict[str, Any]):
