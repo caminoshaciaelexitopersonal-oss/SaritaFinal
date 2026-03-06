@@ -173,13 +173,25 @@ const CollapsibleNavSection = ({
   );
 };
 
+import { useTenant } from '@/hooks/useTenant';
+
 // --- Componente Principal del Sidebar ---
 export default function Sidebar() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const { isLoading: isTenantLoading, tenant } = useTenant();
   const [isMiNegocioOpen, setIsMiNegocioOpen] = useState(true);
+
+  const isLoading = isAuthLoading || isTenantLoading;
 
   if (isLoading) return <SidebarSkeleton />;
   if (!user) return <aside className="w-72 flex-shrink-0 bg-white dark:bg-black border-r border-slate-100 dark:border-white/5 h-full" />;
+
+  // Prevención de loops: No renderizar menús operativos si el tenant no está resuelto para roles que lo requieren
+  const rolesWithEntity = ['ADMIN', 'ADMIN_ENTIDAD', 'PRESTADOR', 'ARTESANO', 'FUNCIONARIO_DIRECTIVO'];
+  if (rolesWithEntity.includes(user.role) && !tenant && window.location.hostname === 'localhost') {
+      // En localhost, si no hay tenant, permitimos renderizar pero advertimos
+      console.warn("S-UCE: Operando en localhost sin contexto de empresa.");
+  }
 
   const prestadorCategoria = user.perfil_prestador?.categoria?.nombre;
 
@@ -260,6 +272,15 @@ export default function Sidebar() {
                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{user.email}</p>
               </div>
            </div>
+           {tenant && (
+             <div className="mt-3 pt-3 border-t border-slate-100 dark:border-white/5">
+                <p className="text-[9px] font-black uppercase text-brand tracking-widest mb-1">Empresa Activa</p>
+                <div className="flex items-center justify-between">
+                   <p className="text-[11px] font-bold text-slate-700 dark:text-slate-300 truncate">{tenant.name}</p>
+                   <button className="text-[9px] font-black text-brand-deep bg-brand-light px-2 py-0.5 rounded uppercase hover:opacity-80 transition-opacity">Cambiar</button>
+                </div>
+             </div>
+           )}
         </div>
       </div>
 

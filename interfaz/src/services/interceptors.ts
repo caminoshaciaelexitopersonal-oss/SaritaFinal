@@ -30,10 +30,11 @@ export const setupInterceptors = (httpClient: AxiosInstance) => {
           config.headers.Authorization = `Token ${token}`;
         }
 
-        // Multi-tenant / Context headers
-        const companyId = localStorage.getItem('activeCompanyId');
-        if (companyId) {
-          config.headers['X-Company-ID'] = companyId;
+        // Multi-tenant / Context headers (Fase 2: UCE Normalization)
+        const tenantId = localStorage.getItem('activeCompanyId');
+        if (tenantId) {
+          config.headers['X-Tenant-ID'] = tenantId;
+          config.headers['X-Company-ID'] = tenantId; // Retrocompatibilidad
         }
 
         const periodId = localStorage.getItem('activePeriodId');
