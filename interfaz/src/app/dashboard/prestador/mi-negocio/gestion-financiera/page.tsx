@@ -36,11 +36,13 @@ export default function FinanzasDashboard() {
     load();
   }, [getTesoreria, getIndicadores]);
 
+  const findIndicador = (name: string) => indicadores.find(i => i.nombre === name)?.valor || '0.00';
+
   const kpis = [
-    { label: 'Liquidez Corriente', value: '1.82', icon: FiActivity, color: 'text-blue-600', trend: '+5%', status: 'Saludable' },
-    { label: 'Margen EBITDA', value: '32%', icon: FiTrendingUp, color: 'text-green-600', trend: '+2%', status: 'Objetivo' },
-    { label: 'Endeudamiento', value: '0.28', icon: FiAlertCircle, color: 'text-amber-600', trend: '-1%', status: 'Bajo Control' },
-    { label: 'Rentabilidad Neta', value: '18%', icon: FiPieChart, color: 'text-purple-600', trend: '+0.5%', status: 'Creciente' },
+    { label: 'Liquidez Corriente', value: findIndicador('LIQUIDEZ_CORRIENTE'), icon: FiActivity, color: 'text-blue-600', trend: '+5%', status: 'Real' },
+    { label: 'Margen EBITDA', value: findIndicador('RENTABILIDAD_NETA'), icon: FiTrendingUp, color: 'text-green-600', trend: '+2%', status: 'Real' },
+    { label: 'Endeudamiento', value: findIndicador('ENDEUDAMIENTO_TOTAL'), icon: FiAlertCircle, color: 'text-amber-600', trend: '-1%', status: 'Real' },
+    { label: 'EBITDA Estimado', value: `$${parseFloat(findIndicador('EBITDA_ESTIMADO')).toLocaleString()}`, icon: FiPieChart, color: 'text-purple-600', trend: '+0.5%', status: 'Real' },
   ];
 
   const cashFlowData = [

@@ -27,10 +27,18 @@ class SimulationService:
         projected_costs = costs * cost_var
         projected_ebitda = projected_sales - projected_costs
 
+        # Phase 9: Detailed tax and operational impact
+        tax_rate = Decimal(str(variables.get('tax_rate', 0.19)))
+        projected_tax = projected_sales * tax_rate
+        net_result = projected_ebitda - projected_tax
+
         return {
             "scenario_name": variables.get('name', 'Custom Scenario'),
             "projected_sales": float(projected_sales),
             "projected_costs": float(projected_costs),
             "projected_ebitda": float(projected_ebitda),
-            "margin_impact": float((projected_ebitda / projected_sales * 100) if projected_sales else 0)
+            "projected_tax": float(projected_tax),
+            "projected_net_result": float(net_result),
+            "margin_impact": float((projected_ebitda / projected_sales * 100) if projected_sales else 0),
+            "systemic_stability_score": 0.95 # Placeholder for risk-adjusted stability
         }

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import useSWR from 'swr';
-import { getStatistics } from '@/services/api';
+import { getStatistics, getInfraMetrics } from '@/services/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import {
   FiShield,
@@ -39,6 +39,14 @@ export default function AdminPlataformaPage() {
   const { lastEvent, isConnected } = useWebSockets();
   const [liveEvents, setLiveEvents] = React.useState<TowerEvent[]>([]);
   const [autonomousDecisions, setAutonomousDecisions] = React.useState<TowerEvent[]>([]);
+  const { data: initialInfra } = useSWR('infra-metrics', getInfraMetrics, { refreshInterval: 30000 });
+  const [infraMetrics, setInfraMetrics] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    if (initialInfra && !infraMetrics) {
+      setInfraMetrics(initialInfra);
+    }
+  }, [initialInfra, infraMetrics]);
 
   const [isEmergencyDialogOpen, setIsEmergencyDialogOpen] = React.useState(false);
   const [isAttackModeActive, setIsAttackModeActive] = React.useState(false);
@@ -50,6 +58,10 @@ export default function AdminPlataformaPage() {
 
       if (lastEvent.event_type === 'AUTONOMOUS_DECISION_EXECUTED') {
           setAutonomousDecisions(prev => [lastEvent, ...prev].slice(0, 5));
+      }
+
+      if (lastEvent.event_type === 'TECHNICAL_METRICS_UPDATED') {
+          setInfraMetrics(lastEvent.payload);
       }
 
       // Actualizar estadísticas si el evento es relevante
@@ -227,7 +239,55 @@ export default function AdminPlataformaPage() {
       </div>
 
       {/* Simulación Estratégica y Auto-Corrección (Fase 5.9 / 5.6) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Card className="border-none shadow-sm bg-white rounded-3xl overflow-hidden">
+              <CardHeader className="p-8 bg-slate-50 border-b">
+                  <CardTitle className="text-xl font-black flex items-center gap-2">
+                      <FiCpu className="text-brand" /> Monitor de Infraestructura
+                  </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8">
+                  <div className="space-y-6">
+                      <div>
+                          <div className="flex justify-between mb-2">
+                              <span className="text-xs font-black uppercase text-slate-400">CPU Usage</span>
+                              <span className="text-xs font-bold">{infraMetrics?.cpu_usage_percent || 0}%</span>
+                          </div>
+                          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                              <div
+                                className="bg-brand h-full transition-all duration-1000"
+                                style={{ width: `${infraMetrics?.cpu_usage_percent || 0}%` }}
+                              />
+                          </div>
+                      </div>
+                      <div>
+                          <div className="flex justify-between mb-2">
+                              <span className="text-xs font-black uppercase text-slate-400">RAM Usage</span>
+                              <span className="text-xs font-bold">{infraMetrics?.ram_usage_percent || 0}%</span>
+                          </div>
+                          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                              <div
+                                className="bg-indigo-500 h-full transition-all duration-1000"
+                                style={{ width: `${infraMetrics?.ram_usage_percent || 0}%` }}
+                              />
+                          </div>
+                      </div>
+                      <div className="pt-4 border-t border-slate-50 grid grid-cols-2 gap-4">
+                          <div>
+                              <p className="text-[10px] font-black text-slate-400 uppercase">Uptime</p>
+                              <p className="text-sm font-bold">
+                                  {infraMetrics?.uptime_seconds ? `${Math.floor(infraMetrics.uptime_seconds / 3600)}h ${Math.floor((infraMetrics.uptime_seconds % 3600) / 60)}m` : '---'}
+                              </p>
+                          </div>
+                          <div>
+                              <p className="text-[10px] font-black text-slate-400 uppercase">Threads</p>
+                              <p className="text-sm font-bold">{infraMetrics?.threads || '0'}</p>
+                          </div>
+                      </div>
+                  </div>
+              </CardContent>
+          </Card>
+
           <Card className="border-none shadow-sm bg-white rounded-3xl overflow-hidden">
               <CardHeader className="p-8 bg-slate-50 border-b">
                   <CardTitle className="text-xl font-black flex items-center gap-2">

@@ -1,0 +1,118 @@
+{
+    "certification_id": "CERT-20260306-062456",
+    "timestamp": "2026-03-06T06:24:56.964048",
+    "overall_status": "CRITICAL",
+    "certification_level": "D",
+    "integrity_score": 58.75,
+    "components": [
+        {
+            "component": "DomainIsolation",
+            "status": "FAILED",
+            "score": 50,
+            "violations": [
+                {
+                    "file": "backend/apps/comercial/engines/subscription_engine.py",
+                    "line": 5,
+                    "offending_import": "admin_plataforma",
+                    "current_domain": "comercial",
+                    "message": "Violaci\u00f3n de aislamiento: comercial importa directamente a admin_plataforma"
+                },
+                {
+                    "file": "backend/apps/comercial/engines/billing_engine.py",
+                    "line": 14,
+                    "offending_import": "admin_plataforma",
+                    "current_domain": "comercial",
+                    "message": "Violaci\u00f3n de aislamiento: comercial importa directamente a admin_plataforma"
+                },
+                {
+                    "file": "backend/apps/comercial/tests/certification_fase_1.py",
+                    "line": 22,
+                    "offending_import": "admin_plataforma",
+                    "current_domain": "comercial",
+                    "message": "Violaci\u00f3n de aislamiento: comercial importa directamente a admin_plataforma"
+                },
+                {
+                    "file": "backend/apps/admin_plataforma/adaptive_engine.py",
+                    "line": 81,
+                    "offending_import": "comercial",
+                    "current_domain": "admin_plataforma",
+                    "message": "Violaci\u00f3n de aislamiento: admin_plataforma importa directamente a comercial"
+                },
+                {
+                    "file": "backend/apps/admin_plataforma/adaptive_engine.py",
+                    "line": 82,
+                    "offending_import": "comercial",
+                    "current_domain": "admin_plataforma",
+                    "message": "Violaci\u00f3n de aislamiento: admin_plataforma importa directamente a comercial"
+                },
+                {
+                    "file": "backend/apps/admin_plataforma/tests.py",
+                    "line": 7,
+                    "offending_import": "comercial",
+                    "current_domain": "admin_plataforma",
+                    "message": "Violaci\u00f3n de aislamiento: admin_plataforma importa directamente a comercial"
+                },
+                {
+                    "file": "backend/apps/admin_plataforma/serializers.py",
+                    "line": 3,
+                    "offending_import": "comercial",
+                    "current_domain": "admin_plataforma",
+                    "message": "Violaci\u00f3n de aislamiento: admin_plataforma importa directamente a comercial"
+                },
+                {
+                    "file": "backend/apps/admin_plataforma/views.py",
+                    "line": 9,
+                    "offending_import": "comercial",
+                    "current_domain": "admin_plataforma",
+                    "message": "Violaci\u00f3n de aislamiento: admin_plataforma importa directamente a comercial"
+                },
+                {
+                    "file": "backend/apps/admin_plataforma/services/gestion_plataforma_service.py",
+                    "line": 5,
+                    "offending_import": "comercial",
+                    "current_domain": "admin_plataforma",
+                    "message": "Violaci\u00f3n de aislamiento: admin_plataforma importa directamente a comercial"
+                },
+                {
+                    "file": "backend/apps/admin_plataforma/services/interoperability_bridge.py",
+                    "line": 23,
+                    "offending_import": "prestadores",
+                    "current_domain": "admin_plataforma",
+                    "message": "Violaci\u00f3n de aislamiento: admin_plataforma importa directamente a prestadores"
+                }
+            ]
+        },
+        {
+            "component": "N6Persistence",
+            "status": "PASSED",
+            "score": 100,
+            "violations": [],
+            "metrics": {
+                "total_n6_executions": 0,
+                "persisted_ratio": 0.0
+            }
+        },
+        {
+            "component": "AccountingIntegrity",
+            "status": "ERROR",
+            "score": 0,
+            "message": "no such table: core_erp_eventauditlog"
+        },
+        {
+            "component": "EventFlow",
+            "status": "FAILED",
+            "score": 85,
+            "violations": [
+                {
+                    "event": "TENANT_PROVISIONED",
+                    "message": "Evento obligatorio 'TENANT_PROVISIONED' no tiene consumidores registrados."
+                }
+            ],
+            "metrics": {
+                "active_channels": 37,
+                "mandatory_coverage": 0.8
+            }
+        }
+    ],
+    "verdict": "SISTEMA REQUIERE SUBSANACI\u00d3N INMEDIATA"
+}

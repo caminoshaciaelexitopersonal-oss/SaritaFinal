@@ -141,17 +141,36 @@ class EventBus:
     @classmethod
     def _dispatch_async(cls, event_type, payload, subscribers, audit_entry):
         """
-        Punto de integración para colas persistentes (Fase 6.2.2).
+        Integración con Celery para ejecución distribuida y resiliente (Fase 8).
+        Usa el Outbox Pattern implícito vía EventAuditLog.
         """
-        # Placeholder para Celery: task_dispatch_event.delay(event_type, payload)
-        # Por ahora ejecutamos síncronamente pero marcamos el estado.
-        for callback in subscribers:
-            try:
-                callback(payload)
-            except Exception as e:
-                logger.error(f"Async simulation failed for {event_type}: {e}")
+        try:
+            from .observability.tasks import task_dispatch_distributed_event
 
-        audit_entry.status = 'QUEUED_COMPLETED'
+            # Enviar a Celery para procesamiento asíncrono real
+            # Esto permite que el request original termine rápido mientras los agentes trabajan
+            task_dispatch_distributed_event.delay(
+                event_type=event_type,
+                payload=payload,
+                audit_log_id=str(audit_entry.id)
+            )
+
+            audit_entry.status = 'QUEUED_COMPLETED'
+            logger.info(f"Evento {event_type} encolado exitosamente en Celery.")
+        except ImportError:
+            # Fallback en entornos sin Celery configurado (legacy/tests)
+            logger.warning(f"Celery no disponible. Ejecutando asíncrono {event_type} de forma degradada (síncrona).")
+            for callback in subscribers:
+                try:
+                    callback(payload)
+                except Exception as e:
+                    logger.error(f"Async simulation failed for {event_type}: {e}")
+            audit_entry.status = 'PROCESSED'
+        except Exception as e:
+            logger.error(f"Error crítico al encolar evento distribuido: {e}")
+            audit_entry.status = 'PARTIAL_FAILURE'
+            audit_entry.error_details = str(e)
+
         audit_entry.save()
 
     @classmethod

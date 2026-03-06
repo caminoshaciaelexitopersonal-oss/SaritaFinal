@@ -40,7 +40,7 @@ class SelfHealingService:
 
             try:
                 # Caso 1: Venta sin asiento
-                if event.event_type == 'VentaCreada':
+                if event.event_type == 'SALE_CREATED':
                     from apps.core_erp.accounting.ledger_engine import LedgerEngine
                     # Re-emitir evento para que el LedgerEngine lo capture de nuevo
                     LedgerEngine.post_event(event.event_type, event.payload)

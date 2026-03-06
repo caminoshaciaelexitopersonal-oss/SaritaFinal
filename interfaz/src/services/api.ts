@@ -53,23 +53,23 @@ export interface PaginatedResponse<T> {
 }
 
 export const getCategorias = async (): Promise<Categoria[]> => {
-    const response = await api.get('/categorias/');
-    return response.data;
+    const response = await api.get('/public/artesanos/rubros/');
+    return response.data?.data;
 };
 
 export const getPrestadores = async (categoria?: string, search?: string): Promise<PrestadorPublico[]> => {
-    const response = await api.get('/prestadores/', { params: { categoria, search } });
-    return response.data;
+    const response = await api.get('/public/artesanos/', { params: { categoria, search } });
+    return response.data?.data;
 };
 
 export const getPrestadorById = async (id: number): Promise<PrestadorPublicoDetalle> => {
-    const response = await api.get(`/prestadores/${id}/`);
-    return response.data;
+    const response = await api.get(`/public/artesanos/${id}/`);
+    return response.data?.data;
 };
 
 export const getLocations = async (): Promise<Location[]> => {
-    const response = await api.get('/locations/');
-    return response.data;
+    const response = await api.get('/public/locations/');
+    return response.data?.data;
 };
 
 // --- RESTAURACIÓN DE FUNCIONES PARA COMPATIBILIDAD ---
@@ -120,5 +120,9 @@ export const getHechosHistoricos = async () => api.get('/hechos-historicos/').th
 export const getArtesanos = async () => api.get('/artesanos/').then(res => res.data);
 export const getArtesanoById = async (id: number) => api.get(`/artesanos/${id}/`).then(res => res.data);
 export const getRubrosArtesano = async () => api.get('/artesanos/rubros/').then(res => res.data);
+
+// --- Infraestructura y Observabilidad (Fase 8) ---
+export const getInfraMetrics = async () => api.get('/v1/infra/metrics/').then(res => res.data);
+export const getInfraHealth = async () => api.get('/v1/infra/health/readiness/').then(res => res.data);
 
 export const useApi = () => ({ api });

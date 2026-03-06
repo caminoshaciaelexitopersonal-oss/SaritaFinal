@@ -140,7 +140,7 @@ class NominaService:
         # 6. Emisión de Evento de Omnisciencia (Fase 4)
         from apps.core_erp.event_bus import EventBus
         EventBus.emit(
-            "NóminaLiquidada",
+            "PAYROLL_LIQUIDATED_V2",
             {
                 "entity_id": str(planilla.perfil.id),
                 "planilla_id": str(planilla.id),

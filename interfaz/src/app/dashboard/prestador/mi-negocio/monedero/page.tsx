@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FiTrendingUp,
   FiArrowUpRight,
@@ -10,17 +10,27 @@ import {
   FiShield,
   FiActivity
 } from 'react-icons/fi';
-
-const stats = [
-  { label: 'Saldo Disponible', value: '$24,500,000', icon: FiZap, color: 'bg-emerald-500' },
-  { label: 'Saldo Bloqueado', value: '$3,200,000', icon: FiLock, color: 'bg-amber-500' },
-  { label: 'Ingresos (Hoy)', value: '+$1,250,000', icon: FiArrowUpRight, color: 'bg-brand' },
-  { label: 'Egresos (Hoy)', value: '-$450,000', icon: FiArrowDownLeft, color: 'bg-rose-500' },
-];
+import { useMiNegocioApi } from '../hooks/useMiNegocioApi';
 
 export default function WalletDashboard() {
+  const { getTesoreria, getStatistics, isLoading } = useMiNegocioApi();
+  const [tesoreria, setTesoreria] = useState<any>(null);
+  const [statsData, setStatsData] = useState<any>(null);
+
+  useEffect(() => {
+    getTesoreria().then(res => res && res.length > 0 && setTesoreria(res[0]));
+    getStatistics().then(res => res && setStatsData(res));
+  }, [getTesoreria, getStatistics]);
+
+  const stats = [
+    { label: 'Saldo Disponible', value: tesoreria?.liquidez_disponible ? `$${parseFloat(tesoreria.liquidez_disponible).toLocaleString()}` : '$0.00', icon: FiZap, color: 'bg-emerald-500' },
+    { label: 'Saldo Bloqueado', value: tesoreria?.saldo_bloqueado ? `$${parseFloat(tesoreria.saldo_bloqueado).toLocaleString()}` : '$0.00', icon: FiLock, color: 'bg-amber-500' },
+    { label: 'Ingresos (Mes)', value: statsData?.ventas_mes ? `+$${statsData.ventas_mes.toLocaleString()}` : '+$0.00', icon: FiArrowUpRight, color: 'bg-brand' },
+    { label: 'Egresos (Mes)', value: statsData?.gastos_mes ? `-$${statsData.gastos_mes.toLocaleString()}` : '-$0.00', icon: FiArrowDownLeft, color: 'bg-rose-500' },
+  ];
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-500">
       {/* Resumen Superior */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, i) => (

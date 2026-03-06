@@ -177,6 +177,7 @@ MIDDLEWARE = [
     "apps.common.security_hardening.SecurityHardeningMiddleware",
     "apps.defense_deception.middleware.DeceptionMiddleware",
     "apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.permissions.TenantMiddleware",
+    "apps.common.observability.middleware.ObservabilityMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
@@ -329,7 +330,12 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '100/day',
         'user': '1000/day'
-    }
+    },
+    'DEFAULT_RENDERER_CLASSES': [
+        'apps.common.renderers.EnterpriseJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'EXCEPTION_HANDLER': 'apps.common.exceptions.enterprise_exception_handler',
 }
 
 SPECTACULAR_SETTINGS = {
@@ -340,6 +346,12 @@ SPECTACULAR_SETTINGS = {
     # Limitar la generación del esquema a las rutas de mi-negocio
     'URL_PATTERNS': [
         r'^/api/v1/mi-negocio/',
+        r'^/api/v1/sales/',
+        r'^/api/v1/finance/',
+        r'^/api/v1/operations/',
+        r'^/api/v1/payroll/',
+        r'^/api/v1/agents/',
+        r'^/api/v1/governance/',
     ],
     # Excluir explícitamente las rutas de la API pública que tienen problemas
     'URL_PATTERNS_EXCLUDE': [
@@ -396,6 +408,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'notarize_pending_documents_batch',
         'schedule': 3600.0,  # Ejecutar cada hora
     },
+    'broadcast-technical-metrics-every-minute': {
+        'task': 'broadcast_system_metrics_task',
+        'schedule': 60.0, # Pulso técnico cada minuto
+    },
 }
 
 # --- Blockchain ---
@@ -415,13 +431,27 @@ AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME")
 SADI_AGENT_LLM_MODEL = os.environ.get("SADI_AGENT_LLM_MODEL", "gpt-4-turbo")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
-# --- Configuración de Logging ---
+# --- FASE 4: Observabilidad Total (Logging Estructurado) ---
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'json': {
+            '()': 'apps.common.observability.logging.EnterpriseJSONFormatter',
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'json' if not DEBUG else 'simple',
+        },
+        'file_audit': {
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/audit.log'),
+            'formatter': 'json',
         },
     },
     'root': {
@@ -429,11 +459,25 @@ LOGGING = {
         'level': 'INFO',
     },
     'loggers': {
+        'apps.core_erp': {
+            'handlers': ['console', 'file_audit'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'apps.sarita_agents': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
         'django.db.backends': {
             'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
+            'level': 'WARNING', # Reducir verbosidad en producción
+            'propagate': False,
         },
     },
 }
+
+# Asegurar existencia de directorio de logs
+if not os.path.exists(os.path.join(BASE_DIR, 'logs')):
+    os.makedirs(os.path.join(BASE_DIR, 'logs'))
 CELERY_TASK_ALWAYS_EAGER = True
