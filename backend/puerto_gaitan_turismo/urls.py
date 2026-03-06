@@ -116,6 +116,7 @@ urlpatterns = [
 
     # EOS Activation: Enterprise Operating System Core
     path('api/v1/enterprise-core/', include('apps.enterprise_core.urls')),
+    path('api/v1/governance/', include('apps.core_erp.urls')),
     path('api/enterprise/', include('apps.enterprise_core.urls')),
 
     # EOS Maturity & Self-Reporting
