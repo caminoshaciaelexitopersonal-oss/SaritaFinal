@@ -58,7 +58,26 @@ const modules = [
   }
 ];
 
+import { useMiNegocioApi } from '../hooks/useMiNegocioApi';
+
 export default function GestionOperativaPage() {
+  const { getStatistics, isLoading } = useMiNegocioApi();
+  const [statsData, setStatsData] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    getStatistics().then(res => res && setStatsData(res));
+  }, [getStatistics]);
+
+  const dynamicModules = modules.map(mod => {
+    let stat = mod.stats;
+    if (mod.title === 'Centro de Operaciones' && statsData?.tareas_activas) stat = `${statsData.tareas_activas} Activas`;
+    if (mod.title === 'CRM y Clientes' && statsData?.total_clientes) stat = `${statsData.total_clientes} Turistas`;
+    if (mod.title === 'Productos y Servicios' && statsData?.total_productos) stat = `${statsData.total_productos} Activos`;
+    if (mod.title === 'Reservas y Agenda' && statsData?.reservas_pendientes) stat = `${statsData.reservas_pendientes} Pendientes`;
+    if (mod.title === 'Valoraciones' && statsData?.rating_promedio) stat = `${statsData.rating_promedio} Estrellas`;
+    return { ...mod, stats: stat };
+  });
+
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -73,7 +92,7 @@ export default function GestionOperativaPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-         {modules.map((mod, i) => (
+         {dynamicModules.map((mod, i) => (
            <Card key={i} className="group border-none shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white">
               <CardContent className="p-8">
                  <div className={`w-14 h-14 ${mod.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>

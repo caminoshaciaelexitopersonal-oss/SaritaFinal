@@ -52,10 +52,15 @@ export default function GestionComercialPage() {
   const { role, isReadOnly } = usePermissions();
   const [activeView, setActiveView] = useState<CommercialView>(CommercialView.DASHBOARD);
   const { facturas, isLoading: isLoadingFacturas } = useComercialApi();
-  const { getClientes, isLoading: isLoadingClientes } = useMiNegocioApi();
+  const { getClientes, getStatistics, isLoading: isLoadingClientes } = useMiNegocioApi();
   const [clientes, setClientes] = useState<any[]>([]);
+  const [statsData, setStatsData] = useState<any>(null);
 
   const isLoading = isLoadingFacturas || isLoadingClientes;
+
+  useEffect(() => {
+    getStatistics().then(res => res && setStatsData(res));
+  }, [getStatistics]);
 
   useEffect(() => {
     if (activeView === CommercialView.LOYALTY) {
@@ -270,10 +275,10 @@ export default function GestionComercialPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                {[
-                 { label: 'Ingresos Mes', val: '$0.00', icon: FiDollarSign, color: 'text-brand' },
-                 { label: 'Leads Nuevos', val: '0', icon: FiUsers, color: 'text-indigo-600' },
-                 { label: 'Conversión', val: '0%', icon: FiZap, color: 'text-amber-500' },
-                 { label: 'Tickets Activos', val: '0', icon: FiActivity, color: 'text-emerald-600' },
+                 { label: 'Ingresos Mes', val: statsData?.ventas_mes ? `$${statsData.ventas_mes.toLocaleString()}` : '$0.00', icon: FiDollarSign, color: 'text-brand' },
+                 { label: 'Leads Nuevos', val: statsData?.leads_nuevos || '0', icon: FiUsers, color: 'text-indigo-600' },
+                 { label: 'Conversión', val: statsData?.tasa_conversion ? `${statsData.tasa_conversion}%` : '0%', icon: FiZap, color: 'text-amber-500' },
+                 { label: 'Tickets Activos', val: statsData?.tickets_activos || '0', icon: FiActivity, color: 'text-emerald-600' },
                ].map((kpi, i) => (
                  <Card key={i} className="border-none shadow-sm bg-white dark:bg-brand-deep/20">
                     <CardContent className="p-8 flex items-center justify-between">
