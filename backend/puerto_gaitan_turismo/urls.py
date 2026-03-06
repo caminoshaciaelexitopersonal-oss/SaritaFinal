@@ -121,6 +121,9 @@ urlpatterns = [
 
     # EOS Maturity & Self-Reporting
     path('api/enterprise/governance/', include('apps.enterprise_governance.urls')),
+
+    # FASE 8: Infraestructura y Observabilidad Global
+    path('api/v1/infra/', include('apps.common.observability.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

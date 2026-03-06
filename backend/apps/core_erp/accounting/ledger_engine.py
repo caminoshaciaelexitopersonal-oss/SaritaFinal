@@ -11,6 +11,7 @@ from .exceptions import (
 )
 from .posting_rules import PostingRules
 from .journal_service import JournalService
+from apps.common.db_resilience import db_retry
 
 logger = logging.getLogger(__name__)
 
@@ -115,6 +116,7 @@ class LedgerEngine:
         return result
 
     @staticmethod
+    @db_retry(max_retries=3)
     @transaction.atomic
     def post_entry(entry_id):
         """

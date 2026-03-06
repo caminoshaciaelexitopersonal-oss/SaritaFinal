@@ -121,4 +121,8 @@ export const getArtesanos = async () => api.get('/artesanos/').then(res => res.d
 export const getArtesanoById = async (id: number) => api.get(`/artesanos/${id}/`).then(res => res.data);
 export const getRubrosArtesano = async () => api.get('/artesanos/rubros/').then(res => res.data);
 
+// --- Infraestructura y Observabilidad (Fase 8) ---
+export const getInfraMetrics = async () => api.get('/v1/infra/metrics/').then(res => res.data);
+export const getInfraHealth = async () => api.get('/v1/infra/health/readiness/').then(res => res.data);
+
 export const useApi = () => ({ api });
