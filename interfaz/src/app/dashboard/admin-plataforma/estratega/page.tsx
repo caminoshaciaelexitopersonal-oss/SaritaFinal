@@ -63,7 +63,12 @@ export default function EstrategaPage() {
                                         </Badge>
                                     </div>
                                     <h3 className="text-xl font-bold text-slate-900 mb-2">{p.suggested_action.intention}</h3>
-                                    <p className="text-slate-500 text-sm mb-6">Métrica disparadora: <span className="font-mono font-bold">{p.origin_metric}</span> ({p.metric_value})</p>
+                                    <p className="text-slate-500 text-sm mb-2">Métrica disparadora: <span className="font-mono font-bold">{p.origin_metric}</span> ({p.metric_value})</p>
+
+                                    <div className="bg-amber-50/50 p-4 rounded-xl mb-6 border border-amber-100">
+                                        <p className="text-xs font-black text-amber-700 uppercase tracking-widest mb-1">Razonamiento IA</p>
+                                        <p className="text-sm text-slate-700 italic">"Se detectó una desviación del {((parseFloat(p.metric_value)/10)-1)*100}% respecto al baseline. Se recomienda {p.suggested_action.intention} para estabilizar la rentabilidad del tenant."</p>
+                                    </div>
 
                                     {p.governance_status === 'PENDING' && (
                                         <div className="flex gap-4">
