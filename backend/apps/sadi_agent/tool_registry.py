@@ -2,6 +2,7 @@ import requests
 import asyncio
 import os
 from .tool import Tool
+from .operational_tools import record_journal_entry, check_financial_status, run_payroll_liquidation
 
 # --- Tool Implementations ---
 
@@ -63,4 +64,28 @@ def get_tools() -> list[Tool]:
             function=write_file,
             params={"path": "The path of the file to write.", "content": "The content to write into the file."}
         ),
+        Tool(
+            name="record_journal_entry",
+            description="Registra un asiento contable en el Ledger. Útil para gastos, pagos y ventas manuales.",
+            function=record_journal_entry,
+            params={
+                "description": "Motivo del asiento",
+                "amount": "Valor numérico",
+                "debit_account": "Código de cuenta débito (ej: 110505)",
+                "credit_account": "Código de cuenta crédito",
+                "tenant_id": "UUID de la empresa"
+            }
+        ),
+        Tool(
+            name="check_financial_status",
+            description="Consulta el saldo y flujo de caja actual de la empresa.",
+            function=check_financial_status,
+            params={"tenant_id": "UUID de la empresa"}
+        ),
+        Tool(
+            name="run_payroll_liquidation",
+            description="Inicia el proceso de liquidación de nómina para el periodo actual.",
+            function=run_payroll_liquidation,
+            params={"tenant_id": "UUID de la empresa", "period_id": "ID del periodo fiscal"}
+        )
     ]

@@ -43,25 +43,27 @@ class SemanticEngine:
         intents_catalog = self._get_intents_catalog()
 
         system_prompt = f"""
-        Eres el Motor de Intenciones de SARITA (Intent Engine). Tu tarea es convertir comandos de voz en lenguaje natural
-        a órdenes estructuradas JSON para el Super Administrador.
+        Eres el Motor de Intenciones de SARITA (Intent Engine). Tu tarea es convertir comandos de voz o texto en lenguaje natural
+        a órdenes estructuradas JSON para el Sistema Operativo Empresarial.
 
         CATÁLOGO DE INTENCIONES SISTÉMICAS:
         {json.dumps(intents_catalog, indent=2)}
 
-        REGLAS DE INTERPRETACIÓN:
-        1. Identifica el DOMINIO (comercial, contable, operativo, financiero, archivistico).
+        REGLAS DE INTERPRETACIÓN (Fase 6: Inteligencia Operativa):
+        1. Identifica el DOMINIO (comercial, contable, operativo, financiero, archivistico, nomina).
         2. Determina el TIPO DE ACCIÓN (consultar, crear, modificar, aprobar, eliminar).
-        3. Identifica la ENTIDAD afectada (plan, usuario, operacion, asiento, etc.).
-        4. Extrae todos los PARÁMETROS necesarios del contexto verbal.
-        5. Devuelve ÚNICAMENTE un objeto JSON con la siguiente estructura:
+        3. Identifica la ENTIDAD afectada (venta, gasto, pago, nomina, saldo, etc.).
+        4. Para Gastos/Pagos, identifica montos y cuentas si se mencionan (ej. 110505 para Caja).
+        5. Extrae todos los PARÁMETROS necesarios del contexto verbal.
+        6. Devuelve ÚNICAMENTE un objeto JSON con la siguiente estructura:
            {{
-             "actor": "super_admin",
+             "actor": "user_agent",
              "domain_name": "nombre_del_dominio",
              "intent_name": "NOMBRE_DE_LA_INTENCION",
              "accion": "tipo_de_accion",
              "entidad": "nombre_de_la_entidad",
-             "parameters": {{ "llave": "valor" }}
+             "parameters": {{ "llave": "valor" }},
+             "thought": "Breve explicación de por qué elegiste esta intención"
            }}
         6. Si el comando es ambiguo o no reconocido, devuelve {{"error": "UNKNOWN_INTENT"}}.
 

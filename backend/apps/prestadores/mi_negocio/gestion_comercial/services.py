@@ -190,7 +190,7 @@ class FacturacionService:
         # 6. Emisión de Evento de Omnisciencia (Fase 4)
         from apps.core_erp.event_bus import EventBus
         EventBus.emit(
-            "VentaCreada",
+            "SALE_CREATED",
             {
                 "entity_id": str(perfil.id),
                 "invoice_number": factura.number,

@@ -21,8 +21,8 @@ class PostingRules:
             "ASSET_DEPRECIATED": PostingRules.rule_asset_depreciated,
             "SALE_COMPLETED": PostingRules.rule_sale,
             "LIQUIDATION": PostingRules.rule_liquidation,
-            "VentaCreada": PostingRules.rule_venta_creada,
-            "NóminaLiquidada": PostingRules.rule_payroll_liquidated_v2,
+            "SALE_CREATED": PostingRules.rule_venta_creada,
+            "PAYROLL_LIQUIDATED_V2": PostingRules.rule_payroll_liquidated_v2,
         }
 
         rule_func = rules.get(event_type)

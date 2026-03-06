@@ -44,14 +44,20 @@ export default function HomePage() {
         const data = await response.json();
         let saritaResponse = "Entiendo perfectamente. Mis agentes de inteligencia están analizando tu perfil operativo para ofrecerte la integración más rentable.";
 
-        if (data.intent === 'quiero_vender_turismo') {
+        const intent = data.intent?.toUpperCase();
+
+        if (intent === 'QUIERO_VENDER_TURISMO') {
           saritaResponse = "Excelente. Sarita elimina las fugas de capital por desorden administrativo y centraliza tu flujo de caja. ¿Tu operación es hotelera, gastronómica o de servicios?";
-        } else if (data.intent === 'soy_gobierno') {
+        } else if (intent === 'SOY_GOBIERNO') {
           saritaResponse = "Entendido. Nuestra capa de gobernanza digital permite monitorear el cumplimiento normativo y automatizar inventarios turísticos nacionales. ¿Deseas ver el módulo de supervisión?";
-        } else if (data.intent === 'quiero_precio') {
+        } else if (intent === 'QUIERO_PRECIO') {
           saritaResponse = "Nuestros modelos de suscripción se basan en el ROI generado. Cuéntame primero, ¿cuál es el volumen transaccional mensual de tu nodo?";
-        } else if (data.intent === 'explorar_plataforma') {
+        } else if (intent === 'EXPLORAR_PLATAFORMA') {
           saritaResponse = "¡Genial! Sarita conecta la Triple Vía: Gobierno, Prestadores y Turistas en un solo núcleo. ¿Por cuál dominio te gustaría iniciar el despliegue?";
+        }
+
+        if (data.mision_id) {
+            saritaResponse += ` [Misión de Prospección Activa: ${data.mision_id.substring(0,8)}]`;
         }
 
         setMessages([...newMessages as any, { role: 'sarita', text: saritaResponse }]);

@@ -38,8 +38,8 @@ class StandardAccountingHandlers:
             'INVENTORY_ADJUSTED',
             'ASSET_DEPRECIATED',
             'LIQUIDATION',
-            'VentaCreada',
-            'NóminaLiquidada'
+            'SALE_CREATED',
+            'PAYROLL_LIQUIDATED_V2'
         ]
 
         for event in standard_events:

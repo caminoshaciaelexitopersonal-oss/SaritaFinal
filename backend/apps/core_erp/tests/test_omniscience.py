@@ -14,10 +14,10 @@ class RealTimeOmniscienceTest(TestCase):
         Prueba 1: Validar que los eventos se emitan con el formato estándar y persistan.
         """
         payload = {"total": 5000.0, "entity_id": "test-entity-123"}
-        EventBus.emit("VentaCreada", payload, severity="critical", user_id="admin-1")
+        EventBus.emit("SALE_CREATED", payload, severity="critical", user_id="admin-1")
 
         # Verificar persistencia en base de datos
-        log = EventAuditLog.objects.filter(event_type="VentaCreada").first()
+        log = EventAuditLog.objects.filter(event_type="SALE_CREATED").first()
         self.assertIsNotNone(log)
         self.assertEqual(log.severity, "critical")
         self.assertEqual(log.tenant_id, "test-entity-123")
