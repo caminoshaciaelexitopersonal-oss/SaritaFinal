@@ -27,56 +27,52 @@ urlpatterns = [
     # Nueva API para el panel de administración de la plataforma
     path('api/admin/plataforma/', include('apps.admin_plataforma.urls')),
 
-    # API Comercial Unificada (Fase 3)
+    # --- DOMINIOS NORMALIZADOS (api/v1/) ---
+
+    # Comercial
+    path('api/v1/sales/', include('apps.comercial.urls')),
+    path('api/v1/commercial-engine/', include('apps.commercial_engine.urls')),
+    path('api/v1/web-funnel/', include('apps.web_funnel.urls')),
+    path('api/v1/cart/', include('apps.cart.urls')),
+    path('api/v1/payments/', include('apps.payments.urls')),
+
+    # Finanzas
+    path('api/v1/finance/wallet/', include('apps.wallet.urls')),
+    path('api/v1/finance/ledger/', include('apps.prestadores.mi_negocio.gestion_contable.contabilidad.urls')),
+    path('api/v1/finance/indicators/', include('apps.finanzas.urls')),
+
+    # Operaciones y Logística
+    path('api/v1/operations/delivery/', include('apps.delivery.urls')),
+    path('api/v1/operations/intelligence/', include('apps.operational_intelligence.urls')),
+
+    # Capital Humano
+    path('api/v1/payroll/', include('apps.prestadores.mi_negocio.gestion_contable.nomina.urls')),
+
+    # Inteligencia y Agentes
+    path('api/v1/agents/sadi/', include('apps.sadi_agent.urls')),
+    path('api/v1/agents/sarita/', include('apps.sarita_agents.urls')),
+
+    # Gobernanza y Holding
+    path('api/v1/governance/control-tower/', include('apps.admin_control_tower.urls')),
+    path('api/v1/governance/intelligence/', include('apps.decision_intelligence.urls')),
+    path('api/v1/governance/optimization/', include('apps.ecosystem_optimization.urls')),
+    path('api/v1/governance/plataforma/', include('apps.admin_plataforma.urls')),
+
+    # --- ALIAS DE COMPATIBILIDAD (DEPRECATED) ---
     path('api/comercial/', include('apps.comercial.urls')),
-
-    # Motor Comercial SaaS (Fase 2)
     path('api/commercial-engine/', include('apps.commercial_engine.urls')),
-
-    # APIs para la gobernanza del contenido web (Funnel y páginas públicas)
     path('api/web/', include('apps.web_funnel.urls')),
- 
-
- 
-    # APIs para la página de descargas
-    # path('api/downloads/', include('apps.downloads.urls')),
- 
- 
-    # API para el carro de compras
     path('api/cart/', include('apps.cart.urls')),
-
-    # API para pagos
     path('api/payments/', include('apps.payments.urls')),
-
-    # API para el Monedero Institucional
     path('api/wallet/', include('apps.wallet.urls')),
-
-    # API para la Plataforma de Delivery
     path('api/delivery/', include('apps.delivery.urls')),
-
-    # API para el Agente SADI
     path('api/sadi/', include('apps.sadi_agent.urls')),
-    path('api/voice/marketing/', include('apps.sadi_agent.urls')), # Alias para Phase 4-M
-
-    # API para el motor de agentes SARITA
     path('api/sarita/', include('apps.sarita_agents.urls')),
-
-    # Alias estructural para el Dominio Contable (Fase 5.1)
     path('api/contabilidad/', include('apps.prestadores.mi_negocio.gestion_contable.contabilidad.urls')),
-
-    # Alias estructural para el Dominio de Nómina (Fase 8)
     path('api/nomina/', include('apps.prestadores.mi_negocio.gestion_contable.nomina.urls')),
-
-    # API para la Torre de Control del Holding
     path('api/admin/control-tower/', include('apps.admin_control_tower.urls')),
-
-    # API para Inteligencia de Decisión
     path('api/admin/intelligence/', include('apps.decision_intelligence.urls')),
-
-    # API para Optimización del Ecosistema
     path('api/admin/optimization/', include('apps.ecosystem_optimization.urls')),
-
-    # API para Finanzas Sistémicas
     path('api/admin/finanzas/', include('apps.finanzas.urls')),
 
     # API para Interoperabilidad Internacional (Z-TRUST-NET)

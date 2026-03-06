@@ -26,14 +26,23 @@ class TenantMiddleware:
         _thread_locals.tenant = None
         tenant = None
 
-        if request.user and request.user.is_authenticated:
+        # Prioridad 1: Header X-Tenant-ID (Standard Fase 3)
+        tenant_id = request.headers.get('X-Tenant-ID') or request.headers.get('X-Company-ID')
+        if tenant_id:
             try:
-                # El perfil del prestador es nuestro Inquilino (Tenant)
+                tenant = ProviderProfile.objects.get(id=tenant_id)
+            except (ProviderProfile.DoesNotExist, ValueError):
+                pass
+
+        # Prioridad 2: Usuario autenticado (Fallback)
+        if not tenant and request.user and request.user.is_authenticated:
+            try:
                 tenant = request.user.perfil_prestador
             except ProviderProfile.DoesNotExist:
                 tenant = None
 
         _thread_locals.tenant = tenant
+        request.tenant_id = str(tenant.id) if tenant else None
         response = self.get_response(request)
 
         if hasattr(_thread_locals, 'tenant'):

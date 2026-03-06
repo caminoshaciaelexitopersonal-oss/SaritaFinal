@@ -91,7 +91,19 @@ path(
     path('', include(preguntas_router.urls)),
     path('', include(opciones_router.urls)),
 
-    # --- Vistas Públicas ---
+    # --- Vistas Públicas (Namespace v1/public) ---
+    path('v1/public/sugerencias/felicitaciones-publicas/', views.FelicitacionesPublicasView.as_view(), name='v1-public-felicitaciones-list'),
+    path('v1/public/artesanos/rubros/', views.RubroArtesanoListView.as_view(), name='v1-public-artesano-rubros-list'),
+    path('v1/public/artesanos/', views.ArtesanoPublicListView.as_view(), name='v1-public-artesano-list'),
+    path('v1/public/artesanos/<int:pk>/', views.ArtesanoPublicDetailView.as_view(), name='v1-public-artesano-detail'),
+    path('v1/public/publicaciones/', views.PublicacionListView.as_view(), name='v1-public-publicaciones-list'),
+    path('v1/public/publicaciones/<slug:slug>/', views.PublicacionDetailView.as_view(), name='v1-public-publicaciones-detail'),
+    path('v1/public/consejo-consultivo/', views.ConsejoConsultivoListView.as_view(), name='v1-public-consejo-list'),
+    path('v1/public/videos/', views.VideoListView.as_view(), name='v1-public-videos-list'),
+    path('v1/public/locations/', views.LocationListView.as_view(), name='v1-public-locations-list'),
+    path('v1/public/galeria-media/', views.GaleriaListView.as_view(), name='v1-public-galeria-list'),
+
+    # --- Legacy aliases ---
     path('sugerencias/felicitaciones-publicas/', views.FelicitacionesPublicasView.as_view(), name='felicitaciones-publicas-list'),
     path('artesanos/rubros/', views.RubroArtesanoListView.as_view(), name='artesano-rubros-list'),
     path('artesanos/', views.ArtesanoPublicListView.as_view(), name='artesano-public-list'),

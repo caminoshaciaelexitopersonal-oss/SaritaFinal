@@ -329,7 +329,12 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '100/day',
         'user': '1000/day'
-    }
+    },
+    'DEFAULT_RENDERER_CLASSES': [
+        'apps.common.renderers.EnterpriseJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'EXCEPTION_HANDLER': 'apps.common.exceptions.enterprise_exception_handler',
 }
 
 SPECTACULAR_SETTINGS = {
@@ -340,6 +345,12 @@ SPECTACULAR_SETTINGS = {
     # Limitar la generación del esquema a las rutas de mi-negocio
     'URL_PATTERNS': [
         r'^/api/v1/mi-negocio/',
+        r'^/api/v1/sales/',
+        r'^/api/v1/finance/',
+        r'^/api/v1/operations/',
+        r'^/api/v1/payroll/',
+        r'^/api/v1/agents/',
+        r'^/api/v1/governance/',
     ],
     # Excluir explícitamente las rutas de la API pública que tienen problemas
     'URL_PATTERNS_EXCLUDE': [
