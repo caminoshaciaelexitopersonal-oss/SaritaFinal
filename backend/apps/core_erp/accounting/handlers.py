@@ -37,7 +37,9 @@ class StandardAccountingHandlers:
             'PAYROLL_LIQUIDATED',
             'INVENTORY_ADJUSTED',
             'ASSET_DEPRECIATED',
-            'LIQUIDATION'
+            'LIQUIDATION',
+            'VentaCreada',
+            'NóminaLiquidada'
         ]
 
         for event in standard_events:

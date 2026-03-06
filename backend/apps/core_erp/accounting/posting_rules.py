@@ -21,6 +21,8 @@ class PostingRules:
             "ASSET_DEPRECIATED": PostingRules.rule_asset_depreciated,
             "SALE_COMPLETED": PostingRules.rule_sale,
             "LIQUIDATION": PostingRules.rule_liquidation,
+            "VentaCreada": PostingRules.rule_venta_creada,
+            "NóminaLiquidada": PostingRules.rule_payroll_liquidated_v2,
         }
 
         rule_func = rules.get(event_type)
@@ -221,4 +223,28 @@ class PostingRules:
         return [
             {'account': '111005', 'debit_amount': amount, 'credit_amount': 0, 'description': payload.get('description', '')},
             {'account': '112505', 'debit_amount': 0, 'credit_amount': amount, 'description': payload.get('description', '')}
+        ]
+
+    @staticmethod
+    def rule_venta_creada(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Mapeo para el evento 'VentaCreada' emitido por FacturacionService.
+        """
+        total = Decimal(str(payload.get('total', 0)))
+        invoice = payload.get('invoice_number', 'N/A')
+        return [
+            {'account': '130505', 'debit_amount': total, 'credit_amount': 0, 'description': f"Venta Factura {invoice}"},
+            {'account': '413501', 'debit_amount': 0, 'credit_amount': total, 'description': f"Ingreso Factura {invoice}"}
+        ]
+
+    @staticmethod
+    def rule_payroll_liquidated_v2(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Mapeo para el evento 'NóminaLiquidada' emitido por NominaService.
+        """
+        total = Decimal(str(payload.get('total_neto', 0)))
+        periodo = payload.get('periodo', 'N/A')
+        return [
+            {'account': '510506', 'debit_amount': total, 'credit_amount': 0, 'description': f"Gasto Nómina {periodo}"},
+            {'account': '250505', 'debit_amount': 0, 'credit_amount': total, 'description': f"Pasivo Nómina {periodo}"}
         ]
