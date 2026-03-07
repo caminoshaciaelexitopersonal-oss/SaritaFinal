@@ -2,6 +2,9 @@
 import uuid
 from django.db import models
 
+# --- MODELOS DE INTELIGENCIA ---
+from .models_intelligent import TenienteLearning, MissionHistory
+
 class Mision(models.Model):
     """
     Registro de más alto nivel. Representa la directiva original del General.

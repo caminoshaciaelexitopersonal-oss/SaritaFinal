@@ -11,6 +11,9 @@ from django.utils import timezone
 from django.conf import settings
 from apps.companies.models import Company
 
+# --- CAPACIDADES INTELIGENTES ---
+from .models_intelligent import DeviceToken, ServiceLocation
+
 
 def prestador_directory_path(instance, filename):
     # Asegurarse de que el username existe antes de crear la ruta

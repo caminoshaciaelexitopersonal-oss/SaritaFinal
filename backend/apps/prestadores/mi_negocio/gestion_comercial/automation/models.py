@@ -1,6 +1,7 @@
 # automation/models.py
 from django.db import models
 from infrastructure.models import Tenant
+from .models_sales import Lead
 
 class AgentPersona(models.Model):
     """

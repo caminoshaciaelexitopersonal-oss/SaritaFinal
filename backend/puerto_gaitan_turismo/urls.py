@@ -124,6 +124,12 @@ urlpatterns = [
 
     # FASE 8: Infraestructura y Observabilidad Global
     path('api/v1/infra/', include('apps.common.observability.urls')),
+
+    # Geointeligencia y Mapas
+    path('api/v1/tourism-map/', include('apps.tourism_map.urls')),
+
+    # Operación Móvil en Campo
+    path('api/v1/operational/', include('apps.operational_mobile.urls')),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo
