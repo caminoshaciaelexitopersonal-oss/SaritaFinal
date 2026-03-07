@@ -2,6 +2,7 @@
 
 import React, { createContext, useState, useContext, ReactNode, useCallback, useEffect } from 'react';
 import api from '@/services/api';
+import { resolveTenant } from '@/utils/resolveTenant';
 
 export interface Entity {
   id: string;
@@ -24,35 +25,32 @@ const EntityContext = createContext<EntityContextType | undefined>(undefined);
 export const EntityProvider = ({ children }: { children: ReactNode }) => {
   const [entity, setEntity] = useState<Entity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [entityResolved, setEntityResolved] = useState(false);
 
-  // 🔹 Cargar entidad automáticamente desde el subdominio o localStorage
+  // 🔹 Cargar entidad automáticamente con resolución jerárquica (Hallazgo 13)
   useEffect(() => {
     const fetchInitialEntity = async () => {
       if (typeof window === 'undefined') return;
 
+      const tenant = resolveTenant();
       const storedEntityId = localStorage.getItem('activeCompanyId');
 
-      if (storedEntityId) {
-        await loadEntity(storedEntityId);
-        return;
-      }
-
-      // Fallback: subdominio (solo si no es localhost)
-      if (window.location.hostname !== 'localhost') {
-        setIsLoading(true);
-        try {
+      try {
+        if (storedEntityId) {
+          await loadEntity(storedEntityId);
+        } else if (tenant !== 'dev_tenant') {
+          // Si resolvimos un tenant específico por subdominio pero no hay ID guardado
           const response = await api.get<Entity>('/entities/current/');
           if (response.data) {
             setEntity(response.data);
             localStorage.setItem('activeCompanyId', response.data.id);
           }
-        } catch (error) {
-          console.error('S-UCE: Fallo en resolución de entidad por subdominio.', error);
-        } finally {
-          setIsLoading(false);
         }
-      } else {
+      } catch (error) {
+        console.error('S-UCE: Error en resolución jerárquica de entidad.', error);
+      } finally {
         setIsLoading(false);
+        setEntityResolved(true);
       }
     };
 
@@ -95,7 +93,7 @@ export const EntityProvider = ({ children }: { children: ReactNode }) => {
 
   const value = {
     entity,
-    isLoading,
+    isLoading: isLoading || !entityResolved,
     loadEntity,
     switchEntity,
     clearEntity,
