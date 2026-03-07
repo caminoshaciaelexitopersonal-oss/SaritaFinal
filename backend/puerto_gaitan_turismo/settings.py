@@ -165,6 +165,8 @@ INSTALLED_APPS = [
     # Optimizaciones Financieras 2026
     "apps.banking_integration.apps.BankingIntegrationConfig",
     "apps.analytics_engine.apps.AnalyticsEngineConfig",
+    "apps.tourism_map.apps.TourismMapConfig",
+    "apps.operational_mobile.apps.OperationalMobileConfig",
 ]
 
 
