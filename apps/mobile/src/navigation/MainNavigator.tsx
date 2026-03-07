@@ -13,6 +13,11 @@ import {
 import { TourDetailScreen } from '../screens/tour/TourDetailScreen';
 import { MapScreen } from '../screens/map/MapScreen';
 import { BookingScreen } from '../screens/booking/BookingScreen';
+import { ChatScreen } from '../screens/chat/ChatScreen';
+import { TourTrackingScreen } from '../screens/tracking/TourTrackingScreen';
+import { ReviewScreen } from '../screens/review/ReviewScreen';
+import { HistoryScreen } from '../screens/history/HistoryScreen';
+import { SupportScreen } from '../screens/support/SupportScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,6 +28,13 @@ const ExploreStack = () => (
     <Stack.Screen name="TourDetail" component={TourDetailScreen} options={{ title: 'Detalle del Tour' }} />
     <Stack.Screen name="Booking" component={BookingScreen} options={{ title: 'Reservar' }} />
     <Stack.Screen name="Map" component={MapScreen} options={{ title: 'Mapa' }} />
+    <Stack.Screen name="Payment" component={PaymentScreen} options={{ title: 'Pago Seguro' }} />
+    <Stack.Screen name="Ticket" component={TicketScreen} options={{ title: 'Mi Ticket' }} />
+    <Stack.Screen name="Chat" component={ChatScreen} options={{ title: 'Chat con Operador' }} />
+    <Stack.Screen name="Tracking" component={TourTrackingScreen} options={{ title: 'Seguimiento del Tour' }} />
+    <Stack.Screen name="Review" component={ReviewScreen} options={{ title: 'Calificar Tour' }} />
+    <Stack.Screen name="History" component={HistoryScreen} options={{ title: 'Historial de Viajes' }} />
+    <Stack.Screen name="Support" component={SupportScreen} options={{ title: 'Soporte Técnico' }} />
   </Stack.Navigator>
 );
 
