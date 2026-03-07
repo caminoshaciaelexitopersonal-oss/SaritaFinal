@@ -4,8 +4,10 @@
   "description": "SARITA Desktop Application (Electron)",
   "main": "main/main.js",
   "scripts": {
-    "start": "electron .",
-    "build": "electron-builder"
+    "build": "tsc",
+    "start": "npm run build && electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "dependencies": {
     "@sarita/shared-sdk": "file:../../sarita-platform/shared-sdk"
