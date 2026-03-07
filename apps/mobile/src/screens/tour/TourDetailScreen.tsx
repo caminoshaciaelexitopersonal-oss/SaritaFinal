@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Image, StyleSheet, ActivityIndicator } from 're
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { api } from '../../services/api';
 import { Button } from '../../components/Button';
+import { analyticsService } from '../../services/analyticsService';
 
 export const TourDetailScreen = () => {
   const route = useRoute<any>();
@@ -15,6 +16,7 @@ export const TourDetailScreen = () => {
       try {
         const response = await api.get(`/tours/${route.params.id}`);
         setTour(response.data);
+        analyticsService.logTourView(route.params.id);
       } catch (error) {
         console.error('Error fetching tour detail:', error);
       } finally {

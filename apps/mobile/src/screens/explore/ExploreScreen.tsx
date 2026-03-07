@@ -4,8 +4,10 @@ import { usePagination } from '../../hooks/usePagination';
 import { TourCard } from '../../components/TourCard';
 import { SearchBar } from './SearchBar';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 export const ExploreScreen = () => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const navigation = useNavigation<any>();
   const { data, loading, loadMore, hasMore } = usePagination(`/tours?search=${search}`);
@@ -26,7 +28,7 @@ export const ExploreScreen = () => {
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={loading ? <ActivityIndicator style={{ margin: 20 }} /> : null}
-        ListEmptyComponent={!loading ? <Text style={styles.empty}>No hay tours disponibles</Text> : null}
+        ListEmptyComponent={!loading ? <Text style={styles.empty}>{t('no_tours', 'No hay tours disponibles')}</Text> : null}
       />
     </View>
   );
