@@ -1,0 +1,19 @@
+{
+  "name": "@sarita/desktop",
+  "version": "1.0.0",
+  "description": "SARITA Desktop Application (Electron)",
+  "main": "main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "dependencies": {
+    "@sarita/shared-sdk": "file:../../sarita-platform/shared-sdk"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^24.13.3",
+    "typescript": "^5.0.0"
+  },
+  "private": true
+}
