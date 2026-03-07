@@ -1,94 +1,69 @@
-import logging
-import hashlib
-import json
 from decimal import Decimal
-from typing import List, Dict, Any
-from django.db import transaction
-from django.utils import timezone
-from .models import Tax, TaxRate, TaxRule, TaxTransaction, TaxAccountMapping
+import logging
+from django.db.models import Q
+from apps.core_erp.taxation.models import Tax, TaxRate, TaxRule, TaxTransaction
 
 logger = logging.getLogger(__name__)
 
-class TaxEngine:
+class TaxOrchestrator:
     """
-    Motor Fiscal Soberano — SARITA 2026.
-    Implementación integral, determinística y auditable del cálculo de impuestos.
+    Hallazgo 16: Motor Fiscal Inteligente Expandido.
+    Coordina cálculos de IVA, ReteFuente y ReteICA basados en territorialidad.
     """
 
     @staticmethod
-    def calculate_taxes(document_payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def calculate_all_taxes(tenant_id, document_type, entity_type, amount, city_id=None):
         """
-        Bloque 2.1: Punto de Entrada Principal.
+        Orquesta el cálculo de todos los impuestos aplicables.
         """
-        doc_id = document_payload.get('document_id')
-        tenant_id = document_payload.get('tenant_id')
-        issue_date = document_payload.get('issue_date', timezone.now().date())
+        base_amount = Decimal(str(amount))
 
-        # 1. Idempotencia: Verificar hash de contenido (Bloque 2.3)
-        if TaxEngine._check_idempotency(document_payload):
-            return TaxEngine._get_previous_results(doc_id)
+        # 1. Calcular IVA
+        iva = TaxOrchestrator._calculate_specific_tax(tenant_id, 'IVA', document_type, entity_type, base_amount)
 
-        # 2. Context Resolver
-        jurisdiction = document_payload.get('jurisdiction_id')
-        doc_type = document_payload.get('document_type')
-        entity_type = document_payload.get('entity_type')
+        # 2. Calcular ReteFuente
+        rete_fuente = TaxOrchestrator._calculate_specific_tax(tenant_id, 'RETEFUENTE', document_type, entity_type, base_amount)
 
-        # 3. Rule Engine: Obtener reglas aplicables
-        rules = TaxRule.objects.filter(
-            tax__active=True,
-            tax__tenant_id=tenant_id,
-            document_type=doc_type,
-            entity_type=entity_type
-        ).order_by('priority')
+        # 3. Calcular ReteICA (Requiere Ciudad/Municipio)
+        rete_ica = 0
+        if city_id:
+            rete_ica = TaxOrchestrator._calculate_specific_tax(tenant_id, 'RETEICA', document_type, entity_type, base_amount, city_id)
 
-        tax_results = []
-        base_total = Decimal(str(document_payload.get('base_amount', 0)))
+        total_taxes = iva + rete_fuente + rete_ica
 
-        for rule in rules:
-            # 4. Rate Provider: Obtener tasa histórica
-            rate_obj = TaxRate.objects.filter(
-                tax=rule.tax,
-                effective_from__lte=issue_date
-            ).filter(models.Q(effective_to__isnull=True) | models.Q(effective_to__gte=issue_date)).first()
-
-            if not rate_obj:
-                continue
-
-            # 5. Calculator: Computar Base e Impuesto
-            tax_amount = (base_total * rate_obj.rate).quantize(Decimal('0.01'))
-
-            # 6. Validator: Verificar límites legales
-            if base_total < rule.minimum_base:
-                continue
-
-            res = {
-                "tax_id": str(rule.tax.id),
-                "tax_code": rule.tax.code,
-                "base": float(base_total),
-                "rate": float(rate_obj.rate),
-                "amount": float(tax_amount)
-            }
-            tax_results.append(res)
-
-            # 7. Persistencia y Auditoría (Bloque 3.6)
-            TaxTransaction.objects.create(
-                document_id=doc_id,
-                tax=rule.tax,
-                base_amount=base_total,
-                tax_amount=tax_amount,
-                rate_applied=rate_obj.rate,
-                tenant_id=tenant_id,
-                integrity_hash=TaxEngine._generate_hash(doc_id, res)
-            )
-
-        return tax_results
+        return {
+            "base_amount": float(base_amount),
+            "iva": float(iva),
+            "rete_fuente": float(rete_fuente),
+            "rete_ica": float(rete_ica),
+            "total_taxes": float(total_taxes),
+            "net_amount": float(base_amount + iva - rete_fuente - rete_ica)
+        }
 
     @staticmethod
-    def _generate_hash(doc_id, result_payload):
-        data = f"{doc_id}{json.dumps(result_payload, sort_keys=True)}"
-        return hashlib.sha256(data.encode()).hexdigest()
+    def _calculate_specific_tax(tenant_id, tax_type, document_type, entity_type, base_amount, jurisdiction_id=None):
+        query = Q(tenant_id=tenant_id, tax_type=tax_type, active=True)
+        if jurisdiction_id:
+            query &= Q(jurisdiction_id=jurisdiction_id)
 
-    @staticmethod
-    def _check_idempotency(payload):
-        # Lógica de verificación de hash almacenado
-        return False # Placeholder para integración con ProcessedEvents
+        tax = Tax.objects.filter(query).first()
+        if not tax:
+            return Decimal('0.00')
+
+        # Evaluar Regla
+        rule = TaxRule.objects.filter(
+            tax=tax,
+            document_type=document_type,
+            entity_type=entity_type,
+            minimum_base__lte=base_amount
+        ).filter(Q(maximum_base__gte=base_amount) | Q(maximum_base__isnull=True)).first()
+
+        if not rule:
+            return Decimal('0.00')
+
+        # Obtener Tasa
+        rate_obj = TaxRate.objects.filter(tax=tax).order_by('-effective_from').first()
+        if not rate_obj:
+            return Decimal('0.00')
+
+        return (base_amount * rate_obj.rate).quantize(Decimal('1.00'))

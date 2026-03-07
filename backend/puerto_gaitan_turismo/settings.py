@@ -161,6 +161,10 @@ INSTALLED_APPS = [
     "apps.payments.apps.PaymentsConfig",
     "apps.wallet.apps.WalletConfig",
     "apps.delivery.apps.DeliveryConfig",
+
+    # Optimizaciones Financieras 2026
+    "apps.banking_integration.apps.BankingIntegrationConfig",
+    "apps.analytics_engine.apps.AnalyticsEngineConfig",
 ]
 
 
