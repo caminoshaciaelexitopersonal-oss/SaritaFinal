@@ -18,6 +18,10 @@ import { TourTrackingScreen } from '../screens/tracking/TourTrackingScreen';
 import { ReviewScreen } from '../screens/review/ReviewScreen';
 import { HistoryScreen } from '../screens/history/HistoryScreen';
 import { SupportScreen } from '../screens/support/SupportScreen';
+import { OperatorDashboard } from '../screens/operator/OperatorDashboard';
+import { LoyaltyScreen } from '../screens/loyalty/LoyaltyScreen';
+import { TripPlannerScreen } from '../screens/planner/TripPlannerScreen';
+import { AdminDashboard } from '../screens/admin/AdminDashboard';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,5 +55,9 @@ export const MainNavigator = () => (
     <Tab.Screen name="BookingsTab" component={BookingsStack} options={{ title: 'Reservas' }} />
     <Tab.Screen name="Favorites" component={FavoritesScreen} options={{ title: 'Favoritos', headerShown: true }} />
     <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: true }} />
+    <Tab.Screen name="Operator" component={OperatorDashboard} options={{ title: 'Negocio', headerShown: true }} />
+    <Tab.Screen name="Loyalty" component={LoyaltyScreen} options={{ title: 'Club', headerShown: true }} />
+    <Tab.Screen name="Planner" component={TripPlannerScreen} options={{ title: 'Planes', headerShown: true }} />
+    <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Torre', headerShown: true }} />
   </Tab.Navigator>
 );

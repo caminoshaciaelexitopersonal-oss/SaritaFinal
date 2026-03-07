@@ -9,6 +9,7 @@ export const TourDetailScreen = () => {
   const route = useRoute<any>();
   const navigation = useNavigation<any>();
   const [tour, setTour] = useState<any>(null);
+  const [dynamicPrice, setDynamicPrice] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,6 +18,10 @@ export const TourDetailScreen = () => {
         const response = await api.get(`/tours/${route.params.id}`);
         setTour(response.data);
         analyticsService.logTourView(route.params.id);
+
+        // Cargar precio dinámico (Fase 04)
+        const priceData = await aiService.getDynamicPrice(route.params.id);
+        setDynamicPrice(priceData);
       } catch (error) {
         console.error('Error fetching tour detail:', error);
       } finally {
@@ -34,7 +39,18 @@ export const TourDetailScreen = () => {
       <Image source={{ uri: 'https://via.placeholder.com/600x400' }} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.name}>{tour.name}</Text>
-        <Text style={styles.price}>${tour.price.toLocaleString()} COP</Text>
+
+        <View style={styles.priceContainer}>
+          <Text style={styles.price}>
+            ${(dynamicPrice?.dynamic_price || tour.price).toLocaleString()} COP
+          </Text>
+          {dynamicPrice?.reason && (
+            <View style={styles.dynamicBadge}>
+              <Text style={styles.dynamicText}>Alta Demanda</Text>
+            </View>
+          )}
+        </View>
+
         <Text style={styles.sectionTitle}>Descripción</Text>
         <Text style={styles.description}>{tour.description || 'Sin descripción disponible.'}</Text>
 
@@ -58,7 +74,10 @@ const styles = StyleSheet.create({
   image: { width: '100%', height: 300 },
   content: { padding: 20 },
   name: { fontSize: 24, fontWeight: 'bold' },
-  price: { fontSize: 20, color: '#1e3a8a', fontWeight: '600', marginTop: 10 },
+  priceContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
+  price: { fontSize: 20, color: '#1e3a8a', fontWeight: '600' },
+  dynamicBadge: { backgroundColor: '#fee2e2', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, marginLeft: 10 },
+  dynamicText: { color: '#ef4444', fontSize: 10, fontWeight: 'bold' },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', marginTop: 25 },
   description: { fontSize: 16, color: '#4b5563', marginTop: 10, lineHeight: 24 },
   stats: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, padding: 15, backgroundColor: '#f3f4f6', borderRadius: 8 },
