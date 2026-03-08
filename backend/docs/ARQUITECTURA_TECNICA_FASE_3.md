@@ -1,26 +1,29 @@
-# ARQUITECTURA TÉCNICA COMPLETA — SARITA ERP (FASE 3)
+# BLUEPRINT TECNOLÓGICO — SARITA PLATFORM (FASE 3)
 
-## 1. Motor Multi-Tenancy
-- **Implementación:** Aislamiento de datos mediante `TenantAwareModel`.
-- **Gobernanza:** Filtrado automático por `tenant_id` en todas las consultas de la API y acciones de agentes.
+## 1. Arquitectura de Software
+- **Modelo:** Backend centralizado Multi-cliente.
+- **Capas:** API Layer, Application Layer, Domain Layer, Service Layer, Data Layer.
+- **Orquestación:** Agentes IA con estándar N6 Oro V2.
 
-## 2. Seguridad y Comunicaciones
-- **Autenticación:** JWT centralizado con rotación de tokens.
-- **Shared SDK:** Cliente HTTP unificado para Web, Mobile y Desktop con manejo de interceptores de seguridad.
+## 2. Arquitectura de Datos
+- **Motor:** PostgreSQL (ACID Compliant).
+- **Integridad:** Hashing SHA-256 operativo y Chained Hashing contable.
+- **Seguridad:** Cifrado de datos sensibles y auditoría total.
 
-## 3. Blindaje Criptográfico (Blockchain)
-- **Hashing Operativo:** SHA-256 para sellado inmediato de documentos y transacciones.
-- **Notarización:** Procesamiento por lotes (Batch processing) mediante Árboles de Merkle anclados a la red Polygon.
+## 3. Arquitectura de APIs
+- **Protocolo:** RESTful JSON.
+- **Versionado:** /api/v1/ con soporte para v2.
+- **Seguridad:** Autenticación JWT y Autorización RBAC.
 
-## 4. Orquestación de Agentes IA
-- **Jerarquía:** 6 niveles de mando.
-- **Estándar N6 Oro V2:** Ejecución determinística, atómica e idéntica en todos los nodos del sistema.
+## 4. Infraestructura Cloud
+- **Orquestación:** Docker / Docker Compose / Kubernetes ready.
+- **CI/CD:** Pipelines automatizados para testing y despliegue.
+- **Escalabilidad:** Horizontal y Vertical soportada.
 
-## 5. Ecosistema de Servicios
-- **Wallet:** Gestión de créditos y pagos integrados.
-- **Delivery:** Logística de última milla vinculada a la operativa de restaurantes.
-- **Orquestador de Viajes:** Planificación autónoma basada en perfiles de turista.
-
-## 6. Sincronización Multi-Plataforma
-- **Event Bus:** Comunicación en tiempo real mediante WebSockets y tareas asíncronas (Celery/Redis).
-- **Offline Resilience:** Estrategia de sincronización para dispositivos móviles en zonas remotas.
+## 5. Stack Tecnológico Oficial
+- **Backend:** Python / Django.
+- **Frontend Web:** Next.js.
+- **Mobile:** React Native / Expo.
+- **Desktop:** Electron.
+- **Base de Datos:** PostgreSQL.
+- **Eventos:** Redis / Celery.
