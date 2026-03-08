@@ -20,7 +20,7 @@ class MobileStorageProvider implements StorageProvider {
 // Inyectar el proveedor en el SDK
 tokenManager.setStorage(new MobileStorageProvider());
 
-// Configurar la URL base del cliente HTTP del SDK
-httpClient.defaults.baseURL = API_URL;
+// Configurar la URL base del cliente HTTP del SDK de forma segura
+httpClient.defaults.baseURL = `${API_URL}${API_V1_PREFIX}`;
 
 export { httpClient as api };

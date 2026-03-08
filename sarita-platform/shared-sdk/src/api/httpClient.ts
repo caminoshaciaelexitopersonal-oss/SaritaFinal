@@ -7,9 +7,16 @@ import { tokenManager } from '../auth/tokenManager';
  */
 
 export const httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'http://localhost:8000/api/v1',
+  baseURL: 'http://localhost:8000/api/v1',
   timeout: 10000,
 });
+
+/**
+ * Permite configurar la URL base dinámicamente según la plataforma.
+ */
+export const setBaseURL = (url: string) => {
+  httpClient.defaults.baseURL = url;
+};
 
 httpClient.interceptors.request.use(async (config) => {
   const token = await tokenManager.getToken();
