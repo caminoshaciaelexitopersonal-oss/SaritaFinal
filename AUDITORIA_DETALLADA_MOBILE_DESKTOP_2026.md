@@ -106,6 +106,7 @@ Para garantizar la "UX Parity" (Paridad de Experiencia de Usuario), se define la
 | SARITA Wallet          | ✓ | ✓ | ✓ |
 | SARITA Delivery        | ✓ | ✓ | ✓ |
 | ERP "Mi Negocio"       | ✓ | ✓ | ✓ |
+| Gestión Financiera (Ratios)| ✓ | ✓ | ✓ |
 
 ---
 

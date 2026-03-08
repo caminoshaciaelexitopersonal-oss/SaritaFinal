@@ -26,6 +26,7 @@ import { JournalEntries } from './dashboard/accounting/JournalEntries';
 import { BalanceSheet, IncomeStatement } from './dashboard/accounting/FinancialStatements';
 import { ReconciliationManager } from './dashboard/accounting/ReconciliationManager';
 import { AccountingAuditLog } from './dashboard/accounting/AccountingAuditLog';
+import { FinanceDashboard } from './dashboard/finance/FinanceDashboard';
 import { WalletDashboard } from './dashboard/Wallet';
 import { DeliveryManager } from './dashboard/Delivery';
 import { AdminDashboard } from './admin/AdminDashboard';
@@ -58,6 +59,7 @@ const App = () => (
                   <Route path="operaciones" element={<OperationsDashboard />} />
                   <Route path="archivo" element={<ArchiveDashboard />} />
                   <Route path="contabilidad" element={<AccountingDashboard />} />
+                  <Route path="finanzas" element={<FinanceDashboard />} />
                   <Route path="reportes" element={<CommercialReports />} />
                 </Route>
                 <Route path="wallet" element={<WalletDashboard />} />
