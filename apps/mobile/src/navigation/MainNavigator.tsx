@@ -36,6 +36,8 @@ import { OperatorDashboard } from '../screens/operator/OperatorDashboard';
 import { LoyaltyScreen } from '../screens/loyalty/LoyaltyScreen';
 import { TripPlannerScreen } from '../screens/planner/TripPlannerScreen';
 import { AdminDashboard } from '../screens/admin/AdminDashboard';
+import { GlobalNetworkScreen } from '../screens/global_network/GlobalNetworkScreen';
+import { SystemObservabilityScreen } from '../screens/monitoring/SystemObservabilityScreen';
 import { CountryDashboard } from '../screens/country_management/CountryDashboard';
 import { HyperPersonalizedScreen } from '../screens/personalization/HyperPersonalizedScreen';
 import { OpenDataPortalScreen } from '../screens/open_data/OpenDataPortalScreen';
@@ -107,6 +109,8 @@ export const MainNavigator = () => (
     <Tab.Screen name="Community" component={CommunityScreen} options={{ title: 'Comunidad', headerShown: true }} />
     <Tab.Screen name="Education" component={EducationScreen} options={{ title: 'Aula', headerShown: true }} />
     <Tab.Screen name="Reputation" component={ReputationScreen} options={{ title: 'Confianza', headerShown: true }} />
+    <Tab.Screen name="GlobalNet" component={GlobalNetworkScreen} options={{ title: 'Red', headerShown: true }} />
+    <Tab.Screen name="Observability" component={SystemObservabilityScreen} options={{ title: 'Monitor', headerShown: true }} />
     <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Torre', headerShown: true }} />
   </Tab.Navigator>
 );

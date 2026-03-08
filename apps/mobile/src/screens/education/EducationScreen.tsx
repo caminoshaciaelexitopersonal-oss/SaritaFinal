@@ -25,6 +25,13 @@ export const EducationScreen = () => {
         <Text style={styles.eduTitle}>Sostenibilidad en el Safari</Text>
         <Text style={styles.eduText}>Cómo interactuar de forma responsable con la fauna local.</Text>
       </Card>
+
+      <Text style={styles.sectionTitle}>Global Learning (Fase 08)</Text>
+      <Card style={styles.eduCard}>
+        <Image source={{ uri: 'https://via.placeholder.com/300x150' }} style={styles.image} />
+        <Text style={styles.eduTitle}>Maravillas del Mundo: Historia Global</Text>
+        <Text style={styles.eduText}>Explora los patrimonios culturales conectados a la red SARITA.</Text>
+      </Card>
     </ScrollView>
   );
 };

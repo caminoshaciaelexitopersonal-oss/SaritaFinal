@@ -23,6 +23,8 @@ export * from './orchestration/LiveExperiencesScreen';
 export * from './urban/UrbanServicesScreen';
 export * from './sustainability/SustainabilityDashboard';
 export * from './economy/EconomyDashboard';
+export * from './global_network/GlobalNetworkScreen';
+export * from './monitoring/SystemObservabilityScreen';
 
 import React from 'react';
 import { View, Text } from 'react-native';
