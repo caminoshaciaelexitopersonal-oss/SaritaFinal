@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { ShoppingCart, Users, Target, Tag, BarChart3, Briefcase } from 'lucide-react';
+import { ShoppingCart, Users, Target, Tag, BarChart3, Briefcase, Anchor, FileText, Calculator } from 'lucide-react';
 
 export const BusinessManager = () => {
   const navItems = [
@@ -11,6 +11,7 @@ export const BusinessManager = () => {
     { label: 'Promociones', path: 'promociones', icon: Tag },
     { label: 'Operaciones', path: 'operaciones', icon: Anchor },
     { label: 'Archivo', path: 'archivo', icon: FileText },
+    { label: 'Contabilidad', path: 'contabilidad', icon: Calculator },
     { label: 'Reportes', path: 'reportes', icon: BarChart3 },
   ];
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, FlatList, Image } from 'react-native';
-import { aiService } from '../../services/aiService';
-import { Card } from '../../components/Card';
+import { aiService } from '../services/aiService';
+import { Card } from '../components/Card';
 import { useNavigation } from '@react-navigation/native';
 
 export const HomeScreen = () => {

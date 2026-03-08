@@ -4,6 +4,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { api } from '../../services/api';
 import { Button } from '../../components/Button';
 import { analyticsService } from '../../services/analyticsService';
+import { aiService } from '../../services/aiService';
 
 export const TourDetailScreen = () => {
   const route = useRoute<any>();

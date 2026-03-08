@@ -20,6 +20,12 @@ import { ToursManager } from './dashboard/operations/ToursManager';
 import { BookingsCalendar } from './dashboard/operations/BookingsCalendar';
 import { StaffManager } from './dashboard/operations/StaffManager';
 import { ResourceScheduler } from './dashboard/operations/ResourceScheduler';
+import { AccountingDashboard } from './dashboard/accounting/AccountingDashboard';
+import { ChartOfAccounts } from './dashboard/accounting/ChartOfAccounts';
+import { JournalEntries } from './dashboard/accounting/JournalEntries';
+import { BalanceSheet, IncomeStatement } from './dashboard/accounting/FinancialStatements';
+import { ReconciliationManager } from './dashboard/accounting/ReconciliationManager';
+import { AccountingAuditLog } from './dashboard/accounting/AccountingAuditLog';
 import { WalletDashboard } from './dashboard/Wallet';
 import { DeliveryManager } from './dashboard/Delivery';
 import { AdminDashboard } from './admin/AdminDashboard';
@@ -51,6 +57,7 @@ const App = () => (
                   <Route path="promociones" element={<PromotionsManager />} />
                   <Route path="operaciones" element={<OperationsDashboard />} />
                   <Route path="archivo" element={<ArchiveDashboard />} />
+                  <Route path="contabilidad" element={<AccountingDashboard />} />
                   <Route path="reportes" element={<CommercialReports />} />
                 </Route>
                 <Route path="wallet" element={<WalletDashboard />} />

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
-import { aiService } from '../../services/aiService';
-import { Button } from '../../components/Button';
-import { Card } from '../../components/Card';
+import { View, Text, StyleSheet, FlatList, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { aiService } from '../services/aiService';
+import { Button } from '../components/Button';
+import { Card } from '../components/Card';
 import { useNavigation } from '@react-navigation/native';
 
 export const AISearchScreen = () => {
@@ -57,9 +57,6 @@ export const AISearchScreen = () => {
     </KeyboardAvoidingView>
   );
 };
-
-// Importar TouchableOpacity para los items
-import { TouchableOpacity } from 'react-native';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
