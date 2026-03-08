@@ -8,7 +8,10 @@ import {
   MessagesScreen,
   ProfileScreen,
   FavoritesScreen,
-  SearchScreen
+  SearchScreen,
+  AISearchScreen,
+  CreatorDashboard,
+  DestinationDashboard
 } from '../screens';
 import { TravelFeedScreen } from '../screens/feed/TravelFeedScreen';
 import { PassportScreen } from '../screens/passport/PassportScreen';
@@ -18,6 +21,10 @@ import { TourDetailScreen } from '../screens/tour/TourDetailScreen';
 import { MapScreen } from '../screens/map/MapScreen';
 import { BookingScreen } from '../screens/booking/BookingScreen';
 import { ChatScreen } from '../screens/chat/ChatScreen';
+import { VirtualGuideScreen } from '../screens/ai/VirtualGuideScreen';
+import { TransportScreen } from '../screens/transport/TransportScreen';
+import { ExtensionsMarketplaceScreen } from '../screens/extensions/ExtensionsMarketplaceScreen';
+import { ARDiscoveryScreen } from '../screens/ar/ARDiscoveryScreen';
 import { TourTrackingScreen } from '../screens/tracking/TourTrackingScreen';
 import { ReviewScreen } from '../screens/review/ReviewScreen';
 import { HistoryScreen } from '../screens/history/HistoryScreen';
@@ -37,6 +44,10 @@ const ExploreStack = () => (
     <Stack.Screen name="Booking" component={BookingScreen} options={{ title: 'Reservar' }} />
     <Stack.Screen name="Map" component={MapScreen} options={{ title: 'Mapa' }} />
     <Stack.Screen name="SmartMap" component={SmartMapScreen} options={{ title: 'Explora tu entorno' }} />
+    <Stack.Screen name="VirtualGuide" component={VirtualGuideScreen} options={{ title: 'Guía Virtual IA' }} />
+    <Stack.Screen name="Transport" component={TransportScreen} options={{ title: 'Transporte Regional' }} />
+    <Stack.Screen name="Extensions" component={ExtensionsMarketplaceScreen} options={{ title: 'Extensiones' }} />
+    <Stack.Screen name="ARDiscovery" component={ARDiscoveryScreen} options={{ title: 'Descubrimiento AR' }} />
     <Stack.Screen name="Payment" component={PaymentScreen} options={{ title: 'Pago Seguro' }} />
     <Stack.Screen name="Ticket" component={TicketScreen} options={{ title: 'Mi Ticket' }} />
     <Stack.Screen name="Chat" component={ChatScreen} options={{ title: 'Chat con Operador' }} />
@@ -67,6 +78,7 @@ export const MainNavigator = () => (
     <Tab.Screen name="Passport" component={PassportScreen} options={{ title: 'Pasaporte', headerShown: true }} />
     <Tab.Screen name="Live" component={LiveTourScreen} options={{ title: 'En Vivo', headerShown: false }} />
     <Tab.Screen name="Creator" component={CreatorDashboard} options={{ title: 'Creador', headerShown: true }} />
+    <Tab.Screen name="Destination" component={DestinationDashboard} options={{ title: 'Destino', headerShown: true }} />
     <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Torre', headerShown: true }} />
   </Tab.Navigator>
 );

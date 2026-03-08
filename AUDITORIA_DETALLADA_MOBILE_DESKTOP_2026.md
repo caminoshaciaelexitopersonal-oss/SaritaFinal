@@ -85,8 +85,17 @@ Para garantizar la "UX Parity" (Paridad de Experiencia de Usuario), se define la
 | Firma Digital Biométrica| ✗ | ✓ | ✗ |
 | Feed Social (Reels)    | ✗ | ✓ | ✗ |
 | Pasaporte Digital      | ✗ | ✓ | ✗ |
+| Discovery AR           | ✗ | ✓ | ✗ |
+| Smart City Dashboard   | ✓ | ✓ | ✓ |
 
 ---
+
+## 6. ESPECIFICACIÓN DE API PÚBLICA (INFRAESTRUCTURA TURÍSTICA)
+Para permitir que hoteles y agencias externas se conecten al ecosistema SARITA, se definen los siguientes endpoints de la API Pública:
+
+*   `GET /api/v1/public/inventory`: Consulta global de tours y servicios.
+*   `POST /api/v1/public/bookings/external`: Permite crear reservas desde sistemas PMS externos.
+*   `GET /api/v1/public/destinations/{id}/stats`: Datos anónimos de flujo turístico para partners regionales.
 
 ## 6. RECOMENDACIONES PRECISAS PARA EL PERFIL DE PRESTADOR
 
