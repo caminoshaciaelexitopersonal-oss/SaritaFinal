@@ -33,6 +33,12 @@ import { OperatorDashboard } from '../screens/operator/OperatorDashboard';
 import { LoyaltyScreen } from '../screens/loyalty/LoyaltyScreen';
 import { TripPlannerScreen } from '../screens/planner/TripPlannerScreen';
 import { AdminDashboard } from '../screens/admin/AdminDashboard';
+import { TravelOrchestratorScreen } from '../screens/orchestration/TravelOrchestratorScreen';
+import { ContextualExperiencesScreen } from '../screens/orchestration/ContextualExperiencesScreen';
+import { UrbanServicesScreen } from '../screens/urban/UrbanServicesScreen';
+import { SustainabilityDashboard } from '../screens/sustainability/SustainabilityDashboard';
+import { EconomyDashboard } from '../screens/economy/EconomyDashboard';
+import { LiveExperiencesScreen } from '../screens/orchestration/LiveExperiencesScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -64,6 +70,9 @@ const BookingsStack = () => (
   </Stack.Navigator>
 );
 
+import { PaymentScreen } from '../screens/payment/PaymentScreen';
+import { TicketScreen } from '../screens/ticket/TicketScreen';
+
 export const MainNavigator = () => (
   <Tab.Navigator screenOptions={{ headerShown: false }}>
     <Tab.Screen name="Home" component={HomeScreen} />
@@ -79,6 +88,12 @@ export const MainNavigator = () => (
     <Tab.Screen name="Live" component={LiveTourScreen} options={{ title: 'En Vivo', headerShown: false }} />
     <Tab.Screen name="Creator" component={CreatorDashboard} options={{ title: 'Creador', headerShown: true }} />
     <Tab.Screen name="Destination" component={DestinationDashboard} options={{ title: 'Destino', headerShown: true }} />
+    <Tab.Screen name="Orchestrator" component={TravelOrchestratorScreen} options={{ title: 'Orquestador', headerShown: true }} />
+    <Tab.Screen name="Contextual" component={ContextualExperiencesScreen} options={{ title: 'Cerca de mí', headerShown: true }} />
+    <Tab.Screen name="Urban" component={UrbanServicesScreen} options={{ title: 'Ciudad', headerShown: true }} />
+    <Tab.Screen name="Sustainability" component={SustainabilityDashboard} options={{ title: 'Impacto', headerShown: true }} />
+    <Tab.Screen name="Economy" component={EconomyDashboard} options={{ title: 'Monedero', headerShown: true }} />
+    <Tab.Screen name="LiveNow" component={LiveExperiencesScreen} options={{ title: 'En Vivo!', headerShown: true }} />
     <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Torre', headerShown: true }} />
   </Tab.Navigator>
 );

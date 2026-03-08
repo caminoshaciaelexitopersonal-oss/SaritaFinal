@@ -26,6 +26,8 @@
 | **Reservas / Actividad**| `/reservas` | `Bookings` | `ActivityLog` |
 | **Mensajería SADI** | `/mensajes` | `Messages` | `ChatCenter` |
 | **Configuración** | `/perfil` | `Profile` | `Settings` |
+| **Orquestación** | `/orchestrate`| `Orchestrator`| `Planner` |
+| **Ciudad** | `/urban` | `Urban` | `CityControl` |
 
 ---
 

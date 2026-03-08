@@ -13,6 +13,13 @@ export * from './live/LiveTourScreen';
 export * from './operator/OperatorDashboard';
 export * from './admin/AdminDashboard';
 export * from './creator/CreatorDashboard';
+export * from './destination/DestinationDashboard';
+export * from './orchestration/TravelOrchestratorScreen';
+export * from './orchestration/ContextualExperiencesScreen';
+export * from './orchestration/LiveExperiencesScreen';
+export * from './urban/UrbanServicesScreen';
+export * from './sustainability/SustainabilityDashboard';
+export * from './economy/EconomyDashboard';
 
 import React from 'react';
 import { View, Text } from 'react-native';
