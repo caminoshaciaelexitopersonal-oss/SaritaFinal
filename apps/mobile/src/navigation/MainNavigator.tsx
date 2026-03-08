@@ -11,6 +11,9 @@ import {
   SearchScreen,
   AISearchScreen,
   CreatorDashboard,
+  CommunityScreen,
+  EducationScreen,
+  ReputationScreen,
   DestinationDashboard
 } from '../screens';
 import { TravelFeedScreen } from '../screens/feed/TravelFeedScreen';
@@ -101,6 +104,9 @@ export const MainNavigator = () => (
     <Tab.Screen name="Country" component={CountryDashboard} options={{ title: 'País', headerShown: true }} />
     <Tab.Screen name="Personalized" component={HyperPersonalizedScreen} options={{ title: 'Para ti', headerShown: true }} />
     <Tab.Screen name="OpenData" component={OpenDataPortalScreen} options={{ title: 'Datos', headerShown: true }} />
+    <Tab.Screen name="Community" component={CommunityScreen} options={{ title: 'Comunidad', headerShown: true }} />
+    <Tab.Screen name="Education" component={EducationScreen} options={{ title: 'Aula', headerShown: true }} />
+    <Tab.Screen name="Reputation" component={ReputationScreen} options={{ title: 'Confianza', headerShown: true }} />
     <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Torre', headerShown: true }} />
   </Tab.Navigator>
 );
