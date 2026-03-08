@@ -12,6 +12,9 @@ import { OpportunitiesManager } from './dashboard/commercial/OpportunitiesManage
 import { SalesManager } from './dashboard/commercial/SalesManager';
 import { PromotionsManager } from './dashboard/commercial/PromotionsManager';
 import { CommercialReports } from './dashboard/commercial/CommercialReports';
+import { ArchiveDashboard } from './dashboard/archive/ArchiveDashboard';
+import { DocumentsManager } from './dashboard/archive/DocumentsManager';
+import { ArchiveActivityLog } from './dashboard/archive/ArchiveActivityLog';
 import { WalletDashboard } from './dashboard/Wallet';
 import { DeliveryManager } from './dashboard/Delivery';
 import { AdminDashboard } from './admin/AdminDashboard';
@@ -41,6 +44,7 @@ const App = () => (
                   <Route path="oportunidades" element={<OpportunitiesManager />} />
                   <Route path="ventas" element={<SalesManager />} />
                   <Route path="promociones" element={<PromotionsManager />} />
+                  <Route path="archivo" element={<ArchiveDashboard />} />
                   <Route path="reportes" element={<CommercialReports />} />
                 </Route>
                 <Route path="wallet" element={<WalletDashboard />} />
