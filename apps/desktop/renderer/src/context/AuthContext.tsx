@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { tokenManager, User } from '@sarita/shared-sdk';
+import { api } from '../services/api';
 
 interface AuthContextType {
   user: User | null;
