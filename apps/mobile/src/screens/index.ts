@@ -29,6 +29,9 @@ export * from './digital_twin/DigitalTwinScreen';
 export * from './simulation/SimulationEngineScreen';
 export * from './control_center/GlobalControlCenterScreen';
 export * from './research/ResearchPortalScreen';
+export * from './autonomous/GlobalAIDashboard';
+export * from './autonomous/AutonomousPlanningScreen';
+export * from './alerts/GlobalAlertsScreen';
 
 import React from 'react';
 import { View, Text } from 'react-native';

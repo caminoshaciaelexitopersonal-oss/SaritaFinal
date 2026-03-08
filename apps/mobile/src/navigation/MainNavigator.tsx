@@ -37,6 +37,9 @@ import { LoyaltyScreen } from '../screens/loyalty/LoyaltyScreen';
 import { TripPlannerScreen } from '../screens/planner/TripPlannerScreen';
 import { AdminDashboard } from '../screens/admin/AdminDashboard';
 import { ResearchPortalScreen } from '../screens/research/ResearchPortalScreen';
+import { GlobalAIDashboard } from '../screens/autonomous/GlobalAIDashboard';
+import { AutonomousPlanningScreen } from '../screens/autonomous/AutonomousPlanningScreen';
+import { GlobalAlertsScreen } from '../screens/alerts/GlobalAlertsScreen';
 import { GlobalControlCenterScreen } from '../screens/control_center/GlobalControlCenterScreen';
 import { GlobalNetworkScreen } from '../screens/global_network/GlobalNetworkScreen';
 import { SystemObservabilityScreen } from '../screens/monitoring/SystemObservabilityScreen';
@@ -118,6 +121,9 @@ export const MainNavigator = () => (
     <Tab.Screen name="Twin" component={DigitalTwinScreen} options={{ title: 'Twin', headerShown: true }} />
     <Tab.Screen name="Sim" component={SimulationEngineScreen} options={{ title: 'Sim', headerShown: true }} />
     <Tab.Screen name="Control" component={GlobalControlCenterScreen} options={{ title: 'Control', headerShown: true }} />
+    <Tab.Screen name="GlobalAI" component={GlobalAIDashboard} options={{ title: 'Cerebro', headerShown: true }} />
+    <Tab.Screen name="AutoPlan" component={AutonomousPlanningScreen} options={{ title: 'AutoPlan', headerShown: true }} />
+    <Tab.Screen name="GlobalAlerts" component={GlobalAlertsScreen} options={{ title: 'Alertas', headerShown: true }} />
     <Tab.Screen name="Research" component={ResearchPortalScreen} options={{ title: 'I+D', headerShown: true }} />
     <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Torre', headerShown: true }} />
   </Tab.Navigator>
