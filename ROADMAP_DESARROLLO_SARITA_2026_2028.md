@@ -10,7 +10,7 @@
 *Objetivo: Consolidar el núcleo operativo en el Meta, Colombia.*
 
 *   **Hitos Técnicos:**
-    *   Lanzamiento oficial de la Super App en App Store y Play Store.
+    *   Lanzamiento oficial de la Super App con Wallet, Delivery y Mi Negocio integrados.
     *   Certificación de seguridad bancaria para la pasarela Stripe integrada.
     *   Implementación del "Sargento de Sincronización" (N5) para modo offline 100% resiliente.
 *   **Arquitectura:** Migración a infraestructura AWS Multi-AZ para alta disponibilidad.

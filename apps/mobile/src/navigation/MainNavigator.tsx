@@ -1,6 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useAuth } from '../context/AuthContext';
 import {
   HomeScreen,
   ExploreScreen,
@@ -14,7 +15,24 @@ import {
   CommunityScreen,
   EducationScreen,
   ReputationScreen,
-  DestinationDashboard
+  DestinationDashboard,
+  WalletHomeScreen,
+  WalletBalanceScreen,
+  WalletTransactionsScreen,
+  WalletRewardsScreen,
+  DeliveryHomeScreen,
+  RestaurantListScreen,
+  ProductListScreen,
+  ProductDetailsScreen,
+  CartScreen,
+  OrderTrackingScreen,
+  BusinessDashboard,
+  BusinessServicesScreen,
+  BusinessOrdersScreen,
+  BusinessCustomersScreen,
+  BusinessFinanceScreen,
+  BusinessAccountingScreen,
+  BusinessDocumentsScreen
 } from '../screens';
 import { TravelFeedScreen } from '../screens/feed/TravelFeedScreen';
 import { PassportScreen } from '../screens/passport/PassportScreen';
@@ -54,6 +72,8 @@ import { UrbanServicesScreen } from '../screens/urban/UrbanServicesScreen';
 import { SustainabilityDashboard } from '../screens/sustainability/SustainabilityDashboard';
 import { EconomyDashboard } from '../screens/economy/EconomyDashboard';
 import { LiveExperiencesScreen } from '../screens/orchestration/LiveExperiencesScreen';
+import { PaymentScreen } from '../screens/payment/PaymentScreen';
+import { TicketScreen } from '../screens/ticket/TicketScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -85,46 +105,79 @@ const BookingsStack = () => (
   </Stack.Navigator>
 );
 
-import { PaymentScreen } from '../screens/payment/PaymentScreen';
-import { TicketScreen } from '../screens/ticket/TicketScreen';
-
-export const MainNavigator = () => (
-  <Tab.Navigator screenOptions={{ headerShown: false }}>
-    <Tab.Screen name="Home" component={HomeScreen} />
-    <Tab.Screen name="ExploreTab" component={ExploreStack} options={{ title: 'Explorar' }} />
-    <Tab.Screen name="BookingsTab" component={BookingsStack} options={{ title: 'Reservas' }} />
-    <Tab.Screen name="Favorites" component={FavoritesScreen} options={{ title: 'Favoritos', headerShown: true }} />
-    <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: true }} />
-    <Tab.Screen name="Operator" component={OperatorDashboard} options={{ title: 'Negocio', headerShown: true }} />
-    <Tab.Screen name="Loyalty" component={LoyaltyScreen} options={{ title: 'Club', headerShown: true }} />
-    <Tab.Screen name="Planner" component={TripPlannerScreen} options={{ title: 'Planes', headerShown: true }} />
-    <Tab.Screen name="Feed" component={TravelFeedScreen} options={{ title: 'Experiencias', headerShown: false }} />
-    <Tab.Screen name="Passport" component={PassportScreen} options={{ title: 'Pasaporte', headerShown: true }} />
-    <Tab.Screen name="Live" component={LiveTourScreen} options={{ title: 'En Vivo', headerShown: false }} />
-    <Tab.Screen name="Creator" component={CreatorDashboard} options={{ title: 'Creador', headerShown: true }} />
-    <Tab.Screen name="Destination" component={DestinationDashboard} options={{ title: 'Destino', headerShown: true }} />
-    <Tab.Screen name="Orchestrator" component={TravelOrchestratorScreen} options={{ title: 'Orquestador', headerShown: true }} />
-    <Tab.Screen name="Contextual" component={ContextualExperiencesScreen} options={{ title: 'Cerca de mí', headerShown: true }} />
-    <Tab.Screen name="Urban" component={UrbanServicesScreen} options={{ title: 'Ciudad', headerShown: true }} />
-    <Tab.Screen name="Sustainability" component={SustainabilityDashboard} options={{ title: 'Impacto', headerShown: true }} />
-    <Tab.Screen name="Economy" component={EconomyDashboard} options={{ title: 'Monedero', headerShown: true }} />
-    <Tab.Screen name="LiveNow" component={LiveExperiencesScreen} options={{ title: 'En Vivo!', headerShown: true }} />
-    <Tab.Screen name="GlobalIntel" component={GlobalAnalyticsDashboard} options={{ title: 'Global', headerShown: true }} />
-    <Tab.Screen name="Country" component={CountryDashboard} options={{ title: 'País', headerShown: true }} />
-    <Tab.Screen name="Personalized" component={HyperPersonalizedScreen} options={{ title: 'Para ti', headerShown: true }} />
-    <Tab.Screen name="OpenData" component={OpenDataPortalScreen} options={{ title: 'Datos', headerShown: true }} />
-    <Tab.Screen name="Community" component={CommunityScreen} options={{ title: 'Comunidad', headerShown: true }} />
-    <Tab.Screen name="Education" component={EducationScreen} options={{ title: 'Aula', headerShown: true }} />
-    <Tab.Screen name="Reputation" component={ReputationScreen} options={{ title: 'Confianza', headerShown: true }} />
-    <Tab.Screen name="GlobalNet" component={GlobalNetworkScreen} options={{ title: 'Red', headerShown: true }} />
-    <Tab.Screen name="Observability" component={SystemObservabilityScreen} options={{ title: 'Monitor', headerShown: true }} />
-    <Tab.Screen name="Twin" component={DigitalTwinScreen} options={{ title: 'Twin', headerShown: true }} />
-    <Tab.Screen name="Sim" component={SimulationEngineScreen} options={{ title: 'Sim', headerShown: true }} />
-    <Tab.Screen name="Control" component={GlobalControlCenterScreen} options={{ title: 'Control', headerShown: true }} />
-    <Tab.Screen name="GlobalAI" component={GlobalAIDashboard} options={{ title: 'Cerebro', headerShown: true }} />
-    <Tab.Screen name="AutoPlan" component={AutonomousPlanningScreen} options={{ title: 'AutoPlan', headerShown: true }} />
-    <Tab.Screen name="GlobalAlerts" component={GlobalAlertsScreen} options={{ title: 'Alertas', headerShown: true }} />
-    <Tab.Screen name="Research" component={ResearchPortalScreen} options={{ title: 'I+D', headerShown: true }} />
-    <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Torre', headerShown: true }} />
-  </Tab.Navigator>
+const WalletStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="WalletHome" component={WalletHomeScreen} options={{ title: 'Mi Billetera' }} />
+    <Stack.Screen name="WalletBalance" component={WalletBalanceScreen} options={{ title: 'Mi Saldo' }} />
+    <Stack.Screen name="WalletTopUp" component={WalletTopUpScreen} options={{ title: 'Recargar' }} />
+    <Stack.Screen name="WalletTransactions" component={WalletTransactionsScreen} options={{ title: 'Transacciones' }} />
+    <Stack.Screen name="WalletRewards" component={WalletRewardsScreen} options={{ title: 'Recompensas' }} />
+  </Stack.Navigator>
 );
+
+const DeliveryStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="DeliveryHome" component={DeliveryHomeScreen} options={{ title: 'Delivery' }} />
+    <Stack.Screen name="RestaurantList" component={RestaurantListScreen} options={{ title: 'Restaurantes' }} />
+    <Stack.Screen name="ProductList" component={ProductListScreen} options={{ title: 'Menú' }} />
+    <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} options={{ title: 'Plato' }} />
+    <Stack.Screen name="Cart" component={CartScreen} options={{ title: 'Carrito' }} />
+    <Stack.Screen name="OrderTracking" component={OrderTrackingScreen} options={{ title: 'Rastreo Pedido' }} />
+  </Stack.Navigator>
+);
+
+const BusinessStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="BusinessDashboard" component={BusinessDashboard} options={{ title: 'Dashboard ERP' }} />
+    <Stack.Screen name="BusinessServices" component={BusinessServicesScreen} options={{ title: 'Mis Servicios' }} />
+    <Stack.Screen name="BusinessOrders" component={BusinessOrdersScreen} options={{ title: 'Órdenes ERP' }} />
+    <Stack.Screen name="BusinessCustomers" component={BusinessCustomersScreen} options={{ title: 'Mis Clientes' }} />
+    <Stack.Screen name="BusinessFinance" component={BusinessFinanceScreen} options={{ title: 'Finanzas ERP' }} />
+    <Stack.Screen name="BusinessAccounting" component={BusinessAccountingScreen} options={{ title: 'Contabilidad' }} />
+    <Stack.Screen name="BusinessReports" component={BusinessReportsScreen} options={{ title: 'Reportes ERP' }} />
+    <Stack.Screen name="BusinessDocuments" component={BusinessDocumentsScreen} options={{ title: 'Documentación' }} />
+  </Stack.Navigator>
+);
+
+export const MainNavigator = () => {
+  const { user } = useAuth();
+  const isBusiness = user?.role === 'provider' || user?.role === 'operator';
+
+  return (
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+      {/* VÍA 1: USUARIOS / VIAJEROS */}
+      {!isBusiness && (
+        <>
+          <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Inicio' }} />
+          <Tab.Screen name="ExploreTab" component={ExploreStack} options={{ title: 'Explorar' }} />
+          <Tab.Screen name="BookingsTab" component={BookingsStack} options={{ title: 'Reservas' }} />
+          <Tab.Screen name="WalletTab" component={WalletStack} options={{ title: 'Billetera' }} />
+          <Tab.Screen name="DeliveryTab" component={DeliveryStack} options={{ title: 'Delivery' }} />
+          <Tab.Screen name="Feed" component={TravelFeedScreen} options={{ title: 'Experiencias', headerShown: false }} />
+          <Tab.Screen name="Passport" component={PassportScreen} options={{ title: 'Pasaporte', headerShown: true }} />
+        </>
+      )}
+
+      {/* VÍA 2: EMPRESARIOS / PRESTADORES */}
+      {isBusiness && (
+        <>
+          <Tab.Screen name="BusinessTab" component={BusinessStack} options={{ title: 'Mi Negocio' }} />
+          <Tab.Screen name="Operator" component={OperatorDashboard} options={{ title: 'Mercado', headerShown: true }} />
+          <Tab.Screen name="Reputation" component={ReputationScreen} options={{ title: 'Confianza', headerShown: true }} />
+          <Tab.Screen name="Live" component={LiveTourScreen} options={{ title: 'Transmisión', headerShown: false }} />
+        </>
+      )}
+
+      {/* VÍA COMÚN Y ADMIN */}
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil', headerShown: true }} />
+
+      {user?.role === 'admin' && (
+        <>
+          <Tab.Screen name="GlobalAI" component={GlobalAIDashboard} options={{ title: 'Cerebro', headerShown: true }} />
+          <Tab.Screen name="Control" component={GlobalControlCenterScreen} options={{ title: 'Control', headerShown: true }} />
+          <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Torre', headerShown: true }} />
+        </>
+      )}
+    </Tab.Navigator>
+  );
+};

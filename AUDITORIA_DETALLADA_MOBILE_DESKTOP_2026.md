@@ -103,6 +103,9 @@ Para garantizar la "UX Parity" (Paridad de Experiencia de Usuario), se define la
 | Motor Global IA        | ✓ | ✓ | ✓ |
 | Planificación Autónoma | ✓ | ✓ | ✓ |
 | Alertas Globales IA    | ✓ | ✓ | ✓ |
+| SARITA Wallet          | ✓ | ✓ | ✓ |
+| SARITA Delivery        | ✓ | ✓ | ✓ |
+| ERP "Mi Negocio"       | ✓ | ✓ | ✓ |
 
 ---
 
