@@ -33,6 +33,9 @@ import { OperatorDashboard } from '../screens/operator/OperatorDashboard';
 import { LoyaltyScreen } from '../screens/loyalty/LoyaltyScreen';
 import { TripPlannerScreen } from '../screens/planner/TripPlannerScreen';
 import { AdminDashboard } from '../screens/admin/AdminDashboard';
+import { CountryDashboard } from '../screens/country_management/CountryDashboard';
+import { HyperPersonalizedScreen } from '../screens/personalization/HyperPersonalizedScreen';
+import { OpenDataPortalScreen } from '../screens/open_data/OpenDataPortalScreen';
 import { TravelOrchestratorScreen } from '../screens/orchestration/TravelOrchestratorScreen';
 import { ContextualExperiencesScreen } from '../screens/orchestration/ContextualExperiencesScreen';
 import { UrbanServicesScreen } from '../screens/urban/UrbanServicesScreen';
@@ -94,6 +97,10 @@ export const MainNavigator = () => (
     <Tab.Screen name="Sustainability" component={SustainabilityDashboard} options={{ title: 'Impacto', headerShown: true }} />
     <Tab.Screen name="Economy" component={EconomyDashboard} options={{ title: 'Monedero', headerShown: true }} />
     <Tab.Screen name="LiveNow" component={LiveExperiencesScreen} options={{ title: 'En Vivo!', headerShown: true }} />
+    <Tab.Screen name="GlobalIntel" component={GlobalAnalyticsDashboard} options={{ title: 'Global', headerShown: true }} />
+    <Tab.Screen name="Country" component={CountryDashboard} options={{ title: 'País', headerShown: true }} />
+    <Tab.Screen name="Personalized" component={HyperPersonalizedScreen} options={{ title: 'Para ti', headerShown: true }} />
+    <Tab.Screen name="OpenData" component={OpenDataPortalScreen} options={{ title: 'Datos', headerShown: true }} />
     <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Torre', headerShown: true }} />
   </Tab.Navigator>
 );

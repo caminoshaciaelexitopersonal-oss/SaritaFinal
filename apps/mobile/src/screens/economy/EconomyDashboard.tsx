@@ -10,8 +10,14 @@ export const EconomyDashboard = () => {
 
       <Card style={styles.walletCard}>
         <Text style={styles.label}>Créditos SARITA Disponibles</Text>
-        <Text style={styles.value}>$150.00</Text>
+        <Text style={styles.value}>$150.00 USD</Text>
         <Button title="Recargar Créditos" onPress={() => {}} style={styles.topupBtn} />
+      </Card>
+
+      <Text style={styles.sectionTitle}>Conversión Multi-moneda (Fase 08)</Text>
+      <Card style={styles.infoCard}>
+        <Text style={styles.currencyRow}>100 USD = 390.000 COP</Text>
+        <Text style={styles.currencyRow}>100 USD = 92 EUR</Text>
       </Card>
 
       <Text style={styles.sectionTitle}>Economía de Experiencias</Text>
@@ -30,6 +36,7 @@ const styles = StyleSheet.create({
   label: { color: 'rgba(255,255,255,0.7)', fontSize: 14 },
   value: { color: '#fff', fontSize: 36, fontWeight: 'bold', marginVertical: 10 },
   topupBtn: { backgroundColor: '#f59e0b', width: '100%', marginTop: 10 },
+  currencyRow: { fontSize: 16, fontWeight: 'bold', color: '#1e3a8a', marginBottom: 5 },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', marginVertical: 20 },
   infoCard: { padding: 20 },
   infoTitle: { fontWeight: 'bold', marginBottom: 5 },
