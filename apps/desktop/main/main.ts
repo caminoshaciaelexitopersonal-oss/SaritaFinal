@@ -1,10 +1,16 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 
+/**
+ * SARITA Desktop Main Process
+ *
+ * Gestiona el ciclo de vida de la ventana y el aislamiento de contexto.
+ */
+
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1280,
+    height: 900,
     webPreferences: {
       preload: path.join(__dirname, '../preload/preload.js'),
       contextIsolation: true,
@@ -12,9 +18,12 @@ function createWindow() {
     },
   });
 
-  // En desarrollo carga de localhost, en producción de archivo compilado
-  const startUrl = process.env.ELECTRON_START_URL || 'http://localhost:3000';
-  win.loadURL(startUrl);
+  // Carga el renderer unificado
+  win.loadFile(path.join(__dirname, '../renderer/index.html'));
+
+  if (process.env.NODE_ENV === 'development') {
+    win.webContents.openDevTools();
+  }
 }
 
 app.whenReady().then(() => {

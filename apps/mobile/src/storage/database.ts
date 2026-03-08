@@ -13,7 +13,7 @@ export const initDatabase = async () => {
   try {
     const db = await SQLite.openDatabaseAsync(dbName);
 
-    // Crear tablas básicas para caché offline
+    // Crear tablas básicas para caché offline (Fase 01)
     await db.execAsync(`
       PRAGMA journal_mode = WAL;
       CREATE TABLE IF NOT EXISTS sync_queue (
@@ -23,7 +23,7 @@ export const initDatabase = async () => {
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
         synced INTEGER DEFAULT 0
       );
-      CREATE TABLE IF NOT EXISTS offline_data (
+      CREATE TABLE IF NOT EXISTS offline_cache (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL,
         last_updated DATETIME DEFAULT CURRENT_TIMESTAMP
