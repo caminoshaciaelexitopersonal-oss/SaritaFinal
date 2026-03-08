@@ -6,7 +6,12 @@ import { LoginPage } from './pages/Login';
 import { HomePage } from './pages/Home';
 import { DashboardLayout } from './dashboard/DashboardLayout';
 import { DashboardHome } from './dashboard/DashboardHome';
-import { BusinessManager } from './dashboard/MiNegocio';
+import { BusinessManager, BusinessSummary } from './dashboard/MiNegocio';
+import { CustomersManager } from './dashboard/commercial/CustomersManager';
+import { OpportunitiesManager } from './dashboard/commercial/OpportunitiesManager';
+import { SalesManager } from './dashboard/commercial/SalesManager';
+import { PromotionsManager } from './dashboard/commercial/PromotionsManager';
+import { CommercialReports } from './dashboard/commercial/CommercialReports';
 import { WalletDashboard } from './dashboard/Wallet';
 import { DeliveryManager } from './dashboard/Delivery';
 import { AdminDashboard } from './admin/AdminDashboard';
@@ -30,7 +35,14 @@ const App = () => (
             <DashboardLayout>
               <Routes>
                 <Route path="home" element={<DashboardHome />} />
-                <Route path="negocio" element={<BusinessManager />} />
+                <Route path="negocio" element={<BusinessManager />}>
+                  <Route index element={<BusinessSummary />} />
+                  <Route path="clientes" element={<CustomersManager />} />
+                  <Route path="oportunidades" element={<OpportunitiesManager />} />
+                  <Route path="ventas" element={<SalesManager />} />
+                  <Route path="promociones" element={<PromotionsManager />} />
+                  <Route path="reportes" element={<CommercialReports />} />
+                </Route>
                 <Route path="wallet" element={<WalletDashboard />} />
                 <Route path="delivery" element={<DeliveryManager />} />
                 <Route path="admin" element={<AdminDashboard />} />
