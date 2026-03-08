@@ -30,6 +30,12 @@ export const CountryDashboard = () => {
         <Text style={styles.collabText}>✓ Sincronización con Red Global SARITA</Text>
         <Text style={styles.collabText}>✓ Intercambio de Datos Open Data Activo</Text>
       </Card>
+
+      <Text style={styles.sectionTitle}>Optimización Automática (Fase 09)</Text>
+      <Card style={styles.optiCard}>
+        <Text style={styles.optiTitle}>Distribución de Visitantes</Text>
+        <Text style={styles.optiText}>El motor IA está desviando el 15% del tráfico hacia rutas eco-sustentables para optimizar la carga del destino.</Text>
+      </Card>
     </ScrollView>
   );
 };
@@ -49,5 +55,8 @@ const styles = StyleSheet.create({
   progressLabel: { fontSize: 10, color: '#94a3b8', marginTop: 5, textAlign: 'right' },
   govBtn: { marginTop: 10, backgroundColor: '#334155' },
   collabCard: { padding: 15, backgroundColor: '#f1f5f9' },
-  collabText: { fontSize: 12, color: '#1e3a8a', marginBottom: 5, fontWeight: 'bold' }
+  collabText: { fontSize: 12, color: '#1e3a8a', marginBottom: 5, fontWeight: 'bold' },
+  optiCard: { padding: 20, backgroundColor: '#e0f2fe' },
+  optiTitle: { fontWeight: 'bold', color: '#0369a1' },
+  optiText: { fontSize: 12, color: '#075985', marginTop: 5 }
 });

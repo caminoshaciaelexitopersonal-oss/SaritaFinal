@@ -36,8 +36,12 @@ import { OperatorDashboard } from '../screens/operator/OperatorDashboard';
 import { LoyaltyScreen } from '../screens/loyalty/LoyaltyScreen';
 import { TripPlannerScreen } from '../screens/planner/TripPlannerScreen';
 import { AdminDashboard } from '../screens/admin/AdminDashboard';
+import { ResearchPortalScreen } from '../screens/research/ResearchPortalScreen';
+import { GlobalControlCenterScreen } from '../screens/control_center/GlobalControlCenterScreen';
 import { GlobalNetworkScreen } from '../screens/global_network/GlobalNetworkScreen';
 import { SystemObservabilityScreen } from '../screens/monitoring/SystemObservabilityScreen';
+import { DigitalTwinScreen } from '../screens/digital_twin/DigitalTwinScreen';
+import { SimulationEngineScreen } from '../screens/simulation/SimulationEngineScreen';
 import { CountryDashboard } from '../screens/country_management/CountryDashboard';
 import { HyperPersonalizedScreen } from '../screens/personalization/HyperPersonalizedScreen';
 import { OpenDataPortalScreen } from '../screens/open_data/OpenDataPortalScreen';
@@ -111,6 +115,10 @@ export const MainNavigator = () => (
     <Tab.Screen name="Reputation" component={ReputationScreen} options={{ title: 'Confianza', headerShown: true }} />
     <Tab.Screen name="GlobalNet" component={GlobalNetworkScreen} options={{ title: 'Red', headerShown: true }} />
     <Tab.Screen name="Observability" component={SystemObservabilityScreen} options={{ title: 'Monitor', headerShown: true }} />
+    <Tab.Screen name="Twin" component={DigitalTwinScreen} options={{ title: 'Twin', headerShown: true }} />
+    <Tab.Screen name="Sim" component={SimulationEngineScreen} options={{ title: 'Sim', headerShown: true }} />
+    <Tab.Screen name="Control" component={GlobalControlCenterScreen} options={{ title: 'Control', headerShown: true }} />
+    <Tab.Screen name="Research" component={ResearchPortalScreen} options={{ title: 'I+D', headerShown: true }} />
     <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Torre', headerShown: true }} />
   </Tab.Navigator>
 );
