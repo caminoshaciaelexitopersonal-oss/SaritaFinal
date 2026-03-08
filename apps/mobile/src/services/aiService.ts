@@ -23,5 +23,15 @@ export const aiService = {
     } catch (error) {
       return null;
     }
+  },
+
+  async askAssistant(query: string) {
+    try {
+      const response = await api.post('/ai/assistant/', { query });
+      return response.data.suggestions || [];
+    } catch (error) {
+      console.error('Error with AI Assistant:', error);
+      return [];
+    }
   }
 };
