@@ -9,6 +9,7 @@ export const BusinessManager = () => {
     { label: 'Oportunidades', path: 'oportunidades', icon: Target },
     { label: 'Ventas', path: 'ventas', icon: ShoppingCart },
     { label: 'Promociones', path: 'promociones', icon: Tag },
+    { label: 'Operaciones', path: 'operaciones', icon: Anchor },
     { label: 'Archivo', path: 'archivo', icon: FileText },
     { label: 'Reportes', path: 'reportes', icon: BarChart3 },
   ];

@@ -4,6 +4,8 @@ import { Upload, Download, Trash2, Eye, MoreVertical, Filter, FileText } from 'l
 
 export const DocumentsManager = () => {
   const [documents, setDocuments] = useState<any[]>([]);
+  const [search, setSearch] = useState('');
+  const [selectedCat, setSelectedCat] = useState('Todas');
 
   useEffect(() => {
     const fetchDocs = async () => {
@@ -25,10 +27,17 @@ export const DocumentsManager = () => {
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
         <h2 className="text-xl font-bold text-gray-800">Explorador de Archivos</h2>
-        <div className="flex gap-2">
-          <button className="px-4 py-2 border rounded-lg flex items-center gap-2 text-gray-600 hover:bg-gray-100 transition text-sm font-bold">
-            <Filter size={18} /> Filtrar
-          </button>
+        <div className="flex gap-4">
+          <div className="relative w-64">
+            <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+            <input
+              type="text"
+              placeholder="Buscar por nombre..."
+              className="w-full pl-10 pr-4 py-2 border rounded-lg outline-none text-sm"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
           <button className="bg-primary text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-900 transition text-sm font-bold shadow-sm">
             <Upload size={18} /> Subir Documento
           </button>

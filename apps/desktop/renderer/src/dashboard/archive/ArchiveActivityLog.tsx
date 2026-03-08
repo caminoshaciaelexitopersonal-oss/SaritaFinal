@@ -39,14 +39,14 @@ export const ArchiveActivityLog = () => {
 
       <div className="divide-y divide-gray-100">
         {logs.map(log => (
-          <div key={log.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition">
+          <div key={log.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition border-l-4 border-transparent hover:border-primary">
             <div className="flex items-center gap-4">
               <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
                 <User size={16} />
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-800">
-                  <span className="font-bold">{log.user}</span> realizó una <span className="font-bold">{log.action}</span> de:
+                  <span className="font-bold text-primary">{log.user}</span> realizó una <span className="font-bold text-gray-900">{log.action}</span> de:
                 </p>
                 <div className="flex items-center gap-2 mt-1">
                   {getActionIcon(log.action)}

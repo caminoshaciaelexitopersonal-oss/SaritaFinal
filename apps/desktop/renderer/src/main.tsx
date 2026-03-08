@@ -15,6 +15,11 @@ import { CommercialReports } from './dashboard/commercial/CommercialReports';
 import { ArchiveDashboard } from './dashboard/archive/ArchiveDashboard';
 import { DocumentsManager } from './dashboard/archive/DocumentsManager';
 import { ArchiveActivityLog } from './dashboard/archive/ArchiveActivityLog';
+import { OperationsDashboard } from './dashboard/operations/OperationsDashboard';
+import { ToursManager } from './dashboard/operations/ToursManager';
+import { BookingsCalendar } from './dashboard/operations/BookingsCalendar';
+import { StaffManager } from './dashboard/operations/StaffManager';
+import { ResourceScheduler } from './dashboard/operations/ResourceScheduler';
 import { WalletDashboard } from './dashboard/Wallet';
 import { DeliveryManager } from './dashboard/Delivery';
 import { AdminDashboard } from './admin/AdminDashboard';
@@ -44,6 +49,7 @@ const App = () => (
                   <Route path="oportunidades" element={<OpportunitiesManager />} />
                   <Route path="ventas" element={<SalesManager />} />
                   <Route path="promociones" element={<PromotionsManager />} />
+                  <Route path="operaciones" element={<OperationsDashboard />} />
                   <Route path="archivo" element={<ArchiveDashboard />} />
                   <Route path="reportes" element={<CommercialReports />} />
                 </Route>

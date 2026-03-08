@@ -17,6 +17,11 @@ export const ArchiveDashboard = () => {
     fetchMetrics();
   }, []);
 
+  const integrationAlerts = [
+    { title: 'Factura de Venta Archivada', desc: 'Se ha guardado automáticamente la factura de la Venta S-101.', type: 'Comercial', icon: '🛒' },
+    { title: 'Contrato Laboral Actualizado', desc: 'Nueva versión 2.0 disponible para revisión.', type: 'Administrativo', icon: '📄' },
+  ];
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
@@ -56,6 +61,22 @@ export const ArchiveDashboard = () => {
             <p className="text-gray-500 text-xs font-bold uppercase">Categorías</p>
             <p className="text-2xl font-bold">6</p>
           </div>
+        </div>
+      </div>
+
+      <div className="bg-primary/5 p-6 rounded-xl border border-primary/10">
+        <h3 className="text-sm font-bold text-primary uppercase tracking-widest mb-4 px-2">Integración Sistémica SARITA</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {integrationAlerts.map(alert => (
+            <div key={alert.title} className="flex items-center gap-4 bg-white p-4 rounded-lg shadow-sm border border-primary/5">
+              <span className="text-2xl">{alert.icon}</span>
+              <div>
+                <p className="text-xs font-bold text-primary">{alert.type}</p>
+                <p className="text-sm font-bold text-gray-800">{alert.title}</p>
+                <p className="text-[10px] text-gray-500 mt-0.5">{alert.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
