@@ -22,6 +22,8 @@ interface SiteConfig {
 }
 
 const initialConfig: SiteConfig = {
+    nombre_entidad_principal: "Alcaldía de",
+    nombre_entidad_secundaria: "Puerto Gaitán",
     direccion: "No disponible",
     horario_atencion: "No disponible",
     telefono_conmutador: "No disponible",
