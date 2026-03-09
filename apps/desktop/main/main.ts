@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, safeStorage } from 'electron';
 import * as path from 'path';
 import { getHardwareSpecs } from './hardwareIntelligence';
 
@@ -24,6 +24,29 @@ ipcMain.handle('scan-id', async () => {
 // IA LOCAL: Detección de hardware para Ollama
 ipcMain.handle('get-hardware-intelligence', async () => {
   return await getHardwareSpecs();
+});
+
+// SECURE STORAGE: Bridge para cifrado nativo del SO (Remediación Hallazgo Seguridad)
+ipcMain.handle('secure-store-set', async (event, { key, value }) => {
+  if (!safeStorage.isEncryptionAvailable()) {
+    console.warn('SARITA SECURE: Cifrado no disponible. Usando fallback inseguro (No recomendado).');
+    return false;
+  }
+  const encrypted = safeStorage.encryptString(value);
+  // En una implementación real, esto se guardaría en un archivo de configuración local cifrado
+  // Para propósitos de este bridge, lo manejaremos via IPC para el renderer
+  return encrypted.toString('base64');
+});
+
+ipcMain.handle('secure-store-get', async (event, { encryptedBase64 }) => {
+  if (!safeStorage.isEncryptionAvailable()) return null;
+  try {
+    const buffer = Buffer.from(encryptedBase64, 'base64');
+    return safeStorage.decryptString(buffer);
+  } catch (e) {
+    console.error('SARITA SECURE: Error al descifrar el token.');
+    return null;
+  }
 });
 
 function createWindow() {
