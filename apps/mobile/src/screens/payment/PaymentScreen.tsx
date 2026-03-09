@@ -28,15 +28,18 @@ export const PaymentScreen = () => {
   const handlePayment = async () => {
     try {
       setLoading(true);
-      // Simulación de confirmación de pago (en real se usaría Stripe SDK)
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      await paymentService.confirmPayment('pi_fake_123');
+      // Integración real con la pasarela de pagos vía Backend
+      const response = await paymentService.confirmPayment(clientSecret);
 
-      Alert.alert('¡Pago Exitoso!', 'Tu reserva ha sido confirmada.', [
-        { text: 'Ver Ticket', onPress: () => navigation.navigate('Ticket', { reservationId }) }
-      ]);
+      if (response.data.status === 'succeeded') {
+        Alert.alert('¡Pago Exitoso!', 'Tu reserva ha sido confirmada.', [
+          { text: 'Ver Ticket', onPress: () => navigation.navigate('Ticket', { reservationId }) }
+        ]);
+      } else {
+        throw new Error('Pago no procesado correctamente');
+      }
     } catch (error) {
-      Alert.alert('Error', 'Hubo un problema al procesar el pago.');
+      Alert.alert('Error', 'Hubo un problema al procesar el pago real.');
     } finally {
       setLoading(false);
     }

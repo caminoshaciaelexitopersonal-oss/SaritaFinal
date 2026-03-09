@@ -7,7 +7,7 @@ import './storage';
  * Sincronizado con el Shared SDK y el backend central.
  */
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://api.sarita.travel/api/v1';
+const baseURL = (import.meta as any).env?.VITE_API_URL || 'https://api.sarita.travel/api/v1';
 
 export const api = axios.create({
   baseURL,
