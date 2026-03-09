@@ -25,21 +25,28 @@ class SyncSargento {
   private initDatabase() {
     this.db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS sync_queue (id INTEGER PRIMARY KEY AUTOINCREMENT, endpoint TEXT, method TEXT, payload TEXT, timestamp TEXT)'
+        'CREATE TABLE IF NOT EXISTS sync_queue (id INTEGER PRIMARY KEY AUTOINCREMENT, endpoint TEXT, method TEXT, payload TEXT, timestamp TEXT, local_audit TEXT)'
       );
     });
   }
 
   /**
    * Encola una acción para ejecución diferida si no hay red.
+   * Soporta órdenes procesadas por IA local.
    */
-  async enqueue(endpoint: string, method: string, payload: any) {
+  async enqueue(endpoint: string, method: string, payload: any, processedLocally: boolean = false) {
     console.log(`SYNC SARGENTO: Encolando acción para ${endpoint}`);
     return new Promise((resolve, reject) => {
       this.db.transaction(tx => {
         tx.executeSql(
-          'INSERT INTO sync_queue (endpoint, method, payload, timestamp) VALUES (?, ?, ?, ?)',
-          [endpoint, method, JSON.stringify(payload), new Date().toISOString()],
+          'INSERT INTO sync_queue (endpoint, method, payload, timestamp, local_audit) VALUES (?, ?, ?, ?, ?)',
+          [
+            endpoint,
+            method,
+            JSON.stringify(payload),
+            new Date().toISOString(),
+            processedLocally ? 'LOCAL_IA_PROCESSED' : 'USER_ACTION'
+          ],
           (_, result) => resolve(result),
           (_, error) => { reject(error); return false; }
         );

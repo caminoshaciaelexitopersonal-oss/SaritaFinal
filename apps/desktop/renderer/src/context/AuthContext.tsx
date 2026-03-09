@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { tokenManager, User } from '@sarita/shared-sdk';
+import { tokenManager, User, hybridAI } from '@sarita/shared-sdk';
 import { api } from '../services/api';
 
 interface AuthContextType {
@@ -19,6 +19,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const initAuth = async () => {
       const token = await tokenManager.getToken();
       const userData = await tokenManager.getUserData();
+
+      // Configurar Inteligencia Local (Ollama)
+      try {
+        const intel = await (window as any).saritaAPI.getHardwareIntelligence();
+        hybridAI.setLocalConfig(intel.recommendedModel);
+        console.log(`IA DESKTOP: Modelo local configurado -> ${intel.recommendedModel}`);
+      } catch (e) {
+        console.warn('IA DESKTOP: No se pudo obtener inteligencia de hardware.');
+      }
+
       if (token && userData) {
         setUser(userData);
       }

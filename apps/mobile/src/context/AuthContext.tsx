@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { api } from '../services/api';
-import { User, tokenManager } from '@sarita/shared-sdk';
+import { User, tokenManager, hybridAI } from '@sarita/shared-sdk';
+import { getMobileIntelligence } from '../services/deviceIntelligence';
 
 interface AuthContextData {
   user: User | null;
@@ -20,6 +21,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     async function loadStorageData() {
       const token = await tokenManager.getToken();
       const userData = await tokenManager.getUserData();
+
+      // Configurar Inteligencia Local (Ollama)
+      const intel = await getMobileIntelligence();
+      hybridAI.setLocalConfig(intel.recommendedModel);
+      console.log(`IA MOBILE: Modelo local configurado -> ${intel.recommendedModel}`);
 
       if (token && userData) {
         setUser(userData);

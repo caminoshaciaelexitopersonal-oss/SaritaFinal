@@ -1,9 +1,11 @@
 import { api } from './api';
+import { hybridAI } from '@sarita/shared-sdk';
 
 /**
- * SARITA AI Assistant Service - Desktop
+ * SARITA AI Assistant Service - Desktop (INTEGRACIÓN HÍBRIDA)
  */
 export const aiService = {
-  askAssistant: (query: string) => api.post('/ai/assistant/', { query }),
+  // Utiliza el motor híbrido del SDK para soporte Offline con Ollama
+  askAssistant: (query: string) => hybridAI.ask(query),
   getRecommendations: () => api.get('/recommendations/'),
 };

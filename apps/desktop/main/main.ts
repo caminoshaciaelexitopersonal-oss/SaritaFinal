@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
+import { getHardwareSpecs } from './hardwareIntelligence';
 
 /**
  * SARITA Desktop Main Process (HALLAZGO F4/F6)
@@ -18,6 +19,11 @@ ipcMain.handle('scan-id', async () => {
   console.log('MAIN: Solicitud de escaneo de identidad iniciada.');
   // Simulación de interacción con escáner USB
   return { status: 'SUCCESS', id_data: { name: 'SIMULATED DATA', valid: true } };
+});
+
+// IA LOCAL: Detección de hardware para Ollama
+ipcMain.handle('get-hardware-intelligence', async () => {
+  return await getHardwareSpecs();
 });
 
 function createWindow() {
