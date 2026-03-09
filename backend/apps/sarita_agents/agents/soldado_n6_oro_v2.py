@@ -117,9 +117,16 @@ class SoldadoN6OroV2(ABC):
     def _check_permissions(self, user):
         if not user:
              raise PermissionError("Ejecución denegada: No se proporcionó contexto de usuario.")
-        # Simulación de motor de permisos (Fase 1)
-        # if not user.has_perms(self.required_permissions):
-        #    raise PermissionError(f"Faltan permisos: {self.required_permissions}")
+
+        # MOTOR DE PERMISOS REAL (HALLAZGO F5)
+        # Verificamos si el usuario tiene el permiso específico del dominio o es un SuperUser
+        if user.is_superuser:
+            return True
+
+        for perm in self.required_permissions:
+            if not user.has_perm(perm):
+                logger.error(f"N6-ORO-V2: Violación de Seguridad. Usuario {user.id} no tiene permiso {perm}.")
+                raise PermissionError(f"Faltan permisos obligatorios: {perm}")
 
     def _check_idempotency(self, key):
         from apps.sarita_agents.models import IdempotencyKey
