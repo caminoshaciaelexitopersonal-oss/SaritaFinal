@@ -19,5 +19,9 @@ contextBridge.exposeInMainWorld('saritaAPI', {
       ipcRenderer.on(channel, (event, ...args) => func(...args));
     }
   },
-  getHardwareIntelligence: () => ipcRenderer.invoke('get-hardware-intelligence')
+  getHardwareIntelligence: () => ipcRenderer.invoke('get-hardware-intelligence'),
+  secureStore: {
+    set: (key: string, value: string) => ipcRenderer.invoke('secure-store-set', { key, value }),
+    get: (encryptedBase64: string) => ipcRenderer.invoke('secure-store-get', { encryptedBase64 })
+  }
 });
