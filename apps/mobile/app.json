@@ -27,6 +27,7 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
+      "apiUrl": "https://api.sarita.travel",
       "eas": {
         "projectId": "your-project-id"
       }

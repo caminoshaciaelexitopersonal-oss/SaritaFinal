@@ -1,6 +1,7 @@
 import { StorageProvider, tokenManager, httpClient } from '@sarita/shared-sdk';
 import * as SecureStore from 'expo-secure-store';
-import { API_URL } from '../config/env';
+import Constants from 'expo-constants';
+import { API_URL as FALLBACK_API_URL, API_V1_PREFIX } from '../config/env';
 
 /**
  * Proveedor de Almacenamiento Seguro para Mobile (Expo)
@@ -21,6 +22,7 @@ class MobileStorageProvider implements StorageProvider {
 tokenManager.setStorage(new MobileStorageProvider());
 
 // Configurar la URL base del cliente HTTP del SDK de forma segura
-httpClient.defaults.baseURL = `${API_URL}${API_V1_PREFIX}`;
+const BASE_API_URL = Constants.expoConfig?.extra?.apiUrl || FALLBACK_API_URL;
+httpClient.defaults.baseURL = `${BASE_API_URL}${API_V1_PREFIX}`;
 
 export { httpClient as api };
