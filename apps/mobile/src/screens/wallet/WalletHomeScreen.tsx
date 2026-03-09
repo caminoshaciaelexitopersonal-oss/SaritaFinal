@@ -13,7 +13,8 @@ export const WalletHomeScreen = () => {
         const response = await walletService.getBalance();
         setBalance(response.data.balance);
       } catch (error) {
-        setBalance(150.50); // Fallback mock
+        console.error('SARITA Wallet: Error al obtener saldo real.');
+        setBalance(0);
       }
     };
     fetchBalance();

@@ -1,30 +1,57 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { Card } from '../../components/Card';
+import { businessService } from '../../services/businessService';
 
 export const BusinessAccountingScreen = () => {
+  const [journal, setJournal] = useState<any[]>([]);
+  const [balance, setBalance] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAccounting = async () => {
+      try {
+        const [journalRes, balanceRes] = await Promise.all([
+          businessService.getContabilidadGeneral(),
+          businessService.getFinancieraDashboard()
+        ]);
+        setJournal(journalRes.data);
+        setBalance(balanceRes.data.balance_general);
+      } catch (error) {
+        console.error('Error al cargar datos contables reales.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAccounting();
+  }, []);
+
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Libro Mayor y Contabilidad</Text>
+      <Text style={styles.title}>Libro Mayor y Contabilidad ERP</Text>
 
       <Card style={styles.ledgerCard}>
-        <Text style={styles.ledgerTitle}>Asientos Recientes</Text>
-        {[
-          { id: 'J-001', date: '2026-03-07', desc: 'Venta Tour Safari', debit: 120.00, credit: 0 },
-          { id: 'J-002', date: '2026-03-07', desc: 'Pago Comisión SARITA', debit: 0, credit: 18.00 },
-        ].map(j => (
+        <Text style={styles.ledgerTitle}>Libro Diario (Asientos)</Text>
+        {journal.length > 0 ? journal.map(j => (
           <View key={j.id} style={styles.entry}>
-            <Text style={styles.entryDesc}>{j.desc}</Text>
-            <Text style={styles.entryVal}>{j.debit > 0 ? `+${j.debit}` : `-${j.credit}`} USD</Text>
+            <View>
+              <Text style={styles.entryDesc}>{j.descripcion}</Text>
+              <Text style={{ fontSize: 10, color: '#94a3b8' }}>{j.fecha}</Text>
+            </View>
+            <Text style={styles.entryVal}>
+              {j.naturaleza === 'DB' ? `+${j.monto}` : `-${j.monto}`} COP
+            </Text>
           </View>
-        ))}
+        )) : <Text style={{ color: '#94a3b8' }}>No hay asientos recientes.</Text>}
       </Card>
 
-      <Text style={styles.sectionTitle}>Balance General Simulado</Text>
+      <Text style={styles.sectionTitle}>Situación Financiera Real</Text>
       <Card style={styles.balanceCard}>
-        <View style={styles.row}><Text>Activos Circulantes</Text><Text style={styles.bold}>$15.250 USD</Text></View>
-        <View style={styles.row}><Text>Pasivos</Text><Text style={styles.bold}>$2.100 USD</Text></View>
-        <View style={styles.row}><Text>Patrimonio Neto</Text><Text style={styles.bold}>$13.150 USD</Text></View>
+        <View style={styles.row}><Text>Activos</Text><Text style={styles.bold}>${balance?.activos || 0} COP</Text></View>
+        <View style={styles.row}><Text>Pasivos</Text><Text style={styles.bold}>${balance?.pasivos || 0} COP</Text></View>
+        <View style={styles.row}><Text>Patrimonio</Text><Text style={styles.bold}>${balance?.patrimonio || 0} COP</Text></View>
       </Card>
     </ScrollView>
   );
