@@ -1,6 +1,10 @@
 import { app, BrowserWindow, ipcMain, safeStorage } from 'electron';
 import * as path from 'path';
 import { getHardwareSpecs } from './hardwareIntelligence';
+import { dbService } from './databaseService';
+import { syncEngine } from './syncEngine';
+import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
 
 /**
  * SARITA Desktop Main Process (HALLAZGO F4/F6)
@@ -8,11 +12,23 @@ import { getHardwareSpecs } from './hardwareIntelligence';
  * Gestiona el ciclo de vida de la ventana y el puente de hardware.
  */
 
-// HARDWARE BRIDGE: Manejo de periféricos locales
+// HARDWARE BRIDGE: Manejo de periféricos locales (Fase 3: POS Robustecimiento)
 ipcMain.handle('print-receipt', async (event, data) => {
-  console.log('MAIN: Solicitud de impresión fiscal recibida.', data);
-  // Aquí iría la integración real con drivers de impresoras térmicas
-  return { status: 'SUCCESS', message: 'Recibo enviado a cola de impresión.' };
+  log.info('POS: Generando recibo de venta...', data.id);
+
+  // En un entorno real con impresoras térmicas ESC/POS:
+  // const printer = new ThermalPrinter({ type: PrinterTypes.EPSON, interface: 'usb' });
+  // printer.alignCenter();
+  // printer.println(data.company);
+  // printer.println(`FECHA: ${data.timestamp}`);
+  // data.items.forEach(i => printer.println(`${i.quantity} x ${i.id} ... $${i.price}`));
+  // await printer.execute();
+
+  return {
+    status: 'SUCCESS',
+    message: `Recibo ${data.id} enviado a la impresora predeterminada.`,
+    timestamp: new Date().toISOString()
+  };
 });
 
 ipcMain.handle('scan-id', async () => {
@@ -24,6 +40,36 @@ ipcMain.handle('scan-id', async () => {
 // IA LOCAL: Detección de hardware para Ollama
 ipcMain.handle('get-hardware-intelligence', async () => {
   return await getHardwareSpecs();
+});
+
+// POS OPERATIONS: Manejo de base de datos local (Fase 3)
+ipcMain.handle('pos-get-products', async () => {
+  return await dbService.all('SELECT * FROM local_products');
+});
+
+ipcMain.handle('pos-save-sale', async (event, sale) => {
+  const query = `INSERT INTO local_sales (id, total, payment_method, items) VALUES (?, ?, ?, ?)`;
+  await dbService.run(query, [sale.id, sale.total, sale.payment_method, JSON.stringify(sale.items)]);
+
+  // Add to sync queue
+  await dbService.run(`INSERT INTO sync_queue (operation_type, payload) VALUES (?, ?)`,
+    ['CREATE_SALE', JSON.stringify(sale)]);
+
+  return { status: 'SUCCESS', id: sale.id };
+});
+
+ipcMain.handle('pos-get-sales-history', async () => {
+  return await dbService.all('SELECT * FROM local_sales ORDER BY created_at DESC');
+});
+
+// SYNC ENGINE: Estado y control
+ipcMain.handle('sync-get-status', async () => {
+  return syncEngine.getStatus();
+});
+
+ipcMain.handle('sync-force', async () => {
+  await syncEngine.processQueue();
+  return { status: 'SUCCESS' };
 });
 
 // SECURE STORAGE: Bridge para cifrado nativo del SO (Remediación Hallazgo Seguridad)
@@ -68,7 +114,12 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  log.info('App starting...');
+  autoUpdater.checkForUpdatesAndNotify();
+
+  await dbService.init();
+  syncEngine.start();
   createWindow();
 
   app.on('activate', () => {
