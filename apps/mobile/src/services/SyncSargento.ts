@@ -27,6 +27,41 @@ class SyncSargento {
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS sync_queue (id INTEGER PRIMARY KEY AUTOINCREMENT, endpoint TEXT, method TEXT, payload TEXT, timestamp TEXT, local_audit TEXT)'
       );
+      // Fase 4: Tabla de Caché para optimización de UX
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS local_cache (key TEXT PRIMARY KEY, value TEXT, expires_at DATETIME)'
+      );
+    });
+  }
+
+  async setCache(key: string, value: any, ttlMinutes: number = 60) {
+    const expiresAt = new Date(Date.now() + ttlMinutes * 60000).toISOString();
+    return new Promise((resolve) => {
+      this.db.transaction(tx => {
+        tx.executeSql(
+          'INSERT OR REPLACE INTO local_cache (key, value, expires_at) VALUES (?, ?, ?)',
+          [key, JSON.stringify(value), expiresAt],
+          () => resolve(true)
+        );
+      });
+    });
+  }
+
+  async getCache(key: string) {
+    return new Promise((resolve) => {
+      this.db.transaction(tx => {
+        tx.executeSql(
+          'SELECT value FROM local_cache WHERE key = ? AND expires_at > ?',
+          [key, new Date().toISOString()],
+          (_, { rows }) => {
+            if (rows.length > 0) {
+              resolve(JSON.parse((rows as any)._array[0].value));
+            } else {
+              resolve(null);
+            }
+          }
+        );
+      });
     });
   }
 

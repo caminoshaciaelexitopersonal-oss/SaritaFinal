@@ -4,6 +4,20 @@ import { Button } from '../../components/Button';
 
 export const VirtualGuideScreen = () => {
   const [isNarrating, setIsNarrating] = useState(false);
+  const [query, setQuery] = useState('');
+  const [answer, setAnswer] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const askAI = async () => {
+    if (!query) return;
+    setLoading(true);
+    try {
+      const response = await aiService.askAssistant(query);
+      setAnswer(response);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -24,6 +38,25 @@ export const VirtualGuideScreen = () => {
           <Text style={styles.btnText}>{isNarrating ? '⏹ Detener Narración' : '▶ Escuchar Historia'}</Text>
         </TouchableOpacity>
 
+        <Text style={styles.sectionTitle}>Pregúntale a SARITA</Text>
+        <Input
+          placeholder="¿Qué actividades hay cerca?"
+          value={query}
+          onChangeText={setQuery}
+        />
+        <Button
+          title="Consultar Guía"
+          onPress={askAI}
+          loading={loading}
+          style={{ marginTop: 10 }}
+        />
+
+        {answer && (
+          <Card style={styles.answerCard}>
+            <Text style={styles.answerText}>{answer}</Text>
+          </Card>
+        )}
+
         <Text style={styles.sectionTitle}>Curiosidades Locales</Text>
         <Card style={styles.factCard}>
           <Text style={styles.factText}>¿Sabías que aquí se encuentran tres grandes ríos: Meta, Manacacías y Yucao?</Text>
@@ -34,6 +67,8 @@ export const VirtualGuideScreen = () => {
 };
 
 import { Card } from '../../components/Card';
+import { Input } from '../../components/Input';
+import { aiService } from '../../services/aiService';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
@@ -48,5 +83,7 @@ const styles = StyleSheet.create({
   btnText: { color: '#fff', fontWeight: 'bold' },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', marginTop: 30, marginBottom: 15 },
   factCard: { padding: 15 },
-  factText: { fontStyle: 'italic', color: '#374151' }
+  factText: { fontStyle: 'italic', color: '#374151' },
+  answerCard: { marginTop: 20, padding: 15, backgroundColor: '#f0f9ff', borderColor: '#bae6fd' },
+  answerText: { color: '#0369a1', fontSize: 14 }
 });
