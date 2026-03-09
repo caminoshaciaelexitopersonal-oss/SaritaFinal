@@ -26,9 +26,11 @@ export const aiService = {
   },
 
   async askAssistant(query: string) {
+    // Utiliza el motor híbrido del SDK para soporte Offline con Ollama
+    const { hybridAI } = require('@sarita/shared-sdk');
     try {
-      const response = await api.post('/ai/assistant/', { query });
-      return response.data.suggestions || [];
+      const response = await hybridAI.ask(query);
+      return response.answer || [];
     } catch (error) {
       console.error('Error with AI Assistant:', error);
       return [];

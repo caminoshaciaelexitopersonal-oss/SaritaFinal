@@ -57,6 +57,26 @@ export class TokenManager {
   public async clear(): Promise<void> {
     return this.clearToken();
   }
+
+  public async setUserData(user: any): Promise<void> {
+    if (this.storage) {
+      await this.storage.setItem('sarita_user_data', JSON.stringify(user));
+    }
+  }
+
+  public async getUserData(): Promise<any | null> {
+    if (this.storage) {
+      const data = await this.storage.getItem('sarita_user_data');
+      return data ? JSON.parse(data) : null;
+    }
+    return null;
+  }
+
+  public async clearUserData(): Promise<void> {
+    if (this.storage) {
+      await this.storage.removeItem('sarita_user_data');
+    }
+  }
 }
 
 export const tokenManager = TokenManager.getInstance();

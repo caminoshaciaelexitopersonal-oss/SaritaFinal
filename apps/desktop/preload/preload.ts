@@ -18,5 +18,6 @@ contextBridge.exposeInMainWorld('saritaAPI', {
     if (validChannels.includes(channel)) {
       ipcRenderer.on(channel, (event, ...args) => func(...args));
     }
-  }
+  },
+  getHardwareIntelligence: () => ipcRenderer.invoke('get-hardware-intelligence')
 });

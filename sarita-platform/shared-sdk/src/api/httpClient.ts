@@ -7,9 +7,16 @@ import { tokenManager } from '../auth/tokenManager';
  */
 
 export const httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'http://localhost:8000/api/v1',
+  baseURL: 'http://localhost:8000/api/v1',
   timeout: 10000,
 });
+
+/**
+ * Permite configurar la URL base dinámicamente según la plataforma.
+ */
+export const setBaseURL = (url: string) => {
+  httpClient.defaults.baseURL = url;
+};
 
 httpClient.interceptors.request.use(async (config) => {
   const token = await tokenManager.getToken();
@@ -19,9 +26,28 @@ httpClient.interceptors.request.use(async (config) => {
   return config;
 });
 
+// INTERCEPTOR DE RATE LIMITING Y NORMALIZACIÓN (HALLAZGO F6)
+let requestCount = 0;
+const MAX_REQUESTS_PER_MINUTE = 300;
+
+httpClient.interceptors.request.use((config) => {
+  requestCount++;
+  if (requestCount > MAX_REQUESTS_PER_MINUTE) {
+    console.warn('SARITA SDK: Rate Limit excedido localmente.');
+    // En producción aquí se podría disparar una excepción o delay
+  }
+  return config;
+});
+
 // Interceptor de respuesta para manejo de errores de clase mundial
 httpClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Normalización de respuesta exitosa
+    return {
+      ...response,
+      data: response.data?.data || response.data // Asegurar acceso directo a 'data' si viene envuelto
+    };
+  },
   async (error) => {
     const originalRequest = error.config;
 

@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { api } from '../services/api';
-import { User, tokenManager } from '@sarita/shared-sdk';
+import { User, tokenManager, hybridAI } from '@sarita/shared-sdk';
+import { getMobileIntelligence } from '../services/deviceIntelligence';
 
 interface AuthContextData {
   user: User | null;
@@ -18,11 +19,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     async function loadStorageData() {
-      const token = await SecureStore.getItemAsync('auth_token');
-      const userStr = await SecureStore.getItemAsync('user_data');
+      const token = await tokenManager.getToken();
+      const userData = await tokenManager.getUserData();
 
-      if (token && userStr) {
-        setUser(JSON.parse(userStr));
+      // Configurar Inteligencia Local (Ollama)
+      const intel = await getMobileIntelligence();
+      hybridAI.setLocalConfig(intel.recommendedModel);
+      console.log(`IA MOBILE: Modelo local configurado -> ${intel.recommendedModel}`);
+
+      if (token && userData) {
+        setUser(userData);
       }
       setLoading(false);
     }
@@ -35,8 +41,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const response = await api.post('/token/', credentials);
       const { access, user: userData } = response.data;
 
+      // Usar el tokenManager del SDK para persistencia unificada
       await tokenManager.setToken(access);
-      await SecureStore.setItemAsync('user_data', JSON.stringify(userData));
+      await tokenManager.setUserData(userData);
 
       setUser(userData);
     } catch (error) {
@@ -47,7 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     await tokenManager.clearToken();
-    await SecureStore.deleteItemAsync('user_data');
+    await tokenManager.clearUserData();
     setUser(null);
   };
 

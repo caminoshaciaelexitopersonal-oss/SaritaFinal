@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { tokenManager, User } from '@sarita/shared-sdk';
+import { tokenManager, User, hybridAI } from '@sarita/shared-sdk';
+import { api } from '../services/api';
 
 interface AuthContextType {
   user: User | null;
@@ -17,9 +18,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const initAuth = async () => {
       const token = await tokenManager.getToken();
-      if (token) {
-        // En una implementación real se llamaría a /me/
-        setUser({ id: '1', email: 'admin@sarita.travel', first_name: 'Admin', last_name: 'SARITA', role: 'admin' });
+      const userData = await tokenManager.getUserData();
+
+      // Configurar Inteligencia Local (Ollama)
+      try {
+        const intel = await (window as any).saritaAPI.getHardwareIntelligence();
+        hybridAI.setLocalConfig(intel.recommendedModel);
+        console.log(`IA DESKTOP: Modelo local configurado -> ${intel.recommendedModel}`);
+      } catch (e) {
+        console.warn('IA DESKTOP: No se pudo obtener inteligencia de hardware.');
+      }
+
+      if (token && userData) {
+        setUser(userData);
       }
       setLoading(false);
     };
@@ -27,13 +38,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (credentials: any) => {
-    // Simulación de login conectada al SDK en el futuro
-    await tokenManager.setToken('fake-jwt-token');
-    setUser({ id: '1', email: 'admin@sarita.travel', first_name: 'Admin', last_name: 'SARITA', role: 'admin' });
+    try {
+      // Conexión real al endpoint de token del backend centralizado
+      const response = await api.post('/token/', credentials);
+      const { access, user: userData } = response.data;
+
+      await tokenManager.setToken(access);
+      await tokenManager.setUserData(userData);
+      setUser(userData);
+    } catch (error) {
+      console.error('Error in desktop login:', error);
+      throw error;
+    }
   };
 
   const logout = () => {
     tokenManager.clearToken();
+    tokenManager.clearUserData();
     setUser(null);
   };
 

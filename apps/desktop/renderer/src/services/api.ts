@@ -1,15 +1,21 @@
 import axios from 'axios';
-import { tokenManager } from '@sarita/shared-sdk';
+import { tokenManager, httpClient } from '@sarita/shared-sdk';
+import './storage';
 
 /**
  * Cliente API para la versión de Escritorio.
  * Sincronizado con el Shared SDK y el backend central.
  */
 
+const baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://api.sarita.travel/api/v1';
+
 export const api = axios.create({
-  baseURL: 'https://api.sarita.travel/api/v1',
+  baseURL,
   timeout: 15000,
 });
+
+// Sincronizar httpClient del SDK con la URL de Desktop
+httpClient.defaults.baseURL = baseURL;
 
 api.interceptors.request.use(async (config) => {
   const token = await tokenManager.getToken();
