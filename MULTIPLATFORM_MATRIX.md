@@ -4,18 +4,18 @@
 
 | Módulo | Web (Next.js) | Móvil (Expo) | Escritorio (Electron) |
 | :--- | :--- | :--- | :--- |
-| **Panel Admin (Gov)** | ✅ Completo | ⚠️ Analítica/SRE | ⚠️ Básico |
-| **Tablero Prestador** | ✅ Completo | ✅ Extenso | ⚠️ POS/Admin |
+| **Panel Gobierno (Admin)** | ✅ Completo | ⚠️ Analítica | ⚠️ Básico |
+| **Tablero Prestador (Mi Negocio)** | ✅ Completo | ✅ Extenso | ⚠️ POS/Admin |
 | **Descubre Turismo** | ✅ Completo | ✅ Interactivo | ✅ Básico |
-| **Autenticación (JWT)** | ✅ | ✅ | ✅ |
-| **Gestión Usuarios** | ✅ | ✅ | ❌ No |
-| **Informes Finanzas** | ✅ | ✅ | ⚠️ Parcial |
-| **Reservas** | ✅ | ✅ | ❌ No |
+| **Autenticación (JWT RS256)** | ✅ Completo | ✅ Completo | ✅ Completo |
+| **Gestión Usuarios** | ✅ Completo | ✅ Perfil | ❌ No (Sólo Local) |
+| **Informes Finanzas** | ✅ Completo | ✅ Dashboards | ⚠️ Parcial |
+| **Reservas** | ✅ Completo | ✅ Nativo | ⚠️ Sólo POS |
 | **Punto de Venta (POS)** | ⚠️ Parcial | ❌ No | ✅ Completo |
-| **Sincronización Sync** | ❌ No (Online) | ✅ SQLite | ✅ SQLite |
+| **Sincronización SyncEngine** | ❌ No (Online) | ✅ SQLite | ✅ SQLite |
 
 ---
-**Criterio:**
-- ✅: Funcional al 100%
-- ⚠️: Parcial o Simplificado
-- ❌: No implementado
+**Leyenda:**
+- ✅: Funcional al 100% (Paridad Total).
+- ⚠️: Funcionalidad Parcial o Simplificada.
+- ❌: No Implementado actualmente.
