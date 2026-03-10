@@ -10,12 +10,14 @@ class Empleado(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     perfil = models.ForeignKey(ProviderProfile, on_delete=models.CASCADE, related_name='empleados')
+    from api.fields import EncryptedTextField
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
-    identificacion = models.CharField(max_length=20, unique=True)
+    # Hallazgo March 2026: Encriptación de datos PII para cumplimiento GDPR
+    identificacion = models.CharField(max_length=100, unique=True) # Aumentado para hash/enc
     fecha_nacimiento = models.DateField()
-    direccion = models.CharField(max_length=255)
-    telefono = models.CharField(max_length=20)
+    direccion = EncryptedTextField()
+    telefono = EncryptedTextField()
     email = models.EmailField(unique=True)
     framework_legal = models.CharField(max_length=50, default='CO') # ej: CO, MX, ES
     estado = models.CharField(max_length=20, choices=EstadoEmpleado.choices, default=EstadoEmpleado.ACTIVO)

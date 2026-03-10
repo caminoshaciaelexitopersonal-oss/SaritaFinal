@@ -76,5 +76,24 @@ class BillingEngine:
         Genera facturación basada en consumo (API calls, tokens, etc).
         """
         logger.info(f"Procesando facturación por uso para la entidad {entity_id}")
-        # Lógica de agregación de eventos de uso
-        pass
+        # Hallazgo March 2026: Sincronización con el motor de facturación por uso
+        try:
+            from apps.usage_billing.usage_collector import UsageCollector
+            from apps.usage_billing.usage_billing_engine import UsageBillingEngine
+
+            # 1. Registrar eventos de consumo
+            for metric_code, quantity in usage_data.items():
+                UsageCollector.record_event(
+                    metric_code=metric_code,
+                    quantity=quantity,
+                    company_id=entity_id,
+                    metadata={"source": "BillingEngine.manual_trigger"}
+                )
+
+            # 2. El proceso automático de cierre de ciclo (UsageBillingEngine)
+            # se encargará de generar la factura. Aquí retornamos éxito de registro.
+            return {"status": "usage_recorded", "entity_id": entity_id}
+
+        except ImportError:
+            logger.error("Módulo usage_billing no disponible. Facturación por uso desactivada.")
+            return {"status": "module_missing", "error": True}
