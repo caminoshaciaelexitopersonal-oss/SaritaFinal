@@ -36,7 +36,7 @@ async def test_websocket_broadcast():
 
             # Usar loop.run_in_executor para no bloquear el bucle asíncrono si el emit es síncrono
             # Aunque en mi implementación el WS broadcast es async_to_sync
-            EventBus.emit("VentaCreada", payload, severity="info")
+            EventBus.emit("SALE_CREATED", payload, severity="info")
 
             print("Esperando mensaje en el WebSocket...")
             try:

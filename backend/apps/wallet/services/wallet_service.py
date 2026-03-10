@@ -179,7 +179,7 @@ class WalletService(WalletInterface):
         # 6. Emisión de Evento de Omnisciencia (Fase 4)
         from apps.core_erp.event_bus import EventBus
         EventBus.emit(
-            "PagoRecibido",
+            "PAYMENT_RECEIVED",
             {
                 "entity_id": str(transaccion.metadata.get('entity_id', 'holding')),
                 "transaction_id": str(transaccion.id),
