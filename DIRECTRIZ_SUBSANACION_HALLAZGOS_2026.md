@@ -1,74 +1,48 @@
-# DIRECTRIZ DE SUBSANACIÓN DE HALLAZGOS: MOBILE & DESKTOP SARITA 2026
+# DIRECTRIZ DE SUBSANACIÓN DE HALLAZGOS - SARITA v1.0
+**Mandato de Estabilización y Excelencia Técnica 2026**
 
-**Versión:** 1.0 - Remediación y Perfeccionamiento de Clase Mundial
-**Estado:** EJECUCIÓN PRIORITARIA
-**Responsable:** Equipo de Ingeniería Móvil y Escritorio
+## 1. OBJETIVO
+Establecer el plan de acción obligatorio para corregir las brechas técnicas, funcionales y de arquitectura identificadas en la auditoría de marzo de 2026, garantizando un estado de producción de clase mundial.
 
----
+## 2. PRIORIZACIÓN ESTRATÉGICA
 
-## 1. PROPÓSITO
-Esta directriz establece las acciones correctivas obligatorias para resolver los hallazgos técnicos detectados durante la auditoría integral de las capas de cliente (Mobile y Desktop) del ecosistema SARITA. El objetivo es elevar la madurez del sistema a un estándar de **Clase Mundial**, garantizando seguridad, resiliencia y una experiencia de usuario impecable.
+### NIVEL 1: CRÍTICO (Inmediato - 15 días)
+*   **Lógica Contable:** Resolver los 12 `NotImplementedError` en el motor de liquidaciones del ERP.
+*   **Seguridad:** Completar la cobertura de pruebas en el módulo `wallet` al 85%.
+*   **Infraestructura:** Realizar el stress test de 1M de transacciones en entorno Staging AWS.
 
----
+### NIVEL 2: ALTA (Corto Plazo - 30 días)
+*   **Paridad Desktop:** Hidratar el stub de `DiscoveryDashboard` con datos reales de la API.
+*   **Paridad Mobile:** Finalizar el módulo de `Analítica Territorial` para el perfil Gobierno.
+*   **Deuda Técnica:** Eliminar placeholders `pass` y `TODO` en los módulos core de `prestadores` y `delivery`.
 
-## 2. MATRIZ DE REMEDIACIÓN DE HALLAZGOS CRÍTICOS
+### NIVEL 3: MEDIA (Mediano Plazo - 60 días)
+*   **Estandarización UI:** Implementar la biblioteca `shared-ui` para unificar el Look & Feel entre Web y Desktop.
+*   **Optimización:** Eliminar la duplicidad de lógica de impuestos mediante el uso del `shared-sdk`.
 
-### 2.1. Hallazgo 01: Gestión de Configuración de Entorno (Resuelto parcialmente)
-*   **Problema:** Uso de URLs quemadas en `env.ts` para la App Mobile.
-*   **Subsanación:**
-    1.  Migrar totalmente a `expo-constants` (Realizado en `api.ts`).
-    2.  Implementar perfiles de despliegue (`development`, `staging`, `production`) en `app.json` bajo la llave `extra.apiUrl`.
-    3.  Validar la inyección de la URL correcta durante el proceso de build de EAS (Expo Application Services).
+## 3. ACCIONES DETALLADAS POR ÁREA
 
-### 2.2. Hallazgo 02: Resiliencia Offline (N5 Sargento de Sincronización)
-*   **Problema:** Estructura de SQLite existente pero falta lógica de vaciado automático de cola ante reconexión.
-*   **Subsanación:**
-    1.  Implementar un `NetInfo` listener en `SyncSargento.ts` para detectar cambios de conectividad.
-    2.  Ejecutar `syncSargento.flush()` automáticamente al recuperar internet.
-    3.  Añadir lógica de reintento exponencial (*Exponential Backoff*) para fallos persistentes en el flush.
+### 3.1 Backend y ERP
+1.  **Soberanía de Datos:** Asegurar que todos los modelos operativos hereden correctamente de `TenantAwareModel`.
+2.  **Integridad:** Ejecutar el script `verify_ledger_integrity.py` diariamente en Staging.
+3.  **Refactorización:** Reemplazar importaciones directas en `EventBus` por registros dinámicos para mejorar el desacoplamiento.
 
-### 2.3. Hallazgo 03: Seguridad y Persistencia en Desktop
-*   **Problema:** Uso de `localStorage` estándar para tokens JWT en la versión de escritorio.
-*   **Subsanación:**
-    1.  Implementar un puente IPC en `main.ts` que consuma `safeStorage` de Electron.
-    2.  Crear `SafeDesktopStorageProvider` en el renderer que invoque este puente.
-    3.  Cifrar el token JWT y los datos de perfil (`userData`) utilizando las llaves nativas del sistema operativo (OS Keychain).
+### 3.2 Multiplataforma (Web, Mobile, Desktop)
+1.  **Sincronización:** Refinar el `SyncEngine` en Desktop para manejar colisiones de datos en escenarios de alta latencia.
+2.  **UX Turista:** Completar el flujo de "Mi Viaje" en Desktop para igualar la experiencia Mobile.
+3.  **MFA:** Activar obligatoriamente la autenticación de dos factores para perfiles de Gobierno y Prestador.
 
-### 2.4. Hallazgo 04: Activos Visuales y Marca (Placeholders)
-*   **Problema:** Iconos, splash screens y favicon en `apps/mobile/assets/` son archivos vacíos o genéricos.
-*   **Subsanación:**
-    1.  Generar el set completo de activos con la identidad visual oficial de SARITA.
-    2.  Configurar el `adaptive-icon` para Android y el set de iconos multiresolución para iOS.
-    3.  Asegurar que el `splash.png` esté correctamente centrado y optimizado para evitar distorsiones en pantallas largas.
+### 3.3 Inteligencia Artificial
+1.  **Cognición de Agentes:** Evolucionar las misiones de los Capitanes de lógica determinista a toma de decisiones basada en LLM dinámico.
+2.  **Observabilidad de IA:** Implementar un tablero de "Misiones Fallidas" en la Torre de Control para re-entrenamiento de agentes.
 
-### 2.5. Hallazgo 05: Contrato de API Unificado (OpenAPI)
-*   **Problema:** Ausencia de una especificación OpenAPI (Swagger) que sirva como contrato único para los clientes.
-*   **Subsanación:**
-    1.  Generar `openapi.yaml` desde el backend Django utilizando `drf-spectacular`.
-    2.  Implementar validación de tipos en el Shared SDK basada en este esquema OpenAPI.
-    3.  Asegurar que cualquier cambio en los endpoints del backend rompa el build de los clientes si el contrato no se cumple (Testing de Contratos).
+## 4. CRITERIOS DE CIERRE
+Una tarea se considera subsanada solo si:
+1.  El código pasa las pruebas unitarias y de integración.
+2.  La cobertura de código no disminuye.
+3.  Se ha actualizado la documentación técnica correspondiente.
+4.  Se ha verificado la paridad funcional en las tres plataformas (cuando aplique).
 
 ---
-
-## 3. PROTOCOLO DE CALIDAD Y PRUEBAS MULTIPLATAFORMA
-
-Para garantizar que el sistema sea de talla mundial, se deben ejecutar:
-
-1.  **Pruebas de Latencia IA:** Validar que el fallback a Ollama local (Hybrid AI) ocurra en menos de 2 segundos si el backend no responde.
-2.  **Pruebas de Firma Digital:** Verificar la integridad SHA-256 de los documentos generados desde Mobile y Desktop comparándolos con el registro en el Ledger Engine.
-3.  **Matriz de Compatibilidad:**
-    *   **iOS:** Pruebas en iPhone 13 a 15 (iOS 16+).
-    *   **Android:** Pruebas en Android 12, 13 y 14.
-    *   **Windows/macOS:** Instaladores generados con `electron-builder` firmados digitalmente.
-
----
-
-## 4. CRONOGRAMA DE SUBSANACIÓN (Sprints)
-
-*   **Semana 1:** Implementación de `safeStorage` en Desktop y `NetInfo` en Mobile.
-*   **Semana 2:** Generación de activos visuales y configuración de perfiles de build.
-*   **Semana 3:** Testing de contratos OpenAPI y validación de la jerarquía de Agentes N1-N7.
-
----
-
-**Estado Final de la Subsanación:** EN PROCESO DE CIERRE TÉCNICO.
+**Firmado:** Jules, AI Lead Architect.
+**Fecha de Emisión:** Marzo de 2026.
