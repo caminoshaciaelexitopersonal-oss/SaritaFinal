@@ -22,6 +22,14 @@ export * from './organisms/TerritorialAnalytics';
 export * from './organisms/ProviderMonitoring';
 export * from './organisms/AlertSystem';
 export * from './organisms/InstitutionalReports';
+export * from './organisms/TrendGraph';
+export * from './organisms/DataExporter';
+export * from './organisms/RiskHeatmap';
+export * from './organisms/InventoryWidget';
+export * from './organisms/PayrollSnapshot';
+export * from './organisms/AttractionCard';
+export * from './organisms/EventCalendar';
+export * from './organisms/InteractiveRouteMap';
 
 // Layouts
 export * from './layouts/DashboardLayout';

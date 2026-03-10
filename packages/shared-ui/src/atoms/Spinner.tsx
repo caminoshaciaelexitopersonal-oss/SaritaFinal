@@ -1,17 +1,27 @@
 import React from 'react';
+import { View, ActivityIndicator, Platform, StyleSheet } from 'react-native';
 import { designTokens } from '../tokens/design-tokens';
 
 export const Spinner: React.FC = () => {
+  if (Platform.OS === 'web') {
+    return (
+      <div style={{
+        width: '24px',
+        height: '24px',
+        border: `3px solid ${designTokens.colors.border}`,
+        borderTop: `3px solid ${designTokens.colors.primary}`,
+        borderRadius: '50%',
+      }} />
+    );
+  }
+
   return (
-    <div style={{
-      width: '24px',
-      height: '24px',
-      border: `3px solid ${designTokens.colors.border}`,
-      borderTop: `3px solid ${designTokens.colors.primary}`,
-      borderRadius: '50%',
-      animation: 'spin 1s linear infinite',
-    }} />
+    <View style={styles.container}>
+      <ActivityIndicator size="small" color={designTokens.colors.primary} />
+    </View>
   );
 };
 
-// CSS for spinner would be handled via a global inject or CSS-in-JS library in a real scenario
+const styles = StyleSheet.create({
+  container: { padding: 10 }
+});

@@ -1,72 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
-import { Card } from '../../components/Card';
-import { businessService } from '../../services/businessService';
+import React from 'react';
+import { InventoryWidget, PayrollSnapshot, StatCard, StatGrid } from '@sarita/shared-ui';
+import { ScrollView, View, StyleSheet } from 'react-native';
+
+const PRESTADOR_MOCK = {
+  inventory: [
+    { id: '1', name: 'Toallas Blancas', stock: 15, minStock: 20, unit: 'unidades' },
+    { id: '2', name: 'Jabón Biodegradable', stock: 50, minStock: 10, unit: 'litros' }
+  ],
+  payroll: {
+    totalEmployees: 12,
+    totalPayable: "$8,500,000",
+    nextPaymentDate: "30 Mar 2026",
+    pendingLiquidations: 1
+  },
+  stats: {
+    revenue: "$45.2M",
+    bookings: 85,
+    satisfaction: "4.8/5"
+  }
+};
 
 export const BusinessAccountingScreen = () => {
-  const [journal, setJournal] = useState<any[]>([]);
-  const [balance, setBalance] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAccounting = async () => {
-      try {
-        const [journalRes, balanceRes] = await Promise.all([
-          businessService.getContabilidadGeneral(),
-          businessService.getFinancieraDashboard()
-        ]);
-        setJournal(journalRes.data);
-        setBalance(balanceRes.data.balance_general);
-      } catch (error) {
-        console.error('Error al cargar datos contables reales.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAccounting();
-  }, []);
-
-  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
-
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Libro Mayor y Contabilidad ERP</Text>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <StatGrid columns={1}>
+        <StatCard title="Ingresos Mes" value={PRESTADOR_MOCK.stats.revenue} trend="+12%" trendDirection="up" />
+        <StatCard title="Reservas Activas" value={PRESTADOR_MOCK.stats.bookings} trend="+5%" trendDirection="up" />
+      </StatGrid>
 
-      <Card style={styles.ledgerCard}>
-        <Text style={styles.ledgerTitle}>Libro Diario (Asientos)</Text>
-        {journal.length > 0 ? journal.map(j => (
-          <View key={j.id} style={styles.entry}>
-            <View>
-              <Text style={styles.entryDesc}>{j.descripcion}</Text>
-              <Text style={{ fontSize: 10, color: '#94a3b8' }}>{j.fecha}</Text>
-            </View>
-            <Text style={styles.entryVal}>
-              {j.naturaleza === 'DB' ? `+${j.monto}` : `-${j.monto}`} COP
-            </Text>
-          </View>
-        )) : <Text style={{ color: '#94a3b8' }}>No hay asientos recientes.</Text>}
-      </Card>
+      <View style={{ marginVertical: 20 }}>
+        <PayrollSnapshot data={PRESTADOR_MOCK.payroll} />
+      </View>
 
-      <Text style={styles.sectionTitle}>Situación Financiera Real</Text>
-      <Card style={styles.balanceCard}>
-        <View style={styles.row}><Text>Activos</Text><Text style={styles.bold}>${balance?.activos || 0} COP</Text></View>
-        <View style={styles.row}><Text>Pasivos</Text><Text style={styles.bold}>${balance?.pasivos || 0} COP</Text></View>
-        <View style={styles.row}><Text>Patrimonio</Text><Text style={styles.bold}>${balance?.patrimonio || 0} COP</Text></View>
-      </Card>
+      <InventoryWidget items={PRESTADOR_MOCK.inventory} />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc', padding: 20 },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20, color: '#0f172a' },
-  ledgerCard: { padding: 20, marginBottom: 20 },
-  ledgerTitle: { fontWeight: 'bold', marginBottom: 15, fontSize: 16 },
-  entry: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10, borderBottomWidth: 1, borderColor: '#f1f5f9' },
-  entryDesc: { fontSize: 13, color: '#475569' },
-  entryVal: { fontWeight: 'bold' },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginVertical: 15 },
-  balanceCard: { padding: 20 },
-  row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
-  bold: { fontWeight: 'bold', color: '#1e3a8a' }
+  container: { flex: 1, backgroundColor: '#f9fafb' },
+  content: { padding: 16 }
 });
