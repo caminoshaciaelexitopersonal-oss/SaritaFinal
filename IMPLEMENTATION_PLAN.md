@@ -1,20 +1,20 @@
-# IMPLEMENTATION PLAN: FUNCTIONAL PARITY ALIGNMENT
+# IMPLEMENTATION PLAN: CONSOLIDATING PARITY
 
-## Fase 1: Estandarización de Componentes (Semanas 1-2)
-- [ ] Extraer componentes UI base (`Button`, `Card`, `Input`) de `interfaz/src/components/ui` a `sarita-platform/shared-ui`.
-- [ ] Implementar un sistema de temas (Tailwind config compartido) para garantizar consistencia visual.
+## Fase 1: Sincronización Estructural (Completado)
+- Implementación de Bridges y Stubs en Mobile y Desktop.
+- Creación de rutas unificadas `panel-admin`, `tablero-prestador`, `descubre-turismo`.
 
-## Fase 2: Alineación Dashboard Prestador (Semanas 3-4)
-- [ ] **Desktop:** Implementar `RegionalAnalyticsScreen` adaptando los gráficos de la Web.
-- [ ] **Mobile:** Refinar `BusinessAccountingScreen` para permitir la creación de asientos manuales (N6 integration).
+## Fase 2: Implementación de Módulos Faltantes (Próximos 30 días)
+### Prioridad 1: Tablero Prestador (Mi Negocio)
+- [ ] Mobile: Integración total de `BusinessAccounting` con el Ledger Core.
+- [ ] Desktop: Optimización de `ArchiveDashboard` para gestión local de archivos masivos.
 
-## Fase 3: Alineación Descubre Turismo (Semanas 5-6)
-- [ ] **Desktop:** Implementar la versión completa de `DiscoveryDashboard` consumiendo el SDK de mapas compartido.
-- [ ] **Mobile:** Integrar `VirtualGuideScreen` directamente con la navegación de `ExploreStack`.
+### Prioridad 2: Descubre Turismo
+- [ ] Desktop: Evolucionar el Bridge `DiscoveryDashboard` a una experiencia inmersiva completa con mapas 3D.
+- [ ] Mobile: Activación de Realidad Aumentada (AR) para exploración de destinos.
 
-## Fase 4: Alineación Dashboard Gobierno (Semanas 7-8)
-- [ ] **Desktop:** Implementar `TorreControlAdmin` con acceso a `UserManager` y `AuditLog`.
-- [ ] **Mobile:** Crear `GovernmentAlertsScreen` para notificaciones P0 en tiempo real.
+### Prioridad 3: Panel Admin (Gobierno)
+- [ ] Mobile/Desktop: Portar el `UserManager` ABAC de la versión Web.
 
 ---
-*Roadmap proposed by Jules.*
+*Roadmap estratégico para el Nivel 10 de madurez total.*

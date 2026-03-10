@@ -1,44 +1,37 @@
-# COMPONENT INVENTORY: SARITA ECHOSYSTEM
+# COMPONENT INVENTORY: SARITA MULTIPLATFORM
 
-## 1. Web Platform (Next.js 15)
-### Screens & Layouts
-- **Dashboard Admin:** `/app/dashboard/admin`
-- **Dashboard Prestador:** `/app/dashboard/prestador`
-- **Descubre Turismo:** `/app/descubre`
-- **Auth:** `/app/dashboard/login`, `/app/dashboard/registro`
-- **Sub-módulos:** `atractivos`, `delivery`, `formularios`, `verificacion`, `agenda-cultural`, `mapa`, `rutas-turisticas`.
+## 1. Interfaz Web (Next.js 15)
+### Módulos Principales
+- **panel-admin:** Localizado en `interfaz/src/app/dashboard/admin`. Incluye `ia-audit` e `integrity`.
+- **tablero-prestador:** Localizado en `interfaz/src/app/dashboard/prestador/mi-negocio`.
+- **descubre-turismo:** Localizado en `interfaz/src/app/descubre`. Incluye `atractivos`, `agenda-cultural`, `mapa`, `rutas-turisticas`.
 
-### Components
-- **Core UI:** `Button`, `Card`, `Input`, `Modal`, `Sidebar`, `Header`, `NotificationBell`.
-- **Business/ERP:** `ArtesanoProfileForm`, `AtractivoForm`, `FormBuilder`, `DocumentManager`, `ResenasManager`.
-- **Specialized:** `MapComponent`, `ImageGalleryManager`, `LLMKeysManager`, `AuditLogViewer`.
+### Componentes UI
+- `AdminDashboard.tsx`, `UserManager.tsx`, `StatisticsDashboard.tsx`.
+- `FormBuilder.tsx`, `FormFiller.tsx`, `DocumentManager.tsx`.
+- `MapComponent.tsx`, `ImageGalleryManager.tsx`.
 
-## 2. Mobile Platform (Expo / React Native)
-### Screens (MainNavigator)
-- **Tourist:** `ExploreScreen`, `BookingsScreen`, `WalletHomeScreen`, `DeliveryHomeScreen`, `PassportScreen`, `VirtualGuideScreen`.
-- **Prestador:** `BusinessDashboard`, `BusinessServicesScreen`, `BusinessOrdersScreen`, `BusinessAccountingScreen`, `BusinessFinanceScreen`.
-- **Admin:** `AdminDashboard`, `GlobalControlCenterScreen`, `SystemObservabilityScreen`, `CountryDashboard`.
+## 2. Interfaz Móvil (React Native / Expo)
+### Módulos Principales
+- **panel-admin:** Localizado en `apps/mobile/src/screens/admin`. Incluye `analytics` y `alerts`.
+- **tablero-prestador:** Localizado en `apps/mobile/src/screens/business`. Incluye `BusinessAccounting`, `BusinessFinance`, `BusinessOrders`.
+- **descubre-turismo:** Localizado en `apps/mobile/src/screens/explore`. Incluye `ExploreScreen`.
 
-### Components
-- **UI:** `Button`, `Card`, `Input`, `Loader`, `TourCard`.
-- **Specialized:** Native Map integrations, QR Scanner (Passport), Push Notifications.
+### Pantallas Clave
+- `AdminDashboard.tsx`, `GlobalControlCenterScreen.tsx`.
+- `BusinessDashboard.tsx`, `RegionalAnalyticsScreen.tsx`.
+- `ExploreScreen.tsx`, `SmartMapScreen.tsx`.
 
-## 3. Desktop Platform (Electron)
-### Screens (React-Router)
-- **Main:** `HomePage`, `LoginPage`.
-- **Mi Negocio:** `BusinessManager`, `CustomersManager`, `SalesManager`, `ArchiveDashboard`, `AccountingDashboard`, `FinanceDashboard`.
-- **Admin:** `AdminDashboard` (Torre de Control).
-- **Domain:** `WalletDashboard`, `DeliveryManager`.
+## 3. Interfaz Escritorio (Electron)
+### Módulos Principales
+- **panel-admin:** Localizado en `apps/desktop/renderer/src/admin`.
+- **tablero-prestador:** Localizado en `apps/desktop/renderer/src/dashboard`. Incluye `accounting`, `archive`, `commercial`, `finance`, `operations`.
+- **descubre-turismo:** Localizado en `apps/desktop/renderer/src/pages/descubre`.
 
-### Components
-- **UI:** `Button`, `Card`, `Navbar`, `Sidebar`.
-- **Hardware Integration:** Local database (SQLite), POS printers integration (via main process).
-
-## 4. Shared SDK (Logic & Service Parity)
-- **Auth Service:** Universal token management (JWT).
-- **API Client:** Shared Axios instances with interceptors.
-- **AI Engine:** Client-side LLM routing logic.
-- **Models:** Common TypeScript interfaces for ERP and Tourism entities.
+### Componentes Clave
+- `AdminDashboard.tsx`.
+- `MiNegocio.tsx`, `POSInterface.tsx`, `AccountingDashboard.tsx`.
+- `DiscoveryDashboard.tsx`.
 
 ---
-*Inventory consolidated on March 2026.*
+*Consolidado por Jules - Marzo 2026*

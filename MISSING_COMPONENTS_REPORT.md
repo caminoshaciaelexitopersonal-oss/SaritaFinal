@@ -1,18 +1,17 @@
-# MISSING COMPONENTS REPORT: SARITA ECOSYSTEM
+# MISSING COMPONENTS REPORT: SARITA PARITY AUDIT
 
-## 1. Desktop Platform (Electron)
-- **Admin Users Manager:** Falta portar `UserManager.tsx` y `GlobalPermission` controls.
-- **AI Local Bridge:** Interfaz para configuración de Ollama local vía IPC.
-- **Inmersive Discovery:** No existen los componentes de `MapComponent` y `ImageSlider` en la versión de escritorio de "Descubre".
-- **Real-time Analytics:** Falta el dashboard de `StatisticsDashboard` en la Torre de Control Desktop.
+## 1. Módulos Incompletos / Faltantes
+### Escritorio (Desktop)
+- **Gestión de Usuarios Avanzada:** Falta el módulo de control de permisos ABAC/RBAC dinámico que posee la Web.
+- **Descubre Turismo (Inmersivo):** El `DiscoveryDashboard.tsx` actual es un Bridge; falta la integración total de mapas y rutas interactivas.
 
-## 2. Mobile Platform (Expo)
-- **Advanced Form Builder:** El creador de formularios (`FormBuilder`) solo existe en Web; Mobile solo permite llenado (`FormFiller`).
-- **Regional Analytics:** Los reportes de `RegionalAnalytics` son limitados en comparación con la versión Web.
-- **Audit Logs:** Falta el visualizador de `AuditLogViewer`.
+### Móvil (Mobile)
+- **Gestión de Usuarios:** Actualmente limitado al perfil propio; falta la vista administrativa de usuarios para el rol de Gobierno.
+- **Informes Complejos:** La visualización de gráficos financieros masivos requiere optimización de rendimiento para dispositivos de gama media.
 
-## 3. Web Platform (Next.js)
-- **Offline Sync Manager:** Aunque Web es online-only, falta una interfaz para monitorear el estado de sincronización de otros clientes (Mobile/Desktop) asociados al tenant.
+## 2. Brechas Funcionales
+- **Punto de Venta (POS):** Aunque funcional en Desktop, la versión Móvil carece de integración con impresoras térmicas Bluetooth (Fase U de Mobile).
+- **IA Audit:** La trazabilidad de misiones de IA es visualmente más pobre en Móvil y Escritorio en comparación con la Torre de Control Web.
 
 ---
-*Generated on March 2026.*
+*Reporte de brechas consolidado para el plan de alineación.*
