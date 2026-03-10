@@ -1,48 +1,51 @@
-# DIRECTRIZ DE SUBSANACIÓN DE HALLAZGOS - SARITA v1.0
-**Mandato de Estabilización y Excelencia Técnica 2026**
+# DIRECTRIZ DE SUBSANACIÓN DE HALLAZGOS Y EXCELENCIA TÉCNICA 2026
 
-## 1. OBJETIVO
-Establecer el plan de acción obligatorio para corregir las brechas técnicas, funcionales y de arquitectura identificadas en la auditoría de marzo de 2026, garantizando un estado de producción de clase mundial.
-
-## 2. PRIORIZACIÓN ESTRATÉGICA
-
-### NIVEL 1: CRÍTICO (Inmediato - 15 días)
-*   **Lógica Contable:** Resolver los 12 `NotImplementedError` en el motor de liquidaciones del ERP.
-*   **Seguridad:** Completar la cobertura de pruebas en el módulo `wallet` al 85%.
-*   **Infraestructura:** Realizar el stress test de 1M de transacciones en entorno Staging AWS.
-
-### NIVEL 2: ALTA (Corto Plazo - 30 días)
-*   **Paridad Desktop:** Hidratar el stub de `DiscoveryDashboard` con datos reales de la API.
-*   **Paridad Mobile:** Finalizar el módulo de `Analítica Territorial` para el perfil Gobierno.
-*   **Deuda Técnica:** Eliminar placeholders `pass` y `TODO` en los módulos core de `prestadores` y `delivery`.
-
-### NIVEL 3: MEDIA (Mediano Plazo - 60 días)
-*   **Estandarización UI:** Implementar la biblioteca `shared-ui` para unificar el Look & Feel entre Web y Desktop.
-*   **Optimización:** Eliminar la duplicidad de lógica de impuestos mediante el uso del `shared-sdk`.
-
-## 3. ACCIONES DETALLADAS POR ÁREA
-
-### 3.1 Backend y ERP
-1.  **Soberanía de Datos:** Asegurar que todos los modelos operativos hereden correctamente de `TenantAwareModel`.
-2.  **Integridad:** Ejecutar el script `verify_ledger_integrity.py` diariamente en Staging.
-3.  **Refactorización:** Reemplazar importaciones directas en `EventBus` por registros dinámicos para mejorar el desacoplamiento.
-
-### 3.2 Multiplataforma (Web, Mobile, Desktop)
-1.  **Sincronización:** Refinar el `SyncEngine` en Desktop para manejar colisiones de datos en escenarios de alta latencia.
-2.  **UX Turista:** Completar el flujo de "Mi Viaje" en Desktop para igualar la experiencia Mobile.
-3.  **MFA:** Activar obligatoriamente la autenticación de dos factores para perfiles de Gobierno y Prestador.
-
-### 3.3 Inteligencia Artificial
-1.  **Cognición de Agentes:** Evolucionar las misiones de los Capitanes de lógica determinista a toma de decisiones basada en LLM dinámico.
-2.  **Observabilidad de IA:** Implementar un tablero de "Misiones Fallidas" en la Torre de Control para re-entrenamiento de agentes.
-
-## 4. CRITERIOS DE CIERRE
-Una tarea se considera subsanada solo si:
-1.  El código pasa las pruebas unitarias y de integración.
-2.  La cobertura de código no disminuye.
-3.  Se ha actualizado la documentación técnica correspondiente.
-4.  Se ha verificado la paridad funcional en las tres plataformas (cuando aplique).
+**Objetivo:** Transformar el sistema SARITA de un prototipo avanzado a una plataforma de **Talla Mundial (Nivel 10+)**, garantizando la resiliencia sistémica, la paridad total y el cumplimiento de estándares internacionales de producción.
 
 ---
-**Firmado:** Jules, AI Lead Architect.
-**Fecha de Emisión:** Marzo de 2026.
+
+## 1. SUBSANACIÓN DEL BACKEND Y LÓGICA CRÍTICA
+Para alcanzar la talla mundial, el backend debe eliminar toda incertidumbre algorítmica.
+
+- **[P0] Cálculo de Costos Reales:** Implementar los motores de recálculo en `reservas` y `ai_views` para que la rentabilidad sea trazable en el Ledger inmutable.
+- **[P0] Nómina SMMLV 2026:** Finalizar el módulo de liquidación automática cumpliendo con la normativa laboral proyectada, incluyendo el cálculo de provisiones en tiempo real.
+- **[P1] Saneamiento de Deuda:** Eliminar los 335 marcadores de deuda técnica (`TODO`, `FIXME`). No se permite código en producción con sentencias `pass` en bloques de excepción.
+- **[P1] Optimización de Consultas:** Implementar `select_related` y `prefetch_related` en el 100% de los ViewSets para mantener la latencia < 300ms con 1M+ registros.
+
+## 2. EVOLUCIÓN DE LA INTELIGENCIA ARTIFICIAL (N1-N7)
+La jerarquía de agentes debe pasar de la "ejecución de plantillas" a la "toma de decisiones autónoma".
+
+- **Activación de Sargentos (N5):** Reemplazar los stubs de sargentos por coordinadores reales que gestionen el estado de las microtareas de los Soldados (N6).
+- **Hardening de Soldados:** Los soldados de dominios periféricos (Marketing, SST) deben integrarse con las APIs externas reales (SendGrid, WhatsApp Cloud) y no solo con mocks.
+- **Forensic AI Audit:** Activar el visualizador de `MisionHistory` para que el Super Admin pueda auditar el razonamiento de los agentes en caso de anomalías financieras.
+
+## 3. PARIDAD MULTIPLATAFORMA (THE GLOBAL EXPERIENCE)
+La arquitectura unificada debe ser funcional, no solo estructural.
+
+- **Evolución de Bridges:** Convertir los stubs de `panel-admin` y `tablero-prestador` en Mobile y Desktop en interfaces hidratadas con datos reales sincronizados vía `SyncEngine`.
+- **Offline Total:** Garantizar que el 100% de las transacciones del POS en Desktop se sincronicen con el Ledger central sin pérdida de integridad SHA-256.
+- **Impresión Térmica:** Implementar el driver universal de impresión en la versión Mobile para formalizar la "Factura de Bolsillo".
+
+## 4. ESTÁNDARES DE CLASE MUNDIAL (PRODUCTION READY)
+Para operar a escala gubernamental e internacional, el sistema debe cumplir:
+
+- **Disponibilidad:** 99.95% mediante configuración Multi-AZ en AWS RDS y replicación de lectura.
+- **Seguridad S-0.3:** Activar el `Kill Switch` global ante detecciones de inyección de intenciones en la capa de IA.
+- **Compliance:** Auditoría automatizada de cumplimiento GDPR/CCPA en el módulo de `privacy_vault`.
+- **Observabilidad:** Integración total con Prometheus/Grafana para alertas predictivas de agotamiento de recursos.
+
+---
+
+## CRONOGRAMA DE EJECUCIÓN (ROADMAP)
+
+| Fase | Título | Plazo | Meta |
+| :--- | :--- | :--- | :--- |
+| **I** | **Estabilización de Núcleo** | 30 días | 0 Deuda Técnica P0. |
+| **II** | **Alineación de Interfaces** | 45 días | 100% Paridad Funcional. |
+| **III** | **Blindaje y Cognición** | 60 días | IA Autónoma y Seguridad Zero-Trust. |
+| **IV** | **Certificación Global** | 90 días | Auditoría Externa y Salida a Producción. |
+
+---
+**Firmado por Jules.**
+*Lead Architect & Senior Engineer.*
+**Fecha:** Marzo 2026.
