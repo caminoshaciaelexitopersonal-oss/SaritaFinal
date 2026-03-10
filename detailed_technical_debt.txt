@@ -1,0 +1,244 @@
+backend/puerto_gaitan_turismo/settings.py:251:    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+backend/puerto_gaitan_turismo/settings.py:252:    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+backend/puerto_gaitan_turismo/settings.py:253:    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+backend/puerto_gaitan_turismo/settings.py:305:ACCOUNT_SIGNUP_FIELDS = ['email', 'password1']
+backend/docs/DIRECTRICES_MAESTRAS_SARITA.md:5:**Regla Crítica:** TODO se ejecuta en el backend. Los clientes (Web, Mobile, Desktop) NUNCA contienen lógica de negocio.
+backend/README.md:90:Contraseña: password123
+backend/audit_soldiers.py:18:                        has_todo = "TODO" in content or "FIXME" in content
+backend/audit_soldiers.py:33:    print(f"{'Name':<35} | {'Base':<15} | TODO | R0 | Atomic | Action")
+backend/audit_soldiers_v2.py:25:                        has_todo = "TODO" in block or "FIXME" in block
+backend/legacy_custody/test_legacy.py:10:        user = User.objects.create_user(username="testcustodian", password="password")
+backend/seed_phase_c.py:46:        admin_user.set_password('admin123')
+backend/seed_phase_c.py:58:        prestador_user.set_password('prestador123')
+backend/apps/delivery/tests.py:15:            username='tourist_del', email='tourist_del@test.com', password='password',
+backend/apps/delivery/tests.py:19:            username='driver_del', email='driver_del@test.com', password='password',
+backend/apps/delivery/tests.py:46:        admin = CustomUser.objects.create_superuser('admin_del', 'admin_del@test.com', 'password')
+backend/apps/delivery/agents/soldados.py:22:                pass
+backend/apps/sovereign_infrastructure/apps.py:10:        pass
+backend/apps/enterprise_core/integration/governance_adapter.py:5:    Ensures every EOS decision passes through the GovernanceKernel.
+backend/apps/enterprise_core/integration/governance_adapter.py:18:            pass
+backend/apps/enterprise_core/services/metric_listener.py:31:        pass
+backend/apps/enterprise_core/services/metric_listener.py:36:        pass
+backend/apps/enterprise_core/services/self_healing.py:70:            pass
+backend/apps/decision_intelligence/agents/capitanes_decisores.py:26:        pass
+backend/apps/wallet/tests.py:11:            username='admin_test', email='admin_test@test.com', password='password'
+backend/apps/wallet/tests.py:15:            username='tourist_test', email='tourist_test@test.com', password='password',
+backend/apps/wallet/tests.py:19:            username='provider_test', email='provider_test@test.com', password='password',
+backend/apps/wallet/reality_test_17_wallet.py:15:        admin = CustomUser.objects.create_superuser('admin_wallet', 'admin@test.com', 'password')
+backend/apps/wallet/reality_test_17_wallet.py:17:    cliente = CustomUser.objects.create_user(username=f'cliente_{uuid.uuid4().hex[:4]}', password='password')
+backend/apps/wallet/reality_test_17_wallet.py:18:    agencia_user = CustomUser.objects.create_user(username=f'agencia_{uuid.uuid4().hex[:4]}', password='password')
+backend/apps/wallet/reality_test_17_wallet.py:19:    hotel_user = CustomUser.objects.create_user(username=f'hotel_{uuid.uuid4().hex[:4]}', password='password')
+backend/apps/wallet/reality_test_17_wallet.py:20:    guia_user = CustomUser.objects.create_user(username=f'guia_{uuid.uuid4().hex[:4]}', password='password')
+backend/apps/wallet/services/wallet_interface.py:14:        pass
+backend/apps/wallet/services/wallet_interface.py:21:        pass
+backend/apps/wallet/services/wallet_interface.py:28:        pass
+backend/apps/wallet/services/wallet_interface.py:35:        pass
+backend/apps/wallet/services/wallet_interface.py:42:        pass
+backend/apps/wallet/services/wallet_interface.py:49:        pass
+backend/apps/governance_live/tests.py:13:            password='password123'
+backend/apps/financial_stability/apps.py:10:        pass
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/services.py:66:            pass
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/services.py:119:        passengers = data_reserva.get('passengers', [])
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/services.py:120:        for p in passengers:
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:168:    booking = models.ForeignKey(TransportBooking, on_delete=models.CASCADE, related_name='passengers')
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/serializers.py:36:    passengers = PassengerManifestSerializer(many=True, read_only=True)
+backend/apps/prestadores/mi_negocio/operativa_turistica/cadena_productiva/artesanos/tests.py:10:        self.user = CustomUser.objects.create_user(username="artesano_test", email="art@test.com", password="password")
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/views.py:103:            "proximo_vencimiento": None # TODO
+backend/apps/prestadores/mi_negocio/gestion_contable/presupuesto/signals.py:35:            pass # No hacer nada si no hay partida para esa cuenta
+backend/apps/prestadores/mi_negocio/gestion_contable/presupuesto/signals.py:58:            pass
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/sargentos.py:20:        pass
+backend/apps/prestadores/mi_negocio/gestion_contable/tests/_DEPRECATED__obsoleto_test_services.py:22:        self.user = CustomUser.objects.create_user(email='prestador_service@test.com', username='prestador_service', password='pw', role='PRESTADOR')
+backend/apps/prestadores/mi_negocio/gestion_contable/tests/_DEPRECATED__obsoleto_test_integracion_contable.py:22:        self.user = User.objects.create_user('prestador2@test.com', 'password', role='PRESTADOR')
+backend/apps/prestadores/mi_negocio/gestion_contable/activos_fijos/tests.py:13:        self.prestador_user = CustomUser.objects.create_user(username='prestador', email='prestador@test.com', password='password', role='PRESTADOR')
+backend/apps/prestadores/mi_negocio/gestion_contable/activos_fijos/tests.py:14:        self.admin_user = CustomUser.objects.create_superuser(username='admin', email='admin@test.com', password='password')
+backend/apps/prestadores/mi_negocio/gestion_archivistica/tests/factories.py:28:    password = factory.PostGenerationMethodCall('set_password', 'defaultpassword')
+backend/apps/prestadores/mi_negocio/gestion_archivistica/tests/_DEPRECATED__obsoleto_test_integration.py:22:        self.user = User.objects.create_user(username='test_integration', email='test@integracion.com', password='password')
+backend/apps/prestadores/mi_negocio/gestion_archivistica/storage_adapters/base.py:15:        pass
+backend/apps/prestadores/mi_negocio/gestion_archivistica/storage_adapters/base.py:22:        pass
+backend/apps/prestadores/mi_negocio/gestion_archivistica/storage_adapters/base.py:29:        pass
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/permissions.py:35:                pass
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/reservas/serializers.py:77:        # TODO: Recalcular costo si cambian los datos base
+backend/apps/prestadores/mi_negocio/gestion_comercial/_DEPRECATED__obsoleto_test_facturacion_integracion.py:17:        self.user = CustomUser.objects.create_user(email='prestador3@test.com', password='password123', role='PRESTADOR', username='prestador_test_3')
+backend/apps/prestadores/mi_negocio/gestion_comercial/migrations/0001_initial.py:1235:                ("password", models.CharField(max_length=128, verbose_name="password")),
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/management/commands/seed_data.py:26:        password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'password123')
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/management/commands/seed_data.py:29:            user = User.objects.create_user(email=email, password=password, tenant=tenant, is_staff=True, is_superuser=True)
+backend/apps/prestadores/mi_negocio/gestion_comercial/dian_services.py:143:        signature_value = hashlib.sha256(f"{xml_content}{certificate.password_encrypted}".encode()).hexdigest()
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:19:    def create_user(self, email, password=None, **extra_fields):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:24:        user.set_password(password)
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:28:    def create_superuser(self, email, password=None, **extra_fields):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:31:        return self.create_user(email, password, **extra_fields)
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/management/commands/seed_demo_data.py:19:            defaults={'password': 'password'}
+backend/apps/prestadores/mi_negocio/gestion_comercial/tests/_DEPRECATED__obsoleto_test_facturacion_integracion.py:17:        self.user = User.objects.create_user('prestador3@test.com', 'password')
+backend/apps/prestadores/mi_negocio/gestion_comercial/tests/test_sales_flow.py:25:            password="password123",
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/_DEPRECATED__obsoleto_tests_runtime.py:14:        self.user = User.objects.create_user(email='runtime@example.com', password='password', tenant=self.tenant)
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/management/commands/seed_funnel_data.py:76:                password='testpassword',
+backend/apps/prestadores/mi_negocio/gestion_comercial/ai/views.py:84:                costo_estimado=0.0 # TODO: Calcular costo real
+backend/apps/prestadores/mi_negocio/gestion_comercial/ai/services/ai_manager/ai_base_provider.py:15:        pass
+backend/apps/prestadores/mi_negocio/gestion_comercial/ai/services/ai_manager/ai_base_provider.py:22:        pass
+backend/apps/prestadores/mi_negocio/gestion_comercial/ai/services/ai_manager/ai_base_provider.py:26:        pass
+backend/apps/prestadores/mi_negocio/gestion_comercial/domain/models.py:51:    password_encrypted = models.CharField(max_length=512)
+backend/apps/prestadores/mi_negocio/gestion_comercial/domain/services/auth_service.py:5:def register_user(username, password, email, tenant_name):
+backend/apps/prestadores/mi_negocio/gestion_comercial/domain/services/auth_service.py:18:            password=password,
+backend/apps/prestadores/mi_negocio/gestion_comercial/main_config/settings.py:90:# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+backend/apps/prestadores/mi_negocio/gestion_comercial/main_config/settings.py:94:        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+backend/apps/prestadores/mi_negocio/gestion_comercial/main_config/settings.py:97:        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+backend/apps/prestadores/mi_negocio/gestion_comercial/main_config/settings.py:100:        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+backend/apps/prestadores/mi_negocio/gestion_comercial/main_config/settings.py:103:        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+backend/apps/prestadores/migrations/0009_rename_capacidad_vehicle_capacidad_maxima_and_more.py:264:                        related_name="passengers",
+backend/apps/prestadores/tests/_obsoleto_test_mi_negocio_api.py:23:            username='prestador_test', email='prestador@example.com', password='password123', role=CustomUser.Role.PRESTADOR
+backend/apps/prestadores/tests/_obsoleto_test_mi_negocio_api.py:26:            username='otro_prestador', email='otro@example.com', password='password123', role=CustomUser.Role.PRESTADOR
+backend/apps/prestadores/tests/_obsoleto_test_mi_negocio_api.py:29:            username='turista_test', email='turista@example.com', password='password123', role=CustomUser.Role.TURISTA
+backend/apps/macroeconomic_coordination/apps.py:10:        pass
+backend/apps/global_digital_infrastructure/apps.py:10:        pass
+backend/apps/commercial_engine/tests/certification_test.py:41:    if not admin_user.password:
+backend/apps/commercial_engine/tests/certification_test.py:42:        admin_user.set_password("admin123")
+backend/apps/tokenization/application/governance_service.py:55:            pass
+backend/apps/tokenization/application/compliance_service.py:28:                pass
+backend/apps/tokenization/application/compliance_service.py:33:                pass
+backend/apps/tokenization/application/compliance_service.py:41:        pass
+backend/apps/tokenization/application/token_orchestrator.py:28:        pass
+backend/apps/enterprise/application/adaptive_policy_service.py:84:        pass
+backend/apps/enterprise/application/strategic_handler.py:13:    pass
+backend/apps/enterprise/application/autonomous_orchestrator.py:58:        pass
+backend/apps/enterprise/application/policy_service.py:80:            pass
+backend/apps/enterprise/application/policy_service.py:87:                pass
+backend/apps/legacy_custody/tests.py:10:            password='password123',
+backend/apps/legacy_custody/tests.py:16:            password='password123',
+backend/apps/sarita_agents/finanzas/capitan_cac.py:5:from apps.finanzas.models import FinancialEventRecord # DECOUPLED (TODO: Move to FinancialService)
+backend/apps/sarita_agents/agents/soldado_n6_oro_v2.py:107:        pass
+backend/apps/sarita_agents/agents/soldado_n6_oro_v2.py:111:        pass
+backend/apps/sarita_agents/agents/teniente_template.py:71:        raise NotImplementedError("El método perform_action() debe ser implementado por cada Teniente.")
+backend/apps/sarita_agents/agents/sargento_template.py:21:        raise NotImplementedError("El método _get_soldiers() debe ser implementado por cada Sargento.")
+backend/apps/sarita_agents/agents/sargento_template.py:78:        raise NotImplementedError("El método plan_microtasks() debe ser implementado.")
+backend/apps/sarita_agents/agents/capitan_template.py:64:        raise NotImplementedError("El método plan() debe ser implementado por cada Capitán.")
+backend/apps/sarita_agents/agents/capitan_template.py:124:        raise NotImplementedError("El método _get_tenientes() debe ser implementado por cada Capitán.")
+backend/apps/sarita_agents/agents/soldado_template.py:61:        raise NotImplementedError("El método perform_action() debe ser implementado por cada Soldado.")
+backend/apps/sarita_agents/agents/coronel_template.py:53:        raise NotImplementedError("El método _get_capitanes() debe ser implementado por cada Coronel.")
+backend/apps/sarita_agents/tasks.py:323:        # ELIMINADO: from django.utils.module_loading import import_string; # TODO: Assign variable correctly in F1... (Importación directa prohibida en F1)
+backend/apps/comercial/engines/activation_engine.py:31:                user.set_password(str(uuid.uuid4())) # Generar password temporal
+backend/apps/comercial/signals/subscription_signals.py:21:            pass
+backend/apps/comercial/commercial_core/growth_engine.py:33:        pass
+backend/apps/comercial/commercial_core/retention_engine.py:43:        pass
+backend/apps/ecosystem_optimization/services/autonomy_engine.py:12:    pass
+backend/apps/ecosystem_optimization/services/autonomy_engine.py:56:                    bypass_policy=False # La IA NUNCA ignora políticas
+backend/apps/ecosystem_optimization/services/autonomy_engine.py:144:            pass
+backend/apps/application_services/governance_service.py:5:from apps.admin_plataforma.models import GovernancePolicy # TODO: Move to service
+backend/apps/application_services/governance_service.py:6:from apps.sarita_agents.models import Mision, PlanTáctico # TODO: Move to service
+backend/apps/application_services/domain_contracts/base.py:34:        raise NotImplementedError
+backend/apps/transnational_governance/apps.py:10:        pass
+backend/apps/core_erp/contracts/operational_contract.py:22:    pass
+backend/apps/core_erp/contracts/financial_contract.py:26:    pass
+backend/apps/core_erp/contracts/tenant_contract.py:20:    pass
+backend/apps/core_erp/contracts/accounting_contract.py:10:        pass
+backend/apps/core_erp/contracts/accounting_contract.py:14:        pass
+backend/apps/core_erp/contracts/accounting_contract.py:18:        pass
+backend/apps/core_erp/contracts/commercial_contract.py:26:    pass
+backend/apps/core_erp/consolidation/elimination_rules.py:26:            pass
+backend/apps/core_erp/events/consumers.py:56:        pass
+backend/apps/core_erp/inventory_engine.py:17:        pass
+backend/apps/core_erp/accounting_engine.py:42:        pass
+backend/apps/core_erp/accounting_engine.py:76:        pass
+backend/apps/core_erp/billing_engine.py:80:        pass
+backend/apps/core_erp/intelligence/predictive_engine.py:58:        pass
+backend/apps/core_erp/integrity/architecture_validator.py:84:            pass
+backend/apps/core_erp/base/fx_engine.py:59:        pass
+backend/apps/core_erp/treasury_engine.py:46:        pass
+backend/apps/core_erp/certification_phase_1.py:43:        def save(self): pass
+backend/apps/core_erp/certification_phase_1.py:73:        def save(self): pass
+backend/apps/core_erp/audit_engine.py:52:        pass
+backend/apps/core_erp/accounting/exceptions.py:3:    pass
+backend/apps/core_erp/accounting/exceptions.py:7:    pass
+backend/apps/core_erp/accounting/exceptions.py:11:    pass
+backend/apps/core_erp/accounting/exceptions.py:15:    pass
+backend/apps/core_erp/accounting/exceptions.py:19:    pass
+backend/apps/core_erp/accounting/exceptions.py:23:    pass
+backend/apps/core_erp/accounting/journal_service.py:26:        # Using plain_objects to bypass automatic filtering as we have the explicit tenant_id
+backend/apps/admin_plataforma/tests.py:13:        self.admin_user = CustomUser.objects.create_superuser('admin', 'admin@test.com', 'password')
+backend/apps/admin_plataforma/tests.py:18:        self.prestador_user = CustomUser.objects.create_user('prestador_cliente', 'cliente@test.com', 'password', role='PRESTADOR')
+backend/apps/admin_plataforma/REPORTE_DUPLICACIONES_DOMINIO_2026.md:26:   - **Riesgo:** Bypass de reglas contables en uno de los dominios.
+backend/apps/admin_plataforma/gestion_contable/presupuesto/signals.py:35:            pass # No hacer nada si no hay partida para esa cuenta
+backend/apps/admin_plataforma/gestion_contable/presupuesto/signals.py:58:            pass
+backend/apps/admin_plataforma/gestion_archivistica/services.py:40:        password = date.today().isoformat().encode('utf-8')
+backend/apps/admin_plataforma/gestion_archivistica/services.py:42:        key = hashlib.pbkdf2_hmac('sha256', password, combined_salt, cls.ITERATIONS, dklen=32)
+backend/apps/admin_plataforma/gestion_archivistica/tests/factories.py:29:    password = factory.PostGenerationMethodCall('set_password', 'defaultpassword')
+backend/apps/admin_plataforma/gestion_archivistica/storage_adapters/base.py:15:        pass
+backend/apps/admin_plataforma/gestion_archivistica/storage_adapters/base.py:22:        pass
+backend/apps/admin_plataforma/gestion_archivistica/storage_adapters/base.py:29:        pass
+backend/apps/admin_plataforma/services/governance_kernel.py:133:    def resolve_and_execute(self, intention_name: str, parameters: Dict[str, Any], bypass_policy: bool = False, stress_mode: bool = False) -> Dict[str, Any]:
+backend/apps/admin_plataforma/services/governance_kernel.py:230:        if not bypass_policy:
+backend/apps/admin_plataforma/services/governance_kernel.py:356:            bypass_policy=True # Las propuestas aprobadas ya fueron evaluadas
+backend/apps/admin_plataforma/services/interoperability_bridge.py:47:        pass
+backend/apps/operational_treaties/tests.py:9:        self.admin = CustomUser.objects.create_superuser(username="admin_treaty", email="admin@treaty.com", password="pass")
+backend/apps/global_holding/application/tax_optimization_service.py:43:        pass
+backend/apps/global_holding/application/simulation_engine.py:45:        pass
+backend/apps/global_holding/application/treasury_service.py:51:        pass
+backend/apps/autonomous_operations/apps.py:15:            pass # Avoid failure during initial migrations
+backend/apps/control_tower/metric_listener.py:40:        pass
+backend/apps/control_tower/infrastructure/alert_dispatcher.py:58:        pass
+backend/apps/state_integration/apps.py:10:        pass
+backend/apps/companies/services/key_derivation_service.py:45:        password = for_date.isoformat().encode('utf-8')
+backend/apps/companies/services/key_derivation_service.py:50:            password,
+backend/apps/meta_economic_network/apps.py:10:        pass
+backend/apps/peace_net/tests.py:9:        self.admin = CustomUser.objects.create_superuser(username="admin_peace", email="admin@peace.com", password="pass")
+backend/apps/admin_control_tower/adaptive_autonomy/retention_optimizer.py:45:        pass
+backend/apps/capital_markets_layer/services/ipo_compliance_engine.py:13:                "compensation_committee": False, # TODO: Create
+backend/apps/sadi_agent/voice_providers.py:15:        pass
+backend/apps/sadi_agent/voice_providers.py:21:        pass
+backend/apps/sadi_agent/management/commands/run_voice_command.py:26:        pass
+backend/apps/sadi_agent/views.py:30:             pass
+backend/apps/sadi_agent/tasks.py:47:                pass  # Cannot update status if the object doesn't exist
+backend/sabotage_test_governance.py:24:    attacker = CustomUser.objects.create_user(username="malicious_agent", email="attack@dev.null", password="pass", role="TURISTA")
+backend/scripts/verify_ledger_integrity.py:21:    all_passed = True
+backend/scripts/verify_ledger_integrity.py:29:            all_passed = False
+backend/scripts/verify_ledger_integrity.py:34:    if all_passed:
+backend/reality_test_10_wallet.py:25:        tourist_user = CustomUser.objects.create_user(username="tourist_wallet", email="tourist_w@example.com", password="pass", role="TURISTA")
+backend/reality_test_10_wallet.py:29:        provider_user = CustomUser.objects.create_user(username="prov_wallet", email="prov_w@example.com", password="pass", role="PRESTADOR")
+backend/verify_ws.py:65:    pass
+backend/api/migrations/0001_initial.py:579:                ("password", models.CharField(max_length=128, verbose_name="password")),
+backend/api/signals.py:3:# TODO: Lógica de Puntuación Desactivada Temporalmente
+backend/api/signals.py:25:#             pass
+backend/api/signals.py:96:#             pass
+backend/api/management/commands/create_test_user.py:15:        password = os.environ.get('TEST_USER_PASSWORD', 'testpassword123')
+backend/api/management/commands/create_test_user.py:26:            password=password,
+backend/api/management/commands/setup_test_data.py:159:                user.set_password('password123')
+backend/api/management/commands/setup_test_data.py:199:                pass
+backend/api/management/commands/seed_institutional_pages.py:23:            admin_user.set_password('adminpassword')
+backend/api/tests/test_user_management_api.py:17:            'admin', 'admin@example.com', 'password123'
+backend/api/tests/test_user_management_api.py:20:            'funcionario1', 'func1@example.com', 'password123', role=CustomUser.Role.FUNCIONARIO_DIRECTIVO
+backend/api/tests/test_user_management_api.py:23:            'funcionario2', 'func2@example.com', 'password123', role=CustomUser.Role.FUNCIONARIO_DIRECTIVO
+backend/api/tests/test_user_management_api.py:26:            'turista', 'turista@example.com', 'password123', role=CustomUser.Role.TURISTA
+backend/api/tests/test_user_management_api.py:29:            'prestador', 'prestador@example.com', 'password123', role=CustomUser.Role.PRESTADOR
+backend/api/tests/test_user_management_api.py:55:        data = {'username': 'nuevofuncionario', 'password': 'password123', 'role': CustomUser.Role.FUNCIONARIO_DIRECTIVO}
+backend/api/tests/test_user_management_api.py:91:        data_turista = {'username': 'nuevoturista', 'password': 'password123', 'role': 'TURISTA'}
+backend/api/tests/test_user_management_api.py:97:        data_admin = {'username': 'intentoadmin', 'password': 'password123', 'role': 'ADMIN'}
+backend/api/tests/test_user_management_api.py:101:        data_func = {'username': 'intentofunc', 'password': 'password123', 'role': 'FUNCIONARIO_DIRECTIVO'}
+backend/api/tests/_obsoleto_test_scoring_system.py:22:            'prestador_puntuado', 'prestador_puntuado@example.com', 'password123', role=CustomUser.Role.PRESTADOR
+backend/api/tests/_obsoleto_test_scoring_system.py:29:            'turista_puntuador', 'turista_puntuador@example.com', 'password123', role=CustomUser.Role.TURISTA
+backend/api/tests/_obsoleto_test_admin_views.py:14:            username='admin', email='admin@example.com', password='password123'
+backend/api/tests/_obsoleto_test_admin_views.py:17:            username='funcionario', email='funcionario@example.com', password='password123', role=CustomUser.Role.FUNCIONARIO_DIRECTIVO
+backend/api/tests/_obsoleto_test_admin_views.py:20:            username='prestador_pendiente', email='pendiente@example.com', password='password123', role=CustomUser.Role.PRESTADOR
+backend/api/tests/_obsoleto_test_admin_views.py:23:            username='turista', email='turista@example.com', password='password123', role=CustomUser.Role.TURISTA
+backend/api/tests/_obsoleto_test_admin_views.py:63:        self.admin_user = CustomUser.objects.create_superuser('admin', 'admin@test.com', 'password')
+backend/api/tests/_obsoleto_test_admin_views.py:65:            'turista', 'turista@test.com', 'password', role=CustomUser.Role.TURISTA
+backend/api/tests/test_approval_workflow.py:16:            'admin_approver', 'admin_approver@example.com', 'password123'
+backend/api/tests/test_approval_workflow.py:19:            'directivo_approver', 'directivo_approver@example.com', 'password123', role=CustomUser.Role.FUNCIONARIO_DIRECTIVO
+backend/api/tests/test_approval_workflow.py:22:            'profesional_creator', 'profesional_creator@example.com', 'password123', role=CustomUser.Role.FUNCIONARIO_PROFESIONAL
+backend/api/tests/test_config_api.py:14:        self.admin_user = CustomUser.objects.create_superuser('admin', 'admin@example.com', 'password123')
+backend/api/tests/test_config_api.py:15:        self.funcionario_user = CustomUser.objects.create_user('funcionario', 'func@example.com', 'password123', role=CustomUser.Role.FUNCIONARIO_DIRECTIVO)
+backend/api/tests/test_config_api.py:16:        self.turista_user = CustomUser.objects.create_user('turista', 'turista@example.com', 'password123', role=CustomUser.Role.TURISTA)
+backend/api/tests/test_config_api.py:63:        self.admin_user = CustomUser.objects.create_superuser('admin', 'admin@example.com', 'password123')
+backend/api/tests/test_config_api.py:64:        self.funcionario_user = CustomUser.objects.create_user('funcionario', 'func@example.com', 'password123', role=CustomUser.Role.FUNCIONARIO_DIRECTIVO)
+backend/api/serializers.py:197:        fields = ('id', 'username', 'email', 'role', 'password')
+backend/api/serializers.py:198:        extra_kwargs = {'password': {'write_only': True, 'required': False}}
+backend/api/serializers.py:205:        password = validated_data.pop('password', None)
+backend/api/serializers.py:207:        if password:
+backend/api/serializers.py:208:            instance.set_password(password)
+backend/api/serializers.py:964:        style={'input_type': 'password'},
+backend/api/auth_urls.py:16:    path("password/reset/", PasswordResetView.as_view(), name="rest_password_reset"),
+backend/api/auth_urls.py:18:        "password/reset/confirm/<uidb64>/<token>/",
+backend/api/auth_urls.py:20:        name="password_reset_confirm",
+backend/api/auth_urls.py:22:    path("password/change/", PasswordChangeView.as_view(), name="rest_password_change"),
+backend/tools/herramientas_artesanos.py:34:        user.set_password(f"temp_art_{slugify(nombre_taller)}_{user.id}") # Contraseña temporal
+backend/tools/herramientas_prestador.py:38:#         user.set_password(f"temp_{slugify(nombre_negocio)}_{user.id}") # Contraseña temporal
+backend/tools/herramientas_admin.py:36:        user.set_password("temporal12345")
+backend/simulate_artisan_production.py:23:        password="password"

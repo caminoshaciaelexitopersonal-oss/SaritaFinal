@@ -1,17 +1,17 @@
-# MISSING COMPONENTS REPORT: SARITA PARITY AUDIT
+# MISSING COMPONENTS REPORT: SARITA v1.0
+**Lead Auditor:** Jules (Senior AI Software Engineer)
+**Fecha:** Marzo de 2026
 
-## 1. Módulos Incompletos / Faltantes
-### Escritorio (Desktop)
-- **Gestión de Usuarios Avanzada:** Falta el módulo de control de permisos ABAC/RBAC dinámico que posee la Web.
-- **Descubre Turismo (Inmersivo):** El `DiscoveryDashboard.tsx` actual es un Bridge; falta la integración total de mapas y rutas interactivas.
+## 1. Desktop (Prioridad Alta)
+- `AdminPayrollScreen`: Gestión de nómina local.
+- `AdminAccountingScreen`: Libro mayor y diario local.
+- `GovernmentInterventionPanel`: Panel de mando para el rol de Gobierno.
+- `ReservationManager`: Módulo de gestión de reservas fuera de POS.
 
-### Móvil (Mobile)
-- **Gestión de Usuarios:** Actualmente limitado al perfil propio; falta la vista administrativa de usuarios para el rol de Gobierno.
-- **Informes Complejos:** La visualización de gráficos financieros masivos requiere optimización de rendimiento para dispositivos de gama media.
+## 2. Mobile (Prioridad Media)
+- `AutonomyConfigScreen`: Ajuste de niveles de IA N1-N7 desde móvil.
+- `GovernanceKernelMonitor`: Estado de salud del kernel de gobernanza.
+- `CheckoutMobileFlow`: Flujo de pago optimizado nativo.
 
-## 2. Brechas Funcionales
-- **Punto de Venta (POS):** Aunque funcional en Desktop, la versión Móvil carece de integración con impresoras térmicas Bluetooth (Fase U de Mobile).
-- **IA Audit:** La trazabilidad de misiones de IA es visualmente más pobre en Móvil y Escritorio en comparación con la Torre de Control Web.
-
----
-*Reporte de brechas consolidado para el plan de alineación.*
+## 3. Web (Prioridad Baja)
+- `OfflineSyncStatus`: Indicador de estado para usuarios con mala conexión (imitando el SyncEngine de Mobile/Desktop).
