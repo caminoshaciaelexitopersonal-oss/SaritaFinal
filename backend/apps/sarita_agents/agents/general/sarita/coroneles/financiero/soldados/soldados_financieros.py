@@ -15,14 +15,12 @@ class SoldadoRegistroIngresos(SoldadoN6OroV2):
 
     def perform_atomic_action(self, params: dict):
         logger.info("SOLDADO TESORERÍA: Registrando ingresos reales.")
-        from apps.prestadores.mi_negocio.gestion_financiera.models import IngresoFinanciero
-        ingreso = IngresoFinanciero.objects.create(
-            provider_id=params.get('provider_id'),
-            monto=params.get('monto'),
-            concepto=params.get('concepto'),
-            metodo_pago=params.get('metodo', 'EFECTIVO')
-        )
-        return ingreso
+        from application.services.analytics_service import FinanceService
+        service = FinanceService()
+
+        # Refactored: No direct Model access. Using Application Service.
+        result = service.record_income(params)
+        return result.data
 
 class SoldadoRegistroEgresos(SoldadoN6OroV2):
     domain = "financiero"

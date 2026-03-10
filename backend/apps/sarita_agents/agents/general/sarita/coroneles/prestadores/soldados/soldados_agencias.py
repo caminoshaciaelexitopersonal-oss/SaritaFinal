@@ -12,10 +12,11 @@ class SoldadoValidacionReservaAgencia(SoldadoN6OroV2):
 
     def perform_atomic_action(self, params: dict):
         logger.info(f"SOLDADO AGENCIA: Validando reserva -> {params.get('reserva_id')}")
-        from apps.prestadores.models import Reserva
-        reserva = Reserva.objects.get(id=params.get('reserva_id'))
-        reserva.estado = 'VALIDADA'
-        reserva.save()
+        from application.services.reservation_service import ReservationService
+        service = ReservationService()
+
+        # Refactored: No direct Model access. Using Application Service.
+        reserva = service.process_validation(params.get('reserva_id'))
         return reserva
 
 class SoldadoRegistroComisionAgencia(SoldadoN6OroV2):
