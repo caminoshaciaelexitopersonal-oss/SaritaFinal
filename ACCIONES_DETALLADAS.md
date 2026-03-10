@@ -1,30 +1,56 @@
-# ACCIONES DETALLADAS DE HARDENING Y VERIFICACIÓN POR SUBMÓDULO
+# ACCIONES DETALLADAS DE SUBSANACIÓN (PLAN TÉCNICO V1.0)
+**Complemento a la Directriz Maestra de Excelencia 2026**
 
-Este documento detalla las intervenciones realizadas durante la auditoría final para llevar el sistema Sarita a un estado de madurez industrial.
-
-## 1. MÓDULO DE GESTIÓN COMERCIAL (Vía 2)
-- **Hardening Invoicing:** Se reemplazó el simulador de `DianService` por una lógica de negocio que genera XMLs bajo el estándar **UBL 2.1**.
-- **Algoritmo CUFE:** Implementación de hashing SHA-384 para el Código Único de Factura Electrónica.
-- **Integración de Pagos:** El endpoint `registrar-pago` ahora utiliza el `WalletService` para mover fondos reales entre el ciudadano (Turista) y el prestador, impactando el ERP Quíntuple de forma automática.
-
-## 2. MÓDULO DE GESTIÓN OPERATIVA (Vía 2)
-- **CRUD Hotelería:** Se habilitaron las interfaces y servicios para la gestión de tipos de habitaciones y asignación de habitaciones físicas.
-- **CRUD Restaurantes:** Implementación completa del maestro de mesas y estados de ocupación.
-- **CRUD Agencias:** Creación de paquetes turísticos dinámicos vinculados a proveedores de transporte y alojamiento.
-
-## 3. CORE DE IDENTIDAD Y SEGURIDAD (Transversal)
-- **AuthContext Optimization:** Refactorización del contexto de autenticación en Next.js para eliminar el "loading loop" y garantizar redirecciones limpias post-login.
-- **Security Middleware:** Verificación de las reglas de Rate Limiting y auditoría forense en el backend.
-
-## 4. SISTEMA DE AGENTES SARITA (IA)
-- **TenienteCierre (Marketing):** Evolución de un agente informativo a un agente ejecutivo capaz de disparar la creación de perfiles de prestador (`ProviderProfile`) al detectar una conversión exitosa.
-- **Jerarquía de Misiones:** Verificación de la trazabilidad de misiones desde el General hasta los Soldados, asegurando que cada acción deje un rastro inmutable en el `GovernanceAuditLog`.
-
-## 5. MONEDERO SOBERANO (Finanzas)
-- **Integración Sistémica:** Se verificó que todas las transacciones comerciales liquiden a través de `apps.wallet`, prohibiendo la modificación manual de saldos para preservar la integridad financiera.
-
-## 6. INTERFAZ SUPERADMIN (Gobernanza)
-- **Control de Módulos:** Se activaron los controles que permiten al SuperAdmin habilitar o deshabilitar funcionalidades (Gestión Comercial, Operativa, etc.) por cada prestador de forma granular.
+Este documento detalla los pasos atómicos necesarios para cerrar los hallazgos críticos detectados en la auditoría de Jules.
 
 ---
-**Resultado:** El sistema ha pasado de ser una estructura teórica a un motor operativo capaz de procesar flujos de negocio reales con cumplimiento legal y financiero.
+
+## 1. MÓDULO BACKEND: ELIMINACIÓN DE "PASS" Y "STUBS"
+
+### 1.1 Motor de Facturación (BillingEngine)
+- **Acción:** Reemplazar `pass` en `process_usage_billing(entity_id, usage_data)`.
+- **Implementación:** Integrar con `usage_billing.models.UsageRecord` para sumarizar consumo de tokens de IA y llamadas a la API, generando facturas automáticas en estado `DRAFT`.
+- **Plazo:** Semana 1.
+
+### 1.2 Gestión de Nómina (Nomina ViewSet)
+- **Acción:** Resolver `# TODO: Proximo vencimiento`.
+- **Implementación:** Crear tarea programada en Celery que calcule la fecha de vencimiento basada en el tipo de contrato y la periodicidad de pago del prestador.
+- **Plazo:** Semana 2.
+
+---
+
+## 2. INFRAESTRUCTURA DE FRONTEND: UNIFICACIÓN ESTRATÉGICA
+
+### 2.1 Migración al Shared SDK
+- **Acción:** Extraer `AuthContext` y `EntityContext` de `interfaz/src/contexts` hacia `sarita-platform/shared-sdk/core`.
+- **Objetivo:** Eliminar la duplicación de lógica de tokens RS256 entre la Web y el Embudo de Ventas.
+- **Validación:** Asegurar que un cambio en la llave pública en el backend se refleje automáticamente en ambos frontends sin redeploy individual de lógica.
+
+### 2.2 Sincronización Desktop/Mobile
+- **Acción:** Estandarizar el esquema de `expo-sqlite` (Mobile) y `sqlite3` (Desktop) usando el `SchemaRegistry` del Core ERP.
+- **Objetivo:** Que el POS y el Dashboard móvil compartan la misma estructura de datos local para facilitar misiones de IA de inventario.
+
+---
+
+## 3. SISTEMA DE AGENTES: CERTIFICACIÓN N6 (SOLDADOS)
+
+### 3.1 Hardening de Herramientas
+- **Acción:** Implementar validación de esquemas JSON en la entrada de cada Soldado.
+- **Detalle:** Si un soldado recibe un parámetro incorrecto, debe disparar un evento `INVALID_DIRECTIVE` capturado por el Sargento (N5) para re-planificación inmediata.
+- **Seguridad:** Ningún soldado puede ejecutar escrituras en el Ledger sin un `governance_token` válido por misión.
+
+---
+
+## 4. BLINDAJE DE SEGURIDAD (AWS PRE-PRODUCTION)
+
+### 4.1 Encriptación de Datos
+- **Acción:** Implementar `django-fernet-fields` o similar en campos de identificación y correos electrónicos.
+- **Cumplimiento:** GDPR (Derecho al olvido debe ser un método atómico que borre llaves de encriptación o registros físicos).
+
+### 4.2 Monitoreo de Intenciones
+- **Acción:** Integrar el log de misiones de IA con AWS CloudWatch Logs.
+- **Alerta:** Disparar P0 si se detectan más de 5 misiones fallidas por "Violación de Integridad" en una misma ventana de 10 minutos.
+
+---
+**Certificado por Jules.**
+*Senior Architect.*
