@@ -26,9 +26,21 @@ class SoldierTemplate:
         from apps.common.observability.middleware import get_correlation_id
 
         logger.info(
-            f"SOLDADO ({self.__class__.__name__}): Ejecutando microtarea.",
+            f"SOLDADO ({self.__class__.__name__}): Validando y ejecutando microtarea.",
             extra={"extra_fields": {"correlation_id": get_correlation_id(), "agent_level": "N6"}}
         )
+
+        # Hallazgo March 2026: Validación de Esquema Obligatoria
+        try:
+            self.validate_input(directive)
+        except Exception as e:
+            logger.error(f"SOLDADO ({self.__class__.__name__}): Directiva Inválida -> {str(e)}")
+            return {
+                "status": "INVALID_DIRECTIVE",
+                "soldier": self.__class__.__name__,
+                "error": str(e),
+                "correlation_id": get_correlation_id()
+            }
 
         try:
             result = self.perform_action(directive)
@@ -55,6 +67,15 @@ class SoldierTemplate:
                 "error": str(e),
                 "correlation_id": get_correlation_id()
             }
+
+    def validate_input(self, directive: Dict[str, Any]):
+        """
+        Define el contrato de entrada para el soldado.
+        Debe ser sobrescrito por implementaciones concretas.
+        """
+        # Por defecto, validación básica de que es un diccionario
+        if not isinstance(directive, dict):
+            raise ValueError("La directiva debe ser un diccionario JSON.")
 
     def perform_action(self, params: Dict[str, Any]):
         """Lógica concreta del soldado."""

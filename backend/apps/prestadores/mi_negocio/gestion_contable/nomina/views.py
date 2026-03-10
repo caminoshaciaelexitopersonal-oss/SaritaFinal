@@ -96,9 +96,31 @@ class DashboardNominaViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
     def list(self, request):
         perfil = request.user.perfil_prestador
+
+        # Hallazgo March 2026: Cálculo automático del próximo vencimiento
+        proximo_vencimiento = None
+        ultima_planilla = Planilla.objects.filter(perfil=perfil).order_by('-periodo_fin').first()
+
+        if ultima_planilla:
+            # Asumimos periodicidad mensual por defecto si no se especifica en el perfil
+            from datetime import timedelta
+            proximo_vencimiento = ultima_planilla.periodo_fin + timedelta(days=30)
+
+        # Alerta de vencimientos de contratos fijos
+        contrato_por_vencer = Contrato.objects.filter(
+            empleado__perfil=perfil,
+            activo=True,
+            tipo_contrato='TERMINO_FIJO',
+            fecha_fin__isnull=False
+        ).order_by('fecha_fin').first()
+
         return Response({
             "total_empleados": Empleado.objects.filter(perfil=perfil, estado='ACTIVO').count(),
-            "ultima_nomina": PlanillaSerializer(Planilla.objects.filter(perfil=perfil).order_by('-periodo_fin').first()).data,
+            "ultima_nomina": PlanillaSerializer(ultima_planilla).data if ultima_planilla else None,
             "indicadores": IndicadorLaboralSerializer(IndicadorLaboral.objects.filter(perfil=perfil), many=True).data,
-            "proximo_vencimiento": None # TODO
+            "proximo_vencimiento": proximo_vencimiento,
+            "alerta_contrato": {
+                "fecha": contrato_por_vencer.fecha_fin,
+                "empleado": f"{contrato_por_vencer.empleado.nombre} {contrato_por_vencer.empleado.apellido}"
+            } if contrato_por_vencer else None
         })

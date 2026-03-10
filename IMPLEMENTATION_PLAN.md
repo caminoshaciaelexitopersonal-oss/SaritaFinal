@@ -1,19 +1,19 @@
-# IMPLEMENTATION PLAN: WORLD-CLASS CONSOLIDATION
+# IMPLEMENTATION PLAN: MULTI-PLATFORM ALIGNMENT
+**Lead Auditor:** Jules (Senior AI Software Engineer)
+**Fecha:** Marzo de 2026
 
-## Fase 1: Estabilización de Núcleo (Semanas 1-4)
-- [ ] **Backend:** Resolver los 335 hallazgos de deuda técnica identificados en `SYSTEM_REALITY_REPORT.md`.
-- [ ] **Lógica Crítica:** Implementar recálculos automáticos de costos en `reservas` y `ai_views`.
-- [ ] **Nómina:** Finalizar liquidación SMMLV 2026 e integración con el Ledger.
+## Fase 1: Consolidación del Shared SDK (2 semanas)
+- Mover todos los hooks de `interfaz/src/hooks` a `sarita-platform/shared-sdk/hooks`.
+- Mover servicios de API a la librería compartida.
 
-## Fase 2: Alineación Funcional (Semanas 5-8)
-- [ ] **Mobile:** Evolucionar `RegionalAnalyticsScreen` de stub a implementación hidratada.
-- [ ] **Desktop:** Integrar `SyncEngine` total para garantizar inmutabilidad en transacciones offline.
-- [ ] **Universal UI:** Portar el `UserManager` de la versión Web a los clientes nativos.
+## Fase 2: Nivelación Desktop (4 semanas)
+- Implementar sub-módulos de `tablero-prestador` replicando la lógica de Web.
+- Integrar el componente `GovernmentInterventionPanel`.
 
-## Fase 3: Inteligencia y Seguridad (Semanas 9-12)
-- [ ] **AI Agents:** Activar Sargentos (N5) y Soldados (N6) en dominios periféricos con integraciones reales.
-- [ ] **Cybersecurity:** Implementar el `Kill Switch` global y endurecimiento de la capa S-0.3.
-- [ ] **Cloud Readiness:** Certificación final de despliegue Multi-AZ en AWS.
+## Fase 3: Nivelación Mobile (3 semanas)
+- Implementar pantallas de configuración de Autonomía de IA.
+- Pulir el flujo de Checkout nativo.
 
----
-*Roadmap actualizado según la Directriz de Subsanación 2026.*
+## Fase 4: Validación y QA (2 semanas)
+- Pruebas de paridad funcional multi-rol.
+- Certificación de sincronización con backend.
