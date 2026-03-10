@@ -1,20 +1,19 @@
-# IMPLEMENTATION PLAN - PLATFORM PARITY
+# IMPLEMENTATION PLAN: WORLD-CLASS CONSOLIDATION
 
-## FASE 1: ESTANDARIZACIÓN DE ESTRUCTURA (7 días)
-- **Acción:** Crear los stubs de carpetas faltantes para asegurar la arquitectura `dashboard-admin`, `dashboard-prestador`, `descubre-turismo` en todas las plataformas.
-- **Nomenclatura:** Unificar nombres de rutas y servicios.
+## Fase 1: Estabilización de Núcleo (Semanas 1-4)
+- [ ] **Backend:** Resolver los 335 hallazgos de deuda técnica identificados en `SYSTEM_REALITY_REPORT.md`.
+- [ ] **Lógica Crítica:** Implementar recálculos automáticos de costos en `reservas` y `ai_views`.
+- [ ] **Nómina:** Finalizar liquidación SMMLV 2026 e integración con el Ledger.
 
-## FASE 2: SHARED-UI INITIALIZATION (14 días)
-- **Acción:** Migrar componentes básicos (Buttons, Inputs, Spinners) de la Web al `shared-sdk` o a una nueva carpeta `shared-ui` si se opta por un monorepo real.
-- **Herramienta:** Tailwind CSS para estilos consistentes.
+## Fase 2: Alineación Funcional (Semanas 5-8)
+- [ ] **Mobile:** Evolucionar `RegionalAnalyticsScreen` de stub a implementación hidratada.
+- [ ] **Desktop:** Integrar `SyncEngine` total para garantizar inmutabilidad en transacciones offline.
+- [ ] **Universal UI:** Portar el `UserManager` de la versión Web a los clientes nativos.
 
-## FASE 3: CIERRE DE BRECHAS - DESKTOP (10 días)
-- **Acción:** Implementar `DiscoveryDashboard` en Desktop consumiendo las APIs existentes de `Atractivos` y `Rutas`.
-- **Objetivo:** Lograr que el Ciudadano pueda usar Desktop para planear su viaje.
+## Fase 3: Inteligencia y Seguridad (Semanas 9-12)
+- [ ] **AI Agents:** Activar Sargentos (N5) y Soldados (N6) en dominios periféricos con integraciones reales.
+- [ ] **Cybersecurity:** Implementar el `Kill Switch` global y endurecimiento de la capa S-0.3.
+- [ ] **Cloud Readiness:** Certificación final de despliegue Multi-AZ en AWS.
 
-## FASE 4: CIERRE DE BRECHAS - MOBILE (10 días)
-- **Acción:** Implementar `RegionalAnalytics` en el `AdminDashboard` de Mobile.
-- **Objetivo:** Permitir que el Gobierno tome decisiones desde el territorio.
-
-## FASE 5: VALIDACIÓN Y CERTIFICACIÓN (5 días)
-- **Acción:** Pruebas cruzadas de sincronización (Ej: Venta en Desktop -> Ver en Mobile -> Reporte en Web).
+---
+*Roadmap actualizado según la Directriz de Subsanación 2026.*

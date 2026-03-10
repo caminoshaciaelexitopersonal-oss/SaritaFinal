@@ -1,23 +1,37 @@
-# COMPONENT INVENTORY - SARITA MULTIPLATFORM
+# COMPONENT INVENTORY: SARITA MULTIPLATFORM
 
-## 1. WEB COMPONENTS (interfaz/src/components)
-- **UI Core:** Buttons, Modals, Inputs, Cards, Tables.
-- **Dashboards:** Sidebar, Header, AnalyticsCharts, EntitySelector.
-- **Business:** SaleForm, InventoryGrid, LedgerTable, DocumentViewer.
-- **Turismo:** AtractivoCard, RutaMap, BookingCalendar.
+## 1. Interfaz Web (Next.js 15)
+### Módulos Principales
+- **panel-admin:** Localizado en `interfaz/src/app/dashboard/admin`. Incluye `ia-audit` e `integrity`.
+- **tablero-prestador:** Localizado en `interfaz/src/app/dashboard/prestador/mi-negocio`.
+- **descubre-turismo:** Localizado en `interfaz/src/app/descubre`. Incluye `atractivos`, `agenda-cultural`, `mapa`, `rutas-turisticas`.
 
-## 2. MOBILE COMPONENTS (apps/mobile/src/components)
-- **Native UI:** StyledView, CustomText, SafeAreaWrapper.
-- **Navigation:** TabBar, HeaderBackButton.
-- **Features:** WalletCard, DeliveryStatus, AIGuideBubble, QRScanner.
-- **Business:** OrderSummary, ServiceListItem.
+### Componentes UI
+- `AdminDashboard.tsx`, `UserManager.tsx`, `StatisticsDashboard.tsx`.
+- `FormBuilder.tsx`, `FormFiller.tsx`, `DocumentManager.tsx`.
+- `MapComponent.tsx`, `ImageGalleryManager.tsx`.
 
-## 3. DESKTOP COMPONENTS (apps/desktop/renderer/src/components)
-- **Desktop UI:** WindowControls (Custom), Sidebar, Tooltip.
-- **POS:** ProductGrid, ShoppingCart, ReceiptPreview, CashDrawerStatus.
-- **Business:** CustomersTable, OpportunitiesList, SalesChart.
+## 2. Interfaz Móvil (React Native / Expo)
+### Módulos Principales
+- **panel-admin:** Localizado en `apps/mobile/src/screens/admin`. Incluye `analytics` y `alerts`.
+- **tablero-prestador:** Localizado en `apps/mobile/src/screens/business`. Incluye `BusinessAccounting`, `BusinessFinance`, `BusinessOrders`.
+- **descubre-turismo:** Localizado en `apps/mobile/src/screens/explore`. Incluye `ExploreScreen`.
 
-## 4. SHARED ELEMENTS (sarita-platform/shared-sdk)
-- **Logic:** API Clients (Axios), Auth Services, Validation Schemas (Zod).
-- **Contexts:** AuthContext, ThemeContext (partial).
-- **Hooks:** useAuth, useSystemStatus.
+### Pantallas Clave
+- `AdminDashboard.tsx`, `GlobalControlCenterScreen.tsx`.
+- `BusinessDashboard.tsx`, `RegionalAnalyticsScreen.tsx`.
+- `ExploreScreen.tsx`, `SmartMapScreen.tsx`.
+
+## 3. Interfaz Escritorio (Electron)
+### Módulos Principales
+- **panel-admin:** Localizado en `apps/desktop/renderer/src/admin`.
+- **tablero-prestador:** Localizado en `apps/desktop/renderer/src/dashboard`. Incluye `accounting`, `archive`, `commercial`, `finance`, `operations`.
+- **descubre-turismo:** Localizado en `apps/desktop/renderer/src/pages/descubre`.
+
+### Componentes Clave
+- `AdminDashboard.tsx`.
+- `MiNegocio.tsx`, `POSInterface.tsx`, `AccountingDashboard.tsx`.
+- `DiscoveryDashboard.tsx`.
+
+---
+*Consolidado por Jules - Marzo 2026*

@@ -1,22 +1,17 @@
-# MISSING COMPONENTS REPORT
+# MISSING COMPONENTS REPORT: SARITA PARITY AUDIT
 
-## 1. BRECHAS CRÍTICAS (DEBEN IMPLEMENTARSE)
+## 1. Módulos Incompletos / Faltantes
+### Escritorio (Desktop)
+- **Gestión de Usuarios Avanzada:** Falta el módulo de control de permisos ABAC/RBAC dinámico que posee la Web.
+- **Descubre Turismo (Inmersivo):** El `DiscoveryDashboard.tsx` actual es un Bridge; falta la integración total de mapas y rutas interactivas.
 
-### 1.1 Desktop: Módulo "Descubre Turismo"
-- Falta la capacidad de explorar destinos y realizar reservas desde la aplicación de escritorio.
-- **Componentes requeridos:** `DiscoveryLayout`, `DestinationCard`, `SearchFilters`.
+### Móvil (Mobile)
+- **Gestión de Usuarios:** Actualmente limitado al perfil propio; falta la vista administrativa de usuarios para el rol de Gobierno.
+- **Informes Complejos:** La visualización de gráficos financieros masivos requiere optimización de rendimiento para dispositivos de gama media.
 
-### 1.2 Mobile: Módulo "Analítica Territorial"
-- El gobierno no puede ver reportes de impacto regional en tiempo real desde la app móvil.
-- **Componentes requeridos:** `RegionalChart`, `MetricSummary`, `ImpactHeatmap`.
+## 2. Brechas Funcionales
+- **Punto de Venta (POS):** Aunque funcional en Desktop, la versión Móvil carece de integración con impresoras térmicas Bluetooth (Fase U de Mobile).
+- **IA Audit:** La trazabilidad de misiones de IA es visualmente más pobre en Móvil y Escritorio en comparación con la Torre de Control Web.
 
-### 1.3 Desktop: Módulo "Gestión Archivística Full"
-- Falta la capacidad de notarizar documentos localmente y sincronizar con Blockchain desde Desktop.
-- **Componentes requeridos:** `BlockchainSigner`, `DocumentVault`.
-
-## 2. INCONSISTENCIAS DE UI
-- Los Dashboards de Prestador no comparten el mismo "Look & Feel" en las tres plataformas.
-- Las tablas de datos en Web son altamente funcionales (sort/filter), mientras que en Desktop son estáticas.
-
-## 3. DUPLICIDAD DE LÓGICA
-- La lógica de cálculo de impuestos se encuentra duplicada en `interfaz/src/services` y `apps/desktop/renderer/src/services`.
+---
+*Reporte de brechas consolidado para el plan de alineación.*

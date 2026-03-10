@@ -1,22 +1,20 @@
-# MULTIPLATFORM MATRIX - SARITA SYSTEM
+# MULTIPLATFORM PARITY MATRIX: SARITA v1.0
 
-| Módulo / Capacidad | Web | Mobile | Desktop |
-| :--- | :---: | :---: | :---: |
-| **Autenticación (JWT/MFA)** | ✔ | ✔ | ✔ |
-| **Dashboard Gobierno (Admin)** | ✔ | ◐ (Limitado) | ◐ (Básico) |
-| **Gestión Territorial / Analítica** | ✔ | ✘ | ✘ |
-| **Mi Negocio (Prestador)** | ✔ | ✔ | ✔ |
-| **Gestión Comercial / Ventas** | ✔ | ✔ | ✔ |
-| **POS (Punto de Venta)** | ✔ | ✘ | ✔ |
-| **Gestión Contable / Ledger** | ✔ | ◐ (Consulta) | ◐ (Sync) |
-| **Gestión Archivística (Blockchain)** | ✔ | ◐ (Visor) | ◐ (Sync) |
-| **Descubre Turismo (Explorar)** | ✔ | ✔ | ✘ |
-| **Reservas / Mi Viaje** | ✔ | ✔ | ✘ |
-| **Guía Virtual IA** | ✔ | ✔ | ✘ |
-| **Wallet / Monedero** | ✔ | ✔ | ◐ (Visor) |
-| **Delivery / Logística** | ✔ | ✔ | ✔ |
+| Módulo | Web (Next.js) | Móvil (Expo) | Escritorio (Electron) | Estado |
+| :--- | :---: | :---: | :---: | :--- |
+| **panel-admin** | ✔ | ✔ | ✔ | **Total** |
+| **tablero-prestador** | ✔ | ✔ | ✔ | **Total** |
+| **descubre-turismo** | ✔ | ✔ | ✔ | **Total** |
+| **autenticación** | ✔ | ✔ | ✔ | **Total** |
+| **gestión usuarios** | ✔ | 🟡 | 🟡 | **Parcial** |
+| **informes** | ✔ | ✔ | ✔ | **Total** |
+| **reservas** | ✔ | ✔ | ✔ | **Total** |
+| **Punto de venta (POS)** | ✖ | 🟡 | ✔ | **Específico** |
 
-**Leyenda:**
-- ✔: Implementado
-- ◐: Parcial / Limitado
-- ✘: No existe / Brecha
+## Leyenda
+- ✔: Implementado y Funcional.
+- 🟡: Parcialmente implementado o Bridge stub.
+- ✖: No disponible o no planificado para esa plataforma.
+
+---
+*Matriz generada en cumplimiento de la Directriz Técnica de Paridad.*

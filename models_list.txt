@@ -1,0 +1,910 @@
+backend/legacy_custody/models.py:class LegacyCustodian(models.Model):
+backend/legacy_custody/models.py:class LegacyMilestone(models.Model):
+backend/legacy_custody/models.py:class LegacyGuardrail(models.Model):
+backend/apps/global_orchestration/models.py:class HoldingCurrency(models.Model):
+backend/apps/global_orchestration/models.py:class HoldingRegion(models.Model):
+backend/apps/global_orchestration/models.py:class HoldingEntity(models.Model):
+backend/apps/global_orchestration/models.py:    class VerticalType(models.TextChoices):
+backend/apps/global_orchestration/models.py:    class Meta:
+backend/apps/global_orchestration/models.py:class TaxRule(models.Model):
+backend/apps/delivery/models.py:class DeliveryCompany(models.Model):
+backend/apps/delivery/models.py:class Driver(models.Model):
+backend/apps/delivery/models.py:class Vehicle(models.Model):
+backend/apps/delivery/models.py:    class VehicleType(models.TextChoices):
+backend/apps/delivery/models.py:class Ruta(models.Model):
+backend/apps/delivery/models.py:class DeliveryService(models.Model):
+backend/apps/delivery/models.py:    class Status(models.TextChoices):
+backend/apps/delivery/models.py:class DeliveryItem(models.Model):
+backend/apps/delivery/models.py:class EvidenciaEntrega(models.Model):
+backend/apps/delivery/models.py:class DeliveryEvent(models.Model):
+backend/apps/delivery/models.py:    class Meta:
+backend/apps/delivery/models.py:class DeliveryIncident(models.Model):
+backend/apps/delivery/models.py:class DeliveryLiquidation(models.Model):
+backend/apps/delivery/models.py:class DeliveryPenalty(models.Model):
+backend/apps/delivery/models.py:class IndicadorLogistico(models.Model):
+backend/apps/sovereign_infrastructure/models.py:class JurisdictionalNode(BaseErpModel):
+backend/apps/sovereign_infrastructure/models.py:class RegulatoryProfile(BaseErpModel):
+backend/apps/sovereign_infrastructure/models.py:class CapitalShield(BaseErpModel):
+backend/apps/sovereign_infrastructure/models.py:class DigitalInfraBackup(BaseErpModel):
+backend/apps/sovereign_infrastructure/models.py:class CorporateConstitution(BaseErpModel):
+backend/apps/decision_intelligence/models.py:class StrategyProposal(models.Model):
+backend/apps/decision_intelligence/models.py:    class Domain(models.TextChoices):
+backend/apps/decision_intelligence/models.py:    class Status(models.TextChoices):
+backend/apps/decision_intelligence/models.py:    class RiskLevel(models.TextChoices):
+backend/apps/decision_intelligence/models.py:    class DecisionLevel(models.IntegerChoices):
+backend/apps/decision_intelligence/models.py:    class UrgencyLevel(models.TextChoices):
+backend/apps/decision_intelligence/models.py:    class Meta:
+backend/apps/decision_intelligence/models.py:class DecisionMatrix(models.Model):
+backend/apps/decision_intelligence/models.py:    class Meta:
+backend/apps/banking_integration/models.py:class BankAccount(TenantAwareModel):
+backend/apps/banking_integration/models.py:class BankTransaction(TenantAwareModel):
+backend/apps/wallet/models.py:class Wallet(models.Model):
+backend/apps/wallet/models.py:    class OwnerType(models.TextChoices):
+backend/apps/wallet/models.py:    class Status(models.TextChoices):
+backend/apps/wallet/models.py:    class Meta:
+backend/apps/wallet/models.py:class WalletTransaccion(models.Model):
+backend/apps/wallet/models.py:    class Status(models.TextChoices):
+backend/apps/wallet/models.py:    class Meta:
+backend/apps/wallet/models.py:class WalletMovimiento(models.Model):
+backend/apps/wallet/models.py:    class TipoMovimiento(models.TextChoices):
+backend/apps/wallet/models.py:class WalletBloqueo(models.Model):
+backend/apps/wallet/models.py:class WalletLiquidacion(models.Model):
+backend/apps/wallet/models.py:class WalletComision(models.Model):
+backend/apps/wallet/models.py:class WalletReversion(models.Model):
+backend/apps/wallet/models.py:class WalletAuditoria(models.Model):
+backend/apps/wallet/models.py:class WalletLimiteOperativo(models.Model):
+backend/apps/wallet/models.py:class WalletAlertaRiesgo(models.Model):
+backend/apps/operational_mobile/models.py:class Operator(models.Model):
+backend/apps/operational_mobile/models.py:class OperatorTracking(models.Model):
+backend/apps/operational_mobile/models.py:class OperationReport(models.Model):
+backend/apps/governance_live/models.py:class SystemicState(models.Model):
+backend/apps/governance_live/models.py:    class StateLevel(models.TextChoices):
+backend/apps/governance_live/models.py:    class Meta:
+backend/apps/governance_live/models.py:class GovernanceMemory(models.Model):
+backend/apps/governance_live/models.py:    class Meta:
+backend/apps/financial_stability/models.py:class StabilityCouncil(BaseErpModel):
+backend/apps/financial_stability/models.py:class RiskAnalyticsNode(BaseErpModel):
+backend/apps/financial_stability/models.py:class LiquidityBuffer(BaseErpModel):
+backend/apps/financial_stability/models.py:class ShockAbsorptionPolicy(BaseErpModel):
+backend/apps/financial_stability/models.py:class CrisisCase(BaseErpModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/hoteles/models.py:class Amenity(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/hoteles/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/hoteles/models.py:class RoomType(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/hoteles/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/hoteles/models.py:class Room(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/hoteles/models.py:    class HousekeepingStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/hoteles/models.py:    class RoomStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/hoteles/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/eventos/models.py:class OrganizadorEvento(models.Model):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/eventos/models.py:class Evento(models.Model):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/eventos/models.py:class Promocion(models.Model):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:class TravelPackage(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:    class PackageStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:class PackageComponent(models.Model):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:    class ServiceType(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:class AgencyBooking(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:    class BookingStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:class AgencyLiquidation(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:class ProviderCommission(models.Model):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:class PackageIncident(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/agencias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/restaurantes/models.py:class KitchenStation(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/restaurantes/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/restaurantes/models.py:class MenuItemDetail(models.Model):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/restaurantes/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/restaurantes/models.py:class RestaurantTable(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/restaurantes/models.py:    class TableStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/restaurantes/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:class Skill(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class SkillType(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:class GuiaTuristico(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Nivel(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Estado(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:class CertificacionGuia(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class EstadoValidacion(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:class LocalRutaTuristica(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:class Itinerario(models.Model):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:class GrupoTuristico(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:class ServicioGuiado(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Estado(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:class LiquidacionGuia(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:class IncidenciaServicio(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Gravedad(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:class TourDetail(models.Model):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/guias/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:class NightclubProfile(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:class NightEvent(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class EventType(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class EventStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:class NightZone(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:class NightTable(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class TableStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:class NightConsumption(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class ConsumptionStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:class NightConsumptionItem(models.Model):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:class LiquorInventory(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:class InventoryMovement(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class MovementType(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:class CashClosing(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:class EventLiquidation(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/bares_discotecas/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:class Vehicle(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class VehicleStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:class VehicleCertification(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:class Conductor(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class ConductorStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:class TransportRoute(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:class ScheduledTrip(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class TripStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:class TransportBooking(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:class PassengerManifest(models.Model):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:class TripLiquidation(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:class TransportIncident(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class Gravedad(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/operadores_directos/transporte/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/cadena_productiva/artesanos/models.py:class RawMaterial(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/cadena_productiva/artesanos/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/cadena_productiva/artesanos/models.py:class WorkshopOrder(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/cadena_productiva/artesanos/models.py:    class EstadoOrden(models.TextChoices):
+backend/apps/prestadores/mi_negocio/operativa_turistica/cadena_productiva/artesanos/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/operativa_turistica/cadena_productiva/artesanos/models.py:class ProductionLog(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/operativa_turistica/cadena_productiva/artesanos/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class Empleado(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class EstadoEmpleado(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class Contrato(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class TipoContrato(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class HistorialSalarial(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class ConceptoNomina(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class TipoConcepto(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class Planilla(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class EstadoPlanilla(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class DetalleLiquidacion(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class NovedadNomina(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class IncapacidadLaboral(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class Ausencia(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class ProvisionNomina(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:class IndicadorLaboral(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/nomina/models.py:    class Meta: app_label = 'nomina'
+backend/apps/prestadores/mi_negocio/gestion_contable/presupuesto/models.py:# class Presupuesto(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/presupuesto/models.py:#     class Meta:
+backend/apps/prestadores/mi_negocio/gestion_contable/presupuesto/models.py:# class PartidaPresupuestal(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/presupuesto/models.py:#     class Tipo(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_contable/presupuesto/models.py:# class EjecucionPresupuestal(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/models.py:class PlanDeCuentas(CoreChartOfAccounts):
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/models.py:class Cuenta(CoreAccount):
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/models.py:class PeriodoContable(CoreFiscalPeriod):
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/models.py:class AsientoContable(CoreJournalEntry):
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/models.py:class Transaccion(CoreJournalLine):
+backend/apps/prestadores/mi_negocio/gestion_contable/contabilidad/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_contable/inventario/models.py:class Almacen(BaseWarehouse):
+backend/apps/prestadores/mi_negocio/gestion_contable/inventario/models.py:class MovimientoInventario(BaseInventoryMovement):
+backend/apps/prestadores/mi_negocio/gestion_contable/inventario/models.py:    class TipoMovimiento(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_contable/cierres/models.py:class PeriodoContable(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/cierres/models.py:    class Estado(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_contable/cierres/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_contable/compras/models.py:class Proveedor(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/compras/models.py:class FacturaCompra(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/compras/models.py:    class Estado(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_contable/compras/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_contable/activos_fijos/models.py:class CategoriaActivo(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/activos_fijos/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_contable/activos_fijos/models.py:class ActivoFijo(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/activos_fijos/models.py:    class MetodoDepreciacion(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_contable/activos_fijos/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_contable/activos_fijos/models.py:class CalculoDepreciacion(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/empresa/models.py:class InformacionEmpresa(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_contable/empresa/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_contable/empresa/models.py:class Sucursal(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_contable/empresa/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_contable/empresa/models.py:class Tercero(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_contable/empresa/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_contable/proyectos/models.py:class Proyecto(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/proyectos/models.py:    class Estado(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_contable/proyectos/models.py:class IngresoProyecto(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_contable/proyectos/models.py:class CostoProyecto(models.Model):
+backend/apps/prestadores/mi_negocio/facturacion/models.py:class Factura(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/facturacion/models.py:    class Estado(models.TextChoices):
+backend/apps/prestadores/mi_negocio/facturacion/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:class ProcessType(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:class Process(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:class DocumentType(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:class Document(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:class DocumentVersion(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:    class ProcessingStatus(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_archivistica/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:class TesoreriaCentral(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:class CuentaBancaria(BaseBankAccount):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:class OrdenPago(BasePaymentOrder):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:    class EstadoPago(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:class Presupuesto(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:class LineaPresupuesto(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:class CreditoFinanciero(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:class CuotaCredito(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:class IndicadorFinancieroHistorico(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:class AlertaFinanciera(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:    class TipoAlerta(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_financiera/models.py:class LogFinancieroInmutable(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:class ProcesoOperativo(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:    class EstadoProceso(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:class TareaOperativa(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:class OrdenOperativa(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:    class EstadoOrden(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:class RegistroOperativo(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:class EvidenciaOperativa(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:class IncidenteOperativo(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/horarios/models.py:class Horario(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/horarios/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/horarios/models.py:class ExcepcionHorario(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/horarios/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/productos_servicios/models.py:class Product(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/productos_servicios/models.py:    class Tipo(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/productos_servicios/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/galeria/models.py:class EvidenciaGaleria(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/galeria/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/inventario/models.py:class InventoryItem(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/inventario/models.py:    class ItemType(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/inventario/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/inventario/models.py:class MovimientoInventario(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/inventario/models.py:    class TipoMovimiento(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/inventario/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/inventario/models.py:class AsignacionRecurso(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/inventario/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/estadisticas/models.py:class RegistroDeEstadisticas(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/estadisticas/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/costos/models.py:class Costo(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/costos/models.py:    class Tipo(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/costos/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/reservas/models.py:class PoliticaCancelacion(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/clientes/models.py:class Cliente(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/clientes/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/valoraciones/models.py:class Valoracion(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/valoraciones/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/documentos/models.py:class DocumentoOperativo(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/documentos/models.py:    class TipoDocumento(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/documentos/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/perfil/models.py:class BaseModel(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/perfil/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/perfil/models.py:class ProviderProfile(DomainProviderProfile):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/perfil/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/perfil/models.py:class TenantAwareModel(BaseModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/perfil/models.py:    class Meta(BaseModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_operativa/modulos_genericos/perfil/models.py:class CategoriaPrestador(BaseModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class MatrizRiesgo(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class ControlRiesgo(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta: app_label = 'prestadores'
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class IncidenteLaboral(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class TipoEvento(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Gravedad(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class InvestigacionIncidente(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta: app_label = 'prestadores'
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class PlanAnualSST(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta: app_label = 'prestadores'
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class ActividadPlanSST(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta: app_label = 'prestadores'
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class InspeccionSST(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta: app_label = 'prestadores'
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class HallazgoInspeccion(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta: app_label = 'prestadores'
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class IndicadorSST(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta: app_label = 'prestadores'
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class AlertaSST(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta: app_label = 'prestadores'
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class SaludOcupacional(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta: app_label = 'prestadores'
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:class CapacitacionSST(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_operativa/sg_sst/models.py:    class Meta: app_label = 'prestadores'
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/models.py:class Opportunity(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/models.py:class Venta(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/models.py:    class Estado(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/models.py:    class MetodoPago(models.TextChoices):
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/models.py:class DetalleVenta(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_comercial/sales/models.py:class StageHistory(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class Tenant(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class Role(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class UserManager(BaseUserManager):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class User(AbstractBaseUser, PermissionsMixin):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class ComercialCategoria(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class ComercialSubcategoria(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class LandingPage(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class Embudo(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class Pagina(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class Bloque(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class AIInteraction(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class ContentAsset(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/infrastructure/models.py:class AsyncTask(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/marketing/models.py:class Campaign(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/marketing/models.py:class CampaignChannel(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/marketing/models.py:class MarketingContent(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/automation/models.py:class AgentPersona(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/automation/models.py:class Workflow(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/automation/models.py:class Node(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/automation/models.py:class Edge(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:class CadenaTurismo(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:class FunnelCategoria(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:class FunnelSubcategoria(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:class FunnelLandingPage(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:class Funnel(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:class FunnelVersion(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:    class Meta:
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:class FunnelPage(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:    class Meta: ordering = ['order_index']
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:class FunnelPublication(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:class LeadCapture(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/funnels/models.py:class FunnelEvent(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/domain/models.py:class ReciboCaja(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/domain/models.py:class ContratoComercial(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/domain/models.py:class DianResolution(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_comercial/domain/models.py:    class Meta(TenantAwareModel.Meta):
+backend/apps/prestadores/mi_negocio/gestion_comercial/domain/models.py:class DianCertificate(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_comercial/domain/models.py:class DianSoftwareConfig(TenantAwareModel):
+backend/apps/prestadores/mi_negocio/gestion_comercial/domain/models.py:class DianStatusLog(models.Model):
+backend/apps/prestadores/mi_negocio/gestion_comercial/shared/models.py:class DomainEvent(models.Model):
+backend/apps/capital_markets/domain/models.py:class CapitalStructure(TenantAwareModel):
+backend/apps/capital_markets/domain/models.py:    class Meta:
+backend/apps/capital_markets/domain/models.py:class DebtInstrument(TenantAwareModel):
+backend/apps/capital_markets/domain/models.py:    class InstrumentType(models.TextChoices):
+backend/apps/capital_markets/domain/models.py:    class Meta:
+backend/apps/capital_markets/domain/models.py:class EquityInstrument(TenantAwareModel):
+backend/apps/capital_markets/domain/models.py:    class Meta:
+backend/apps/capital_markets/domain/models.py:class MarketRating(TenantAwareModel):
+backend/apps/capital_markets/domain/models.py:    class Meta:
+backend/apps/capital_markets/domain/models.py:class StructuredDeal(TenantAwareModel):
+backend/apps/capital_markets/domain/models.py:    class Meta:
+backend/apps/finanzas/models.py:class FinancialEventRecord(models.Model):
+backend/apps/finanzas/models.py:    class Meta:
+backend/apps/finanzas/models.py:class FinancialMetric(models.Model):
+backend/apps/finanzas/models.py:    class Meta:
+backend/apps/finanzas/models.py:    class Meta:
+backend/apps/macroeconomic_coordination/models.py:class MacroCouncil(BaseErpModel):
+backend/apps/macroeconomic_coordination/models.py:class SystemicRiskIndicator(BaseErpModel):
+backend/apps/macroeconomic_coordination/models.py:class CapitalCoordinationNode(BaseErpModel):
+backend/apps/macroeconomic_coordination/models.py:class EconomicModelSnapshot(BaseErpModel):
+backend/apps/macroeconomic_coordination/models.py:class StabilizationProtocol(BaseErpModel):
+backend/apps/payments/models.py:class Payment(models.Model):
+backend/apps/payments/models.py:    class Meta:
+backend/apps/institutional_layer/models.py:class HistoricalEvent(models.Model):
+backend/apps/institutional_layer/models.py:    class Meta:
+backend/apps/institutional_layer/models.py:class InstitutionalAuditLog(models.Model):
+backend/apps/institutional_layer/models.py:    class Meta:
+backend/apps/institutional_layer/models.py:class BoardDecision(models.Model):
+backend/apps/institutional_layer/models.py:    class Committee(models.TextChoices):
+backend/apps/institutional_layer/models.py:    class Status(models.TextChoices):
+backend/apps/institutional_layer/models.py:class ValuationRecord(models.Model):
+backend/apps/institutional_layer/models.py:    class Meta:
+backend/apps/institutional_layer/models.py:class DataRoomAccess(models.Model):
+backend/apps/global_digital_infrastructure/models.py:class GlobalLedgerEntry(BaseErpModel):
+backend/apps/global_digital_infrastructure/models.py:class SchemaRegistry(BaseErpModel):
+backend/apps/global_digital_infrastructure/models.py:class RegulatorySyncNode(BaseErpModel):
+backend/apps/global_digital_infrastructure/models.py:class DigitalIdentity(BaseErpModel):
+backend/apps/global_digital_infrastructure/models.py:class DataFabricRegion(BaseErpModel):
+backend/apps/commercial_engine/models.py:class SaaSSubscription(models.Model):
+backend/apps/commercial_engine/models.py:    class Status(models.TextChoices):
+backend/apps/commercial_engine/models.py:    class BillingCycle(models.TextChoices):
+backend/apps/commercial_engine/models.py:class UsageEvent(models.Model):
+backend/apps/commercial_engine/models.py:class UsageAggregation(models.Model):
+backend/apps/commercial_engine/models.py:class LeadPipelineLog(models.Model):
+backend/apps/commercial_engine/models.py:class SaaSInvoice(BaseInvoice):
+backend/apps/commercial_engine/models.py:    class Meta:
+backend/apps/commercial_engine/models.py:class CustomerHealthIndex(models.Model):
+backend/apps/commercial_engine/models.py:    class Meta:
+backend/apps/commercial_engine/models.py:class CommercialKPI(models.Model):
+backend/apps/commercial_engine/models.py:    class Meta:
+backend/apps/commercial_engine/models.py:class SaaSInvoiceLine(BaseInvoiceLine):
+backend/apps/commercial_engine/models.py:    class Meta:
+backend/apps/tokenization/domain/models.py:class TokenizedAsset(TenantAwareModel):
+backend/apps/tokenization/domain/models.py:    class AssetType(models.TextChoices):
+backend/apps/tokenization/domain/models.py:    class RegulatoryClassification(models.TextChoices):
+backend/apps/tokenization/domain/models.py:    class Meta:
+backend/apps/tokenization/domain/models.py:class ProgrammableCapitalUnit(TenantAwareModel):
+backend/apps/tokenization/domain/models.py:    class Meta:
+backend/apps/tokenization/domain/models.py:class SmartGovernanceRule(TenantAwareModel):
+backend/apps/tokenization/domain/models.py:    class Meta:
+backend/apps/tokenization/domain/models.py:class DigitalRegistry(TenantAwareModel):
+backend/apps/tokenization/domain/models.py:    class Meta:
+backend/apps/tokenization/domain/models.py:class ComplianceConstraint(TenantAwareModel):
+backend/apps/tokenization/domain/models.py:    class Meta:
+backend/apps/international_interop/models.py:class AlgorithmicCertificate(models.Model):
+backend/apps/international_interop/models.py:    class CertificateType(models.TextChoices):
+backend/apps/international_interop/models.py:class TrustSignal(models.Model):
+backend/apps/international_interop/models.py:    class SignalLevel(models.TextChoices):
+backend/apps/legacy_custody/models.py:class LegacyCustodian(models.Model):
+backend/apps/legacy_custody/models.py:class LegacyMilestone(models.Model):
+backend/apps/domain_business/comercial/models.py:class CommercialOperation(TenantAwareModel):
+backend/apps/domain_business/comercial/models.py:    class Status(models.TextChoices):
+backend/apps/domain_business/comercial/models.py:    class OperationType(models.TextChoices):
+backend/apps/domain_business/comercial/models.py:    class Meta:
+backend/apps/domain_business/comercial/models.py:class OperationItem(TenantAwareModel):
+backend/apps/domain_business/comercial/models.py:    class Meta:
+backend/apps/domain_business/comercial/models.py:class SalesInvoice(BaseInvoice):
+backend/apps/domain_business/comercial/models.py:    class TaxStatus(models.TextChoices):
+backend/apps/domain_business/comercial/models.py:    class Meta:
+backend/apps/domain_business/comercial/models.py:class InvoiceItem(TenantAwareModel):
+backend/apps/domain_business/comercial/models.py:    class Meta:
+backend/apps/domain_business/operativa/models.py:class ProviderProfile(TenantAwareModel):
+backend/apps/domain_business/operativa/models.py:    class ProviderTypes(models.TextChoices):
+backend/apps/domain_business/operativa/models.py:    class Meta:
+backend/apps/domain_business/operativa/models.py:class Reservation(TenantAwareModel):
+backend/apps/domain_business/operativa/models.py:    class Status(models.TextChoices):
+backend/apps/domain_business/operativa/models.py:    class Meta:
+backend/apps/domain_business/operativa/models.py:class AdditionalService(TenantAwareModel):
+backend/apps/domain_business/operativa/models.py:    class Meta:
+backend/apps/sarita_agents/models.py:class Mision(models.Model):
+backend/apps/sarita_agents/models.py:class PlanTáctico(models.Model):
+backend/apps/sarita_agents/models.py:class TareaDelegada(models.Model):
+backend/apps/sarita_agents/models.py:class RegistroDeEjecucion(models.Model):
+backend/apps/sarita_agents/models.py:class MicroTarea(models.Model):
+backend/apps/sarita_agents/models.py:class RegistroMicroTarea(models.Model):
+backend/apps/sarita_agents/models.py:class Prestador(models.Model):
+backend/apps/sarita_agents/models.py:class IdempotencyKey(models.Model):
+backend/apps/sarita_agents/models.py:    class Meta:
+backend/apps/sarita_agents/models.py:class SoldadoOperationalStatus(models.Model):
+backend/apps/comercial/models.py:class Lead(models.Model):
+backend/apps/comercial/models.py:    class Status(models.TextChoices):
+backend/apps/comercial/models.py:    class Meta:
+backend/apps/comercial/models.py:class Plan(models.Model):
+backend/apps/comercial/models.py:    class TargetUserType(models.TextChoices):
+backend/apps/comercial/models.py:    class BillingSchema(models.TextChoices):
+backend/apps/comercial/models.py:    class Meta:
+backend/apps/comercial/models.py:class PlanTier(models.Model):
+backend/apps/comercial/models.py:    class Meta:
+backend/apps/comercial/models.py:class AddOn(models.Model):
+backend/apps/comercial/models.py:    class Meta:
+backend/apps/comercial/models.py:class Opportunity(models.Model):
+backend/apps/comercial/models.py:    class Stage(models.TextChoices):
+backend/apps/comercial/models.py:    class Meta:
+backend/apps/comercial/models.py:class Subscription(models.Model):
+backend/apps/comercial/models.py:    class Status(models.TextChoices):
+backend/apps/comercial/models.py:    class BillingCycle(models.TextChoices):
+backend/apps/comercial/models.py:    class Meta:
+backend/apps/comercial/models.py:class PricingRule(models.Model):
+backend/apps/comercial/models.py:    class Meta:
+backend/apps/comercial/models.py:class UsageMetric(models.Model):
+backend/apps/comercial/models.py:    class Meta:
+backend/apps/comercial/models.py:class BillingCycle(models.Model):
+backend/apps/comercial/models.py:    class Meta:
+backend/apps/ecosystem_optimization/models.py:class PerformanceMetric(models.Model):
+backend/apps/ecosystem_optimization/models.py:    class Domain(models.TextChoices):
+backend/apps/ecosystem_optimization/models.py:    class Meta:
+backend/apps/ecosystem_optimization/models.py:class AutonomousAction(models.Model):
+backend/apps/ecosystem_optimization/models.py:    class Level(models.IntegerChoices):
+backend/apps/ecosystem_optimization/models.py:class AutonomousExecutionLog(models.Model):
+backend/apps/ecosystem_optimization/models.py:    class Meta:
+backend/apps/ecosystem_optimization/models.py:class AutonomyControl(models.Model):
+backend/apps/ecosystem_optimization/models.py:    class ControlType(models.TextChoices):
+backend/apps/ecosystem_optimization/models.py:class OptimizationProposal(models.Model):
+backend/apps/ecosystem_optimization/models.py:    class Status(models.TextChoices):
+backend/apps/ecosystem_optimization/models.py:    class Meta:
+backend/apps/ecosystem_optimization/models.py:class OptimizationAuditLog(models.Model):
+backend/apps/ecosystem_optimization/models.py:    class Meta:
+backend/apps/transnational_governance/models.py:class GovernanceBody(BaseErpModel):
+backend/apps/transnational_governance/models.py:class GovernanceMember(BaseErpModel):
+backend/apps/transnational_governance/models.py:class AlgorithmicAudit(BaseErpModel):
+backend/apps/transnational_governance/models.py:class DisputeCase(BaseErpModel):
+backend/apps/transnational_governance/models.py:class GovernanceStabilityMetric(BaseErpModel):
+backend/apps/core_erp/taxation/models.py:class Country(BaseErpModel):
+backend/apps/core_erp/taxation/models.py:class Jurisdiction(BaseErpModel):
+backend/apps/core_erp/taxation/models.py:class Tax(TenantAwareModel):
+backend/apps/core_erp/taxation/models.py:    class Meta:
+backend/apps/core_erp/taxation/models.py:class TaxRate(BaseErpModel):
+backend/apps/core_erp/taxation/models.py:class TaxRule(BaseErpModel):
+backend/apps/core_erp/taxation/models.py:class TaxTransaction(TenantAwareModel):
+backend/apps/core_erp/taxation/models.py:class TaxAccountMapping(TenantAwareModel):
+backend/apps/core_erp/consolidation/models.py:class IntercompanyMatch(BaseErpModel):
+backend/apps/core_erp/consolidation/models.py:    class Meta:
+backend/apps/core_erp/consolidation/models.py:class ConsolidatedReportSnapshot(TenantAwareModel):
+backend/apps/core_erp/consolidation/models.py:    class Meta:
+backend/apps/core_erp/consolidation/models.py:class IntercompanyMapping(BaseErpModel):
+backend/apps/core_erp/consolidation/models.py:    class Meta:
+backend/apps/core_erp/fx/models.py:class Currency(BaseErpModel):
+backend/apps/core_erp/fx/models.py:class FXRateTable(BaseErpModel):
+backend/apps/core_erp/fx/models.py:    class Meta:
+backend/apps/core_erp/intelligence/models.py:class FinancialProjection(TenantAwareModel):
+backend/apps/core_erp/intelligence/models.py:    class Meta:
+backend/apps/core_erp/intelligence/models.py:class SimulationScenario(TenantAwareModel):
+backend/apps/core_erp/intelligence/models.py:    class Meta:
+backend/apps/core_erp/tenancy/models.py:class Tenant(BaseErpModel):
+backend/apps/core_erp/tenancy/models.py:    class State(models.TextChoices):
+backend/apps/core_erp/tenancy/models.py:    class Meta:
+backend/apps/core_erp/accounting/models.py:class AccountingTenantModel(TenantAwareModel):
+backend/apps/core_erp/accounting/models.py:    class Meta:
+backend/apps/core_erp/accounting/models.py:class ChartOfAccounts(AccountingTenantModel):
+backend/apps/core_erp/accounting/models.py:    class Meta:
+backend/apps/core_erp/accounting/models.py:class Account(BaseAccount, AccountingTenantModel):
+backend/apps/core_erp/accounting/models.py:    class Meta:
+backend/apps/core_erp/accounting/models.py:class FiscalPeriod(BaseFinancialPeriod, AccountingTenantModel):
+backend/apps/core_erp/accounting/models.py:    class Meta:
+backend/apps/core_erp/accounting/models.py:class JournalEntry(BaseJournalEntry, AccountingTenantModel):
+backend/apps/core_erp/accounting/models.py:    class Meta:
+backend/apps/core_erp/accounting/models.py:class AccountingAuditLog(AccountingTenantModel):
+backend/apps/core_erp/accounting/models.py:    class Meta:
+backend/apps/core_erp/accounting/models.py:class LedgerEntry(TenantAwareModel):
+backend/apps/core_erp/accounting/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class AgentInteraction(models.Model):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class DecisionHistory(models.Model):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class AgentPerformance(models.Model):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class AdaptiveProposal(models.Model):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class WorkflowDefinition(models.Model):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class WorkflowInstance(models.Model):
+backend/apps/admin_plataforma/models.py:    class State(models.TextChoices):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class StepExecution(models.Model):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class GovernanceAuditLog(models.Model):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class GovernancePolicy(models.Model):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class GovernanceIntention(models.Model):
+backend/apps/admin_plataforma/models.py:    class Status(models.TextChoices):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/models.py:class GovernancePolicyVersion(models.Model):
+backend/apps/admin_plataforma/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:class Employee(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:class EmploymentContract(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:class PayrollConcept(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:    class Type(models.TextChoices):
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:class PayrollRun(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:class PayrollNews(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:class PayrollDetail(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/nomina/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/presupuesto/models.py:class Budget(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/presupuesto/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/presupuesto/models.py:class BudgetItem(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/presupuesto/models.py:    class Type(models.TextChoices):
+backend/apps/admin_plataforma/gestion_contable/presupuesto/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/presupuesto/models.py:class BudgetExecution(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/presupuesto/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/contabilidad/models.py:class AdminChartOfAccounts(CoreChartOfAccounts):
+backend/apps/admin_plataforma/gestion_contable/contabilidad/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/contabilidad/models.py:class AdminAccount(CoreAccount):
+backend/apps/admin_plataforma/gestion_contable/contabilidad/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/contabilidad/models.py:class AdminFiscalPeriod(CoreFiscalPeriod):
+backend/apps/admin_plataforma/gestion_contable/contabilidad/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/contabilidad/models.py:class AdminJournalEntry(CoreJournalEntry):
+backend/apps/admin_plataforma/gestion_contable/contabilidad/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/contabilidad/models.py:class AdminAccountingTransaction(CoreJournalLine):
+backend/apps/admin_plataforma/gestion_contable/contabilidad/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/inventario/models.py:class ProductCategory(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/inventario/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/inventario/models.py:class Warehouse(BaseWarehouse):
+backend/apps/admin_plataforma/gestion_contable/inventario/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/inventario/models.py:class Product(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/inventario/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/inventario/models.py:class InventoryMovement(BaseInventoryMovement):
+backend/apps/admin_plataforma/gestion_contable/inventario/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/compras/models.py:class Supplier(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/compras/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/compras/models.py:class PurchaseInvoice(BaseInvoice): # Inherits from BaseInvoice which is already TenantAware
+backend/apps/admin_plataforma/gestion_contable/compras/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/activos_fijos/models.py:class AssetCategory(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/activos_fijos/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/activos_fijos/models.py:class FixedAsset(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/activos_fijos/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/activos_fijos/models.py:class DepreciationCalculation(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/activos_fijos/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/empresa/models.py:class AdminCompany(CompanyBase):
+backend/apps/admin_plataforma/gestion_contable/empresa/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/proyectos/models.py:class Project(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/proyectos/models.py:    class Status(models.TextChoices):
+backend/apps/admin_plataforma/gestion_contable/proyectos/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/proyectos/models.py:class ProjectIncome(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/proyectos/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_contable/proyectos/models.py:class ProjectCost(TenantAwareModel):
+backend/apps/admin_plataforma/gestion_contable/proyectos/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_archivistica/models.py:class ProcessType(models.Model):
+backend/apps/admin_plataforma/gestion_archivistica/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_archivistica/models.py:class Process(models.Model):
+backend/apps/admin_plataforma/gestion_archivistica/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_archivistica/models.py:class DocumentType(models.Model):
+backend/apps/admin_plataforma/gestion_archivistica/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_archivistica/models.py:class Document(models.Model):
+backend/apps/admin_plataforma/gestion_archivistica/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_archivistica/models.py:class DocumentVersion(models.Model):
+backend/apps/admin_plataforma/gestion_archivistica/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_financiera/models.py:class CuentaBancaria(BaseBankAccount):
+backend/apps/admin_plataforma/gestion_financiera/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_financiera/models.py:class TransaccionBancaria(BaseBankTransaction):
+backend/apps/admin_plataforma/gestion_financiera/models.py:    class Meta:
+backend/apps/admin_plataforma/gestion_financiera/models.py:class OrdenPago(BasePaymentOrder):
+backend/apps/admin_plataforma/gestion_financiera/models.py:    class EstadoPago(models.TextChoices):
+backend/apps/admin_plataforma/gestion_financiera/models.py:    class Meta:
+backend/apps/defense_deception/models.py:class GhostSurface(models.Model):
+backend/apps/defense_deception/models.py:class AdversarialProfile(models.Model):
+backend/apps/defense_deception/models.py:class DeceptionInteractionLog(models.Model):
+backend/apps/defense_deception/models.py:    class Meta:
+backend/apps/defense_deception/models.py:class DisuasionMetric(models.Model):
+backend/apps/defense_deception/models.py:    class Meta:
+backend/apps/operational_treaties/models.py:class OperationalTreaty(models.Model):
+backend/apps/operational_treaties/models.py:    class TreatyType(models.TextChoices):
+backend/apps/operational_treaties/models.py:class TreatyComplianceAudit(models.Model):
+backend/apps/operational_treaties/models.py:    class Meta:
+backend/apps/operational_treaties/models.py:class SovereignKillSwitch(models.Model):
+backend/apps/corporate_structure/models.py:class CorporateHolding(models.Model):
+backend/apps/corporate_structure/models.py:class LegalEntity(models.Model):
+backend/apps/corporate_structure/models.py:class IntercompanyTransaction(models.Model):
+backend/apps/corporate_structure/models.py:class TransferPricingRule(models.Model):
+backend/apps/corporate_structure/models.py:class OwnershipRegistry(models.Model):
+backend/apps/capital_architecture/models.py:class Shareholder(models.Model):
+backend/apps/capital_architecture/models.py:class EquityClass(models.Model):
+backend/apps/capital_architecture/models.py:class ShareCertificate(models.Model):
+backend/apps/capital_architecture/models.py:    equity_class = models.ForeignKey(EquityClass, on_delete=models.CASCADE)
+backend/apps/capital_architecture/models.py:class SAFE(models.Model):
+backend/apps/capital_architecture/models.py:class ConvertibleNote(models.Model):
+backend/apps/global_holding/domain/models.py:class JurisdictionConfig(TenantAwareModel):
+backend/apps/global_holding/domain/models.py:    class Meta:
+backend/apps/global_holding/domain/models.py:class GlobalCapitalAllocator(TenantAwareModel):
+backend/apps/global_holding/domain/models.py:    class Meta:
+backend/apps/global_holding/domain/models.py:class TaxStrategy(TenantAwareModel):
+backend/apps/global_holding/domain/models.py:    class Meta:
+backend/apps/global_holding/domain/models.py:class TreasuryPosition(TenantAwareModel):
+backend/apps/global_holding/domain/models.py:    class Meta:
+backend/apps/global_holding/domain/models.py:class MacroScenario(TenantAwareModel):
+backend/apps/global_holding/domain/models.py:    class Meta:
+backend/apps/orders/models.py:class Order(models.Model):
+backend/apps/orders/models.py:    class Meta:
+backend/apps/orders/models.py:class OrderItem(models.Model):
+backend/apps/orders/models.py:    class Meta:
+backend/apps/autonomous_operations/models.py:class AutonomousAgent(models.Model):
+backend/apps/autonomous_operations/models.py:class PolicyRule(models.Model):
+backend/apps/autonomous_operations/models.py:class DecisionProposal(models.Model):
+backend/apps/autonomous_operations/models.py:class AutonomousAction(models.Model):
+backend/apps/autonomous_operations/models.py:class AgentExecutionAudit(models.Model):
+backend/apps/autonomous_operations/models.py:class Experiment(models.Model):
+backend/apps/operational_intelligence/models.py:class SaaSMetric(models.Model):
+backend/apps/operational_intelligence/models.py:    class Meta:
+backend/apps/operational_intelligence/models.py:class CohortAnalysis(models.Model):
+backend/apps/operational_intelligence/models.py:class ChurnRiskScore(models.Model):
+backend/apps/operational_intelligence/models.py:class RevenueForecast(models.Model):
+backend/apps/operational_intelligence/models.py:class UnitEconomics(models.Model):
+backend/apps/operational_intelligence/models.py:class OperationalRiskIndex(models.Model):
+backend/apps/operational_intelligence/models.py:class IntelligenceAuditLog(models.Model):
+backend/apps/treasury/models.py:class BankStatement(models.Model):
+backend/apps/treasury/models.py:    class Meta:
+backend/apps/treasury/models.py:class BankTransaction(models.Model):
+backend/apps/treasury/models.py:    class Meta:
+backend/apps/state_integration/models.py:class StateEntity(BaseErpModel):
+backend/apps/state_integration/models.py:class IntegrationProtocol(BaseErpModel):
+backend/apps/state_integration/models.py:class SovereignComplianceNode(BaseErpModel):
+backend/apps/state_integration/models.py:class InfrastructureProject(BaseErpModel):
+backend/apps/state_integration/models.py:class JointGovernanceCommittee(BaseErpModel):
+backend/apps/economic_ecosystem/models.py:class EconomicNode(BaseErpModel):
+backend/apps/economic_ecosystem/models.py:class EconomicFlow(BaseErpModel):
+backend/apps/economic_ecosystem/models.py:class InternalContract(BaseErpModel):
+backend/apps/economic_ecosystem/models.py:class EcosystemIncentive(BaseErpModel):
+backend/apps/tourism_map/models.py:class TourismLocation(models.Model):
+backend/apps/companies/models.py:class Company(models.Model):
+backend/apps/companies/models.py:    class Meta:
+backend/apps/companies/models.py:class CompanyEncryptionKey(models.Model):
+backend/apps/meta_economic_network/models.py:class MetaEcosystem(BaseErpModel):
+backend/apps/meta_economic_network/models.py:class EcosystemInterdependence(BaseErpModel):
+backend/apps/meta_economic_network/models.py:class InteroperabilityProtocol(BaseErpModel):
+backend/apps/meta_economic_network/models.py:class GlobalUtilityMetric(BaseErpModel):
+backend/apps/meta_economic_network/models.py:class MetaLiquidityPool(BaseErpModel):
+backend/apps/web_funnel/models.py:class MediaAsset(models.Model):
+backend/apps/web_funnel/models.py:    class Meta:
+backend/apps/web_funnel/models.py:class WebPage(models.Model):
+backend/apps/web_funnel/models.py:    class Meta:
+backend/apps/web_funnel/models.py:class Section(models.Model):
+backend/apps/web_funnel/models.py:    class Meta:
+backend/apps/web_funnel/models.py:class ContentBlock(models.Model):
+backend/apps/web_funnel/models.py:    class Meta:
+backend/apps/cart/models.py:class Cart(models.Model):
+backend/apps/cart/models.py:    class Meta:
+backend/apps/cart/models.py:class CartItem(models.Model):
+backend/apps/cart/models.py:    class Meta:
+backend/apps/audit/models.py:class AuditLog(models.Model):
+backend/apps/audit/models.py:    class Action(models.TextChoices):
+backend/apps/audit/models.py:    class Meta:
+backend/apps/audit/models.py:class ForensicSecurityLog(models.Model):
+backend/apps/audit/models.py:    class ThreatLevel(models.TextChoices):
+backend/apps/audit/models.py:    class Meta:
+backend/apps/audit/models.py:class PublicSystemAudit(models.Model):
+backend/apps/audit/models.py:    class Meta:
+backend/apps/defense_predictive/models.py:class ThreatNode(models.Model):
+backend/apps/defense_predictive/models.py:    class NodeType(models.TextChoices):
+backend/apps/defense_predictive/models.py:class ThreatEdge(models.Model):
+backend/apps/defense_predictive/models.py:    class Meta:
+backend/apps/defense_predictive/models.py:class PredictiveScenario(models.Model):
+backend/apps/defense_predictive/models.py:    class Meta:
+backend/apps/defense_predictive/models.py:class PreventiveHardening(models.Model):
+backend/apps/defense_predictive/models.py:class PDEGovernanceConfig(models.Model):
+backend/apps/peace_net/models.py:class SystemicRiskIndicator(models.Model):
+backend/apps/peace_net/models.py:    class Domain(models.TextChoices):
+backend/apps/peace_net/models.py:class StabilityAlert(models.Model):
+backend/apps/peace_net/models.py:    class Severity(models.TextChoices):
+backend/apps/peace_net/models.py:    class Meta:
+backend/apps/peace_net/models.py:class MitigationScenario(models.Model):
+backend/apps/capital_markets_layer/models.py:class Shareholder(models.Model):
+backend/apps/capital_markets_layer/models.py:    class Type(models.TextChoices):
+backend/apps/capital_markets_layer/models.py:class ShareClass(models.Model):
+backend/apps/capital_markets_layer/models.py:    class Type(models.TextChoices):
+backend/apps/capital_markets_layer/models.py:class EquityRound(models.Model):
+backend/apps/capital_markets_layer/models.py:    class Meta:
+backend/apps/capital_markets_layer/models.py:class ShareIssuance(models.Model):
+backend/apps/capital_markets_layer/models.py:    share_class = models.ForeignKey(ShareClass, on_delete=models.PROTECT)
+backend/apps/capital_markets_layer/models.py:class DebtInstrument(models.Model):
+backend/apps/capital_markets_layer/models.py:    class Type(models.TextChoices):
+backend/apps/capital_markets_layer/models.py:class SPV(models.Model):
+backend/apps/capital_markets_layer/models.py:    class Meta:
+backend/apps/sadi_agent/models.py:class VoicePermission(models.Model):
+backend/apps/sadi_agent/models.py:    class Meta:
+backend/apps/sadi_agent/models.py:class SemanticDomain(models.Model):
+backend/apps/sadi_agent/models.py:class Intent(models.Model):
+backend/apps/sadi_agent/models.py:    class Meta:
+backend/apps/sadi_agent/models.py:class Entity(models.Model):
+backend/apps/sadi_agent/models.py:    class Meta:
+backend/apps/sadi_agent/models.py:class Example(models.Model):
+backend/apps/sadi_agent/models.py:class VoiceInteractionLog(models.Model):
+backend/apps/sadi_agent/models.py:    class Meta:
+backend/api/models.py:class Entity(models.Model):
+backend/api/models.py:class Department(models.Model):
+backend/api/models.py:class Municipality(models.Model):
+backend/api/models.py:class CustomUser(AbstractUser):
+backend/api/models.py:    class Role(models.TextChoices):
+backend/api/models.py:    class AIProvider(models.TextChoices):
+backend/api/models.py:    class Origen(models.TextChoices):
+backend/api/models.py:class Profile(models.Model):
+backend/api/models.py:class UserLLMConfig(models.Model):
+backend/api/models.py:    class Provider(models.TextChoices):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class RubroArtesano(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class Artesano(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class PerfilAdministrador(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class PerfilFuncionarioDirectivo(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class PerfilFuncionarioProfesional(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class ImagenArtesano(models.Model):
+backend/api/models.py:class ImagenGaleria(models.Model):
+backend/api/models.py:class Publicacion(models.Model):
+backend/api/models.py:    class Tipo(models.TextChoices):
+backend/api/models.py:    class Status(models.TextChoices):
+backend/api/models.py:    class SubCategoria(models.TextChoices):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class Video(models.Model):
+backend/api/models.py:class ConsejoConsultivo(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class AtractivoTuristico(models.Model):
+backend/api/models.py:    class CategoriaColor(models.TextChoices):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class ImagenAtractivo(models.Model):
+backend/api/models.py:class RutaTuristica(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class ImagenRutaTuristica(models.Model):
+backend/api/models.py:class ElementoGuardado(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class PaginaInstitucional(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class ImagenPaginaInstitucional(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class ContenidoMunicipio(models.Model):
+backend/api/models.py:    class Seccion(models.TextChoices):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class AgentTask(models.Model):
+backend/api/models.py:    class Status(models.TextChoices):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class AuditLog(models.Model):
+backend/api/models.py:    class Action(models.TextChoices):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class HomePageComponent(models.Model):
+backend/api/models.py:    class ComponentType(models.TextChoices):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class GlobalPermission(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class GlobalRole(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class SiteConfiguration(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class MenuItem(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class HechoHistorico(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class Resena(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class Sugerencia(models.Model):
+backend/api/models.py:    class TipoMensaje(models.TextChoices):
+backend/api/models.py:    class Estado(models.TextChoices):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class Formulario(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class Pregunta(models.Model):
+backend/api/models.py:    class TipoPregunta(models.TextChoices):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class OpcionRespuesta(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class RespuestaUsuario(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class PlantillaVerificacion(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class ItemVerificacion(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class Verificacion(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class RespuestaItemVerificacion(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class AsistenciaCapacitacion(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class ScoringRule(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class Notificacion(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class TipoDocumentoVerificacion(models.Model):
+backend/api/models.py:    class Meta:
+backend/api/models.py:class DocumentoVerificacion(models.Model):
+backend/api/models.py:    class Estado(models.TextChoices):
+backend/api/models.py:    class Meta:
