@@ -19,7 +19,7 @@ class PostingRules:
             "INVENTORY_ADJUSTED": PostingRules.rule_inventory_adjusted,
             "PURCHASE_ORDER_POSTED": PostingRules.rule_purchase_order_posted,
             "ASSET_DEPRECIATED": PostingRules.rule_asset_depreciated,
-            "SALE_COMPLETED": PostingRules.rule_sale,
+            "SALE_COMPLETED": PostingRules.rule_sale_completed,
             "LIQUIDATION": PostingRules.rule_liquidation,
             "SALE_CREATED": PostingRules.rule_venta_creada,
             "PAYROLL_LIQUIDATED_V2": PostingRules.rule_payroll_liquidated_v2,
@@ -209,6 +209,33 @@ class PostingRules:
         ]
 
     # --- Compatibility Rules ---
+    @staticmethod
+    def rule_sale_completed(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Impacto Contable de Venta Finalizada (Fase 2 ERP).
+        - Wallet/Caja (110505): Débito Total
+        - Ingresos (413501): Crédito Subtotal
+        - IVA por Pagar (240801): Crédito Impuestos
+        """
+        total = Decimal(str(payload.get('total', 0)))
+        taxes = Decimal(str(payload.get('taxes', 0)))
+        subtotal = total - taxes
+        invoice = payload.get('invoice_number', 'N/A')
+        method = payload.get('payment_method', 'EFECTIVO')
+
+        # Determinar cuenta de entrada según método
+        account_in = '110505' # Caja General
+        if method == 'WALLET':
+            account_in = '111005' # Bancos / Wallet Centralizada
+        elif method == 'TARJETA':
+            account_in = '111010' # Cuentas Corrientes
+
+        return [
+            {'account': account_in, 'debit_amount': total, 'credit_amount': 0, 'description': f"Ingreso {method} - Factura {invoice}"},
+            {'account': '413501', 'debit_amount': 0, 'credit_amount': subtotal, 'description': f"Venta Mercancía - Factura {invoice}"},
+            {'account': '240801', 'debit_amount': 0, 'credit_amount': taxes, 'description': f"IVA Generado - Factura {invoice}"}
+        ]
+
     @staticmethod
     def rule_sale(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
         amount = Decimal(str(payload.get('amount', 0)))

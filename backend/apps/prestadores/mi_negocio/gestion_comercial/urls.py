@@ -1,8 +1,7 @@
 from rest_framework.routers import DefaultRouter
-from .presentation.views import FacturaVentaViewSet, OperacionComercialViewSet
+from .presentation.views import BusinessReportsViewSet
 
 router = DefaultRouter()
-router.register(r'operaciones-comerciales', OperacionComercialViewSet, basename='operacion-comercial')
-router.register(r'facturas-venta', FacturaVentaViewSet, basename='factura-venta')
+router.register(r'reports', BusinessReportsViewSet, basename='business-reports')
 
 urlpatterns = router.urls

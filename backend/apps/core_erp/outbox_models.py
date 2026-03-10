@@ -24,6 +24,7 @@ class EventAuditLog(models.Model):
     payload = models.JSONField()
     status = models.CharField(max_length=20, default='EMITTED') # EMITTED, PROCESSED, PARTIAL_FAILURE, QUEUED_COMPLETED
     severity = models.CharField(max_length=20, default='info') # info, warning, critical, fatal
+    retry_count = models.IntegerField(default=0)
     error_details = models.TextField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 

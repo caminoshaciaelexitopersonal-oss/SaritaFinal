@@ -23,5 +23,21 @@ contextBridge.exposeInMainWorld('saritaAPI', {
   secureStore: {
     set: (key: string, value: string) => ipcRenderer.invoke('secure-store-set', { key, value }),
     get: (encryptedBase64: string) => ipcRenderer.invoke('secure-store-get', { encryptedBase64 })
+  },
+  pos: {
+    getProducts: () => ipcRenderer.invoke('pos-get-products'),
+    saveSale: (sale: any) => ipcRenderer.invoke('pos-save-sale'),
+    getSalesHistory: () => ipcRenderer.invoke('pos-get-sales-history'),
+    getInventory: () => ipcRenderer.invoke('pos-get-inventory')
+  },
+  sync: {
+    getStatus: () => ipcRenderer.invoke('sync-get-status'),
+    forceSync: () => ipcRenderer.invoke('sync-force')
+  },
+  hardware: {
+    printReceipt: (data: any) => ipcRenderer.invoke('print-receipt', data),
+    scanBarcode: (callback: (code: string) => void) => {
+      ipcRenderer.on('barcode-scanned', (_event, code) => callback(code));
+    }
   }
 });

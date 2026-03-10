@@ -1,7 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Store } from 'lucide-react';
+import { POSInterface } from './commercial/POSInterface';
 
-export const DashboardHome = () => (
+export const DashboardHome = () => {
+  const [showPOS, setShowPOS] = useState(false);
+
+  if (showPOS) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold text-gray-800 uppercase tracking-tight">Terminal Punto de Venta (POS)</h2>
+          <button
+            onClick={() => setShowPOS(false)}
+            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold hover:bg-gray-300 transition"
+          >
+            Volver al Dashboard
+          </button>
+        </div>
+        <POSInterface />
+      </div>
+    );
+  }
+
+  return (
   <div className="space-y-8">
+    <div className="flex justify-end mb-4">
+        <button
+          onClick={() => setShowPOS(true)}
+          className="bg-primary text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-opacity-90 transition shadow-lg shadow-primary/20"
+        >
+          <Store size={20} /> Abrir Punto de Venta (POS)
+        </button>
+    </div>
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
       {[
         { label: 'Reservas Hoy', value: '42', color: 'bg-blue-500' },
@@ -26,4 +56,5 @@ export const DashboardHome = () => (
       </div>
     </div>
   </div>
-);
+  );
+};

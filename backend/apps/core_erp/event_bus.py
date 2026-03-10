@@ -127,6 +127,7 @@ class EventBus:
                     break
                 except Exception as e:
                     attempt += 1
+                    audit_entry.retry_count = attempt
                     wait_time = 2 ** attempt
                     logger.error(f"Error en {event_type} (intento {attempt}): {str(e)}. Reintentando en {wait_time}s...")
                     time.sleep(wait_time)
