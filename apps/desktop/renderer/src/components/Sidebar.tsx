@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Wallet, Truck, Briefcase, Users, FileText, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Wallet, Truck, Briefcase, Users, FileText, Settings, LogOut, UserCheck, DollarSign, FileStack, Signature, Archive } from 'lucide-react';
 
 export const Sidebar = () => {
   const { logout, user } = useAuth();
@@ -9,6 +9,11 @@ export const Sidebar = () => {
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard/home' },
     { icon: Briefcase, label: 'Mi Negocio', path: '/dashboard/negocio', role: ['provider', 'operator', 'admin'] },
+    { icon: UserCheck, label: 'Empleados', path: '/dashboard/erp/empleados', role: ['provider', 'admin'] },
+    { icon: DollarSign, label: 'Nómina', path: '/dashboard/erp/nomina', role: ['provider', 'admin'] },
+    { icon: FileStack, label: 'Documentos', path: '/dashboard/erp/documentos', role: ['provider', 'admin'] },
+    { icon: Signature, label: 'Contratos', path: '/dashboard/erp/contratos', role: ['provider', 'admin'] },
+    { icon: Archive, label: 'Archivo', path: '/dashboard/erp/archivistica', role: ['provider', 'admin'] },
     { icon: Wallet, label: 'Wallet', path: '/dashboard/wallet' },
     { icon: Truck, label: 'Delivery', path: '/dashboard/delivery' },
     { icon: Users, label: 'Admin', path: '/dashboard/admin', role: ['admin'] },
