@@ -1,26 +1,28 @@
-# AWS DEPLOYMENT AUDIT - SARITA SYSTEM
+# AWS DEPLOYMENT AUDIT – SISTEMA SARITA
 
-**Resultado:** **CERTIFICADO PARA DESPLIEGUE EN AWS**
+## 1. COMPATIBILIDAD DE SERVICIOS
 
-## 1. COMPATIBILIDAD DE SERVICIOS AWS
+| Servicio AWS | Estado | Configuración Detectada |
+| :--- | :--- | :--- |
+| **Amazon EKS** | ✅ LISTO | Manifiestos K8s incluyen Deployments, Services y HPA (3-10 réplicas). |
+| **Amazon RDS** | ✅ LISTO | Configuración multibase activa. Soporta PostgreSQL 15 con aislamiento lógico. |
+| **Amazon S3** | ✅ LISTO | Integración vía `django-storages` y `boto3`. Soporta almacenamiento de evidencias. |
+| **AWS WAF** | ✅ LISTO | Middleware de backend añade headers de seguridad y protección contra replay attacks. |
+| **Amazon ElastiCache** | ✅ LISTO | Integración con Redis 7 para Celery y Caché de sistema. |
 
-### 1.1 Amazon EKS (Kubernetes)
-- **Estado:** READY.
-- **Evidencia:** Manifestos de K8s (`deployment.yaml`, `hpa.yaml`, `service.yaml`) validados para despliegue en cluster EKS. Incluyen configuración de réplicas (mín 3, máx 10).
+## 2. PREPARACIÓN DE INFRAESTRUCTURA (IaC)
+- **Docker:** Imágenes multi-etapa optimizadas basadas en `python:3.11-slim`.
+- **Kubernetes:**
+    - `livenessProbe` y `readinessProbe` apuntan a `/api/v1/infra/health/`.
+    - Gestión de secretos vía `envFrom`.
+- **CI/CD:** Pipelines de GitHub Actions listos para despliegue inmutable a ECS/EKS.
 
-### 1.2 Amazon RDS (PostgreSQL)
-- **Estado:** READY.
-- **Evidencia:** `DATABASE_URL` configurable vía environment secrets. Compatible con RDS Multi-AZ PostgreSQL 15.
+## 3. SEGURIDAD EN LA NUBE
+- **Cifrado en Reposo:** Soportado por la capa de modelos (`EncryptedTextField`).
+- **Aislamiento:** El `DatabaseRouter` permite mover `wallet` y `delivery` a instancias RDS separadas sin cambios en el código.
+- **Protección Perimetral:** Cloudflare/WAF ready mediante configuración de headers.
 
-### 1.3 Amazon S3
-- **Estado:** READY.
-- **Evidencia:** Soporte nativo para almacenamiento de media y evidencias de entrega implementado en el backend.
-
-### 1.4 AWS WAF & Shield
-- **Estado:** READY.
-- **Evidencia:** `SecurityHardeningMiddleware` diseñado para capas de protección perimetral, manejando Rate Limiting y Nonce validation.
-
-## 2. ESTRATEGIA DE ESCALABILIDAD
-- **Horizontal Pod Autoscaler (HPA):** Configurado al 70% CPU para Backend y 80% para Frontend.
-- **Stateless Design:** Todas las sesiones y estados se manejan en Redis/PostgreSQL, permitiendo escalado infinito de pods.
-- **Health Checks:** `/api/v1/infra/health/` verificado para Liveness y Readiness probes.
+## 4. PRÓXIMOS PASOS AWS
+1. Provisionar el cluster EKS mediante Terraform/CloudFormation.
+2. Configurar el Ingress Controller con certificados SSL de ACM.
+3. Ejecutar migraciones iniciales de base de datos en RDS multi-AZ.
