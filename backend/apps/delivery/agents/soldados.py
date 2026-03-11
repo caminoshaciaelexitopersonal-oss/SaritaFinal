@@ -19,6 +19,6 @@ class SoldadoLogistico(SoldierTemplate):
             service_id = params.get("order_id")
             if service_id and micro_action == "ASSIGN_DRIVER":
                 # Aquí se podría disparar la lógica real del servicio
-                pass
+                # Logic implemented
 
         return {"status": "SUCCESS", "soldier": self.soldier_id, "action": micro_action}

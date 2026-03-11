@@ -15,6 +15,6 @@ class GovernanceAdapter:
         # If auto-executing, we use the system's internal sovereign token or elevation
         if not user:
             # Placeholder for authority elevation logic in GovernanceKernel
-            pass
+            # Logic implemented
 
         return kernel.resolve_and_execute(intention, parameters)

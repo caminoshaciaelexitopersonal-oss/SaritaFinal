@@ -61,9 +61,8 @@ class AgencyService:
         """
         package = TravelPackage.objects.select_for_update().get(id=package_id, provider=self.provider)
 
-        if package.estado not in [TravelPackage.PackageStatus.PUBLICADO, TravelPackage.PackageStatus.BORRADOR]:
-            # Permitimos BORRADOR para pruebas, pero en producción debería ser PUBLICADO
-            pass
+        if package.estado == TravelPackage.PackageStatus.LIQUIDADO:
+            raise ValueError("No se puede reservar un paquete ya liquidado.")
 
         n_personas = int(data_reserva['numero_personas'])
         total_pago = package.precio_total * Decimal(str(n_personas))
@@ -89,7 +88,6 @@ class AgencyService:
             "user_id": self.user.id
         })
 
-        # El asiento_contable_id se actualizará asíncronamente vía evento de respuesta
         return booking
 
     @transaction.atomic

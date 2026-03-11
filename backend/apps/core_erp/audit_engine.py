@@ -48,5 +48,15 @@ class AuditEngine:
         """
         Verifica la integridad de una cadena de registros de auditoría.
         """
-        # Lógica de verificación secuencial de hashes
-        pass
+        if not logs:
+            return True, "Chain empty"
+
+        previous_hash = ""
+        for i, log in enumerate(logs):
+            # Asumimos que log tiene data_json y integrity_hash
+            calculated_hash = AuditEngine.generate_hash(log.data_json, previous_hash)
+            if calculated_hash != log.integrity_hash:
+                return False, f"Integrity break at sequence {i} (ID: {log.id})"
+            previous_hash = log.integrity_hash
+
+        return True, "Integrity verified"
