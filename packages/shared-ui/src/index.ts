@@ -33,6 +33,12 @@ export * from './organisms/InteractiveRouteMap';
 export * from './organisms/ChartCard';
 export * from './organisms/ReportTable';
 export * from './organisms/KPIWidget';
+export * from './organisms/RoleBadge';
+export * from './organisms/UserCard';
+export * from './organisms/UserForm';
+export * from './organisms/ReservationCard';
+export * from './organisms/ReservationForm';
+export { ReportTable as ReservationTable } from './organisms/ReportTable';
 
 // Layouts
 export * from './layouts/DashboardLayout';

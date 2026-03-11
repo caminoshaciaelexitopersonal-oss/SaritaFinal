@@ -7,3 +7,5 @@ export * from './utils/currencyUtils';
 export * from './governance/controlTower';
 export * from './governance/discovery';
 export * from './governance/reporting';
+export * from './governance/users';
+export * from './governance/reservations';
