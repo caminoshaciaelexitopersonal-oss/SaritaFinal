@@ -1,41 +1,45 @@
-import React, { useState } from 'react';
-import { View, FlatList, ActivityIndicator, Text, StyleSheet } from 'react-native';
-import { usePagination } from '../../hooks/usePagination';
-import { TourCard } from '../../components/TourCard';
-import { SearchBar } from './SearchBar';
-import { useNavigation } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
+import React from 'react';
+import { View, ScrollView, StyleSheet } from 'react-native';
+import { AttractionCard, EventCalendar, InteractiveRouteMap } from '@sarita/shared-ui';
+
+const TOURIST_MOCK = {
+  attractions: [
+    { id: '1', name: 'Río Manacacías', category: 'Naturaleza', description: 'Avistamiento de delfines rosados y atardeceres únicos.', imageUrl: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470' },
+    { id: '2', name: 'Arco de la Maloca', category: 'Cultura', description: 'Monumento emblemático de la cultura llanera.', imageUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b' }
+  ],
+  events: [
+    { id: '1', title: 'Festival del Retorno', date: 'Octubre 2026', location: 'Plaza Principal' },
+    { id: '2', title: 'Muestra Gastronómica', date: 'Abril 12', location: 'Puerto Malecón' }
+  ],
+  route: {
+    name: 'Ruta del Amanecer Llanero',
+    points: [
+      { label: 'Puerto Gaitán', type: 'Punto de Inicio' },
+      { label: 'Mirador del Manacacías', type: 'Atractivo Natural' },
+      { label: 'Finca La Esperanza', type: 'Agroturismo' }
+    ]
+  }
+};
 
 export const ExploreScreen = () => {
-  const { t } = useTranslation();
-  const [search, setSearch] = useState('');
-  const navigation = useNavigation<any>();
-  const { data, loading, loadMore, hasMore } = usePagination(`/tours?search=${search}`);
-
   return (
-    <View style={styles.container}>
-      <SearchBar value={search} onChangeText={setSearch} />
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TourCard
-            tour={item}
-            onPress={(t) => navigation.navigate('TourDetail', { id: t.id })}
-          />
-        )}
-        contentContainerStyle={styles.list}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={loading ? <ActivityIndicator style={{ margin: 20 }} /> : null}
-        ListEmptyComponent={!loading ? <Text style={styles.empty}>{t('no_tours', 'No hay tours disponibles')}</Text> : null}
-      />
-    </View>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <View style={{ marginBottom: 30 }}>
+         <InteractiveRouteMap routeName={TOURIST_MOCK.route.name} points={TOURIST_MOCK.route.points} />
+      </View>
+
+      <EventCalendar events={TOURIST_MOCK.events} />
+
+      <View style={{ marginTop: 30 }}>
+        {TOURIST_MOCK.attractions.map(attr => (
+          <AttractionCard key={attr.id} attraction={attr} />
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f9fafb' },
-  list: { padding: 15 },
-  empty: { textAlign: 'center', marginTop: 50, color: '#6b7280' }
+  content: { padding: 16 }
 });

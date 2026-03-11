@@ -1,19 +1,18 @@
-# IMPLEMENTATION PLAN: MULTI-PLATFORM ALIGNMENT
-**Lead Auditor:** Jules (Senior AI Software Engineer)
-**Fecha:** Marzo de 2026
+# IMPLEMENTATION PLAN: MULTIPLATFORM PARITY
+**Owner:** Jules (Senior AI Software Engineer)
 
-## Fase 1: Consolidación del Shared SDK (2 semanas)
-- Mover todos los hooks de `interfaz/src/hooks` a `sarita-platform/shared-sdk/hooks`.
-- Mover servicios de API a la librería compartida.
+## Fase 1: Estandarización Core (30 días)
+- Implementar biblioteca `@sarita/shared-ui` para unificar átomos de UI (Botones, Tarjetas, Inputs).
+- Migrar contextos de autenticación y entidad a un patrón unificado en el SDK compartido.
 
-## Fase 2: Nivelación Desktop (4 semanas)
-- Implementar sub-módulos de `tablero-prestador` replicando la lógica de Web.
-- Integrar el componente `GovernmentInterventionPanel`.
+## Fase 2: Alineación "Mi Negocio" (60 días)
+- **Desktop:** Portar módulos de Nómina y Archivística desde Web usando la lógica del `SyncEngine`.
+- **Mobile:** Refactorizar `BusinessFinanceScreen` para incluir gráficos de performance nativos (Victory Native).
 
-## Fase 3: Nivelación Mobile (3 semanas)
-- Implementar pantallas de configuración de Autonomía de IA.
-- Pulir el flujo de Checkout nativo.
+## Fase 3: Activación Institucional (90 días)
+- Implementar `ControlTower` en Mobile y Desktop para el rol de Gobierno.
+- Sincronizar la experiencia de "Descubre Turismo": asegurar que el motor de búsqueda y filtros funcione idénticamente en las tres plataformas.
 
-## Fase 4: Validación y QA (2 semanas)
-- Pruebas de paridad funcional multi-rol.
-- Certificación de sincronización con backend.
+## Fase 4: Validación Final
+- Pruebas de paridad funcional E2E (Playwright + Detox).
+- Certificación de Madurez Nivel 10 en todas las plataformas.

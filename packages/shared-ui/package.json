@@ -1,0 +1,37 @@
+{
+  "name": "@sarita/shared-ui",
+  "version": "1.0.0",
+  "description": "Unified Component Library for SARITA Platform (Web, Mobile, Desktop)",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --watch --dts",
+    "lint": "eslint src/",
+    "test": "jest"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-native": "0.76.0",
+    "typescript": "^5.0.0",
+    "tsup": "^8.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.3.0",
+    "lucide-react": "^0.395.0",
+    "lucide-react-native": "^0.395.0"
+  }
+}
