@@ -25,7 +25,7 @@ def check_parity():
         "dashboard-prestador": ["dashboard/prestador", "business", "dashboard/tablero-prestador"],
         "descubre-turismo": ["descubre", "explore", "pages/descubre"],
         "usuarios": ["dashboard/usuarios", "profile", "dashboard/users"],
-        "reportes": ["dashboard/reportes", "business/BusinessReportsScreen.tsx", "dashboard/finance/FinancialRatiosDashboard.tsx"],
+        "reportes": ["dashboard/reportes", "reports", "dashboard/reports"],
         "reservas": ["dashboard/reservas", "booking", "dashboard/operations/BookingsCalendar.tsx"],
         "POS": ["dashboard/pos", "pos", "dashboard/commercial/POSInterface.tsx"],
         "ERP": ["dashboard/erp", "business/BusinessAccountingScreen.tsx", "dashboard/MiNegocio.tsx"]

@@ -30,6 +30,9 @@ export * from './organisms/PayrollSnapshot';
 export * from './organisms/AttractionCard';
 export * from './organisms/EventCalendar';
 export * from './organisms/InteractiveRouteMap';
+export * from './organisms/ChartCard';
+export * from './organisms/ReportTable';
+export * from './organisms/KPIWidget';
 
 // Layouts
 export * from './layouts/DashboardLayout';

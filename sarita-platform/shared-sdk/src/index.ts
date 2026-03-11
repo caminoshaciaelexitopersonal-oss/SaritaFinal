@@ -6,3 +6,4 @@ export * from './pagination/paginationEngine';
 export * from './utils/currencyUtils';
 export * from './governance/controlTower';
 export * from './governance/discovery';
+export * from './governance/reporting';
