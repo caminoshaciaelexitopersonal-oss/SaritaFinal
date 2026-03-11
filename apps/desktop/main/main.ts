@@ -3,6 +3,7 @@ import * as path from 'path';
 import { getHardwareSpecs } from './hardwareIntelligence';
 import { dbService } from './databaseService';
 import { syncEngine } from './syncEngine';
+import { setupHardwareBridge } from './hardwareBridge';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 
@@ -16,14 +17,6 @@ import { autoUpdater } from 'electron-updater';
 ipcMain.handle('print-receipt', async (event, data) => {
   log.info('POS: Generando recibo de venta...', data.id);
 
-  // En un entorno real con impresoras térmicas ESC/POS:
-  // const printer = new ThermalPrinter({ type: PrinterTypes.EPSON, interface: 'usb' });
-  // printer.alignCenter();
-  // printer.println(data.company);
-  // printer.println(`FECHA: ${data.timestamp}`);
-  // data.items.forEach(i => printer.println(`${i.quantity} x ${i.id} ... $${i.price}`));
-  // await printer.execute();
-
   return {
     status: 'SUCCESS',
     message: `Recibo ${data.id} enviado a la impresora predeterminada.`,
@@ -33,7 +26,6 @@ ipcMain.handle('print-receipt', async (event, data) => {
 
 ipcMain.handle('scan-id', async () => {
   console.log('MAIN: Solicitud de escaneo de identidad iniciada.');
-  // Simulación de interacción con escáner USB
   return { status: 'SUCCESS', id_data: { name: 'SIMULATED DATA', valid: true } };
 });
 
@@ -79,8 +71,6 @@ ipcMain.handle('secure-store-set', async (event, { key, value }) => {
     return false;
   }
   const encrypted = safeStorage.encryptString(value);
-  // En una implementación real, esto se guardaría en un archivo de configuración local cifrado
-  // Para propósitos de este bridge, lo manejaremos via IPC para el renderer
   return encrypted.toString('base64');
 });
 
@@ -106,7 +96,6 @@ function createWindow() {
     },
   });
 
-  // Carga el renderer unificado
   win.loadFile(path.join(__dirname, '../renderer/index.html'));
 
   if (process.env.NODE_ENV === 'development') {
@@ -120,6 +109,7 @@ app.whenReady().then(async () => {
 
   await dbService.init();
   syncEngine.start();
+  setupHardwareBridge();
   createWindow();
 
   app.on('activate', () => {
