@@ -9,3 +9,4 @@ export * from './governance/discovery';
 export * from './governance/reporting';
 export * from './governance/users';
 export * from './governance/reservations';
+export * from './api/SyncService';
