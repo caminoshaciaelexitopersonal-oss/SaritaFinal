@@ -118,3 +118,32 @@ class PublicSystemAudit(models.Model):
 
     def __str__(self):
         return f"[{self.domain}] {self.function_name} - {self.timestamp.date()}"
+
+class FraudEvent(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    event_type = models.CharField(max_length=100)
+    score = models.IntegerField()
+    ip_address = models.GenericIPAddressField()
+    metadata = models.JSONField(default=dict)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+
+class SystemAuditLog(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    action = models.CharField(max_length=255)
+    entity = models.CharField(max_length=100)
+    entity_id = models.CharField(max_length=255)
+    ip_address = models.GenericIPAddressField()
+    old_values = models.JSONField(null=True, blank=True)
+    new_values = models.JSONField(null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            raise PermissionError("Audit logs are immutable.")
+        super().save(*args, **kwargs)
