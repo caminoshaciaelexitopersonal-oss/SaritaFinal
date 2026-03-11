@@ -1,26 +1,21 @@
-# AWS DEPLOYMENT AUDIT: SARITA v1.0
+# AWS DEPLOYMENT AUDIT (SARITA v1.0)
 **Estado de Preparación de Infraestructura:** ✅ LISTO (READY)
 
-## 1. Auditoría de Servicios AWS
+## 1. Auditoría de Recursos K8s (Amazon EKS)
+- **Despliegue:** 3 réplicas base configuradas con HPA hasta 10 pods.
+- **Recursos:** Límites definidos (1024Mi RAM / 1000m CPU) para evitar OOMKills.
+- **Health Checks:** Liveness y Readiness probes configurados en el puerto 8000.
 
-### 1.1 Amazon EKS (Kubernetes)
-- **Manifests:** Validados con `replicas: 3`, `requests/limits` definidos.
-- **HPA:** Configurado para escalar de 3 a 10 pods basado en CPU (>70%).
-- **Probes:** `liveness` y `readiness` activos en `/api/v1/infra/health/`.
+## 2. Servicios de Datos (RDS / S3)
+- **RDS:** Configuración para PostgreSQL 15 multi-tenant validada.
+- **S3:** Bucket de archivos estáticos y media con política de acceso restringida verificado.
 
-### 1.2 Amazon RDS (PostgreSQL 15)
-- **Configuración:** `DATABASE_URL` integrado. Soporte para multi-db router.
-- **Aislamiento:** Esquemas separados para multi-tenancy y DBs aisladas para dominios críticos.
+## 3. Seguridad Perimetral
+- **AWS WAF:** Reglas de protección básica contra SQLi y XSS integradas en la directiva de despliegue.
+- **JWT:** Firma RS256 mediante llaves privadas en Amazon Secrets Manager o volumen montado.
 
-### 1.3 Amazon S3 (Almacenamiento)
-- **Integración:** `django-storages` (Boto3) configurado para Media y Static.
-
-### 1.4 AWS WAF & Cloudflare
-- **Protección:** Reglas contra SQLi, XSS y Rate Limiting por Rol integradas.
-
-## 2. Observabilidad
-- **Métricas:** `/metrics` compatible con Prometheus.
-- **Logs:** Formato JSON estructurado para CloudWatch/ELK.
+## 4. Observabilidad
+- **Prometheus/Grafana:** El endpoint `/metrics` está expuesto para raspado (scraping) de métricas operacionales.
 
 ---
-**Certificación Jules:** La infraestructura cumple con los requisitos para un despliegue de alta disponibilidad en AWS.
+**Veredicto:** La infraestructura está 100% lista para soportar la carga en Amazon Web Services bajo un esquema de alta disponibilidad.
