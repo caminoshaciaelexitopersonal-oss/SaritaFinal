@@ -380,6 +380,19 @@ export function useMiNegocioApi() {
     return makeRequest(() => saritaEndpoints.triggerMission(type, parameters).then(res => res.data), "Misión delegada exitosamente.");
   }, [makeRequest]);
 
+  // --- UNIFIED TOURISM API ---
+  const getUnifiedProviders = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getUnifiedProviders().then(res => res.data));
+  }, [makeRequest]);
+
+  const getUnifiedServices = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getUnifiedServices().then(res => res.data));
+  }, [makeRequest]);
+
+  const getUnifiedReservations = useCallback(async () => {
+    return makeRequest(() => operativoEndpoints.getUnifiedReservations().then(res => res.data));
+  }, [makeRequest]);
+
   return {
     isLoading,
     error,
@@ -460,5 +473,8 @@ export function useMiNegocioApi() {
     updateOrdenEstado,
     reportIncidente,
     triggerMission,
+    getUnifiedProviders,
+    getUnifiedServices,
+    getUnifiedReservations,
   };
 }
