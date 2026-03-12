@@ -51,6 +51,32 @@ class ForensicSecurityLog(models.Model):
     previous_hash = models.CharField(max_length=64, null=True, blank=True)
     integrity_hash = models.CharField(max_length=64, null=True, blank=True)
 
+    @classmethod
+    def log_event(cls, attack_vector, payload, headers, action_taken, threat_level='LOW', user=None, ip=None):
+        """
+        Registra un evento de seguridad forense con encadenamiento SHA-256.
+        """
+        last_log = cls.objects.order_by('-timestamp').first()
+        prev_hash = last_log.integrity_hash if last_log else "0" * 64
+
+        # Crear instancia sin guardar para calcular hash
+        instance = cls(
+            source_ip=ip,
+            user=user,
+            threat_level=threat_level,
+            attack_vector=attack_vector,
+            payload_captured=payload,
+            headers_captured=headers,
+            action_taken=action_taken,
+            previous_hash=prev_hash
+        )
+
+        # Calcular hash de integridad
+        data_to_hash = f"{prev_hash}|{attack_vector}|{json.dumps(payload)}|{action_taken}|{timezone.now()}"
+        instance.integrity_hash = hashlib.sha256(data_to_hash.encode()).hexdigest()
+        instance.save()
+        return instance
+
     class Meta:
         ordering = ['-timestamp']
 
@@ -79,6 +105,9 @@ class FraudEvent(models.Model):
         ordering = ['-timestamp']
 
 class SystemAuditLog(models.Model):
+    """
+    Log de auditoría de sistema inmutable.
+    """
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     action = models.CharField(max_length=255)
     entity = models.CharField(max_length=100)
@@ -87,6 +116,14 @@ class SystemAuditLog(models.Model):
     old_values = models.JSONField(null=True, blank=True)
     new_values = models.JSONField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            raise PermissionError("SystemAuditLog is immutable and cannot be modified.")
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise PermissionError("SystemAuditLog is immutable and cannot be deleted.")
 
     class Meta:
         ordering = ['-timestamp']

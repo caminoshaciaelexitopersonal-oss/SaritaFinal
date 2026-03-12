@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
-from .models.provider_models import TourismProvider, BusinessProfile, TourismService, Reservation
-from .serializers.provider_serializers import (
+from ..models.provider_models import TourismProvider, BusinessProfile, TourismService, Reservation
+from ..serializers.provider_serializers import (
     TourismProviderSerializer, BusinessProfileSerializer,
     TourismServiceSerializer, ReservationSerializer
 )

@@ -2,7 +2,7 @@ import logging
 from decimal import Decimal
 from django.db import transaction
 from apps.wallet.services import WalletService
-from ..models.provider_models import TourismProvider, Reservation
+from ..models.provider_models import TourismProvider, Reservation, TourismService
 
 logger = logging.getLogger(__name__)
 
@@ -21,13 +21,9 @@ class TourismFinancialService:
         if reservation.status != Reservation.Status.PENDING:
             raise ValueError("La reserva no está en estado pendiente para pago.")
 
-        # Obtener el owner del proveedor (Prestador)
         prestador_user = reservation.provider.owner
-
-        # Inicializar WalletService para el cliente (Turista)
         wallet_service = WalletService(user=reservation.customer)
 
-        # Ejecutar el pago
         try:
             transaction_res = wallet_service.pay_to_user(
                 target_user=prestador_user,
@@ -36,7 +32,6 @@ class TourismFinancialService:
                 description=f"Pago Reserva {reservation.id} - {reservation.service.name}"
             )
 
-            # Actualizar estado de la reserva
             reservation.status = Reservation.Status.CONFIRMED
             reservation.metadata['wallet_transaction_id'] = str(transaction_res.id)
             reservation.save()
@@ -49,10 +44,26 @@ class TourismFinancialService:
             raise e
 
     @staticmethod
+    def register_transaction(provider, amount, customer, description="Venta Directa"):
+        """
+        Registra una transacción directa sin reserva previa (POS).
+        """
+        wallet_service = WalletService(user=customer)
+        return wallet_service.pay_to_user(
+            target_user=provider.owner,
+            amount=amount,
+            description=description
+        )
+
+    @staticmethod
+    def calculate_commission(amount, percentage=Decimal('0.10')):
+        """
+        Calcula la comisión para la plataforma.
+        """
+        return (amount * percentage).quantize(Decimal('0.01'))
+
+    @staticmethod
     def get_provider_balance(provider_id: str):
-        """
-        Consulta el saldo disponible del prestador en su wallet.
-        """
         provider = TourismProvider.objects.get(id=provider_id)
         wallet_service = WalletService(user=provider.owner)
         return wallet_service.get_wallet_balance()

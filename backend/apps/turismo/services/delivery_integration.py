@@ -13,23 +13,17 @@ class TourismDeliveryService:
     @staticmethod
     @transaction.atomic
     def request_delivery_for_reservation(reservation_id: str, origin_address: str, destination_address: str):
-        """
-        Crea una solicitud de delivery asociada a una reserva confirmada.
-        """
         reservation = Reservation.objects.get(id=reservation_id)
 
-        # Validar que el servicio permita delivery
         if not reservation.service.delivery_available:
             raise ValueError(f"El servicio {reservation.service.name} no tiene delivery disponible.")
 
-        # Inicializar Delivery Service para el cliente
         logistic_service = DeliveryLogisticService(user=reservation.customer)
 
-        # Parámetros para la solicitud
         parameters = {
             "origin_address": origin_address,
             "destination_address": destination_address,
-            "estimated_price": 5000, # Valor base simulado
+            "estimated_price": 5000,
             "value_declared": float(reservation.total_price),
             "related_operational_order_id": str(reservation.id),
             "provider_id": str(reservation.provider.id),
@@ -42,16 +36,22 @@ class TourismDeliveryService:
             ]
         }
 
-        try:
-            delivery_request = logistic_service.create_request(parameters)
+        delivery_request = logistic_service.create_request(parameters)
+        reservation.metadata['delivery_request_id'] = str(delivery_request.id)
+        reservation.save()
 
-            # Vincular en metadata de la reserva
-            reservation.metadata['delivery_request_id'] = str(delivery_request.id)
-            reservation.save()
+        return delivery_request
 
-            logger.info(f"Solicitud de delivery {delivery_request.id} creada para reserva {reservation.id}")
-            return delivery_request
-
-        except Exception as e:
-            logger.error(f"Error al crear solicitud de delivery para reserva {reservation.id}: {e}")
-            raise e
+    @staticmethod
+    def create_delivery(provider, customer, items, address):
+        """
+        Crea un pedido de delivery directo.
+        """
+        logistic_service = DeliveryLogisticService(user=customer)
+        parameters = {
+            "origin_address": "Sede Prestador",
+            "destination_address": address,
+            "provider_id": str(provider.id),
+            "items": items
+        }
+        return logistic_service.create_request(parameters)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .provider_models import TourismProvider, BusinessProfile, TourismService, Reservation
+from ..models.provider_models import TourismProvider, BusinessProfile, TourismService, Reservation
 
 class BusinessProfileSerializer(serializers.ModelSerializer):
     class Meta:

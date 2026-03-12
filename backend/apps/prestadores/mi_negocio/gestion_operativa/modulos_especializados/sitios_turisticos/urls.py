@@ -9,7 +9,7 @@ router.register(r'sitios', SitioTuristicoViewSet, basename='sitio-turistico')
 
 # Router anidado para las Actividades dentro de un Sitio Turístico
 # Generará URLs como: /sitios/{sitio_pk}/actividades/
-sitios_router = routers.NestedDefaultRouter(router, r'sitios', lookup='sitio')
+sitios_router = routers.NestedSimpleRouter(router, r'sitios', lookup='sitio')
 sitios_router.register(r'actividades', ActividadEnSitioViewSet, basename='sitio-actividad')
 
 urlpatterns = [
