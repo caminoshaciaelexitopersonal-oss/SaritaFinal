@@ -1,0 +1,8 @@
+# Logs
+*.log
+
+# Build artifacts
+frontend/tsconfig.tsbuildinfo
+
+# Redis
+dump.rdb

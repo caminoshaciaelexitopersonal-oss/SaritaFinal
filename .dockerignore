@@ -1,0 +1,47 @@
+# Git
+.git
+.gitignore
+
+# Variables de entorno
+.env
+.env.*
+!/.env.example
+
+# Entornos virtuales
+.venv
+venv/
+env/
+
+# Cache y bytecode de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDEs y editores
+.idea/
+.vscode/
+*.swp
+
+# Base de datos de desarrollo
+db.sqlite3
+*.sqlite3
+
+# Herramientas de testing
+.pytest_cache/
+pytest.ini
+.coverage
+htmlcov/
+
+# Archivos de la aplicación
+*.log
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Frontend
+frontend/
+node_modules/
+.next/

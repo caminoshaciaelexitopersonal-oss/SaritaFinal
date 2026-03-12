@@ -1,0 +1,20 @@
+{
+    "total_scanned": 398,
+    "migrated": [
+        "soldados_artesanos.py",
+        "soldados_financieros.py",
+        "sargento_indicadores.py",
+        "soldados_contables.py",
+        "soldados_comerciales.py",
+        "soldados_agencias.py",
+        "soldados_sst.py",
+        "soldados_nomina.py",
+        "soldados_nacionales.py",
+        "soldados_departamentales.py",
+        "soldados_municipales.py",
+        "soldados_sst.py",
+        "soldados_turistas.py",
+        "soldados_contables.py"
+    ],
+    "errors": []
+}

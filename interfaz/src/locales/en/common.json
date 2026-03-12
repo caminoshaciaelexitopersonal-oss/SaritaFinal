@@ -1,0 +1,21 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "settings": "Settings",
+    "logout": "Logout",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading..."
+  },
+  "sidebar": {
+    "operational_management": "Operational Management",
+    "commercial_management": "Commercial Management",
+    "financial_management": "Financial Management",
+    "accounting_management": "Accounting Management",
+    "archival_management": "Archival Management",
+    "central_dashboard": "Central Dashboard",
+    "my_business": "My Business",
+    "governance_ia": "AI Governance"
+  }
+}

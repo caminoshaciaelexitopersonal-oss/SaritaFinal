@@ -1,0 +1,21 @@
+{
+  "common": {
+    "dashboard": "Panel de Control",
+    "home": "Inicio",
+    "settings": "Configuración",
+    "logout": "Cerrar Sesión",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "loading": "Cargando..."
+  },
+  "sidebar": {
+    "operational_management": "Gestión Operativa",
+    "commercial_management": "Gestión Comercial",
+    "financial_management": "Gestión Financiera",
+    "accounting_management": "Gestión Contable",
+    "archival_management": "Gestión Archivística",
+    "central_dashboard": "Dashboard Central",
+    "my_business": "Mi Negocio",
+    "governance_ia": "Gobernanza IA"
+  }
+}

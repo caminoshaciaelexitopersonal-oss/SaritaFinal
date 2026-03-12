@@ -1,0 +1,135 @@
+name: CI/CD - Deploy Sarita to AWS ECS
+
+on:
+  push:
+    branches:
+      - main # Rama de producción
+      - staging # Rama de staging/pruebas
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-push-images:
+    name: 1. Build and Push Docker Images
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }}
+    outputs:
+      backend_image_uri: ${{ steps.build-backend.outputs.image }}
+      frontend_image_uri: ${{ steps.build-frontend.outputs.image }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Define ECR Repository and Image Tag
+        id: image-vars
+        run: |
+          echo "ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Build, tag, and push Backend image to Amazon ECR
+        id: build-backend
+        run: |
+          ECR_REPOSITORY="sarita-backend"
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        env:
+          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+
+      - name: Build, tag, and push Frontend image to Amazon ECR
+        id: build-frontend
+        run: |
+          ECR_REPOSITORY="sarita-frontend"
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f frontend/Dockerfile ./frontend
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        env:
+          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+
+  deploy:
+    name: 2. Deploy to Amazon ECS
+    needs: build-and-push-images
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set Environment-Specific Variables
+        id: set-env-vars
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "CLUSTER_NAME=sarita-cluster-prod" >> $GITHUB_ENV
+            echo "BACKEND_SERVICE=sarita-backend-service-prod" >> $GITHUB_ENV
+            echo "FRONTEND_SERVICE=sarita-frontend-service-prod" >> $GITHUB_ENV
+            echo "BACKEND_TASK_DEF=sarita_backend_task_def_prod" >> $GITHUB_ENV
+            echo "FRONTEND_TASK_DEF=sarita_frontend_task_def_prod" >> $GITHUB_ENV
+            echo "BACKEND_CONTAINER=sarita-backend-container-prod" >> $GITHUB_ENV
+            echo "FRONTEND_CONTAINER=sarita-frontend-container-prod" >> $GITHUB_ENV
+          else
+            echo "CLUSTER_NAME=sarita-cluster-staging" >> $GITHUB_ENV
+            echo "BACKEND_SERVICE=sarita-backend-service-staging" >> $GITHUB_ENV
+            echo "FRONTEND_SERVICE=sarita-frontend-service-staging" >> $GITHUB_ENV
+            echo "BACKEND_TASK_DEF=sarita_backend_task_def_staging" >> $GITHUB_ENV
+            echo "FRONTEND_TASK_DEF=sarita_frontend_task_def_staging" >> $GITHUB_ENV
+            echo "BACKEND_CONTAINER=sarita-backend-container-staging" >> $GITHUB_ENV
+            echo "FRONTEND_CONTAINER=sarita-frontend-container-staging" >> $GITHUB_ENV
+          fi
+
+      - name: Run Django DB Migrations
+        uses: aws-actions/amazon-ecs-run-task@v1
+        with:
+          cluster: ${{ env.CLUSTER_NAME }}
+          task-definition: ${{ env.BACKEND_TASK_DEF }}
+          override-container: |
+            [
+              {
+                "name": "${{ env.BACKEND_CONTAINER }}",
+                "command": ["python", "manage.py", "migrate", "--noinput"]
+              }
+            ]
+          wait-for-task-stopping: true
+
+      - name: Download ECS task definition files
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ env.BACKEND_TASK_DEF }} --query taskDefinition > task-def-backend.json
+          aws ecs describe-task-definition --task-definition ${{ env.FRONTEND_TASK_DEF }} --query taskDefinition > task-def-frontend.json
+
+      - name: Fill in new image IDs in task definitions
+        id: render-task-defs
+        run: |
+          BACKEND_IMAGE_URI="${{ needs.build-and-push-images.outputs.backend_image_uri }}"
+          FRONTEND_IMAGE_URI="${{ needs.build-and-push-images.outputs.frontend_image_uri }}"
+          jq --arg image "$BACKEND_IMAGE_URI" '.containerDefinitions[0].image = $image' task-def-backend.json > new-task-def-backend.json
+          jq --arg image "$FRONTEND_IMAGE_URI" '.containerDefinitions[0].image = $image' task-def-frontend.json > new-task-def-frontend.json
+
+      - name: Deploy new task definitions to Amazon ECS services
+        run: |
+          aws ecs update-service --cluster ${{ env.CLUSTER_NAME }} --service ${{ env.BACKEND_SERVICE }} --task-definition "$(aws ecs register-task-definition --cli-input-json file://new-task-def-backend.json --query taskDefinition.taskDefinitionArn --output text)"
+          aws ecs update-service --cluster ${{ env.CLUSTER_NAME }} --service ${{ env.FRONTEND_SERVICE }} --task-definition "$(aws ecs register-task-definition --cli-input-json file://new-task-def-frontend.json --query taskDefinition.taskDefinitionArn --output text)"
+
+      - name: Wait for service stability
+        run: |
+          aws ecs wait services-stable --cluster ${{ env.CLUSTER_NAME }} --services ${{ env.BACKEND_SERVICE }} ${{ env.FRONTEND_SERVICE }}
