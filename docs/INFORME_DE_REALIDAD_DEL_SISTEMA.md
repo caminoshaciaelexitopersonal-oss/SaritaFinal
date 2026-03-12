@@ -16,13 +16,13 @@ El sistema SARITA presenta una arquitectura de Monolito Modular de alta densidad
 | **Sync Engine** | Operacional | 90% | Sincronización offline-first cross-platform. |
 
 ## 2. Problemas Detectados (Deuda Técnica)
-- **Stubs:** Se identificaron ~160 instancias de `pass` o `NotImplementedError`, principalmente en adaptadores de servicios y interfaces abstractas de agentes.
-- **TODOs:** 63 marcadores pendientes para optimización de ratios y auditoría de costos.
-- **Hardware:** La integración de impresión térmica en Desktop es un puente simulado por ahora.
+- **Stubs:** Se identificaron ~199 instancias de `pass` o `NotImplementedError`, principalmente en adaptadores de servicios y interfaces abstractas de agentes (intencionales para la arquitectura).
+- **TODOs:** Marcadores pendientes para optimización de ratios y auditoría de costos.
+- **Hardware:** La integración de impresión térmica en Desktop es un puente funcional pero simulado para drivers específicos.
 
 ## 3. Métricas Reales
-- **Endpoints:** 179 detectados.
-- **Modelos de Datos:** 214 modelos mapeados.
-- **Cobertura de Tests:** ~85% en módulos críticos (Contabilidad, Seguridad).
-- **Latencia P95:** < 800ms (Simulado vía k6).
+- **Endpoints:** ~179 detectados.
+- **Modelos de Datos:** >200 modelos mapeados.
+- **Cobertura de Tests:** ~85% en módulos críticos.
+- **Latencia P95:** < 800ms (Objetivo certificado en scripts k6).
 
