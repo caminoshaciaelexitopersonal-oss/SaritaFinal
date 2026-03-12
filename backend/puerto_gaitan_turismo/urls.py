@@ -130,6 +130,7 @@ urlpatterns = [
 
     # Operación Móvil en Campo
     path('api/v1/operational/', include('apps.operational_mobile.urls')),
+    path("api/v1/turismo/", include("apps.turismo.urls")),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

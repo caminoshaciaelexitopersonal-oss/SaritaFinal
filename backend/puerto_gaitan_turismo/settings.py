@@ -167,6 +167,7 @@ INSTALLED_APPS = [
     "apps.analytics_engine.apps.AnalyticsEngineConfig",
     "apps.tourism_map.apps.TourismMapConfig",
     "apps.operational_mobile.apps.OperationalMobileConfig",
+    "apps.turismo.apps.TurismoConfig",
 ]
 
 

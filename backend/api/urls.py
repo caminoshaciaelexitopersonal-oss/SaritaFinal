@@ -4,7 +4,11 @@ from rest_framework_nested import routers
 from . import views
 
 # --- Routers ---
-router = DefaultRouter()
+class NestedDefaultRouter(DefaultRouter):
+    def _register_nested_router(self, nested_router):
+        pass
+
+router = NestedDefaultRouter()
 prestador_resenas_router = DefaultRouter()
 prestador_resenas_router.register(r'valoraciones', views.PrestadorResenaUpdateViewSet, basename='prestador-resena-update')
 
