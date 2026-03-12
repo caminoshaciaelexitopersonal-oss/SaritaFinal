@@ -61,3 +61,20 @@ class GovernanceMemory(models.Model):
     class Meta:
         verbose_name = "Memoria de Gobernanza"
         verbose_name_plural = "Memorias de Gobernanza"
+
+class CivilizatoryEvent(models.Model):
+    """
+    FASE META: Records systemic milestones that impact the territory beyond technology.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    impact_level = models.CharField(max_length=50, choices=[('REGIONAL', 'Regional'), ('NATIONAL', 'Nacional'), ('GLOBAL', 'Global')])
+    date_occurred = models.DateTimeField(auto_now_add=True)
+    metadata = models.JSONField(default=dict)
+
+    class Meta:
+        ordering = ['-date_occurred']
+
+    def __str__(self):
+        return f"[{self.impact_level}] {self.title}"
