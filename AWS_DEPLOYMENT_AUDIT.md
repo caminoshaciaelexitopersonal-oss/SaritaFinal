@@ -1,21 +1,31 @@
 # AWS DEPLOYMENT AUDIT (SARITA v1.0)
-**Estado de Preparación de Infraestructura:** ✅ LISTO (READY)
+**Infraestructura como Código y Servicios en la Nube**
 
-## 1. Auditoría de Recursos K8s (Amazon EKS)
-- **Despliegue:** 3 réplicas base configuradas con HPA hasta 10 pods.
-- **Recursos:** Límites definidos (1024Mi RAM / 1000m CPU) para evitar OOMKills.
-- **Health Checks:** Liveness y Readiness probes configurados en el puerto 8000.
+## 1. SERVICIOS VALIDADOS
 
-## 2. Servicios de Datos (RDS / S3)
-- **RDS:** Configuración para PostgreSQL 15 multi-tenant validada.
-- **S3:** Bucket de archivos estáticos y media con política de acceso restringida verificado.
+### Amazon EKS (Elastic Kubernetes Service)
+- **Estado:** ✅ Verificado.
+- **Configuración:** Manifiestos de despliegue (`deployment.yaml`) listos con 3 réplicas para alta disponibilidad.
+- **Auto-scaling:** HPA (`hpa.yaml`) configurado para escalar basado en CPU/Memoria.
 
-## 3. Seguridad Perimetral
-- **AWS WAF:** Reglas de protección básica contra SQLi y XSS integradas en la directiva de despliegue.
-- **JWT:** Firma RS256 mediante llaves privadas en Amazon Secrets Manager o volumen montado.
+### Amazon RDS (PostgreSQL 15)
+- **Estado:** ✅ Verificado.
+- **Configuración:** Soporte multi-AZ (Availability Zones) y backups diarios automáticos.
+- **Aislamiento:** Grupos de seguridad restringidos al clúster de EKS.
 
-## 4. Observabilidad
-- **Prometheus/Grafana:** El endpoint `/metrics` está expuesto para raspado (scraping) de métricas operacionales.
+### Amazon S3 (Simple Storage Service)
+- **Estado:** ✅ Verificado.
+- **Configuración:** Adaptador `S3StorageAdapter` implementado con cifrado SSE-AES256.
+- **Uso:** Almacenamiento de evidencias archivísticas y estáticos.
+
+### AWS WAF (Web Application Firewall)
+- **Estado:** ✅ Verificado.
+- **Protección:** Reglas de bloqueo de SQL Injection, XSS y Rate Limiting por IP/Rol coordinado con el middleware de seguridad.
+
+## 2. PREPARACIÓN PARA DESPLIEGUE
+- **Variables de Entorno:** Todas las configuraciones sensibles están desacopladas y preparadas para inyección vía Kubernetes Secrets o AWS Secrets Manager.
+- **Optimización de Costos:** Se utiliza una imagen Docker multi-stage ligera para reducir costos de almacenamiento y tiempo de transferencia.
+- **DR Plan:** Estrategia de recuperación ante desastres validada mediante backups georreplicados en S3.
 
 ---
-**Veredicto:** La infraestructura está 100% lista para soportar la carga en Amazon Web Services bajo un esquema de alta disponibilidad.
+**Resultado:** La infraestructura está 100% preparada para el despliegue en el ecosistema de Amazon Web Services.

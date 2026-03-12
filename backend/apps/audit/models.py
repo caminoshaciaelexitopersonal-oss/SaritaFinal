@@ -3,6 +3,7 @@ import uuid
 import hashlib
 import json
 from django.utils import timezone
+from django.conf import settings
 
 class AuditLog(models.Model):
     class Action(models.TextChoices):
