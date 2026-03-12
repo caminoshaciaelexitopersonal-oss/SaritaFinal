@@ -13,8 +13,18 @@ class InventoryEngine:
 
     @staticmethod
     def validate_stock_availability(product, warehouse, requested_quantity):
-        # Lógica para verificar stock en modelos que hereden de BaseWarehouse e InventoryMovement
-        pass
+        # Implementación real: busca el balance actual en el almacén
+        from .models import InventoryMovement
+        from django.db.models import Sum
+
+        balance = InventoryMovement.objects.filter(
+            product=product,
+            warehouse=warehouse
+        ).aggregate(
+            total=Sum('quantity')
+        )['total'] or 0
+
+        return balance >= requested_quantity
 
     @staticmethod
     @transaction.atomic

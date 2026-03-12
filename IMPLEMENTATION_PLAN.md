@@ -1,18 +1,33 @@
-# IMPLEMENTATION PLAN: MULTIPLATFORM PARITY
-**Owner:** Jules (Senior AI Software Engineer)
+# IMPLEMENTATION PLAN: PLATFORM PARITY ALIGNMENT
+**Lead Auditor:** Jules (Senior AI Software Engineer)
+**Date:** March 2026
 
-## Fase 1: Estandarización Core (30 días)
-- Implementar biblioteca `@sarita/shared-ui` para unificar átomos de UI (Botones, Tarjetas, Inputs).
-- Migrar contextos de autenticación y entidad a un patrón unificado en el SDK compartido.
+## 1. Roadmap to 100% Parity
 
-## Fase 2: Alineación "Mi Negocio" (60 días)
-- **Desktop:** Portar módulos de Nómina y Archivística desde Web usando la lógica del `SyncEngine`.
-- **Mobile:** Refactorizar `BusinessFinanceScreen` para incluir gráficos de performance nativos (Victory Native).
+### Phase 1: Shared UI Standardization (Week 1)
+- **Goal:** Migrate all platforms to @sarita/shared-ui v1.1 (Tailwind 4.0 compatible).
+- **Actions:**
+  - Update `packages/shared-ui` to include all specialized widgets (KPIs, Maps, DataTables).
+  - Replace custom layouts in Mobile and Desktop with the `UnifiedGovernmentDashboard` and `UnifiedProviderDashboard`.
 
-## Fase 3: Activación Institucional (90 días)
-- Implementar `ControlTower` en Mobile y Desktop para el rol de Gobierno.
-- Sincronizar la experiencia de "Descubre Turismo": asegurar que el motor de búsqueda y filtros funcione idénticamente en las tres plataformas.
+### Phase 2: Functional Porting (Week 2-3)
+- **Goal:** Implement missing sub-modules.
+- **Actions:**
+  - **Mobile:** Port `InvoiceGenerator` from Web to Mobile using `SharedSDK`.
+  - **Desktop:** Synchronize `ArchiveManager` module using the `SyncEngine` for local document caching.
+  - **Mobile:** Integrate `ControlTowerService.getInstitutionalReports()` in the Admin Dashboard.
 
-## Fase 4: Validación Final
-- Pruebas de paridad funcional E2E (Playwright + Detox).
-- Certificación de Madurez Nivel 10 en todas las plataformas.
+### Phase 3: Hardware & Persistence Hardening (Week 4)
+- **Goal:** Bridge the gaps in native capabilities.
+- **Actions:**
+  - **Web:** Implement `OfflineQueue` for PWA to capture actions during disconnects.
+  - **Desktop:** Finalize thermal printer driver integration in the main process bridge.
+
+## 2. Validation Matrix
+Each ported module must pass the following checks:
+1. **Visual Parity:** Coherent UI across Web/Mobile/Desktop.
+2. **Behavioral Parity:** Identical API payloads and error handling.
+3. **Offline Parity:** Consistent behavior when network is unavailable (if applicable).
+
+---
+**Status:** Ready to execute Phase 1.

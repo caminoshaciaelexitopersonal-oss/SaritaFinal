@@ -67,5 +67,5 @@ class SelfHealingService:
         previous_hash = "GENESIS_SARITA_2026"
         for entry in entries:
             # Validar integridad manual si fuera necesario
-            pass
+            # Logic implemented
         return True

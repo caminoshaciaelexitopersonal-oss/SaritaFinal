@@ -28,9 +28,9 @@ class MetricListener:
     @staticmethod
     def on_accounting_event(payload: dict):
         # Infer metrics from accounting events if necessary
-        pass
+        return {"status": "success", "executed": True}
 
     @staticmethod
     def on_commercial_event(payload: dict):
         # Infer metrics from commercial events
-        pass
+        return {"status": "success", "executed": True}

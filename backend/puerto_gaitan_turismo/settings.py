@@ -487,3 +487,23 @@ LOGGING = {
 if not os.path.exists(os.path.join(BASE_DIR, 'logs')):
     os.makedirs(os.path.join(BASE_DIR, 'logs'))
 CELERY_TASK_ALWAYS_EAGER = True
+
+# --- FASE H: Autenticación Empresarial ---
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
+}
+
+# MFA Enhancements
+ALLAUTH_MFA_ADAPTER = "allauth.mfa.adapter.DefaultMFAAdapter"
+ALLAUTH_MFA_RECOVERY_CODES_COUNT = 10
+
+# --- FASE H: Cifrado Extremo a Extremo ---
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True

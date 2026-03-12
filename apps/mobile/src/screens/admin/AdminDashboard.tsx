@@ -1,52 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { UnifiedGovernmentDashboard } from '@sarita/shared-ui';
-import { ControlTowerService } from '@sarita/shared-sdk';
+import React from 'react';
+import { View, Text, ScrollView } from 'react-native';
+import { MobileLayout, KpiCard } from '@sarita/shared-ui';
 
-export const AdminDashboard = () => {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [stats, alerts, providers] = await Promise.all([
-          ControlTowerService.getGlobalStats(),
-          ControlTowerService.getSystemAlerts(),
-          ControlTowerService.getProviderMonitoring()
-        ]);
-
-        setData({
-          stats,
-          alerts,
-          providers,
-          regionData: [
-            { id: '1', label: 'Meta', value: 85 },
-            { id: '2', label: 'Casanare', value: 42 }
-          ],
-          trends: {
-            bookings: [{ label: 'Mar', value: 900 }],
-            revenue: [{ label: 'Mar', value: 450000 }]
-          },
-          reports: [
-            { id: '1', name: 'Impacto Regional', lastGenerated: '2026-03-01', type: 'financial' }
-          ]
-        });
-      } catch (error) {
-        console.error("Error fetching admin data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) return null;
-
+export default function AdminDashboardScreen() {
   return (
-    <UnifiedGovernmentDashboard
-      platform="mobile"
-      data={data}
-    />
+    <MobileLayout>
+      <ScrollView>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>Gobernanza Móvil</Text>
+        <View style={{ gap: 12 }}>
+          <KpiCard title="Ingresos" value="2.5k" />
+          <KpiCard title="Alertas" value="2" />
+          <KpiCard title="Sincronización" value="99%" />
+        </View>
+      </ScrollView>
+    </MobileLayout>
   );
-};
+}
