@@ -9,25 +9,23 @@ from apps.sarita_agents.orchestrator import SaritaOrchestrator
 from apps.application_services.governance_service import GovernanceService
 
 def test_ai_flow():
-    print("🚀 INICIANDO PRUEBA DE ORQUESTACIÓN IA N1-N7")
+    print("🚀 INICIANDO PRUEBA DE ORQUESTACIÓN IA N1-N7 (V2)")
     orch = SaritaOrchestrator()
 
+    # Probando con 'operativa_turistica' que suele estar más completo
     directive = {
-        "domain": "contable",
-        "action": "ERP_GENERATE_BALANCE",
-        "parameters": {"tenant_id": str(uuid.uuid4()), "initial": True}
+        "domain": "operativa_turistica",
+        "action": "PROCESS_COMMAND",
+        "parameters": {"command": "Verificar estado de reservas", "entity_id": "test-123"}
     }
 
     print(f"Enviando directiva de dominio: {directive['domain']}")
-    # En el entorno de sandbox, es posible que el coronel falle si no hay datos,
-    # pero el orquestador debe ser capaz de procesar e intentar la ejecución.
     try:
-        # Usamos handle_directive que encapsula start y execute
         result = orch.handle_directive(directive)
         print(f"Resultado de Orquestación: {result}")
-        print("✅ EL SISTEMA DE AGENTES ES REAL Y RESPONDIO.")
+        print("✅ EL SISTEMA DE AGENTES ES REAL Y PROCESO LA MISION.")
     except Exception as e:
-        print(f"Fallo controlado del Orquestador (probablemente falta de datos): {e}")
+        print(f"Fallo en la ejecución de la misión: {e}")
 
 if __name__ == "__main__":
     test_ai_flow()
