@@ -137,6 +137,9 @@ urlpatterns = [
     # Redirecciones para cumplir Directiva Frontend
     path("api/v1/providers/", include("apps.turismo.api.urls")),
     path("api/v1/reservations/", include("apps.turismo.api.urls")),
+
+    # Triple Vía de Usuarios
+    path("api/v1/", include("api.triple_via_urls")),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo
