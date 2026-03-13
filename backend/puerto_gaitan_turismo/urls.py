@@ -131,6 +131,7 @@ urlpatterns = [
     # Operación Móvil en Campo
     path('api/v1/operational/', include('apps.operational_mobile.urls')),
     path("api/v1/turismo/", include("apps.turismo.urls")),
+    path("api/v1/marketplace/", include("apps.tourism_marketplace.urls")),
 
     # Redirecciones para cumplir Directiva Frontend
     path("api/v1/providers/", include("apps.turismo.api.urls")),

@@ -19,6 +19,16 @@ const TOURIST_MOCK = {
       { label: 'Mirador del Manacacías', type: 'Atractivo Natural' },
       { label: 'Finca La Esperanza', type: 'Agroturismo' }
     ]
+  },
+  marketplace: {
+    trending: [
+      { id: '1', name: 'Avistamiento de Toninas', price: 45000, rating: 4.9, reviews: 124 },
+      { id: '2', name: 'Safari Fotográfico', price: 85000, rating: 4.8, reviews: 89 }
+    ],
+    recommended: [
+      { id: '3', name: 'Cena Romántica en el Río', price: 120000, rating: 5.0, reviews: 45 },
+      { id: '4', name: 'Tour de Pesca Deportiva', price: 200000, rating: 4.7, reviews: 67 }
+    ]
   }
 };
 
@@ -38,10 +48,47 @@ export default function DescubrePage() {
             </div>
           </section>
 
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Tendencias del Destino</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              {TOURIST_MOCK.marketplace.trending.map(item => (
+                <div key={item.id} style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                  <h3 style={{ fontWeight: 'bold' }}>{item.name}</h3>
+                  <p style={{ fontSize: '14px', color: '#6b7280' }}>Desde ${item.price}</p>
+                  <p style={{ fontSize: '12px', color: '#f59e0b' }}>★ {item.rating} ({item.reviews} reseñas)</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Experiencias Recomendadas</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              {TOURIST_MOCK.marketplace.recommended.map(item => (
+                <div key={item.id} style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #6366f1', borderWidth: '2px' }}>
+                  <h3 style={{ fontWeight: 'bold' }}>{item.name}</h3>
+                  <p style={{ fontSize: '14px', color: '#6b7280' }}>Desde ${item.price}</p>
+                  <p style={{ fontSize: '12px', color: '#f59e0b' }}>★ {item.rating} ({item.reviews} reseñas)</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
           <InteractiveRouteMap routeName={TOURIST_MOCK.route.name} points={TOURIST_MOCK.route.points} />
         </div>
 
         <aside>
+          <div style={{ marginBottom: '32px' }}>
+             <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Servicios Mejor Valorados</h2>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {TOURIST_MOCK.marketplace.trending.map(item => (
+                   <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', backgroundColor: '#fff', borderRadius: '8px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: '600' }}>{item.name}</span>
+                      <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>★ {item.rating}</span>
+                   </div>
+                ))}
+             </div>
+          </div>
           <EventCalendar events={TOURIST_MOCK.events} />
         </aside>
       </div>
