@@ -23,15 +23,25 @@ router.register(r'valoraciones', ValoracionViewSet, basename='valoracion')
 
 urlpatterns = [
     path('', include(router.urls)),
-    # Módulos especializados (Phase 4 - Consolidated)
-    path('hotel/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.hoteles.urls')),
-    path('restaurante/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.restaurantes.urls')),
-    path('transporte/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.transporte.urls')),
 
-    # Placeholders for future consolidation
-    path('guias/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.guias.urls')),
-    path('agencias/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.agencias.urls')),
-    path('eventos/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.eventos.urls')),
-    path('bares-discotecas/', include('apps.prestadores.mi_negocio.operativa_turistica.operadores_directos.bares_discotecas.urls')),
-    path('artesanos/', include('apps.prestadores.mi_negocio.operativa_turistica.cadena_productiva.artesanos.urls')),
+    # --- Gestión Operativa Especializada (Fase 8.5) ---
+    path('esp/agencias/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.urls')),
+    path('esp/agencias-de-viajes/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias_de_viajes.urls')),
+    path('esp/alojamientos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.alojamientos.urls')),
+    path('esp/arrendadoras-vehiculos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.arrendadoras_vehiculos.urls')),
+    path('esp/eventos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.eventos.urls')),
+    path('esp/gastronomia/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.gastronomia.urls')),
+    path('esp/guias/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.urls')),
+    path('esp/hoteles/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.hoteles.urls')),
+    path('esp/operadores-turisticos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.operadores_turisticos.urls')),
+    path('esp/restaurantes/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.restaurantes.urls')),
+    path('esp/sitios-turisticos/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.sitios_turisticos.urls')),
+    path('esp/transporte/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.urls')),
+    path('esp/transportes/', include('apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transportes.urls')),
+
 ]
+
+# Redirecciones para cumplir con la paridad funcional unificada
+from apps.turismo.api.urls import router as turismo_router
+
+router.registry.extend(turismo_router.registry)

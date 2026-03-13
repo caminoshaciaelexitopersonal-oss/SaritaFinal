@@ -130,6 +130,16 @@ urlpatterns = [
 
     # Operación Móvil en Campo
     path('api/v1/operational/', include('apps.operational_mobile.urls')),
+    path("api/v1/turismo/", include("apps.turismo.urls")),
+    path("api/v1/marketplace/", include("apps.tourism_marketplace.urls")),
+    path("api/v1/tourism/intelligence/", include("apps.tourism_intelligence.urls")),
+
+    # Redirecciones para cumplir Directiva Frontend
+    path("api/v1/providers/", include("apps.turismo.api.urls")),
+    path("api/v1/reservations/", include("apps.turismo.api.urls")),
+
+    # Triple Vía de Usuarios
+    path("api/v1/", include("api.triple_via_urls")),
 ]
 
 # Servir archivos multimedia y la URL del admin en modo de desarrollo

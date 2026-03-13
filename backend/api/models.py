@@ -142,6 +142,44 @@ class Profile(models.Model):
     def __str__(self):
         return f"Profile for {self.user.username}"
 
+class GovernmentProfile(models.Model):
+    """
+    Vía 1: Perfil para funcionarios gubernamentales.
+    """
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='government_profile')
+    entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='officials')
+    cargo = models.CharField(max_length=255)
+    nivel = models.CharField(max_length=20, choices=[('NACIONAL', 'Nacional'), ('DEPARTAMENTAL', 'Departamental'), ('MUNICIPAL', 'Municipal')])
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='officials_created')
+
+    def __str__(self):
+        return f"{self.cargo} - {self.entity.name}"
+
+class TouristProfile(models.Model):
+    """
+    Vía 3: Perfil para ciudadanos y turistas.
+    """
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='tourist_profile')
+    passport_number = models.CharField(max_length=50, blank=True, null=True)
+    nationality = models.CharField(max_length=100, default='Colombiana')
+    preferences = models.JSONField(default=dict)
+
+    def __str__(self):
+        return f"Turista: {self.user.get_full_name()}"
+
+class DeliveryProfile(models.Model):
+    """
+    Canal adicional: Perfil para empresas y repartidores de delivery.
+    """
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='delivery_profile')
+    company_name = models.CharField(max_length=255)
+    vehicle_type = models.CharField(max_length=100, blank=True)
+    license_plate = models.CharField(max_length=20, blank=True)
+    status = models.CharField(max_length=20, default='OFFLINE')
+
+    def __str__(self):
+        return f"Delivery: {self.company_name} ({self.user.username})"
+
 
 class UserLLMConfig(models.Model):
     """

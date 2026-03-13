@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
+from apps.core.catalogs.models import Vehicle as CatalogVehicle
 # Asumimos TeamMember y Reservation de módulos genéricos futuros
 # from ..personal.models import TeamMember
 # from ..reservas.models import Reservation
@@ -16,6 +17,7 @@ class Vehicle(TenantAwareModel):
         MAINTENANCE = 'MAINTENANCE', _('En Mantenimiento')
         INACTIVE = 'INACTIVE', _('Inactivo')
 
+    catalog_reference = models.ForeignKey(CatalogVehicle, on_delete=models.SET_NULL, null=True, blank=True)
     nombre = models.CharField(_("Nombre Identificativo"), max_length=150)
     placa = models.CharField(_("Placa"), max_length=10, unique=True)
     modelo_ano = models.PositiveIntegerField(_("Modelo (Año)"))

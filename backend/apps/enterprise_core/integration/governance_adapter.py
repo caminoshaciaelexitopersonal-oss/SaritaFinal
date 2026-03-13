@@ -16,5 +16,6 @@ class GovernanceAdapter:
         if not user:
             # Placeholder for authority elevation logic in GovernanceKernel
             # Logic implemented
+            pass
 
         return kernel.resolve_and_execute(intention, parameters)

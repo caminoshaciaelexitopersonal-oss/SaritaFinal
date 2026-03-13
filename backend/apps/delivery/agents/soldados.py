@@ -20,5 +20,6 @@ class SoldadoLogistico(SoldierTemplate):
             if service_id and micro_action == "ASSIGN_DRIVER":
                 # Aquí se podría disparar la lógica real del servicio
                 # Logic implemented
+                pass
 
         return {"status": "SUCCESS", "soldier": self.soldier_id, "action": micro_action}

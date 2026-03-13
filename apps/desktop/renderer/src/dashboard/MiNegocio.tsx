@@ -46,36 +46,46 @@ export const BusinessManager = () => {
 
 import { InventoryWidget, PayrollSnapshot, StatCard, StatGrid } from '@sarita/shared-ui';
 
+import { useState, useEffect } from 'react';
+import { httpClient } from '../../../../../sarita-platform/shared-sdk/src/api/httpClient';
+
 export const BusinessSummary = () => {
-  const PRESTADOR_MOCK = {
-    inventory: [
-      { id: '1', name: 'Toallas Blancas', stock: 15, minStock: 20, unit: 'unidades' },
-      { id: '2', name: 'Jabón Biodegradable', stock: 50, minStock: 10, unit: 'litros' }
-    ],
-    payroll: {
-      totalEmployees: 12,
-      totalPayable: "$8,500,000",
-      nextPaymentDate: "30 Mar 2026",
-      pendingLiquidations: 1
-    },
-    stats: {
-      revenue: "$45.2M",
-      bookings: 85,
-      satisfaction: "4.8/5"
-    }
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await httpClient.get('/providers/business-profiles/me/');
+        setData(response.data);
+      } catch (error) {
+        console.error("Error loading profile", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) return <div className="p-10 text-center animate-pulse">Cargando datos empresariales...</div>;
+
+  const stats = data?.stats || {
+    revenue: "$0",
+    bookings: 0,
+    satisfaction: "N/A"
   };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <StatGrid columns={3}>
-        <StatCard title="Ventas Totales" value={PRESTADOR_MOCK.stats.revenue} trend="+12%" trendDirection="up" />
-        <StatCard title="Reservas" value={PRESTADOR_MOCK.stats.bookings} trend="+5%" trendDirection="up" />
-        <StatCard title="Reputación" value={PRESTADOR_MOCK.stats.satisfaction} />
+        <StatCard title="Ventas Totales" value={stats.revenue} trend={data?.trends?.revenue} trendDirection="up" />
+        <StatCard title="Reservas" value={stats.bookings} trend={data?.trends?.bookings} trendDirection="up" />
+        <StatCard title="Reputación" value={stats.satisfaction} />
       </StatGrid>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <PayrollSnapshot data={PRESTADOR_MOCK.payroll} />
-        <InventoryWidget items={PRESTADOR_MOCK.inventory} />
+        <PayrollSnapshot data={data?.payroll || {}} />
+        <InventoryWidget items={data?.inventory || []} />
       </div>
     </div>
   );

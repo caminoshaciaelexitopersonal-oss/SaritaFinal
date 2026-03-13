@@ -63,11 +63,13 @@ INSTALLED_APPS = [
     "django_filters",
     "channels",
     "modeltranslation",
-    # Mis Apps
+
+    # Mis Apps Core
     "api.apps.ApiConfig",
     "apps.core_erp.apps.CoreErpConfig",
     "apps.domain_business.apps.DomainBusinessConfig",
     "apps.prestadores.apps.PrestadoresConfig",
+    "apps.core.catalogs.apps.CatalogsConfig",
 
     # Módulos de "Mi Negocio"
     "apps.prestadores.mi_negocio.gestion_comercial.apps.GestionComercialConfig",
@@ -78,21 +80,31 @@ INSTALLED_APPS = [
 
     # Submódulos de Contabilidad
     "apps.prestadores.mi_negocio.gestion_contable.activos_fijos.apps.ActivosFijosConfig",
-    # "apps.prestadores.mi_negocio.gestion_contable.presupuesto.apps.PresupuestoConfig",
     "apps.prestadores.mi_negocio.gestion_contable.compras.apps.ComprasConfig",
     "apps.prestadores.mi_negocio.gestion_contable.contabilidad.apps.ContabilidadConfig",
     "apps.prestadores.mi_negocio.gestion_contable.inventario.apps.InventarioConfig",
-    # "apps.prestadores.mi_negocio.gestion_contable.nomina.apps.NominaConfig",
-    # "apps.prestadores.mi_negocio.gestion_contable.proyectos.apps.ProyectosConfig",
 
     # Módulos de "Mi Negocio" - Implementados
-    "apps.prestadores.mi_negocio.facturacion.apps.FacturacionConfig", # Stub para F19
-    # Nota: 'mi_negocio' es un módulo paraguas, no una app instalable.
-    # Las apps de gestión_operativa ya están contenidas en 'prestadores'.
+    "apps.prestadores.mi_negocio.facturacion.apps.FacturacionConfig",
     "apps.companies.apps.CompaniesConfig",
     "apps.audit.apps.AuditConfig",
     "apps.prestadores.mi_negocio.gestion_archivistica.apps.GestionArchivisticaConfig",
     "apps.prestadores.mi_negocio.gestion_operativa.sg_sst.apps.SgsstConfig",
+
+    # Gestión Operativa Especializada (Normalizada Fase 8.5)
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias.apps.AgenciasConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.agencias_de_viajes.apps.AgenciasDeViajesConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.alojamientos.apps.AlojamientosConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.arrendadoras_vehiculos.apps.ArrendadorasVehiculosConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.eventos.apps.EventosConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.gastronomia.apps.GastronomiaConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.guias.apps.GuiasConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.hoteles.apps.HotelesConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.operadores_turisticos.apps.OperadoresTuristicosConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.restaurantes.apps.RestaurantesConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.sitios_turisticos.apps.SitiosTuristicosConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transporte.apps.TransporteConfig",
+    "apps.prestadores.mi_negocio.gestion_operativa.modulos_especializados.transportes.apps.TransportesConfig",
 
     # App para el panel de administración de la plataforma
     "apps.admin_plataforma.apps.AdminPlataformaConfig",
@@ -154,8 +166,6 @@ INSTALLED_APPS = [
     "apps.saas.apps.SaasOrchestrationConfig",
     "legacy_custody.apps.LegacyCustodyConfig",
 
-    # "apps.downloads.apps.DownloadsConfig",
-
     "apps.cart.apps.CartConfig",
     "apps.orders.apps.OrdersConfig",
     "apps.payments.apps.PaymentsConfig",
@@ -167,6 +177,9 @@ INSTALLED_APPS = [
     "apps.analytics_engine.apps.AnalyticsEngineConfig",
     "apps.tourism_map.apps.TourismMapConfig",
     "apps.operational_mobile.apps.OperationalMobileConfig",
+    "apps.turismo.apps.TurismoConfig",
+    "apps.tourism_marketplace.apps.TourismMarketplaceConfig",
+    "apps.tourism_intelligence.apps.TourismIntelligenceConfig",
 ]
 
 
@@ -219,11 +232,6 @@ CHANNEL_LAYERS = {
 }
 
 # Database
-# ------------------------------------------------------------------------
-# Usa DATABASE_URL desde .env
-# Formato: postgresql://USER:PASSWORD@HOST:PORT/DBNAME
-# ------------------------------------------------------------------------
-# --- Configuración Multibase (Fase 18: Aislamiento de Dominios) ---
 if "DATABASE_URL" in os.environ:
     DATABASES = {
         "default": dj_database_url.config(conn_max_age=600, ssl_require=False)

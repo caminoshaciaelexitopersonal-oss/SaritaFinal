@@ -61,4 +61,10 @@ export const operativoEndpoints = {
   getOrdenesOperativas: () => httpClient.get('/v1/mi-negocio/operativa/ordenes/'),
   updateOrdenEstado: (id: string, nuevo_estado: string, motivo: string) => httpClient.post(`/v1/mi-negocio/operativa/ordenes/${id}/cambiar-estado/`, { nuevo_estado, motivo }),
   reportIncidente: (data: any) => httpClient.post('/v1/mi-negocio/operativa/incidencias/', data),
+
+  // --- UNIFICACIÓN TURISMO (PHASE 1) ---
+  getUnifiedProviders: () => httpClient.get('/v1/providers/tourism-providers/'),
+  getUnifiedBusinessProfile: (id: string) => httpClient.get(`/v1/providers/business-profiles/${id}/`),
+  getUnifiedServices: () => httpClient.get('/v1/providers/tourism-services/'),
+  getUnifiedReservations: () => httpClient.get('/v1/reservations/tourism-reservations/'),
 };

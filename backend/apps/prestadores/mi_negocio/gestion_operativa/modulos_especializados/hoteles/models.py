@@ -3,19 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
-
-class Amenity(TenantAwareModel):
-    """
-    Representa una comodidad o servicio (ej. WiFi, AC, Piscina).
-    """
-    nombre = models.CharField(_("Nombre de la Amenidad"), max_length=100)
-    # Se podría añadir un icono o categoría
-
-    def __str__(self):
-        return self.nombre
-
-    class Meta:
-        app_label = 'prestadores'
+from apps.core.catalogs.models import Amenity
 
 class RoomType(TenantAwareModel):
     """

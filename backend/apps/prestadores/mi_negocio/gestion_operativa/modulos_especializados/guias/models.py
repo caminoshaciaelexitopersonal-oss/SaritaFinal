@@ -3,26 +3,9 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import TenantAwareModel
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.productos_servicios.models import Product
+from apps.core.catalogs.models import Skill
 # Asumimos que existirá un modelo TeamMember en un futuro módulo genérico
 # from ..personal.models import TeamMember
-
-class Skill(TenantAwareModel):
-    """
-    Representa una competencia, certificación o idioma que un guía puede tener.
-    """
-    class SkillType(models.TextChoices):
-        SPECIALIZATION = 'SPECIALIZATION', _('Especialización')
-        CERTIFICATION = 'CERTIFICATION', _('Certificación')
-        LANGUAGE = 'LANGUAGE', _('Idioma')
-
-    nombre = models.CharField(_("Nombre de la Competencia"), max_length=150)
-    skill_type = models.CharField(_("Tipo"), max_length=20, choices=SkillType.choices)
-
-    def __str__(self):
-        return self.nombre
-
-    class Meta:
-        app_label = 'prestadores'
 
 class TourDetail(models.Model):
     """
