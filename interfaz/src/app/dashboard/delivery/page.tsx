@@ -17,7 +17,7 @@ export default function DeliveryDashboardPage() {
     if (!token) return;
     setIsLoading(true);
     try {
-      const response = await api.get('/delivery/services/');
+      const response = await api.get('/v1/operations/delivery/services/');
       setServices(response.data.results || []);
     } catch (err) {
       setError("Error al cargar servicios asignados.");
@@ -32,7 +32,7 @@ export default function DeliveryDashboardPage() {
 
   const handleComplete = async (id: string) => {
     try {
-      await api.post(`/delivery/services/${id}/complete_service/`);
+      await api.post(`/v1/operations/delivery/services/${id}/complete_service/`);
       toast.success("Servicio completado. Pago procesado institucionalmente.");
       fetchServices();
     } catch (err) {
