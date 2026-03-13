@@ -31,6 +31,8 @@ import { FinanceDashboard } from './dashboard/finance/FinanceDashboard';
 import { WalletDashboard } from './dashboard/Wallet';
 import { DeliveryManager } from './dashboard/Delivery';
 import { AdminDashboard } from './admin/AdminDashboard';
+import { TouristDashboard } from './dashboard/TouristDashboard';
+import { CouncilDashboard } from './dashboard/CouncilDashboard';
 import './index.css';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -65,6 +67,8 @@ const App = () => (
                 </Route>
                 <Route path="wallet" element={<WalletDashboard />} />
                 <Route path="delivery" element={<DeliveryManager />} />
+                <Route path="tourist" element={<TouristDashboard />} />
+                <Route path="council" element={<CouncilDashboard />} />
                 <Route path="admin" element={<AdminDashboard />} />
                 <Route path="*" element={<Navigate to="home" />} />
               </Routes>

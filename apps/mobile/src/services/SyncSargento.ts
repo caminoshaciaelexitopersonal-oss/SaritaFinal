@@ -1,132 +1,78 @@
-import * as SQLite from 'expo-sqlite';
-import { api } from './api';
-
 /**
- * SYNC SARGENTO (N5) - MOBILE APP (HALLAZGO F5/F6)
- * Responsable de la sincronización resiliente Offline -> Online.
+ * PHASE 2: Mobile Offline Resilience
+ * Implements an immutable transaction queue for offline-first operations.
  */
+import * as SQLite from 'expo-sqlite';
+import * as Crypto from 'expo-crypto';
+import { SyncService } from '@sarita/shared-sdk';
 
-interface SyncItem {
-  id: number;
-  endpoint: string;
-  method: string;
-  payload: string;
+const db = SQLite.openDatabaseSync('sarita_offline.db');
+
+export interface OfflineTransaction {
+  transaction_id: string;
+  user_id: string;
+  device_id: string;
   timestamp: string;
+  payload: any;
+  hash: string;
+  previous_hash: string;
+  status: 'PENDING' | 'SYNCED' | 'FAILED';
 }
 
-class SyncSargento {
-  private db: SQLite.WebSQLDatabase;
-
-  constructor() {
-    this.db = SQLite.openDatabase('sarita_sync.db');
-    this.initDatabase();
-  }
-
-  private initDatabase() {
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS sync_queue (id INTEGER PRIMARY KEY AUTOINCREMENT, endpoint TEXT, method TEXT, payload TEXT, timestamp TEXT, local_audit TEXT)'
+export class SyncSargento {
+  static async init() {
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS offline_transactions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        transaction_id TEXT UNIQUE,
+        user_id TEXT,
+        device_id TEXT,
+        timestamp TEXT,
+        payload TEXT,
+        hash TEXT,
+        previous_hash TEXT,
+        status TEXT DEFAULT 'PENDING'
       );
-      // Fase 4: Tabla de Caché para optimización de UX
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS local_cache (key TEXT PRIMARY KEY, value TEXT, expires_at DATETIME)'
-      );
-    });
+    `);
   }
 
-  async setCache(key: string, value: any, ttlMinutes: number = 60) {
-    const expiresAt = new Date(Date.now() + ttlMinutes * 60000).toISOString();
-    return new Promise((resolve) => {
-      this.db.transaction(tx => {
-        tx.executeSql(
-          'INSERT OR REPLACE INTO local_cache (key, value, expires_at) VALUES (?, ?, ?)',
-          [key, JSON.stringify(value), expiresAt],
-          () => resolve(true)
+  static async recordTransaction(payload: any, userId: string, deviceId: string) {
+    const timestamp = new Date().toISOString();
+    const transaction_id = Crypto.randomUUID();
+
+    // Get last hash for chaining
+    const lastTx = await db.getFirstAsync<OfflineTransaction>(
+      'SELECT hash FROM offline_transactions ORDER BY id DESC LIMIT 1'
+    );
+    const previous_hash = lastTx ? lastTx.hash : 'GENESIS';
+
+    // Create current hash (SHA-256)
+    const content = `${transaction_id}${timestamp}${JSON.stringify(payload)}${previous_hash}`;
+    const hash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, content);
+
+    await db.runAsync(
+      'INSERT INTO offline_transactions (transaction_id, user_id, device_id, timestamp, payload, hash, previous_hash) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [transaction_id, userId, deviceId, timestamp, JSON.stringify(payload), hash, previous_hash]
+    );
+
+    return transaction_id;
+  }
+
+  static async syncQueue() {
+    const pending = await db.getAllAsync<OfflineTransaction>(
+      "SELECT * FROM offline_transactions WHERE status = 'PENDING' ORDER BY id ASC"
+    );
+
+    for (const tx of pending) {
+      try {
+        await SyncService.syncLocalChanges(tx);
+        await db.runAsync(
+          "UPDATE offline_transactions SET status = 'SYNCED' WHERE transaction_id = ?",
+          [tx.transaction_id]
         );
-      });
-    });
-  }
-
-  async getCache(key: string) {
-    return new Promise((resolve) => {
-      this.db.transaction(tx => {
-        tx.executeSql(
-          'SELECT value FROM local_cache WHERE key = ? AND expires_at > ?',
-          [key, new Date().toISOString()],
-          (_, { rows }) => {
-            if (rows.length > 0) {
-              resolve(JSON.parse((rows as any)._array[0].value));
-            } else {
-              resolve(null);
-            }
-          }
-        );
-      });
-    });
-  }
-
-  /**
-   * Encola una acción para ejecución diferida si no hay red.
-   * Soporta órdenes procesadas por IA local.
-   */
-  async enqueue(endpoint: string, method: string, payload: any, processedLocally: boolean = false) {
-    console.log(`SYNC SARGENTO: Encolando acción para ${endpoint}`);
-    return new Promise((resolve, reject) => {
-      this.db.transaction(tx => {
-        tx.executeSql(
-          'INSERT INTO sync_queue (endpoint, method, payload, timestamp, local_audit) VALUES (?, ?, ?, ?, ?)',
-          [
-            endpoint,
-            method,
-            JSON.stringify(payload),
-            new Date().toISOString(),
-            processedLocally ? 'LOCAL_IA_PROCESSED' : 'USER_ACTION'
-          ],
-          (_, result) => resolve(result),
-          (_, error) => { reject(error); return false; }
-        );
-      });
-    });
-  }
-
-  /**
-   * Vacía la cola de sincronización hacia el backend real.
-   */
-  async flush() {
-    console.log('SYNC SARGENTO: Iniciando vaciado de cola (Flush)...');
-
-    return new Promise((resolve, reject) => {
-      this.db.transaction(tx => {
-        tx.executeSql('SELECT * FROM sync_queue ORDER BY timestamp ASC', [], async (_, { rows }) => {
-          const items = (rows as any)._array as SyncItem[];
-
-          for (const item of items) {
-            try {
-              console.log(`SYNC SARGENTO: Procesando ${item.endpoint}...`);
-              await api.request({
-                url: item.endpoint,
-                method: item.method,
-                data: JSON.parse(item.payload)
-              });
-
-              // Eliminar de la cola tras éxito
-              this.removeItem(item.id);
-            } catch (error) {
-              console.error(`SYNC SARGENTO: Error sincronizando ${item.id}. Reintento en próximo ciclo.`, error);
-              break; // Detener flush ante error de red
-            }
-          }
-          resolve(true);
-        });
-      });
-    });
-  }
-
-  private removeItem(id: number) {
-    this.db.transaction(tx => {
-      tx.executeSql('DELETE FROM sync_queue WHERE id = ?', [id]);
-    });
+      } catch (err) {
+        console.error(`Sync failed for ${tx.transaction_id}`, err);
+      }
+    }
   }
 }
-
-export const syncSargento = new SyncSargento();

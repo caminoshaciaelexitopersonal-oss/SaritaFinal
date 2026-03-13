@@ -50,10 +50,14 @@ class IsAdminOrFuncionario(BasePermission):
             and request.user.is_authenticated
             and request.user.role in [
                 CustomUser.Role.ADMIN,
+                CustomUser.Role.ADMIN_NACIONAL,
                 CustomUser.Role.ADMIN_DEPARTAMENTAL,
                 CustomUser.Role.ADMIN_MUNICIPAL,
-                CustomUser.Role.FUNCIONARIO_DIRECTIVO,
+                CustomUser.Role.DIRECTIVO_NACIONAL,
+                CustomUser.Role.DIRECTIVO_DEPARTAMENTAL,
+                CustomUser.Role.DIRECTIVO_MUNICIPAL,
                 CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+                CustomUser.Role.FUNCIONARIO_ASISTENCIAL,
             ]
         )
 
@@ -121,10 +125,14 @@ class IsAdminOrFuncionarioForUserManagement(BasePermission):
             return True
 
         is_funcionario = user.role in [
+            CustomUser.Role.ADMIN_NACIONAL,
             CustomUser.Role.ADMIN_DEPARTAMENTAL,
             CustomUser.Role.ADMIN_MUNICIPAL,
-            CustomUser.Role.FUNCIONARIO_DIRECTIVO,
+            CustomUser.Role.DIRECTIVO_NACIONAL,
+            CustomUser.Role.DIRECTIVO_DEPARTAMENTAL,
+            CustomUser.Role.DIRECTIVO_MUNICIPAL,
             CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+            CustomUser.Role.FUNCIONARIO_ASISTENCIAL,
         ]
 
         if is_funcionario:
@@ -150,9 +158,12 @@ class IsAnyAdminOrDirectivo(BasePermission):
             and request.user.is_authenticated
             and request.user.role in [
                 CustomUser.Role.ADMIN,
+                CustomUser.Role.ADMIN_NACIONAL,
                 CustomUser.Role.ADMIN_DEPARTAMENTAL,
                 CustomUser.Role.ADMIN_MUNICIPAL,
-                CustomUser.Role.FUNCIONARIO_DIRECTIVO,
+                CustomUser.Role.DIRECTIVO_NACIONAL,
+                CustomUser.Role.DIRECTIVO_DEPARTAMENTAL,
+                CustomUser.Role.DIRECTIVO_MUNICIPAL,
             ]
         )
 
@@ -233,7 +244,16 @@ class CanManageAtractivos(BasePermission):
             return False
 
         # Admins y Funcionarios pueden editar/borrar cualquier atractivo.
-        if user.role in [CustomUser.Role.ADMIN, CustomUser.Role.FUNCIONARIO_DIRECTIVO, CustomUser.Role.FUNCIONARIO_PROFESIONAL]:
+        if user.role in [
+            CustomUser.Role.ADMIN,
+            CustomUser.Role.ADMIN_NACIONAL,
+            CustomUser.Role.ADMIN_DEPARTAMENTAL,
+            CustomUser.Role.ADMIN_MUNICIPAL,
+            CustomUser.Role.DIRECTIVO_NACIONAL,
+            CustomUser.Role.DIRECTIVO_DEPARTAMENTAL,
+            CustomUser.Role.DIRECTIVO_MUNICIPAL,
+            CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+        ]:
             return True
 
         # El autor del atractivo puede gestionarlo.

@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Wallet, Truck, Briefcase, Users, FileText, Settings, LogOut, UserCheck, DollarSign, FileStack, Signature, Archive } from 'lucide-react';
+import { LayoutDashboard, Wallet, Truck, Briefcase, Users, FileText, Settings, LogOut, UserCheck, DollarSign, FileStack, Signature, Archive, MapPin, Building2 } from 'lucide-react';
 
 export const Sidebar = () => {
   const { logout, user } = useAuth();
@@ -16,6 +16,8 @@ export const Sidebar = () => {
     { icon: Archive, label: 'Archivo', path: '/dashboard/erp/archivistica', role: ['provider', 'admin'] },
     { icon: Wallet, label: 'Wallet', path: '/dashboard/wallet' },
     { icon: Truck, label: 'Delivery', path: '/dashboard/delivery' },
+    { icon: MapPin, label: 'Turista', path: '/dashboard/tourist' },
+    { icon: Building2, label: 'Consejo', path: '/dashboard/council' },
     { icon: Users, label: 'Admin', path: '/dashboard/admin', role: ['admin'] },
     { icon: FileText, label: 'Reportes', path: '/dashboard/reportes' },
   ];
