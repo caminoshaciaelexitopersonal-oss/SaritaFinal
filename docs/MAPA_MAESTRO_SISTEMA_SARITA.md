@@ -27,6 +27,19 @@ SARITA no es una aplicación única, es un ecosistema orquestado que conecta tre
 - **Agent Governance**: Los agentes jerárquicos (N1-N7) ejecutan la estrategia sin intervención humana para procesos de bajo riesgo.
 - **Zero-Touch**: Despliegue automático de nuevos inquilinos en la infraestructura K8s.
 
+## 4. Arquitectura de Interconexión (Ecosistema Soberano)
+
+### IA Orquestadora (El Cerebro)
+La IA no es un añadido, es el tejido conectivo.
+- **SADI** actúa como la interfaz de lenguaje natural para la toma de decisiones institucionales.
+- **SARITA Agents (N1-N7)** orquestan misiones operativas, desde la liquidación de nómina hasta la optimización de rutas de delivery, interactuando con los Sargentos (Business Logic) del ERP.
+
+### El Motor ERP (El Corazón)
+Un "Modular Monolith" que garantiza que cada byte de información financiera, comercial y operativa sea procesado con precisión de clase mundial. Implementa el estándar **Multi-Tenant**, permitiendo que miles de empresas operen de forma aislada pero dentro de la misma infraestructura optimizada.
+
+### Infraestructura Soberana (La Armadura)
+Desplegada sobre **Kubernetes (EKS)** con auto-escalado y persistencia en **RDS Multi-AZ**. La soberanía se garantiza mediante el **Kill Switch** centralizado y la propiedad absoluta de los datos, protegidos por el `SecurityHardeningMiddleware` y la notarización en **Blockchain (Polygon)** para documentos críticos.
+
 ---
-**SARITA — El Estándar de la Economía Digital Llanera**
+**SARITA — El Estándar Global de Gobernanza Algorítmica y Economía Digital**
 **Marzo 2026**
