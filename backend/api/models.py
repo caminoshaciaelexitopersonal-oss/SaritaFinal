@@ -85,13 +85,27 @@ class CustomUser(AbstractUser):
         DIRECTIVO_NACIONAL = "DIRECTIVO_NACIONAL", _("Directivo Nacional")
         DIRECTIVO_DEPARTAMENTAL = "DIRECTIVO_DEPARTAMENTAL", _("Directivo Departamental")
         DIRECTIVO_MUNICIPAL = "DIRECTIVO_MUNICIPAL", _("Directivo Municipal")
+        FUNCIONARIO_DIRECTIVO = "FUNCIONARIO_DIRECTIVO", _("Funcionario Directivo")
         FUNCIONARIO_PROFESIONAL = "FUNCIONARIO_PROFESIONAL", _("Funcionario Profesional")
         FUNCIONARIO_ASISTENCIAL = "FUNCIONARIO_ASISTENCIAL", _("Funcionario Asistencial")
-        PRESTADOR = "PRESTADOR", _("Prestador de Servicio")
+
+        # --- Vía 2: Prestadores de Servicios ---
+        PRESTADOR = "PRESTADOR", _("Prestador de Servicio (Genérico)")
+        BUSINESS_OWNER = "BUSINESS_OWNER", _("Propietario de Negocio")
+        BUSINESS_ADMIN = "BUSINESS_ADMIN", _("Administrador de Negocio")
+        BUSINESS_OPERATOR = "BUSINESS_OPERATOR", _("Operador de Negocio")
+        BUSINESS_EMPLOYEE = "BUSINESS_EMPLOYEE", _("Empleado de Negocio")
         ARTESANO = "ARTESANO", _("Artesano")
-        CONSEJO_CONSULTIVO_TURISMO = "CONSEJO_CONSULTIVO_TURISMO", _("Consejo Consultivo de Turismo")
+
+        # --- Canal adicional: Delivery ---
+        DELIVERY = "DELIVERY", _("Delivery / Logística (Genérico)")
+        DELIVERY_ADMIN = "DELIVERY_ADMIN", _("Administrador de Delivery")
+        DELIVERY_DRIVER = "DELIVERY_DRIVER", _("Repartidor / Mensajero")
+        DELIVERY_OPERATOR = "DELIVERY_OPERATOR", _("Operador Logístico")
+
+        # --- Vía 3: Ciudadanos / Turistas ---
         TURISTA = "TURISTA", _("Turista")
-        DELIVERY = "DELIVERY", _("Delivery / Logística")
+        CONSEJO_CONSULTIVO_TURISMO = "CONSEJO_CONSULTIVO_TURISMO", _("Consejo Consultivo de Turismo")
 
     # --- Campos de Identidad IA (Fase Z) ---
     is_agent = models.BooleanField(default=False, help_text="Indica si este usuario es un Funcionario Digital (Agente IA).")
@@ -154,10 +168,26 @@ class GovernmentProfile(models.Model):
     entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='officials')
     cargo = models.CharField(max_length=255)
     nivel = models.CharField(max_length=20, choices=[('NACIONAL', 'Nacional'), ('DEPARTAMENTAL', 'Departamental'), ('MUNICIPAL', 'Municipal')])
+    phone = models.CharField(max_length=20, blank=True)
+    is_active = models.BooleanField(default=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='officials_created')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.cargo} - {self.entity.name}"
+
+class BusinessUserProfile(models.Model):
+    """
+    Vía 2: Perfil para prestadores de servicios turísticos (Vínculo con Empresa).
+    """
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='business_user_profile')
+    provider = models.ForeignKey('turismo.TourismProvider', on_delete=models.CASCADE, related_name='staff')
+    position = models.CharField(max_length=100)
+    is_admin = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.provider.name}"
 
 class TouristProfile(models.Model):
     """
