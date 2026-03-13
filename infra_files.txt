@@ -1,0 +1,13 @@
+Dockerfile
+docker-compose.yml
+
+k8s/:
+deployment.yaml
+hpa.yaml
+monitoring
+service.yaml
+
+k8s/monitoring:
+alerts.yaml
+grafana.yaml
+prometheus.yaml
