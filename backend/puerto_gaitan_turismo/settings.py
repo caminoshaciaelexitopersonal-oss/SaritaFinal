@@ -179,6 +179,7 @@ INSTALLED_APPS = [
     "apps.operational_mobile.apps.OperationalMobileConfig",
     "apps.turismo.apps.TurismoConfig",
     "apps.tourism_marketplace.apps.TourismMarketplaceConfig",
+    "apps.tourism_intelligence.apps.TourismIntelligenceConfig",
 ]
 
 
