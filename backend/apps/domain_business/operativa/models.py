@@ -3,29 +3,25 @@ from django.conf import settings
 from apps.core_erp.base_models import BaseErpModel, TenantAwareModel
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from apps.turismo.models import TourismProvider
 
-class ProviderProfile(TenantAwareModel):
-    class ProviderTypes(models.TextChoices):
-        RESTAURANT = 'RESTAURANT', 'Restaurante'
-        HOTEL = 'HOTEL', 'Hotel'
-        AGENCY = 'AGENCY', 'Agencia de Viajes'
-        GUIDE = 'GUIDE', 'Guía Turístico'
-        TRANSPORT = 'TRANSPORT', 'Transportadora Turística'
-        BAR_DISCO = 'BAR_DISCO', 'Bar o Discoteca'
-        ARTISAN = 'ARTISAN', 'Artesano'
-
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='domain_profile'
-    )
-    commercial_name = models.CharField(max_length=255)
-    provider_type = models.CharField(max_length=20, choices=ProviderTypes.choices, default=ProviderTypes.HOTEL)
-    is_verified = models.BooleanField(default=False)
-
+class ProviderProfile(TourismProvider):
+    """
+    Proxy del modelo TourismProvider para retrocompatibilidad con el dominio business.
+    Asegura que el ecosistema productivo herede del dominio central de Turismo.
+    """
     class Meta:
-        verbose_name = "Provider Profile"
+        proxy = True
+        verbose_name = "Provider Profile (Legacy Proxy)"
         app_label = 'domain_business'
+
+    @property
+    def commercial_name(self):
+        return self.name
+
+    @commercial_name.setter
+    def commercial_name(self, value):
+        self.name = value
 
 class Reservation(TenantAwareModel):
     class Status(models.TextChoices):
