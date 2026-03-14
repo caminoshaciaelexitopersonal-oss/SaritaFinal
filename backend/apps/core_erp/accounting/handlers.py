@@ -39,7 +39,9 @@ class StandardAccountingHandlers:
             'ASSET_DEPRECIATED',
             'LIQUIDATION',
             'SALE_CREATED',
-            'PAYROLL_LIQUIDATED_V2'
+            'PAYROLL_LIQUIDATED_V2',
+            'SaaS_INVOICE_GENERATED',
+            'BANK_FEE_REGISTERED'
         ]
 
         for event in standard_events:

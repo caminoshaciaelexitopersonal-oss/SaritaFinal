@@ -7,9 +7,9 @@ from .models import (
 
 @admin.register(Wallet)
 class WalletAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'owner_type', 'owner_id', 'saldo_disponible', 'estado')
+    list_display = ('id', 'user_id', 'owner_type', 'owner_id', 'saldo_disponible', 'estado')
     list_filter = ('owner_type', 'estado')
-    search_fields = ('user__username', 'owner_id')
+    search_fields = ('user_id', 'owner_id')
 
 @admin.register(WalletTransaccion)
 class WalletTransaccionAdmin(admin.ModelAdmin):
@@ -38,7 +38,7 @@ class WalletComisionAdmin(admin.ModelAdmin):
 
 @admin.register(WalletReversion)
 class WalletReversionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'transaccion_original', 'autorizado_por', 'timestamp')
+    list_display = ('id', 'transaccion_original', 'autorizado_por_id', 'timestamp')
 
 @admin.register(WalletAuditoria)
 class WalletAuditoriaAdmin(admin.ModelAdmin):

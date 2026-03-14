@@ -7,6 +7,8 @@ from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
 from decimal import Decimal
 
 class DeliveryIntegrationTest(TestCase):
+    databases = {'default', 'wallet_db', 'delivery_db'}
+
     def setUp(self):
         self.company = Company.objects.create(name='Delivery Corp', code='DC')
         self.delivery_company = DeliveryCompany.objects.create(name='Logistics SARITA', company=self.company)
@@ -24,11 +26,11 @@ class DeliveryIntegrationTest(TestCase):
         self.vehicle = Vehicle.objects.create(plate='XYZ-789', vehicle_type='MOTO', delivery_company=self.delivery_company, current_driver=self.driver)
 
         # Wallets (created via signal, but let's ensure balance)
-        self.tourist_wallet = WalletAccount.objects.get(user=self.tourist)
-        self.tourist_wallet.balance = Decimal('50000.00')
+        self.tourist_wallet = WalletAccount.objects.get(user_id=self.tourist.id)
+        self.tourist_wallet.saldo_disponible = Decimal('50000.00')
         self.tourist_wallet.save()
 
-        self.driver_wallet = WalletAccount.objects.get(user=self.driver_user)
+        self.driver_wallet = WalletAccount.objects.get(user_id=self.driver_user.id)
 
     def test_full_delivery_flow(self):
         kernel = GovernanceKernel(user=self.tourist)
@@ -65,8 +67,8 @@ class DeliveryIntegrationTest(TestCase):
         self.tourist_wallet.refresh_from_db()
         self.driver_wallet.refresh_from_db()
 
-        self.assertEqual(self.tourist_wallet.balance, Decimal('30000.00'))
-        self.assertEqual(self.driver_wallet.balance, Decimal('20000.00'))
+        self.assertEqual(self.tourist_wallet.saldo_disponible, Decimal('30000.00'))
+        self.assertEqual(self.driver_wallet.saldo_disponible, Decimal('20000.00'))
 
         # 5. Verify Service Status
         service = DeliveryService.objects.get(id=service_id)

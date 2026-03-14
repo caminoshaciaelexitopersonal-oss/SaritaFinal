@@ -8,10 +8,8 @@ from ..models import Subscription
 from ..models import BillingCycle
 from ..models import UsageMetric
 from ..models import PricingRule
-from apps.core_erp.billing_engine import BillingEngine as CoreBillingEngine
-from apps.core_erp.accounting_engine import AccountingEngine
+from apps.core_erp.event_bus import EventBus
 from apps.domain_business.comercial.models import FacturaVenta, OperacionComercial
-from apps.admin_plataforma.gestion_contable.contabilidad.models import AdminJournalEntry, AdminAccountingTransaction, AdminAccount, AdminFiscalPeriod
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +93,7 @@ class BillingEngine:
             status="DRAFT"
         )
 
-        CoreBillingEngine.validate_invoice(invoice)
+        # CoreBillingEngine.validate_invoice(invoice) - Desacoplado via EventBus
         invoice.status = "ISSUED"
         invoice.save()
 
@@ -103,57 +101,18 @@ class BillingEngine:
         cycle.status = BillingCycle.Status.INVOICED
         cycle.save()
 
-        BillingEngine._create_accounting_impact(invoice)
+        # Emitir evento para impacto contable (Desacoplamiento total)
+        EventBus.emit(
+            event_type='SaaS_INVOICE_GENERATED',
+            payload={
+                'invoice_id': str(invoice.id),
+                'number': invoice.number,
+                'total_amount': float(invoice.total_amount),
+                'issue_date': invoice.issue_date.isoformat(),
+                'tenant_id': subscription.tenant_id,
+                'domain': 'COMERCIAl'
+            }
+        )
 
         logger.info(f"Factura generada para tenant {subscription.tenant_id} por {total_amount}")
         return invoice
-
-    @staticmethod
-    def _create_accounting_impact(invoice):
-        """Dispara el asiento contable balanceado via Core AccountingEngine."""
-
-        # 1. Obtener Periodo Contable
-        period_name = invoice.issue_date.strftime("%Y-%m")
-        periodo = AdminFiscalPeriod.objects.filter(name=period_name).first()
-        if not periodo:
-            periodo = AdminFiscalPeriod.objects.create(
-                name=period_name,
-                start_date=invoice.issue_date.replace(day=1),
-                end_date=invoice.issue_date,
-                tenant_id="SARITA_HOLDING"
-            )
-
-        # 2. Crear Asiento
-        asiento = AdminJournalEntry.objects.create(
-            period=periodo,
-            date=invoice.issue_date,
-            description=f"Facturación SaaS {invoice.number}",
-            reference=str(invoice.id),
-            is_posted=False,
-            tenant_id="SARITA_HOLDING"
-        )
-
-        # 3. Crear Transacciones (CxC y Ventas)
-        cuenta_ingresos = AdminAccount.objects.filter(code="413501").first()
-        cuenta_clientes = AdminAccount.objects.filter(code="130505").first()
-
-        if cuenta_ingresos and cuenta_clientes:
-            AdminAccountingTransaction.objects.create(
-                journal_entry=asiento,
-                account=cuenta_clientes,
-                debit=invoice.total_amount,
-                credit=0,
-                description="CxC suscripción"
-            )
-            AdminAccountingTransaction.objects.create(
-                journal_entry=asiento,
-                account=cuenta_ingresos,
-                debit=0,
-                credit=invoice.total_amount,
-                description="Ingresos por suscripciones"
-            )
-
-            # 4. Validar y Postear via Engine
-            AccountingEngine.post_entry(asiento)
-        else:
-            logger.error("No se encontraron las cuentas contables 413501 o 130505. El asiento quedó en borrador.")

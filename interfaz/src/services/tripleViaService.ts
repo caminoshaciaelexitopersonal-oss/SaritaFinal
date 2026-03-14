@@ -8,6 +8,8 @@ export const governmentService = {
 
 export const businessService = {
   getProviders: () => api.get('/v1/business/'),
+  getStaff: () => api.get('/v1/business-staff/'),
+  createStaff: (data: any) => api.post('/v1/business-staff/', data),
   createService: (data: any) => api.post('/v1/turismo/tourism-services/', data),
 };
 

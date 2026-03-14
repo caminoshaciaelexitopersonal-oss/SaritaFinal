@@ -20,7 +20,7 @@ from operator import attrgetter
 from django.db.models.functions import TruncDay
 from django.db.models import Count
 from .models import (
-    CustomUser,
+    CustomUser, GovernmentProfile, TouristProfile, DeliveryProfile, BusinessUserProfile,
     # CategoriaPrestador fue movido a gestion_operativa
     ImagenGaleria,
     ImagenArtesano,
@@ -117,9 +117,15 @@ from .serializers import (
     # GuardarVerificacionSerializer,
     CapacitacionDetailSerializer,
     RegistrarAsistenciaSerializer,
+    GovernmentProfileSerializer,
+    TouristProfileSerializer,
+    DeliveryProfileSerializer,
+    BusinessUserSerializer,
+    BusinessProfileSerializer,
 )
 from django.utils import timezone
 from datetime import timedelta
+from apps.turismo.models.provider_models import TourismProvider
 from .permissions import (
     IsTurista,
     IsAdminOrFuncionario,
@@ -434,15 +440,48 @@ class UserViewSet(viewsets.ModelViewSet):
         if user.role == CustomUser.Role.ADMIN:
             return CustomUser.objects.all()
 
+        # Roles base visibles para funcionarios y gestores
         allowed_roles_to_view = [
             CustomUser.Role.PRESTADOR,
             CustomUser.Role.ARTESANO,
             CustomUser.Role.TURISTA,
+            CustomUser.Role.DELIVERY_DRIVER,
         ]
-        # Un funcionario puede ver los roles permitidos Y a sí mismo
-        return CustomUser.objects.filter(
-            Q(role__in=allowed_roles_to_view) | Q(pk=user.pk)
-        )
+
+        # Filtro inicial: Roles públicos y el propio usuario
+        queryset = CustomUser.objects.filter(Q(role__in=allowed_roles_to_view) | Q(pk=user.pk))
+
+        # --- Jerarquía Gubernamental (Vía 1) ---
+        if hasattr(user, 'government_profile'):
+            profile = user.government_profile
+            # Directivos pueden ver funcionarios de su misma entidad
+            if user.role in [
+                CustomUser.Role.DIRECTIVO_NACIONAL,
+                CustomUser.Role.DIRECTIVO_DEPARTAMENTAL,
+                CustomUser.Role.DIRECTIVO_MUNICIPAL
+            ]:
+                subordinate_roles = [
+                    CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+                    CustomUser.Role.FUNCIONARIO_TECNICO,
+                    CustomUser.Role.FUNCIONARIO_ASISTENCIAL,
+                ]
+                queryset |= CustomUser.objects.filter(
+                    role__in=subordinate_roles,
+                    government_profile__entity=profile.entity
+                )
+
+            # Admins de nivel superior pueden ver niveles inferiores
+            if user.role == CustomUser.Role.DIRECTIVO_NACIONAL:
+                queryset |= CustomUser.objects.filter(role=CustomUser.Role.DIRECTIVO_DEPARTAMENTAL)
+            if user.role == CustomUser.Role.DIRECTIVO_DEPARTAMENTAL:
+                queryset |= CustomUser.objects.filter(role=CustomUser.Role.DIRECTIVO_MUNICIPAL)
+
+        # --- Jerarquía Empresarial (Vía 2) ---
+        if hasattr(user, 'business_user_profile') and user.role == CustomUser.Role.BUSINESS_OWNER:
+            provider = user.business_user_profile.provider
+            queryset |= CustomUser.objects.filter(business_user_profile__provider=provider)
+
+        return queryset.distinct()
 
 # class AdminPrestadorViewSet(viewsets.ModelViewSet):
 #     queryset = ProviderProfile.objects.all()
@@ -693,6 +732,52 @@ class AdminUsuarioListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UsuarioListSerializer
     permission_classes = [IsAdminOrFuncionario]
+
+
+class GovernmentProfileViewSet(viewsets.ModelViewSet):
+    queryset = GovernmentProfile.objects.all()
+    serializer_class = GovernmentProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        # Flujo 1-3: El directivo crea al funcionario
+        serializer.save(created_by=self.request.user)
+
+
+class TouristProfileViewSet(viewsets.ModelViewSet):
+    queryset = TouristProfile.objects.all()
+    serializer_class = TouristProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class DeliveryProfileViewSet(viewsets.ModelViewSet):
+    queryset = DeliveryProfile.objects.all()
+    serializer_class = DeliveryProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class BusinessProfileViewSet(viewsets.ModelViewSet):
+    """
+    Endpoint para ver la lista de Prestadores (Empresas)
+    """
+    queryset = TourismProvider.objects.all()
+    serializer_class = BusinessUserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class BusinessStaffViewSet(viewsets.ModelViewSet):
+    """
+    Endpoint para gestionar el personal de los negocios (Vía 2)
+    """
+    queryset = BusinessUserProfile.objects.all()
+    serializer_class = BusinessProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == CustomUser.Role.BUSINESS_OWNER:
+            return BusinessUserProfile.objects.filter(provider__owner=user)
+        return BusinessUserProfile.objects.all()
 
 class RubroArtesanoListView(generics.ListAPIView):
     queryset = RubroArtesano.objects.all()

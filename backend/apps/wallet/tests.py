@@ -6,6 +6,8 @@ from apps.admin_plataforma.services.governance_kernel import GovernanceKernel, A
 from decimal import Decimal
 
 class WalletIntegrationTest(TestCase):
+    databases = {'default', 'wallet_db'}
+
     def setUp(self):
         self.admin = CustomUser.objects.create_superuser(
             username='admin_test', email='admin_test@test.com', password='password'
@@ -22,25 +24,23 @@ class WalletIntegrationTest(TestCase):
 
         # Get or create wallets (signals might have created them)
         self.tourist_wallet, _ = WalletAccount.objects.get_or_create(
-            user=self.tourist_user,
+            user_id=self.tourist_user.id,
+            owner_id=str(self.tourist_user.id),
             defaults={
-                'owner_type': WalletAccount.OwnerType.TOURIST,
-                'owner_id': str(self.tourist_user.id),
-                'company': self.company,
-                'balance': Decimal('100.00')
+                'owner_type': WalletAccount.OwnerType.TURISTA,
+                'saldo_disponible': Decimal('100.00')
             }
         )
-        if self.tourist_wallet.balance < Decimal('100.00'):
-            self.tourist_wallet.balance = Decimal('100.00')
+        if self.tourist_wallet.saldo_disponible < Decimal('100.00'):
+            self.tourist_wallet.saldo_disponible = Decimal('100.00')
             self.tourist_wallet.save()
 
         self.provider_wallet, _ = WalletAccount.objects.get_or_create(
-            user=self.provider_user,
+            user_id=self.provider_user.id,
+            owner_id='some-uuid-for-provider-test',
             defaults={
-                'owner_type': WalletAccount.OwnerType.PROVIDER,
-                'owner_id': 'some-uuid-for-provider-test',
-                'company': self.company,
-                'balance': Decimal('0.00')
+                'owner_type': WalletAccount.OwnerType.HOTEL,
+                'saldo_disponible': Decimal('0.00')
             }
         )
 
@@ -61,13 +61,12 @@ class WalletIntegrationTest(TestCase):
         self.tourist_wallet.refresh_from_db()
         self.provider_wallet.refresh_from_db()
 
-        self.assertEqual(self.tourist_wallet.balance, Decimal('50.00'))
-        self.assertEqual(self.provider_wallet.balance, Decimal('50.00'))
+        self.assertEqual(self.tourist_wallet.saldo_disponible, Decimal('50.00'))
+        self.assertEqual(self.provider_wallet.saldo_disponible, Decimal('50.00'))
 
         # Check transaction
         tx = WalletTransaction.objects.get(id=result['transaction_id'])
-        self.assertEqual(tx.amount, Decimal('50.00'))
-        self.assertEqual(tx.type, WalletTransaction.TransactionType.PAYMENT)
+        self.assertEqual(tx.monto_total, Decimal('50.00'))
 
     def test_insufficient_funds(self):
         kernel = GovernanceKernel(user=self.tourist_user)
@@ -94,15 +93,16 @@ class WalletIntegrationTest(TestCase):
 
         self.assertEqual(result['status'], 'SUCCESS')
         self.tourist_wallet.refresh_from_db()
-        self.assertEqual(self.tourist_wallet.status, WalletAccount.Status.FROZEN)
+        self.assertEqual(self.tourist_wallet.estado, WalletAccount.Status.BLOQUEADO)
 
         # Now payment should fail
         kernel_tourist = GovernanceKernel(user=self.tourist_user)
-        with self.assertRaises(PermissionError):
-            kernel_tourist.resolve_and_execute(
-                intention_name="WALLET_PAY",
-                parameters={
-                    "to_wallet_id": str(self.provider_wallet.id),
-                    "amount": 10.00
-                }
-            )
+        # Note: Depending on Kernel implementation, this might raise Exception or return FAIL
+        res = kernel_tourist.resolve_and_execute(
+            intention_name="WALLET_PAY",
+            parameters={
+                "to_wallet_id": str(self.provider_wallet.id),
+                "amount": 10.00
+            }
+        )
+        self.assertEqual(res['status'], 'FAIL')

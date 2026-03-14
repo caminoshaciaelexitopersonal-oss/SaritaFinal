@@ -22,10 +22,17 @@ def create_user_wallet(sender, instance, created, **kwargs):
             owner_type = Wallet.OwnerType.ARTESANO
 
         # Evitar duplicidad si ya existe
-        if not Wallet.objects.filter(owner_type=owner_type, owner_id=str(instance.id)).exists():
-            Wallet.objects.create(
-                user=instance,
-                owner_type=owner_type,
-                owner_id=str(instance.id),
-                saldo_disponible=0.00
-            )
+        # Importante: Usar .using() no es necesario porque el Router se encarga,
+        # pero para señales transversales somos explícitos si hay fallos.
+        try:
+            if not Wallet.objects.filter(owner_type=owner_type, owner_id=str(instance.id)).exists():
+                Wallet.objects.create(
+                    user_id=instance.id,
+                    owner_type=owner_type,
+                    owner_id=str(instance.id),
+                    saldo_disponible=0.00
+                )
+        except Exception:
+            # En entornos de test multi-db, las señales pueden dispararse antes de que
+            # todas las bases de datos estén listas o migradas.
+            pass

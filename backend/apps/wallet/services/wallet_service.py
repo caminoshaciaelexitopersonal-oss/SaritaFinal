@@ -25,7 +25,7 @@ class WalletService(WalletInterface):
         """
         Implementación de autorización via bloqueo de fondos.
         """
-        from_wallet = Wallet.objects.filter(user=self.user).first()
+        from_wallet = Wallet.objects.filter(user_id=self.user.id).first()
         if not from_wallet:
             raise ValueError("El usuario no posee un monedero activo.")
 
@@ -59,7 +59,8 @@ class WalletService(WalletInterface):
 
     def release_payment(self, transaction_id):
         """
-        Libera el bloqueo y ejecuta el movimiento real de fondos.
+        Libera el bloqueo y ejecuta el movimiento real de fondos con distribución de comisiones.
+        Cumple con el Escrow SARITA (Fase 17).
         """
         transaccion = get_object_or_404(WalletTransaccion, id=transaction_id)
         if transaccion.estado != WalletTransaccion.Status.PROCESANDO:
@@ -71,20 +72,52 @@ class WalletService(WalletInterface):
 
         with transaction.atomic():
             wallet_origen = bloqueo.wallet
-            monto = transaccion.monto_total
+            monto_total = transaccion.monto_total
 
-            # Liberar del bloqueado (ya fue restado del disponible en authorize_payment)
-            wallet_origen.saldo_bloqueado -= monto
+            # 1. Obtener receptor y reglas de la metadata
+            target_wallet_id = transaccion.metadata.get('target_wallet_id')
+            commission_pct = Decimal(str(transaccion.metadata.get('commission_pct', '0.05'))) # 5% plataforma
+
+            if not target_wallet_id:
+                raise ValueError("No se especificó wallet de destino en la transacción de escrow.")
+
+            wallet_destino = Wallet.objects.select_for_update().get(id=target_wallet_id)
+            wallet_holding = Wallet.objects.filter(owner_type=Wallet.OwnerType.CORPORATIVO).first()
+
+            # 2. Calcular montos
+            monto_comision = (monto_total * commission_pct).quantize(Decimal('0.01'))
+            monto_neto = monto_total - monto_comision
+
+            # 3. Mover fondos
+            wallet_origen.saldo_bloqueado -= monto_total
             wallet_origen.save()
 
-            # Determinar destino (usualmente en metadata o via lógica de negocio)
-            # Para esta refactorización, asumimos que el pago se completa via execute_complex_transaction
-            # Pero para simplificar el flujo de release:
+            wallet_destino.saldo_disponible += monto_neto
+            wallet_destino.save()
 
-            # Buscamos si hay un destino pre-definido o lo tomamos de la referencia
-            # (En un sistema real esto estaría más estructurado)
+            if wallet_holding:
+                wallet_holding.saldo_disponible += monto_comision
+                wallet_holding.save()
 
-            # Por ahora, completamos la transacción
+            # 4. Registrar movimientos detallados
+            WalletMovimiento.objects.create(
+                wallet=wallet_origen, transaccion=transaccion,
+                tipo=WalletMovimiento.TipoMovimiento.PAGO, monto=monto_total,
+                referencia_modelo="Escrow", referencia_id=str(transaccion.id)
+            )
+            WalletMovimiento.objects.create(
+                wallet=wallet_destino, transaccion=transaccion,
+                tipo=WalletMovimiento.TipoMovimiento.INGRESO, monto=monto_neto,
+                referencia_modelo="Escrow", referencia_id=str(transaccion.id)
+            )
+            if wallet_holding:
+                WalletMovimiento.objects.create(
+                    wallet=wallet_holding, transaccion=transaccion,
+                    tipo=WalletMovimiento.TipoMovimiento.COMISION, monto=monto_comision,
+                    referencia_modelo="Escrow", referencia_id=str(transaccion.id)
+                )
+
+            # 5. Finalizar estado
             transaccion.estado = WalletTransaccion.Status.COMPLETADA
             transaccion.save()
 
@@ -92,8 +125,17 @@ class WalletService(WalletInterface):
             bloqueo.liberado_en = timezone.now()
             bloqueo.save()
 
-            # Registrar en ERP
+            # 6. Registrar en ERP
             self._integrate_erp(transaccion)
+
+            # 7. Emitir Evento
+            from apps.core_erp.event_bus import EventBus
+            EventBus.emit('ESCROW_FUNDS_RELEASED', {
+                'transaction_id': str(transaccion.id),
+                'amount': float(monto_total),
+                'net_amount': float(monto_neto),
+                'commission': float(monto_comision)
+            })
 
             return transaccion
 
@@ -122,6 +164,7 @@ class WalletService(WalletInterface):
 
             return transaccion
 
+    @transaction.atomic
     @transaction.atomic
     def execute_complex_transaction(self, referencia, movements_data, intention_id=None, metadata=None):
         monto_total = sum(Decimal(str(m['monto'])) for m in movements_data if m['tipo'] in [WalletMovimiento.TipoMovimiento.INGRESO, WalletMovimiento.TipoMovimiento.PAGO])
@@ -228,14 +271,14 @@ class WalletService(WalletInterface):
              # Si no hay filtros, devolvemos el del usuario actual (si existe)
              if not self.user:
                  return Decimal('0.00')
-             wallet = Wallet.objects.filter(user=self.user).first()
+             wallet = Wallet.objects.filter(user_id=self.user.id).first()
         else:
              wallet = Wallet.objects.filter(**query).first()
 
         return wallet.saldo_disponible if wallet else Decimal('0.00')
 
     def pay(self, to_wallet_id, amount, related_service_id=None, description="Pago", intention_id=None):
-        from_wallet = Wallet.objects.filter(user=self.user).first()
+        from_wallet = Wallet.objects.filter(user_id=self.user.id).first()
         if not from_wallet:
             raise ValueError("El usuario no posee un monedero activo.")
         to_wallet = get_object_or_404(Wallet, id=to_wallet_id)

@@ -73,7 +73,7 @@ class DeliveryService(models.Model):
         CANCELADO = "CANCELADO", _("Cancelado")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    tourist = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='delivery_requests')
+    tourist_id = models.IntegerField(null=True, blank=True, help_text="ID del CustomUser (aislamiento DB)")
 
     # Tenant alignment
     provider_id = models.UUIDField(null=True, blank=True, help_text="ID del ProviderProfile")
@@ -107,6 +107,11 @@ class DeliveryService(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def tourist(self):
+        from api.models import CustomUser
+        return CustomUser.objects.filter(id=self.tourist_id).first()
 
     def __str__(self):
         return f"Delivery {self.id} - {self.status}"

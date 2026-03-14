@@ -132,6 +132,7 @@ class IsAdminOrFuncionarioForUserManagement(BasePermission):
             CustomUser.Role.DIRECTIVO_DEPARTAMENTAL,
             CustomUser.Role.DIRECTIVO_MUNICIPAL,
             CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+            CustomUser.Role.FUNCIONARIO_TECNICO,
             CustomUser.Role.FUNCIONARIO_ASISTENCIAL,
         ]
 
@@ -141,6 +142,10 @@ class IsAdminOrFuncionarioForUserManagement(BasePermission):
                 CustomUser.Role.PRESTADOR,
                 CustomUser.Role.ARTESANO,
                 CustomUser.Role.TURISTA,
+                CustomUser.Role.DELIVERY_DRIVER,
+                CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+                CustomUser.Role.FUNCIONARIO_TECNICO,
+                CustomUser.Role.FUNCIONARIO_ASISTENCIAL,
             ]
             return target_role in allowed_target_roles
 

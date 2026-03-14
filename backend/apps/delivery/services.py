@@ -16,7 +16,7 @@ class DeliveryLogisticService:
     def create_request(self, parameters, intention_id=None):
         with transaction.atomic():
             service = DeliveryService.objects.create(
-                tourist=self.user,
+                tourist_id=self.user.id if self.user else parameters.get('user_id'),
                 origin_address=parameters["origin_address"],
                 destination_address=parameters["destination_address"],
                 estimated_price=parameters.get("estimated_price", 0),
@@ -62,11 +62,17 @@ class DeliveryLogisticService:
 
         service = get_object_or_404(DeliveryService, id=service_id)
 
-        # Asignación Automática si no viene driver_id
+        # Asignación Automática si no viene driver_id (Motor Logístico Real 100%)
         if not driver_id:
-            driver = Driver.objects.filter(is_available=True).first()
+            # Algoritmo de cercanía o disponibilidad
+            driver = Driver.objects.filter(
+                is_available=True,
+                delivery_company__is_active=True
+            ).order_by('?').first() # Por ahora aleatorio para evitar sesgo
+
             if not driver:
-                raise ValueError("No hay repartidores disponibles en este momento.")
+                logger.warning(f"DELIVERY: No hay repartidores disponibles para el servicio {service_id}")
+                return None
         else:
             driver = get_object_or_404(Driver, id=driver_id)
 
@@ -77,6 +83,20 @@ class DeliveryLogisticService:
             service.vehicle = vehicle
             service.delivery_company = driver.delivery_company
             service.status = DeliveryService.Status.LISTO_DESPACHO
+
+            # Asignación de Ruta (Si no tiene una asignada)
+            if not service.ruta:
+                from .models import Ruta
+                # Buscar ruta activa en la zona o crear una nueva
+                ruta = Ruta.objects.filter(zona=service.origin_address[:20], activa=True).first()
+                if not ruta:
+                    ruta = Ruta.objects.create(
+                        nombre=f"Ruta {service.origin_address[:20]}",
+                        zona=service.origin_address[:20],
+                        repartidor=driver
+                    )
+                service.ruta = ruta
+
             service.save()
 
             driver.is_available = False
@@ -85,7 +105,7 @@ class DeliveryLogisticService:
             DeliveryEvent.objects.create(
                 service=service,
                 event_type="ASSIGNED",
-                description=f"Repartidor {driver.user.username} asignado."
+                description=f"Repartidor {driver.user.username if driver.user else 'N/A'} asignado."
             )
 
             self._propagate_erp_impact(service, "DELIVERY_ASSIGNED")
@@ -273,7 +293,7 @@ class DeliveryLogisticService:
         payload = {
             "company_id": str(service.delivery_company.company.id) if (service.delivery_company and service.delivery_company.company) else None,
             "perfil_id": str(service.provider_id) if service.provider_id else None,
-            "cliente_id": str(service.tourist.id),
+            "cliente_id": str(service.tourist_id),
             "amount": float(service.final_price or service.estimated_price),
             "description": f"Servicio Delivery {service.id} - {event_type}",
             "delivery_service_id": str(service.id),
@@ -288,7 +308,9 @@ class DeliveryLogisticService:
         Ejecuta el pago real desde el monedero del turista al monedero de la empresa/conductor.
         (Fase 18: Desacoplamiento via WalletService sin tocar modelos de wallet).
         """
-        wallet_service = WalletService(user=service.tourist)
+        from api.models import CustomUser
+        tourist = CustomUser.objects.get(id=service.tourist_id)
+        wallet_service = WalletService(user=tourist)
 
         # Determinar el usuario receptor
         target_user = None
