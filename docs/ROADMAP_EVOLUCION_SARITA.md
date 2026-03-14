@@ -23,9 +23,14 @@ Este documento traza la trayectoria estratégica de SARITA desde su concepción 
 *   **Tecnología:** Infraestructura Cloud multiregión, Identidad Digital Global del Viajero, API Planetaria.
 
 ## Fase 5: Red Inteligente Autónoma (2030+)
-*   **Enfoque:** Autogestión del ecosistema turístico mediante IA soberana.
-*   **Hito:** El sistema optimiza el mercado, la logística y la gobernanza de forma autónoma basándose en objetivos de sostenibilidad y desarrollo económico.
-*   **Tecnología:** IA generativa y predictiva descentralizada, contratos inteligentes autónomos de liquidación global.
+*   **Enfoque:** Autogestión y coordinación planetaria del ecosistema turístico.
+*   **Hito:** Red de nodos inteligentes autogestionados operando bajo gobernanza soberana verificable.
+*   **Capacidades:**
+    - Equilibrio dinámico de carga de destinos (DMO Agent).
+    - Liquidación económica instantánea transfronteriza.
+    - Mapa vivo de flujos turísticos planetarios en tiempo real.
+    - Sostenibilidad como motor de optimización core.
+*   **Tecnología:** Redes neuronales distribuidas, Ledger Planetario, Smart Contracts autónomos, SADI Universal (Voz ubicua).
 
 ---
 **Visión Estratégica:** SARITA - Hacia la Inteligencia Turística Total
