@@ -8,3 +8,5 @@ class WalletConfig(AppConfig):
 
     def ready(self):
         import apps.wallet.signals
+        from .handlers import WalletEventHandlers
+        WalletEventHandlers.register_all()

@@ -52,26 +52,10 @@ class AccountingEngine:
     @transaction.atomic
     def post_journal_entry(entry, responsible_user=None):
         """
-        Realiza la contabilización definitiva de un asiento.
+        Realiza la contabilización definitiva de un asiento delegando al LedgerEngine real.
         """
-        if entry.is_posted:
-            raise ValidationError("El asiento ya ha sido contabilizado.")
-
-        # Validaciones de Integridad
-        AccountingEngine.validate_balance(entry)
-
-        # Lógica Multi-moneda: Normalización a moneda base si aplica
-        if hasattr(entry, 'currency') and entry.currency != 'COP':
-            logger.info(f"Procesando asiento en moneda extranjera: {entry.currency}")
-            # Aquí iría la lógica de conversión usando el engine de global_orchestration si está disponible
-
-        entry.is_posted = True
-        entry.save()
-
-        logger.info(f"Asiento {entry.id} posteado exitosamente.")
-
-        # Registro en Auditoría (AuditEngine será llamado aquí o vía señales)
-        return entry
+        from .accounting.ledger_engine import LedgerEngine
+        return LedgerEngine.post_entry(entry.id)
 
     @staticmethod
     def create_intercompany_entry(origin_tenant, destination_tenant, amount, currency, concept):

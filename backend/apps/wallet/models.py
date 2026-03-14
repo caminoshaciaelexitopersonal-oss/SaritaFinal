@@ -24,7 +24,7 @@ class Wallet(models.Model):
         AUDITORIA = "AUDITORIA", _("En Proceso de Auditoría")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sarita_wallets')
+    user_id = models.IntegerField(null=True, blank=True, help_text="ID del CustomUser (aislamiento DB)")
 
     owner_type = models.CharField(max_length=20, choices=OwnerType.choices)
     owner_id = models.CharField(max_length=255, help_text="ID del perfil de negocio o usuario")
@@ -43,6 +43,11 @@ class Wallet(models.Model):
         verbose_name = _("Monedero")
         verbose_name_plural = _("Monederos")
         unique_together = ('owner_type', 'owner_id')
+
+    @property
+    def user(self):
+        from api.models import CustomUser
+        return CustomUser.objects.filter(id=self.user_id).first()
 
     def __str__(self):
         return f"Wallet {self.owner_type} - {self.owner_id} ({self.saldo_disponible})"
@@ -134,7 +139,7 @@ class WalletReversion(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     transaccion_original = models.ForeignKey(WalletTransaccion, on_delete=models.PROTECT, related_name='reversiones')
     motivo = models.TextField()
-    autorizado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    autorizado_por_id = models.IntegerField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class WalletAuditoria(models.Model):

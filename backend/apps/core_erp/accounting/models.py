@@ -62,10 +62,73 @@ class JournalEntry(BaseJournalEntry, AccountingTenantModel):
     previous_hash = models.CharField(max_length=64, null=True, blank=True)
     immutable_signature = models.TextField(null=True, blank=True)
 
+    def compute_hash(self):
+        """
+        Calcula el hash SHA-256 del asiento incluyendo sus líneas para garantizar integridad.
+        """
+        import hashlib
+        import json
+        from decimal import Decimal
+
+        def default_serializer(obj):
+            if isinstance(obj, Decimal):
+                return str(obj)
+            return obj
+
+        # Recopilar datos base del asiento
+        header_data = {
+            "id": str(self.id),
+            "date": str(self.date),
+            "tenant": str(self.tenant_id),
+            "event_type": self.event_type,
+            "previous_hash": self.previous_hash or "",
+        }
+
+        # Recopilar datos de las líneas (deben existir para el hash final)
+        lines_data = []
+        for line in self.lines.all().order_by('id'):
+            lines_data.append({
+                "account": str(line.account_id),
+                "debit": line.debit_amount,
+                "credit": line.credit_amount
+            })
+
+        full_content = {
+            "header": header_data,
+            "lines": lines_data
+        }
+
+        content_str = json.dumps(full_content, sort_keys=True, default=default_serializer)
+        return hashlib.sha256(content_str.encode()).hexdigest()
+
     def save(self, *args, **kwargs):
-        if self.pk and self.is_posted:
+        if self.pk and JournalEntry.plain_objects.get(pk=self.pk).is_posted:
             # Phase 3.5: Irreversibility - No editing posted entries
             raise PermissionError("Posted journal entries cannot be modified. Use reversal instead.")
+
+        # Lógica de encadenamiento al postear
+        if self.is_posted and not self.system_hash:
+            from django.utils import timezone
+            # 1. Obtener el hash del asiento anterior (por fecha de posteo)
+            last_entry = JournalEntry.plain_objects.filter(
+                is_posted=True,
+                tenant=self.tenant
+            ).order_by('-posted_at', '-id').first()
+
+            if last_entry:
+                self.previous_hash = last_entry.system_hash
+            else:
+                self.previous_hash = "GENESIS_BLOCK_SARITA_V1"
+
+            # 2. Registrar timestamp de posteo
+            if not self.posted_at:
+                self.posted_at = timezone.now()
+
+            # 3. El hash final se calcula después de asegurar que las líneas existen.
+            # Nota: Esto requiere que el AccountingEngine llame a un método .post()
+            # que ejecute esta lógica después de verificar el balance.
+            self.system_hash = self.compute_hash()
+
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):

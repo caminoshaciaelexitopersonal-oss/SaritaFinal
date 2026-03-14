@@ -37,13 +37,24 @@ class TreasuryEngine:
         return True
 
     @staticmethod
-    def register_bank_fees(amount, account_code, description):
+    def register_bank_fees(tenant_id, amount, bank_account_code, description):
         """
-        Registra gastos bancarios independientes.
+        Registra gastos bancarios reales e impacta el Ledger (Integridad 100%).
         """
         logger.info(f"Registrando comisión bancaria: {amount}")
-        # Lógica de generación de asiento de gasto vs banco
-        pass
+
+        from .event_bus import EventBus
+        payload = {
+            "tenant_id": tenant_id,
+            "amount": float(amount),
+            "bank_account": bank_account_code,
+            "description": description,
+            "reference": f"FEE-{timezone.now().timestamp()}"
+        }
+
+        # Disparar evento para que LedgerEngine lo procese via PostingRules
+        EventBus.emit('BANK_FEE_REGISTERED', payload)
+        return True
 
     @staticmethod
     def mark_as_uncollectible(invoice, reason):

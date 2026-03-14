@@ -251,6 +251,7 @@ class VoiceOrchestrator:
         }
 
         # Iniciamos la misión asíncrona
+        from apps.sarita_agents.orchestrator import sarita_orchestrator
         mision = sarita_orchestrator.start_mission(directive)
         sarita_orchestrator.execute_mission(mision.id)
 
