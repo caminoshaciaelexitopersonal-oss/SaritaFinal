@@ -20,7 +20,7 @@ from operator import attrgetter
 from django.db.models.functions import TruncDay
 from django.db.models import Count
 from .models import (
-    CustomUser,
+    CustomUser, GovernmentProfile, TouristProfile, DeliveryProfile, BusinessUserProfile,
     # CategoriaPrestador fue movido a gestion_operativa
     ImagenGaleria,
     ImagenArtesano,
@@ -117,9 +117,15 @@ from .serializers import (
     # GuardarVerificacionSerializer,
     CapacitacionDetailSerializer,
     RegistrarAsistenciaSerializer,
+    GovernmentProfileSerializer,
+    TouristProfileSerializer,
+    DeliveryProfileSerializer,
+    BusinessUserSerializer,
+    BusinessProfileSerializer,
 )
 from django.utils import timezone
 from datetime import timedelta
+from apps.turismo.models.provider_models import TourismProvider
 from .permissions import (
     IsTurista,
     IsAdminOrFuncionario,

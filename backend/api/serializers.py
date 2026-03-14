@@ -3,7 +3,8 @@ from rest_framework import serializers
 # from apps.prestadores.models import CategoriaPrestador
 from apps.turismo.models.provider_models import TourismProvider
 from .models import (
-    CustomUser, ImagenGaleria, ImagenArtesano, Publicacion,
+    CustomUser, GovernmentProfile, TouristProfile, DeliveryProfile, BusinessUserProfile,
+    ImagenGaleria, ImagenArtesano, Publicacion,
     ConsejoConsultivo, AtractivoTuristico, ImagenAtractivo, RutaTuristica, ImagenRutaTuristica, ElementoGuardado, ContentType,
     Video, ContenidoMunicipio, AgentTask, SiteConfiguration, MenuItem,
     HomePageComponent, AuditLog, PaginaInstitucional, ImagenPaginaInstitucional, HechoHistorico, Artesano, RubroArtesano,

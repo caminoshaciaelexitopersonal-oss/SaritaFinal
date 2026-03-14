@@ -272,6 +272,8 @@ gettext = lambda s: s
 LANGUAGES = (
     ("es", gettext("Español")),
     ("en", gettext("English")),
+    ("pt", gettext("Português")),
+    ("fr", gettext("Français")),
 )
 MODELTRANSLATION_DEFAULT_LANGUAGE = "es"
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = "es"
