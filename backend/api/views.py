@@ -727,6 +727,52 @@ class AdminUsuarioListView(generics.ListAPIView):
     serializer_class = UsuarioListSerializer
     permission_classes = [IsAdminOrFuncionario]
 
+
+class GovernmentProfileViewSet(viewsets.ModelViewSet):
+    queryset = GovernmentProfile.objects.all()
+    serializer_class = GovernmentProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        # Flujo 1-3: El directivo crea al funcionario
+        serializer.save(created_by=self.request.user)
+
+
+class TouristProfileViewSet(viewsets.ModelViewSet):
+    queryset = TouristProfile.objects.all()
+    serializer_class = TouristProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class DeliveryProfileViewSet(viewsets.ModelViewSet):
+    queryset = DeliveryProfile.objects.all()
+    serializer_class = DeliveryProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class BusinessProfileViewSet(viewsets.ModelViewSet):
+    """
+    Endpoint para ver la lista de Prestadores (Empresas)
+    """
+    queryset = TourismProvider.objects.all()
+    serializer_class = BusinessUserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class BusinessStaffViewSet(viewsets.ModelViewSet):
+    """
+    Endpoint para gestionar el personal de los negocios (Vía 2)
+    """
+    queryset = BusinessUserProfile.objects.all()
+    serializer_class = BusinessProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == CustomUser.Role.BUSINESS_OWNER:
+            return BusinessUserProfile.objects.filter(provider__owner=user)
+        return BusinessUserProfile.objects.all()
+
 class RubroArtesanoListView(generics.ListAPIView):
     queryset = RubroArtesano.objects.all()
     serializer_class = RubroArtesanoSerializer

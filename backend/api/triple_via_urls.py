@@ -1,6 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .api.views import GovernmentProfileViewSet, TouristProfileViewSet, DeliveryProfileViewSet, BusinessProfileViewSet, UserViewSet, BusinessStaffViewSet
+from .views import (
+    GovernmentProfileViewSet, TouristProfileViewSet, DeliveryProfileViewSet,
+    BusinessProfileViewSet, BusinessStaffViewSet
+)
 
 router = DefaultRouter()
 router.register(r'government', GovernmentProfileViewSet, basename='government-via')
