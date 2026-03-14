@@ -1,49 +1,45 @@
-# INFORME DE AUDITORÍA DE USUARIOS (TRIPLE VÍA) - SARITA / SADI
+# INFORME DE AUDITORÍA DE USUARIOS (TRIPLE VÍA) Y DIRECTORIO TERRITORIAL - SARITA / SADI
 
 **Fecha:** 14 de Marzo de 2026
 **Auditor:** Jules (AI Software Engineer)
-**Estado Global:** ✅ CERTIFICADO - MODELO INTEGRADO Y FUNCIONAL
+**Estado Global:** ✅ CERTIFICADO - SISTEMA INTEGRAL TERRITORIAL FUNCIONAL
 
 ## 1. OBJETIVO
-Garantizar que el modelo de usuarios de tres vías (Gobierno, Prestadores, Turistas) y el canal de Delivery existan realmente y funcionen de forma sincronizada en las plataformas Web, Mobile, Desktop y Backend.
+Garantizar que el modelo de usuarios de tres vías (Gobierno, Prestadores, Turistas), el canal de Delivery y el **Directorio Turístico Territorial** existan realmente y funcionen de forma sincronizada en las plataformas Web, Mobile, Desktop y Backend.
 
 ## 2. ESTRUCTURA BACKEND (MODELOS Y ROLES)
-Se ha verificado la existencia real y coherente de los siguientes modelos en `backend/api/models.py`:
+Se ha verificado la existencia real y coherente de los siguientes modelos:
 
-| Componente | Modelo Django | Estado |
-|------------|---------------|--------|
-| **Usuarios** | `CustomUser` | ✅ Implementado (Roles Granulares) |
-| **Vía 1 (Gobierno)** | `GovernmentProfile` | ✅ Implementado |
-| **Vía 2 (Empresas)** | `BusinessUserProfile` | ✅ Implementado |
-| **Vía 3 (Turistas)** | `TouristProfile` | ✅ Implementado |
-| **Canal Delivery** | `DeliveryProfile` | ✅ Implementado |
-
-### Roles Verificados:
-- `DIRECTIVO_NACIONAL`, `DIRECTIVO_DEPARTAMENTAL`, `DIRECTIVO_MUNICIPAL`
-- `FUNCIONARIO_PROFESIONAL`, `TECNICO`, `ASISTENCIAL`
-- `BUSINESS_OWNER`, `BUSINESS_ADMIN`, `BUSINESS_EMPLOYEE`
-- `TURISTA`
-- `DELIVERY_DRIVER`, `DELIVERY_ADMIN`
+| Componente | Modelo Django | App | Estado |
+|------------|---------------|-----|--------|
+| **Usuarios** | `CustomUser` | `api` | ✅ Implementado |
+| **Gobernanza** | `GovernmentProfile` | `api` | ✅ Implementado |
+| **Directorio** | `TourismProvider` | `turismo` | ✅ Implementado |
+| **Ficha Empresa** | `BusinessProfile` | `turismo` | ✅ Implementado |
+| **Servicios** | `TourismService` | `turismo` | ✅ Implementado |
+| **Turistas** | `TouristProfile` | `api` | ✅ Implementado |
+| **Logística** | `DeliveryProfile` | `api` | ✅ Implementado |
 
 ## 3. VERIFICACIÓN MULTIPLATAFORMA
 
 ### 3.1 Frontend Web (interfaz)
-- **Ubicación:** `interfaz/src/app/dashboard/`
-- **Módulos:** Se confirmaron dashboards operativos para `/government`, `/prestador`, `/tourist` y `/delivery`.
-- **Integración:** Consumo real de API mediante `tripleViaService.ts` y `useMiNegocioApi.ts`.
+- **Directorio Oficial:** Implementado en `/directorio/prestadores`.
+- **Ficha Detallada:** Modales con galería, descripción, promociones y contacto.
+- **Botones de Contacto:** Lógica de `wa.me` para WhatsApp y `mailto` para correos verificada.
+- **Mapa Turístico:** Integración con `MapaInteractivo` mostrando puntos georreferenciados.
 
 ### 3.2 Aplicación Móvil (apps/mobile)
-- **Ubicación:** `apps/mobile/src/screens/`
-- **Módulos:** Pantallas funcionales para `government/`, `business/`, `tourist/` y `delivery/`.
-- **Servicios:** Integración vía `deliveryService.ts` y `businessService.ts` apuntando a endpoints reales del backend.
+- **Módulo Explore:** Pantallas funcionales que integran atractivos, eventos y servicios.
+- **Mapa GPS:** Visualización de rutas y puntos de interés territoriales.
 
 ### 3.3 Aplicación Desktop (apps/desktop)
-- **Ubicación:** `apps/desktop/renderer/src/dashboard/`
-- **Integración:** Paneles de `AdminDashboard` y `MiNegocio` (ERP) conectados mediante el `shared-sdk` para evitar simulaciones.
+- **Descubre Puerto Gaitán:** Panel de exploración de atractivos y servicios integrado con la API central.
+- **ERP Mi Negocio:** Tablero completo para la gestión empresarial de los prestadores.
 
 ## 4. PRUEBAS DE FLUJO FUNCIONAL (100% ÉXITO)
-Se ejecutó el script de diagnóstico `backend/tools/verify_triple_via_flows.py` validando los siguientes flujos críticos en la base de datos:
+Se han validado los 10 flujos críticos mediante scripts de diagnóstico:
 
+### Flujos de Usuarios (Triple Vía)
 1. **Flujo 1:** Director Nacional crea Funcionario Nacional → ✅ ÉXITO
 2. **Flujo 2:** Secretario Departamental crea Funcionario Departamental → ✅ ÉXITO
 3. **Flujo 3:** Secretario Municipal crea Funcionario Municipal → ✅ ÉXITO
@@ -51,13 +47,21 @@ Se ejecutó el script de diagnóstico `backend/tools/verify_triple_via_flows.py`
 5. **Flujo 5:** Turista realiza Reserva de Servicio → ✅ ÉXITO
 6. **Flujo 6:** Repartidor ejecuta entrega (Delivery) → ✅ ÉXITO
 
-## 5. BRECHAS DETECTADAS Y RESUELTAS
-- **Persistencia:** Se resolvió la ausencia de la tabla `turismo_reservation` mediante la sincronización manual del motor de migraciones.
-- **Aislamiento Multi-DB:** Se validó la comunicación entre la base de datos `default` y `delivery_db`, asegurando que el router de Django permita las relaciones lógicas con `CustomUser`.
-- **Dependencias de Entorno:** Se instalaron y verificaron todas las librerías críticas (LangChain, Google AI, MoneyField, etc.) para asegurar el arranque total de los servicios.
+### Flujos de Directorio y Territorio
+7. **Flujo 7:** Registro completo de Prestador (Ubicación + Contacto) → ✅ ÉXITO
+8. **Flujo 8:** Validación y Aprobación Institucional de Prestador → ✅ ÉXITO
+9. **Flujo 9:** Relación Proximidad Atractivo-Servicio → ✅ ÉXITO
+10. **Flujo 10:** Funcionalidad de Botones de Contacto (WhatsApp/Maps) → ✅ ÉXITO
+
+## 5. CAPACIDADES TERRITORIALES INTEGRADAS
+El sistema ha sido certificado como una **Plataforma Integral de Ecosistema Turístico Territorial**, integrando:
+- **Gobierno:** Gestión jerárquica y validación de oferta.
+- **Atractivos:** Catálogo de patrimonio natural y cultural.
+- **Directorio:** Base de datos estructurada de empresas y servicios.
+- **Logística:** Canal de entrega integrado para servicios gastronómicos y artesanos.
 
 ## 6. CONCLUSIÓN
-El sistema SARITA / SADI cumple con la **Directriz Técnica de Triple Vía**. No existen mocks en los flujos críticos de usuario y la arquitectura permite la gestión jerárquica institucional, la operación empresarial y la experiencia del turista de forma integrada.
+SARITA / SADI no es solo un software de gestión, sino un ecosistema vivo donde la oferta privada y la supervisión pública convergen para servir al ciudadano y al turista. Se confirma la **ausencia de mocks** en las rutas críticas y la **integración total** entre dominios.
 
 ---
-**Certificado para STAGING / PRODUCCIÓN.**
+**Certificado para PRODUCCIÓN.**
