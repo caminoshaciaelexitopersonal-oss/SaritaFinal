@@ -87,6 +87,7 @@ class CustomUser(AbstractUser):
         DIRECTIVO_MUNICIPAL = "DIRECTIVO_MUNICIPAL", _("Directivo Municipal")
         FUNCIONARIO_DIRECTIVO = "FUNCIONARIO_DIRECTIVO", _("Funcionario Directivo")
         FUNCIONARIO_PROFESIONAL = "FUNCIONARIO_PROFESIONAL", _("Funcionario Profesional")
+        FUNCIONARIO_TECNICO = "FUNCIONARIO_TECNICO", _("Funcionario Técnico")
         FUNCIONARIO_ASISTENCIAL = "FUNCIONARIO_ASISTENCIAL", _("Funcionario Asistencial")
 
         # --- Vía 2: Prestadores de Servicios ---

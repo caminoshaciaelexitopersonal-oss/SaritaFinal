@@ -7,8 +7,6 @@ class ApiConfig(AppConfig):
 
     def ready(self):
         # Importar las señales para que se registren correctamente en la aplicación
-        print("DEBUG: Antes de importar api.signals")
-        print("DEBUG: Antes de importar api.signals")
-        print("DEBUG: Después de importar api.signals")
-        import api.signals
-        print("DEBUG: Después de importar api.signals")
+        import sys
+        if 'makemigrations' not in sys.argv:
+            import api.signals

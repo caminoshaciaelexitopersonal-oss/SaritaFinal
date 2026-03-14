@@ -434,15 +434,48 @@ class UserViewSet(viewsets.ModelViewSet):
         if user.role == CustomUser.Role.ADMIN:
             return CustomUser.objects.all()
 
+        # Roles base visibles para funcionarios y gestores
         allowed_roles_to_view = [
             CustomUser.Role.PRESTADOR,
             CustomUser.Role.ARTESANO,
             CustomUser.Role.TURISTA,
+            CustomUser.Role.DELIVERY_DRIVER,
         ]
-        # Un funcionario puede ver los roles permitidos Y a sí mismo
-        return CustomUser.objects.filter(
-            Q(role__in=allowed_roles_to_view) | Q(pk=user.pk)
-        )
+
+        # Filtro inicial: Roles públicos y el propio usuario
+        queryset = CustomUser.objects.filter(Q(role__in=allowed_roles_to_view) | Q(pk=user.pk))
+
+        # --- Jerarquía Gubernamental (Vía 1) ---
+        if hasattr(user, 'government_profile'):
+            profile = user.government_profile
+            # Directivos pueden ver funcionarios de su misma entidad
+            if user.role in [
+                CustomUser.Role.DIRECTIVO_NACIONAL,
+                CustomUser.Role.DIRECTIVO_DEPARTAMENTAL,
+                CustomUser.Role.DIRECTIVO_MUNICIPAL
+            ]:
+                subordinate_roles = [
+                    CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+                    CustomUser.Role.FUNCIONARIO_TECNICO,
+                    CustomUser.Role.FUNCIONARIO_ASISTENCIAL,
+                ]
+                queryset |= CustomUser.objects.filter(
+                    role__in=subordinate_roles,
+                    government_profile__entity=profile.entity
+                )
+
+            # Admins de nivel superior pueden ver niveles inferiores
+            if user.role == CustomUser.Role.DIRECTIVO_NACIONAL:
+                queryset |= CustomUser.objects.filter(role=CustomUser.Role.DIRECTIVO_DEPARTAMENTAL)
+            if user.role == CustomUser.Role.DIRECTIVO_DEPARTAMENTAL:
+                queryset |= CustomUser.objects.filter(role=CustomUser.Role.DIRECTIVO_MUNICIPAL)
+
+        # --- Jerarquía Empresarial (Vía 2) ---
+        if hasattr(user, 'business_user_profile') and user.role == CustomUser.Role.BUSINESS_OWNER:
+            provider = user.business_user_profile.provider
+            queryset |= CustomUser.objects.filter(business_user_profile__provider=provider)
+
+        return queryset.distinct()
 
 # class AdminPrestadorViewSet(viewsets.ModelViewSet):
 #     queryset = ProviderProfile.objects.all()

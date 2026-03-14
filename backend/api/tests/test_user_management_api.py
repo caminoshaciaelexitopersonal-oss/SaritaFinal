@@ -10,6 +10,7 @@ class UserManagementAPITests(APITestCase):
     Pruebas para el endpoint de gestión de usuarios (/api/admin/users/).
     Verifica los permisos granulares para roles ADMIN y FUNCIONARIO.
     """
+    databases = {'default', 'wallet_db', 'delivery_db'}
 
     def setUp(self):
         # --- Crear usuarios con diferentes roles ---
