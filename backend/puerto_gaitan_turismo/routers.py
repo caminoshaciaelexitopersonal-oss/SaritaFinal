@@ -22,13 +22,14 @@ class DatabaseRouter:
         if obj1._meta.app_label == obj2._meta.app_label:
             return True
 
-        # Excepción: Permitir relaciones con 'api' (CustomUser) que está en default
-        # Nota: Django no soporta FKs reales entre bases de datos distintas en la mayoría de motores.
-        # En SQLite esto causará errores si no se maneja con cuidado.
-        # Sin embargo, para aislamiento lógico seguimos esta directriz.
-        if obj1._meta.app_label in ['wallet', 'delivery'] and obj2._meta.app_label == 'api':
+        # Excepción: Permitir relaciones con 'api' y 'companies' que están en default
+        if obj1._meta.app_label in ['wallet', 'delivery'] and obj2._meta.app_label in ['api', 'companies']:
             return True
-        if obj2._meta.app_label in ['wallet', 'delivery'] and obj1._meta.app_label == 'api':
+        if obj2._meta.app_label in ['wallet', 'delivery'] and obj1._meta.app_label in ['api', 'companies']:
+            return True
+
+        # Permitir relaciones generales con default
+        if obj1._state.db == 'default' or obj2._state.db == 'default':
             return True
 
         return None

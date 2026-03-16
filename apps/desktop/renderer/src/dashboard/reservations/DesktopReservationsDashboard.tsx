@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ReservationTable, ReservationForm, Text, Button, KPIWidget } from '@sarita/shared-ui';
+import { ReservationTable, ReservationForm, Text, Button, KPIWidget, ReportTable } from '@sarita/shared-ui';
 import { ReservationService, ReservationData } from '@sarita/shared-sdk';
 
 export const DesktopReservationsDashboard = () => {
@@ -10,14 +10,20 @@ export const DesktopReservationsDashboard = () => {
   const fetchReservations = async () => {
     setLoading(true);
     try {
-      // Mock data for ERP Desktop consistency
-      const data: ReservationData[] = [
-        { id: '101', client: 'Andrés Villamil', service: 'Cabaña Familiar', startDate: '2026-03-15', endDate: '2026-03-18', status: 'EN_CURSO', price: '$850,000' },
-        { id: '102', client: 'Marina Silva', service: 'Parque Nacional', startDate: '2026-03-22', endDate: '2026-03-22', status: 'CONFIRMADA', price: '$220,000' }
-      ];
-      setReservations(data);
+      const data = await ReservationService.getReservations();
+      // Transformación de datos para ReportTable si es necesario
+      const formattedData: ReservationData[] = data.map((r: any) => ({
+        id: r.id,
+        client: r.customer_name || 'Turista',
+        service: r.service_name || 'Servicio',
+        startDate: r.start_date,
+        endDate: r.end_date,
+        status: r.status,
+        price: `$${r.total_price}`
+      }));
+      setReservations(formattedData);
     } catch (err) {
-      console.error(err);
+      console.error('Desktop Reservations Error:', err);
     } finally {
       setLoading(false);
     }

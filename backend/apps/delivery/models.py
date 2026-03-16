@@ -6,16 +6,21 @@ from django.utils.translation import gettext_lazy as _
 class DeliveryCompany(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
-    company = models.OneToOneField('companies.Company', on_delete=models.CASCADE, related_name='delivery_profile')
+    company_id = models.UUIDField(unique=True, null=True, blank=True, help_text="ID de la Company (aislamiento DB)")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def company(self):
+        from apps.companies.models import Company
+        return Company.objects.filter(id=self.company_id).first()
 
     def __str__(self):
         return self.name
 
 class Driver(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='driver_profile')
+    user_id = models.IntegerField(unique=True, null=True, blank=True, help_text="ID del CustomUser (aislamiento DB)")
     delivery_company = models.ForeignKey(DeliveryCompany, on_delete=models.CASCADE, related_name='drivers')
     license_number = models.CharField(max_length=100)
     is_available = models.BooleanField(default=True)
@@ -107,6 +112,11 @@ class DeliveryService(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def driver_user(self):
+        from api.models import CustomUser
+        return CustomUser.objects.filter(id=self.user_id).first()
 
     @property
     def tourist(self):

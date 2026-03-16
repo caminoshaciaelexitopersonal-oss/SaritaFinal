@@ -22,7 +22,7 @@ class Vehicle(TenantAwareModel):
     placa = models.CharField(_("Placa"), max_length=10, unique=True)
     modelo_ano = models.PositiveIntegerField(_("Modelo (Año)"))
     tipo_vehiculo = models.CharField(_("Tipo"), max_length=50) # Ej: Van, Bus
-    capacidad = models.PositiveSmallIntegerField(_("Capacidad de Pasajeros"))
+    capacidad = models.PositiveSmallIntegerField(_("Capacidad de Pasajeros"), default=1)
     status = models.CharField(_("Estado"), max_length=20, choices=VehicleStatus.choices, default=VehicleStatus.AVAILABLE)
 
     # Campos de cumplimiento
