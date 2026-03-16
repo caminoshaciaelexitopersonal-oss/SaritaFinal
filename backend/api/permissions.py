@@ -102,16 +102,45 @@ class IsAdminOrFuncionarioForUserManagement(BasePermission):
             return True
 
         # Los funcionarios pueden listar, pero el filtrado se hace en la vista.
-        if view.action == 'list':
+        if view.action in ['list', 'retrieve']:
             return True
 
         # Para crear, los funcionarios solo pueden crear roles de menor jerarquía
         if view.action == 'create':
             target_role = request.data.get('role')
-            allowed_target_roles = [
+
+            # Jerarquía Gubernamental
+            if user.role == CustomUser.Role.DIRECTIVO_NACIONAL:
+                 allowed_target_roles = [
+                     CustomUser.Role.DIRECTIVO_DEPARTAMENTAL,
+                     CustomUser.Role.DIRECTIVO_MUNICIPAL,
+                     CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+                     CustomUser.Role.FUNCIONARIO_TECNICO,
+                     CustomUser.Role.FUNCIONARIO_ASISTENCIAL,
+                 ]
+            elif user.role == CustomUser.Role.DIRECTIVO_DEPARTAMENTAL:
+                 allowed_target_roles = [
+                     CustomUser.Role.DIRECTIVO_MUNICIPAL,
+                     CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+                     CustomUser.Role.FUNCIONARIO_TECNICO,
+                     CustomUser.Role.FUNCIONARIO_ASISTENCIAL,
+                 ]
+            elif user.role == CustomUser.Role.DIRECTIVO_MUNICIPAL:
+                 allowed_target_roles = [
+                     CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+                     CustomUser.Role.FUNCIONARIO_TECNICO,
+                     CustomUser.Role.FUNCIONARIO_ASISTENCIAL,
+                 ]
+            else:
+                 allowed_target_roles = []
+
+            # Roles Base siempre permitidos para directivos/funcionarios
+            allowed_target_roles += [
                 CustomUser.Role.PRESTADOR,
                 CustomUser.Role.ARTESANO,
                 CustomUser.Role.TURISTA,
+                CustomUser.Role.DELIVERY_DRIVER,
+                CustomUser.Role.BUSINESS_OWNER
             ]
             return target_role in allowed_target_roles
 

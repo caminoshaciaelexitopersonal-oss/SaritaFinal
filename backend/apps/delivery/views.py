@@ -39,10 +39,14 @@ class DeliveryServiceViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_superuser:
             return DeliveryService.objects.all()
+
+        # Check if user has any delivery-related role
+        is_delivery_role = user.role in ['DELIVERY', 'DELIVERY_ADMIN', 'DELIVERY_DRIVER', 'DELIVERY_OPERATOR']
+
         if user.role == 'TURISTA':
-            return DeliveryService.objects.filter(tourist=user)
-        if user.role == 'DELIVERY' or user.role == 'PRESTADOR':
-            return DeliveryService.objects.all() # Para simplificar visibilidad en dashboard prestador
+            return DeliveryService.objects.filter(tourist_id=user.id)
+        if is_delivery_role or user.role == 'PRESTADOR':
+            return DeliveryService.objects.all() # For visibility in dashboards
         return DeliveryService.objects.none()
 
     @action(detail=False, methods=['get'])

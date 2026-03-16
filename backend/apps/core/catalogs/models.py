@@ -50,7 +50,7 @@ class Vehicle(BaseModel):
 
     model_name = models.CharField(_("Modelo"), max_length=100)
     vehicle_type = models.CharField(_("Tipo"), max_length=20, choices=VehicleType.choices)
-    capacity_max = models.PositiveIntegerField(_("Capacidad Máxima"))
+    capacity_max = models.PositiveIntegerField(_("Capacidad Máxima"), default=1)
 
     def __str__(self):
         return f"{self.model_name} ({self.get_vehicle_type_display()})"

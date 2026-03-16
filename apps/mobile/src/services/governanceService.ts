@@ -6,6 +6,10 @@ import { api } from './api';
  */
 
 export const governanceService = {
+  // Triple Via - Officials
+  getOfficials: () => api.get('/government/'),
+  createOfficial: (data: any) => api.post('/government/', data),
+
   // Gemelo Digital y Simulación
   getDigitalTwin: (destinationId: string) => api.get(`/governance/digital-twin/${destinationId}/`),
   runSimulation: (scenario: string, params: any) => api.post('/governance/simulate/', { scenario, ...params }),

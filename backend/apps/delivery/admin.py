@@ -7,7 +7,7 @@ class DeliveryCompanyAdmin(admin.ModelAdmin):
 
 @admin.register(Driver)
 class DriverAdmin(admin.ModelAdmin):
-    list_display = ('user', 'delivery_company', 'is_available')
+    list_display = ('user_id', 'delivery_company', 'is_available')
 
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):

@@ -24,6 +24,7 @@ from .models import (
     Entity,
     Profile
 )
+import uuid
 from django.db import transaction
 from dj_rest_auth.serializers import LoginSerializer
 from dj_rest_auth.registration.serializers import RegisterSerializer
@@ -193,23 +194,130 @@ class UsuarioListSerializer(serializers.ModelSerializer):
         return obj.get_full_name() or obj.username
 
 
+class GovernmentProfileSerializer(serializers.ModelSerializer):
+    entity_name = serializers.CharField(source='entity.name', read_only=True)
+    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
+
+    class Meta:
+        model = GovernmentProfile
+        fields = '__all__'
+
+
+class TouristProfileSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
+
+    class Meta:
+        model = TouristProfile
+        fields = '__all__'
+
+
+class DeliveryProfileSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
+
+    class Meta:
+        model = DeliveryProfile
+        fields = '__all__'
+
+
+class BusinessProfileSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
+    provider_name = serializers.CharField(source='provider.name', read_only=True)
+
+    class Meta:
+        model = BusinessUserProfile
+        fields = '__all__'
+
+
 class AdminUserSerializer(serializers.ModelSerializer):
+    government_profile = serializers.JSONField(required=False, allow_null=True)
+    business_user_profile = serializers.JSONField(required=False, allow_null=True)
+    tourist_profile = serializers.JSONField(required=False, allow_null=True)
+    delivery_profile = serializers.JSONField(required=False, allow_null=True)
+
     class Meta:
         model = CustomUser
-        fields = ('id', 'username', 'email', 'role', 'password')
+        fields = (
+            'id', 'username', 'email', 'role', 'password',
+            'government_profile', 'business_user_profile', 'tourist_profile', 'delivery_profile'
+        )
         extra_kwargs = {'password': {'write_only': True, 'required': False}}
 
+    @transaction.atomic
     def create(self, validated_data):
+        gov_data = validated_data.pop('government_profile', None)
+        biz_data = validated_data.pop('business_user_profile', None)
+        tourist_data = validated_data.pop('tourist_profile', None)
+        delivery_data = validated_data.pop('delivery_profile', None)
+
+        password = validated_data.pop('password', None)
         user = CustomUser.objects.create_user(**validated_data)
+        if password:
+            user.set_password(password)
+            user.save()
+
+        if gov_data:
+            if isinstance(gov_data.get('entity'), (str, uuid.UUID)):
+                 gov_data['entity'] = Entity.objects.get(pk=gov_data['entity'])
+            GovernmentProfile.objects.create(user=user, **gov_data)
+            # Hierarchical logic: if the creator is also a gov official, assign them as creator
+            request = self.context.get('request')
+            if request and request.user.is_authenticated:
+                 user.government_profile.created_by = request.user
+                 user.government_profile.save()
+        if biz_data:
+            if isinstance(biz_data.get('provider'), (str, int, uuid.UUID)):
+                 from apps.turismo.models.provider_models import TourismProvider
+                 biz_data['provider'] = TourismProvider.objects.get(pk=biz_data['provider'])
+            BusinessUserProfile.objects.create(user=user, **biz_data)
+        if tourist_data:
+            TouristProfile.objects.create(user=user, **tourist_data)
+        if delivery_data:
+            DeliveryProfile.objects.create(user=user, **delivery_data)
+
         return user
 
+    @transaction.atomic
     def update(self, instance, validated_data):
+        gov_data = validated_data.pop('government_profile', None)
+        biz_data = validated_data.pop('business_user_profile', None)
+        tourist_data = validated_data.pop('tourist_profile', None)
+        delivery_data = validated_data.pop('delivery_profile', None)
+
         password = validated_data.pop('password', None)
         instance = super().update(instance, validated_data)
         if password:
             instance.set_password(password)
             instance.save()
+
+        if gov_data:
+            if isinstance(gov_data.get('entity'), (str, uuid.UUID)):
+                 gov_data['entity'] = Entity.objects.get(pk=gov_data['entity'])
+            GovernmentProfile.objects.update_or_create(user=instance, defaults=gov_data)
+        if biz_data:
+            if isinstance(biz_data.get('provider'), (str, int, uuid.UUID)):
+                 from apps.turismo.models.provider_models import TourismProvider
+                 biz_data['provider'] = TourismProvider.objects.get(pk=biz_data['provider'])
+            BusinessUserProfile.objects.update_or_create(user=instance, defaults=biz_data)
+        if tourist_data:
+            TouristProfile.objects.update_or_create(user=instance, defaults=tourist_data)
+        if delivery_data:
+            DeliveryProfile.objects.update_or_create(user=instance, defaults=delivery_data)
+
         return instance
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        # Ensure profiles are serialized properly if they were returned as objects
+        # because JSONField in serializer doesn't automatically serialize models
+        if hasattr(instance, 'government_profile'):
+             ret['government_profile'] = GovernmentProfileSerializer(instance.government_profile).data
+        if hasattr(instance, 'business_user_profile'):
+             ret['business_user_profile'] = BusinessProfileSerializer(instance.business_user_profile).data
+        if hasattr(instance, 'tourist_profile'):
+             ret['tourist_profile'] = TouristProfileSerializer(instance.tourist_profile).data
+        if hasattr(instance, 'delivery_profile'):
+             ret['delivery_profile'] = DeliveryProfileSerializer(instance.delivery_profile).data
+        return ret
 
 
 class SugerenciaSerializer(serializers.ModelSerializer):
@@ -1082,45 +1190,11 @@ class CustomTokenSerializer(serializers.Serializer):
     user = CustomUserDetailSerializer(read_only=True)
 
 
-class GovernmentProfileSerializer(serializers.ModelSerializer):
-    entity_name = serializers.CharField(source='entity.name', read_only=True)
-    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
-
-    class Meta:
-        model = GovernmentProfile
-        fields = '__all__'
-
-
-class TouristProfileSerializer(serializers.ModelSerializer):
-    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
-
-    class Meta:
-        model = TouristProfile
-        fields = '__all__'
-
-
-class DeliveryProfileSerializer(serializers.ModelSerializer):
-    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
-
-    class Meta:
-        model = DeliveryProfile
-        fields = '__all__'
-
-
 class BusinessUserSerializer(serializers.ModelSerializer):
     owner_name = serializers.CharField(source='owner.get_full_name', read_only=True)
 
     class Meta:
         model = TourismProvider
-        fields = '__all__'
-
-
-class BusinessProfileSerializer(serializers.ModelSerializer):
-    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
-    provider_name = serializers.CharField(source='provider.name', read_only=True)
-
-    class Meta:
-        model = BusinessUserProfile
         fields = '__all__'
 
 

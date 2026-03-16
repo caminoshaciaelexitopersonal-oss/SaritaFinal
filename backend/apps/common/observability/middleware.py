@@ -39,11 +39,13 @@ class ObservabilityMiddleware(MiddlewareMixin):
             if request.path.startswith('/api/'):
                 logger.info(
                     f"API Request: {request.method} {request.path} -> {response.status_code} ({duration:.3f}s)",
-                    extra_fields={
-                        "path": request.path,
-                        "method": request.method,
-                        "status_code": response.status_code,
-                        "latency": duration
+                    extra={
+                        "extra_fields": {
+                            "path": request.path,
+                            "method": request.method,
+                            "status_code": response.status_code,
+                            "latency": duration
+                        }
                     }
                 )
 

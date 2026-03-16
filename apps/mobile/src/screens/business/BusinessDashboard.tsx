@@ -9,9 +9,11 @@ export const BusinessDashboard = () => {
   useEffect(() => {
     const fetchBusinessData = async () => {
       try {
-        const response = await businessService.getDashboard();
+        const response = await businessService.getOperativaDashboard();
         setStats(response.data);
-      } catch (error) {}
+      } catch (error) {
+        console.error("Mobile Business Dashboard Error:", error);
+      }
     };
     fetchBusinessData();
   }, []);
@@ -21,9 +23,9 @@ export const BusinessDashboard = () => {
       <Text style={styles.title}>ERP Mi Negocio</Text>
 
       <Card style={styles.mainCard}>
-        <Text style={styles.label}>Ventas del Mes</Text>
-        <Text style={styles.value}>$8.450.000 COP</Text>
-        <View style={styles.badge}><Text style={styles.badgeText}>+15% vs mes anterior</Text></View>
+        <Text style={styles.label}>Ventas Brutas</Text>
+        <Text style={styles.value}>${stats?.total_sales?.toLocaleString() || 0} COP</Text>
+        <View style={styles.badge}><Text style={styles.badgeText}>Flujo Real</Text></View>
       </Card>
 
       <View style={styles.grid}>
@@ -43,8 +45,8 @@ export const BusinessDashboard = () => {
 
       <Text style={styles.sectionTitle}>Operaciones Recientes</Text>
       <Card style={styles.opCard}>
-        <Text style={styles.opTitle}>Nueva Reserva: Safari Río Yucao</Text>
-        <Text style={styles.opStatus}>Pendiente de Confirmación</Text>
+        <Text style={styles.opTitle}>Saldo Monedero</Text>
+        <Text style={[styles.opStatus, { color: '#4f46e5' }]}>${stats?.wallet_balance?.toLocaleString() || 0} Disponible</Text>
       </Card>
     </ScrollView>
   );

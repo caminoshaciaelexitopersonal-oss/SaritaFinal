@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { ReservationCard, Text, Button, StatCard } from '@sarita/shared-ui';
-import { ReservationService, ReservationData } from '@sarita/shared-sdk';
+import { ReservationData } from '@sarita/shared-sdk';
+import { bookingService } from '../../services/bookingService';
 
 export const MobileBookingsScreen = () => {
   const [bookings, setBookings] = useState<ReservationData[]>([]);
@@ -10,14 +11,20 @@ export const MobileBookingsScreen = () => {
   const fetchBookings = async () => {
     setLoading(true);
     try {
-      // Usando mock para la demo de paridad
-      const data: ReservationData[] = [
-        { id: '1', client: 'Carlos Ruiz', service: 'Tour Río Manacacías', startDate: '2026-03-20', endDate: '2026-03-20', status: 'CONFIRMADA', price: '$150,000' },
-        { id: '2', client: 'Elena Gómez', service: 'Hospedaje 2 Noches', startDate: '2026-03-21', endDate: '2026-03-23', status: 'PENDIENTE', price: '$450,000' }
-      ];
-      setBookings(data);
+      const response = await bookingService.getReservations();
+      // Map API data to UI model if needed
+      const mappedData = (response.data.results || []).map((item: any) => ({
+         id: item.id,
+         client: item.customer_name || 'Turista',
+         service: item.service_name || 'Servicio',
+         startDate: item.start_date,
+         endDate: item.end_date,
+         status: item.status,
+         price: `$${item.total_price}`
+      }));
+      setBookings(mappedData);
     } catch (err) {
-      console.error(err);
+      console.error("Mobile Bookings Error:", err);
     } finally {
       setLoading(false);
     }
