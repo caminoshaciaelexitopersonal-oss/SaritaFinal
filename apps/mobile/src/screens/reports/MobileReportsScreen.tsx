@@ -10,27 +10,27 @@ export const MobileReportsScreen = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        // En un entorno real, llamaríamos a ReportingService.getAnalyticsSummary()
-        // Simulamos la respuesta para la paridad funcional
-        const mockData = {
-          kpis: [
-            { label: 'Ingresos Hoy', value: '$1.2M', trend: '+5%', pos: true },
-            { label: 'Ocupación', value: '82%', trend: '+2%', pos: true },
-            { label: 'Alertas', value: '3', trend: '-1', pos: true }
-          ],
-          touristChart: [
-            { label: 'Ene', value: 45 },
-            { label: 'Feb', value: 62 },
-            { label: 'Mar', value: 88 }
-          ],
-          topProviders: [
-            { name: 'Hotel Sol', cat: 'Hospedaje', score: '4.9' },
-            { name: 'EcoPark', cat: 'Aventura', score: '4.7' }
-          ]
-        };
-        setData(mockData);
+        const response = await api.get('/tourism/intelligence/intelligence/economic-impact/');
+        const results = response.data.results || [];
+
+        const kpis = [
+          { label: 'Ventas Totales', value: `$${results[0]?.ventas_totales || 0}`, trend: '+5%', pos: true },
+          { label: 'Ingresos Netos', value: `$${results[0]?.ingresos_turisticos_netos || 0}`, trend: '+2%', pos: true },
+          { label: 'Empleo Gen.', value: results[0]?.empleo_generado_estimado || 0, trend: '+12', pos: true }
+        ];
+
+        const chartData = results.map((r: any) => ({
+          label: r.periodo,
+          value: parseFloat(r.ventas_totales)
+        }));
+
+        setData({
+          kpis,
+          touristChart: chartData,
+          topProviders: [] // Marketplace integration pending
+        });
       } catch (err) {
-        console.error(err);
+        console.error('Mobile Reports Error:', err);
       } finally {
         setLoading(false);
       }
