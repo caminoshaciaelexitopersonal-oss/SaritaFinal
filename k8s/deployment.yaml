@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sarita-backend
+  labels:
+    app: sarita
+    tier: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sarita
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: sarita
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: sarita-backend:latest
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: sarita-secrets
+        - configMapRef:
+            name: sarita-config
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
+        livenessProbe:
+          httpGet:
+            path: /api/v1/infra/health/liveness/
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/v1/infra/health/readiness/
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sarita-frontend
+  labels:
+    app: sarita
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sarita
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: sarita
+        tier: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: sarita-frontend:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sarita-worker
+  labels:
+    app: sarita
+    tier: worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sarita
+      tier: worker
+  template:
+    metadata:
+      labels:
+        app: sarita
+        tier: worker
+    spec:
+      containers:
+      - name: worker
+        image: sarita-backend:latest
+        command: ["celery", "-A", "puerto_gaitan_turismo", "worker", "--loglevel=info", "-P", "gevent", "--concurrency=10"]
+        envFrom:
+        - secretRef:
+            name: sarita-secrets
+        - configMapRef:
+            name: sarita-config
+        resources:
+          requests:
+            cpu: "300m"
+            memory: "512Mi"
+          limits:
+            cpu: "800m"
+            memory: "1024Mi"

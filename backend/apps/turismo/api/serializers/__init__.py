@@ -1,0 +1,2 @@
+# Divipola serializers init
+
