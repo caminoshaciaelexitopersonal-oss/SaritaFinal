@@ -3,6 +3,45 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from apps.turismo.models.provider_models import BaseModel
 
+class ConversationalIntent(BaseModel):
+    """
+    Vía 3: Inteligencia Conversacional.
+    Clasifica las intenciones de los turistas en los chats.
+    """
+    class IntentType(models.TextChoices):
+        SEARCH_HOTEL = 'SEARCH_HOTEL', _('Búsqueda de Alojamiento')
+        SEARCH_FOOD = 'SEARCH_FOOD', _('Búsqueda de Restaurante')
+        BOOKING_REQUEST = 'BOOKING_REQUEST', _('Solicitud de Reserva')
+        PRICING_QUERY = 'PRICING_QUERY', _('Consulta de Precios')
+        HOW_TO_ARRIVE = 'HOW_TO_ARRIVE', _('Consulta de Ubicación/GPS')
+        SERVICE_COMPLAINT = 'SERVICE_COMPLAINT', _('Queja o Reclamo')
+        POSITIVE_FEEDBACK = 'POSITIVE_FEEDBACK', _('Comentario Positivo')
+
+    conversation_id = models.UUIDField(db_index=True)
+    message_id = models.UUIDField(db_index=True)
+    tourist = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    intent = models.CharField(max_length=50, choices=IntentType.choices)
+    confidence_score = models.FloatField(default=0.0)
+    sentiment_score = models.FloatField(default=0.0) # -1.0 a 1.0
+    detected_entities = models.JSONField(default=dict) # Ej: {"destino": "Puerto Gaitán"}
+
+    def __str__(self):
+        return f"{self.intent} ({self.confidence_score})"
+
+class ConversationalKPI(BaseModel):
+    """
+    Indicadores de calidad de respuesta por prestador.
+    """
+    provider = models.ForeignKey('turismo.TourismProvider', on_delete=models.CASCADE, related_name='chat_kpis')
+    avg_response_time_seconds = models.FloatField(default=0.0)
+    response_rate = models.FloatField(default=0.0) # 0.0 a 1.0
+    total_chats = models.PositiveIntegerField(default=0)
+    missed_chats = models.PositiveIntegerField(default=0)
+    period = models.CharField(max_length=20) # YYYY-MM
+
+    class Meta:
+        unique_together = ('provider', 'period')
+
 class TourismDemandForecast(BaseModel):
     """
     Motor de predicción de demanda por destino y categoría.

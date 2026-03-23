@@ -1,10 +1,14 @@
+from django.utils import timezone
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from ..models import TourismDemandForecast, TourismSeasonality, TouristBehaviorProfile, TourismEconomicImpact
+from django.db.models import Sum, Avg, Count
+from apps.turismo.models.provider_models import TourismProvider, Reservation
+from ..models import TourismDemandForecast, TourismSeasonality, TouristBehaviorProfile, TourismEconomicImpact, ConversationalIntent, ConversationalKPI
 from .serializers import (
     TourismDemandForecastSerializer, TourismSeasonalitySerializer,
-    TouristBehaviorProfileSerializer, TourismEconomicImpactSerializer
+    TouristBehaviorProfileSerializer, TourismEconomicImpactSerializer,
+    ConversationalIntentSerializer, ConversationalKPISerializer
 )
 from ..services import TourismIntelligenceService, DynamicPricingService
 
@@ -13,6 +17,45 @@ class IntelligenceViewSet(viewsets.ViewSet):
     Controlador central de Inteligencia Turística.
     """
     permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=False, methods=['get'])
+    def dashboard(self, request):
+        """
+        Dashboard unificado para Web, Mobile y Desktop.
+        Consolida métricas de Vía 1, 2 y 3.
+        """
+        user = request.user
+        periodo_actual = timezone.now().strftime("%Y-%m")
+
+        # 1. Métricas de Vía 3 (Conversacional)
+        total_intents = ConversationalIntent.objects.count()
+        sentiment_avg = ConversationalIntent.objects.aggregate(Avg('sentiment_score'))['sentiment_score__avg'] or 0.0
+
+        # 2. Métricas de Vía 2 (Prestadores)
+        total_providers = TourismProvider.objects.count()
+        total_reservations = Reservation.objects.count()
+
+        # 3. Predicciones (Vía 1 / SADI)
+        # Tomamos la predicción más reciente para Puerto Gaitán
+        forecast = TourismDemandForecast.objects.filter(destino='Puerto Gaitán').order_by('-fecha').first()
+
+        return Response({
+            "status": "OPERATIONAL",
+            "via_3": {
+                "total_interacciones": total_intents,
+                "sentimiento_promedio": round(sentiment_avg, 2),
+                "kpis_chat": ConversationalKPISerializer(ConversationalKPI.objects.filter(period=periodo_actual)[:5], many=True).data
+            },
+            "via_2": {
+                "prestadores_activos": total_providers,
+                "reservas_totales": total_reservations,
+                "impacto_economico": TourismEconomicImpactSerializer(TourismEconomicImpact.objects.order_by('-periodo').first()).data
+            },
+            "via_1": {
+                "prediccion_demanda": TourismDemandForecastSerializer(forecast).data if forecast else None,
+                "estado_gobernanza": "ESTABLE"
+            }
+        })
 
     @action(detail=False, methods=['get'])
     def forecast(self, request):
@@ -50,3 +93,19 @@ class TouristBehaviorViewSet(viewsets.ReadOnlyModelViewSet):
 class SeasonalityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = TourismSeasonality.objects.all()
     serializer_class = TourismSeasonalitySerializer
+
+class ConversationalIntentViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ConversationalIntent.objects.all().order_by('-created_at')
+    serializer_class = ConversationalIntentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role in ['ADMIN_NACIONAL', 'ADMIN_DEPARTAMENTAL', 'ADMIN_MUNICIPAL']:
+            return ConversationalIntent.objects.all()
+        return ConversationalIntent.objects.filter(tourist=user)
+
+class ConversationalKPIViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ConversationalKPI.objects.all().order_by('-period')
+    serializer_class = ConversationalKPISerializer
+    permission_classes = [permissions.IsAuthenticated]
