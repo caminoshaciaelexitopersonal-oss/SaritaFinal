@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models.divipola import Department, Municipality
+from ..models.divipola import Department, Municipality
+from ..models.provider_models import TourismProvider
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:

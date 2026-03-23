@@ -12,7 +12,7 @@ class FacturaElectronica(models.Model):
         RECHAZADA = 'rechazada', 'Rechazada'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    operacion_comercial = models.OneToOneField('domain.OperacionComercial', on_delete=models.CASCADE, related_name='factura')
+    operacion_comercial = models.OneToOneField('domain_business.CommercialOperation', on_delete=models.CASCADE, related_name='factura_electronica')
     cufe = models.CharField(max_length=CUFE_LENGTH, unique=True)
     xml_content = models.TextField()  # Base64 XML DIAN
     pdf_url = models.URLField(blank=True)

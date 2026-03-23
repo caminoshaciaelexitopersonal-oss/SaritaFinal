@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from .serializers import DepartmentSerializer, MunicipalitySerializer
-from .models.divipola import Department, Municipality
+from ..models.divipola import Department, Municipality
 
 class DepartmentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Department.objects.all()
