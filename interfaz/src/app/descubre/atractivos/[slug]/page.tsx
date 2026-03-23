@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 import Slider from 'react-slick';
 import Image from 'next/image';
+import Link from 'next/link';
+import { FiHome, FiCoffee } from 'react-icons/fi';
 
 // Importar los estilos del carrusel
 import "slick-carousel/slick/slick.css";
@@ -120,20 +122,44 @@ export default function AtractivoDetailPage() {
             </div>
           </div>
 
-          {/* Mapa de Ubicación */}
+          {/* Mapa de Ubicación y Servicios Cercanos */}
           <div className="md:col-span-1">
-            <div className="bg-gray-50 p-6 rounded-lg shadow-md sticky top-24">
-              <h3 className="text-lg font-bold text-gray-900">Ubicación</h3>
-              {atractivo.ubicacion_mapa ? (
-                 <div className="mt-4 h-64 bg-gray-300 rounded-md flex items-center justify-center">
-                   <p className="text-gray-600 text-center">
-                     Aquí irá el mapa interactivo. <br/>
-                     Coordenadas: {atractivo.ubicacion_mapa}
-                   </p>
+            <div className="bg-gray-50 p-6 rounded-lg shadow-md sticky top-24 space-y-6">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Ubicación</h3>
+                {atractivo.ubicacion_mapa ? (
+                   <div className="mt-4 h-64 bg-gray-300 rounded-md flex items-center justify-center overflow-hidden">
+                      <iframe
+                        width="100%"
+                        height="100%"
+                        frameBorder="0" style={{ border: 0 }}
+                        src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&q=${atractivo.ubicacion_mapa}`}
+                        allowFullScreen
+                      ></iframe>
+                   </div>
+                ) : (
+                  <p className="mt-4 text-gray-600">Ubicación no especificada.</p>
+                )}
+              </div>
+
+              <div>
+                 <h3 className="text-lg font-bold text-gray-900 border-b pb-2 mb-4">Servicios Cercanos</h3>
+                 <p className="text-sm text-slate-500 italic mb-4">Encuentra los mejores lugares cerca de {atractivo.nombre}.</p>
+                 <div className="space-y-4">
+                    <Link href="/directorio/prestadores?cat=hoteles" className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-indigo-300 transition-all shadow-sm group">
+                       <div className="w-10 h-10 bg-indigo-50 text-indigo-500 rounded-lg flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+                          <FiHome />
+                       </div>
+                       <span className="font-bold text-slate-700">Hoteles</span>
+                    </Link>
+                    <Link href="/directorio/prestadores?cat=restaurantes" className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-indigo-300 transition-all shadow-sm group">
+                       <div className="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-lg flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                          <FiCoffee />
+                       </div>
+                       <span className="font-bold text-slate-700">Restaurantes</span>
+                    </Link>
                  </div>
-              ) : (
-                <p className="mt-4 text-gray-600">Ubicación no especificada.</p>
-              )}
+              </div>
             </div>
           </div>
         </div>
