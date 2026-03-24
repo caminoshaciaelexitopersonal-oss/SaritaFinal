@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import api from '@/services/api';
 import {
   listSocialConversations,
   createSocialConversation,
@@ -23,6 +24,10 @@ export default function SocialSuperAppPage() {
   const [suggestions, setSuggestions] = useState<SocialPreference[]>([]);
   const [messageInput, setMessageInput] = useState('');
   const [newConversationTitle, setNewConversationTitle] = useState('');
+  const [newConversationType, setNewConversationType] = useState<'group' | 'public_room' | 'private_room'>('group');
+  const [newConversationFee, setNewConversationFee] = useState(0);
+  const [newConversationAdultOnly, setNewConversationAdultOnly] = useState(false);
+
   const [receiverId, setReceiverId] = useState('');
   const [selectedGiftId, setSelectedGiftId] = useState('');
   const [loading, setLoading] = useState(false);
@@ -66,6 +71,15 @@ export default function SocialSuperAppPage() {
     }
   };
 
+  const handleJoin = async (id: string): Promise<void> => {
+    try {
+      await api.post(`/social/conversations/${id}/join/`);
+      void loadInitialData();
+    } catch (err: any) {
+      alert(err.response?.data?.detail || 'Error al entrar a la sala.');
+    }
+  }
+
   useEffect(() => {
     void loadInitialData();
   }, []);
@@ -82,8 +96,10 @@ export default function SocialSuperAppPage() {
     if (!newConversationTitle.trim()) return;
     try {
       const created = await createSocialConversation({
-        conversation_type: 'group',
+        conversation_type: newConversationType,
         title: newConversationTitle.trim(),
+        entry_fee: newConversationFee,
+        is_adult_only: newConversationAdultOnly,
       });
       setConversations((prev: SocialConversation[]) => [created, ...prev]);
       setSelectedConversation(created);
@@ -110,6 +126,19 @@ export default function SocialSuperAppPage() {
     }
   };
 
+  const [myProfile, setMyProfile] = useState<SocialPreference | null>(null);
+
+  const loadMyProfile = async () => {
+    try {
+      const { data } = await api.get('/social/preferences/me/');
+      setMyProfile(data);
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    void loadMyProfile();
+  }, []);
+
   const handleSendGift = async (): Promise<void> => {
     if (!canSendGift) return;
     try {
@@ -131,11 +160,24 @@ export default function SocialSuperAppPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold">Vía 3 · Super App Social</h1>
-        <p className="text-sm text-gray-500">
-          Chat real, matching social y regalos integrados con backend SARITA.
-        </p>
+      <header className="flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-bold">Vía 3 · Super App Social & Dating</h1>
+          <p className="text-sm text-gray-500">
+            Chat, Video Citas (18+) y Regalos Económicos integrados.
+          </p>
+        </div>
+        {myProfile && (
+          <div className="bg-white border rounded-lg p-2 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-indigo-100 overflow-hidden">
+               {myProfile.presentation_photo && <img src={myProfile.presentation_photo} alt="Me" className="w-full h-full object-cover" />}
+            </div>
+            <div>
+              <p className="text-xs font-bold">Mi Perfil Dating</p>
+              <p className="text-[10px] text-gray-400">{myProfile.is_dating_active ? '✅ Activo' : '❌ Inactivo'}</p>
+            </div>
+          </div>
+        )}
       </header>
 
       {error && (
@@ -146,30 +188,78 @@ export default function SocialSuperAppPage() {
 
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="border rounded-xl p-4 space-y-3">
-          <h2 className="font-semibold">Conversaciones</h2>
-          <div className="flex gap-2">
+          <h2 className="font-semibold">Salas y Conversaciones</h2>
+          <div className="space-y-2 border-b pb-3 mb-3">
             <input
               value={newConversationTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewConversationTitle(e.target.value)}
-              className="border rounded px-3 py-2 text-sm flex-1"
-              placeholder="Título de conversación"
+              className="border rounded px-3 py-2 text-sm w-full"
+              placeholder="Título de la sala/chat"
             />
-            <button onClick={handleCreateConversation} className="px-3 py-2 text-sm bg-black text-white rounded">
-              Crear
+            <div className="flex gap-2">
+              <select
+                value={newConversationType}
+                onChange={(e: any) => setNewConversationType(e.target.value)}
+                className="border rounded px-2 py-1 text-xs"
+              >
+                <option value="group">Chat Grupal</option>
+                <option value="public_room">Video Cita Pública</option>
+                <option value="private_room">Video Cita Privada</option>
+              </select>
+              {newConversationType === 'private_room' && (
+                <input
+                  type="number"
+                  value={newConversationFee}
+                  onChange={(e) => setNewConversationFee(Number(e.target.value))}
+                  className="border rounded px-2 py-1 text-xs w-20"
+                  placeholder="Tarifa $"
+                />
+              )}
+            </div>
+            <label className="flex items-center gap-2 text-xs">
+              <input
+                type="checkbox"
+                checked={newConversationAdultOnly}
+                onChange={(e) => setNewConversationAdultOnly(e.target.checked)}
+              />
+              Solo mayores de 18 años
+            </label>
+            <button onClick={handleCreateConversation} className="w-full px-3 py-2 text-sm bg-black text-white rounded">
+              Crear Nueva Sala
             </button>
           </div>
           <div className="max-h-80 overflow-auto space-y-2">
             {conversations.map((c: SocialConversation) => (
-              <button
+              <div
                 key={c.id}
-                onClick={() => setSelectedConversation(c)}
-                className={`w-full text-left p-2 rounded border ${
+                className={`w-full flex justify-between items-center p-2 rounded border ${
                   selectedConversation?.id === c.id ? 'bg-gray-100 border-gray-400' : 'border-gray-200'
                 }`}
               >
-                <p className="font-medium text-sm">{c.title || 'Sin título'}</p>
-                <p className="text-xs text-gray-500">{c.conversation_type}</p>
-              </button>
+                <button
+                   onClick={() => setSelectedConversation(c)}
+                   className="text-left flex-1"
+                >
+                  <p className="font-medium text-sm">{c.title || 'Sin título'}</p>
+                  <div className="flex gap-2 items-center">
+                    <p className="text-xs text-gray-500 uppercase">{c.conversation_type.replace('_', ' ')}</p>
+                    {c.entry_fee && Number(c.entry_fee) > 0 && (
+                      <span className="text-[10px] bg-amber-100 text-amber-700 px-1 rounded">${c.entry_fee}</span>
+                    )}
+                    {c.is_adult_only && (
+                      <span className="text-[10px] bg-red-100 text-red-700 px-1 rounded">18+</span>
+                    )}
+                  </div>
+                </button>
+                {!c.memberships?.some(m => m.user === myProfile?.user) && (
+                  <button
+                    onClick={() => handleJoin(c.id)}
+                    className="text-[10px] bg-blue-600 text-white px-2 py-1 rounded"
+                  >
+                    Entrar
+                  </button>
+                )}
+              </div>
             ))}
           </div>
         </div>

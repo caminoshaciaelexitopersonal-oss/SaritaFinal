@@ -129,6 +129,20 @@ class CustomUser(AbstractUser):
         null=True,
         help_text=_("País de origen, si el turista es extranjero.")
     )
+    birthdate = models.DateField(
+        _("Fecha de Nacimiento"),
+        blank=True,
+        null=True,
+        help_text=_("Requerido para verificación de edad en servicios sociales/citas.")
+    )
+
+    def is_adult(self):
+        if not self.birthdate:
+            return False
+        from datetime import date
+        today = date.today()
+        age = today.year - self.birthdate.year - ((today.month, today.day) < (self.birthdate.month, self.birthdate.day))
+        return age >= 18
 
     def save(self, *args, **kwargs):
         if not self.pk:
