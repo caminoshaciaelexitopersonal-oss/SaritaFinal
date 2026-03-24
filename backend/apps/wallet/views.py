@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import WalletAccount, WalletTransaction
+from .models import Wallet, WalletTransaccion
 from .serializers import WalletAccountSerializer, WalletTransactionSerializer
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel
 from django.db import models
@@ -12,8 +12,8 @@ class WalletAccountViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return WalletAccount.objects.all()
-        return WalletAccount.objects.filter(user=self.request.user)
+            return Wallet.objects.all()
+        return Wallet.objects.filter(user_id=self.request.user.id)
 
     @action(detail=True, methods=['post'])
     def deposit(self, request, pk=None):
@@ -83,12 +83,11 @@ class WalletTransactionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return WalletTransaction.objects.all()
-        # Transacciones donde el usuario es origen o destino
-        return WalletTransaction.objects.filter(
-            models.Q(from_wallet__user=self.request.user) |
-            models.Q(to_wallet__user=self.request.user)
-        )
+            return WalletTransaccion.objects.all()
+        # Transacciones donde el usuario es origen o destino a través de sus movimientos
+        return WalletTransaccion.objects.filter(
+            movimientos__wallet__user_id=self.request.user.id
+        ).distinct()
 
     @action(detail=True, methods=['post'])
     def refund(self, request, pk=None):

@@ -109,6 +109,14 @@ class ConversationalAnalyticsEngine:
                 'detected_entities': entities
             }
         )
+
+        # 5. Integración Vía 4: Disparar automatización económica
+        try:
+            from apps.turismo.services.economic_automation import EconomicAutomationService
+            EconomicAutomationService.process_intent_for_automation(intent_obj)
+        except Exception as e:
+            logger.error(f"Vía 4: Error en automatización económica: {e}")
+
         return intent_obj
 
     @staticmethod
