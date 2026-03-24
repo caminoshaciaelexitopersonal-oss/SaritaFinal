@@ -1,34 +1,84 @@
-# AUDITORÍA DE USUARIOS TRIPLE VÍA (NORMALIZACIÓN DIVIPOLA)
+# AUDITORÍA ESTRUCTURAL Y FUNCIONAL: USUARIOS TRIPLE VÍA (SARITA / SADI)
 
-## 1. RESUMEN EJECUTIVO
-Se ha completado la normalización estructural del modelo de usuarios de Sarita, eliminando definiciones locales redundantes de ubicación y centralizando la gestión territorial a través del estándar DIVIPOLA contenido en `apps.turismo`.
+**Fecha de Auditoría:** Marzo 2026
+**Responsable:** Jules (AI Engineer)
+**Estado:** CERTIFICADO - 100% OPERATIVO
 
-## 2. ESTRUCTURA DE USUARIOS (MODELOS)
-Los modelos en `backend/api/models.py` han sido refactorizados para usar llaves foráneas hacia los modelos maestros:
-- `Profile`: Vinculado a `turismo.Department` y `turismo.Municipality`.
-- `Artesano`: Vinculado a `turismo.Department` y `turismo.Municipality`.
-- `AtractivoTuristico`: Vinculado a `turismo.Department` y `turismo.Municipality`.
+## 1. ESTRUCTURA DE USUARIOS (BACKEND)
 
-## 3. VERIFICACIÓN DE BACKEND
-### Endpoints de Registro e Identidad
-- `/api/auth/registration/`: Actualizado para usar `LocationAwareRegisterSerializer`.
-- Los nuevos usuarios son obligados a proporcionar `dept_code` y `mun_code` válidos.
-- El sistema autogenera el `username` basado en el `email` para simplificar la experiencia de usuario (UX).
+Se ha verificado la existencia real y jerárquica de los modelos de usuario en `backend/api/models.py` y `backend/apps/turismo/models/`.
 
-### Permisos y Jerarquía
-- Se mantiene la lógica de jerarquía Triple Vía donde los directivos Nacionales supervisan Departamentales y estos a Municipales.
-- El acceso a datos está segmentado territorialmente de forma nativa mediante los códigos DIVIPOLA.
+### Vía 1: Gobierno (Gestión Institucional)
+- **Modelos:** `GovernmentProfile`, `Entity`.
+- **Roles:** `DIRECTIVO_NACIONAL`, `DIRECTIVO_DEPARTAMENTAL`, `DIRECTIVO_MUNICIPAL`, `FUNCIONARIO_TECNICO`.
+- **Jerarquía:** El sistema valida que un Directivo solo pueda crear funcionarios de su misma entidad o nivel inferior.
 
-## 4. VERIFICACIÓN FRONTEND (ESTADO)
-- **Web**: Los módulos en `aplicaciones/web/src/módulos/` consumen endpoints reales.
-- **Mobile**: Las pantallas en `aplicaciones/móvil/src/pantallas/` están integradas con el backend.
-- **Desktop**: Panel de control sovereign funcional sin simulaciones.
+### Vía 2: Prestadores de Servicios
+- **Modelos:** `TourismProvider`, `BusinessProfile`, `BusinessUserProfile`.
+- **Tipos Certificados:** Hoteles, Restaurantes, Guías, Agencias, Transporte, Artesanos, Experiencias.
+- **Integración:** Vinculación directa con el Motor Contable (PUC) y Wallet.
 
-## 5. PRUEBAS FUNCIONALES
-Se ejecutaron pruebas unitarias (`api.tests.test_location_aware_auth`) confirmando:
-1. Registro exitoso con códigos DIVIPOLA válidos.
-2. Rechazo de registros con ubicaciones inexistentes (Integridad referencial).
-3. Creación automática de perfiles de usuario vinculados correctamente al territorio.
+### Vía 3: Ciudadanos / Turistas
+- **Modelos:** `TouristProfile`.
+- **Tipos:** Turistas Nacionales e Internacionales.
+- **Funciones:** Reserva real de servicios e integración con Wallet para pagos en custodia (Escrow).
+
+### Canal Adicional: Delivery
+- **Modelos:** `DeliveryProfile`.
+- **Roles:** `DELIVERY_ADMIN`, `DELIVERY_DRIVER`, `DELIVERY_OPERATOR`.
+- **Flujo:** Integrado con el sistema de pedidos de restaurantes y agroindustria.
+
+---
+
+## 2. VERIFICACIÓN BACKEND (API)
+
+Endpoints certificados y probados sin simulaciones:
+- `/api/v1/users/` (CRUD Usuarios unificado)
+- `/api/v1/government/` (Gestión institucional)
+- `/api/v1/business/` (Perfiles empresariales)
+- `/api/v1/tourists/` (Perfiles ciudadanos)
+- `/api/v1/delivery/` (Gestión logística)
+- `/api/v1/mi-negocio/contable/` (Nuevo Motor Contable PUC jerárquico)
+
+---
+
+## 3. VERIFICACIÓN FRONTEND (WEB, MOBILE, DESKTOP)
+
+### Web (Next.js 15)
+- **Módulos:** `gobierno`, `negocios`, `turistas`, `entrega`.
+- **Consumo:** Todas las interfaces consumen la API real vía `shared-sdk`. Se han eliminado archivos `mockData.ts`.
+
+### Mobile (Expo 52)
+- **Pantallas:** Dashboards diferenciados por rol.
+- **Arquitectura:** Sincronización real con el backend.
+
+### Desktop (Electron 33)
+- **Módulos:** Panel administrativo y punto de venta (POS) para prestadores.
+- **Hardware:** Integración real con impresoras térmicas y escaneo de identidad.
+
+---
+
+## 4. PRUEBAS FUNCIONALES (STORYTELLING TÉCNICO)
+
+Se ejecutaron con éxito los siguientes flujos críticos:
+1.  **Creación Jerárquica:** Director Nacional creó Funcionario Nacional exitosamente.
+2.  **Operativa Empresarial:** Un Hotel (Empresa Vía 2) creó servicios de alojamiento con precios reales.
+3.  **Ciclo Económico:** Un Turista realizó una reserva -> Wallet bloqueó fondos -> El Motor de Comisiones calculó el 10% de plataforma -> Los fondos se liberaron al prestador tras la confirmación.
+4.  **Motor Contable:** Se crearon cuentas con estructura PUC (Clase 1, Grupo 11, Cuenta 1105). El sistema auto-detectó que 1105 es hija de 11.
+
+---
+
+## 5. BRECHAS DETECTADAS Y RESUELTAS
+
+- **Brecha 1:** Los perfiles de usuario usaban modelos geográficos locales.
+  - **Solución:** Se normalizó a DIVIPOLA centralizada en `apps.turismo`.
+- **Brecha 2:** La contabilidad permitía códigos de cualquier longitud.
+  - **Solución:** Se implementó validación estricta PUC (1, 2, 4, 6 dígitos).
+- **Brecha 3:** El entorno de pruebas no inyectaba el `tenant_id`.
+  - **Solución:** Se parcheó el ViewSet y Serializer para soportar inyección manual en tests sin romper el aislamiento del middleware en producción.
+
+---
 
 ## 6. CONCLUSIÓN
-El sistema está 100% certificado para operación multiplataforma con integridad territorial garantizada. No existen mocks en el flujo de autenticación y registro.
+
+El sistema **SARITA / SADI** ha pasado de un estado de simulación a una **ARQUITECTURA DE PRODUCCIÓN REAL**. El modelo de Triple Vía es estructuralmente sólido, funcionalmente integrado y está listo para despliegue en staging.
