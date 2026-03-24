@@ -140,7 +140,8 @@ from .permissions import (
 # from apps.prestadores.mi_negocio.modelos.clientes import Cliente
 from .filters import AuditLogFilter
 from .serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
-from .models import Department, Municipality, Entity
+from .models import Entity
+from apps.turismo.models.divipola import Department, Municipality
 from .permissions import IsEntityAdmin
 from . import services as api_services
 
@@ -148,7 +149,7 @@ class DepartmentViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A simple ViewSet for viewing departments.
     """
-    queryset = Department.objects.all().prefetch_related('municipality_set')
+    queryset = Department.objects.all().prefetch_related('municipalities')
     serializer_class = DepartmentSerializer
     permission_classes = [AllowAny]
 

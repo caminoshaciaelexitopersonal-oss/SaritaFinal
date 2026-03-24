@@ -19,11 +19,10 @@ from .models import (
     PerfilFuncionarioDirectivo,
     PerfilFuncionarioProfesional,
     UserLLMConfig,
-    Department,
-    Municipality,
     Entity,
     Profile
 )
+from apps.turismo.models.divipola import Department, Municipality
 import uuid
 from django.db import transaction
 from dj_rest_auth.serializers import LoginSerializer

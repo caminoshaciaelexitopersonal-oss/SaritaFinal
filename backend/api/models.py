@@ -60,20 +60,6 @@ class Entity(models.Model):
     def __str__(self):
         return self.name
 
-class Department(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.name
-
-class Municipality(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
 
 class CustomUser(AbstractUser):
     class Role(models.TextChoices):
@@ -155,8 +141,8 @@ class CustomUser(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     entity = models.ForeignKey(Entity, on_delete=models.SET_NULL, null=True, blank=True)
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
-    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True)
+    department = models.ForeignKey('turismo.Department', on_delete=models.SET_NULL, null=True, blank=True, related_name='api_profiles')
+    municipality = models.ForeignKey('turismo.Municipality', on_delete=models.SET_NULL, null=True, blank=True, related_name='api_profiles')
 
     def __str__(self):
         return f"Profile for {self.user.username}"
@@ -283,8 +269,8 @@ class Artesano(models.Model):
     red_social_whatsapp = models.CharField(max_length=20, blank=True, null=True, help_text="Número de WhatsApp con código de país")
 
     # --- Campos de Ubicación Estructurados ---
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Departamento"))
-    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Municipio"))
+    department = models.ForeignKey('turismo.Department', on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Departamento"), related_name='api_artesanos')
+    municipality = models.ForeignKey('turismo.Municipality', on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Municipio"), related_name='api_artesanos')
     direccion = models.CharField(_("Dirección"), max_length=255, blank=True, null=True)
     latitud = models.FloatField(_("Latitud"), blank=True, null=True)
     longitud = models.FloatField(_("Longitud"), blank=True, null=True)
@@ -472,8 +458,8 @@ class AtractivoTuristico(models.Model):
     como_llegar = models.TextField(help_text="Instrucciones sobre cómo llegar al atractivo.")
 
     # --- Campos de Ubicación Estructurados ---
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Departamento"))
-    municipality = models.ForeignKey(Municipality, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Municipio"))
+    department = models.ForeignKey('turismo.Department', on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Departamento"), related_name='api_atractivos')
+    municipality = models.ForeignKey('turismo.Municipality', on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Municipio"), related_name='api_atractivos')
     direccion = models.CharField(_("Dirección"), max_length=255, blank=True, null=True)
     latitud = models.FloatField(_("Latitud"), blank=True, null=True)
     longitud = models.FloatField(_("Longitud"), blank=True, null=True)
@@ -521,7 +507,7 @@ class RutaTuristica(models.Model):
     # para desacoplar el módulo 'api' del dominio 'gestion_operativa',
     # siguiendo la Directriz de la Fase 14. La relación se gestionará
     # a nivel de servicio utilizando referencias por UUID.
-    municipalities = models.ManyToManyField(Municipality, related_name="rutas_turisticas", blank=True, verbose_name=_("Municipios que abarca la Ruta"))
+    municipalities = models.ManyToManyField('turismo.Municipality', related_name="rutas_turisticas", blank=True, verbose_name=_("Municipios que abarca la Ruta"))
 
     es_publicado = models.BooleanField(_("Publicado"), default=False, help_text="Marcar para que la ruta sea visible en el sitio web público.")
     fecha_creacion = models.DateTimeField(auto_now_add=True)

@@ -307,7 +307,7 @@ REST_AUTH = {
     "JWT_AUTH_HTTPONLY": True,
     "USER_DETAILS_SERIALIZER": "api.serializers.CustomUserDetailSerializer",
     'LOGIN_SERIALIZER': 'api.serializers.CustomLoginSerializer',
-    'REGISTER_SERIALIZER': 'api.serializers.CustomRegisterSerializer',
+    'REGISTER_SERIALIZER': 'api.auth_serializers.LocationAwareRegisterSerializer',
 }
 
 ACCOUNT_LOGIN_METHODS = ['email']
