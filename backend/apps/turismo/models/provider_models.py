@@ -30,9 +30,28 @@ class TourismProvider(BaseModel):
     name = models.CharField(max_length=255)
     provider_type = models.CharField(max_length=20, choices=ProviderType.choices)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tourism_providers')
+
+    # --- Territorial Hierarchy (DIVIPOLA) ---
+    department = models.ForeignKey('turismo.Department', on_delete=models.PROTECT, related_name='providers', null=True, blank=True)
+    municipality = models.ForeignKey('turismo.Municipality', on_delete=models.PROTECT, related_name='providers', null=True, blank=True)
+
     location = models.JSONField(default=dict, help_text="Coordenadas y dirección")
     contact = models.JSONField(default=dict, help_text="Teléfonos, redes sociales, etc.")
     status = models.CharField(max_length=20, default='ACTIVE')
+
+    # --- Scoring & Visibility ---
+    puntuacion_capacitacion = models.PositiveIntegerField(default=0, help_text="Puntaje por asistencia a capacitaciones.")
+    puntuacion_verificacion = models.PositiveIntegerField(default=0, help_text="Puntaje por cumplimiento de requisitos legales.")
+    puntuacion_resenas = models.PositiveIntegerField(default=0, help_text="Puntaje por reseñas de turistas.")
+    puntuacion_total = models.PositiveIntegerField(default=0, db_index=True)
+
+    def recalcular_puntuacion_total(self):
+        self.puntuacion_total = (
+            self.puntuacion_capacitacion +
+            self.puntuacion_verificacion +
+            self.puntuacion_resenas
+        )
+        self.save(update_fields=['puntuacion_total'])
 
     def __str__(self):
         return f"{self.name} ({self.get_provider_type_display()})"

@@ -319,3 +319,57 @@ class IsEntityAdmin(BasePermission):
         except AttributeError:
             # El usuario no tiene un perfil, por lo tanto no puede ser admin de ninguna entidad.
             return False
+
+
+class IsCharacterizationManager(BasePermission):
+    """
+    Jerarquía de acceso para Caracterización y Verificación:
+    - Super Administrador: Control total (CRUD).
+    - Funcionarios (Directivo/Profesional): Monitoreo (Lectura) de todos. No editan.
+    - Prestadores / Artesanos: Edición propia de sus formularios iniciales.
+    """
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+
+        # El Admin puede todo
+        if request.user.role == CustomUser.Role.ADMIN or request.user.is_superuser:
+            return True
+
+        # Funcionarios pueden leer todos
+        if request.user.role in [
+            CustomUser.Role.DIRECTIVO_NACIONAL,
+            CustomUser.Role.DIRECTIVO_DEPARTAMENTAL,
+            CustomUser.Role.DIRECTIVO_MUNICIPAL,
+            CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+        ]:
+            if request.method in SAFE_METHODS:
+                return True
+            return False # No pueden crear/borrar globalmente vía esta vista
+
+        # Prestadores/Artesanos pueden crear y leer
+        if request.user.role in [CustomUser.Role.BUSINESS_OWNER, CustomUser.Role.ARTESANO, CustomUser.Role.PRESTADOR]:
+            return True
+
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+
+        # Admin puede todo
+        if user.role == CustomUser.Role.ADMIN or user.is_superuser:
+            return True
+
+        # Funcionarios leen todo, no editan
+        if user.role in [
+            CustomUser.Role.DIRECTIVO_NACIONAL,
+            CustomUser.Role.DIRECTIVO_DEPARTAMENTAL,
+            CustomUser.Role.DIRECTIVO_MUNICIPAL,
+            CustomUser.Role.FUNCIONARIO_PROFESIONAL,
+        ]:
+            return request.method in SAFE_METHODS
+
+        # Prestadores solo editan/ven lo suyo
+        # Intentamos obtener el propietario del objeto de caracterización
+        owner = getattr(obj, 'usuario', None) or getattr(obj, 'user', None)
+        return owner == user

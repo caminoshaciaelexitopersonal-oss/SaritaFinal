@@ -18,17 +18,23 @@ export default function GovernmentDashboard() {
   const [officials, setOfficials] = useState([]);
   const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [territorialFilter, setTerritorialFilter] = useState({ dept: '', mun: '' });
 
-  useEffect(() => {
+  const loadData = useCallback(() => {
+    setLoading(true);
     Promise.all([
         governmentService.getOfficials(),
-        getUnifiedDashboard()
+        getUnifiedDashboard(territorialFilter.dept || undefined, territorialFilter.mun || undefined)
     ]).then(([offRes, intelRes]) => {
         setOfficials(offRes.data.results || []);
         setAnalytics(intelRes);
         setLoading(false);
     });
-  }, []);
+  }, [territorialFilter]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   // Simulación de datos para gráficos basados en analítica real
   const visitorFlow = [
@@ -58,7 +64,32 @@ export default function GovernmentDashboard() {
               <FiGlobe /> SADI · Sistema de Analítica de Destino Inteligente
            </div>
            <h1 className="text-5xl font-black text-slate-900 tracking-tighter uppercase">Panel de Gobernanza</h1>
-           <p className="text-slate-500 font-medium mt-1">Supervisión estratégica y gestión institucional de Puerto Gaitán.</p>
+           <p className="text-slate-500 font-medium mt-1">Supervisión estratégica y gestión institucional territorial.</p>
+        </div>
+        <div className="flex gap-4 bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
+           <select
+             className="bg-transparent font-bold text-xs uppercase"
+             value={territorialFilter.dept}
+             onChange={(e) => setTerritorialFilter({ dept: e.target.value, mun: '' })}
+           >
+              <option value="">Todo el País</option>
+              <option value="50">Meta</option>
+              <option value="25">Cundinamarca</option>
+           </select>
+           <div className="w-px h-6 bg-slate-200" />
+           <select
+             className="bg-transparent font-bold text-xs uppercase"
+             value={territorialFilter.mun}
+             onChange={(e) => setTerritorialFilter({ ...territorialFilter, mun: e.target.value })}
+           >
+              <option value="">Todos los Municipios</option>
+              {territorialFilter.dept === '50' && (
+                <>
+                  <option value="50568">Puerto Gaitán</option>
+                  <option value="50001">Villavicencio</option>
+                </>
+              )}
+           </select>
         </div>
         <div className="flex gap-3">
            <Button className="bg-white text-slate-900 border border-slate-200 font-bold px-6 py-3 rounded-xl shadow-sm hover:bg-slate-50">Generar Reporte PDF</Button>
@@ -143,18 +174,26 @@ export default function GovernmentDashboard() {
                <p className="text-sm text-slate-400 font-medium">Por sectores operativos vía 2</p>
             </CardHeader>
             <CardContent className="p-8 h-[400px]">
-               <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={economicData} layout="vertical">
-                     <XAxis type="number" hide />
-                     <YAxis dataKey="category" type="category" axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 700, fill: '#475569'}} />
-                     <Tooltip cursor={{fill: 'transparent'}} />
-                     <Bar dataKey="value" radius={[0, 10, 10, 0]} barSize={30}>
-                        {economicData.map((entry, index) => (
-                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                     </Bar>
-                  </BarChart>
-               </ResponsiveContainer>
+               <div className="space-y-4 overflow-y-auto h-full pr-4 custom-scrollbar">
+                  {analytics?.via_2?.consolidado_territorial?.map((item: any, idx: number) => (
+                    <div key={idx} className="bg-slate-50 p-6 rounded-3xl flex justify-between items-center group hover:bg-indigo-600 transition-all">
+                       <div>
+                          <p className="text-[10px] font-black text-slate-400 uppercase group-hover:text-indigo-200">Jurisdicción</p>
+                          <h4 className="font-bold text-slate-900 group-hover:text-white uppercase">{item.municipality__name || item.department__name}</h4>
+                       </div>
+                       <div className="text-right">
+                          <p className="text-2xl font-black text-indigo-600 group-hover:text-white">{item.count}</p>
+                          <p className="text-[9px] font-black text-slate-400 uppercase group-hover:text-indigo-200">Prestadores</p>
+                       </div>
+                    </div>
+                  ))}
+                  {(!analytics?.via_2?.consolidado_territorial || analytics?.via_2?.consolidado_territorial.length === 0) && (
+                     <div className="flex flex-col items-center justify-center h-full text-slate-400 italic">
+                        <FiMap size={48} className="mb-4 opacity-10" />
+                        No hay datos territoriales consolidados.
+                     </div>
+                  )}
+               </div>
             </CardContent>
          </Card>
       </div>

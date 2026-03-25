@@ -88,7 +88,12 @@ export const getEconomicImpact = async (destino: string, periodo: string) => {
     return response.data;
 };
 
-export const getUnifiedDashboard = async () => {
-    const response = await api.get('/tourism/intelligence/dashboard/');
+export const getUnifiedDashboard = async (departmentId?: string, municipalityId?: string) => {
+    const response = await api.get('/tourism/intelligence/dashboard/', {
+        params: {
+            department: departmentId,
+            municipality: municipalityId
+        }
+    });
     return response.data;
 };

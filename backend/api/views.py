@@ -452,9 +452,27 @@ class UserViewSet(viewsets.ModelViewSet):
         # Filtro inicial: Roles públicos y el propio usuario
         queryset = CustomUser.objects.filter(Q(role__in=allowed_roles_to_view) | Q(pk=user.pk))
 
-        # --- Jerarquía Gubernamental (Vía 1) ---
+        # --- Jerarquía Territorial DIVIPOLA ---
+        if hasattr(user, 'profile'):
+            profile = user.profile
+
+            # Nacional: Ve todo lo permitido
+            if user.role == CustomUser.Role.DIRECTIVO_NACIONAL:
+                 pass # Ya tiene el filtro base de allowed_roles_to_view
+
+            # Departamental: Ve su dpto
+            elif user.role == CustomUser.Role.DIRECTIVO_DEPARTAMENTAL:
+                 if profile.department:
+                     queryset = queryset.filter(profile__department=profile.department)
+
+            # Municipal: Ve su municipio
+            elif user.role in [CustomUser.Role.DIRECTIVO_MUNICIPAL, CustomUser.Role.FUNCIONARIO_PROFESIONAL]:
+                 if profile.municipality:
+                     queryset = queryset.filter(profile__municipality=profile.municipality)
+
+        # --- Jerarquía Gubernamental Antigua (Mantenida para compatibilidad de Entidades) ---
         if hasattr(user, 'government_profile'):
-            profile = user.government_profile
+            gov_profile = user.government_profile
             # Directivos pueden ver funcionarios de su misma entidad
             if user.role in [
                 CustomUser.Role.DIRECTIVO_NACIONAL,
@@ -468,14 +486,8 @@ class UserViewSet(viewsets.ModelViewSet):
                 ]
                 queryset |= CustomUser.objects.filter(
                     role__in=subordinate_roles,
-                    government_profile__entity=profile.entity
+                    government_profile__entity=gov_profile.entity
                 )
-
-            # Admins de nivel superior pueden ver niveles inferiores
-            if user.role == CustomUser.Role.DIRECTIVO_NACIONAL:
-                queryset |= CustomUser.objects.filter(role=CustomUser.Role.DIRECTIVO_DEPARTAMENTAL)
-            if user.role == CustomUser.Role.DIRECTIVO_DEPARTAMENTAL:
-                queryset |= CustomUser.objects.filter(role=CustomUser.Role.DIRECTIVO_MUNICIPAL)
 
         # --- Jerarquía Empresarial (Vía 2) ---
         if hasattr(user, 'business_user_profile') and user.role == CustomUser.Role.BUSINESS_OWNER:
@@ -509,6 +521,17 @@ class AdminPublicacionViewSet(viewsets.ModelViewSet):
         api_services.enviar_para_aprobacion(publicacion_id=pk, usuario=request.user)
         return Response({'status': 'Publicación enviada para aprobación.'})
 
+    @action(detail=True, methods=['post'], permission_classes=[IsAdminOrFuncionario], serializer_class=RegistrarAsistenciaSerializer)
+    def registrar_asistencia(self, request, pk=None):
+        """
+        Registra la asistencia de múltiples prestadores/artesanos a una capacitación
+        y asigna puntos automáticamente.
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        result = serializer.save()
+        return Response(result, status=status.HTTP_200_OK)
+
 class HomePageComponentViewSet(viewsets.ModelViewSet):
     queryset = HomePageComponent.objects.all()
     serializer_class = HomePageComponentSerializer
@@ -533,15 +556,100 @@ class AdminArtesanoViewSet(viewsets.ModelViewSet):
     serializer_class = AdminArtesanoDetailSerializer
     permission_classes = [IsAdminOrFuncionario]
 
-# class PlantillaVerificacionViewSet(viewsets.ModelViewSet):
-#     queryset = PlantillaVerificacion.objects.all()
-#     serializer_class = PlantillaVerificacionListSerializer
-#     permission_classes = [IsAdminOrFuncionario]
+class PlantillaVerificacionViewSet(viewsets.ModelViewSet):
+    queryset = PlantillaVerificacion.objects.all()
+    serializer_class = PlantillaVerificacionListSerializer
+    permission_classes = [IsAdminOrFuncionario]
 
-# class VerificacionViewSet(viewsets.ModelViewSet):
-#     queryset = Verificacion.objects.all()
-#     serializer_class = VerificacionListSerializer
-#     permission_classes = [IsAuthenticated]
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return PlantillaVerificacionDetailSerializer
+        return super().get_serializer_class()
+
+class VerificacionViewSet(viewsets.ModelViewSet):
+    queryset = Verificacion.objects.all()
+    serializer_class = VerificacionListSerializer
+    permission_classes = [IsCharacterizationManager]
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = super().get_queryset()
+
+        # Super Admin ve todo
+        if user.role == CustomUser.Role.ADMIN or user.is_superuser:
+            return qs
+
+        # --- Jerarquía Territorial (Vía 1) ---
+        if hasattr(user, 'profile'):
+            profile = user.profile
+
+            # Nacional: Ve todo (Ya cubierto por Admin, pero por si hay Directivo Nacional)
+            if user.role == CustomUser.Role.DIRECTIVO_NACIONAL:
+                return qs
+
+            # Departamental: Ve todos los municipios de su dpto
+            if user.role == CustomUser.Role.DIRECTIVO_DEPARTAMENTAL:
+                if profile.department:
+                    # Filtramos las verificaciones cuyos prestadores pertenecen a municipios del depto
+                    return qs.filter(
+                        models.Exists(
+                            TourismProvider.objects.filter(
+                                id=models.OuterRef('prestador_ref_id'),
+                                department=profile.department
+                            )
+                        )
+                    )
+
+            # Municipal: Ve solo su municipio
+            if user.role in [CustomUser.Role.DIRECTIVO_MUNICIPAL, CustomUser.Role.FUNCIONARIO_PROFESIONAL]:
+                if profile.municipality:
+                    return qs.filter(
+                        models.Exists(
+                            TourismProvider.objects.filter(
+                                id=models.OuterRef('prestador_ref_id'),
+                                municipality=profile.municipality
+                            )
+                        )
+                    )
+
+        # --- Prestadores (Vía 2) ---
+        if user.role in [CustomUser.Role.BUSINESS_OWNER, CustomUser.Role.PRESTADOR]:
+             return qs.filter(
+                 models.Exists(
+                    TourismProvider.objects.filter(
+                        id=models.OuterRef('prestador_ref_id'),
+                        owner=user
+                    )
+                 )
+             )
+
+        return qs.none()
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return VerificacionDetailSerializer
+        if self.action == 'iniciar':
+            return IniciarVerificacionSerializer
+        if self.action in ['update', 'partial_update']:
+            return GuardarVerificacionSerializer
+        return super().get_serializer_class()
+
+    @action(detail=False, methods=['post'], permission_classes=[IsAdminOrFuncionario])
+    def iniciar(self, request):
+        """
+        Crea una instancia de verificación vacía lista para ser llenada.
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        verificacion = Verificacion.objects.create(
+            plantilla_usada=serializer.validated_data['plantilla_id'],
+            prestador_ref_id=serializer.validated_data['prestador_ref_id'],
+            funcionario_evaluador=request.user,
+            fecha_visita=timezone.now().date()
+        )
+
+        return Response(VerificacionDetailSerializer(verificacion).data, status=status.HTTP_201_CREATED)
 
 class PreguntaViewSet(viewsets.ModelViewSet):
     queryset = Pregunta.objects.all()

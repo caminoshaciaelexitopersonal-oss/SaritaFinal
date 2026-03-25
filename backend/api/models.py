@@ -83,6 +83,7 @@ class CustomUser(AbstractUser):
         BUSINESS_OPERATOR = "BUSINESS_OPERATOR", _("Operador de Negocio")
         BUSINESS_EMPLOYEE = "BUSINESS_EMPLOYEE", _("Empleado de Negocio")
         ARTESANO = "ARTESANO", _("Artesano")
+        EVENT_MANAGER = "EVENT_MANAGER", _("Organizador de Eventos")
 
         # --- Canal adicional: Delivery ---
         DELIVERY = "DELIVERY", _("Delivery / Logística (Genérico)")

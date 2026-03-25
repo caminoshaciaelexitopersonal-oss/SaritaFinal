@@ -38,6 +38,10 @@ router.register(r'admin/sugerencias', views.SugerenciaAdminViewSet, basename='su
 
 router.register(r'documentos-verificacion/tipos', views.TipoDocumentoVerificacionViewSet, basename='tipo-documento-verificacion')
 
+# --- Verificación de Cumplimiento ---
+router.register(r'admin/plantillas-verificacion', views.PlantillaVerificacionViewSet, basename='plantilla-verificacion')
+router.register(r'admin/verificaciones', views.VerificacionViewSet, basename='verificacion')
+
 
 # --- Formularios Dinámicos (con rutas anidadas) ---
 router.register(r'formularios', views.FormularioViewSet, basename='formulario')
