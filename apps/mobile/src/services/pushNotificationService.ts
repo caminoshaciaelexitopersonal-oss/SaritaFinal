@@ -50,3 +50,28 @@ export async function registerForPushNotificationsAsync() {
 
   return token;
 }
+
+/**
+ * Geofenced Notifications Implementation
+ * Triggers location checking when a special data push is received.
+ */
+export async function setupGeofencedListener() {
+    Notifications.addNotificationReceivedListener(async notification => {
+        const data = notification.request.content.data;
+
+        if (data.trigger_geofence) {
+            const Location = require('expo-location');
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            if (status === 'granted') {
+                const location = await Location.getCurrentPositionAsync({});
+                // Send current location to backend to fetch nearby offers
+                const { httpClient } = require('@sarita/shared-sdk');
+                await httpClient.post('/operational/geofence/check/', {
+                    lat: location.coords.latitude,
+                    lon: location.coords.longitude,
+                    notification_id: notification.request.identifier
+                });
+            }
+        }
+    });
+}

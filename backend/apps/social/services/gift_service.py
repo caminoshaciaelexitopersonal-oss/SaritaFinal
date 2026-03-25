@@ -10,10 +10,16 @@ logger = logging.getLogger(__name__)
 class SocialGiftService:
     """
     Engine for economic gifts in SARITA Chat/Social.
-    Handles 2% commission for Super Admin and integration with Wallet.
+    Handles commission for Super Admin and integration with Wallet.
     """
 
-    COMMISSION_RATE = Decimal("0.02") # 2%
+    @classmethod
+    def get_commission_rate(cls):
+        from apps.admin_plataforma.models import PlatformGlobalSettings
+        settings = PlatformGlobalSettings.objects.first()
+        if settings:
+            return settings.social_gift_commission_pct / 100
+        return Decimal("0.02") # Default 2%
 
     @classmethod
     def send_gift(cls, sender, receiver_id, gift_code, conversation_id=None):
@@ -26,7 +32,7 @@ class SocialGiftService:
         gift = SocialGiftCatalog.objects.get(code=gift_code, active=True)
 
         base_amount = gift.price
-        commission = (base_amount * cls.COMMISSION_RATE).quantize(Decimal("0.01"))
+        commission = (base_amount * cls.get_commission_rate()).quantize(Decimal("0.01"))
         total_to_pay = base_amount + commission
 
         # En SARITA, las transacciones que cruzan DBs (Social en default, Wallet en wallet_db)

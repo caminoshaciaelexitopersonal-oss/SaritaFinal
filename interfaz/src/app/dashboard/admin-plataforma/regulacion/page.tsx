@@ -1,16 +1,48 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '@/services/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import {
-  FiFileText, FiBook, FiCheckCircle, FiAlertCircle, FiSettings, FiGlobe, FiBriefcase
+  FiFileText, FiBook, FiCheckCircle, FiAlertCircle, FiSettings, FiGlobe, FiBriefcase, FiPercent, FiShield
 } from 'react-icons/fi';
 import { ViewState } from '@/components/ui/ViewState';
+import { toast } from 'react-hot-toast';
 
 export default function RegulacionPage() {
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [settings, setSettings] = useState<any>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const { data } = await api.get('/admin/plataforma/system-audit/settings/global/');
+      setSettings(data);
+    } catch (e) {
+      toast.error("Error al cargar configuraciones globales.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdateSetting = async (key: string, value: any) => {
+    setIsSaving(true);
+    try {
+      await api.patch('/admin/plataforma/system-audit/settings/global/', { [key]: value });
+      toast.success("Configuración actualizada.");
+      loadSettings();
+    } catch (e) {
+      toast.error("No se pudo guardar el cambio.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const frameworks = [
     {
@@ -58,8 +90,62 @@ export default function RegulacionPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-8">
+                {/* GLOBAL PARAMETERS (FASE SUPER ADMIN) */}
                 <h3 className="text-xl font-black text-slate-900 uppercase tracking-widest flex items-center gap-2 italic">
+                    <FiSettings className="text-brand" /> Parámetros Globales del Sistema
+                </h3>
+                <Card className="border-none shadow-xl bg-white rounded-[2.5rem] overflow-hidden">
+                    <CardContent className="p-10 space-y-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
+                                        <FiPercent />
+                                    </div>
+                                    <label className="text-sm font-black text-slate-900 uppercase">Comisión Regalos Social</label>
+                                </div>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="number"
+                                        value={settings?.social_gift_commission_pct || 0}
+                                        onChange={(e) => setSettings({...settings, social_gift_commission_pct: e.target.value})}
+                                        className="w-full border-2 border-slate-100 rounded-2xl px-6 py-4 font-bold text-xl focus:border-brand transition-all"
+                                    />
+                                    <Button
+                                        onClick={() => handleUpdateSetting('social_gift_commission_pct', settings.social_gift_commission_pct)}
+                                        disabled={isSaving}
+                                        className="bg-slate-900 text-white font-black px-6 rounded-2xl"
+                                    >
+                                        FIJAR
+                                    </Button>
+                                </div>
+                                <p className="text-[10px] text-slate-400 font-medium">Porcentaje aplicado a cada premio/regalo en Vía 3.</p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
+                                        <FiShield />
+                                    </div>
+                                    <label className="text-sm font-black text-slate-900 uppercase">Modo Mantenimiento</label>
+                                </div>
+                                <div className="flex items-center justify-between bg-slate-50 p-6 rounded-2xl">
+                                    <span className="text-xs font-bold text-slate-600 uppercase italic">Estado de Plataforma</span>
+                                    <button
+                                        onClick={() => handleUpdateSetting('maintenance_mode', !settings?.maintenance_mode)}
+                                        className={`w-14 h-8 rounded-full transition-all relative ${settings?.maintenance_mode ? 'bg-red-500' : 'bg-emerald-500'}`}
+                                    >
+                                        <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all ${settings?.maintenance_mode ? 'right-1' : 'left-1'}`} />
+                                    </button>
+                                </div>
+                                <p className="text-[10px] text-slate-400 font-medium">Bloquea el acceso a todas las interfaces excepto Super Admin.</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <h3 className="text-xl font-black text-slate-900 uppercase tracking-widest flex items-center gap-2 italic pt-6">
                     <FiGlobe className="text-indigo-500" /> Marcos Legales Activos
                 </h3>
                 {frameworks.map((fw) => (

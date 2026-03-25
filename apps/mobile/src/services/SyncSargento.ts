@@ -65,14 +65,34 @@ export class SyncSargento {
 
     for (const tx of pending) {
       try {
-        await SyncService.syncLocalChanges(tx);
-        await db.runAsync(
-          "UPDATE offline_transactions SET status = 'SYNCED' WHERE transaction_id = ?",
-          [tx.transaction_id]
-        );
+        // Enviar al SDK para sincronización real
+        const response = await SyncService.syncLocalChanges(tx);
+
+        if (response.success) {
+            await db.runAsync(
+              "UPDATE offline_transactions SET status = 'SYNCED' WHERE transaction_id = ?",
+              [tx.transaction_id]
+            );
+        } else {
+            // Manejar conflictos o errores específicos del servidor
+            await db.runAsync(
+                "UPDATE offline_transactions SET status = 'FAILED' WHERE transaction_id = ?",
+                [tx.transaction_id]
+            );
+        }
       } catch (err) {
-        console.error(`Sync failed for ${tx.transaction_id}`, err);
+        console.error(`Sync failed for ${tx.transaction_id}. Retrying later...`, err);
       }
     }
+  }
+
+  static async autoSyncOnReconnect() {
+      const { addEventListener } = require('@react-native-community/netinfo');
+      addEventListener((state: any) => {
+          if (state.isConnected) {
+              console.log("SARITA: Conexión restaurada. Iniciando sincronización automática...");
+              this.syncQueue();
+          }
+      });
   }
 }
