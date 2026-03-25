@@ -92,7 +92,7 @@ export default function GovernmentDashboard() {
          />
          <KpiCard
             title="Impacto Económico"
-            value={`$${(analytics?.via_2?.impacto_economic?.ventas_totales / 1000000 || 0).toFixed(1)}M`}
+            value={`$${(analytics?.via_2?.impacto_economico?.ventas_totales / 1000000 || 0).toFixed(1)}M`}
             sub="Ventas estimadas Q1"
             icon={FiTrendingUp}
             trend="+8.1%"
