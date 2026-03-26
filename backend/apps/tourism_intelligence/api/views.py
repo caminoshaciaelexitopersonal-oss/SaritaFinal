@@ -1,8 +1,10 @@
 from django.utils import timezone
+from django.db import models
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Sum, Avg, Count
+from api.models import CustomUser
 from apps.turismo.models.provider_models import TourismProvider, Reservation
 from ..models import TourismDemandForecast, TourismSeasonality, TouristBehaviorProfile, TourismEconomicImpact, ConversationalIntent, ConversationalKPI
 from .serializers import (

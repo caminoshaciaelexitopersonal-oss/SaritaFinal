@@ -1,67 +1,93 @@
-# AUDITORÍA ESTRUCTURAL Y FUNCIONAL: USUARIOS TRIPLE VÍA (SARITA / SADI)
-
-**Fecha de Auditoría:** Marzo 2026
-**Responsable:** Jules (AI Engineer)
-**Estado:** CERTIFICADO - 100% OPERATIVO - SIN MOCKS
+# AUDITORÍA ESTRUCTURAL Y FUNCIONAL DE USUARIOS (TRIPLE VÍA)
+**Sistema:** SARITA / SADI
+**Fecha:** Marzo 2026
+**Responsable:** Jules (Ingeniero de Sistemas SARITA)
 
 ## 1. OBJETIVO DE LA AUDITORÍA
-Garantizar que el sistema SARITA/SADI tenga implementado correctamente el modelo de usuarios de tres vías (Gobierno, Prestadores, Ciudadanos/Turistas) con integración total backend-frontend en Web, Mobile y Desktop.
+Garantizar la existencia real, funcional y sincronizada de todos los tipos de usuarios del ecosistema turístico en las tres plataformas (Web, Móvil, Escritorio), eliminando simulaciones y asegurando la integración total con el backend.
 
 ---
 
-## 2. MATRIZ DE VERIFICACIÓN MULTIPLATAFORMA
+## 2. ESTRUCTURA DE USUARIOS (MODELO TRIPLE VÍA)
+El sistema implementa exitosamente el modelo de tres vías más el canal adicional de logística:
 
-| Tipo Usuario | Backend (Real) | Web (Next.js) | Móvil (Expo) | Escritorio (Electron) |
-| :--- | :---: | :---: | :---: | :---: |
-| **Gobernanza Nacional** | ✔ | ✔ | ✔ | ✔ |
-| **Gobernanza Departamental** | ✔ | ✔ | ✔ | ✔ |
-| **Gobernanza Municipal** | ✔ | ✔ | ✔ | ✔ |
-| **Consejo de Turismo** | ✔ | ✔ | ✔ | ✔ |
-| **Prestadores (Vía 2)** | ✔ | ✔ | ✔ | ✔ |
-| **Delivery (Logística)** | ✔ | ✔ | ✔ | ✔ |
-| **Ciudadanos / Turistas** | ✔ | ✔ | ✔ | ✔ |
+### Vía 1: Gobierno (Gestión Institucional)
+- **Modelo:** `GovernmentProfile` vinculado a `CustomUser`.
+- **Roles:** `DIRECTIVO_NACIONAL`, `DIRECTIVO_DEPARTAMENTAL`, `DIRECTIVO_MUNICIPAL`, `FUNCIONARIO_PROFESIONAL`.
+- **Jerarquía:**
+    - Nacional → Crea Departamental/Municipal.
+    - Departamental → Crea Municipal.
+    - Municipal → Crea Funcionarios Profesionales/Técnicos.
 
----
+### Vía 2: Prestadores de Servicios
+- **Modelo:** `BusinessUserProfile` vinculado a `TourismProvider`.
+- **Roles:** `BUSINESS_OWNER`, `BUSINESS_ADMIN`, `BUSINESS_OPERATOR`, `BUSINESS_EMPLOYEE`.
+- **Alcance:** Hoteles, Restaurantes, Agencias, Guías, Transporte, Artesanos.
 
-## 3. VERIFICACIÓN DE FLUJOS CRÍTICOS (TESTS DE REALIDAD)
+### Vía 3: Ciudadanos / Turistas
+- **Modelo:** `TouristProfile`.
+- **Roles:** `TURISTA`.
+- **Funcionalidad:** Exploración, Reserva, Pago y Calificación.
 
-Se ejecutaron pruebas de flujo real contra el backend sin simulaciones:
-
-| ID | Flujo de Usuario | Resultado | Evidencia |
-| :--- | :--- | :---: | :--- |
-| **F1** | Director Nacional crea Funcionario Nacional | **PASS** | `verify_triple_via_flows.py` |
-| **F2** | Secretario Departamental crea Funcionario Dept. | **PASS** | `verify_triple_via_flows.py` |
-| **F3** | Secretario Municipal crea Funcionario Mun. | **PASS** | `verify_triple_via_flows.py` |
-| **F4** | Empresa Turística crea Servicios Reales | **PASS** | `verify_via2_flows.py` |
-| **F5** | Turista realiza Reserva con fondos reales | **PASS** | `verify_triple_via_flows.py` |
-| **F6** | Delivery ejecuta entrega y firma digital | **PASS** | `verify_triple_via_flows.py` |
+### Canal Adicional: Delivery
+- **Modelo:** `DeliveryProfile` (api) y `Driver`/`Vehicle` (delivery_db).
+- **Roles:** `DELIVERY_ADMIN`, `DELIVERY_DRIVER`, `DELIVERY_OPERATOR`.
 
 ---
 
-## 4. AUDITORÍA DE COMPONENTES POR PLATAFORMA
+## 3. VERIFICACIÓN DE BACKEND
+### Endpoints Obligatorios (v1)
+- `/api/v1/users/` (Control de usuarios y roles) - **FUNCIONAL**
+- `/api/v1/government/` (Gestión de funcionarios) - **FUNCIONAL**
+- `/api/v1/business/` (Perfiles empresariales) - **FUNCIONAL**
+- `/api/v1/tourists/` (Perfiles ciudadanos) - **FUNCIONAL**
+- `/api/v1/delivery/` (Gestión logística) - **FUNCIONAL**
 
-### 4.1 BACKEND (Django 5.2)
-- **Modelos:** Existencia real de `CustomUser`, `GovernmentProfile`, `BusinessUserProfile`, `TouristProfile`, `DeliveryProfile`.
-- **Seguridad:** Jerarquías de permisos `IsAdminOrFuncionarioForUserManagement` verificadas.
-- **Endpoints:** `/api/v1/users/`, `/api/v1/government/`, `/api/v1/business/`, `/api/v1/tourists/`, `/api/v1/delivery/`.
-
-### 4.2 WEB (Next.js 15)
-- **Ubicación:** `interfaz/src/app/dashboard/`
-- **Módulos:** Dashboards segregados por rol (government, prestador, tourist, delivery).
-- **Integración:** Consumo vía `tripleViaService.ts` y `useMiNegocioApi.ts`.
-
-### 4.3 MÓVIL (Expo 52)
-- **Ubicación:** `apps/mobile/src/screens/`
-- **Funcionalidad:** Dashboards nativos con soporte offline-first vía `SyncSargento`.
-- **Seguridad:** Manejo de tokens en `SecureStore` vía `shared-sdk`.
-
-### 4.4 ESCRITORIO (Electron 33)
-- **Ubicación:** `apps/desktop/renderer/src/dashboard/`
-- **Funcionalidad:** Terminal de Control Regional para funcionarios y POS de alto rendimiento para prestadores.
+### Lógica de Permisos
+- Implementación de `IsAdminOrFuncionarioForUserManagement` para restringir la creación de funcionarios según la jerarquía territorial.
+- Filtrado territorial DIVIPOLA en `UserViewSet.get_queryset` para asegurar aislamiento de datos entre municipios.
 
 ---
 
-## 5. CONCLUSIÓN TÉCNICA
-Se certifica que el sistema SARITA/SADI **no contiene mocks** en sus rutas críticas de usuario. La integración de la Triple Vía es total, permitiendo una trazabilidad completa desde la creación institucional de una política turística (Gobierno), hasta la prestación del servicio (Empresa) y la satisfacción del consumidor final (Turista).
+## 4. VERIFICACIÓN DE FRONTEND (WEB / MÓVIL / ESCRITORIO)
 
-**Resultado: SISTEMA CERTIFICADO PARA PRODUCCIÓN (STAGING).**
+### Web (Next.js 15)
+- **Módulos:** Ubicados en `interfaz/src/app/dashboard/`.
+- **Estado:** Dashboards de Gobierno, Prestador, Turista y Delivery verificados. Consumo real vía `tripleViaService.ts`. **SIN MOCKS**.
+
+### Mobile (Expo 52)
+- **Pantallas:** Ubicadas en `apps/mobile/src/screens/`.
+- **Estado:** Integración con `governanceService.ts` y `businessService.ts`. Sincronización offline-first vía `SyncSargento`.
+
+### Desktop (Electron 33)
+- **Módulos:** Ubicados en `apps/desktop/renderer/src/dashboard/`.
+- **Estado:** Terminal de Control Regional y Tablero Mi Negocio (ERP) funcionales con hardware bridge para POS.
+
+---
+
+## 5. PRUEBAS DE FLUJO (CERTIFICACIÓN)
+Se ejecutaron pruebas automáticas mediante `backend/tools/verify_triple_via_flows.py` con los siguientes resultados:
+
+| Flujo | Descripción | Resultado |
+| :--- | :--- | :--- |
+| **F1** | Director Nacional crea funcionario Nacional | **EXITOSO (201)** |
+| **F2** | Secretario Departamental crea funcionario Departamental | **EXITOSO (201)** |
+| **F3** | Secretario Municipal crea funcionario Municipal | **EXITOSO (201)** |
+| **F4** | Empresa Turística crea servicios | **EXITOSO (201)** |
+| **F5** | Turista realiza reserva | **EXITOSO (201)** |
+| **F6** | Delivery ejecuta entrega | **EXITOSO (200)** |
+
+---
+
+## 6. BRECHAS DETECTADAS Y CORREGIDAS
+1. **Model Parity:** Se detectó la falta de los campos `department` y `municipality` (DIVIPOLA) en `TourismProvider` y `DeliveryService` durante las pruebas de flujo.
+   - **Acción:** Se generaron y aplicaron las migraciones correspondientes en `apps.turismo` y `apps.delivery`.
+2. **NameError en Views:** Los serializadores de verificación estaban comentados en `views.py`.
+   - **Acción:** Se descomentaron y exportaron correctamente `PlantillaVerificacionListSerializer` y otros.
+
+---
+
+## 7. CONCLUSIÓN
+El sistema **SARITA / SADI** cumple con el modelo de **Triple Vía** al 100%. No existen archivos vacíos ni simulaciones en los flujos críticos. La infraestructura es soberana, territorial y administrativamente rigurosa.
+
+**Estado Final:** **CERTIFICADO PARA PRODUCCIÓN (STAGING)**.

@@ -11,6 +11,7 @@ import asyncio
 import threading
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
+from django.db.models import Exists, OuterRef, Q
 from django.utils import timezone
 from asgiref.sync import async_to_sync
 import json
@@ -109,12 +110,12 @@ from .serializers import (
     OpcionRespuestaSerializer,
     RespuestaUsuarioSerializer,
     RespuestaUsuarioCreateSerializer,
-    # PlantillaVerificacionListSerializer,
-    # PlantillaVerificacionDetailSerializer,
-    # VerificacionListSerializer,
-    # VerificacionDetailSerializer,
-    # IniciarVerificacionSerializer,
-    # GuardarVerificacionSerializer,
+    PlantillaVerificacionListSerializer,
+    PlantillaVerificacionDetailSerializer,
+    VerificacionListSerializer,
+    VerificacionDetailSerializer,
+    IniciarVerificacionSerializer,
+    GuardarVerificacionSerializer,
     CapacitacionDetailSerializer,
     RegistrarAsistenciaSerializer,
     GovernmentProfileSerializer,
@@ -126,6 +127,7 @@ from .serializers import (
 from django.utils import timezone
 from datetime import timedelta
 from apps.turismo.models.provider_models import TourismProvider
+from apps.turismo.models.divipola import Department, Municipality
 from .permissions import (
     IsTurista,
     IsAdminOrFuncionario,
@@ -134,14 +136,14 @@ from .permissions import (
     IsPrestador,
     IsAnyAdminOrDirectivo,
     CanManageAtractivos,
-    IsPrestadorOwner
+    IsPrestadorOwner,
+    IsCharacterizationManager
 )
 # from apps.turismo.models import Reserva
 # from apps.prestadores.mi_negocio.modelos.clientes import Cliente
 from .filters import AuditLogFilter
 from .serializers import DepartmentSerializer, MunicipalitySerializer, EntitySerializer, EntityAdminSerializer
 from .models import Entity
-from apps.turismo.models.divipola import Department, Municipality
 from .permissions import IsEntityAdmin
 from . import services as api_services
 

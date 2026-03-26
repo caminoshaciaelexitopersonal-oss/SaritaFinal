@@ -69,3 +69,15 @@ class TerritorialHardeningTest(TestCase):
         response = self.client.get('/api/admin/verificaciones/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['count'], 3)
+
+    def test_rnt_integration_mock(self):
+        """Prueba de integración RNT y subclasificación"""
+        from apps.turismo.services.rnt_integration import RNTIntegrationService
+
+        # Sincronizamos el prestador de Gaitan
+        RNTIntegrationService.sync_provider(self.prov_gaitan.id)
+        self.prov_gaitan.refresh_from_db()
+
+        self.assertTrue(self.prov_gaitan.rnt_validated)
+        self.assertEqual(self.prov_gaitan.status, 'ACTIVE')
+        self.assertIsNotNone(self.prov_gaitan.rnt_last_sync)

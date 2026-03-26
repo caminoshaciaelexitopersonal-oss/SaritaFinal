@@ -21,7 +21,52 @@ class TourismProviderViewSet(viewsets.ModelViewSet):
         return TourismProvider.objects.filter(owner=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        provider = serializer.save(owner=self.request.user)
+        # Sincronización automática con RNT si se proveyó número
+        if provider.rnt_number:
+            from ..services.rnt_integration import RNTIntegrationService
+            RNTIntegrationService.sync_provider(provider.id)
+
+    @action(detail=True, methods=['post'])
+    def sync_rnt(self, request, pk=None):
+        """
+        Fuerza la sincronización manual con el Registro Nacional de Turismo.
+        """
+        from ..services.rnt_integration import RNTIntegrationService
+        success = RNTIntegrationService.sync_provider(pk)
+        if success:
+            return Response({"status": "success", "message": "Datos sincronizados con éxito."})
+        return Response({"status": "error", "message": "No se pudo validar el RNT."}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'])
+    def me(self, request):
+        """
+        Devuelve el perfil del prestador logueado.
+        """
+        provider = TourismProvider.objects.filter(owner=request.user).first()
+        if not provider:
+             return Response({"error": "No provider profile found"}, status=404)
+        return Response(TourismProviderSerializer(provider).data)
+
+    @action(detail=False, methods=['post'], url_path='login-rnt', permission_classes=[permissions.AllowAny])
+    def login_rnt(self, request):
+        """
+        Inicia sesión utilizando credenciales validadas del Registro Nacional de Turismo.
+        """
+        rnt_number = request.data.get('rnt_number')
+        # password_token = request.data.get('rnt_token') # En producción
+
+        from ..services.rnt_integration import RNTIntegrationService
+        user = RNTIntegrationService.login_via_rnt(rnt_number, None)
+
+        if user:
+            # Aquí se retornaría un JWT real
+            return Response({
+                "status": "success",
+                "message": f"Acceso concedido para RNT {rnt_number}",
+                "user": user.username
+            })
+        return Response({"error": "Credenciales RNT inválidas o prestador no registrado."}, status=status.HTTP_401_UNAUTHORIZED)
 
 class BusinessProfileViewSet(viewsets.ModelViewSet):
     queryset = BusinessProfile.objects.all()

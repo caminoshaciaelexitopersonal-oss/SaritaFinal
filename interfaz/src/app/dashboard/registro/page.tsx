@@ -253,6 +253,18 @@ export default function RegisterPage() {
           {role === 'PRESTADOR' && (
             <div className="p-4 space-y-4 border-l-4 border-green-500 bg-green-50">
               <h3 className="font-medium text-gray-800">Información del Prestador de Servicios</h3>
+
+              <div className="bg-white p-4 rounded-xl border border-green-100 shadow-sm mb-4">
+                  <FormField
+                    name="rnt_number"
+                    label="Registro Nacional de Turismo (RNT)"
+                    register={register}
+                    errors={errors}
+                    placeholder="Ej: 12345"
+                  />
+                  <p className="text-[10px] text-slate-500 mt-1 italic">Si posees RNT, ingresalo para validar automáticamente tu información estatal.</p>
+              </div>
+
               <FormField name="nombre_negocio" label="Nombre del Establecimiento" register={register} errors={errors} required />
               <div>
                   <label htmlFor="categoria_id" className="block text-sm font-medium text-gray-700">Categoría del Servicio</label>

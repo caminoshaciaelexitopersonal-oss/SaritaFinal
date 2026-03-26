@@ -9,6 +9,9 @@ class LocationAwareRegisterSerializer(RegisterSerializer):
     dept_code = serializers.CharField(max_length=2, required=True, write_only=True)
     mun_code = serializers.CharField(max_length=5, required=True, write_only=True)
 
+    # RNT Optional but highly recommended for Via 2
+    rnt_number = serializers.CharField(max_length=50, required=False, write_only=True)
+
     def get_cleaned_data(self):
         data = super().get_cleaned_data()
         data.pop('username', None)
@@ -44,4 +47,23 @@ class LocationAwareRegisterSerializer(RegisterSerializer):
                 'municipality': self.validated_data['municipality']
             }
         )
+
+        # Si es un prestador, intentar validar RNT si se proveyó
+        rnt_num = self.validated_data.get('rnt_number')
+        if rnt_num:
+            from apps.turismo.services.rnt_integration import RNTIntegrationService
+            from apps.turismo.models.provider_models import TourismProvider
+
+            # Buscamos o creamos el provider
+            provider, _ = TourismProvider.objects.get_or_create(
+                owner=user,
+                defaults={
+                    'name': f"Negocio de {user.get_full_name() or user.username}",
+                    'department': self.validated_data['department'],
+                    'municipality': self.validated_data['municipality'],
+                    'rnt_number': rnt_num
+                }
+            )
+            RNTIntegrationService.sync_provider(provider.id)
+
         return user

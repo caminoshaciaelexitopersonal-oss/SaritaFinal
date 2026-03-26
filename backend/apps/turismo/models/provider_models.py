@@ -39,6 +39,14 @@ class TourismProvider(BaseModel):
     contact = models.JSONField(default=dict, help_text="Teléfonos, redes sociales, etc.")
     status = models.CharField(max_length=20, default='ACTIVE')
 
+    # --- R.N.T. Data ---
+    rnt_number = models.CharField(_('Número RNT'), max_length=50, blank=True, null=True, db_index=True)
+    rnt_validated = models.BooleanField(default=False)
+    rnt_last_sync = models.DateTimeField(null=True, blank=True)
+
+    # --- Classification ---
+    sub_classification = models.CharField(_('Subclasificación'), max_length=150, blank=True, null=True)
+
     # --- Scoring & Visibility ---
     puntuacion_capacitacion = models.PositiveIntegerField(default=0, help_text="Puntaje por asistencia a capacitaciones.")
     puntuacion_verificacion = models.PositiveIntegerField(default=0, help_text="Puntaje por cumplimiento de requisitos legales.")
