@@ -1,7 +1,7 @@
 from django.test import TestCase
 from api.models import CustomUser
 from apps.companies.models import Company
-from apps.wallet.models import WalletAccount, WalletTransaction
+from apps.wallet.models import Wallet, WalletTransaccion
 from apps.admin_plataforma.services.governance_kernel import GovernanceKernel, AuthorityLevel
 from decimal import Decimal
 
@@ -23,11 +23,11 @@ class WalletIntegrationTest(TestCase):
         )
 
         # Get or create wallets (signals might have created them)
-        self.tourist_wallet, _ = WalletAccount.objects.get_or_create(
+        self.tourist_wallet, _ = Wallet.objects.get_or_create(
             user_id=self.tourist_user.id,
             owner_id=str(self.tourist_user.id),
             defaults={
-                'owner_type': WalletAccount.OwnerType.TURISTA,
+                'owner_type': Wallet.OwnerType.TURISTA,
                 'saldo_disponible': Decimal('100.00')
             }
         )
@@ -35,11 +35,11 @@ class WalletIntegrationTest(TestCase):
             self.tourist_wallet.saldo_disponible = Decimal('100.00')
             self.tourist_wallet.save()
 
-        self.provider_wallet, _ = WalletAccount.objects.get_or_create(
+        self.provider_wallet, _ = Wallet.objects.get_or_create(
             user_id=self.provider_user.id,
             owner_id='some-uuid-for-provider-test',
             defaults={
-                'owner_type': WalletAccount.OwnerType.HOTEL,
+                'owner_type': Wallet.OwnerType.HOTEL,
                 'saldo_disponible': Decimal('0.00')
             }
         )
@@ -62,11 +62,14 @@ class WalletIntegrationTest(TestCase):
         self.provider_wallet.refresh_from_db()
 
         self.assertEqual(self.tourist_wallet.saldo_disponible, Decimal('50.00'))
-        self.assertEqual(self.provider_wallet.saldo_disponible, Decimal('50.00'))
+        # El prestador recibe el 90% (50 * 0.9 = 45)
+        self.assertEqual(self.provider_wallet.saldo_disponible, Decimal('45.00'))
 
         # Check transaction
-        tx = WalletTransaction.objects.get(id=result['transaction_id'])
-        self.assertEqual(tx.monto_total, Decimal('50.00'))
+        tx = WalletTransaccion.objects.get(id=result['transaction_id'])
+        # El monto_total registrado en la transaccion es la suma de los montos de movimientos PAGO e INGRESO
+        # PAGO(50) + INGRESO(45) = 95
+        self.assertEqual(tx.monto_total, Decimal('95.00'))
 
     def test_insufficient_funds(self):
         kernel = GovernanceKernel(user=self.tourist_user)
@@ -93,16 +96,16 @@ class WalletIntegrationTest(TestCase):
 
         self.assertEqual(result['status'], 'SUCCESS')
         self.tourist_wallet.refresh_from_db()
-        self.assertEqual(self.tourist_wallet.estado, WalletAccount.Status.BLOQUEADO)
+        self.assertEqual(self.tourist_wallet.estado, Wallet.Status.BLOQUEADO)
 
         # Now payment should fail
         kernel_tourist = GovernanceKernel(user=self.tourist_user)
-        # Note: Depending on Kernel implementation, this might raise Exception or return FAIL
-        res = kernel_tourist.resolve_and_execute(
-            intention_name="WALLET_PAY",
-            parameters={
-                "to_wallet_id": str(self.provider_wallet.id),
-                "amount": 10.00
-            }
-        )
-        self.assertEqual(res['status'], 'FAIL')
+        # El Kernel lanza ValueError si el saldo es insuficiente o hay bloqueo
+        with self.assertRaises(ValueError):
+            kernel_tourist.resolve_and_execute(
+                intention_name="WALLET_PAY",
+                parameters={
+                    "to_wallet_id": str(self.provider_wallet.id),
+                    "amount": 10.00
+                }
+            )

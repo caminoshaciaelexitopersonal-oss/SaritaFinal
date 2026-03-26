@@ -30,9 +30,36 @@ class TourismProvider(BaseModel):
     name = models.CharField(max_length=255)
     provider_type = models.CharField(max_length=20, choices=ProviderType.choices)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tourism_providers')
+
+    # --- Territorial Hierarchy (DIVIPOLA) ---
+    department = models.ForeignKey('turismo.Department', on_delete=models.PROTECT, related_name='providers', null=True, blank=True)
+    municipality = models.ForeignKey('turismo.Municipality', on_delete=models.PROTECT, related_name='providers', null=True, blank=True)
+
     location = models.JSONField(default=dict, help_text="Coordenadas y dirección")
     contact = models.JSONField(default=dict, help_text="Teléfonos, redes sociales, etc.")
     status = models.CharField(max_length=20, default='ACTIVE')
+
+    # --- R.N.T. Data ---
+    rnt_number = models.CharField(_('Número RNT'), max_length=50, blank=True, null=True, db_index=True)
+    rnt_validated = models.BooleanField(default=False)
+    rnt_last_sync = models.DateTimeField(null=True, blank=True)
+
+    # --- Classification ---
+    sub_classification = models.CharField(_('Subclasificación'), max_length=150, blank=True, null=True)
+
+    # --- Scoring & Visibility ---
+    puntuacion_capacitacion = models.PositiveIntegerField(default=0, help_text="Puntaje por asistencia a capacitaciones.")
+    puntuacion_verificacion = models.PositiveIntegerField(default=0, help_text="Puntaje por cumplimiento de requisitos legales.")
+    puntuacion_resenas = models.PositiveIntegerField(default=0, help_text="Puntaje por reseñas de turistas.")
+    puntuacion_total = models.PositiveIntegerField(default=0, db_index=True)
+
+    def recalcular_puntuacion_total(self):
+        self.puntuacion_total = (
+            self.puntuacion_capacitacion +
+            self.puntuacion_verificacion +
+            self.puntuacion_resenas
+        )
+        self.save(update_fields=['puntuacion_total'])
 
     def __str__(self):
         return f"{self.name} ({self.get_provider_type_display()})"

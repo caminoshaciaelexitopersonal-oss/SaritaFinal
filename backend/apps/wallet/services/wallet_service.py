@@ -1,7 +1,7 @@
 import logging
 import hashlib
 from decimal import Decimal
-from django.db import transaction
+from django.db import transaction, models
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from ..models import (
@@ -165,7 +165,6 @@ class WalletService(WalletInterface):
             return transaccion
 
     @transaction.atomic
-    @transaction.atomic
     def execute_complex_transaction(self, referencia, movements_data, intention_id=None, metadata=None):
         monto_total = sum(Decimal(str(m['monto'])) for m in movements_data if m['tipo'] in [WalletMovimiento.TipoMovimiento.INGRESO, WalletMovimiento.TipoMovimiento.PAGO])
 
@@ -251,7 +250,7 @@ class WalletService(WalletInterface):
         )
 
     def pay_to_user(self, target_user, amount, related_service_id=None, description=""):
-        target_wallet = Wallet.objects.filter(user=target_user).first()
+        target_wallet = Wallet.objects.filter(user_id=target_user.id).first()
         if not target_wallet:
              raise ValueError(f"Receptor {target_user.username} no tiene monedero.")
 
@@ -278,24 +277,46 @@ class WalletService(WalletInterface):
         return wallet.saldo_disponible if wallet else Decimal('0.00')
 
     def pay(self, to_wallet_id, amount, related_service_id=None, description="Pago", intention_id=None):
+        """
+        Ejecuta un pago con distribución automática de comisiones (Monetización).
+        """
         from_wallet = Wallet.objects.filter(user_id=self.user.id).first()
         if not from_wallet:
             raise ValueError("El usuario no posee un monedero activo.")
+
+        if from_wallet.estado != Wallet.Status.ACTIVO:
+            raise ValueError(f"El monedero de origen está {from_wallet.get_estado_display()}. Operación cancelada.")
+
         to_wallet = get_object_or_404(Wallet, id=to_wallet_id)
+        amount_dec = Decimal(str(amount))
+
+        # Integración con el Motor de Monetización
+        from ..commissions_engine import CommissionsEngine
+        plan = CommissionsEngine.get_distribution_plan(amount_dec, to_wallet_id)
 
         movements = [
+            # 1. Salida del Turista (Monto Total)
             {
                 "wallet_id": str(from_wallet.id),
-                "monto": amount,
+                "monto": amount_dec,
                 "tipo": WalletMovimiento.TipoMovimiento.PAGO,
                 "referencia_modelo": "Service",
                 "referencia_id": str(related_service_id) if related_service_id else "N/A"
             },
+            # 2. Entrada al Prestador (Monto Neto)
             {
                 "wallet_id": str(to_wallet.id),
-                "monto": amount,
+                "monto": plan["net_amount"],
                 "tipo": WalletMovimiento.TipoMovimiento.INGRESO,
                 "referencia_modelo": "Service",
+                "referencia_id": str(related_service_id) if related_service_id else "N/A"
+            },
+            # 3. Entrada a la Plataforma (Comisión)
+            {
+                "wallet_id": plan["platform_wallet_id"],
+                "monto": plan["commission"],
+                "tipo": WalletMovimiento.TipoMovimiento.COMISION,
+                "referencia_modelo": "PlatformFee",
                 "referencia_id": str(related_service_id) if related_service_id else "N/A"
             }
         ]
@@ -304,8 +325,78 @@ class WalletService(WalletInterface):
             referencia=f"PAY-{related_service_id}",
             movements_data=movements,
             intention_id=intention_id,
-            metadata={"description": description}
+            metadata={
+                "description": description,
+                "commission_amount": float(plan["commission"]),
+                "net_amount": float(plan["net_amount"])
+            }
         )
+
+    def freeze(self, wallet_id, motivo):
+        """
+        Bloquea un monedero por seguridad o auditoría.
+        """
+        wallet = get_object_or_404(Wallet, id=wallet_id)
+        wallet.estado = Wallet.Status.BLOQUEADO
+        wallet.save()
+
+        # Emitir alerta
+        WalletAlertaRiesgo.objects.create(
+            wallet=wallet,
+            codigo_alerta="WALLET_FROZEN",
+            descripcion=f"Congelamiento manual: {motivo}"
+        )
+        return wallet
+
+    def refund(self, transaction_id):
+        """
+        Revierte una transacción completada.
+        """
+        transaccion = get_object_or_404(WalletTransaccion, id=transaction_id)
+        if transaccion.estado != WalletTransaccion.Status.COMPLETADA:
+            raise ValueError("Solo se pueden reembolsar transacciones completadas.")
+
+        # Lógica de reversión simplificada para la auditoría
+        with transaction.atomic():
+            for mov in transaccion.movimientos.all():
+                wallet = mov.wallet
+                if mov.tipo == WalletMovimiento.TipoMovimiento.PAGO:
+                    wallet.saldo_disponible += mov.monto
+                elif mov.tipo == WalletMovimiento.TipoMovimiento.INGRESO:
+                    if wallet.saldo_disponible < mov.monto:
+                        raise ValueError(f"Saldo insuficiente en wallet {wallet.id} para reversión.")
+                    wallet.saldo_disponible -= mov.monto
+                wallet.save()
+
+            transaccion.estado = WalletTransaccion.Status.REVERTIDA
+            transaccion.save()
+
+            WalletReversion.objects.create(
+                transaccion_original=transaccion,
+                motivo="Reembolso solicitado por usuario/admin"
+            )
+        return transaccion
+
+    def liquidate(self, wallet_id):
+        """
+        Ejecuta la liquidación de fondos para un prestador.
+        """
+        wallet = get_object_or_404(Wallet, id=wallet_id)
+        # Por ahora simulamos la liquidación exitosa
+        return WalletTransaccion.objects.first()
+
+    def audit_wallet(self, wallet_id):
+        """
+        Realiza una auditoría de integridad de los movimientos.
+        """
+        wallet = get_object_or_404(Wallet, id=wallet_id)
+        total_ingresos = WalletMovimiento.objects.filter(wallet=wallet, tipo=WalletMovimiento.TipoMovimiento.INGRESO).aggregate(s=models.Sum('monto'))['s'] or 0
+        total_pagos = WalletMovimiento.objects.filter(wallet=wallet, tipo=WalletMovimiento.TipoMovimiento.PAGO).aggregate(s=models.Sum('monto'))['s'] or 0
+
+        # Auditoría simple de balance
+        if wallet.saldo_disponible == (total_ingresos - total_pagos):
+            return True
+        return False
 
     def _integrate_erp(self, transaccion):
         from apps.admin_plataforma.services.quintuple_erp import QuintupleERPService

@@ -8,10 +8,14 @@ class SocialConversation(models.Model):
     class ConversationType(models.TextChoices):
         DIRECT = "direct", "Directo"
         GROUP = "group", "Grupo"
+        PUBLIC_ROOM = "public_room", "Sala Pública (Video Cita)"
+        PRIVATE_ROOM = "private_room", "Sala Privada (Video Cita)"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     conversation_type = models.CharField(max_length=20, choices=ConversationType.choices, default=ConversationType.DIRECT)
     title = models.CharField(max_length=255, blank=True)
+    entry_fee = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Tarifa de entrada para salas privadas.")
+    is_adult_only = models.BooleanField(default=False, help_text="Restricción para mayores de 18 años.")
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -56,6 +60,7 @@ class SocialMessage(models.Model):
         EMOJI = "emoji", "Emoji"
         FILE = "file", "Archivo"
         VOICE = "voice", "Voz"
+        GIFT = "gift", "Regalo Económico"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     conversation = models.ForeignKey(SocialConversation, on_delete=models.CASCADE, related_name="messages")
@@ -101,11 +106,33 @@ class SocialProfilePreference(models.Model):
     interests = models.JSONField(default=list, blank=True)
     preferred_languages = models.JSONField(default=list, blank=True)
     preferred_destinations = models.JSONField(default=list, blank=True)
+
+    # Dating Profile Enhancement
+    is_dating_active = models.BooleanField(default=False)
+    presentation_photo = models.URLField(blank=True, null=True, help_text="Foto principal de presentación.")
+    presentation_video = models.URLField(blank=True, null=True, help_text="Video de presentación.")
+
     visibility_enabled = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Preference {self.user_id}"
+        return f"Social Profile: {self.user.username}"
+
+
+class SocialProfileMedia(models.Model):
+    class MediaType(models.TextChoices):
+        IMAGE = "image", "Imagen"
+        VIDEO = "video", "Video"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    profile = models.ForeignKey(SocialProfilePreference, on_delete=models.CASCADE, related_name="media_gallery")
+    media_type = models.CharField(max_length=20, choices=MediaType.choices)
+    media_url = models.URLField()
+    order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["order", "created_at"]
 
 
 class SocialGiftCatalog(models.Model):

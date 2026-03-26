@@ -3,6 +3,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from .domain.models import OperacionComercial
+from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.clientes.models import Cliente
+from .serializers import OperacionSerializer, ClienteSerializer
+from rest_framework.views import APIView
+from django.db.models import Sum
 
 class OperacionComercialViewSet(viewsets.ModelViewSet):
     queryset = OperacionComercial.objects.all()

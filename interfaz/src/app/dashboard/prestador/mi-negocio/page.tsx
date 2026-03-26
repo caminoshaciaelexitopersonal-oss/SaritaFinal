@@ -50,8 +50,18 @@ const sections = [
     href: '/dashboard/prestador/mi-negocio/monedero',
     color: 'bg-indigo-100 text-indigo-600',
     key: 'wallet'
+  },
+  {
+    title: 'Caracterización Institucional',
+    desc: 'Completa tu perfil técnico para la Secretaría de Turismo.',
+    icon: FiFileText,
+    href: '/dashboard/prestador/mi-negocio/caracterizacion',
+    color: 'bg-orange-100 text-orange-600',
+    key: 'characterization'
   }
 ];
+
+import { FiFileText, FiAlertCircle } from 'react-icons/fi';
 
 export default function MiNegocioDashboard() {
   const { getStatistics } = useMiNegocioApi();
@@ -80,9 +90,22 @@ export default function MiNegocioDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
          <StatCard title="Ventas del Mes" value={stats?.total_sales} icon={FiTrendingUp} isCurrency />
          <StatCard title="Reservas Activas" value={stats?.active_reservations} icon={FiCalendar} />
-         <StatCard title="Pedidos Delivery" value={stats?.pending_deliveries} icon={FiTruck} />
+         <StatCard title="Puntaje Institucional" value="85" icon={<FiAward className="text-indigo-600"/>} />
          <StatCard title="Saldo Monedero" value={stats?.wallet_balance} icon={FiCreditCard} isCurrency />
       </div>
+
+      <Card className="bg-amber-50 border-amber-100 border-2 rounded-[2rem] p-8 flex items-center gap-6 animate-pulse">
+         <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center shrink-0">
+            <FiAlertCircle size={32} />
+         </div>
+         <div>
+            <h3 className="text-xl font-bold text-amber-900">Periodo de Caracterización Activo</h3>
+            <p className="text-amber-700 font-medium">Restan 24 días para completar tu caracterización técnica obligatoria. Evita sanciones y mejora tu visibilidad.</p>
+         </div>
+         <Link href="/dashboard/prestador/mi-negocio/caracterizacion" className="ml-auto">
+            <Button className="bg-amber-600 hover:bg-amber-700 text-white font-black px-8">Completar Ahora</Button>
+         </Link>
+      </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
          {sections.map((sec, i) => (

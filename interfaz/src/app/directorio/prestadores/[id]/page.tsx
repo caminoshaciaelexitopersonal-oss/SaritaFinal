@@ -127,7 +127,33 @@ function PrestadorDetailPageContent() {
   if (loading) return <DetailPageSkeleton />;
   if (!prestador) return <div>Prestador no encontrado.</div>;
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: prestador.nombre_negocio,
+    description: prestador.descripcion,
+    image: prestador.foto_principal,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: prestador.direccion,
+      addressLocality: prestador.municipio_nombre,
+      addressCountry: 'CO'
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: prestador.latitud,
+      longitude: prestador.longitud
+    },
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/directorio/prestadores/${id}`,
+    telephone: prestador.telefono_contacto
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     <div className="container mx-auto px-4 py-8">
       {/* ... (encabezado, galería, etc.) ... */}
 
@@ -168,7 +194,7 @@ function PrestadorDetailPageContent() {
             </div>
         </Modal>
       )}
-    </div>
+    </>
   );
 }
 

@@ -12,6 +12,7 @@ class TourismProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = TourismProvider
         fields = '__all__'
+        read_only_fields = ['owner']
 
 class TourismServiceSerializer(serializers.ModelSerializer):
     class Meta:

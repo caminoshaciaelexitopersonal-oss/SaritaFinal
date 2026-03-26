@@ -3,7 +3,7 @@ import json
 from uuid import UUID
 from typing import Dict, Any, Optional, List
 from enum import IntEnum
-from django.db import transaction
+from django.db import transaction, models
 from api.models import CustomUser
 from apps.admin_plataforma.models import GovernanceAuditLog, GovernancePolicy
 from api.services import DefenseService

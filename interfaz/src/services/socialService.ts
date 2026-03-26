@@ -2,8 +2,10 @@ import api from './api';
 
 export interface SocialConversation {
   id: string;
-  conversation_type: 'direct' | 'group';
+  conversation_type: 'direct' | 'group' | 'public_room' | 'private_room';
   title: string;
+  entry_fee?: string;
+  is_adult_only?: boolean;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -21,7 +23,7 @@ export interface SocialMessage {
   id: string;
   conversation: string;
   sender: string;
-  message_type: 'text' | 'emoji' | 'file' | 'voice';
+  message_type: 'text' | 'emoji' | 'file' | 'voice' | 'gift';
   content: string;
   is_deleted: boolean;
   created_at: string;
@@ -35,6 +37,13 @@ export interface SocialMessage {
   }>;
 }
 
+export interface SocialProfileMedia {
+  id: string;
+  media_type: 'image' | 'video';
+  media_url: string;
+  order: number;
+}
+
 export interface SocialPreference {
   id: string;
   user: string;
@@ -42,6 +51,10 @@ export interface SocialPreference {
   interests: string[];
   preferred_languages: string[];
   preferred_destinations: string[];
+  is_dating_active?: boolean;
+  presentation_photo?: string;
+  presentation_video?: string;
+  media_gallery?: SocialProfileMedia[];
   visibility_enabled: boolean;
   updated_at: string;
 }
@@ -75,10 +88,17 @@ export const listSocialConversations = async (): Promise<SocialConversation[]> =
 };
 
 export const createSocialConversation = async (payload: {
-  conversation_type?: 'direct' | 'group';
+  conversation_type?: 'direct' | 'group' | 'public_room' | 'private_room';
   title?: string;
+  entry_fee?: number;
+  is_adult_only?: boolean;
 }): Promise<SocialConversation> => {
   const { data } = await api.post('/social/conversations/', payload);
+  return data;
+};
+
+export const joinSocialConversation = async (conversationId: string) => {
+  const { data } = await api.post(`/social/conversations/${conversationId}/join/`);
   return data;
 };
 
@@ -94,7 +114,7 @@ export const listSocialMessages = async (conversationId: string): Promise<Social
 
 export const sendSocialMessage = async (payload: {
   conversation: string;
-  message_type?: 'text' | 'emoji' | 'file' | 'voice';
+  message_type?: 'text' | 'emoji' | 'file' | 'voice' | 'gift';
   content: string;
 }): Promise<SocialMessage> => {
   const { data } = await api.post('/social/messages/', payload);

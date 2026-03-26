@@ -3,6 +3,8 @@
  * Simulación de eventos para tracking de usuario.
  */
 
+import { api } from './api';
+
 export const analyticsService = {
   logEvent(eventName: string, params: any = {}) {
     console.log(`[Analytics] Event: ${eventName}`, params);
@@ -19,5 +21,10 @@ export const analyticsService = {
 
   logSearch(query: string) {
     this.logEvent('search_used', { query });
+  },
+
+  // Vía 3: Unified Intelligence Dashboard
+  getUnifiedDashboard: async () => {
+    return api.get('/tourism/intelligence/dashboard/');
   }
 };

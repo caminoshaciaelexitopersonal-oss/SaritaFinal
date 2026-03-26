@@ -1,84 +1,116 @@
-"use client";
+'use client';
 
-import { useState } from 'react';
-import useSWR, { useSWRConfig } from 'swr';
-import toast from 'react-hot-toast';
-import { PageHeader } from '@/components/shared/page-header';
-import { Button } from '@/components/ui/Button';
-import { Spinner } from '@/components/common/Spinner'; // Asumo que existe
-import { Alert } from '@/components/common/Alert'; // Asumo que existe
+import React, { useEffect, useState } from 'react';
+import api from '@/services/api';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { FiGift, FiSearch, FiTrendingUp, FiCreditCard } from 'react-icons/fi';
+import { ViewState } from '@/components/ui/ViewState';
 
-// Simulación de tipos, deben coincidir con la API
-interface Product { name: string; base_price: string; }
-interface Amenity { id: number; nombre: string; }
-interface RoomType { id: number; product: Product; capacidad: number; amenities: Amenity[]; }
+export default function GiftAuditPage() {
+  const [gifts, setGifts] = useState<any[]>([]);
+  const [audit, setAudit] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-const fetcher = (url: string) => apiClient.get(url).then(res => res.data.results);
+  useEffect(() => {
+    loadData();
+  }, []);
 
-// --- Componentes Anidados (Simplificados por ahora) ---
+  const loadData = async () => {
+    try {
+      const [giftsRes, auditRes] = await Promise.all([
+          api.get('/admin/plataforma/system-audit/financial/gift-catalog/'),
+          api.get('/admin/plataforma/system-audit/financial/gift-audit/')
+      ]);
+      setGifts(giftsRes.data);
+      setAudit(auditRes.data);
+    } catch (e) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-const RoomList = ({ roomTypeId }: { roomTypeId: number }) => {
-    // Lógica para listar y añadir habitaciones físicas (Rooms)
-    return <div className="p-4 bg-gray-100 rounded mt-4">Gestión de Habitaciones Físicas (Próximamente)</div>;
-};
+  return (
+    <div className="space-y-10 animate-in fade-in duration-700">
+      <div className="flex justify-between items-end">
+        <div>
+           <div className="flex items-center gap-2 text-pink-600 font-bold mb-2 uppercase tracking-widest text-xs">
+              <FiGift /> Auditoría Económica Vía 3
+           </div>
+           <h1 className="text-5xl font-black text-slate-900 tracking-tighter uppercase">Motor de Premios y Regalos</h1>
+           <p className="text-slate-500 font-medium mt-1">Supervisión de transacciones sociales y recaudo de comisiones del 2%.</p>
+        </div>
+      </div>
 
-const AmenitySelector = ({ roomTypeId, initialAmenityIds }: { roomTypeId: number; initialAmenityIds: number[] }) => {
-    // Lógica para asignar amenities a un RoomType
-    return <div className="p-4 bg-gray-100 rounded mt-4">Gestor de Amenidades (Próximamente)</div>;
-};
+      <ViewState isLoading={isLoading}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* AUDIT LOG */}
+            <div className="lg:col-span-2">
+                <Card className="border-none shadow-xl bg-white rounded-[2.5rem] overflow-hidden">
+                    <CardHeader className="p-8 border-b border-slate-50">
+                        <CardTitle className="text-xl font-black uppercase tracking-tight">Historial Reciente de Regalos</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left">
+                                <thead className="bg-slate-50 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                    <tr>
+                                        <th className="px-8 py-4">Emisor</th>
+                                        <th className="px-8 py-4">Receptor</th>
+                                        <th className="px-8 py-4">Monto</th>
+                                        <th className="px-8 py-4 text-pink-600">Comisión (2%)</th>
+                                        <th className="px-8 py-4">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-50">
+                                    {audit.map((tx) => (
+                                        <tr key={tx.id} className="hover:bg-slate-50/50 transition-colors">
+                                            <td className="px-8 py-6 font-bold text-sm text-slate-700">{tx.sender}</td>
+                                            <td className="px-8 py-6 font-bold text-sm text-slate-700">{tx.receiver}</td>
+                                            <td className="px-8 py-6 font-black text-sm text-slate-900">${tx.amount}</td>
+                                            <td className="px-8 py-6 font-black text-sm text-pink-600">+${tx.commission_2pct}</td>
+                                            <td className="px-8 py-6">
+                                                <Badge className="bg-emerald-100 text-emerald-700 text-[9px] font-black uppercase">{tx.status}</Badge>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
-// --- Componente Principal ---
+            {/* CATALOG SUMMARY */}
+            <div className="space-y-8">
+                <Card className="border-none shadow-xl bg-slate-900 text-white p-10 rounded-[2.5rem]">
+                   <p className="text-xs font-black uppercase tracking-[0.2em] text-pink-400 mb-4">Recaudo Estimado Comisiones</p>
+                   <h3 className="text-6xl font-black italic tracking-tighter">
+                       ${audit.reduce((acc, curr) => acc + curr.commission_2pct, 0).toLocaleString()}
+                   </h3>
+                   <p className="text-[10px] text-slate-500 mt-6 uppercase font-bold tracking-widest">Fondos dirigidos a la Wallet Corporativa</p>
+                </Card>
 
-export default function HotelManagementPage() {
-    const { data: roomTypes, error, isLoading } = useSWR<RoomType[]>('/api/v1/mi-negocio/gestion-operativa/hotel/room-types/', fetcher);
-    const [selectedRoomTypeId, setSelectedRoomTypeId] = useState<number | null>(null);
-
-    if (isLoading) return <Spinner text="Cargando configuración del hotel..." />;
-    if (error) return <Alert type="error" title="Error">No se pudo cargar la configuración del hotel.</Alert>;
-
-    return (
-        <div className="flex flex-col gap-8">
-            <PageHeader
-                title="Gestión de Hotel"
-                description="Configure los tipos de habitación, el inventario físico y los servicios de su hotel."
-            >
-                <Button>+ Nuevo Tipo de Habitación</Button>
-            </PageHeader>
-
-            <div className="space-y-4">
-                {roomTypes?.map(rt => (
-                    <div key={rt.id} className="border p-4 rounded-lg shadow-sm">
-                        <button
-                            className="w-full text-left"
-                            onClick={() => setSelectedRoomTypeId(selectedRoomTypeId === rt.id ? null : rt.id)}
-                        >
-                            <h3 className="font-bold text-lg">{rt.product.name}</h3>
-                            <p className="text-sm text-gray-600">
-                                Capacidad: {rt.capacidad} personas | Precio Base: ${rt.product.base_price}
-                            </p>
-                        </button>
-
-                        {selectedRoomTypeId === rt.id && (
-                            <div className="pl-4 mt-4 border-l-2">
-                                <AmenitySelector roomTypeId={rt.id} initialAmenityIds={rt.amenities.map(a => a.id)} />
-                                <RoomList roomTypeId={rt.id} />
+                <h3 className="text-xl font-black text-slate-900 uppercase tracking-widest flex items-center gap-2 italic">
+                    <FiSearch className="text-indigo-500" /> Catálogo Activo
+                </h3>
+                <div className="grid grid-cols-1 gap-4 max-h-[500px] overflow-y-auto pr-2">
+                    {gifts.map((gift) => (
+                        <div key={gift.id} className="bg-white p-6 rounded-2xl shadow-sm flex justify-between items-center border border-slate-100">
+                            <div>
+                                <h4 className="font-bold text-slate-900">{gift.name}</h4>
+                                <p className="text-xs text-slate-400">Código: {gift.code}</p>
                             </div>
-                        )}
-                    </div>
-                ))}
-                {roomTypes?.length === 0 && (
-                    <Alert type="info" title="Sin Configuración">
-                        Aún no has creado ningún tipo de habitación. Haz clic en "+ Nuevo Tipo de Habitación" para empezar.
-                    </Alert>
-                )}
+                            <div className="text-right">
+                                <p className="font-black text-indigo-600">${gift.price}</p>
+                                <Badge className="bg-slate-100 text-slate-500 text-[8px] uppercase">ACTIVO</Badge>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
-    );
+      </ViewState>
+    </div>
+  );
 }
-
-// Asumo que existe un cliente de API en @/services/api
-import axios from 'axios';
-const apiClient = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000',
-    // Aquí iría la lógica para añadir el token de autenticación
-});

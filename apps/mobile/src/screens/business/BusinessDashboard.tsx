@@ -18,6 +18,12 @@ export const BusinessDashboard = () => {
     fetchBusinessData();
   }, []);
 
+  const handleSync = async () => {
+      const { SyncSargento } = require('../../services/SyncSargento');
+      await SyncSargento.syncQueue();
+      Alert.alert("Sincronización", "Cola de transacciones offline procesada.");
+  }
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>ERP Mi Negocio</Text>

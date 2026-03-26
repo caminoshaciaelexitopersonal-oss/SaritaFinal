@@ -8,4 +8,9 @@ export const aiService = {
   // Utiliza el motor híbrido del SDK para soporte Offline con Ollama
   askAssistant: (query: string) => hybridAI.ask(query),
   getRecommendations: () => api.get('/recommendations/'),
+
+  // Vía 3: Unified Intelligence Dashboard
+  getUnifiedDashboard: async () => {
+    return api.get('/tourism/intelligence/dashboard/');
+  }
 };

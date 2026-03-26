@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import SaritaProfileView, PlanViewSet, SuscripcionViewSet, MetaStandardView, SupervisionDianViewSet
+from .superadmin import SuperAdminSystemAuditViewSet
 from apps.audit.views import ForensicSecurityLogViewSet
 
 app_name = 'admin_plataforma'
@@ -10,6 +11,7 @@ router.register(r'planes', PlanViewSet, basename='plan')
 router.register(r'suscripciones', SuscripcionViewSet, basename='suscripcion')
 router.register(r'supervision-dian', SupervisionDianViewSet, basename='supervision-dian')
 router.register(r'audit/forensic-logs', ForensicSecurityLogViewSet, basename='forensic-log')
+router.register(r'system-audit', SuperAdminSystemAuditViewSet, basename='system-audit')
 
 urlpatterns = [
     path('profile/', SaritaProfileView.as_view(), name='sarita-profile'),

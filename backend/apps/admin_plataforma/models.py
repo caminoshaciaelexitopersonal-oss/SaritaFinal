@@ -240,3 +240,30 @@ class GovernancePolicyVersion(models.Model):
     class Meta:
         app_label = 'admin_plataforma'
         unique_together = ('policy', 'version_number')
+
+
+class PlatformGlobalSettings(models.Model):
+    """
+    Configuraciones maestras de la plataforma SARITA, accesibles solo por el Super Admin.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    # Comisiones
+    social_gift_commission_pct = models.DecimalField(max_digits=5, decimal_places=2, default=2.00, help_text="Porcentaje de comisión por regalos sociales.")
+    room_entry_commission_pct = models.DecimalField(max_digits=5, decimal_places=2, default=10.00, help_text="Porcentaje de comisión por entrada a salas privadas.")
+
+    # Límites
+    max_gift_amount = models.DecimalField(max_digits=12, decimal_places=2, default=100000.00)
+
+    # Flags de Sistema
+    maintenance_mode = models.BooleanField(default=False)
+    registration_open = models.BooleanField(default=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = 'admin_plataforma'
+        verbose_name = "Configuración Global de Plataforma"
+
+    def __str__(self):
+        return "Configuración Maestra SARITA"

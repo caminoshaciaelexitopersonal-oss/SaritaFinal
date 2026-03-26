@@ -81,11 +81,15 @@ class FinancialPeriod(TenantAwareModel):
 
 class LedgerAccount(TenantAwareModel):
     ACCOUNT_TYPES = [
-        ('ASSET', 'Asset'),
-        ('LIABILITY', 'Liability'),
-        ('EQUITY', 'Equity'),
-        ('REVENUE', 'Revenue'),
-        ('EXPENSE', 'Expense'),
+        ('ASSET', 'Activo'),                # Clase 1
+        ('LIABILITY', 'Pasivo'),           # Clase 2
+        ('EQUITY', 'Patrimonio'),          # Clase 3
+        ('REVENUE', 'Ingresos'),           # Clase 4
+        ('EXPENSE', 'Gastos'),             # Clase 5
+        ('COST_OF_SALES', 'Costos de Ventas'), # Clase 6
+        ('PRODUCTION_COST', 'Costos de Producción o de Operación'), # Clase 7
+        ('DEBTOR_ORDER', 'Cuentas de Orden Deudoras'), # Clase 8
+        ('CREDITOR_ORDER', 'Cuentas de Orden Acreedoras'), # Clase 9
     ]
     code = models.CharField(max_length=20, null=True, blank=True)
     name = models.CharField(max_length=255, null=True, blank=True)

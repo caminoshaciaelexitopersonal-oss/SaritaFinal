@@ -7,6 +7,7 @@ from .models import (
     SocialProfilePreference,
     SocialGiftCatalog,
     SocialGiftTransaction,
+    SocialProfileMedia,
 )
 
 
@@ -57,6 +58,8 @@ class SocialConversationSerializer(serializers.ModelSerializer):
             "id",
             "conversation_type",
             "title",
+            "entry_fee",
+            "is_adult_only",
             "created_by",
             "created_at",
             "updated_at",
@@ -71,7 +74,14 @@ class SocialConversationSerializer(serializers.ModelSerializer):
         return attrs
 
 
+class SocialProfileMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SocialProfileMedia
+        fields = ["id", "media_type", "media_url", "order", "created_at"]
+
 class SocialProfilePreferenceSerializer(serializers.ModelSerializer):
+    media_gallery = SocialProfileMediaSerializer(many=True, read_only=True)
+
     class Meta:
         model = SocialProfilePreference
         fields = [
@@ -81,10 +91,14 @@ class SocialProfilePreferenceSerializer(serializers.ModelSerializer):
             "interests",
             "preferred_languages",
             "preferred_destinations",
+            "is_dating_active",
+            "presentation_photo",
+            "presentation_video",
+            "media_gallery",
             "visibility_enabled",
             "updated_at",
         ]
-        read_only_fields = ["user", "updated_at"]
+        read_only_fields = ["user", "updated_at", "media_gallery"]
 
     def validate_interests(self, value):
         if not isinstance(value, list):

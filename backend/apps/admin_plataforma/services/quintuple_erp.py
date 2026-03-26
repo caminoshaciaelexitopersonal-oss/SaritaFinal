@@ -30,7 +30,16 @@ class QuintupleERPService:
 
         # Emitimos el evento. Los dominios interesados (Comercial, Contable, etc.)
         # deben estar suscritos y procesar su parte de forma independiente.
-        EventBus.emit("ERP_IMPACT_REQUESTED", event)
+
+        # El EventBus espera un payload (dict), no una instancia de dataclass directamente.
+        payload_dict = {
+            "event_type": event_type,
+            "payload": payload,
+            "user_id": self.user.id if self.user else None,
+            "event_id": str(event.event_id)
+        }
+
+        EventBus.emit("ERP_IMPACT_REQUESTED", payload_dict)
 
         # Retornamos un resultado parcial, ya que la ejecución ahora es desacoplada
         return {

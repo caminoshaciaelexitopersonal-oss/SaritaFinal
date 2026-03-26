@@ -6,23 +6,31 @@
 # en el modelo refactorizado 'ProviderProfile'.
 # Es necesario re-evaluar e implementar una nueva lógica de scoring acorde a la nueva arquitectura.
 
-# from django.db.models.signals import post_save
-# from django.dispatch import receiver
-# from .models import AsistenciaCapacitacion, Resena, ScoringRule
-# from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import AsistenciaCapacitacion, Resena, ScoringRule, Verificacion
+from apps.turismo.models.provider_models import TourismProvider
+import logging
 
+logger = logging.getLogger(__name__)
 
-# @receiver(post_save, sender=AsistenciaCapacitacion)
-# def update_score_on_capacitacion(sender, instance, created, **kwargs):
-#     if created:
-#         try:
-#             perfil = ProviderProfile.objects.get(usuario=instance.usuario)
-#             puntos = instance.capacitacion.puntos_asistencia
-#             perfil.puntuacion_capacitacion += puntos
-#             perfil.save(update_fields=['puntuacion_capacitacion'])
-#             perfil.recalcular_puntuacion_total()
-#         except ProviderProfile.DoesNotExist:
-#             pass
+@receiver(post_save, sender=AsistenciaCapacitacion)
+def update_score_on_capacitacion(sender, instance, created, **kwargs):
+    if created:
+        try:
+            # Vía 2: Prestadores vinculados
+            perfil = TourismProvider.objects.get(owner=instance.usuario)
+            puntos = instance.capacitacion.puntos_asistencia
+            perfil.puntuacion_capacitacion += puntos
+            perfil.save(update_fields=['puntuacion_capacitacion'])
+            perfil.recalcular_puntuacion_total()
+            logger.info(f"Puntaje de capacitación actualizado para {perfil.name}: +{puntos}")
+        except TourismProvider.DoesNotExist:
+            # Artesanos (en api.models)
+            if hasattr(instance.usuario, 'perfil_artesano'):
+                art = instance.usuario.perfil_artesano
+                art.puntuacion_capacitacion += instance.capacitacion.puntos_asistencia
+                art.recalcular_puntuacion_total()
 
 
 def register_security_monitors():
@@ -46,7 +54,7 @@ def register_security_monitors():
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Artesano
+from .models import Artesano, CustomUser
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import ProviderProfile
 
 @receiver(post_save, sender=Artesano)
@@ -71,26 +79,42 @@ def activar_perfil_comercial_artesano(sender, instance, **kwargs):
             perfil.save(update_fields=['is_active', 'is_verified'])
 
 
-# @receiver(post_save, sender=Resena)
-# def update_score_on_resena(sender, instance, **kwargs):
-#     if instance.aprobada and instance.content_type.model_class() == ProviderProfile:
-#         try:
-#             perfil = ProviderProfile.objects.get(pk=instance.object_id)
-#             rules = ScoringRule.load()
-#             puntos = instance.calificacion * rules.puntos_por_estrella_reseña
+@receiver(post_save, sender=Resena)
+def update_score_on_resena(sender, instance, **kwargs):
+    if instance.aprobada:
+        target_model = instance.content_type.model_class()
 
-#             # Recalcular la puntuación total de reseñas desde cero para evitar duplicados
-#             reseñas_aprobadas = Resena.objects.filter(
-#                 content_type=instance.content_type,
-#                 object_id=instance.object_id,
-#                 aprobada=True
-#             )
-#             total_puntos_reseñas = sum(
-#                 r.calificacion * rules.puntos_por_estrella_reseña for r in reseñas_aprobadas
-#             )
+        if target_model == TourismProvider:
+            try:
+                perfil = TourismProvider.objects.get(pk=instance.object_id)
+                rules = ScoringRule.load()
 
-#             perfil.puntuacion_reseñas = total_puntos_reseñas
-#             perfil.save(update_fields=['puntuacion_reseñas'])
-#             perfil.recalcular_puntuacion_total()
-#         except ProviderProfile.DoesNotExist:
-#             pass
+                reseñas_aprobadas = Resena.objects.filter(
+                    content_type=instance.content_type,
+                    object_id=instance.object_id,
+                    aprobada=True
+                )
+                perfil.puntuacion_resenas = sum(
+                    r.calificacion * rules.puntos_por_estrella_reseña for r in reseñas_aprobadas
+                )
+                perfil.save(update_fields=['puntuacion_resenas'])
+                perfil.recalcular_puntuacion_total()
+            except TourismProvider.DoesNotExist:
+                pass
+        elif target_model == Artesano:
+             instance.content_object.recalcular_puntuacion_total()
+
+@receiver(post_save, sender=Verificacion)
+def update_score_on_verificacion(sender, instance, **kwargs):
+    """
+    Actualiza el puntaje del prestador basado en la visita de cumplimiento.
+    """
+    try:
+        # Buscamos el prestador via la referencia UUID del modelo Turismo
+        perfil = TourismProvider.objects.get(id=instance.prestador_ref_id)
+        perfil.puntuacion_verificacion = instance.puntaje_obtenido
+        perfil.save(update_fields=['puntuacion_verificacion'])
+        perfil.recalcular_puntuacion_total()
+        logger.info(f"Puntaje de verificación actualizado para {perfil.name}: {perfil.puntuacion_verificacion}")
+    except TourismProvider.DoesNotExist:
+        pass

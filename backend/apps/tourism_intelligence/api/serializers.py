@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from ..models import TourismDemandForecast, TourismSeasonality, TouristBehaviorProfile, TourismFlowAnalytics, TourismEconomicImpact
+from ..models import (
+    TourismDemandForecast, TourismSeasonality, TouristBehaviorProfile,
+    TourismFlowAnalytics, TourismEconomicImpact, ConversationalIntent, ConversationalKPI
+)
 
 class TourismDemandForecastSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,4 +28,16 @@ class TourismFlowAnalyticsSerializer(serializers.ModelSerializer):
 class TourismEconomicImpactSerializer(serializers.ModelSerializer):
     class Meta:
         model = TourismEconomicImpact
+        fields = '__all__'
+
+class ConversationalIntentSerializer(serializers.ModelSerializer):
+    tourist_name = serializers.CharField(source='tourist.get_full_name', read_only=True)
+    class Meta:
+        model = ConversationalIntent
+        fields = '__all__'
+
+class ConversationalKPISerializer(serializers.ModelSerializer):
+    provider_name = serializers.CharField(source='provider.name', read_only=True)
+    class Meta:
+        model = ConversationalKPI
         fields = '__all__'

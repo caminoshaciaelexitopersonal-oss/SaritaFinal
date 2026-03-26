@@ -16,6 +16,13 @@ export const businessService = {
 export const touristService = {
   getDestinations: () => api.get('/v1/turismo/tourism-providers/'),
   makeReservation: (data: any) => api.post('/v1/turismo/tourism-reservations/', data),
+  processPayment: (reservationId: string) => api.post(`/v1/turismo/tourism-reservations/${reservationId}/process_payment/`),
+};
+
+export const walletService = {
+  getWallet: (id: string) => api.get(`/v1/finance/wallet/accounts/${id}/`),
+  getTransactions: () => api.get('/v1/finance/wallet/transactions/'),
+  depositFunds: (id: string, amount: number) => api.post(`/v1/finance/wallet/accounts/${id}/deposit/`, { amount }),
 };
 
 export const deliveryService = {

@@ -1,6 +1,15 @@
 
 from rest_framework.permissions import BasePermission
 
+class IsSuperAdmin(BasePermission):
+    """
+    Permiso para el Super Administrador de la plataforma.
+    """
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated and (
+            request.user.role == 'ADMIN' or request.user.is_superuser
+        )
+
 class IsPrestadorOwner(BasePermission):
     """
     Permiso para permitir la edición de un objeto solo al prestador

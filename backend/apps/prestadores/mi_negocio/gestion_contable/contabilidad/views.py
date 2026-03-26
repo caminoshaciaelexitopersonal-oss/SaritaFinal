@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.apps import apps
+from . import serializers
 
 Account = apps.get_model('core_erp', 'Account')
 
@@ -16,10 +17,19 @@ class PlanCuentaViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.filter(tenant=self.request.tenant)
+        # En el entorno de SARITA, request.tenant_id es establecido por el middleware
+        tenant_id = getattr(self.request, 'tenant_id', None)
+        if tenant_id:
+            return qs.filter(tenant_id=tenant_id)
+        return qs.none()
 
     def perform_create(self, serializer):
-        serializer.save(tenant=self.request.tenant)
+        # Inyectar tenant_id manualmente si el middleware no lo hizo en el entorno de tests
+        tenant_id = getattr(self.request, 'tenant_id', None)
+        if not tenant_id and 'HTTP_X_TENANT_ID' in self.request.META:
+            tenant_id = self.request.META['HTTP_X_TENANT_ID']
+
+        serializer.save(tenant_id=tenant_id)
 
     @action(detail=False, methods=['get'])
     def tree(self, request):

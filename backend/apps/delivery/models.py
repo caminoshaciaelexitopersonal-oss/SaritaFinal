@@ -83,6 +83,11 @@ class DeliveryService(models.Model):
     # Tenant alignment
     provider_id = models.UUIDField(null=True, blank=True, help_text="ID del ProviderProfile")
 
+    # --- Territorial & Classification ---
+    department_code = models.CharField(max_length=2, blank=True, null=True)
+    municipality_code = models.CharField(max_length=5, blank=True, null=True)
+    sub_classification = models.CharField(max_length=150, blank=True, null=True)
+
     delivery_company = models.ForeignKey(DeliveryCompany, on_delete=models.SET_NULL, null=True, blank=True)
     driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True, blank=True)
