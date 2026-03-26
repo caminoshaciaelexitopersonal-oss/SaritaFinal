@@ -14,7 +14,7 @@ import {
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import api from '@/services/api';
-import { useMiNegocioApi } from '../../../hooks/useMiNegocioApi';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 import { toast } from 'react-toastify';
 import Modal from '@/components/ui/Modal';
 import { useForm } from 'react-hook-form';

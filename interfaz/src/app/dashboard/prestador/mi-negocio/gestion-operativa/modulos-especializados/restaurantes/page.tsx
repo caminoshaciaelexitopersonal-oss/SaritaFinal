@@ -33,7 +33,7 @@ const statusConfig = {
     DIRTY: { bg: 'bg-slate-400', text: 'SUCIA' },
 };
 
-import { useMiNegocioApi } from '../../../hooks/useMiNegocioApi';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 import { toast } from 'react-toastify';
 import Modal from '@/components/ui/Modal';
 import { useForm } from 'react-hook-form';

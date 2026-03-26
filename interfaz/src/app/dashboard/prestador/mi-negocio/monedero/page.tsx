@@ -10,7 +10,7 @@ import {
   FiShield,
   FiActivity
 } from 'react-icons/fi';
-import { useMiNegocioApi } from '../hooks/useMiNegocioApi';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 
 export default function WalletDashboard() {
   const { getTesoreria, getStatistics, isLoading } = useMiNegocioApi();

@@ -1,4 +1,4 @@
-import { Text, Card } from '@/components/ui';
+import { Text, Card } from '@/components/ui/Card';
 
 export default function UsersPage() {
   return (

@@ -70,7 +70,7 @@ import { ViewState } from '@/components/ui/ViewState';
 import api from '@/services/api';
 import { toast } from 'react-toastify';
 
-import { useMiNegocioApi } from '../../hooks/useMiNegocioApi';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 
 export default function CentroOperativoPage() {
     const { getOrdenesOperativas, updateOrdenEstado, reportIncidente, isLoading: apiLoading } = useMiNegocioApi();

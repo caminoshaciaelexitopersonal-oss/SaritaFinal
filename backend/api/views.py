@@ -323,6 +323,11 @@ class AtractivoTuristicoViewSet(viewsets.ModelViewSet):
     serializer_class = AtractivoTuristicoListSerializer
     permission_classes = [AllowAny]
 
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return AtractivoTuristicoDetailSerializer
+        return super().get_serializer_class()
+
 class RutaTuristicaViewSet(viewsets.ModelViewSet):
     queryset = RutaTuristica.objects.all()
     serializer_class = RutaTuristicaListSerializer

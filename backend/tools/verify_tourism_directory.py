@@ -1,68 +1,96 @@
 import os
 import django
-import math
-from decimal import Decimal
+import uuid
+import json
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'puerto_gaitan_turismo.settings')
 django.setup()
 
-from api.models import CustomUser, AtractivoTuristico, Entity, Publicacion
+from api.models import CustomUser, AtractivoTuristico, Entity
 from apps.turismo.models.provider_models import TourismProvider
 from rest_framework.test import APIClient
+from django.urls import reverse
 
-def calculate_distance(lat1, lon1, lat2, lon2):
-    R = 6371
-    dLat = math.radians(lat2 - lat1)
-    dLon = math.radians(lon2 - lon1)
-    a = math.sin(dLat / 2) * math.sin(dLat / 2) +         math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *         math.sin(dLon / 2) * math.sin(dLon / 2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    return R * c
+def verify_directory_flows():
+    client = APIClient()
+    admin = CustomUser.objects.get(username="admin_test")
+    client.force_authenticate(user=admin)
 
-def test_directory_flows():
-    print("\n--- Testing Territorial Tourism Directory ---")
-    admin = CustomUser.objects.get(username="admin")
-    ent = Entity.objects.get(slug="ente-municipal")
+    print("\n--- TEST 1: Provider Registration & Approval ---")
+    # 1. Create a provider
+    res = client.post("/api/v1/turismo/v1/tourism-providers/", {
+        "name": "Restaurante El Gran Llanero",
+        "provider_type": "RESTAURANT",
+        "location": {"address": "Calle Principal 123", "lat": 4.31, "lng": -72.08},
+        "contact": {"phone": "573112223344", "email": "contacto@llanero.co"},
+        "status": "PENDIENTE"
+    }, format='json')
+    print(f"Provider creation: {res.status_code}")
+    provider_id = res.data['id']
 
-    # Prueba 1: Registro de Empresa
-    provider = TourismProvider.objects.create(
-        name="Llanos Express Hotel",
-        provider_type="HOTEL",
-        owner=admin,
-        location={"lat": 4.312, "lng": -72.082, "address": "Calle Principal #5"},
-        contact={"phone": "+573101234567", "whatsapp": "573101234567", "email": "info@llanos.com"},
-        status="ACTIVE"
+    # 2. Check visibility (should not be in public list yet)
+    res = client.get("/api/v1/turismo/v1/tourism-providers/")
+    print(f"Public list count (before approval): {res.data.get('count', 0)}")
+
+    # 3. Institutional Approval
+    res = client.post(f"/api/v1/turismo/v1/tourism-providers/{provider_id}/approve/")
+    print(f"Institutional approval: {res.status_code}")
+
+    # 4. Check visibility (should be in public list now)
+    res = client.get("/api/v1/turismo/v1/tourism-providers/")
+    print(f"Public list count (after approval): {res.data.get('count', 0)}")
+
+    # 5. Verify Contact Links
+    provider_data = res.data['results'][0]
+    print(f"WhatsApp Link: {provider_data.get('whatsapp_link')}")
+    print(f"Google Maps Link: {provider_data.get('google_maps_link')}")
+
+    print("\n--- TEST 2: Attraction Proximity ---")
+    # 1. Create an attraction near the provider
+    attr = AtractivoTuristico.objects.create(
+        nombre="Mirador del Río Manacacías",
+        slug="mirador-manacacias",
+        descripcion="Vista espectacular",
+        latitud=4.312,
+        longitud=-72.081,
+        categoria_color="AMARILLO",
+        es_publicado=True
     )
-    print(f"Prueba 1: Empresa registrada -> {provider.name}")
+    print(f"Attraction created: {attr.nombre}")
 
-    # Prueba 2: Visualización en Mapa
-    print(f"Prueba 2: Ubicación en Mapa -> lat: {provider.location['lat']}, lng: {provider.location['lng']}")
+    # 2. Retrieve attraction details and check nearby services
+    # AtractivoTuristicoViewSet in api/urls.py is included at /api/
+    # It uses integer PKs (default for this model)
+    res = client.get(f"/api/atractivos/{attr.id}/")
 
-    # Prueba 3: WhatsApp Link
-    wa_link = f"https://wa.me/{provider.contact['whatsapp']}"
-    print(f"Prueba 3: WhatsApp Link -> {wa_link}")
-
-    # Prueba 4: Cómo llegar (Google Maps)
-    maps_link = f"https://www.google.com/maps/search/?api=1&query={provider.location['lat']},{provider.location['lng']}"
-    print(f"Prueba 4: Google Maps Link -> {maps_link}")
-
-    # Prueba 5: Relación con Atractivo
-    atractivo = AtractivoTuristico.objects.create(
-        nombre="Río Manacacías", slug="rio-manacacias",
-        latitud=4.315, longitud=-72.085,
-        entity=ent, categoria_color="BLANCO",
-        descripcion="Espectacular río", como_llegar="Cerca al pueblo"
-    )
-    dist = calculate_distance(atractivo.latitud, atractivo.longitud, provider.location['lat'], provider.location['lng'])
-    print(f"Prueba 5: Atractivo '{atractivo.nombre}' cercano a '{provider.name}' (Distancia: {dist:.2f} km)")
-
-    if dist < 2.0:
-        print("SUCCESS: Sistema puede sugerir servicios cercanos.")
+    if res.status_code != 200:
+         print(f"Failed to get attraction detail at /api/atractivos/{attr.id}/. Status: {res.status_code}")
+         # Try by slug
+         res = client.get(f"/api/atractivos/{attr.slug}/")
+         if res.status_code != 200:
+             print(f"Failed to get attraction detail by slug. Status: {res.status_code}")
+             nearby = []
+         else:
+             nearby = res.data.get('nearby_services', [])
     else:
-        print("FAIL: Distancia fuera de rango esperado.")
+         nearby = res.data.get('nearby_services', [])
+    print(f"Nearby services count: {len(nearby)}")
+    if len(nearby) > 0:
+        print(f"First nearby service: {nearby[0]['name']} ({nearby[0]['provider_type']})")
+
+    print("\n--- TEST 3: Nearby Search API ---")
+    # 1. Test the 'nearby' action directly
+    res = client.get(f"/api/v1/turismo/v1/tourism-providers/nearby/?lat=4.31&lng=-72.08&radius=5")
+    print(f"Nearby API count: {len(res.data)}")
+    if len(res.data) > 0:
+        print(f"Found: {res.data[0]['name']}")
 
 if __name__ == "__main__":
+    # Cleanup
+    TourismProvider.objects.filter(name="Restaurante El Gran Llanero").delete()
+    AtractivoTuristico.objects.filter(slug="mirador-manacacias").delete()
+
     try:
-        test_directory_flows()
+        verify_directory_flows()
     except Exception as e:
-        import traceback
-        traceback.print_exc()
+        print(f"Test failed: {e}")

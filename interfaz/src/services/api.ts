@@ -53,23 +53,41 @@ export interface PaginatedResponse<T> {
 }
 
 export const getCategorias = async (): Promise<Categoria[]> => {
-    const response = await api.get('/public/artesanos/rubros/');
-    return response.data?.data;
+    const response = await api.get('/v1/turismo/v1/tourism-providers/');
+    // Extract unique types from the providers list as categories if no explicit endpoint exists
+    const results = response.data?.results || [];
+    const types = Array.from(new Set(results.map((r: any) => r.provider_type)));
+    return types.map((t, idx) => ({ id: idx, nombre: String(t), slug: String(t).toLowerCase() }));
 };
 
 export const getPrestadores = async (categoria?: string, search?: string): Promise<PrestadorPublico[]> => {
-    const response = await api.get('/public/artesanos/', { params: { categoria, search } });
-    return response.data?.data;
+    const params: any = { search };
+    if (categoria) params.provider_type = categoria.toUpperCase();
+    const response = await api.get('/v1/turismo/v1/tourism-providers/', { params });
+    const results = response.data?.results || [];
+    return results.map((r: any) => ({
+        id: r.id,
+        nombre_negocio: r.name,
+        categoria_nombre: r.provider_type,
+        foto_principal: null,
+        municipio_nombre: r.municipality_name || 'Desconocido'
+    }));
 };
 
-export const getPrestadorById = async (id: number): Promise<PrestadorPublicoDetalle> => {
-    const response = await api.get(`/public/artesanos/${id}/`);
-    return response.data?.data;
+export const getPrestadorById = async (id: string | number): Promise<any> => {
+    const response = await api.get(`/v1/turismo/v1/tourism-providers/${id}/`);
+    return response.data;
 };
 
 export const getLocations = async (): Promise<Location[]> => {
-    const response = await api.get('/public/locations/');
-    return response.data?.data;
+    const response = await api.get('/v1/turismo/v1/tourism-providers/');
+    const results = response.data?.results || [];
+    return results.map((r: any) => ({
+        id: r.id,
+        latitud: r.location?.lat,
+        longitud: r.location?.lng,
+        nombre: r.name
+    })).filter(l => l.latitud && l.longitud);
 };
 
 // --- RESTAURACIÓN DE FUNCIONES PARA COMPATIBILIDAD ---

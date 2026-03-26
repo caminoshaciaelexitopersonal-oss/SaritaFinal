@@ -58,7 +58,7 @@ const modules = [
   }
 ];
 
-import { useMiNegocioApi } from '../hooks/useMiNegocioApi';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 
 export default function GestionOperativaPage() {
   const { getStatistics, isLoading } = useMiNegocioApi();

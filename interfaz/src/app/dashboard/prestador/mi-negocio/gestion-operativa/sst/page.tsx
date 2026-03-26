@@ -20,7 +20,7 @@ import {
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
-import { useMiNegocioApi } from '../../hooks/useMiNegocioApi';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 
 export default function SG_SST_Dashboard() {
   const { getSSTDashboard, isLoading } = useMiNegocioApi();

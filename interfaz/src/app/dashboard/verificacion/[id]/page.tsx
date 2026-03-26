@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table';
 import api from '@/services/api';
-import { FiSave, FiXCircle, FiCheck } from 'react-icons/fi';
+import { FiSave, FiCheck } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
 export default function FormularioVerificacionPage() {
@@ -19,7 +19,6 @@ export default function FormularioVerificacionPage() {
   useEffect(() => {
     api.get(`/admin/verificaciones/${id}/`).then(res => {
       setVerificacion(res.data);
-      // Inicializar respuestas si la plantilla tiene items
       if (res.data.plantilla_usada?.items) {
           setResponses(res.data.plantilla_usada.items.map((item: any) => ({
               item_original_id: item.id,
@@ -27,6 +26,9 @@ export default function FormularioVerificacionPage() {
               justificacion: ''
           })));
       }
+      setLoading(false);
+    }).catch(() => {
+      toast.error("No se pudo cargar la verificación.");
       setLoading(false);
     });
   }, [id]);
@@ -57,6 +59,7 @@ export default function FormularioVerificacionPage() {
   };
 
   if (loading) return <div className="p-10 text-center animate-pulse text-slate-400 font-black uppercase tracking-widest">Iniciando Protocolo de Verificación...</div>;
+  if (!verificacion) return <div className="p-10 text-center">Verificación no encontrada.</div>;
 
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -126,7 +129,7 @@ export default function FormularioVerificacionPage() {
                                 className="w-full bg-slate-50 border-none px-4 py-3 rounded-xl text-sm font-medium focus:ring-2 focus:ring-indigo-500"
                              />
                           </TableCell>
-                       </tr>
+                       </TableRow>
                     );
                  })}
               </TableBody>

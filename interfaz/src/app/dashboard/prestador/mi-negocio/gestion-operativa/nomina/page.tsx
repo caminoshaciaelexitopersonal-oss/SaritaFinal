@@ -18,7 +18,7 @@ import {
   FiArrowUpRight
 } from 'react-icons/fi';
 import { Badge } from '@/components/ui/Badge';
-import { useMiNegocioApi } from '../../hooks/useMiNegocioApi';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 
 export default function NominaDashboard() {
   const { getNominaDashboard, isLoading } = useMiNegocioApi();

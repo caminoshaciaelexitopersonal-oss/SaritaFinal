@@ -8,7 +8,7 @@ import {
   FiTrendingUp, FiArrowRight, FiActivity, FiUsers
 } from 'react-icons/fi';
 import Link from 'next/link';
-import { useMiNegocioApi } from './hooks/useMiNegocioApi';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 
 const sections = [
   {

@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "tailwind-merge": "^2.3.0",
     "lucide-react": "^0.395.0",
-    "recharts": "^2.12.7"
+    "recharts": "^2.15.4",
+    "tailwind-merge": "^2.3.0"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

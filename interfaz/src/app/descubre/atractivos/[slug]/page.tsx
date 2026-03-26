@@ -20,6 +20,14 @@ interface Imagen {
   alt_text: string;
 }
 
+interface NearbyService {
+  id: string;
+  name: string;
+  provider_type: string;
+  whatsapp_link: string;
+  google_maps_link: string;
+}
+
 interface AtractivoDetalle {
   id: number;
   nombre: string;
@@ -30,6 +38,7 @@ interface AtractivoDetalle {
   categoria_color: string;
   categoria_color_display: string;
   imagenes: Imagen[];
+  nearby_services?: NearbyService[];
 }
 
 export default function AtractivoDetailPage() {
@@ -145,20 +154,48 @@ export default function AtractivoDetailPage() {
               <div>
                  <h3 className="text-lg font-bold text-gray-900 border-b pb-2 mb-4">Servicios Cercanos</h3>
                  <p className="text-sm text-slate-500 italic mb-4">Encuentra los mejores lugares cerca de {atractivo.nombre}.</p>
-                 <div className="space-y-4">
-                    <Link href="/directorio/prestadores?cat=hoteles" className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-indigo-300 transition-all shadow-sm group">
-                       <div className="w-10 h-10 bg-indigo-50 text-indigo-500 rounded-lg flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                          <FiHome />
-                       </div>
-                       <span className="font-bold text-slate-700">Hoteles</span>
-                    </Link>
-                    <Link href="/directorio/prestadores?cat=restaurantes" className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-indigo-300 transition-all shadow-sm group">
-                       <div className="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-lg flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-                          <FiCoffee />
-                       </div>
-                       <span className="font-bold text-slate-700">Restaurantes</span>
-                    </Link>
-                 </div>
+
+                 {atractivo.nearby_services && atractivo.nearby_services.length > 0 ? (
+                    <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                       {atractivo.nearby_services.map(service => (
+                          <div key={service.id} className="p-4 bg-white rounded-xl border border-slate-100 shadow-sm space-y-3">
+                             <div className="flex justify-between items-start">
+                                <div>
+                                   <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">{service.provider_type}</p>
+                                   <h4 className="font-bold text-slate-900 leading-tight">{service.name}</h4>
+                                </div>
+                             </div>
+                             <div className="flex gap-2">
+                                {service.whatsapp_link && (
+                                   <a href={service.whatsapp_link} target="_blank" className="flex-1 bg-green-50 text-green-700 py-2 rounded-lg text-[10px] font-black uppercase text-center hover:bg-green-100 transition-colors">
+                                      WhatsApp
+                                   </a>
+                                )}
+                                {service.google_maps_link && (
+                                   <a href={service.google_maps_link} target="_blank" className="flex-1 bg-indigo-50 text-indigo-700 py-2 rounded-lg text-[10px] font-black uppercase text-center hover:bg-indigo-100 transition-colors">
+                                      Cómo llegar
+                                   </a>
+                                )}
+                             </div>
+                          </div>
+                       ))}
+                    </div>
+                 ) : (
+                    <div className="space-y-4">
+                       <Link href="/directorio/prestadores?cat=hoteles" className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-indigo-300 transition-all shadow-sm group">
+                          <div className="w-10 h-10 bg-indigo-50 text-indigo-500 rounded-lg flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+                             <FiHome />
+                          </div>
+                          <span className="font-bold text-slate-700">Hoteles</span>
+                       </Link>
+                       <Link href="/directorio/prestadores?cat=restaurantes" className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-indigo-300 transition-all shadow-sm group">
+                          <div className="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-lg flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                             <FiCoffee />
+                          </div>
+                          <span className="font-bold text-slate-700">Restaurantes</span>
+                       </Link>
+                    </div>
+                 )}
               </div>
             </div>
           </div>

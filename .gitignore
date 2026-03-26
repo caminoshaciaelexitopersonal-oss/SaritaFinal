@@ -6,3 +6,4 @@ frontend/tsconfig.tsbuildinfo
 
 # Redis
 dump.rdb
+node_modules/

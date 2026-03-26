@@ -24,7 +24,7 @@ interface Room { id: number; room_type: number; numero_habitacion: string; statu
 
 const fetcher = (url: string) => api.get(url).then(res => res.data.results || []);
 
-import { useMiNegocioApi } from '../../../hooks/useMiNegocioApi';
+import { useMiNegocioApi } from '@/app/dashboard/prestador/mi-negocio/hooks/useMiNegocioApi';
 import { toast } from 'react-toastify';
 import Modal from '@/components/ui/Modal';
 import { useForm } from 'react-hook-form';
