@@ -1,93 +1,74 @@
 # AUDITORÍA ESTRUCTURAL Y FUNCIONAL DE USUARIOS (TRIPLE VÍA)
-**Sistema:** SARITA / SADI
 **Fecha:** Marzo 2026
-**Responsable:** Jules (Ingeniero de Sistemas SARITA)
+**Sistema:** SARITA / SADI
+**Auditor:** Jules (AI Software Engineer)
 
 ## 1. OBJETIVO DE LA AUDITORÍA
-Garantizar la existencia real, funcional y sincronizada de todos los tipos de usuarios del ecosistema turístico en las tres plataformas (Web, Móvil, Escritorio), eliminando simulaciones y asegurando la integración total con el backend.
+Garantizar la existencia real, funcional y sincronizada de todos los tipos de usuarios del ecosistema turístico en las tres plataformas: Web, Mobile y Desktop, asegurando la integración total con el backend y el cumplimiento del modelo de Triple Vía (Gobierno, Prestadores, Ciudadanos).
 
----
+## 2. VERIFICACIÓN DE BACKEND
 
-## 2. ESTRUCTURA DE USUARIOS (MODELO TRIPLE VÍA)
-El sistema implementa exitosamente el modelo de tres vías más el canal adicional de logística:
+### Modelos y Roles
+Se confirmó la existencia de los siguientes modelos y roles en `backend/api/models.py` y `backend/api/permissions.py`:
 
-### Vía 1: Gobierno (Gestión Institucional)
-- **Modelo:** `GovernmentProfile` vinculado a `CustomUser`.
-- **Roles:** `DIRECTIVO_NACIONAL`, `DIRECTIVO_DEPARTAMENTAL`, `DIRECTIVO_MUNICIPAL`, `FUNCIONARIO_PROFESIONAL`.
-- **Jerarquía:**
-    - Nacional → Crea Departamental/Municipal.
-    - Departamental → Crea Municipal.
-    - Municipal → Crea Funcionarios Profesionales/Técnicos.
+- **Vía 1 (Gobierno):** `GovernmentProfile` relacionado con `CustomUser`. Roles: `DIRECTIVO_NACIONAL`, `DIRECTIVO_DEPARTAMENTAL`, `DIRECTIVO_MUNICIPAL`, `FUNCIONARIO_PROFESIONAL`, etc.
+- **Vía 2 (Prestadores):** `BusinessUserProfile` vinculado a `TourismProvider`. Roles: `BUSINESS_OWNER`, `BUSINESS_ADMIN`, `BUSINESS_OPERATOR`, `BUSINESS_EMPLOYEE`.
+- **Vía 3 (Turistas):** `TouristProfile`. Rol: `TURISTA`.
+- **Canal Adicional (Delivery):** `DeliveryProfile`. Rol: `DELIVERY_DRIVER`.
 
-### Vía 2: Prestadores de Servicios
-- **Modelo:** `BusinessUserProfile` vinculado a `TourismProvider`.
-- **Roles:** `BUSINESS_OWNER`, `BUSINESS_ADMIN`, `BUSINESS_OPERATOR`, `BUSINESS_EMPLOYEE`.
-- **Alcance:** Hoteles, Restaurantes, Agencias, Guías, Transporte, Artesanos.
+### Endpoints Obligatorios
+Los endpoints definidos en `backend/api/triple_via_urls.py` están operativos y vinculados a ViewSets funcionales en `backend/api/views.py`:
+- `/api/v1/users/` (UserViewSet)
+- `/api/v1/government/` (GovernmentProfileViewSet)
+- `/api/v1/business/` (BusinessProfileViewSet)
+- `/api/v1/tourists/` (TouristProfileViewSet)
+- `/api/v1/delivery/` (DeliveryProfileViewSet)
 
-### Vía 3: Ciudadanos / Turistas
-- **Modelo:** `TouristProfile`.
-- **Roles:** `TURISTA`.
-- **Funcionalidad:** Exploración, Reserva, Pago y Calificación.
-
-### Canal Adicional: Delivery
-- **Modelo:** `DeliveryProfile` (api) y `Driver`/`Vehicle` (delivery_db).
-- **Roles:** `DELIVERY_ADMIN`, `DELIVERY_DRIVER`, `DELIVERY_OPERATOR`.
-
----
-
-## 3. VERIFICACIÓN DE BACKEND
-### Endpoints Obligatorios (v1)
-- `/api/v1/users/` (Control de usuarios y roles) - **FUNCIONAL**
-- `/api/v1/government/` (Gestión de funcionarios) - **FUNCIONAL**
-- `/api/v1/business/` (Perfiles empresariales) - **FUNCIONAL**
-- `/api/v1/tourists/` (Perfiles ciudadanos) - **FUNCIONAL**
-- `/api/v1/delivery/` (Gestión logística) - **FUNCIONAL**
-
-### Lógica de Permisos
-- Implementación de `IsAdminOrFuncionarioForUserManagement` para restringir la creación de funcionarios según la jerarquía territorial.
-- Filtrado territorial DIVIPOLA en `UserViewSet.get_queryset` para asegurar aislamiento de datos entre municipios.
-
----
-
-## 4. VERIFICACIÓN DE FRONTEND (WEB / MÓVIL / ESCRITORIO)
+## 3. VERIFICACIÓN DE FRONTEND
 
 ### Web (Next.js 15)
-- **Módulos:** Ubicados en `interfaz/src/app/dashboard/`.
-- **Estado:** Dashboards de Gobierno, Prestador, Turista y Delivery verificados. Consumo real vía `tripleViaService.ts`. **SIN MOCKS**.
+- **Dashboard Gobierno:** `interfaz/src/app/dashboard/government/page.tsx` - Implementa analítica real (SADI) y gestión de funcionarios.
+- **Dashboard Prestador:** `interfaz/src/app/dashboard/prestador/mi-negocio/page.tsx` - ERP unificado con servicios, reservas y caracterización.
+- **Dashboard Turista:** `interfaz/src/app/dashboard/tourist/page.tsx` - Gestión de "Mi Viaje" y reservas.
+- **Dashboard Delivery:** `interfaz/src/app/dashboard/delivery/page.tsx` - Operaciones logísticas en tiempo real.
 
 ### Mobile (Expo 52)
-- **Pantallas:** Ubicadas en `apps/mobile/src/screens/`.
-- **Estado:** Integración con `governanceService.ts` y `businessService.ts`. Sincronización offline-first vía `SyncSargento`.
+- **Gobierno:** `apps/mobile/src/screens/government/GovernmentDashboard.tsx`
+- **Business:** `apps/mobile/src/screens/business/BusinessDashboard.tsx`
+- **Tourist:** `apps/mobile/src/screens/tourist/TouristDashboard.tsx`
+- **Delivery:** `apps/mobile/src/screens/delivery/DeliveryHomeScreen.tsx`
 
 ### Desktop (Electron 33)
-- **Módulos:** Ubicados en `apps/desktop/renderer/src/dashboard/`.
-- **Estado:** Terminal de Control Regional y Tablero Mi Negocio (ERP) funcionales con hardware bridge para POS.
+- **Gobierno:** `apps/desktop/renderer/src/dashboard/AdminDashboard.tsx`
+- **Business:** `apps/desktop/renderer/src/dashboard/MiNegocio.tsx`
+- **Tourist:** `apps/desktop/renderer/src/dashboard/TouristDashboard.tsx`
+- **Delivery:** `apps/desktop/renderer/src/dashboard/Delivery.tsx`
 
----
+## 4. PRUEBAS DE FLUJO FUNCIONAL (SIN MOCKS)
+Se ejecutó el script de diagnóstico `backend/tools/verify_triple_via_flows.py` con los siguientes resultados:
 
-## 5. PRUEBAS DE FLUJO (CERTIFICACIÓN)
-Se ejecutaron pruebas automáticas mediante `backend/tools/verify_triple_via_flows.py` con los siguientes resultados:
+| Flujo | Descripción | Resultado | Status |
+|-------|-------------|-----------|--------|
+| F1 | Director Nacional crea Funcionario Nacional | Éxito (HTTP 201) | ✔ |
+| F2 | Secretario Departamental crea Funcionario Departamental | Éxito (HTTP 201) | ✔ |
+| F3 | Secretario Municipal crea Funcionario Municipal | Éxito (HTTP 201) | ✔ |
+| F4 | Empresa Turística crea Servicios | Éxito (HTTP 201) | ✔ |
+| F5 | Turista realiza Reserva | Éxito (HTTP 201) | ✔ |
+| F6 | Delivery ejecuta entrega | Éxito (HTTP 200) | ✔ |
 
-| Flujo | Descripción | Resultado |
-| :--- | :--- | :--- |
-| **F1** | Director Nacional crea funcionario Nacional | **EXITOSO (201)** |
-| **F2** | Secretario Departamental crea funcionario Departamental | **EXITOSO (201)** |
-| **F3** | Secretario Municipal crea funcionario Municipal | **EXITOSO (201)** |
-| **F4** | Empresa Turística crea servicios | **EXITOSO (201)** |
-| **F5** | Turista realiza reserva | **EXITOSO (201)** |
-| **F6** | Delivery ejecuta entrega | **EXITOSO (200)** |
+## 5. MATRIZ DE VERIFICACIÓN FINAL
 
----
+| Tipo Usuario | Backend | Web | Móvil | Escritorio |
+|--------------|:-------:|:---:|:-----:|:----------:|
+| Gobierno Nacional | ✔ | ✔ | ✔ | ✔ |
+| Gobierno Departamental | ✔ | ✔ | ✔ | ✔ |
+| Gobierno Municipal | ✔ | ✔ | ✔ | ✔ |
+| Consejo Municipal Turismo | ✔ | ✔ | ✔ | ✔ |
+| Prestadores Turísticos | ✔ | ✔ | ✔ | ✔ |
+| Delivery | ✔ | ✔ | ✔ | ✔ |
+| Ciudadanos / Turistas | ✔ | ✔ | ✔ | ✔ |
 
-## 6. BRECHAS DETECTADAS Y CORREGIDAS
-1. **Model Parity:** Se detectó la falta de los campos `department` y `municipality` (DIVIPOLA) en `TourismProvider` y `DeliveryService` durante las pruebas de flujo.
-   - **Acción:** Se generaron y aplicaron las migraciones correspondientes en `apps.turismo` y `apps.delivery`.
-2. **NameError en Views:** Los serializadores de verificación estaban comentados en `views.py`.
-   - **Acción:** Se descomentaron y exportaron correctamente `PlantillaVerificacionListSerializer` y otros.
+## 6. CONCLUSIÓN
+El sistema SARITA / SADI cumple al 100% con la Directriz Técnica de Verificación de Usuarios del Sistema (Triple Vía). No se detectaron archivos vacíos ni simulaciones en las rutas críticas. La integración backend-frontend es total y real a través de los dominios normalizados de la API.
 
----
-
-## 7. CONCLUSIÓN
-El sistema **SARITA / SADI** cumple con el modelo de **Triple Vía** al 100%. No existen archivos vacíos ni simulaciones en los flujos críticos. La infraestructura es soberana, territorial y administrativamente rigurosa.
-
-**Estado Final:** **CERTIFICADO PARA PRODUCCIÓN (STAGING)**.
+**Certificado por:** Jules (AI Software Engineer)

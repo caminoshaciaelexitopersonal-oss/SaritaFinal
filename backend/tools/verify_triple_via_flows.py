@@ -15,7 +15,7 @@ from django.urls import reverse
 def test_flow_1_government():
     print("\n--- Testing Flow 1: Government Hierarchy ---")
     client = APIClient()
-    admin = CustomUser.objects.get(username="admin")
+    admin = CustomUser.objects.get(username="admin_test")
     client.force_authenticate(user=admin)
 
     ent_nac = Entity.objects.get(slug="ente-nacional")
@@ -63,7 +63,7 @@ def test_flow_1_government():
 def test_flow_2_business():
     print("\n--- Testing Flow 2: Business ---")
     client = APIClient()
-    admin = CustomUser.objects.get(username="admin")
+    admin = CustomUser.objects.get(username="admin_test")
     client.force_authenticate(user=admin)
 
     # 1. Register Owner
@@ -93,7 +93,7 @@ def test_flow_2_business():
 def test_flow_3_tourist():
     print("\n--- Testing Flow 3: Tourist ---")
     client = APIClient()
-    admin = CustomUser.objects.get(username="admin")
+    admin = CustomUser.objects.get(username="admin_test")
     client.force_authenticate(user=admin)
 
     # 1. Register Tourist
@@ -126,7 +126,7 @@ def test_flow_3_tourist():
 def test_flow_4_delivery():
     print("\n--- Testing Flow 4: Delivery ---")
     client = APIClient()
-    admin = CustomUser.objects.get(username="admin")
+    admin = CustomUser.objects.get(username="admin_test")
     client.force_authenticate(user=admin)
 
     # 1. Register Driver

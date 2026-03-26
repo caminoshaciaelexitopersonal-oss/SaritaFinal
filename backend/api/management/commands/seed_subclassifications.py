@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from api.models import RubroArtesano
+from api.models import RubroArtesano, Formulario, Pregunta, OpcionRespuesta
 from apps.prestadores.mi_negocio.gestion_operativa.modulos_genericos.perfil.models import CategoriaPrestador
 
 class Command(BaseCommand):
