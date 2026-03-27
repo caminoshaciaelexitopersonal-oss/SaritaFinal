@@ -456,10 +456,23 @@ class PublicacionDetailSerializer(serializers.ModelSerializer):
         ]
 
     def get_nearby_services(self, obj):
-        # We only apply nearby logic if it has georeference (events might not have it directly in the model)
-        # Assuming for now events use the entity's or a related location if added later.
-        # If no lat/lng is present in Publicacion, return empty.
-        return []
+        from apps.turismo.serializers.provider_serializers import TourismProviderSerializer
+        from apps.turismo.models.provider_models import TourismProvider
+
+        if not hasattr(obj, 'latitud') or not hasattr(obj, 'longitud') or not obj.latitud or not obj.longitud:
+            return []
+
+        # Find providers within approx 10km (0.1 deg)
+        delta = 0.1
+        nearby = TourismProvider.objects.filter(
+            status='PUBLICADO',
+            location__lat__gte=obj.latitud - delta,
+            location__lat__lte=obj.latitud + delta,
+            location__lng__gte=obj.longitud - delta,
+            location__lng__lte=obj.longitud + delta
+        )[:10]
+
+        return TourismProviderSerializer(nearby, many=True).data
 
 
 class AdminPublicacionSerializer(serializers.ModelSerializer):

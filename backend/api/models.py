@@ -419,6 +419,11 @@ class Publicacion(models.Model):
     puntos_asistencia = models.PositiveIntegerField(default=0, help_text="Puntos otorgados por asistir a esta capacitación (solo si tipo=CAPACITACION).")
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
 
+    # --- Campos de Ubicación para Eventos (Vía 2 integration) ---
+    latitud = models.FloatField(_("Latitud"), blank=True, null=True)
+    longitud = models.FloatField(_("Longitud"), blank=True, null=True)
+    direccion = models.CharField(_("Dirección"), max_length=255, blank=True, null=True)
+
     estado = models.CharField(
         _("Estado de Publicación"),
         max_length=20,

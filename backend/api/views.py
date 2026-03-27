@@ -763,6 +763,7 @@ class PublicacionDetailView(generics.RetrieveAPIView):
     queryset = Publicacion.objects.all()
     serializer_class = PublicacionDetailSerializer
     permission_classes = [AllowAny]
+    lookup_field = 'slug'
 
 class ConsejoConsultivoListView(generics.ListAPIView):
     queryset = ConsejoConsultivo.objects.all()

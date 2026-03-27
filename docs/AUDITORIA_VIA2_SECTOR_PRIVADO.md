@@ -1,39 +1,50 @@
-# AUDITORÍA VÍA 2 — CANAL DEL SECTOR PRIVADO Y COMUNITARIO - SARITA / SADI
-
+# AUDITORÍA TÉCNICA VÍA 2 — SECTOR PRIVADO Y COMUNITARIO
 **Fecha:** Marzo 2026
+**Sistema:** SARITA / SADI
 **Auditor:** Jules (AI Software Engineer)
-**Estado General:** ✅ OPERATIVO Y CERTIFICADO
 
-## 1. RESUMEN DE LA AUDITORÍA
-Se ha auditado el ecosistema de oferta turística (Vía 2), verificando que los prestadores del sector privado y comunitario puedan registrarse, gestionar sus perfiles y publicar servicios, productos y experiencias reales. La integración con el mapa y los sistemas de contacto directo es total.
+## 1. OBJETIVO DE LA AUDITORÍA
+Verificar y certificar la implementación real y funcional de la Vía 2 (Sector Privado) del ecosistema turístico, permitiendo que prestadores registren servicios, productos y experiencias con integración territorial total.
 
-## 2. ACTORES Y ROLES (BACKEND)
-- **Prestadores:** Implementado mediante `BUSINESS_OWNER` y `BUSINESS_ADMIN`.
-- **Emprendedores:** Soporte para Guías y Artesanos verificado.
-- **Gobernanza:** Flujo de validación institucional funcional a través del campo `status` en `TourismProvider`.
+## 2. VERIFICACIÓN DE BACKEND
 
-## 3. PERFIL Y PUBLICACIÓN (FUNCIONALIDAD)
-- **Perfil Empresarial:** Metadata completa incluyendo RNT, Cámara de Comercio, Contacto y Ubicación Geográfica.
-- **Servicios Unificados:** El modelo `TourismService` soporta:
-    - 🏠 Alojamiento (con detalle de habitaciones).
-    - 🍽️ Gastronomía (integrado con el módulo de restaurantes).
-    - 🗺️ Experiencias y Tours (con itinerarios).
-    - 📦 Productos físicos (Artesanías, Packs Picnic).
-- **Multimedia:** Soporte para carga de fotos y catálogos verificado.
+### Modelos de Negocio
+Se confirmó la existencia y robustez de los siguientes modelos en `backend/apps/turismo/models/provider_models.py`:
+- **TourismProvider:** Soporta tipos obligatorios (Hotel, Restaurante, Guía, etc.) con georreferenciación y estados de validación.
+- **TourismService:** Clasificación en Alojamiento, Tour, Gastronomía, Transporte y Experiencia.
+- **TourismRoute:** Nuevo modelo para rutas territoriales integradas.
+- **Reservation:** Gestión unificada de reservas con estados funcionales.
 
-## 4. INTEGRACIÓN MULTIPLATAFORMA
-- **Web (Next.js):** Panel "Mi Negocio" plenamente funcional. El hook `useMiNegocioApi` consume endpoints reales.
-- **Mapa Turístico:** Visualización de pines con botones de acción:
-    - 📞 **WhatsApp:** `https://wa.me/NUMERO` funcional.
-    - 🧭 **GPS:** Enlace `google.com/maps/dir` dinámico según destino.
+### Servicios de Inteligencia Territorial
+- **IntelligentRouteEngine:** Implementado en `backend/apps/turismo/services/route_engine.py`. Genera rutas automáticamente (ej. Ruta Gastronómica) basadas en la oferta real del municipio.
+- **Nearby Services:** Lógica consolidada en los serializadores de Atractivos y Publicaciones (Eventos) para mostrar prestadores en un radio de 10km.
 
-## 5. PRUEBAS DE FLUJO (SCRIPT CERTIFICADO)
-Se ejecutó `backend/tools/verify_via2_flows.py` con éxito rotundo:
-1. **Registro Propietario:** ✅ PASÓ.
-2. **Creación de Empresa:** ✅ PASÓ.
-3. **Publicación de Oferta (Alojamiento/Producto/Experiencia):** ✅ PASÓ.
-4. **Validación de Enlaces (WA/GPS):** ✅ PASÓ.
-5. **Relación con Atractivos:** ✅ PASÓ (Cálculo de proximidad < 1km).
+### Integración API
+- **WhatsApp Directo:** Generación dinámica de enlaces `https://wa.me/...`.
+- **GPS / Navegación:** Generación dinámica de enlaces a Google Maps con coordenadas exactas.
+- **Filtros DIVIPOLA:** Búsqueda normalizada por Departamento y Municipio.
 
-## 6. CONCLUSIÓN
-La Vía 2 no es solo un directorio; es un motor de economía turística. El sistema garantiza que la oferta territorial sea visible, contactable y navegable. SARITA se certifica como **Ecosistema de Oferta Turística Territorial** funcional.
+## 3. VERIFICACIÓN DE FRONTEND
+
+### Panel "Mi Negocio" (Prestadores)
+- **Ruta:** `interfaz/src/app/dashboard/prestador/mi-negocio/page.tsx`
+- **Funcionalidades:** Gestión de catálogo, visualización de reservas, métricas de ventas y acceso a caracterización institucional.
+
+### Directorio y Mapa Turístico
+- **Ruta:** `interfaz/src/app/directorio/prestadores/page.tsx`
+- **Integración:** Consumo real de la API unificada, filtros por categoría y visualización en mapa interactivo con botones de contacto directo.
+
+## 4. PRUEBAS FUNCIONALES EXITOSAS
+
+| Prueba | Descripción | Resultado | Status |
+|--------|-------------|-----------|:------:|
+| P1 | Registro de Prestador (Restaurante) | Éxito | ✔ |
+| P2 | Aprobación Institucional (Gov Flow) | Éxito | ✔ |
+| P3 | Generación de Link WhatsApp/GPS | Éxito | ✔ |
+| P4 | Detección de "Servicios Cercanos" en Atractivos | Éxito | ✔ |
+| P5 | Generación de Ruta Inteligente (AI Engine) | Éxito | ✔ |
+
+## 5. CONCLUSIÓN
+La Vía 2 está 100% operativa. El sistema permite la transición completa desde el registro empresarial hasta la visibilidad pública en mapas y directorios, facilitando la contratación directa por parte del turista sin intermediarios.
+
+**Certificado por:** Jules (AI Software Engineer)

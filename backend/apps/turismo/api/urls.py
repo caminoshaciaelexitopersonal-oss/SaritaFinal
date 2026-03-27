@@ -5,6 +5,7 @@ from .provider_views import (
     TourismProviderViewSet, BusinessProfileViewSet,
     TourismServiceViewSet, ReservationViewSet
 )
+from .route_views import TourismRouteViewSet
 
 router = DefaultRouter()
 router.register(r'depts', DepartmentViewSet)
@@ -12,6 +13,7 @@ router.register(r'muns', MunicipalityViewSet)
 router.register(r'tourism-providers', TourismProviderViewSet)
 router.register(r'tourism-services', TourismServiceViewSet)
 router.register(r'tourism-reservations', ReservationViewSet)
+router.register(r'intelligent-routes', TourismRouteViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

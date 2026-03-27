@@ -6,8 +6,10 @@ import json
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'puerto_gaitan_turismo.settings')
 django.setup()
 
-from api.models import CustomUser, AtractivoTuristico, Entity
+from api.models import CustomUser, AtractivoTuristico, Publicacion
 from apps.turismo.models.provider_models import TourismProvider
+from apps.turismo.models.routes import TourismRoute
+from apps.turismo.services.route_engine import IntelligentRouteEngine
 from rest_framework.test import APIClient
 from django.urls import reverse
 
@@ -41,7 +43,7 @@ def verify_directory_flows():
     print(f"Public list count (after approval): {res.data.get('count', 0)}")
 
     # 5. Verify Contact Links
-    provider_data = res.data['results'][0]
+    provider_data = [p for p in res.data['results'] if p['id'] == provider_id][0]
     print(f"WhatsApp Link: {provider_data.get('whatsapp_link')}")
     print(f"Google Maps Link: {provider_data.get('google_maps_link')}")
 
@@ -59,21 +61,8 @@ def verify_directory_flows():
     print(f"Attraction created: {attr.nombre}")
 
     # 2. Retrieve attraction details and check nearby services
-    # AtractivoTuristicoViewSet in api/urls.py is included at /api/
-    # It uses integer PKs (default for this model)
     res = client.get(f"/api/atractivos/{attr.id}/")
-
-    if res.status_code != 200:
-         print(f"Failed to get attraction detail at /api/atractivos/{attr.id}/. Status: {res.status_code}")
-         # Try by slug
-         res = client.get(f"/api/atractivos/{attr.slug}/")
-         if res.status_code != 200:
-             print(f"Failed to get attraction detail by slug. Status: {res.status_code}")
-             nearby = []
-         else:
-             nearby = res.data.get('nearby_services', [])
-    else:
-         nearby = res.data.get('nearby_services', [])
+    nearby = res.data.get('nearby_services', [])
     print(f"Nearby services count: {len(nearby)}")
     if len(nearby) > 0:
         print(f"First nearby service: {nearby[0]['name']} ({nearby[0]['provider_type']})")
@@ -85,12 +74,45 @@ def verify_directory_flows():
     if len(res.data) > 0:
         print(f"Found: {res.data[0]['name']}")
 
+    print("\n--- TEST 4: Event Georeferencing & Proximity ---")
+    event = Publicacion.objects.create(
+        titulo="Festival del Canoero",
+        slug="festival-canoero",
+        tipo="EVENTO",
+        contenido="Gran fiesta",
+        latitud=4.31,
+        longitud=-72.08,
+        estado="PUBLICADO"
+    )
+    print(f"Event created: {event.titulo}")
+    res = client.get(f"/api/v1/publicaciones/{event.slug}/")
+    nearby_event = res.data.get('nearby_services', [])
+    print(f"Nearby services in event: {len(nearby_event)}")
+
+    print("\n--- TEST 5: Intelligent Route Engine ---")
+    # Associate provider with municipality for route engine
+    from apps.turismo.models.divipola import Municipality
+    mun = Municipality.objects.first()
+    TourismProvider.objects.filter(id=provider_id).update(municipality=mun, status='PUBLICADO')
+    AtractivoTuristico.objects.filter(id=attr.id).update(municipality=mun, categoria_color='BLANCO')
+
+    # Trigger engine
+    res = client.post("/api/v1/turismo/v1/intelligent-routes/generate-intelligent/", {"municipality_id": mun.id}, format='json')
+    print(f"Trigger engine: {res.status_code}")
+
+    res = client.get("/api/v1/turismo/v1/intelligent-routes/")
+    print(f"Total intelligent routes: {res.data.get('count', 0)}")
+
 if __name__ == "__main__":
     # Cleanup
     TourismProvider.objects.filter(name="Restaurante El Gran Llanero").delete()
     AtractivoTuristico.objects.filter(slug="mirador-manacacias").delete()
+    Publicacion.objects.filter(slug="festival-canoero").delete()
+    TourismRoute.objects.filter(is_intelligent=True).delete()
 
     try:
         verify_directory_flows()
     except Exception as e:
         print(f"Test failed: {e}")
+        import traceback
+        traceback.print_exc()
