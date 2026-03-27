@@ -38,10 +38,25 @@ export default function SocialSuperAppPage() {
     [receiverId, selectedGiftId]
   );
 
+  const checkProtection = async () => {
+    try {
+      const { data } = await api.get('/social/protection/status/');
+      if (!data.is_protected) {
+        toast.warn("Debes verificar tu identidad para acceder al chat.");
+        router.push('/dashboard/social/protection');
+        return false;
+      }
+      return true;
+    } catch (e) { return false; }
+  };
+
   const loadInitialData = async (): Promise<void> => {
     setLoading(true);
     setError(null);
     try {
+      const protected_user = await checkProtection();
+      if (!protected_user) return;
+
       const [conv, catalog, sugg] = await Promise.all([
         listSocialConversations(),
         listSocialGiftCatalog(),
@@ -128,6 +143,7 @@ export default function SocialSuperAppPage() {
 
   const [myProfile, setMyProfile] = useState<SocialPreference | null>(null);
 
+  const router = useRouter();
   const loadMyProfile = async () => {
     try {
       const { data } = await api.get('/social/preferences/me/');

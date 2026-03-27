@@ -25,8 +25,20 @@ from .serializers import (
     SocialProfileMediaSerializer,
 )
 from .services.access_control import adult_only_required
+from .services.identity_protection import IdentityProtectionService
 
 User = get_user_model()
+
+
+class IsIdentityVerified(permissions.BasePermission):
+    """
+    Vía 3: Protección de Identidad.
+    Solo permite el acceso si el usuario ha validado su teléfono y rostro.
+    """
+    message = "Para utilizar el chat debes verificar tu identidad (Teléfono y Rostro)."
+
+    def has_permission(self, request, view):
+        return IdentityProtectionService.is_user_protected(request.user)
 
 
 class IsConversationMember(permissions.BasePermission):
@@ -40,7 +52,7 @@ class IsConversationMember(permissions.BasePermission):
 
 class SocialConversationViewSet(viewsets.ModelViewSet):
     serializer_class = SocialConversationSerializer
-    permission_classes = [permissions.IsAuthenticated, IsConversationMember]
+    permission_classes = [permissions.IsAuthenticated, IsConversationMember, IsIdentityVerified]
 
     def get_queryset(self):
         # Allow discovery of public rooms even if not a member yet
@@ -129,7 +141,7 @@ class SocialConversationViewSet(viewsets.ModelViewSet):
 
 class SocialMessageViewSet(viewsets.ModelViewSet):
     serializer_class = SocialMessageSerializer
-    permission_classes = [permissions.IsAuthenticated, IsConversationMember]
+    permission_classes = [permissions.IsAuthenticated, IsConversationMember, IsIdentityVerified]
 
     def get_queryset(self):
         queryset = SocialMessage.objects.filter(conversation__memberships__user=self.request.user).distinct()

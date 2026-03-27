@@ -104,6 +104,22 @@ class CustomUser(AbstractUser):
         GOOGLE = "GOOGLE", _("Google")
         GROQ = "GROQ", _("Groq")
 
+    # --- Campos de Verificación de Identidad ---
+    class VerificationStatus(models.TextChoices):
+        UNVERIFIED = "UNVERIFIED", _("No Verificado")
+        PENDING = "PENDING", _("Pendiente de Revisión")
+        VERIFIED = "VERIFIED", _("Verificado")
+        REJECTED = "REJECTED", _("Rechazado")
+
+    phone_verified = models.BooleanField(default=False, help_text="Indica si el número telefónico ha sido validado vía OTP.")
+    face_verified = models.BooleanField(default=False, help_text="Indica si el rostro ha sido validado mediante biometría.")
+    verification_status = models.CharField(
+        max_length=20,
+        choices=VerificationStatus.choices,
+        default=VerificationStatus.UNVERIFIED,
+        help_text="Estado general de la protección de identidad del usuario."
+    )
+
     base_role = Role.TURISTA
     role = models.CharField(_("Rol"), max_length=50, choices=Role.choices)
     global_roles = models.ManyToManyField('GlobalRole', related_name="users", blank=True)
@@ -744,6 +760,20 @@ class GlobalRole(models.Model):
     class Meta:
         verbose_name = "Rol Global"
         verbose_name_plural = "Roles Globales"
+
+class IdentityVerification(models.Model):
+    """
+    Almacena los detalles técnicos de la verificación de identidad.
+    """
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='identity_audit')
+    phone_number = models.CharField(max_length=20, blank=True)
+    face_hash = models.CharField(max_length=255, blank=True, help_text="Hash seguro del rostro verificado para auditoría.")
+    verification_date = models.DateTimeField(null=True, blank=True)
+    provider_reference = models.CharField(max_length=255, blank=True, help_text="ID de referencia del proveedor externo de KYC.")
+    metadata = models.JSONField(default=dict, blank=True)
+
+    def __str__(self):
+        return f"Identidad: {self.user.username}"
 
 class SiteConfiguration(models.Model):
     nombre_entidad_principal = models.CharField(_("Nombre de la Entidad Principal"), max_length=100, default='Alcaldía de', help_text="Primera línea del nombre de la entidad (ej. 'Alcaldía de')")
