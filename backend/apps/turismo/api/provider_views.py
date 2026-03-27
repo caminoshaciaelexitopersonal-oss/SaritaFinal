@@ -6,9 +6,18 @@ from django_filters.rest_framework import DjangoFilterBackend
 from ..models.provider_models import TourismProvider, BusinessProfile, TourismService, Reservation
 from ..serializers.provider_serializers import (
     TourismProviderSerializer, BusinessProfileSerializer,
-    TourismServiceSerializer, ReservationSerializer
+    TourismServiceSerializer, ReservationSerializer,
+    TourismSubClassificationSerializer
 )
 from ..services.financial_service import TourismFinancialService
+from ..models.provider_models import TourismSubClassification
+
+class TourismSubClassificationViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = TourismSubClassification.objects.all()
+    serializer_class = TourismSubClassificationSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['category']
+    search_fields = ['name']
 
 class TourismProviderViewSet(viewsets.ModelViewSet):
     queryset = TourismProvider.objects.all()

@@ -57,8 +57,18 @@ class RNTIntegrationService:
             provider.rnt_last_sync = timezone.now()
             provider.status = 'ACTIVE' if rnt_data['status'] == 'ACTIVO' else 'INACTIVE'
             # Actualizamos subclasificación si viene del RNT y no ha sido fijada manualmente
-            if not provider.sub_classification:
-                provider.sub_classification = rnt_data.get('sub_category')
+            if not provider.sub_classification_ref:
+                from ..models.provider_models import TourismSubClassification
+                from django.utils.text import slugify
+                try:
+                    # Intentamos mapear la subcategoría del RNT con nuestra base de datos local
+                    rnt_sub_cat = rnt_data.get('sub_category')
+                    if rnt_sub_cat:
+                        slug = slugify(f"{rnt_data.get('category')}-{rnt_sub_cat}")
+                        sub = TourismSubClassification.objects.get(slug=slug)
+                        provider.sub_classification_ref = sub
+                except TourismSubClassification.DoesNotExist:
+                    provider.sub_classification = rnt_data.get('sub_category')
             provider.save()
             return True
         return False

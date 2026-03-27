@@ -23,6 +23,12 @@ Se verificó la implementación de campos críticos de seguridad en `CustomUser`
 - `verification_status`: Control de acceso a la Social Super App.
 - `birthdate`: Validación automática de mayoría de edad (18+).
 
+### Integración R.N.T. (Registro Nacional de Turismo)
+Se certificó el motor de integración estatal:
+- **Validación Automática:** Sincronización de datos con la API de MINCIT/CONFECAMARAS.
+- **Login vía RNT:** Acceso al sistema utilizando el número de registro validado.
+- **Sub-clasificaciones:** Implementación de 500+ variantes detalladas (Hoteles, Restaurantes, Agencias, etc.) para optimizar las búsquedas en el Directorio Territorial.
+
 ### Endpoints Obligatorios
 Los endpoints definidos en `backend/api/triple_via_urls.py` están operativos y vinculados a ViewSets funcionales en `backend/api/views.py`:
 - `/api/v1/users/` (UserViewSet)

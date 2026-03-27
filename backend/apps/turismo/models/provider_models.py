@@ -14,21 +14,64 @@ class BaseModel(models.Model):
         abstract = True
         ordering = ['-created_at']
 
+class TourismSubClassification(BaseModel):
+    """
+    Categoría detallada para prestadores de servicios turísticos.
+    Ej: Hotel Boutique, Restaurante de Comida Italiana, Bar de Cócteles, etc.
+    """
+    category = models.CharField(max_length=50, choices=[
+        ('HOTEL', 'Hoteles'),
+        ('RESTAURANT', 'Restaurantes'),
+        ('BAR', 'Bares'),
+        ('DISCO', 'Discotecas'),
+        ('AGENCY', 'Agencias de Viajes'),
+        ('GUIDE', 'Guías de Turismo'),
+        ('TRANSPORT', 'Empresas Transportadoras'),
+        ('ASSOCIATION', 'Asociaciones Turísticas'),
+        ('ARTISAN', 'Artesanos'),
+        ('DELIVERY', 'Servicios de Delivery'),
+    ])
+    name = models.CharField(max_length=150)
+    slug = models.SlugField(max_length=150, unique=True)
+    icon = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_category_display()} - {self.name}"
+
+    class Meta:
+        verbose_name = "Subclasificación Turística"
+        verbose_name_plural = "Subclasificaciones Turísticas"
+        unique_together = ('category', 'name')
+        ordering = ['category', 'name']
+
 class TourismProvider(BaseModel):
     class ProviderType(models.TextChoices):
-        HOTEL = 'HOTEL', _('Hotel')
-        RESTAURANT = 'RESTAURANT', _('Restaurante')
-        GUIDE = 'GUIDE', _('Guía Turístico')
-        TRAVEL_AGENCY = 'TRAVEL_AGENCY', _('Agencia de Viajes')
-        TOUR_OPERATOR = 'TOUR_OPERATOR', _('Operador Turístico')
-        TRANSPORT = 'TRANSPORT', _('Transporte Turístico')
-        VEHICLE_RENTAL = 'VEHICLE_RENTAL', _('Alquiler de Vehículos')
+        # --- 16 Categorías Obligatorias RNT + Adicionales ---
+        HOTEL = 'HOTEL', _('Establecimiento de Alojamiento (Hoteles, Hostales, Glamping, etc.)')
+        TRAVEL_AGENCY = 'TRAVEL_AGENCY', _('Agencia de Viajes y Turismo')
+        REPRESENTATION_OFFICE = 'REPRESENTATION_OFFICE', _('Oficina de Representación Turística')
+        GUIDE = 'GUIDE', _('Guía de Turismo')
+        PROFESSIONAL_OPERATOR = 'PROFESSIONAL_OPERATOR', _('Operador Profesional de Congresos y Ferias')
+        VEHICLE_RENTAL = 'VEHICLE_RENTAL', _('Arrendador de Vehículos para Turismo')
+        INDUSTRIAL_USER = 'INDUSTRIAL_USER', _('Usuario Industrial de Servicios en Zona Franca')
+        TIME_SHARE = 'TIME_SHARE', _('Promotora de Tiempo Compartido y Multipropiedad')
+        VACATION_EXCHANGE = 'VACATION_EXCHANGE', _('Compañía de Intercambio Vacacional')
+        SAVINGS_FOR_TRAVEL = 'SAVINGS_FOR_TRAVEL', _('Empresa Captadora de Ahorro para Viajes')
+        PARK_CONCESSIONAIRE = 'PARK_CONCESSIONAIRE', _('Concesionario de Servicios Turísticos en Parques')
+        TRANSPORT = 'TRANSPORT', _('Empresa de Transporte Terrestre Automotor Especial')
+        THEME_PARK_OPERATOR = 'THEME_PARK_OPERATOR', _('Operador de Parques Temáticos y Ecoturismo')
+        DIGITAL_PLATFORM = 'DIGITAL_PLATFORM', _('Plataforma Electrónica de Servicios Turísticos')
+        RESTAURANT_BAR = 'RESTAURANT_BAR', _('Restaurante o Bar (RNT Voluntario)')
+        WEDDING_PLANNER = 'WEDDING_PLANNER', _('Organizador de Bodas Destino')
+
+        # --- Roles Especiales / Adicionales ---
         ARTISAN = 'ARTISAN', _('Artesano')
-        EVENT_ORGANIZER = 'EVENT_ORGANIZER', _('Organizador de Eventos')
-        EXPERIENCE_PROVIDER = 'EXPERIENCE_PROVIDER', _('Experiencias Turísticas')
+        ASSOCIATION = 'ASSOCIATION', _('Asociación Turística')
+        DELIVERY = 'DELIVERY', _('Servicio de Delivery')
+        EVENT_ORGANIZER = 'EVENT_ORGANIZER', _('Organizador de Eventos (General)')
 
     name = models.CharField(max_length=255)
-    provider_type = models.CharField(max_length=20, choices=ProviderType.choices)
+    provider_type = models.CharField(max_length=30, choices=ProviderType.choices)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tourism_providers')
 
     # --- Territorial Hierarchy (DIVIPOLA) ---
@@ -45,7 +88,8 @@ class TourismProvider(BaseModel):
     rnt_last_sync = models.DateTimeField(null=True, blank=True)
 
     # --- Classification ---
-    sub_classification = models.CharField(_('Subclasificación'), max_length=150, blank=True, null=True)
+    sub_classification_ref = models.ForeignKey(TourismSubClassification, on_delete=models.SET_NULL, null=True, blank=True, related_name='providers')
+    sub_classification = models.CharField(_('Subclasificación (Texto)'), max_length=150, blank=True, null=True)
 
     # --- Scoring & Visibility ---
     puntuacion_capacitacion = models.PositiveIntegerField(default=0, help_text="Puntaje por asistencia a capacitaciones.")

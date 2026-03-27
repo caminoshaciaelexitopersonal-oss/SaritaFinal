@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from ..models.provider_models import TourismProvider, BusinessProfile, TourismService, Reservation
+from ..models.provider_models import TourismProvider, BusinessProfile, TourismService, Reservation, TourismSubClassification
+
+class TourismSubClassificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TourismSubClassification
+        fields = '__all__'
 
 class BusinessProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,6 +13,7 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
 
 class TourismProviderSerializer(serializers.ModelSerializer):
     business_profile = BusinessProfileSerializer(read_only=True)
+    sub_classification_detail = TourismSubClassificationSerializer(source='sub_classification_ref', read_only=True)
     whatsapp_link = serializers.SerializerMethodField()
     email_link = serializers.SerializerMethodField()
     google_maps_link = serializers.SerializerMethodField()
