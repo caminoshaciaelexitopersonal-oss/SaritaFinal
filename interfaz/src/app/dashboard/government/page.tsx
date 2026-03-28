@@ -34,6 +34,18 @@ export default function GovernmentDashboard() {
 
   useEffect(() => {
     loadData();
+
+    // PHASE 2: Real-time Streaming via WebSockets
+    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000/ws'}/governance/analytics/`);
+
+    socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === 'ANALYTICS_UPDATE') {
+            setAnalytics((prev: any) => ({ ...prev, ...data.payload }));
+        }
+    };
+
+    return () => socket.close();
   }, [loadData]);
 
   // Simulación de datos para gráficos basados en analítica real
