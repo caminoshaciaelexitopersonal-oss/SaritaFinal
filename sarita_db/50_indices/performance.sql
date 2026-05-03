@@ -1,15 +1,13 @@
--- Índices de rendimiento avanzados - FASE 10
+-- Índices de rendimiento avanzados - FASE V1-GOV
 
--- Índices compuestos para filtrado rápido por Tenant y Tiempo
-CREATE INDEX IF NOT EXISTS idx_events_tenant_time ON events.event_store (tenant_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_ledger_tenant_time ON ledger.ledger_entries (tenant_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_audit_tenant_time ON auditoria.system_logs (tenant_id, created_at DESC);
+-- Índices geoespaciales para atractivos y eventos
+CREATE INDEX IF NOT EXISTS idx_attractions_geo ON tourism.attractions USING GIST(location);
+CREATE INDEX IF NOT EXISTS idx_events_geo ON tourism.events USING GIST(location);
+CREATE INDEX IF NOT EXISTS idx_territorial_geo ON governance.territorial_entities USING GIST(location);
 
--- Índices GIN para búsquedas en campos JSONB
-CREATE INDEX IF NOT EXISTS idx_events_payload_gin ON events.event_store USING GIN (payload);
-CREATE INDEX IF NOT EXISTS idx_kyc_data_gin ON kyc.kyc_profiles USING GIN (verification_data);
-CREATE INDEX IF NOT EXISTS idx_payments_metadata_gin ON payments.payment_intents USING GIN (metadata);
+-- Índices de búsqueda textual para el directorio turístico
+CREATE INDEX IF NOT EXISTS idx_directory_search ON tourism.tourism_directory USING GIN(searchable_vector);
 
--- Índices parciales para estados activos/pendientes
-CREATE INDEX IF NOT EXISTS idx_kyc_pending ON kyc.kyc_profiles (id) WHERE status = 'PENDING';
-CREATE INDEX IF NOT EXISTS idx_payments_pending ON payments.payment_intents (id) WHERE status = 'PENDING';
+-- Índices por código DANE y Tenant
+CREATE INDEX IF NOT EXISTS idx_territorial_dane ON governance.territorial_entities (dane_code);
+CREATE INDEX IF NOT EXISTS idx_public_entities_type ON governance.public_entities (entity_type);

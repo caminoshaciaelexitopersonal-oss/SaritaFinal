@@ -28,7 +28,7 @@ def deploy():
 
     phases = [
         ['00_init', '01_core'],
-        ['02_identity', '03_governance', '04_agents'],
+        ['02_identity', '03_governance', '04_agents', '06_turismo'], # Incluimos Turismo institucional
         ['05_erp_comercial', '06_erp_operativo', '07_erp_contable', '08_erp_financiero', '09_erp_archivistico'],
         ['10_wallet', '11_delivery', '12_auditoria', '13_ai_memory', '14_integraciones'],
         ['15_event_sourcing', '16_wallet_ledger', '17_payments', '18_ai_memory', '19_kyc', '21_tax', '22_reconciliation', '23_archival_legal', '24_partitioning', '25_backup_recovery', '26_transaction_engine', '27_concurrency', '28_retry_queue', '29_webhooks', '31_scheduler'],
@@ -37,7 +37,7 @@ def deploy():
         ['20_relaciones_globales', '30_triggers', '40_rls', '50_indices', '70_seed', '80_testing']
     ]
 
-    print("--- Iniciando Despliegue FASE 10.1 (Hardening Real de Producción) ---")
+    print("--- Iniciando Despliegue FASE V1-GOV (Cierre Estructural del Estado) ---")
 
     global_checksum = hashlib.sha256()
 
@@ -52,10 +52,10 @@ def deploy():
                 global_checksum.update(calculate_checksum(sql_file).encode())
 
     final_checksum = global_checksum.hexdigest()
-    print(f"Registrando versión v10.1_production_hardening (Checksum: {final_checksum[:10]})")
-    subprocess.run(['psql', db_url, '-c', f"SELECT core.apply_schema_version('v10.1_production_hardening', '{final_checksum}')"], check=True)
+    print(f"Registrando versión v10.2_gov_structural (Checksum: {final_checksum[:10]})")
+    subprocess.run(['psql', db_url, '-c', f"SELECT core.apply_schema_version('v10.2_gov_structural', '{final_checksum}')"], check=True)
 
-    print("--- DESPLIEGUE FINALIZADO EXITOSAMENTE: SISTEMA CERTIFICADO PARA PRODUCCIÓN ---")
+    print("--- DESPLIEGUE FINALIZADO EXITOSAMENTE: ESTADO MODELADO COMPLETAMENTE ---")
 
 if __name__ == "__main__":
     deploy()
