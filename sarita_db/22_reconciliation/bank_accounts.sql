@@ -1,11 +1,11 @@
-CREATE TABLE wallet.wallets (
+CREATE TABLE reconciliation.bank_accounts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    owner_id UUID NOT NULL, -- FK in 20_global
-    balance DECIMAL(18,2) DEFAULT 0.00,
+    account_number VARCHAR(50) NOT NULL,
+    bank_name VARCHAR(100) NOT NULL,
     currency VARCHAR(3) DEFAULT 'COP',
-    status VARCHAR(20) DEFAULT 'ACTIVE',
     tenant_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now(),
-    hash_integridad TEXT
+    hash_integridad TEXT,
+    UNIQUE(tenant_id, account_number)
 );

@@ -1,4 +1,4 @@
--- Definición de esquemas para la arquitectura Triple Vía de SARITA
+-- Definición de esquemas para la arquitectura Triple Vía de SARITA - HARDENING FASE 10
 
 -- 01 Core & Multitenancy
 CREATE SCHEMA IF NOT EXISTS core;
@@ -33,6 +33,30 @@ CREATE SCHEMA IF NOT EXISTS ai_memory;
 
 -- 14 External Integrations
 CREATE SCHEMA IF NOT EXISTS integraciones;
+
+-- 15 Event Sourcing (Reconstrucción Total)
+CREATE SCHEMA IF NOT EXISTS events;
+
+-- 16 Wallet Ledger (Contabilidad Financiera Real)
+CREATE SCHEMA IF NOT EXISTS ledger;
+
+-- 17 Payment Orchestrator
+CREATE SCHEMA IF NOT EXISTS payments;
+
+-- 18 AI Memory (Capa Extendida)
+-- Reutiliza schema ai_memory definido arriba
+
+-- 19 KYC & Identity Verification
+CREATE SCHEMA IF NOT EXISTS kyc;
+
+-- 21 Global Tax Engine
+CREATE SCHEMA IF NOT EXISTS tax;
+
+-- 22 Bank Reconciliation
+CREATE SCHEMA IF NOT EXISTS reconciliation;
+
+-- 23 Archival & Legal
+CREATE SCHEMA IF NOT EXISTS archival;
 
 -- Social & Tourist (Vía 3)
 CREATE SCHEMA IF NOT EXISTS social;

@@ -1,17 +1,15 @@
--- Scripts de prueba de integridad
-SELECT
-    schemaname,
-    tablename,
-    policyname,
-    permissive,
-    roles,
-    cmd,
-    qual
-FROM pg_policies
-WHERE schemaname NOT IN ('pg_catalog', 'information_schema');
+-- Test de Integridad Financiera (Ledger)
+DO $$
+DECLARE
+    v_diff DECIMAL;
+BEGIN
+    SELECT SUM(debit - credit) INTO v_diff FROM ledger.ledger_entries;
+    IF v_diff != 0 THEN
+        RAISE EXCEPTION 'Falla de Integridad: El ledger global no cuadra (%)', v_diff;
+    END IF;
+    RAISE NOTICE 'Test Ledger: PASSED';
+END;
+$$;
 
--- Verificar que todas las tablas tengan hash_integridad
-SELECT table_schema, table_name
-FROM information_schema.columns
-WHERE column_name = 'hash_integridad'
-AND table_schema NOT IN ('pg_catalog', 'information_schema');
+-- Test de RLS (Verificación de aislamiento)
+-- [Requiere simular sesión de tenant]

@@ -1,8 +1,17 @@
--- Datos Maestros Iniciales
+-- Datos Maestros Iniciales - FASE 10
 
 -- Crear un Tenant Maestro para el sistema (Administración Global)
-INSERT INTO core.tenants (id, name, legal_name, tax_id, domain, state)
-VALUES ('00000000-0000-0000-0000-000000000000', 'SARITA GLOBAL', 'SARITA SISTEMA SOBERANO', '000000000-0', 'sarita.internal', 'ACTIVE')
+-- Se referencia a sí mismo como tenant_id para cumplimiento jerárquico total
+INSERT INTO core.tenants (id, tenant_id, name, legal_name, tax_id, domain, state)
+VALUES (
+    '00000000-0000-0000-0000-000000000000',
+    '00000000-0000-0000-0000-000000000000',
+    'SARITA GLOBAL',
+    'SARITA SISTEMA SOBERANO',
+    '000000000-0',
+    'sarita.internal',
+    'ACTIVE'
+)
 ON CONFLICT DO NOTHING;
 
 -- Roles Globales de Sistema (Asociados al Tenant Maestro)

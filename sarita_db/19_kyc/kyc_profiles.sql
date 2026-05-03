@@ -1,11 +1,9 @@
-CREATE TABLE governance.government_profiles (
+CREATE TABLE kyc.kyc_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL, -- FK in 20_global
-    entity_id UUID NOT NULL, -- FK in 20_global
-    cargo VARCHAR(255) NOT NULL,
-    nivel VARCHAR(20) NOT NULL,
-    phone VARCHAR(20),
-    is_active BOOLEAN DEFAULT true,
+    status VARCHAR(20) DEFAULT 'PENDING',
+    risk_score INTEGER DEFAULT 0,
+    verification_data JSONB DEFAULT '{}',
     tenant_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now(),

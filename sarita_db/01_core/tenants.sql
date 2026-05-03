@@ -1,6 +1,7 @@
 -- Definición de la entidad fundamental de aislamiento
 CREATE TABLE core.tenants (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID, -- Referencia al tenant maestro para cumplimiento jerárquico
     name VARCHAR(255) NOT NULL,
     legal_name VARCHAR(255),
     tax_id VARCHAR(50) UNIQUE NOT NULL,

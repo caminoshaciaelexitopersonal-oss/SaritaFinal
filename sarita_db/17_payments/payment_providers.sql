@@ -1,10 +1,8 @@
-CREATE TABLE governance.government_profiles (
+CREATE TABLE payments.payment_providers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL, -- FK in 20_global
-    entity_id UUID NOT NULL, -- FK in 20_global
-    cargo VARCHAR(255) NOT NULL,
-    nivel VARCHAR(20) NOT NULL,
-    phone VARCHAR(20),
+    name VARCHAR(100) NOT NULL,
+    adapter_class VARCHAR(255) NOT NULL,
+    config JSONB DEFAULT '{}',
     is_active BOOLEAN DEFAULT true,
     tenant_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now(),
