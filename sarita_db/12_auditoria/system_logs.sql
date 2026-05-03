@@ -8,6 +8,7 @@ CREATE TABLE auditoria.system_logs (
     new_value JSONB,
     ip_address INET,
     user_agent TEXT,
+    trace_id UUID, -- Trazabilidad Global
     tenant_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now(),
     hash_integridad TEXT
