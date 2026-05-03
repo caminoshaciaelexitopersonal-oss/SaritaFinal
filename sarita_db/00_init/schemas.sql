@@ -1,62 +1,37 @@
--- Definición de esquemas para la arquitectura Triple Vía de SARITA - HARDENING FASE 10
+-- Definición de esquemas para la arquitectura Triple Vía de SARITA - HARDENING FASE 10 (BANCO CENTRAL)
 
--- 01 Core & Multitenancy
+-- 01-14 Core, Identity, Governance, ERP, etc
 CREATE SCHEMA IF NOT EXISTS core;
-
--- 02 Identity & Access Management
 CREATE SCHEMA IF NOT EXISTS identity;
-
--- 03 Governance & Institutional (Vía 1)
 CREATE SCHEMA IF NOT EXISTS governance;
-
--- 04 Autonomous Agents & AI
 CREATE SCHEMA IF NOT EXISTS agents;
-
--- 05-09 ERP Domains (Vía 2)
 CREATE SCHEMA IF NOT EXISTS erp_comercial;
 CREATE SCHEMA IF NOT EXISTS erp_operativo;
 CREATE SCHEMA IF NOT EXISTS erp_contable;
 CREATE SCHEMA IF NOT EXISTS erp_financiero;
 CREATE SCHEMA IF NOT EXISTS erp_archivistico;
-
--- 10 Financial & Wallets
 CREATE SCHEMA IF NOT EXISTS wallet;
-
--- 11 Logistics & Delivery
 CREATE SCHEMA IF NOT EXISTS delivery;
-
--- 12 Audit & Forensic
 CREATE SCHEMA IF NOT EXISTS auditoria;
-
--- 13 AI Memory & Intelligence
 CREATE SCHEMA IF NOT EXISTS ai_memory;
+CREATE SCHEMA IF NOT EXISTS integrations;
 
--- 14 External Integrations
-CREATE SCHEMA IF NOT EXISTS integraciones;
-
--- 15 Event Sourcing (Reconstrucción Total)
+-- 15-26 Advanced Domains
 CREATE SCHEMA IF NOT EXISTS events;
-
--- 16 Wallet Ledger (Contabilidad Financiera Real)
 CREATE SCHEMA IF NOT EXISTS ledger;
-
--- 17 Payment Orchestrator
 CREATE SCHEMA IF NOT EXISTS payments;
-
--- 18 AI Memory (Capa Extendida)
--- Reutiliza schema ai_memory definido arriba
-
--- 19 KYC & Identity Verification
 CREATE SCHEMA IF NOT EXISTS kyc;
-
--- 21 Global Tax Engine
 CREATE SCHEMA IF NOT EXISTS tax;
-
--- 22 Bank Reconciliation
 CREATE SCHEMA IF NOT EXISTS reconciliation;
-
--- 23 Archival & Legal
 CREATE SCHEMA IF NOT EXISTS archival;
+
+-- 27-31 Hardening Schemas
+-- Reutiliza core para retry y scheduler si no se especifican nuevos schemas,
+-- pero la directriz menciona esquemas específicos en las funciones.
+CREATE SCHEMA IF NOT EXISTS retry;
+CREATE SCHEMA IF NOT EXISTS ai;
+CREATE SCHEMA IF NOT EXISTS scheduler;
+CREATE SCHEMA IF NOT EXISTS watchdog;
 
 -- Social & Tourist (Vía 3)
 CREATE SCHEMA IF NOT EXISTS social;
