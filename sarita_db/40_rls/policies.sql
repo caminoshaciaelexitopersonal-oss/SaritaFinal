@@ -1,4 +1,4 @@
--- Row Level Security (RLS) para aislamiento estricto de inquilinos - HARDENING FASE 10
+-- Row Level Security (RLS) Estandarizado - FASE CORRECTIVA FINAL
 
 DO $$
 DECLARE
@@ -19,18 +19,12 @@ BEGIN
         -- Habilitar RLS
         EXECUTE format('ALTER TABLE %I.%I ENABLE ROW LEVEL SECURITY;', s, t);
 
-        -- Crear políticas diferenciadas
-        EXECUTE format('DROP POLICY IF EXISTS tenant_read_policy ON %I.%I;', s, t);
-        EXECUTE format('CREATE POLICY tenant_read_policy ON %I.%I FOR SELECT USING (tenant_id = current_setting(''sarita.current_tenant_id'', true)::UUID);', s, t);
+        -- Crear política obligatoria usando app.current_tenant
+        EXECUTE format('DROP POLICY IF EXISTS tenant_isolation_policy ON %I.%I;', s, t);
+        EXECUTE format('CREATE POLICY tenant_isolation_policy ON %I.%I USING (tenant_id = current_setting(''app.current_tenant'')::UUID);', s, t);
 
-        EXECUTE format('DROP POLICY IF EXISTS tenant_write_policy ON %I.%I;', s, t);
-        EXECUTE format('CREATE POLICY tenant_write_policy ON %I.%I FOR INSERT WITH CHECK (tenant_id = current_setting(''sarita.current_tenant_id'', true)::UUID);', s, t);
-
-        EXECUTE format('DROP POLICY IF EXISTS tenant_update_policy ON %I.%I;', s, t);
-        EXECUTE format('CREATE POLICY tenant_update_policy ON %I.%I FOR UPDATE USING (tenant_id = current_setting(''sarita.current_tenant_id'', true)::UUID);', s, t);
-
-        -- Protección especial para tablas Inmutables (Event Sourcing / Ledger Entries)
-        IF t IN ('event_store', 'ledger_entries', 'system_logs') THEN
+        -- Inmutabilidad para tablas clave
+        IF t IN ('event_store', 'ledger_entries', 'system_logs', 'payment_state_transitions') THEN
             EXECUTE format('DROP POLICY IF EXISTS immutable_policy ON %I.%I;', s, t);
             EXECUTE format('CREATE POLICY immutable_policy ON %I.%I FOR UPDATE OR DELETE USING (false);', s, t);
         END IF;
@@ -38,3 +32,14 @@ BEGIN
     END LOOP;
 END;
 $$;
+
+-- Función para validar contexto de sesión
+CREATE OR REPLACE FUNCTION core.fn_check_tenant_context()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF current_setting('app.current_tenant', true) IS NULL OR current_setting('app.current_tenant', true) = '' THEN
+        RAISE EXCEPTION 'Error de Seguridad: app.current_tenant no está definido en la sesión.';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
