@@ -1,17 +1,19 @@
-# SARITA DB - Hardening Fase 10 (Operatividad Crítica)
+# SARITA DB - Hardening Fase 10.1 (Producción Real)
 
-## Módulos de Resiliencia Operativa
+## Certificación de Seguridad y Consistencia
 
-- `27_concurrency/`: Control de bloqueo transaccional mediante `pg_advisory_xact_lock`.
-- `28_retry_queue/`: Gestión de reintentos y Dead Letter Queue para operaciones asíncronas.
-- `29_webhooks/`: Motor de recepción de webhooks con verificación de firmas HMAC.
-- `31_scheduler/`: Programador de tareas internas para mantenimiento (Conciliación, KYC).
-- `26_transaction_engine/`: Orquestador atómico con soporte de `trace_id`.
+- `41_cross_domain_consistency/`: Verificación de integridad entre Event Store y Ledger.
+- `42_rls_enforcement/`: Triggers de bloqueo preventivo para asegurar el contexto multi-inquilino.
+- `43_webhook_replay_protection/`: Protección contra ataques de repetición mediante firmas únicas.
+- `44_scheduler_cluster/`: Registro de nodos para ejecución distribuida de tareas.
+- `45_ai_hierarchy/`: Niveles de autoridad para agentes autónomos.
+- `46_event_archival/`: Gestión de ciclo de vida de eventos (Warm to Cold storage).
+- `47_forensic_mode/`: Bloqueo total de escritura para investigaciones legales.
+- `48_system_validation/`: Diagnóstico integral de salud financiera y secuencialidad.
 
-## Reglas de Endurecimiento
+## Nuevas Reglas de Oro
 
-1. **Idempotencia**: Todas las transacciones financieras requieren una referencia única.
-2. **Trazabilidad**: Uso de `trace_id` para vincular eventos, asientos contables y logs.
-3. **Bloqueo por Recurso**: Las operaciones sobre un agregado deben obtener un bloqueo advisory transaccional.
-4. **Cumplimiento KYC**: Integración de estados de expiración y re-verificación de riesgo.
-5. **Aislamiento**: Transacciones financieras aisladas mediante bloqueos preventivos.
+1. **Contexto Obligatorio**: Ninguna operación de escritura puede ocurrir sin un `app.current_tenant` definido.
+2. **Anti-Replay**: Todos los webhooks entrantes deben ser únicos por firma.
+3. **Jerarquía IA**: Los agentes tienen niveles de autoridad (1-6) que limitan sus acciones sobre el sistema.
+4. **Modo Forense**: El sistema soporta un estado de inmutabilidad total para auditorías externas.
