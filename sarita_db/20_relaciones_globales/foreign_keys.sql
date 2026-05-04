@@ -1,101 +1,59 @@
--- Relaciones transversales y restricciones globales - GESTIÓN OPERATIVA TOTAL
+-- Relaciones transversales y restricciones globales - GESTIÓN ARCHIVÍSTICA TOTAL
 
--- [CORE OPERATIVO]
-ALTER TABLE core.operational_units ADD CONSTRAINT fk_unit_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-ALTER TABLE core.service_catalog_extended ADD CONSTRAINT fk_cat_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
+-- [ESTRUCTURA]
+ALTER TABLE archival.document_types_extended ADD CONSTRAINT fk_dtype_cat FOREIGN KEY (category_id) REFERENCES archival.document_categories(id);
+ALTER TABLE archival.file_entities ADD CONSTRAINT fk_fent_file FOREIGN KEY (file_id) REFERENCES archival.files(id);
 
--- [ÓRDENES DE SERVICIO]
-ALTER TABLE core.service_orders_erp ADD CONSTRAINT fk_so_operation FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
-ALTER TABLE core.service_order_items_erp ADD CONSTRAINT fk_soi_so FOREIGN KEY (service_order_id) REFERENCES core.service_orders_erp(id);
-ALTER TABLE core.service_order_items_erp ADD CONSTRAINT fk_soi_prod FOREIGN KEY (product_id) REFERENCES core.products(id);
-ALTER TABLE core.service_execution_logs ADD CONSTRAINT fk_sel_so FOREIGN KEY (service_order_id) REFERENCES core.service_orders_erp(id);
-ALTER TABLE core.service_execution_logs ADD CONSTRAINT fk_sel_user FOREIGN KEY (actor_id) REFERENCES identity.users(id);
+-- [DOCUMENTOS]
+ALTER TABLE archival.documents_main ADD CONSTRAINT fk_doc_file FOREIGN KEY (file_id) REFERENCES archival.files(id);
+ALTER TABLE archival.documents_main ADD CONSTRAINT fk_doc_type FOREIGN KEY (type_id) REFERENCES archival.document_types_extended(id);
+-- current_version_id es ref circular, se aplica después si es necesario o se deja para lógica app
+ALTER TABLE archival.document_relations ADD CONSTRAINT fk_dr_parent FOREIGN KEY (parent_doc_id) REFERENCES archival.documents_main(id);
+ALTER TABLE archival.document_relations ADD CONSTRAINT fk_dr_child FOREIGN KEY (child_doc_id) REFERENCES archival.documents_main(id);
 
--- [TAREAS]
-ALTER TABLE core.operational_tasks ADD CONSTRAINT fk_task_so FOREIGN KEY (service_order_id) REFERENCES core.service_orders_erp(id);
-ALTER TABLE core.task_assignments ADD CONSTRAINT fk_ta_task FOREIGN KEY (task_id) REFERENCES core.operational_tasks(id);
-ALTER TABLE core.task_assignments ADD CONSTRAINT fk_ta_user FOREIGN KEY (user_id) REFERENCES identity.users(id);
-ALTER TABLE core.task_status_history ADD CONSTRAINT fk_tsh_task FOREIGN KEY (task_id) REFERENCES core.operational_tasks(id);
+-- [VERSIONADO]
+ALTER TABLE archival.document_versions ADD CONSTRAINT fk_dv_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
+ALTER TABLE archival.document_versions ADD CONSTRAINT fk_dv_author FOREIGN KEY (author_id) REFERENCES identity.users(id);
+ALTER TABLE archival.version_changes ADD CONSTRAINT fk_vc_ver FOREIGN KEY (version_id) REFERENCES archival.document_versions(id);
 
--- [RECURSOS]
-ALTER TABLE core.operational_resources ADD CONSTRAINT fk_res_type FOREIGN KEY (resource_type_id) REFERENCES core.resource_types(id);
-ALTER TABLE core.resource_availability ADD CONSTRAINT fk_ra_res FOREIGN KEY (resource_id) REFERENCES core.operational_resources(id);
+-- [METADATOS]
+ALTER TABLE archival.metadata_fields ADD CONSTRAINT fk_mf_sch FOREIGN KEY (schema_id) REFERENCES archival.metadata_schemas(id);
+ALTER TABLE archival.document_metadata_values ADD CONSTRAINT fk_dmv_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
+ALTER TABLE archival.document_metadata_values ADD CONSTRAINT fk_dmv_field FOREIGN KEY (field_id) REFERENCES archival.metadata_fields(id);
 
--- [AGENDA & RESERVAS]
-ALTER TABLE core.schedules ADD CONSTRAINT fk_sch_res FOREIGN KEY (resource_id) REFERENCES core.operational_resources(id);
-ALTER TABLE core.schedules ADD CONSTRAINT fk_sch_unit FOREIGN KEY (unit_id) REFERENCES core.operational_units(id);
-ALTER TABLE core.bookings_erp ADD CONSTRAINT fk_book_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
-ALTER TABLE core.bookings_erp ADD CONSTRAINT fk_book_res FOREIGN KEY (resource_id) REFERENCES core.operational_resources(id);
-ALTER TABLE core.time_slots ADD CONSTRAINT fk_ts_sch FOREIGN KEY (schedule_id) REFERENCES core.schedules(id);
+-- [INTELIGENCIA]
+ALTER TABLE archival.classification_rules ADD CONSTRAINT fk_cr_type FOREIGN KEY (target_type_id) REFERENCES archival.document_types_extended(id);
+ALTER TABLE archival.classification_results ADD CONSTRAINT fk_clres_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
+ALTER TABLE archival.ocr_jobs ADD CONSTRAINT fk_oj_ver FOREIGN KEY (version_id) REFERENCES archival.document_versions(id);
+ALTER TABLE archival.ocr_results ADD CONSTRAINT fk_or_job FOREIGN KEY (job_id) REFERENCES archival.ocr_jobs(id);
 
--- [INCIDENTES]
-ALTER TABLE core.incident_actions ADD CONSTRAINT fk_ia_inc FOREIGN KEY (incident_id) REFERENCES core.incidents(id);
-ALTER TABLE core.incident_actions ADD CONSTRAINT fk_ia_user FOREIGN KEY (actor_id) REFERENCES identity.users(id);
+-- [CICLO DE VIDA]
+ALTER TABLE archival.lifecycle_transitions ADD CONSTRAINT fk_lt_from FOREIGN KEY (from_state_id) REFERENCES archival.lifecycle_states(id);
+ALTER TABLE archival.lifecycle_transitions ADD CONSTRAINT fk_lt_to FOREIGN KEY (to_state_id) REFERENCES archival.lifecycle_states(id);
+ALTER TABLE archival.lifecycle_logs ADD CONSTRAINT fk_ll_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
+ALTER TABLE archival.lifecycle_logs ADD CONSTRAINT fk_ll_actor FOREIGN KEY (actor_id) REFERENCES identity.users(id);
 
--- [CHECKLIST]
-ALTER TABLE core.checklist_items ADD CONSTRAINT fk_ci_check FOREIGN KEY (checklist_id) REFERENCES core.checklists(id);
-ALTER TABLE core.checklist_execution ADD CONSTRAINT fk_ce_check FOREIGN KEY (checklist_id) REFERENCES core.checklists(id);
-ALTER TABLE core.checklist_execution ADD CONSTRAINT fk_ce_so FOREIGN KEY (service_order_id) REFERENCES core.service_orders_erp(id);
-ALTER TABLE core.checklist_execution ADD CONSTRAINT fk_ce_user FOREIGN KEY (actor_id) REFERENCES identity.users(id);
+-- [SEGURIDAD]
+ALTER TABLE archival.document_permissions ADD CONSTRAINT fk_dp_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
+ALTER TABLE archival.document_permissions ADD CONSTRAINT fk_dp_file FOREIGN KEY (file_id) REFERENCES archival.files(id);
+ALTER TABLE archival.document_access_logs ADD CONSTRAINT fk_dal_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
+ALTER TABLE archival.document_access_logs ADD CONSTRAINT fk_dal_user FOREIGN KEY (user_id) REFERENCES identity.users(id);
 
--- [LOGÍSTICA]
-ALTER TABLE core.logistics_orders ADD CONSTRAINT fk_lo_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
-ALTER TABLE core.logistics_assignments ADD CONSTRAINT fk_la_ord FOREIGN KEY (logistics_order_id) REFERENCES core.logistics_orders(id);
-ALTER TABLE core.logistics_assignments ADD CONSTRAINT fk_la_res FOREIGN KEY (resource_id) REFERENCES core.operational_resources(id);
+-- [FIRMA Y NOTARIZACIÓN]
+ALTER TABLE archival.signature_requests ADD CONSTRAINT fk_sr_ver FOREIGN KEY (document_version_id) REFERENCES archival.document_versions(id);
+ALTER TABLE archival.signature_participants ADD CONSTRAINT fk_sp_req FOREIGN KEY (request_id) REFERENCES archival.signature_requests(id);
+ALTER TABLE archival.signature_participants ADD CONSTRAINT fk_sp_user FOREIGN KEY (user_id) REFERENCES identity.users(id);
+ALTER TABLE archival.signatures ADD CONSTRAINT fk_sig_part FOREIGN KEY (participant_id) REFERENCES archival.signature_participants(id);
+ALTER TABLE archival.notarizations ADD CONSTRAINT fk_not_ver FOREIGN KEY (document_version_id) REFERENCES archival.document_versions(id);
+ALTER TABLE archival.notarizations ADD CONSTRAINT fk_not_prov FOREIGN KEY (provider_id) REFERENCES archival.notarization_providers(id);
 
--- [CAPACIDAD]
-ALTER TABLE core.capacity_units ADD CONSTRAINT fk_cu_unit FOREIGN KEY (operational_unit_id) REFERENCES core.operational_units(id);
-ALTER TABLE core.capacity_units ADD CONSTRAINT fk_cu_type FOREIGN KEY (resource_type_id) REFERENCES core.resource_types(id);
-ALTER TABLE core.occupancy_tracking ADD CONSTRAINT fk_ot_unit FOREIGN KEY (capacity_unit_id) REFERENCES core.capacity_units(id);
+-- [TRAZABILIDAD Y RETENCIÓN]
+ALTER TABLE archival.document_audit_logs_extended ADD CONSTRAINT fk_dale_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
+ALTER TABLE archival.document_events ADD CONSTRAINT fk_de_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
+ALTER TABLE archival.retention_rules ADD CONSTRAINT fk_rr_pol FOREIGN KEY (policy_id) REFERENCES archival.retention_policies_extended(id);
+ALTER TABLE archival.retention_rules ADD CONSTRAINT fk_rr_type FOREIGN KEY (document_type_id) REFERENCES archival.document_types_extended(id);
+ALTER TABLE archival.disposal_logs ADD CONSTRAINT fk_dl_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
 
--- [GEOLOCALIZACIÓN]
-ALTER TABLE core.geo_points_history ADD CONSTRAINT fk_gp_res FOREIGN KEY (resource_id) REFERENCES core.operational_resources(id);
-ALTER TABLE core.geo_routes_history ADD CONSTRAINT fk_gr_res FOREIGN KEY (resource_id) REFERENCES core.operational_resources(id);
-
--- [ESPECIALIZADA - HOTELES]
-ALTER TABLE tourism.hotel_rooms ADD CONSTRAINT fk_hr_unit FOREIGN KEY (operational_unit_id) REFERENCES core.operational_units(id);
-ALTER TABLE tourism.hotel_rooms ADD CONSTRAINT fk_hr_type FOREIGN KEY (room_type_id) REFERENCES tourism.room_types(id);
-ALTER TABLE tourism.room_inventory ADD CONSTRAINT fk_ri_room FOREIGN KEY (room_id) REFERENCES tourism.hotel_rooms(id);
-
--- [ESPECIALIZADA - RESTAURANTES]
-ALTER TABLE tourism.restaurant_tables ADD CONSTRAINT fk_rt_unit FOREIGN KEY (operational_unit_id) REFERENCES core.operational_units(id);
-ALTER TABLE tourism.menus ADD CONSTRAINT fk_menu_prov FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-ALTER TABLE tourism.menu_items ADD CONSTRAINT fk_mi_menu FOREIGN KEY (menu_id) REFERENCES tourism.menus(id);
-ALTER TABLE tourism.menu_items ADD CONSTRAINT fk_mi_prod FOREIGN KEY (product_id) REFERENCES core.products(id);
-ALTER TABLE tourism.kitchen_orders ADD CONSTRAINT fk_ko_so FOREIGN KEY (service_order_id) REFERENCES core.service_orders_erp(id);
-ALTER TABLE tourism.kitchen_orders ADD CONSTRAINT fk_ko_table FOREIGN KEY (table_id) REFERENCES tourism.restaurant_tables(id);
-ALTER TABLE tourism.kitchen_display_log ADD CONSTRAINT fk_kdl_ord FOREIGN KEY (kitchen_order_id) REFERENCES tourism.kitchen_orders(id);
-
--- [ESPECIALIZADA - BARES]
-ALTER TABLE tourism.establishment_zones ADD CONSTRAINT fk_ez_unit FOREIGN KEY (operational_unit_id) REFERENCES core.operational_units(id);
-ALTER TABLE tourism.liquor_inventory ADD CONSTRAINT fk_li_unit FOREIGN KEY (operational_unit_id) REFERENCES core.operational_units(id);
-ALTER TABLE tourism.liquor_inventory ADD CONSTRAINT fk_li_prod FOREIGN KEY (product_id) REFERENCES core.products(id);
-ALTER TABLE tourism.box_closing ADD CONSTRAINT fk_bc_unit FOREIGN KEY (operational_unit_id) REFERENCES core.operational_units(id);
-ALTER TABLE tourism.box_closing ADD CONSTRAINT fk_bc_user FOREIGN KEY (actor_id) REFERENCES identity.users(id);
-
--- [ESPECIALIZADA - AGENCIAS]
-ALTER TABLE tourism.travel_packages ADD CONSTRAINT fk_tp_prov FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-ALTER TABLE tourism.package_itineraries ADD CONSTRAINT fk_pi_pack FOREIGN KEY (package_id) REFERENCES tourism.travel_packages(id);
-ALTER TABLE tourism.package_pricing ADD CONSTRAINT fk_pp_pack FOREIGN KEY (package_id) REFERENCES tourism.travel_packages(id);
-ALTER TABLE tourism.operator_assignments ADD CONSTRAINT fk_oa_so FOREIGN KEY (service_order_id) REFERENCES core.service_orders_erp(id);
-ALTER TABLE tourism.operator_assignments ADD CONSTRAINT fk_oa_res FOREIGN KEY (operator_resource_id) REFERENCES core.operational_resources(id);
-ALTER TABLE tourism.multi_provider_orders ADD CONSTRAINT fk_mpo_op FOREIGN KEY (main_operation_id) REFERENCES core.business_operations(id);
-ALTER TABLE tourism.multi_provider_orders ADD CONSTRAINT fk_mpo_prov FOREIGN KEY (sub_provider_id) REFERENCES tourism.tourism_providers(id);
-
--- [ESPECIALIZADA - GUÍAS]
-ALTER TABLE tourism.guide_profiles ADD CONSTRAINT fk_gp_user FOREIGN KEY (user_id) REFERENCES identity.users(id);
-ALTER TABLE tourism.guide_certifications ADD CONSTRAINT fk_gc_guide FOREIGN KEY (guide_id) REFERENCES tourism.guide_profiles(id);
-ALTER TABLE tourism.guide_services ADD CONSTRAINT fk_gs_guide FOREIGN KEY (guide_id) REFERENCES tourism.guide_profiles(id);
-ALTER TABLE tourism.association_members ADD CONSTRAINT fk_am_assoc FOREIGN KEY (association_id) REFERENCES tourism.tourism_providers(id);
-ALTER TABLE tourism.association_members ADD CONSTRAINT fk_am_guide FOREIGN KEY (guide_user_id) REFERENCES identity.users(id);
-ALTER TABLE tourism.association_shared_services ADD CONSTRAINT fk_ass_assoc FOREIGN KEY (association_id) REFERENCES tourism.tourism_providers(id);
-ALTER TABLE tourism.association_shared_services ADD CONSTRAINT fk_ass_cat FOREIGN KEY (service_catalog_id) REFERENCES core.service_catalog_extended(id);
-
--- [ESPECIALIZADA - TRANSPORTE]
-ALTER TABLE tourism.operational_vehicles ADD CONSTRAINT fk_ov_prov FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-ALTER TABLE tourism.operational_vehicles ADD CONSTRAINT fk_ov_type FOREIGN KEY (vehicle_type_id) REFERENCES tourism.vehicle_types(id);
-ALTER TABLE tourism.transport_trips ADD CONSTRAINT fk_tt_so FOREIGN KEY (service_order_id) REFERENCES core.service_orders_erp(id);
-ALTER TABLE tourism.transport_trips ADD CONSTRAINT fk_tt_veh FOREIGN KEY (vehicle_id) REFERENCES tourism.operational_vehicles(id);
-ALTER TABLE tourism.transport_trips ADD CONSTRAINT fk_tt_user FOREIGN KEY (driver_user_id) REFERENCES identity.users(id);
-ALTER TABLE tourism.transport_trips ADD CONSTRAINT fk_tt_route FOREIGN KEY (route_id) REFERENCES core.logistics_routes(id);
-ALTER TABLE tourism.trip_passenger_capacity ADD CONSTRAINT fk_tpc_trip FOREIGN KEY (trip_id) REFERENCES tourism.transport_trips(id);
+-- [EXPORTACIÓN]
+ALTER TABLE archival.export_jobs ADD CONSTRAINT fk_ej_user FOREIGN KEY (request_id) REFERENCES identity.users(id);
+ALTER TABLE archival.export_files ADD CONSTRAINT fk_ef_job FOREIGN KEY (job_id) REFERENCES archival.export_jobs(id);

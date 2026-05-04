@@ -1,25 +1,29 @@
-# SARITA ERP - Gestión Operativa (Fase 10.6)
+# SARITA ERP - Gestión Archivística Institucional (Fase 10.7)
 
-## Arquitectura de Motor Operativo Universal
+## Sistema de Verdad Legal y Custodia Inmutable
 
-Este módulo implementa el núcleo funcional de la operación empresarial para todo el ecosistema SARITA, dividiendo la lógica en una base genérica y extensiones sectoriales.
+Este módulo implementa la infraestructura para la gestión formal de documentos, expedientes y evidencias legales bajo estándares gubernamentales y forenses.
 
-### 32_gestion_operativa (Genérico)
-- `01_core`: Unidades operacionales, catálogos extendidos y modalidades.
-- `03_ordenes_servicio`: El eje central de ejecución transaccional.
-- `05_agenda_programacion`: Motor universal de reservas y time-slots.
-- `09_capacidad_ocupacion`: Rastreo de inventario físico (mesas, camas, asientos).
-- Otros: Tareas, Recursos, Incidentes, Checklists, Logística y Geo.
+### Estructura de Submódulos
 
-### 33_operativa_especializada (Extensiones)
-- `01_hoteles`: Habitaciones e inventario.
-- `02_restaurantes`: Mesas, Menús y KDS (Kitchen Display System).
-- `04_agencias`: Paquetes e itinerarios.
-- `08_transporte`: Vehículos y gestión de viajes.
+- `01_estructura_documental/`: Definición jerárquica de tipos y categorías.
+- `02_expedientes/`: Gestión de carpetas raíz (Files) vinculadas a procesos o entidades.
+- `03_documentos/`: Entidades de documento principal con vinculación a expedientes.
+- `04_versionado/`: Control inmutable de versiones (no sobrescritura).
+- `05_metadatos/`: Esquemas dinámicos para indexación técnica.
+- `06_clasificacion/`: Reglas para clasificación automática mediante IA.
+- `07_ciclo_vida/`: Máquina de estados (Creado -> Firmado -> Archivado).
+- `08_accesos_seguridad/`: Logs forenses de acceso y permisos granulares.
+- `09_firma_electronica/`: Orquestación de firmas múltiples.
+- `10_notarizacion/`: Integración con servicios de fe pública (Blockchain-ready).
+- `11_ocr_extraccion/`: Digitalización y extracción de texto de imágenes.
+- `12_trazabilidad/`: Registro detallado de eventos archivísticos.
+- `13_retencion_disposicion/`: Políticas legales de conservación y purga.
+- `14_exportacion_auditoria/`: Generación de paquetes para entes de control.
 
-## Reglas Operativas Maestras
+## Reglas de Oro Archivísticas
 
-1. **Extensión, no Duplicación**: Ninguna tabla sectorial debe recrear lógica de reservas o capacidad; deben vincularse a los módulos genéricos correspondientes.
-2. **Orden de Servicio como Núcleo**: Toda acción física (limpieza, cocina, guía, transporte) debe estar respaldada por una `service_order`.
-3. **Integración IA**: Los incidentes, órdenes y reservas alimentan automáticamente la memoria de los agentes para optimización proactiva.
-4. **Trazabilidad Geo**: El historial de geolocalización permite auditar rutas de transporte y ejecución de guías en tiempo real.
+1. **Inmutabilidad**: Las versiones de documentos nunca se actualizan; se crean nuevas filas con hash SHA256 obligatorio.
+2. **Metadata-Only**: La DB solo almacena la metadata y el hash; los archivos físicos residen en storage externo auditado.
+3. **Firma Obligatoria**: Los documentos legales requieren una solicitud de firma vinculada a la versión específica.
+4. **Trazabilidad Forense**: Cada visualización o descarga se registra con IP y timestamp en `access_logs`.

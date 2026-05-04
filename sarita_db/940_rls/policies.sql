@@ -1,15 +1,15 @@
--- Row Level Security (RLS) Estandarizado - GESTIÓN OPERATIVA
+-- Row Level Security (RLS) Estandarizado - GESTIÓN ARCHIVÍSTICA
 
--- Aplicar aislamiento por tenant_id a todos los nuevos módulos operativos
+-- Aplicar aislamiento por tenant_id a todos los módulos del esquema archival
 DO $$
 DECLARE
     t text;
-    s text;
+    s text := 'archival';
 BEGIN
-    FOR s, t IN
-        SELECT table_schema, table_name
+    FOR t IN
+        SELECT table_name
         FROM information_schema.tables
-        WHERE table_schema IN ('core', 'tourism') AND table_type = 'BASE TABLE'
+        WHERE table_schema = s AND table_type = 'BASE TABLE'
     LOOP
         -- Habilitar RLS
         EXECUTE format('ALTER TABLE %I.%I ENABLE ROW LEVEL SECURITY;', s, t);
