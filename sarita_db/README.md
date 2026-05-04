@@ -1,24 +1,23 @@
-# SARITA ERP - Módulo "Mi Negocio" (Fase 10.4)
+# SARITA ERP - Gestión Comercial Omnicanal (Fase 10.5)
 
-## Arquitectura de Gestión Empresarial
+## Arquitectura de Crecimiento Autónomo
 
-Este submódulo de la base de datos implementa la lógica completa de un ERP soberano para prestadores de servicios turísticos y otros negocios del ecosistema SARITA.
+Este módulo transforma la gestión comercial en un motor inteligente capaz de vender, publicar contenido y atender clientes sin intervención humana constante.
 
-### Dominios Implementados
+### Estructura de Submódulos
 
-- `30_mi_negocio/`: Núcleo transaccional de operaciones.
-- `31_gestion_comercial/`: CRM, oportunidades y contratos.
-- `32-33 operativa/`: Tareas, incidentes y asignación de recursos.
-- `34_gestion_archivistica/`: Gestión documental con trazabilidad forense.
-- `35_gestion_contable/`: Contabilidad de doble entrada integrada.
-- `36-37 financiera/`: Pagos, flujo de caja y analítica predictiva.
-- `38-39 catálogos/`: Maestros de clientes y productos/servicios.
-- `40_facturacion/`: Facturación electrónica integrada.
-- `41_costos/`: Análisis de estructuras de costos.
+- `01_crm/`: Base de datos de clientes, leads, perfiles y canales de comunicación (WhatsApp, IG, etc).
+- `02_ventas/`: Gestión de pedidos, cotizaciones, embudos de venta (funnels) y métricas de conversión omnicanal.
+- `03_marketing/`: Campañas, canales publicitarios y vinculación directa con contenido multimedia.
+- `04_fidelizacion/`: Programas de lealtad y retención de clientes.
+- `05_contenido_multimedia/`: Motor de creación de video, gestión de assets, timelines de edición y renders.
+- `06_social_media/`: Integración con plataformas sociales, programación de posts, metrics y mensajería unificada.
+- `07_automatizacion_comercial/`: Reglas de negocio automáticas, disparadores y acciones de respuesta inmediata.
+- `08_ia_conversacional/`: Sesiones de chat inteligentes, registro de intenciones y ejecución de acciones comerciales autónomas.
 
-## Reglas de Operación Real
+## Reglas de Oro del Motor Comercial
 
-1. **Atomicidad**: Toda operación comercial debe impactar simultáneamente la contabilidad y el event store.
-2. **Cumplimiento**: No se permiten facturas sin operación, ni asientos descuadrados.
-3. **Trazabilidad**: Uso obligatorio de `trace_id` para reconstruir el ciclo de vida: `Cliente -> Venta -> Operación -> Factura -> Contabilidad`.
-4. **Seguridad**: RLS estricto por `tenant_id` en todas las capas del ERP.
+1. **Omnicanalidad Real**: Cada interacción (mensaje, comentario, lead) se rastrea desde su origen hasta la conversión final.
+2. **Metadata-First**: El contenido multimedia se gestiona mediante metadata y rutas, nunca almacenando binarios directamente en la DB.
+3. **Conversión IA**: Los agentes de IA tienen la capacidad de proponer y ejecutar ventas, notificando al sistema mediante el bus de eventos.
+4. **Seguridad Multi-inquilino**: Aislamiento estricto por `tenant_id` y acceso granular por roles empresariales.

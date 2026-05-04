@@ -1,6 +1,6 @@
--- Row Level Security (RLS) Estandarizado - ERP COMPLETO
+-- Row Level Security (RLS) Estandarizado - GESTIÓN COMERCIAL OMNICANAL
 
--- Aplicar aislamiento por tenant_id a todos los módulos ERP (esquema core)
+-- Aplicar aislamiento por tenant_id a todos los módulos del esquema core (incluyendo los nuevos comerciales)
 DO $$
 DECLARE
     t text;
