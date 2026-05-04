@@ -1,24 +1,27 @@
--- Row Level Security (RLS) Estandarizado - GESTIÓN FINANCIERA
+-- Row Level Security (RLS) Estandarizado - LANZAMIENTO GLOBAL
 
--- Aplicar aislamiento por tenant_id a todos los nuevos módulos financieros (esquema core)
+-- El Turista solo puede ver sus propios datos y datos públicos
 DO $$
 DECLARE
     t text;
-    s text := 'core';
+    s text;
 BEGIN
-    FOR t IN
-        VALUES ('cash_accounts', 'cash_movements', 'cash_transfers', 'budgets', 'budget_lines', 'budget_versions',
-                'cash_flow_projections', 'cash_flow_actuals', 'cash_flow_gaps', 'loans', 'loan_payments', 'credit_lines',
-                'investments', 'investment_returns', 'investment_movements', 'financial_expenses', 'expense_receipts',
-                'expense_policies', 'financial_kpis', 'kpi_calculations', 'financial_snapshots', 'financial_groups',
-                'group_entities', 'consolidated_reports')
+    FOR s, t IN
+        SELECT table_schema, table_name
+        FROM information_schema.tables
+        WHERE table_schema IN ('tourism', 'core') AND table_type = 'BASE TABLE'
     LOOP
-        -- Habilitar RLS
-        EXECUTE format('ALTER TABLE %I.%I ENABLE ROW LEVEL SECURITY;', s, t);
+        -- Si la tabla tiene user_id, restringir a su propio ID
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = s AND table_name = t AND column_name = 'user_id') THEN
+            EXECUTE format('DROP POLICY IF EXISTS tourist_self_policy ON %I.%I;', s, t);
+            EXECUTE format('CREATE POLICY tourist_self_policy ON %I.%I USING (user_id = current_setting(''sarita.current_user_id'', true)::UUID);', s, t);
+        END IF;
 
-        -- Política obligatoria usando app.current_tenant
-        EXECUTE format('DROP POLICY IF EXISTS tenant_isolation_policy ON %I.%I;', s, t);
-        EXECUTE format('CREATE POLICY tenant_isolation_policy ON %I.%I USING (tenant_id = current_setting(''app.current_tenant'', true)::UUID);', s, t);
+        -- Tablas de Marketplace (Directorio) son públicas para lectura
+        IF t IN ('artisan_directory_index', 'tourist_feed') THEN
+            EXECUTE format('DROP POLICY IF EXISTS public_read_policy ON %I.%I;', s, t);
+            EXECUTE format('CREATE POLICY public_read_policy ON %I.%I FOR SELECT USING (true);', s, t);
+        END IF;
     END LOOP;
 END;
 $$;
