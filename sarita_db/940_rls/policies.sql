@@ -1,15 +1,15 @@
--- Row Level Security (RLS) Estandarizado - GESTIÓN COMERCIAL OMNICANAL
+-- Row Level Security (RLS) Estandarizado - GESTIÓN OPERATIVA
 
--- Aplicar aislamiento por tenant_id a todos los módulos del esquema core (incluyendo los nuevos comerciales)
+-- Aplicar aislamiento por tenant_id a todos los nuevos módulos operativos
 DO $$
 DECLARE
     t text;
-    s text := 'core';
+    s text;
 BEGIN
-    FOR t IN
-        SELECT table_name
+    FOR s, t IN
+        SELECT table_schema, table_name
         FROM information_schema.tables
-        WHERE table_schema = s AND table_type = 'BASE TABLE'
+        WHERE table_schema IN ('core', 'tourism') AND table_type = 'BASE TABLE'
     LOOP
         -- Habilitar RLS
         EXECUTE format('ALTER TABLE %I.%I ENABLE ROW LEVEL SECURITY;', s, t);
