@@ -1,19 +1,24 @@
-# SARITA DB - Hardening Fase 10.1 (Producción Real)
+# SARITA ERP - Módulo "Mi Negocio" (Fase 10.4)
 
-## Certificación de Seguridad y Consistencia
+## Arquitectura de Gestión Empresarial
 
-- `41_cross_domain_consistency/`: Verificación de integridad entre Event Store y Ledger.
-- `42_rls_enforcement/`: Triggers de bloqueo preventivo para asegurar el contexto multi-inquilino.
-- `43_webhook_replay_protection/`: Protección contra ataques de repetición mediante firmas únicas.
-- `44_scheduler_cluster/`: Registro de nodos para ejecución distribuida de tareas.
-- `45_ai_hierarchy/`: Niveles de autoridad para agentes autónomos.
-- `46_event_archival/`: Gestión de ciclo de vida de eventos (Warm to Cold storage).
-- `47_forensic_mode/`: Bloqueo total de escritura para investigaciones legales.
-- `48_system_validation/`: Diagnóstico integral de salud financiera y secuencialidad.
+Este submódulo de la base de datos implementa la lógica completa de un ERP soberano para prestadores de servicios turísticos y otros negocios del ecosistema SARITA.
 
-## Nuevas Reglas de Oro
+### Dominios Implementados
 
-1. **Contexto Obligatorio**: Ninguna operación de escritura puede ocurrir sin un `app.current_tenant` definido.
-2. **Anti-Replay**: Todos los webhooks entrantes deben ser únicos por firma.
-3. **Jerarquía IA**: Los agentes tienen niveles de autoridad (1-6) que limitan sus acciones sobre el sistema.
-4. **Modo Forense**: El sistema soporta un estado de inmutabilidad total para auditorías externas.
+- `30_mi_negocio/`: Núcleo transaccional de operaciones.
+- `31_gestion_comercial/`: CRM, oportunidades y contratos.
+- `32-33 operativa/`: Tareas, incidentes y asignación de recursos.
+- `34_gestion_archivistica/`: Gestión documental con trazabilidad forense.
+- `35_gestion_contable/`: Contabilidad de doble entrada integrada.
+- `36-37 financiera/`: Pagos, flujo de caja y analítica predictiva.
+- `38-39 catálogos/`: Maestros de clientes y productos/servicios.
+- `40_facturacion/`: Facturación electrónica integrada.
+- `41_costos/`: Análisis de estructuras de costos.
+
+## Reglas de Operación Real
+
+1. **Atomicidad**: Toda operación comercial debe impactar simultáneamente la contabilidad y el event store.
+2. **Cumplimiento**: No se permiten facturas sin operación, ni asientos descuadrados.
+3. **Trazabilidad**: Uso obligatorio de `trace_id` para reconstruir el ciclo de vida: `Cliente -> Venta -> Operación -> Factura -> Contabilidad`.
+4. **Seguridad**: RLS estricto por `tenant_id` en todas las capas del ERP.

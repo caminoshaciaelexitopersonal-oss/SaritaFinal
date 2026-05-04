@@ -1,50 +1,44 @@
--- Relaciones transversales y restricciones globales - FASE VÍA 2 COMPLETA
+-- Relaciones transversales y restricciones globales - ERP COMPLETO
 
 -- [CORE & IDENTITY]
 ALTER TABLE identity.users ADD CONSTRAINT fk_users_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
 
--- [GUBERNAMENTAL V1]
--- [Mantener anteriores...]
+-- [ERP MI NEGOCIO 30-41]
+-- Business Operations
+ALTER TABLE core.business_operations ADD CONSTRAINT fk_op_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
+ALTER TABLE core.business_operations ADD CONSTRAINT fk_op_customer FOREIGN KEY (cliente_id) REFERENCES core.customers(id);
+ALTER TABLE core.business_operations ADD CONSTRAINT fk_op_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
 
--- [PRESTADORES V2]
--- Core Providers
-ALTER TABLE tourism.tourism_providers ADD CONSTRAINT fk_providers_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
+-- Commercial
+ALTER TABLE core.opportunities ADD CONSTRAINT fk_opp_customer FOREIGN KEY (cliente_id) REFERENCES core.customers(id);
+ALTER TABLE core.contracts ADD CONSTRAINT fk_con_customer FOREIGN KEY (cliente_id) REFERENCES core.customers(id);
+ALTER TABLE core.contracts ADD CONSTRAINT fk_con_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
+ALTER TABLE core.sales_orders ADD CONSTRAINT fk_so_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
 
-ALTER TABLE tourism.provider_structure ADD CONSTRAINT fk_struct_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE tourism.provider_structure ADD CONSTRAINT fk_struct_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-ALTER TABLE tourism.provider_structure ADD CONSTRAINT fk_struct_parent FOREIGN KEY (parent_provider_id) REFERENCES tourism.tourism_providers(id);
+-- Operational
+ALTER TABLE core.tasks ADD CONSTRAINT fk_task_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
+ALTER TABLE core.tasks ADD CONSTRAINT fk_task_user FOREIGN KEY (responsable_id) REFERENCES identity.users(id);
+ALTER TABLE core.incidents ADD CONSTRAINT fk_inc_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
+ALTER TABLE core.service_orders ADD CONSTRAINT fk_se_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
+ALTER TABLE core.resource_allocation ADD CONSTRAINT fk_res_se FOREIGN KEY (service_order_id) REFERENCES core.service_orders(id);
 
-ALTER TABLE tourism.provider_wallet ADD CONSTRAINT fk_pwallet_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE tourism.provider_wallet ADD CONSTRAINT fk_pwallet_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-ALTER TABLE tourism.provider_wallet ADD CONSTRAINT fk_pwallet_wallet FOREIGN KEY (wallet_id) REFERENCES wallet.wallets(id);
+-- Archival
+ALTER TABLE core.documents ADD CONSTRAINT fk_doc_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
+ALTER TABLE core.document_traces ADD CONSTRAINT fk_trace_doc FOREIGN KEY (document_id) REFERENCES core.documents(id);
+ALTER TABLE core.document_traces ADD CONSTRAINT fk_trace_user FOREIGN KEY (usuario_id) REFERENCES identity.users(id);
 
--- Roles Empresariales
-ALTER TABLE tourism.provider_roles ADD CONSTRAINT fk_proles_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE tourism.provider_roles ADD CONSTRAINT fk_proles_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-ALTER TABLE tourism.provider_roles ADD CONSTRAINT fk_proles_user FOREIGN KEY (user_id) REFERENCES identity.users(id);
+-- Accounting
+ALTER TABLE core.journal_entries ADD CONSTRAINT fk_je_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
+ALTER TABLE core.journal_lines ADD CONSTRAINT fk_jl_je FOREIGN KEY (journal_entry_id) REFERENCES core.journal_entries(id);
+ALTER TABLE core.journal_lines ADD CONSTRAINT fk_jl_acc FOREIGN KEY (cuenta_id) REFERENCES erp_contable.puc_accounts(id);
 
--- Compliance
-ALTER TABLE tourism.provider_licenses ADD CONSTRAINT fk_lic_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE tourism.provider_licenses ADD CONSTRAINT fk_lic_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
+-- Financial
+ALTER TABLE core.payments_erp ADD CONSTRAINT fk_pay_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
 
-ALTER TABLE tourism.provider_certifications ADD CONSTRAINT fk_cert_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE tourism.provider_certifications ADD CONSTRAINT fk_cert_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
+-- Billing
+ALTER TABLE core.invoices ADD CONSTRAINT fk_inv_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
+ALTER TABLE core.invoice_lines ADD CONSTRAINT fk_il_inv FOREIGN KEY (invoice_id) REFERENCES core.invoices(id);
+ALTER TABLE core.invoice_lines ADD CONSTRAINT fk_il_prod FOREIGN KEY (producto_id) REFERENCES core.products(id);
 
--- Directorio
-ALTER TABLE tourism.provider_directory ADD CONSTRAINT fk_dir_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE tourism.provider_directory ADD CONSTRAINT fk_dir_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-
--- Reputación
-ALTER TABLE tourism.provider_reviews ADD CONSTRAINT fk_rev_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE tourism.provider_reviews ADD CONSTRAINT fk_rev_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-ALTER TABLE tourism.provider_reviews ADD CONSTRAINT fk_rev_user FOREIGN KEY (user_id) REFERENCES identity.users(id);
-
-ALTER TABLE tourism.provider_reputation_score ADD CONSTRAINT fk_score_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE tourism.provider_reputation_score ADD CONSTRAINT fk_score_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-
--- Eventos y Capacidad
-ALTER TABLE tourism.provider_events ADD CONSTRAINT fk_pevent_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE tourism.provider_events ADD CONSTRAINT fk_pevent_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
-
-ALTER TABLE tourism.provider_capacity ADD CONSTRAINT fk_cap_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE tourism.provider_capacity ADD CONSTRAINT fk_cap_provider FOREIGN KEY (provider_id) REFERENCES tourism.tourism_providers(id);
+-- Costs
+ALTER TABLE core.cost_structures ADD CONSTRAINT fk_cost_op FOREIGN KEY (operation_id) REFERENCES core.business_operations(id);
