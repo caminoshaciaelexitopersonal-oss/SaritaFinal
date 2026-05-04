@@ -9,6 +9,7 @@ CREATE TABLE tourism.tourism_providers (
 
     nombre_comercial TEXT NOT NULL,
     razon_social TEXT,
+    user_id UUID, -- FK a identity.users
     tipo_prestador TEXT NOT NULL, -- HOTEL, RESTAURANTE, GUIA, etc.
     subtipo TEXT,
 

@@ -38,7 +38,8 @@ def deploy():
         ['35_gestion_contable/01_catalogos', '35_gestion_contable/02_configuracion', '35_gestion_contable/03_movimientos', '35_gestion_contable/04_periodos', '35_gestion_contable/05_impuestos', '35_gestion_contable/06_conciliacion', '35_gestion_contable/07_analitica', '35_gestion_contable/08_auditoria'],
         ['36_gestion_financiera/01_tesoreria', '36_gestion_financiera/02_presupuestos', '36_gestion_financiera/03_flujo_caja', '36_gestion_financiera/04_financiamiento', '36_gestion_financiera/05_inversiones', '36_gestion_financiera/06_gastos', '36_gestion_financiera/08_consolidacion'],
         ['37_analitica_financiera', '40_facturacion', '41_costos', '50_wpc_funnel'],
-        ['38_clientes_turistas/01_perfil', '38_clientes_turistas/02_geolocalizacion', '38_clientes_turistas/03_comportamiento', '38_clientes_turistas/04_historial', '38_clientes_turistas/05_interacciones', '38_clientes_turistas/06_feed_personalizado', '38_clientes_turistas/07_citas', '10.12_tourist_v3'],
+        ['41_ai_core/00_coverage', '41_ai_core/01_context', '41_ai_core/02_agents', '41_ai_core/03_execution', '41_ai_core/04_memory', '41_ai_core/05_learning', '41_ai_core/06_decisions', '41_ai_core/07_integration'],
+        ['10.12_tourist_v3'], # VÍA 3 (LAST)
         ['932_schema_versioning', '933_event_consistency', '934_retry_intelligence', '935_webhook_security', '936_trace_propagation', '937_ai_governance', '938_scheduler_advanced', '939_watchdog_recovery'],
         ['941_cross_domain_consistency', '942_rl_enforcement', '943_webhook_replay_protection', '944_scheduler_cluster', '945_ai_hierarchy', '946_event_archival', '947_forensic_mode', '948_system_validation'],
         ['20_relaciones_globales', '930_triggers', '940_rls', '950_indices', '970_seed', '980_testing']
