@@ -1,23 +1,23 @@
-# SARITA ERP - Gestión Contable Real (Fase 10.8)
+# SARITA ERP - Gestión Financiera Real (Fase 10.9)
 
-## Mapeo del Motor Contable y Tributario
+## Cerebro Financiero y Control de Liquidez
 
-Este módulo representa la traducción física del sistema contable y tributario actualmente operativo en el backend de SARITA, garantizando persistencia inmutable y auditable.
+Este módulo implementa la capa de planeación, control y proyección financiera de SARITA, separada de la contabilidad para permitir una gestión ágil de tesorería e inversiones.
 
 ### Estructura de Submódulos
 
-- `01_catalogos/`: Plan Único de Cuentas (PUC) y Cuentas Contables con soporte IFRS.
-- `02_configuracion/`: Ajustes de moneda base y reglas de encadenamiento de hashes.
-- `03_movimientos/`: Asientos contables (Journal Entries) y líneas de detalle con soporte multi-divisa.
-- `04_periodos/`: Gestión de periodos fiscales y cierres contables con auditoría de balance.
-- `05_impuestos/`: Motor tributario (IVA, Retenciones, ICA) con reglas de aplicación dinámica.
-- `06_conciliacion/`: Gestión de cuentas bancarias y movimientos para cuadre de libros.
-- `07_analitica/`: Centros de costo y distribución de gastos.
-- `08_auditoria/`: Logs forenses y registro de eventos contables automáticos.
+- `01_tesoreria/`: Control real de dinero en cajas, bancos y billeteras digitales.
+- `02_presupuestos/`: Planificación con control de versiones y seguimiento de ejecución vs planeado.
+- `03_flujo_caja/`: Proyecciones determinísticas y análisis de brechas de liquidez (gaps).
+- `04_financiamiento/`: Gestión de deuda, préstamos y líneas de crédito.
+- `05_inversiones/`: Seguimiento de rendimientos y movimientos en activos financieros.
+- `06_gastos/`: Control administrativo de gastos con soporte para validación de comprobantes (OCR).
+- `07_indicadores/`: KPIs financieros y snapshots históricos de salud económica.
+- `08_consolidacion/`: Soporte para holdings y reportes consolidados multi-empresa.
 
-## Reglas de Integridad Financiera
+## Reglas de Oro Financieras
 
-1. **Hash Chained**: Los asientos contables están encadenados mediante hashes criptográficos (`system_hash`, `previous_hash`) para evitar alteraciones retroactivas.
-2. **Doble Entrada Estricta**: Cada línea de asiento debe cumplir `(debit > 0 AND credit = 0) OR (credit > 0 AND debit = 0)`.
-3. **Inmutabilidad**: Una vez posteado (`is_posted = true`), un asiento no puede ser modificado ni eliminado físicamente; requiere reversión.
-4. **Trazabilidad de Origen**: Todas las transacciones contables deben vincularse a un documento fuente (Factura, Pago, Nómina) vía `transaction_links`.
+1. **Separación Contable**: Los movimientos financieros reflejan el flujo real de dinero, mientras que la contabilidad (35) registra la realidad legal/tributaria.
+2. **Respaldo de Egreso**: Todo egreso de caja debe disparar una alerta si no existe un asiento contable que lo respalde (validación de integridad).
+3. **Inmutabilidad de Presupuestos**: Los presupuestos aprobados no se sobrescriben; se generan nuevas versiones con registro de cambios.
+4. **Alimentación IA**: El flujo de caja y los KPIs alimentan constantemente a los agentes de IA para predicción de riesgo y optimización de capital.

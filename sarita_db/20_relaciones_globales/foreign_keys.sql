@@ -1,38 +1,28 @@
--- Relaciones transversales y restricciones globales - GESTIÓN CONTABLE REAL (FINAL)
+-- Relaciones transversales y restricciones globales - GESTIÓN FINANCIERA
 
--- [CATALOGOS]
-ALTER TABLE accounting.accounts ADD CONSTRAINT fk_acc_coa FOREIGN KEY (chart_of_accounts_id) REFERENCES accounting.charts_of_accounts(id);
-ALTER TABLE accounting.account_structure ADD CONSTRAINT fk_struct_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
-ALTER TABLE accounting.account_types ADD CONSTRAINT fk_type_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
+-- [TESORERIA]
+ALTER TABLE core.cash_movements ADD CONSTRAINT fk_cmov_acc FOREIGN KEY (cash_account_id) REFERENCES core.cash_accounts(id);
+ALTER TABLE core.cash_transfers ADD CONSTRAINT fk_ctra_source FOREIGN KEY (source_account_id) REFERENCES core.cash_accounts(id);
+ALTER TABLE core.cash_transfers ADD CONSTRAINT fk_ctra_dest FOREIGN KEY (destination_account_id) REFERENCES core.cash_accounts(id);
 
--- [CONFIGURACION]
-ALTER TABLE accounting.accounting_rules ADD CONSTRAINT fk_rule_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
+-- [PRESUPUESTOS]
+ALTER TABLE core.budget_lines ADD CONSTRAINT fk_bl_budget FOREIGN KEY (budget_id) REFERENCES core.budgets(id);
+ALTER TABLE core.budget_versions ADD CONSTRAINT fk_bv_budget FOREIGN KEY (budget_id) REFERENCES core.budgets(id);
+ALTER TABLE core.budget_versions ADD CONSTRAINT fk_bv_user FOREIGN KEY (approved_by) REFERENCES identity.users(id);
 
--- [MOVIMIENTOS]
-ALTER TABLE accounting.journal_entries ADD CONSTRAINT fk_je_period FOREIGN KEY (period_id) REFERENCES accounting.fiscal_periods(id);
-ALTER TABLE accounting.journal_entries ADD CONSTRAINT fk_je_user FOREIGN KEY (created_by) REFERENCES identity.users(id);
-ALTER TABLE accounting.journal_entry_lines ADD CONSTRAINT fk_jel_je FOREIGN KEY (journal_entry_id) REFERENCES accounting.journal_entries(id);
-ALTER TABLE accounting.journal_entry_lines ADD CONSTRAINT fk_jel_acc FOREIGN KEY (account_id) REFERENCES accounting.accounts(id);
-ALTER TABLE accounting.transaction_links ADD CONSTRAINT fk_tl_je FOREIGN KEY (journal_entry_id) REFERENCES accounting.journal_entries(id);
+-- [FINANCIAMIENTO]
+ALTER TABLE core.loan_payments ADD CONSTRAINT fk_lp_loan FOREIGN KEY (loan_id) REFERENCES core.loans(id);
 
--- [PERIODOS]
-ALTER TABLE accounting.period_closures ADD CONSTRAINT fk_pc_period FOREIGN KEY (period_id) REFERENCES accounting.fiscal_periods(id);
-ALTER TABLE accounting.period_closures ADD CONSTRAINT fk_pc_user FOREIGN KEY (closed_by) REFERENCES identity.users(id);
+-- [INVERSIONES]
+ALTER TABLE core.investment_returns ADD CONSTRAINT fk_ir_inv FOREIGN KEY (investment_id) REFERENCES core.investments(id);
+ALTER TABLE core.investment_movements ADD CONSTRAINT fk_imov_inv FOREIGN KEY (investment_id) REFERENCES core.investments(id);
 
--- [IMPUESTOS]
-ALTER TABLE accounting.tax_rates_contable ADD CONSTRAINT fk_tr_tax FOREIGN KEY (tax_id) REFERENCES accounting.taxes(id);
-ALTER TABLE accounting.tax_rules_contable ADD CONSTRAINT fk_tru_tax FOREIGN KEY (tax_id) REFERENCES accounting.taxes(id);
-ALTER TABLE accounting.tax_transactions ADD CONSTRAINT fk_tt_tax FOREIGN KEY (tax_id) REFERENCES accounting.taxes(id);
+-- [GASTOS]
+ALTER TABLE core.expense_receipts ADD CONSTRAINT fk_er_expense FOREIGN KEY (expense_id) REFERENCES core.financial_expenses(id);
 
--- [CONCILIACIÓN]
-ALTER TABLE accounting.bank_movements_erp ADD CONSTRAINT fk_bm_acc FOREIGN KEY (bank_account_id) REFERENCES accounting.bank_accounts_erp(id);
-ALTER TABLE accounting.reconciliation_process ADD CONSTRAINT fk_rp_acc FOREIGN KEY (bank_account_id) REFERENCES accounting.bank_accounts_erp(id);
-ALTER TABLE accounting.reconciliation_process ADD CONSTRAINT fk_rp_period FOREIGN KEY (period_id) REFERENCES accounting.fiscal_periods(id);
+-- [INDICADORES]
+ALTER TABLE core.kpi_calculations ADD CONSTRAINT fk_kcalc_kpi FOREIGN KEY (kpi_id) REFERENCES core.financial_kpis(id);
 
--- [ANALÍTICA]
-ALTER TABLE accounting.cost_allocations ADD CONSTRAINT fk_ca_jel FOREIGN KEY (journal_line_id) REFERENCES accounting.journal_entry_lines(id);
-ALTER TABLE accounting.cost_allocations ADD CONSTRAINT fk_ca_cc FOREIGN KEY (cost_center_id) REFERENCES accounting.cost_centers(id);
-
--- [AUDITORIA]
-ALTER TABLE accounting.accounting_logs ADD CONSTRAINT fk_aal_user FOREIGN KEY (user_id) REFERENCES identity.users(id);
-ALTER TABLE accounting.accounting_logs ADD CONSTRAINT fk_aal_je FOREIGN KEY (reference_entry_id) REFERENCES accounting.journal_entries(id);
+-- [CONSOLIDACION]
+ALTER TABLE core.group_entities ADD CONSTRAINT fk_ge_group FOREIGN KEY (group_id) REFERENCES core.financial_groups(id);
+ALTER TABLE core.consolidated_reports ADD CONSTRAINT fk_crep_group FOREIGN KEY (group_id) REFERENCES core.financial_groups(id);
