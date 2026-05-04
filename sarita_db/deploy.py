@@ -28,8 +28,8 @@ def deploy():
 
     phases = [
         ['00_init', '01_core', '38_clientes', '39_productos_servicios'],
-        ['02_identity', '03_governance', '04_agents', '06_turismo', '07_prestadores', '08_directorio_turistico', '09_eventos_prestadores', '10_roles_empresariales', '11_compliance', '12_reputacion', '13_capacidad_operativa'],
-        ['37_artesanos/01_identidad', '37_artesanos/02_geolocalizacion', '37_artesanos/03_catalogo', '37_artesanos/04_inventario_produccion', '37_artesanos/05_clasificacion', '37_artesanos/06_directorio', '37_artesanos/07_eventos'], # ARTESANOS
+        ['02_identity', '03_governance', '04_agents', '06_turismo', '07_prestadores', '08_directorio_turistico', '09_eventos_prestadores', '10_roles_empresariales', '11_compliance', '12_reputacion', '13_capacidad_operativa', '37_artesanos/01_identidad', '37_artesanos/02_geolocalizacion', '37_artesanos/03_catalogo', '37_artesanos/04_inventario_produccion', '37_artesanos/05_clasificacion', '37_artesanos/06_directorio', '37_artesanos/07_eventos'],
+        ['50_wpc_funnel'], # CONECTORES FRONTEND
         ['30_mi_negocio', '31_gestion_comercial/01_crm', '31_gestion_comercial/02_ventas', '31_gestion_comercial/03_marketing', '31_gestion_comercial/04_fidelizacion', '31_gestion_comercial/05_contenido_multimedia', '31_gestion_comercial/06_social_media', '31_gestion_comercial/07_automatizacion_comercial', '31_gestion_comercial/08_ia_conversacional'],
         ['32_gestion_operativa/01_core_operativo', '32_gestion_operativa/02_tareas_operativas', '32_gestion_operativa/03_ordenes_servicio', '32_gestion_operativa/04_recursos', '32_gestion_operativa/05_agenda_programacion', '32_gestion_operativa/06_incidentes', '32_gestion_operativa/07_checklist_control', '32_gestion_operativa/08_logistica', '32_gestion_operativa/09_capacidad_ocupacion', '32_gestion_operativa/10_geolocalizacion'],
         ['33_operativa_especializada/01_hoteles', '33_operativa_especializada/02_restaurantes', '33_operativa_especializada/03_bares_discotecas', '33_operativa_especializada/04_agencias_viaje', '33_operativa_especializada/05_agencias_operativas', '33_operativa_especializada/06_guias_turisticos', '33_operativa_especializada/07_asociaciones_guias', '33_operativa_especializada/08_transporte_turistico'],
@@ -44,7 +44,7 @@ def deploy():
         ['20_relaciones_globales', '930_triggers', '940_rls', '950_indices', '970_seed', '980_testing']
     ]
 
-    print("--- Iniciando Despliegue DOMINIO ARTESANOS Y MARKETPLACE (Fase 10.10) ---")
+    print("--- Iniciando Despliegue CONECTORES GLOBALES (Fase 10.11) ---")
 
     global_checksum = hashlib.sha256()
     for phase in phases:
@@ -57,8 +57,8 @@ def deploy():
                 global_checksum.update(calculate_checksum(sql_file).encode())
 
     final_checksum = global_checksum.hexdigest()
-    print(f"Registrando versión v10.10_artisan_marketplace (Checksum: {final_checksum[:10]})")
-    subprocess.run(['psql', db_url, '-c', f"SELECT core.apply_schema_version('v10.10_artisan_marketplace', '{final_checksum}')"], check=True)
+    print(f"Registrando versión v10.11_global_connectors (Checksum: {final_checksum[:10]})")
+    subprocess.run(['psql', db_url, '-c', f"SELECT core.apply_schema_version('v10.11_global_connectors', '{final_checksum}')"], check=True)
 
     print("--- DESPLIEGUE FINALIZADO EXITOSAMENTE ---")
 
