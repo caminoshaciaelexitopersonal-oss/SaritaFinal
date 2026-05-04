@@ -1,10 +1,10 @@
--- Row Level Security (RLS) Estandarizado - GESTIÓN ARCHIVÍSTICA
+-- Row Level Security (RLS) Estandarizado - GESTIÓN CONTABLE
 
--- Aplicar aislamiento por tenant_id a todos los módulos del esquema archival
+-- Aplicar aislamiento por tenant_id a todos los módulos del esquema accounting
 DO $$
 DECLARE
     t text;
-    s text := 'archival';
+    s text := 'accounting';
 BEGIN
     FOR t IN
         SELECT table_name

@@ -1,59 +1,38 @@
--- Relaciones transversales y restricciones globales - GESTIÓN ARCHIVÍSTICA TOTAL
+-- Relaciones transversales y restricciones globales - GESTIÓN CONTABLE REAL (FINAL)
 
--- [ESTRUCTURA]
-ALTER TABLE archival.document_types_extended ADD CONSTRAINT fk_dtype_cat FOREIGN KEY (category_id) REFERENCES archival.document_categories(id);
-ALTER TABLE archival.file_entities ADD CONSTRAINT fk_fent_file FOREIGN KEY (file_id) REFERENCES archival.files(id);
+-- [CATALOGOS]
+ALTER TABLE accounting.accounts ADD CONSTRAINT fk_acc_coa FOREIGN KEY (chart_of_accounts_id) REFERENCES accounting.charts_of_accounts(id);
+ALTER TABLE accounting.account_structure ADD CONSTRAINT fk_struct_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
+ALTER TABLE accounting.account_types ADD CONSTRAINT fk_type_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
 
--- [DOCUMENTOS]
-ALTER TABLE archival.documents_main ADD CONSTRAINT fk_doc_file FOREIGN KEY (file_id) REFERENCES archival.files(id);
-ALTER TABLE archival.documents_main ADD CONSTRAINT fk_doc_type FOREIGN KEY (type_id) REFERENCES archival.document_types_extended(id);
--- current_version_id es ref circular, se aplica después si es necesario o se deja para lógica app
-ALTER TABLE archival.document_relations ADD CONSTRAINT fk_dr_parent FOREIGN KEY (parent_doc_id) REFERENCES archival.documents_main(id);
-ALTER TABLE archival.document_relations ADD CONSTRAINT fk_dr_child FOREIGN KEY (child_doc_id) REFERENCES archival.documents_main(id);
+-- [CONFIGURACION]
+ALTER TABLE accounting.accounting_rules ADD CONSTRAINT fk_rule_tenant FOREIGN KEY (tenant_id) REFERENCES core.tenants(id);
 
--- [VERSIONADO]
-ALTER TABLE archival.document_versions ADD CONSTRAINT fk_dv_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
-ALTER TABLE archival.document_versions ADD CONSTRAINT fk_dv_author FOREIGN KEY (author_id) REFERENCES identity.users(id);
-ALTER TABLE archival.version_changes ADD CONSTRAINT fk_vc_ver FOREIGN KEY (version_id) REFERENCES archival.document_versions(id);
+-- [MOVIMIENTOS]
+ALTER TABLE accounting.journal_entries ADD CONSTRAINT fk_je_period FOREIGN KEY (period_id) REFERENCES accounting.fiscal_periods(id);
+ALTER TABLE accounting.journal_entries ADD CONSTRAINT fk_je_user FOREIGN KEY (created_by) REFERENCES identity.users(id);
+ALTER TABLE accounting.journal_entry_lines ADD CONSTRAINT fk_jel_je FOREIGN KEY (journal_entry_id) REFERENCES accounting.journal_entries(id);
+ALTER TABLE accounting.journal_entry_lines ADD CONSTRAINT fk_jel_acc FOREIGN KEY (account_id) REFERENCES accounting.accounts(id);
+ALTER TABLE accounting.transaction_links ADD CONSTRAINT fk_tl_je FOREIGN KEY (journal_entry_id) REFERENCES accounting.journal_entries(id);
 
--- [METADATOS]
-ALTER TABLE archival.metadata_fields ADD CONSTRAINT fk_mf_sch FOREIGN KEY (schema_id) REFERENCES archival.metadata_schemas(id);
-ALTER TABLE archival.document_metadata_values ADD CONSTRAINT fk_dmv_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
-ALTER TABLE archival.document_metadata_values ADD CONSTRAINT fk_dmv_field FOREIGN KEY (field_id) REFERENCES archival.metadata_fields(id);
+-- [PERIODOS]
+ALTER TABLE accounting.period_closures ADD CONSTRAINT fk_pc_period FOREIGN KEY (period_id) REFERENCES accounting.fiscal_periods(id);
+ALTER TABLE accounting.period_closures ADD CONSTRAINT fk_pc_user FOREIGN KEY (closed_by) REFERENCES identity.users(id);
 
--- [INTELIGENCIA]
-ALTER TABLE archival.classification_rules ADD CONSTRAINT fk_cr_type FOREIGN KEY (target_type_id) REFERENCES archival.document_types_extended(id);
-ALTER TABLE archival.classification_results ADD CONSTRAINT fk_clres_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
-ALTER TABLE archival.ocr_jobs ADD CONSTRAINT fk_oj_ver FOREIGN KEY (version_id) REFERENCES archival.document_versions(id);
-ALTER TABLE archival.ocr_results ADD CONSTRAINT fk_or_job FOREIGN KEY (job_id) REFERENCES archival.ocr_jobs(id);
+-- [IMPUESTOS]
+ALTER TABLE accounting.tax_rates_contable ADD CONSTRAINT fk_tr_tax FOREIGN KEY (tax_id) REFERENCES accounting.taxes(id);
+ALTER TABLE accounting.tax_rules_contable ADD CONSTRAINT fk_tru_tax FOREIGN KEY (tax_id) REFERENCES accounting.taxes(id);
+ALTER TABLE accounting.tax_transactions ADD CONSTRAINT fk_tt_tax FOREIGN KEY (tax_id) REFERENCES accounting.taxes(id);
 
--- [CICLO DE VIDA]
-ALTER TABLE archival.lifecycle_transitions ADD CONSTRAINT fk_lt_from FOREIGN KEY (from_state_id) REFERENCES archival.lifecycle_states(id);
-ALTER TABLE archival.lifecycle_transitions ADD CONSTRAINT fk_lt_to FOREIGN KEY (to_state_id) REFERENCES archival.lifecycle_states(id);
-ALTER TABLE archival.lifecycle_logs ADD CONSTRAINT fk_ll_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
-ALTER TABLE archival.lifecycle_logs ADD CONSTRAINT fk_ll_actor FOREIGN KEY (actor_id) REFERENCES identity.users(id);
+-- [CONCILIACIÓN]
+ALTER TABLE accounting.bank_movements_erp ADD CONSTRAINT fk_bm_acc FOREIGN KEY (bank_account_id) REFERENCES accounting.bank_accounts_erp(id);
+ALTER TABLE accounting.reconciliation_process ADD CONSTRAINT fk_rp_acc FOREIGN KEY (bank_account_id) REFERENCES accounting.bank_accounts_erp(id);
+ALTER TABLE accounting.reconciliation_process ADD CONSTRAINT fk_rp_period FOREIGN KEY (period_id) REFERENCES accounting.fiscal_periods(id);
 
--- [SEGURIDAD]
-ALTER TABLE archival.document_permissions ADD CONSTRAINT fk_dp_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
-ALTER TABLE archival.document_permissions ADD CONSTRAINT fk_dp_file FOREIGN KEY (file_id) REFERENCES archival.files(id);
-ALTER TABLE archival.document_access_logs ADD CONSTRAINT fk_dal_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
-ALTER TABLE archival.document_access_logs ADD CONSTRAINT fk_dal_user FOREIGN KEY (user_id) REFERENCES identity.users(id);
+-- [ANALÍTICA]
+ALTER TABLE accounting.cost_allocations ADD CONSTRAINT fk_ca_jel FOREIGN KEY (journal_line_id) REFERENCES accounting.journal_entry_lines(id);
+ALTER TABLE accounting.cost_allocations ADD CONSTRAINT fk_ca_cc FOREIGN KEY (cost_center_id) REFERENCES accounting.cost_centers(id);
 
--- [FIRMA Y NOTARIZACIÓN]
-ALTER TABLE archival.signature_requests ADD CONSTRAINT fk_sr_ver FOREIGN KEY (document_version_id) REFERENCES archival.document_versions(id);
-ALTER TABLE archival.signature_participants ADD CONSTRAINT fk_sp_req FOREIGN KEY (request_id) REFERENCES archival.signature_requests(id);
-ALTER TABLE archival.signature_participants ADD CONSTRAINT fk_sp_user FOREIGN KEY (user_id) REFERENCES identity.users(id);
-ALTER TABLE archival.signatures ADD CONSTRAINT fk_sig_part FOREIGN KEY (participant_id) REFERENCES archival.signature_participants(id);
-ALTER TABLE archival.notarizations ADD CONSTRAINT fk_not_ver FOREIGN KEY (document_version_id) REFERENCES archival.document_versions(id);
-ALTER TABLE archival.notarizations ADD CONSTRAINT fk_not_prov FOREIGN KEY (provider_id) REFERENCES archival.notarization_providers(id);
-
--- [TRAZABILIDAD Y RETENCIÓN]
-ALTER TABLE archival.document_audit_logs_extended ADD CONSTRAINT fk_dale_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
-ALTER TABLE archival.document_events ADD CONSTRAINT fk_de_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
-ALTER TABLE archival.retention_rules ADD CONSTRAINT fk_rr_pol FOREIGN KEY (policy_id) REFERENCES archival.retention_policies_extended(id);
-ALTER TABLE archival.retention_rules ADD CONSTRAINT fk_rr_type FOREIGN KEY (document_type_id) REFERENCES archival.document_types_extended(id);
-ALTER TABLE archival.disposal_logs ADD CONSTRAINT fk_dl_doc FOREIGN KEY (document_id) REFERENCES archival.documents_main(id);
-
--- [EXPORTACIÓN]
-ALTER TABLE archival.export_jobs ADD CONSTRAINT fk_ej_user FOREIGN KEY (request_id) REFERENCES identity.users(id);
-ALTER TABLE archival.export_files ADD CONSTRAINT fk_ef_job FOREIGN KEY (job_id) REFERENCES archival.export_jobs(id);
+-- [AUDITORIA]
+ALTER TABLE accounting.accounting_logs ADD CONSTRAINT fk_aal_user FOREIGN KEY (user_id) REFERENCES identity.users(id);
+ALTER TABLE accounting.accounting_logs ADD CONSTRAINT fk_aal_je FOREIGN KEY (reference_entry_id) REFERENCES accounting.journal_entries(id);

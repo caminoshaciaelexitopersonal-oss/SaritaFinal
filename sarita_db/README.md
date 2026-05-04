@@ -1,29 +1,23 @@
-# SARITA ERP - Gestión Archivística Institucional (Fase 10.7)
+# SARITA ERP - Gestión Contable Real (Fase 10.8)
 
-## Sistema de Verdad Legal y Custodia Inmutable
+## Mapeo del Motor Contable y Tributario
 
-Este módulo implementa la infraestructura para la gestión formal de documentos, expedientes y evidencias legales bajo estándares gubernamentales y forenses.
+Este módulo representa la traducción física del sistema contable y tributario actualmente operativo en el backend de SARITA, garantizando persistencia inmutable y auditable.
 
 ### Estructura de Submódulos
 
-- `01_estructura_documental/`: Definición jerárquica de tipos y categorías.
-- `02_expedientes/`: Gestión de carpetas raíz (Files) vinculadas a procesos o entidades.
-- `03_documentos/`: Entidades de documento principal con vinculación a expedientes.
-- `04_versionado/`: Control inmutable de versiones (no sobrescritura).
-- `05_metadatos/`: Esquemas dinámicos para indexación técnica.
-- `06_clasificacion/`: Reglas para clasificación automática mediante IA.
-- `07_ciclo_vida/`: Máquina de estados (Creado -> Firmado -> Archivado).
-- `08_accesos_seguridad/`: Logs forenses de acceso y permisos granulares.
-- `09_firma_electronica/`: Orquestación de firmas múltiples.
-- `10_notarizacion/`: Integración con servicios de fe pública (Blockchain-ready).
-- `11_ocr_extraccion/`: Digitalización y extracción de texto de imágenes.
-- `12_trazabilidad/`: Registro detallado de eventos archivísticos.
-- `13_retencion_disposicion/`: Políticas legales de conservación y purga.
-- `14_exportacion_auditoria/`: Generación de paquetes para entes de control.
+- `01_catalogos/`: Plan Único de Cuentas (PUC) y Cuentas Contables con soporte IFRS.
+- `02_configuracion/`: Ajustes de moneda base y reglas de encadenamiento de hashes.
+- `03_movimientos/`: Asientos contables (Journal Entries) y líneas de detalle con soporte multi-divisa.
+- `04_periodos/`: Gestión de periodos fiscales y cierres contables con auditoría de balance.
+- `05_impuestos/`: Motor tributario (IVA, Retenciones, ICA) con reglas de aplicación dinámica.
+- `06_conciliacion/`: Gestión de cuentas bancarias y movimientos para cuadre de libros.
+- `07_analitica/`: Centros de costo y distribución de gastos.
+- `08_auditoria/`: Logs forenses y registro de eventos contables automáticos.
 
-## Reglas de Oro Archivísticas
+## Reglas de Integridad Financiera
 
-1. **Inmutabilidad**: Las versiones de documentos nunca se actualizan; se crean nuevas filas con hash SHA256 obligatorio.
-2. **Metadata-Only**: La DB solo almacena la metadata y el hash; los archivos físicos residen en storage externo auditado.
-3. **Firma Obligatoria**: Los documentos legales requieren una solicitud de firma vinculada a la versión específica.
-4. **Trazabilidad Forense**: Cada visualización o descarga se registra con IP y timestamp en `access_logs`.
+1. **Hash Chained**: Los asientos contables están encadenados mediante hashes criptográficos (`system_hash`, `previous_hash`) para evitar alteraciones retroactivas.
+2. **Doble Entrada Estricta**: Cada línea de asiento debe cumplir `(debit > 0 AND credit = 0) OR (credit > 0 AND debit = 0)`.
+3. **Inmutabilidad**: Una vez posteado (`is_posted = true`), un asiento no puede ser modificado ni eliminado físicamente; requiere reversión.
+4. **Trazabilidad de Origen**: Todas las transacciones contables deben vincularse a un documento fuente (Factura, Pago, Nómina) vía `transaction_links`.
