@@ -1,6 +1,6 @@
-CREATE TABLE IF NOT EXISTS tourism.booking_reservations (
+CREATE TABLE IF NOT EXISTS erp.business_operations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tourist_id UUID NOT NULL REFERENCES tourism.tourist_profiles(id), status TEXT
+    operation_name TEXT NOT NULL
     context_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now(),
     hash_integridad TEXT

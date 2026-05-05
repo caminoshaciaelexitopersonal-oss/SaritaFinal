@@ -1,4 +1,0 @@
--- Prueba de Aislamiento de Tenant
--- 1. Inserción Tenant A
--- 2. Intento de lectura con app.current_tenant = Tenant B
--- 3. El resultado debe ser 0 filas.

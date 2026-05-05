@@ -1,17 +1,11 @@
--- Definición de la entidad fundamental de aislamiento
-CREATE TABLE core.tenants (
+CREATE TABLE IF NOT EXISTS core.tenants (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tenant_id UUID, -- Referencia al tenant maestro para cumplimiento jerárquico
-    name VARCHAR(255) NOT NULL,
-    legal_name VARCHAR(255),
-    tax_id VARCHAR(50) UNIQUE NOT NULL,
-    domain VARCHAR(255) UNIQUE,
-    currency VARCHAR(3) DEFAULT 'COP',
-    state VARCHAR(20) DEFAULT 'ACTIVE',
-    settings JSONB DEFAULT '{}',
+    tenant_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    trace_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    context_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now()
+    context_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now(),
     hash_integridad TEXT
 );
-
-COMMENT ON TABLE core.tenants IS 'Entidades (Empresas, Alcaldías, Prestadores) que operan en la plataforma.';
