@@ -1,2 +1,0 @@
-CREATE OR REPLACE VIEW ai_core.view_memory_government AS
-SELECT * FROM ai_core.agent_memory_global WHERE entity_type = 'GOVERNMENT';
