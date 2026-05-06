@@ -1,6 +1,0 @@
-Registros huérfanos por tabla:
-finance.payment_intents: 0
-ledger.ledger_entries: 0
-tourism.booking_reservations: 0
-ai_core.agent_executions: 0
-TOTAL HUÉRFANOS: 0

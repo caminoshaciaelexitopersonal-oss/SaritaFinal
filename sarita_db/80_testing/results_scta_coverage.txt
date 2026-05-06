@@ -1,3 +1,0 @@
-Total tablas analizadas: 11
-Tablas con trigger: 11
-Tablas sin trigger: 0

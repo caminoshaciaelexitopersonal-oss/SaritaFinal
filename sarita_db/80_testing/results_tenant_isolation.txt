@@ -1,4 +1,0 @@
-REPORTE DE AISLAMIENTO MULTI-TENANT (RLS)
-Intentos de acceso cruzado: 100
-Resultados filtrados (0 filas): 100
-ACCESOS PERMITIDOS: 0

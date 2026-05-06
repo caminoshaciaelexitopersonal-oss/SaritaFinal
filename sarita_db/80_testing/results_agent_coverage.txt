@@ -1,4 +1,0 @@
-REPORTE DE COBERTURA DE AGENTES (SCTA)
-Eventos transaccionales totales: 50
-Registros en agent_executions: 50
-EVENTOS SIN AGENTE: 0
