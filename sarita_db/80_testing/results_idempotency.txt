@@ -1,0 +1,5 @@
+Validación de duplicados por trace_id:
+finance.payment_intents: 0
+core.business_operations: 0
+events.event_store: 0
+TOTAL DUPLICADOS: 0
