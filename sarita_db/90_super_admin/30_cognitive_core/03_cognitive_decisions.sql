@@ -1,5 +1,5 @@
 -- 90_super_admin/30_cognitive_core/03_cognitive_decisions.sql
--- FASE 30 — COGNITIVE CORE: Decisions and Self-Awareness
+-- FASE 30 — COGNITIVE CORE: Cognitive Decisions
 
 CREATE TABLE IF NOT EXISTS ai_core.autonomous_decisions_log (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -9,20 +9,6 @@ CREATE TABLE IF NOT EXISTS ai_core.autonomous_decisions_log (
     decision_risk_score DECIMAL(5, 4),
     was_rolled_back BOOLEAN DEFAULT false,
     rollback_reason TEXT,
-    tenant_id UUID NOT NULL,
-    trace_id UUID NOT NULL,
-    context_id UUID NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    hash_integridad TEXT
-);
-
-CREATE TABLE IF NOT EXISTS ai_core.system_self_awareness (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    internal_perception_snapshot JSONB,
-    structural_inconsistency_detected BOOLEAN DEFAULT false,
-    systemic_degradation_detected BOOLEAN DEFAULT false,
-    anomaly_details TEXT,
-    self_healing_action_taken TEXT,
     tenant_id UUID NOT NULL,
     trace_id UUID NOT NULL,
     context_id UUID NOT NULL,

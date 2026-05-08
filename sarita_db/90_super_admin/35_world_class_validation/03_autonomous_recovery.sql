@@ -1,5 +1,5 @@
 -- 90_super_admin/35_world_class_validation/03_autonomous_recovery.sql
--- FASE 35 — WORLD-CLASS ELITE VALIDATION: Recovery and Certification
+-- FASE 35 — WORLD-CLASS ELITE VALIDATION: Autonomous Recovery
 
 CREATE TABLE IF NOT EXISTS testing.autonomous_recovery_validation (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
