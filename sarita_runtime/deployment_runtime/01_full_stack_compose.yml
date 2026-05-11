@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: sarita_sovereign
       POSTGRES_USER: sarita_root
-      POSTGRES_PASSWORD: sarita_password
+      POSTGRES_PASSWORD: ${SARITA_DB_PASSWORD:-sarita_dev_pass}
     ports: ["5432:5432"]
 
   kafka:
@@ -34,5 +34,5 @@ services:
       dockerfile: Dockerfile
     depends_on: [postgres, kafka]
     environment:
-      DATABASE_URL: postgresql://sarita_root:sarita_password@postgres:5432/sarita_sovereign
+      DATABASE_URL: postgresql://sarita_root:${SARITA_DB_PASSWORD:-sarita_dev_pass}@postgres:5432/sarita_sovereign
       KAFKA_BROKERS: kafka:9092
