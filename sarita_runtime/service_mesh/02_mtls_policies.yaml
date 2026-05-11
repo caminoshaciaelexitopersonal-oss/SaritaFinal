@@ -1,0 +1,23 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: sarita-mtls-strict
+  namespace: sarita-runtime
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: financial-access-control
+  namespace: sarita-finance
+spec:
+  selector:
+    matchLabels:
+      app: financial-worker
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/sarita-orchestration/sa/temporal-worker"]

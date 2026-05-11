@@ -10,7 +10,9 @@ services:
     image: grafana/grafana:10.0.0
     ports: ["3000:3000"]
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=sarita_master
+      - GF_SECURITY_ADMIN_PASSWORD_FILE=/run/secrets/grafana_password
+    secrets:
+      - grafana_password
 
   tempo:
     image: grafana/tempo:2.2.0
@@ -20,3 +22,7 @@ services:
   loki:
     image: grafana/loki:2.8.0
     ports: ["3100:3100"]
+
+secrets:
+  grafana_password:
+    file: ./grafana_password.txt
