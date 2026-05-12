@@ -24,10 +24,10 @@ class AIExecutionWorker:
         tenant_id = header.get('tenant_id')
         trace_id = header.get('trace_id')
 
-        # 43.4 - Integration Kafka <-> DB
         conn = psycopg2.connect(self.db_url)
         with conn.cursor() as cur:
-            cur.execute(f"SET app.current_tenant_id = '{tenant_id}';")
+            # SECURE RLS Session Injection using set_config
+            cur.execute("SELECT set_config('app.current_tenant_id', %s, false)", (tenant_id,))
 
             # Real AI Action persistence
             cur.execute("""

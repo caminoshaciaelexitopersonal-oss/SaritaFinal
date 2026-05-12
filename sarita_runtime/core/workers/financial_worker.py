@@ -3,7 +3,7 @@ import json
 import logging
 import os
 import psycopg2
-from kafka import KafkaConsumer, KafkaProducer
+from kafka import KafkaConsumer
 from opentelemetry import trace
 
 logging.basicConfig(level=logging.INFO)
@@ -41,8 +41,8 @@ class FinancialWorker:
             try:
                 conn = psycopg2.connect(self.db_url)
                 with conn.cursor() as cur:
-                    # 43.5 - RLS Session Injection
-                    cur.execute(f"SET app.current_tenant_id = '{tenant_id}';")
+                    # SECURE RLS Session Injection using set_config
+                    cur.execute("SELECT set_config('app.current_tenant_id', %s, false)", (tenant_id,))
 
                     # Real persistence logic
                     cur.execute("""
@@ -56,7 +56,6 @@ class FinancialWorker:
                 conn.close()
             except Exception as e:
                 logger.error(f"DB Error: {e}")
-                # Real DLQ logic would go here
 
 if __name__ == "__main__":
     worker = FinancialWorker()
