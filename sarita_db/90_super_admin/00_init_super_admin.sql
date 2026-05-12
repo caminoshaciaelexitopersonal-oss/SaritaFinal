@@ -19,7 +19,7 @@ CREATE SCHEMA IF NOT EXISTS tourism;
 CREATE SCHEMA IF NOT EXISTS events;
 CREATE SCHEMA IF NOT EXISTS testing;
 
--- Base tables required for Foreign Keys
+-- Base tables required for Foreign Keys and RLS
 CREATE TABLE IF NOT EXISTS core.tenants (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL,
@@ -32,6 +32,17 @@ CREATE TABLE IF NOT EXISTS core.tenants (
 CREATE TABLE IF NOT EXISTS ai_core.agents (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     agent_name TEXT NOT NULL,
+    tenant_id UUID NOT NULL,
+    trace_id UUID NOT NULL,
+    context_id UUID NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    hash_integridad TEXT
+);
+
+CREATE TABLE IF NOT EXISTS identity.roles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    role_name TEXT NOT NULL UNIQUE,
+    permissions JSONB,
     tenant_id UUID NOT NULL,
     trace_id UUID NOT NULL,
     context_id UUID NOT NULL,
