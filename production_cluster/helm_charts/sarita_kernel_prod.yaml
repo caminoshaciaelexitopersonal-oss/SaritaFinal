@@ -1,0 +1,31 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: sarita-runtime-kernel
+  namespace: sarita-production
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: sarita-kernel
+      version: "2.0.0"
+  values:
+    replicas: 10
+    autoscaling:
+      enabled: true
+      minReplicas: 3
+      maxReplicas: 20
+      targetCPUUtilizationPercentage: 80
+    resources:
+      limits:
+        cpu: "2000m"
+        memory: "4Gi"
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values: [sarita-kernel]
+          topologyKey: "kubernetes.io/hostname"
