@@ -57,7 +57,6 @@ class SovereignOperator:
         # 1. Kill corrupt pod
         # 2. Fetch last snapshot from Event Store
         # 3. Inject state into new pod via InitContainer/Sidecar
-        pass
 
 if __name__ == "__main__":
     operator = SovereignOperator()
