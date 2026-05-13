@@ -44,7 +44,6 @@ class RaftCommitPipeline:
         return self._calculate_commit_index()
 
     def _calculate_commit_index(self):
-        # Implementation of majority commit logic
         indices = sorted(self.match_indexes.values(), reverse=True)
         if len(indices) >= self.quorum_size:
             return indices[self.quorum_size - 1]

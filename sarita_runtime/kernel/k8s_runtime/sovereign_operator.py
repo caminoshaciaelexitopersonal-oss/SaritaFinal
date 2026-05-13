@@ -24,7 +24,6 @@ class SovereignOperator:
     async def watch_tenant_crds(self):
         """Simulates watching Kubernetes Custom Resource Definitions for Tenants."""
         while True:
-            # In real environment: stream = watch.Watch().stream(custom_api.list_cluster_custom_object, ...)
             # Here we simulate the event arrival
             event = {"type": "MODIFIED", "object": {"metadata": {"name": "tenant-01"}, "spec": {"replicas": 3}}}
             await self.reconciliation_queue.put(event)

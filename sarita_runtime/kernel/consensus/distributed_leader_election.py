@@ -105,7 +105,6 @@ class RaftNode:
                 self.next_index[peer] = max(0, self.next_index[peer] - 1)
 
     async def update_commit_index(self):
-        # Implementation of Raft commit rule
         for n in range(len(self.log) - 1, self.commit_index, -1):
             if self.log[n]['term'] == self.current_term:
                 count = 1
