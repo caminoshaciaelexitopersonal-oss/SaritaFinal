@@ -22,6 +22,7 @@ def deploy():
         '12_auditoria',
         '13_ai_memory',
         '14_integraciones',
+        '90_super_admin',
         '20_relaciones_globales',
         '30_triggers',
         '40_rls',
