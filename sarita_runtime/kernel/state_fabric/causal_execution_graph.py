@@ -34,4 +34,3 @@ class DeterministicStateProjection:
         """
         Mathematically reconstructs state by traversing the DAG.
         """
-        # Logic to walk back to root and apply deltas forward

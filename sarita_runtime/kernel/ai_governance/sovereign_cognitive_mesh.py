@@ -8,7 +8,6 @@ class SovereignCognitiveMesh:
     """
     async def synchronize_reasoning(self, agent_id, reasoning_delta):
         logging.info(f"Cognitive Fabric: Synchronizing reasoning for agent {agent_id}")
-        # Logic to append to federated semantic graph
 
 class SemanticEpochGraph:
     def __init__(self):

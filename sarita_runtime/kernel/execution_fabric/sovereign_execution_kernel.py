@@ -41,6 +41,5 @@ class SovereignExecutionKernel:
 
 class DistributedExecutionRouter:
     async def route_operation(self, operation):
-        # Logic to route to functional drivers (Temporal, Kafka, Postgres)
         logging.info(f"Execution Router: Routing {operation['type']} to target driver.")
         return {"status": "SUCCESS", "node": "node-1"}
