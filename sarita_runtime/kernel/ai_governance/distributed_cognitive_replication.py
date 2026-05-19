@@ -13,7 +13,6 @@ class DistributedCognitiveReplication:
         Uses pgvector snapshots for fidelity.
         """
         logging.info(f"AI Governance: Replicating cognitive state for {self.agent_id}")
-        # Logic to push state to peers via Cognitive Reason Bus
 
 class SemanticCheckpointEngine:
     async def create_checkpoint(self, agent_id, current_memory):

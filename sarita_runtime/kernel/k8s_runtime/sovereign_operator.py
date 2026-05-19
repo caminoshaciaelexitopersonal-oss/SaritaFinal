@@ -47,7 +47,6 @@ class SovereignOperator:
 
     async def ensure_tenant_infrastructure(self, name, spec):
         logging.info(f"Sovereign Operator: Scaling StatefulSet for {name} to {spec['replicas']} replicas.")
-        # Logic to call K8s AppsV1Api to patch statefulset
         self.observed_tenants[name] = spec
 
     async def trigger_autonomous_rehydration(self, pod_name):

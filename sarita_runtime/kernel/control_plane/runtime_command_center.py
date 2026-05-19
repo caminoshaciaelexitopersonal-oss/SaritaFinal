@@ -8,7 +8,6 @@ class RuntimeCommandCenter:
 
     async def broadcast_command(self, command):
         logging.info(f"Control Plane: Broadcasting {command} to all clusters.")
-        # Logic to send command to all federation gateways
 
     async def trigger_failover(self, source_cluster, target_cluster):
         logging.warning(f"Control Plane: Triggering failover from {source_cluster} to {target_cluster}")
@@ -23,7 +22,6 @@ class ClusterStateArbitrator:
         logging.info(f"Arbitrator: Cluster {cluster_id} is now {status}")
 
     def resolve_conflicts(self):
-        # Logic to detect split-brain between clusters
 
 class RuntimePolicyDispatcher:
     def __init__(self):

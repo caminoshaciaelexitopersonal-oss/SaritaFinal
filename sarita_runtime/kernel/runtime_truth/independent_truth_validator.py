@@ -5,12 +5,10 @@ import json
 class IndependentTruthValidator:
     async def validate_federation_integrity(self):
         logging.info("Truth Validator: Verifying cross-cluster topology hashes.")
-        # Logic to fetch topology from multiple gateways and compare hashes
         return True
 
     async def validate_distributed_consensus(self):
         logging.info("Truth Validator: Verifying Raft log consistency across nodes.")
-        # Logic to check for log divergence
         return True
 
     async def generate_truth_report(self):

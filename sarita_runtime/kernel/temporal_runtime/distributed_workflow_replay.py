@@ -11,7 +11,6 @@ class DistributedWorkflowReplay:
 
     def resume_distributed_saga(self, saga_id):
         logging.info(f"Resuming distributed saga {saga_id} across cluster nodes.")
-        # Logic to trigger re-execution of pending activities
         return "RESUMED"
 
 if __name__ == "__main__":

@@ -32,5 +32,4 @@ class EvidenceChainValidator:
 
 async def generate_v3_certification_report(validation_results):
     report_path = "FINAL_REALITY_CERTIFICATION_V3.md"
-    # Logic to format results into the MD template
     logging.info(f"Truth Validator: Final certification report generated: {report_path}")

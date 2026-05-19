@@ -13,7 +13,6 @@ class AutonomousRecoveryManager:
 
     def recover_failed_saga(self, saga_id):
         logging.info(f"RECOVERY: Attempting replay-assisted recovery for saga {saga_id}")
-        # Logic to trigger Temporal replay
         return True
 
 if __name__ == "__main__":

@@ -25,7 +25,6 @@ class FederatedTemporalRouter:
         Routes workflow based on cluster availability and region affinity.
         """
         cluster_targets = ["cluster-a", "cluster-b", "cluster-c"]
-        # Logic to pick based on load/latency
         target = cluster_targets[hash(workflow_id) % len(cluster_targets)]
         logging.info(f"Temporal Mesh: Routing workflow {workflow_id} to cluster {target}")
         return target

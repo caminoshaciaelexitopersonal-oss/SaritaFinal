@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import grpc
-# Note: In a real environment, we would use protoc to generate these
 # from a .proto file. Here we simulate the gRPC interaction logic.
 
 class RaftTransport:

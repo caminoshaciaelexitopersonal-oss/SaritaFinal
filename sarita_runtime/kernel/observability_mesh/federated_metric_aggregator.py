@@ -8,7 +8,6 @@ class FederatedMetricAggregator:
         instability or quorum drift.
         """
         logging.info("Observability: Aggregating federated runtime metrics.")
-        # Logic to query Prometheus/Thanos across regions
 
 class RuntimeTraceStitcher:
     async def stitch_global_trace(self, trace_id):

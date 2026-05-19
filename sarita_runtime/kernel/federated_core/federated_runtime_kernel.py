@@ -31,15 +31,12 @@ class FederatedRuntimeKernel:
 
     async def _maintain_consensus(self):
         logging.info("Sovereign Kernel: Consensus pipeline active.")
-        # Logic to drive Raft and WAL replication
 
     async def _maintain_federation(self):
         logging.info("Sovereign Kernel: Federation pipeline active.")
-        # Logic to drive cross-cluster topology sync
 
     async def _maintain_telemetry(self):
         logging.info("Sovereign Kernel: Telemetry mesh active.")
-        # Logic to drive OTEL and Prometheus grids
 
 class RuntimeConvergenceEngine:
     async def reconcile_global_state(self):

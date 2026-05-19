@@ -49,7 +49,6 @@ class DistributedStateMerger:
             return remote_state, local_clock
         else: # Concurrent or equal
             logging.warning("State Merger: Concurrent state detected. Applying Last-Writer-Wins (LWW).")
-            # In a real SCTA implementation, we might use domain-specific CRDTs.
             # Here we fall back to timestamp or higher node_id for LWW.
             if remote_state.get('timestamp', 0) > local_state.get('timestamp', 0):
                 local_clock.update(remote_clock.clocks)

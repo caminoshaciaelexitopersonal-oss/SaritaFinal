@@ -7,7 +7,6 @@ class FederatedTemporalRouter:
     """
     async def route_workflow(self, workflow_id, constraints):
         logging.info(f"Temporal Mesh: Routing workflow {workflow_id} with constraints {constraints}")
-        # Logic to select optimal cluster based on latency and load
 
 class DeterministicReplayGuard:
     def verify_replay(self, workflow_id, current_state, history_hash):

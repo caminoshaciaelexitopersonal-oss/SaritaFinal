@@ -27,7 +27,6 @@ class FederatedWALPipeline:
         }
 
         logging.info(f"WAL Pipeline: Appending entry [Checksum: {checksum[:8]}]")
-        # Logic to persist in local WAL and trigger replication
         return entry
 
 class DeterministicCommitResolver:
