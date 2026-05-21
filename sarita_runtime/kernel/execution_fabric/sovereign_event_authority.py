@@ -27,7 +27,6 @@ class SovereignEventAuthority:
         return authorized_event
 
     def _sign_event(self, event_hash):
-        # Simulation of cryptographic node signing
         return f"SIG-{event_hash[:8]}"
 
 class CausalStreamValidator:

@@ -1,0 +1,28 @@
+# =============================================================================
+# SARITA SOVEREIGN OS - PHYSICAL ISOLATION MESH
+# Domain: Linux Namespaces, Seccomp, and Economic Governance
+# =============================================================================
+
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: sarita-sovereign-jail
+handler: kata-containers # Simulation of real hardware-level isolation
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: adversarial-resilience-mesh
+  namespace: sarita-runtime
+spec:
+  selector:
+    matchLabels:
+      app: sovereign-kernel
+  action: DENY
+  rules:
+  - from:
+    - source:
+        notPrincipals: ["cluster.local/ns/sarita-runtime/sa/sovereign-operator"]
+    to:
+    - operation:
+        paths: ["/cortex/*", "/budget/*"]
