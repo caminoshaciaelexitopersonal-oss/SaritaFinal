@@ -1,37 +1,41 @@
 import asyncio
 import logging
 import uuid
+from sarita_runtime.kernel.microkernel_fabric.sovereign_microkernel import SovereignMicrokernel
 
 class SovereignExecutionKernel:
     """
     Sovereign Execution Fabric Kernel.
-    Decouples execution from consensus and evidence.
+    Now collapsed into the Sovereign Microkernel authority.
     """
     def __init__(self, node_id, fabric_router):
         self.node_id = node_id
         self.router = fabric_router
+        self.microkernel = SovereignMicrokernel()
         self.current_epoch = 0
         self.fencing_token = str(uuid.uuid4())
         self.is_active = False
 
     async def execute_federated_op(self, operation):
         """
-        Routes and executes federated operations across the fabric.
-        Validates epoch and causal lineage before execution.
+        Routes and executes federated operations via the Sovereign Microkernel.
         """
-        logging.info(f"Execution Kernel: Processing operation {operation['id']} at epoch {self.current_epoch}")
+        logging.info(f"Execution Kernel: Collapsing operation {operation['id']} into Microkernel.")
 
-        # 1. Validate Fencing and Epoch
-        if not await self._validate_execution_context(operation):
-            logging.error("Execution Kernel: Context invalid. Aborting operation.")
-            return False
+        # Task submission to Microkernel for deterministic dispatch
+        success = await self.microkernel.submit_task(
+            task_id=operation['id'],
+            payload=operation,
+            priority=operation.get('priority', 2)
+        )
 
-        # 2. Route to appropriate component (Temporal/Kafka/DB)
-        result = await self.router.route_operation(operation)
-
-        # 3. Emit Execution Proof
-        await self._emit_execution_proof(operation, result)
-        return result
+        if success:
+            # 2. Route to appropriate component (Temporal/Kafka/DB) - Now managed via Microkernel dispatch
+            result = await self.router.route_operation(operation)
+            # 3. Emit Execution Proof
+            await self._emit_execution_proof(operation, result)
+            return result
+        return False
 
     async def _validate_execution_context(self, operation):
         return True

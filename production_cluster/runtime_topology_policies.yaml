@@ -1,0 +1,9 @@
+apiVersion: sarita.io/v1
+kind: RuntimeTopologyPolicy
+metadata:
+  name: numa-locality-enforcement
+spec:
+  enforce_numa_locality: true
+  socket_isolation: mandatory
+  cross_numa_migration: restricted
+  topology_awareness: hardware-verified

@@ -1,0 +1,10 @@
+apiVersion: sarita.io/v1
+kind: SchedulerGovernancePolicy
+metadata:
+  name: critical-workload-governance
+spec:
+  priority_class: ULTRA_CRITICAL
+  cpu_reservation: "50%"
+  latency_budget_ms: 1
+  starvation_prevention: enabled
+  preemption: allowed
