@@ -1,0 +1,32 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: global-federation-mesh
+  namespace: istio-system
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 15443
+      name: tls
+      protocol: TLS
+    hosts:
+    - "*.sarita.sovereign"
+    tls:
+      mode: MUTUAL
+      credentialName: federation-cert
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: peer-cluster-entry
+spec:
+  hosts:
+  - cluster-b.sarita.sovereign
+  location: MESH_EXTERNAL
+  ports:
+  - number: 15443
+    name: tls
+    protocol: TLS
+  resolution: DNS

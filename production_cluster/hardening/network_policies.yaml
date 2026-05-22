@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: sarita-deny-all
+  namespace: sarita-production
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: sarita-finance-isolation
+  namespace: sarita-production
+spec:
+  podSelector:
+    matchLabels:
+      app: financial-worker
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: temporal-worker
+    - namespaceSelector:
+        matchLabels:
+          name: sarita-infrastructure

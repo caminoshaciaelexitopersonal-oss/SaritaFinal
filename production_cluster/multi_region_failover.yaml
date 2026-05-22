@@ -1,0 +1,29 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: cross-region-zero-trust
+  namespace: sarita-production
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/sarita-production/sa/regional-router"]
+    to:
+    - operation:
+        methods: ["POST"]
+        paths: ["/v1/sync"]
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: cross-region-db
+spec:
+  hosts:
+  - db.region-b.sarita.sovereign
+  location: MESH_EXTERNAL
+  ports:
+  - number: 5432
+    name: postgres
+    protocol: TLS
+  resolution: DNS

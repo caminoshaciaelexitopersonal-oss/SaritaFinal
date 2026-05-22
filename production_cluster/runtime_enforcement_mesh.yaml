@@ -1,0 +1,37 @@
+# =============================================================================
+# SARITA SOVEREIGN OS - AUTONOMOUS ENFORCEMENT MESH
+# Domain: Dynamic Execution Quarantine and Resource Quotas
+# =============================================================================
+
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: execution-quarantine-matrix
+  namespace: sarita-runtime
+spec:
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: SIDECAR_INBOUND
+    patch:
+      operation: INSERT_BEFORE
+      value:
+        name: envoy.filters.http.lua
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+          inline_string: |
+            function envoy_on_request(request_handle)
+              local node_status = request_handle:headers():get("x-scta-node-status")
+              -- Hard Quarantine: Block all traffic if node is marked as POSIONED
+              if node_status == "POISONED" then
+                request_handle:respond(423, "QUARANTINED: Autonomous Failure Containment Active")
+              end
+            end
+---
+apiVersion: "scheduling.k8s.io/v1"
+kind: PriorityClass
+metadata:
+  name: sarita-sovereign-critical
+value: 1000000
+globalDefault: false
+description: "Mission-critical SCTA Autonomous Kernel pods."

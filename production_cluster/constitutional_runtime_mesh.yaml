@@ -1,0 +1,37 @@
+# =============================================================================
+# SARITA SOVEREIGN OS - CONSTITUTIONAL GOVERNANCE MESH
+# Domain: Physical Syscall Fencing and Hardware Attestation
+# =============================================================================
+
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: constitutional-runtime-mesh
+  namespace: sarita-runtime
+spec:
+  selector:
+    matchLabels:
+      app: sovereign-kernel
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        requestPrincipals: ["cluster.local/ns/sarita-runtime/sa/constitutional-authority"]
+    to:
+    - operation:
+        methods: ["POST"]
+        paths: ["/admit/*", "/seal/*"]
+---
+apiVersion: "v1"
+kind: ConfigMap
+metadata:
+  name: seccomp-profiles
+  namespace: sarita-runtime
+data:
+  sovereign-kernel.json: |
+    {
+      "defaultAction": "SCMP_ACT_ERRNO",
+      "syscalls": [
+        {"names": ["read", "write", "futex", "nanosleep"], "action": "SCMP_ACT_ALLOW"}
+      ]
+    }

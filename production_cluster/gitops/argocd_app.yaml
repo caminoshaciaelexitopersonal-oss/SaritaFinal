@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sarita-runtime-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/sarita/sovereign-kernel.git'
+    targetRevision: HEAD
+    path: production_cluster/helm_charts
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: sarita-production
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
