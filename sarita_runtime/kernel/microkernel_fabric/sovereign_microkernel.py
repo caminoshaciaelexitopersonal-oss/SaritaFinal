@@ -4,6 +4,9 @@ from typing import Dict, Any, List
 from sarita_runtime.kernel.microkernel_fabric.deterministic_execution_dispatcher import DeterministicExecutionDispatcher
 from sarita_runtime.kernel.microkernel_fabric.kernel_execution_orchestrator import KernelExecutionOrchestrator
 from sarita_runtime.kernel.runtime_determinism.deterministic_latency_controller import DeterministicLatencyController
+from sarita_runtime.kernel.clock_fabric.runtime_clock_authority import RuntimeClockAuthority
+from sarita_runtime.kernel.microkernel_fabric.execution_epoch_orchestrator import ExecutionEpochOrchestrator
+from sarita_runtime.kernel.queue_fabric.runtime_queue_authority import RuntimeQueueAuthority
 
 class SovereignMicrokernel:
     """
@@ -13,6 +16,9 @@ class SovereignMicrokernel:
     def __init__(self):
         self.dispatcher = DeterministicExecutionDispatcher()
         self.orchestrator = KernelExecutionOrchestrator()
+        self.clock = RuntimeClockAuthority()
+        self.epoch_orchestrator = ExecutionEpochOrchestrator()
+        self.queue_authority = RuntimeQueueAuthority()
         self.latency_controller = DeterministicLatencyController()
         self.active_tasks = {}
 
