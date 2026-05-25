@@ -1,45 +1,40 @@
 import logging
-import threading
+import asyncio
 import uuid
+import concurrent.futures
 from sarita_runtime.kernel.microkernel_fabric.sovereign_microkernel import SovereignMicrokernel
 
 class SovereignExecutionKernel:
     """
-    Sovereign Execution Fabric Kernel.
-    Refactored to minimize asyncio dependency on critical path.
+    Sovereign Execution Fabric Kernel (Phase 68).
+    Eliminates asyncio polling. Uses ThreadPoolExecutor for blocking wait.
     """
     def __init__(self, node_id, fabric_router):
         self.node_id = node_id
         self.router = fabric_router
         self.microkernel = SovereignMicrokernel()
-        self.is_active = False
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
     async def boot(self):
-        # Booting microkernel (which starts its own physical thread)
         await self.microkernel.boot()
-        self.is_active = True
 
     async def execute_federated_op(self, operation):
-        """
-        Submits operation to the microkernel's physical thread.
-        Uses threading primitives for wait if necessary.
-        """
         task_id = operation.get('id', str(uuid.uuid4()))
-        logging.info(f"Execution Kernel: Offloading operation {task_id} to physical execution chain.")
-
-        # Ensure the callback is thread-safe for the router
         operation["callback"] = self.router.route_operation
 
-        # Submit to microkernel (synchronous submission to lock-free queue)
-        self.microkernel.dispatcher.enqueue_task(
-            task_id=task_id,
-            payload=operation,
-            priority=operation.get('priority', 2)
+        logging.info(f"Execution Kernel: Submitting {task_id} to material path.")
+
+        # Physical submission
+        self.microkernel.dispatcher.enqueue_task(task_id, operation, operation.get('priority', 2))
+
+        # Efficient async wait for physical thread completion via executor
+        loop = asyncio.get_event_loop()
+        success = await loop.run_in_executor(
+            self.executor,
+            self.microkernel.dispatcher.wait_for_task,
+            task_id
         )
 
-        # Non-blocking wait if async context is needed, or polling status
-        while self.microkernel.dispatcher.get_task_status(task_id) != "COMPLETED":
-            await asyncio.sleep(0.01) # Asyncio is only used for waiting, not execution
-
-        result = operation.get("result")
-        return result
+        if success:
+            return operation.get("result")
+        return False
