@@ -8,9 +8,8 @@ from sarita_runtime.kernel.kernel_event_bus.immutable_kernel_event_log import Im
 class KernelEventAuthority:
     """
     Eliminates event fragmentation. Monotonic authority for all kernel events.
-    Integrates with persistent immutable log.
     """
-    def __init__(self, log_path="/tmp/sarita_kernel_events.db"):
+    def __init__(self, log_path="/var/lib/sarita/kernel_events.db"):
         self.current_epoch = 0
         self.last_event_hash = "0" * 64
         self.log = ImmutableKernelEventLog(log_path)
@@ -30,7 +29,6 @@ class KernelEventAuthority:
             "epoch": self.current_epoch
         }
 
-        # PERSIST MATERIAL LOG
         await self.log.append(event)
 
         self.last_event_hash = event_hash
@@ -38,19 +36,6 @@ class KernelEventAuthority:
         return event
 
     def _calculate_event_hash(self, event_id, event_type, payload):
-        # Deterministic JSON serialization for hashing
         payload_str = json.dumps(payload, sort_keys=True)
         data = f"{event_id}{event_type}{payload_str}{self.last_event_hash}"
         return hashlib.sha256(data.encode()).hexdigest()
-
-    async def verify_chain_integrity(self):
-        """Validates the entire hash chain in the log."""
-        events = await self.log.get_events_from_epoch(0)
-        expected_prev_hash = "0" * 64
-        for e in events:
-            # e is a tuple from sqlite: (id, type, payload, prev_hash, hash, epoch, timestamp)
-            if e[3] != expected_prev_hash:
-                logging.error(f"Chain Integrity FAILED at event {e[0]}")
-                return False
-            expected_prev_hash = e[4]
-        return True
