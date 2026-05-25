@@ -7,6 +7,8 @@ from sarita_runtime.kernel.runtime_determinism.deterministic_latency_controller 
 from sarita_runtime.kernel.clock_fabric.runtime_clock_authority import RuntimeClockAuthority
 from sarita_runtime.kernel.microkernel_fabric.execution_epoch_orchestrator import ExecutionEpochOrchestrator
 from sarita_runtime.kernel.queue_fabric.runtime_queue_authority import RuntimeQueueAuthority
+from sarita_runtime.kernel.cpu_governance.runtime_frequency_authority import RuntimeFrequencyAuthority
+from sarita_runtime.kernel.thermal_fabric.runtime_thermal_authority import RuntimeThermalAuthority
 
 class SovereignMicrokernel:
     """
@@ -19,6 +21,8 @@ class SovereignMicrokernel:
         self.clock = RuntimeClockAuthority()
         self.epoch_orchestrator = ExecutionEpochOrchestrator()
         self.queue_authority = RuntimeQueueAuthority()
+        self.frequency_authority = RuntimeFrequencyAuthority()
+        self.thermal_authority = RuntimeThermalAuthority()
         self.latency_controller = DeterministicLatencyController()
         self.active_tasks = {}
 

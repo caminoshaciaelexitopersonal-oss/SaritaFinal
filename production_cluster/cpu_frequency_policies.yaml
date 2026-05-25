@@ -1,0 +1,9 @@
+apiVersion: sarita.io/v1
+kind: CpuFrequencyPolicy
+metadata:
+  name: max-determinism-freq
+spec:
+  cpu_frequency_khz: 3000000
+  pstate_mode: performance
+  turbo_governance: disabled
+  thermal_aware: true
