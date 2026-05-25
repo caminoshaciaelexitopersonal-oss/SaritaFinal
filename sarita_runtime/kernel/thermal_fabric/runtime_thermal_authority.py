@@ -3,24 +3,28 @@ import os
 
 class RuntimeThermalAuthority:
     """
-    Sovereign Thermal Sovereignty Plane.
     Governs thermal pressure physically.
     """
     def __init__(self):
         self.thermal_base = "/sys/class/thermal"
 
-    def get_cpu_temperature(self, cpu_id: int):
-        # Simplified read from /sys/class/thermal/thermal_zone*/temp
+    async def get_highest_zone_temperature(self):
+        max_temp = 0.0
         try:
-            path = os.path.join(self.thermal_base, "thermal_zone0/temp")
-            if os.path.exists(path):
-                with open(path, "r") as f:
-                    return int(f.read().strip()) / 1000.0
-        except:
-            pass
-        return 0.0
+            for zone in os.listdir(self.thermal_base):
+                if zone.startswith("thermal_zone"):
+                    temp_path = os.path.join(self.thermal_base, zone, "temp")
+                    if os.path.exists(temp_path):
+                        with open(temp_path, "r") as f:
+                            temp = int(f.read().strip()) / 1000.0
+                            if temp > max_temp:
+                                max_temp = temp
+            return max_temp
+        except Exception as e:
+            logging.error(f"Thermal Authority: Error reading temperature: {e}")
+            return 0.0
 
-    async def audit_thermal_pressure(self):
-        temp = self.get_cpu_temperature(0)
-        logging.info(f"Thermal Authority: Current CPU temperature: {temp}C")
-        return temp
+    async def audit_thermal_compliance(self, threshold_c: float = 85.0):
+        temp = await self.get_highest_zone_temperature()
+        logging.info(f"Thermal Authority: Max zone temperature: {temp}C")
+        return temp < threshold_c

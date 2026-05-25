@@ -1,36 +1,46 @@
 import logging
-import asyncio
+import threading
+from collections import deque
+import itertools
 
-class RuntimeQueueAuthority:
+class LockFreeQueue:
     """
-    Sovereign Queue Authority.
-    Replaces asyncio-centric coordination with deterministic queue arbitration.
+    Optimized high-performance queue.
+    While true non-blocking lock-free is complex in Python,
+    this uses a fine-grained mutex-protected deque which is standard for
+    high-concurrency threading.
     """
-    def __init__(self):
-        self.queues = {}
+    def __init__(self, capacity: int = 1000):
+        self._queue = deque()
+        self._lock = threading.Lock()
+        self._capacity = capacity
+        self._not_full = threading.Condition(self._lock)
+        self._not_empty = threading.Condition(self._lock)
+        self._counter = itertools.count()
 
-    async def create_governed_queue(self, queue_id: str, capacity: int):
-        logging.info(f"Queue Authority: Creating governed queue {queue_id} with capacity {capacity}")
-        self.queues[queue_id] = {
-            "items": [],
-            "capacity": capacity,
-            "pressure": 0.0
-        }
+    def put(self, item, block=True):
+        with self._lock:
+            if block:
+                while len(self._queue) >= self._capacity:
+                    self._not_full.wait()
+            elif len(self._queue) >= self._capacity:
+                return False
 
-    async def push(self, queue_id: str, item: any):
-        q = self.queues.get(queue_id)
-        if not q: return False
-
-        if len(q["items"]) < q["capacity"]:
-            q["items"].append(item)
-            q["pressure"] = len(q["items"]) / q["capacity"]
+            self._queue.append(item)
+            self._not_empty.notify()
             return True
-        return False
 
-    async def pop(self, queue_id: str):
-        q = self.queues.get(queue_id)
-        if not q or not q["items"]: return None
+    def get(self, block=True):
+        with self._lock:
+            if block:
+                while not self._queue:
+                    self._not_empty.wait()
+            elif not self._queue:
+                return None
 
-        item = q["items"].pop(0)
-        q["pressure"] = len(q["items"]) / q["capacity"]
-        return item
+            item = self._queue.popleft()
+            self._not_full.notify()
+            return item
+
+    def qsize(self):
+        return len(self._queue)
