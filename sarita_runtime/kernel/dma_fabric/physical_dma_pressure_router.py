@@ -1,26 +1,28 @@
 import logging
 import os
+from sarita_runtime.kernel.interrupt_fabric.physical_interrupt_router import PhysicalInterruptRouter
 
 class PhysicalDmaPressureRouter:
     """
-    Governs DMA pressure and locality.
-    Material enforcement for device-to-CPU affinity.
+    Governs DMA pressure and locality materially.
     """
-    def __init__(self):
+    def __init__(self, interrupt_router: PhysicalInterruptRouter):
         self.pci_path = "/sys/bus/pci/devices"
+        self.router = interrupt_router
 
     def align_device_with_core(self, device_id: str, cpu_id: int):
-        logging.info(f"DMA Router: Materializing locality for {device_id} with Core {cpu_id}")
+        logging.info(f"DMA Router: Materializing locality for {device_id} -> Core {cpu_id}")
 
-        # Real implementation involves finding the MSIs for the device
-        # and routing them via PhysicalInterruptRouter
-        irq_path = os.path.join(self.pci_path, device_id, "msi_irqs")
-        if os.path.exists(irq_path):
-            try:
-                for irq in os.listdir(irq_path):
-                    logging.debug(f"DMA Router: Re-routing device IRQ {irq}")
-                    # Routing logic would call PhysicalInterruptRouter here
-                return True
-            except Exception as e:
-                logging.error(f"DMA Router: Locality alignment failed: {e}")
-        return False
+        # Real hardware locality: Find MSIs for the device and route them
+        msi_path = os.path.join(self.pci_path, device_id, "msi_irqs")
+        if not os.path.exists(msi_path):
+            return False
+
+        try:
+            for irq in os.listdir(msi_path):
+                if irq.isdigit():
+                    self.router.route_irq_to_core(int(irq), cpu_id)
+            return True
+        except Exception as e:
+            logging.error(f"DMA Router: Alignment failure: {e}")
+            return False
