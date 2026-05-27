@@ -1,14 +1,13 @@
 import logging
 import threading
 from collections import deque
-import itertools
 
-class LockFreeQueue:
+class HighPerformanceQueue:
     """
-    Optimized high-performance queue.
-    While true non-blocking lock-free is complex in Python,
-    this uses a fine-grained mutex-protected deque which is standard for
-    high-concurrency threading.
+    High-performance thread-safe queue.
+    Uses fine-grained locking on a deque for minimal contention.
+    (Note: True lock-free in Python is limited by the GIL;
+    this provides the material material performance needed for the physical path).
     """
     def __init__(self, capacity: int = 1000):
         self._queue = deque()
@@ -16,7 +15,6 @@ class LockFreeQueue:
         self._capacity = capacity
         self._not_full = threading.Condition(self._lock)
         self._not_empty = threading.Condition(self._lock)
-        self._counter = itertools.count()
 
     def put(self, item, block=True):
         with self._lock:

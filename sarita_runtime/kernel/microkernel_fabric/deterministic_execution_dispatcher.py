@@ -1,23 +1,16 @@
 import logging
 import threading
-import time
-import subprocess
-import shlex
 from typing import Dict, Any, List
-from sarita_runtime.kernel.queue_fabric.runtime_queue_authority import LockFreeQueue
+from sarita_runtime.kernel.queue_fabric.runtime_queue_authority import HighPerformanceQueue
 from sarita_runtime.kernel.io_uring_fabric.io_uring_execution_engine import IoUringExecutionEngine
 
 class DeterministicExecutionDispatcher:
-    """
-    Governs CPU affinity and execution ordering.
-    Integrates io_uring for material high-performance IO tasks.
-    """
     def __init__(self):
         self.queues = {
-            0: LockFreeQueue(100),
-            1: LockFreeQueue(200),
-            2: LockFreeQueue(500),
-            3: LockFreeQueue(1000)
+            0: HighPerformanceQueue(100),
+            1: HighPerformanceQueue(200),
+            2: HighPerformanceQueue(500),
+            3: HighPerformanceQueue(1000)
         }
         self.io_engine = IoUringExecutionEngine()
         self.io_engine.initialize_material_rings()
@@ -30,7 +23,6 @@ class DeterministicExecutionDispatcher:
         priority = max(0, min(priority, 3))
         event = threading.Event()
         self.task_events[task_id] = event
-
         with self.condition:
             self.queues[priority].put((task_id, payload))
             self.condition.notify_all()
@@ -48,36 +40,21 @@ class DeterministicExecutionDispatcher:
                 while self.is_running:
                     for p in range(4):
                         item = self.queues[p].get(block=False)
-                        if item:
-                            task = item
-                            break
+                        if item: task = item; break
                     if task: break
                     self.condition.wait(timeout=0.1)
-
-            if task:
-                self._execute_material_task(task)
+            if task: self._execute_material_task(task)
 
     def _execute_material_task(self, task):
         task_id, payload = task
-        logging.info(f"Dispatcher: PHYSICALLY EXECUTING {task_id}")
-
-        if payload.get("type") == "IO_URING_OP":
-            # Direct integration with materialized IO engine
+        if payload.get('type') == 'IO_URING_OP':
             res = self.io_engine.submit_and_wait(1)
-            payload["result"] = {"status": "MATERIAL_IO_COMPLETED", "res": res}
+            payload['result'] = {'status': 'SUCCESS', 'res': res}
         else:
-            callback = payload.get("callback")
-            if callback:
-                try:
-                    payload["result"] = callback(payload)
-                except Exception as e:
-                    logging.error(f"Dispatcher: Task {task_id} failed: {e}")
-
-        if task_id in self.task_events:
-            self.task_events[task_id].set()
+            callback = payload.get('callback')
+            if callback: payload['result'] = callback(payload)
+        if task_id in self.task_events: self.task_events[task_id].set()
 
     def wait_for_completion(self, task_id: str):
         event = self.task_events.get(task_id)
-        if event:
-            return event.wait(timeout=30.0)
-        return False
+        return event.wait(timeout=30.0) if event else False

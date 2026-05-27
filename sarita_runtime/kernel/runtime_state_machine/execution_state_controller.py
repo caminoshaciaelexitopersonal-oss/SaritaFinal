@@ -13,21 +13,15 @@ class ExecutionState(Enum):
 class ExecutionStateController:
     """
     Physical Runtime State Machine.
-    Ensures all physical transitions pass through deterministic states.
+    Synchronous transitions to avoid asyncio critical path.
     """
     def __init__(self):
         self.current_state = ExecutionState.INIT
 
-    async def transition_to(self, new_state: ExecutionState):
-        logging.info(f"State Machine: Transitioning from {self.current_state.name} to {new_state.name}")
-        # Validation logic for valid transitions
-        if self._is_valid_transition(self.current_state, new_state):
-            self.current_state = new_state
-            return True
-        else:
-            logging.error(f"State Machine: INVALID TRANSITION {self.current_state.name} -> {new_state.name}")
-            return False
-
-    def _is_valid_transition(self, current, target):
-        # Simplified transition matrix
+    def transition_to_sync(self, new_state: ExecutionState):
+        logging.info(f"State Machine: PHYSICALLY TRANSITIONING {self.current_state.name} -> {new_state.name}")
+        self.current_state = new_state
         return True
+
+    async def transition_to(self, new_state: ExecutionState):
+        return self.transition_to_sync(new_state)

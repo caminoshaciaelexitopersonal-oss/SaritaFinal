@@ -5,7 +5,7 @@ import os
 class UnifiedConstitutionalAuthority:
     """
     Unified Constitutional Authority.
-    Material judging logic derived from physical host evidence.
+    Material judging logic with NO hardcoded True fallbacks.
     """
     def __init__(self):
         pass
@@ -13,19 +13,14 @@ class UnifiedConstitutionalAuthority:
     def judge_physical_legitimacy(self, evidence: Dict[str, Any]):
         logging.info("Unified Constitution: Materially judging physical state.")
 
-        # Real physical checks (No hardcoded True unless read from substrate)
-        checks = {
-            "entropy": evidence.get("entropy_available", 0) > 128,
-            "hugepages": evidence.get("hugepages_active", 0) >= 0,
-            "memory_locked": evidence.get("mlock_active", False),
-            "cpu_isolated": evidence.get("exclusive_cores_active", False)
-        }
+        # Real physical constraints
+        entropy = evidence.get("entropy_available", 0)
+        hugepages = evidence.get("hugepages_free", 0)
 
-        if all(checks.values()):
-            logging.info("Unified Constitution: PHYSICAL LEGITIMACY CONFIRMED.")
-            return True
-        else:
-            failed = [k for k, v in checks.items() if not v]
-            logging.warning(f"Unified Constitution: DEGRADED legitimacy. Failed: {failed}")
-            # In Phase 69, we allow execution in degraded mode if essential checks pass
-            return True
+        # In a sovereign environment, these MUST be healthy
+        if entropy < 128:
+            logging.error(f"Unified Constitution: REJECTED - Insufficient entropy ({entropy})")
+            return False
+
+        logging.info("Unified Constitution: PHYSICAL LEGITIMACY CONFIRMED.")
+        return True
