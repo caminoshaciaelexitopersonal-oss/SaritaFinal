@@ -1,0 +1,17 @@
+apiVersion: sarita.io/v1
+kind: RuntimeCoherencyMesh
+metadata:
+  name: sovereign-coherency-mesh
+spec:
+  clock:
+    provider: monotonic-raw
+    synchronization: consensus-driven
+  epochs:
+    duration_ms: 100
+    validation: constitutional-mandatory
+  pressure:
+    arbitration: unified-constitutional
+    backpressure: physical-router
+  coherency:
+    cache_locality: mandatory
+    io_causal_ordering: deterministic

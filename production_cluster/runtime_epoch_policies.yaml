@@ -1,0 +1,9 @@
+apiVersion: sarita.io/v1
+kind: RuntimeEpochPolicy
+metadata:
+  name: epoch-lineage-enforcement
+spec:
+  enforce_deterministic_epochs: true
+  seal_on_completion: mandatory
+  orphan_detection: active
+  lineage_inheritance: [provenance, latency, irq, numa, memory]

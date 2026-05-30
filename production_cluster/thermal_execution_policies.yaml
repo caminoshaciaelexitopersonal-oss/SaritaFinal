@@ -1,0 +1,9 @@
+apiVersion: sarita.io/v1
+kind: ThermalExecutionPolicy
+metadata:
+  name: thermal-quarantine-policy
+spec:
+  high_temperature_threshold: 75
+  critical_temperature_threshold: 85
+  action_on_critical: task-migration
+  sampling_rate_sec: 1

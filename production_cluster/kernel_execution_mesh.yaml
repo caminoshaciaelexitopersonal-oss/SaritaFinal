@@ -1,0 +1,18 @@
+apiVersion: sarita.io/v1
+kind: KernelExecutionMesh
+metadata:
+  name: sovereign-kernel-mesh
+spec:
+  scheduling:
+    policy: deterministic-priority
+    affinity: numa-aware
+    timeslice_ms: 100
+  memory:
+    governance: constitution-backed
+    reclamation: sovereign-purge
+  interrupts:
+    governance: isolated-cpu-group
+    affinity_mask: "0x000000FF"
+  isolation:
+    provider: lsm-ebpf-seccomp
+    enforcement: mandatory

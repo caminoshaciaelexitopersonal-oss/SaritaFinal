@@ -1,0 +1,18 @@
+apiVersion: sarita.io/v1
+kind: HostGovernanceMesh
+metadata:
+  name: sovereign-host-mesh
+spec:
+  cpu_frequency:
+    governor: userspace-locked
+    turbo_boost: disabled
+  tick_determinism:
+    nohz_full: mandatory
+    preempt_rt: verified
+  thermal:
+    throttling_preventions: rebalance
+    max_temp_c: 80
+  dma:
+    locality_routing: numa-aware
+  entropy:
+    governance: deterministic-seed
