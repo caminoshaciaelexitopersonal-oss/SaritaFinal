@@ -1,43 +1,46 @@
+import asyncio
 import logging
 import sys
 import os
-import threading
 
 sys.path.append(os.getcwd())
 
-from sarita_runtime.kernel.execution_fabric.sovereign_execution_kernel import SovereignExecutionKernel, DistributedExecutionRouter
+from sarita_runtime.kernel.microkernel_fabric.sovereign_microkernel import SovereignMicrokernel
+from sarita_runtime.kernel.runtime_cortex.sovereign_runtime_cortex import SovereignRuntimeCortex
 
-def run_absolute_material_validation():
+async def run_absolute_material_validation():
     logging.basicConfig(level=logging.INFO)
     logging.info("Starting Absolute Material Validation (Phase 72)...")
 
-    # 1. Initialize material stack
-    router = DistributedExecutionRouter()
-    kernel = SovereignExecutionKernel(node_id="master-node", fabric_router=router)
+    # 1. Unified Cortex & Bus Initialization
+    cortex = SovereignRuntimeCortex()
+    cortex.boot_sovereign_cortex()
 
-    # 2. Boot physically (threaded)
-    kernel.boot()
+    # 2. Sovereign Bus (Execution Graph) Interaction
+    task_id = "ABS-999"
+    cortex.nervous_system.register_material_vertex(task_id, {"type": "ABSOLUTE_ENFORCEMENT"})
+    cortex.nervous_system.update_physical_state("CPU-0", task_id)
 
-    # 3. Execution without asyncio/polling
-    op = {
-        "id": "ABS-TASK-72",
-        "type": "MATERIAL_IO",
-        "priority": 0,
-        "provenance_token": "SOV-ABS-KEY"
-    }
+    # 3. Material io_uring Task Submission
+    mk = SovereignMicrokernel()
+    await mk.boot()
 
-    logging.info("Validation: Executing material op via Unified Authority Chain...")
-    # Add dummy entry to graph for validation
-    kernel.microkernel.unified_authority.execution_graph.register_material_vertex("ABS-TASK-72", op)
+    # Associate vertex with the dispatcher task
+    mk.unified_authority.execution_graph = cortex.nervous_system
 
-    result = kernel.execute_material_op(op)
+    success = await mk.submit_task(task_id, {"id": task_id, "type": "IO_URING_OP"})
 
-    if result and result.get("status") == "SUCCESS":
-        logging.info("Validation: Absolute Material Execution SUCCESS.")
+    if success:
+        logging.info(f"Validation: Absolute Material Task {task_id} Dispatched.")
     else:
-        logging.error(f"Validation: Absolute Material Execution FAILED. Result: {result}")
+        logging.error("Validation: Absolute Material Dispatch FAILED.")
+
+    # 4. Memory Pressure Oracle Validation
+    from sarita_runtime.kernel.memory_fabric.physical_memory_pressure_tracker import PhysicalMemoryPressureTracker
+    tracker = PhysicalMemoryPressureTracker()
+    logging.info(f"Validation: Physical PSI tracker active: {tracker.get_current_pressure()}")
 
     logging.info("Absolute Material Validation COMPLETE.")
 
 if __name__ == "__main__":
-    run_absolute_material_validation()
+    asyncio.run(run_absolute_material_validation())
