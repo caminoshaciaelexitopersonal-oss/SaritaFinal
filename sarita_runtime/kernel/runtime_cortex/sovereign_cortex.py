@@ -8,8 +8,7 @@ from sarita_runtime.kernel.scheduling_fabric.sovereign_scheduler import Sovereig
 class SovereignCortex:
     """
     Unified Sovereign Cortex (Phase 73).
-    Single Cognitive Authority for Scheduling, Pressure, and Legality.
-    Collapses previous Cortex V2, Kernel Cortex, and Agent Coordinators.
+    REFACTORED PHASE 74: Materializing pressure handling.
     """
     def __init__(self):
         self.nervous_system = UnifiedExecutionGraph()
@@ -29,8 +28,8 @@ class SovereignCortex:
         logging.info(f"Cortex: Processing {signal} from {subsystem} ({value})")
 
         # 1. Update Nervous System State
-        if signal == "TEMPERATURE":
-            self.nervous_system.calculate_saturation({"thermal": value})
+        if signal == "TEMPERATURE" or signal == "PRESSURE":
+            self.nervous_system.calculate_saturation({subsystem: value})
 
         # 2. Trigger Cognitive Decisions
         if self.nervous_system.global_pressure > 0.8:
@@ -38,8 +37,11 @@ class SovereignCortex:
 
     def _handle_extreme_pressure(self):
         logging.warning("Cortex: Decision - Triggering global deterministic throttling.")
-        # Directly manipulate the scheduler or graph
-        pass
+        # Materializing pressure resolution via Graph
+        self.nervous_system.register_material_decision(
+            "system", "EXTREME_PRESSURE_THROTTLING",
+            {"pressure": self.nervous_system.global_pressure}
+        )
 
     def dispatch_sovereign_task(self, task_id: str, logic, cpu_affinity: int = None):
         """

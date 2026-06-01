@@ -1,12 +1,14 @@
 import logging
 from typing import Dict, Any
+from sarita_runtime.kernel.runtime_graph.unified_execution_graph import UnifiedExecutionGraph
 
 class SovereignKernelCortex:
     """
     Distributed Kernel Cortex V2.
-    Cognition moved to scheduling, interrupts, and physical memory pressure.
+    REFACTORED PHASE 74: Delegating all decisions to UnifiedExecutionGraph.
     """
-    def __init__(self):
+    def __init__(self, graph: UnifiedExecutionGraph):
+        self.graph = graph
         self.state = "OPERATIONAL"
 
     async def process_kernel_signal(self, signal_type: str, context: Dict[str, Any]):
@@ -21,8 +23,9 @@ class SovereignKernelCortex:
 
     async def _handle_memory_pressure(self, context):
         logging.warning("Kernel Cortex: Decision - Triggering sovereign memory reclamation.")
-        pass
+        self.graph.calculate_saturation({"memory": 0.9})
+        self.graph.register_material_decision("kernel", "MEMORY_RECLAIM", context)
 
     async def _handle_scheduler_drift(self, context):
         logging.warning("Kernel Cortex: Decision - Realigning CPU affinity for critical tasks.")
-        pass
+        self.graph.register_material_decision("kernel", "SCHEDULER_REALIGN", context)

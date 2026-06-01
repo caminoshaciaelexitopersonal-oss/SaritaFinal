@@ -1,28 +1,30 @@
-import asyncio
 import logging
+from sarita_runtime.kernel.runtime_graph.unified_execution_graph import UnifiedExecutionGraph
 
 class DistributedRuntimeCortex:
     """
     Decentralized Operational Brain for the Sovereign OS.
-    Emergent decision fabric via distributed quorum cognition.
+    REFACTORED PHASE 74: Telemetry-only. Decisions MUST come from UnifiedExecutionGraph.
     """
-    def __init__(self, node_id, quorum_size):
+    def __init__(self, node_id: str, graph: UnifiedExecutionGraph):
         self.node_id = node_id
-        self.quorum_size = quorum_size
+        self.graph = graph
         self.local_intents = []
-        self.converged_decisions = {} # epoch -> decision
 
-    async def propagate_intent(self, intent):
+    async def propagate_intent(self, intent: dict):
         logging.info(f"Runtime Cortex: Node {self.node_id} emitting intent: {intent['type']}")
-        # 1. Sign intent
-        # 2. Broadcast to peer cortex nodes
-        # 3. Collect quorum ACKs
+        # Telemetry only: Signal intent to the graph
+        self.graph.register_material_decision(
+            task_id=f"intent_{self.node_id}",
+            action="PROPAGATE_INTENT",
+            evidence={"intent": intent}
+        )
         return True
 
-    async def reach_consensus(self, epoch):
-        logging.info(f"Runtime Cortex: Reconciling quorum cognition for epoch {epoch}")
-        decision = {"epoch": epoch, "status": "CONVERGED", "action": "MAINTAIN"}
-        self.converged_decisions[epoch] = decision
+    async def reach_consensus(self, epoch: int):
+        logging.info(f"Runtime Cortex: Reading graph consensus for epoch {epoch}")
+        # READ-ONLY: Convergence is observed via Graph state
+        decision = {"epoch": epoch, "status": "OBSERVED_VIA_GRAPH", "action": "MAINTAIN"}
         return decision
 
 class FederatedAutonomyCoordinator:

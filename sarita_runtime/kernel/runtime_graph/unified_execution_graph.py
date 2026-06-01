@@ -7,17 +7,17 @@ class UnifiedExecutionGraph:
     """
     Unified Execution Graph (Phase 73).
     The SINGLE system nervous system. All decisions originate here.
-    Scheduler, Pressure, Replay, Fencing, and Telemetry authority collapsed.
+    REFACTORED PHASE 74: Fixed lock initialization and lineage support.
     """
     def __init__(self):
-        self.vertices = {}
+        self._lock = threading.Lock() # Initialized lock
+        self.vertices = []
         # Material physical state
         self.ownership = {}
         self.global_pressure = 0.0
         self.active_epoch = 0
         self.material_runqueue = [] # Consolidated runqueue
         self.completed_tasks = set()
-        self._lock = threading.Lock()
 
     def add_authorized_task(self, task: Dict[str, Any]):
         with self._lock:
@@ -41,7 +41,8 @@ class UnifiedExecutionGraph:
 
     def register_material_vertex(self, task_id: str, payload: Dict[str, Any]):
         vertex = PhysicalExecutionVertex(task_id, payload)
-        self.vertices[task_id] = vertex
+        with self._lock:
+            self.vertices.append(vertex)
         return vertex
 
     def calculate_saturation(self, subsystem_signals: dict):
@@ -51,7 +52,16 @@ class UnifiedExecutionGraph:
         return score
 
     def update_ownership(self, resource: str, owner_id: str):
-        self.ownership[resource] = owner_id
+        with self._lock:
+            self.ownership[resource] = owner_id
 
     def get_vertex(self, task_id: str):
-        return self.vertices.get(task_id)
+        with self._lock:
+            for v in reversed(self.vertices):
+                if v.task_id == task_id:
+                    return v
+        return None
+
+    def get_all_vertices(self):
+        with self._lock:
+            return list(self.vertices)
