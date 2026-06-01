@@ -1,0 +1,9 @@
+apiVersion: sarita.io/v1
+kind: IrqIsolationPolicy
+metadata:
+  name: determinism-irq-mask
+spec:
+  protected_cpus: [0, 1]
+  irq_affinity_mask: "0xFFFFFFFC"
+  isolation_mode: physical-pinning
+  latency_validation: active

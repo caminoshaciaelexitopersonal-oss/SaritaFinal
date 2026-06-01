@@ -1,0 +1,9 @@
+apiVersion: sarita.io/v1
+kind: NumaGovernancePolicy
+metadata:
+  name: critical-numa-isolation
+spec:
+  node_binding: preferred-local
+  cross_socket_allocation: restricted
+  memory_locality_validation: active
+  pressure_balancing: enabled

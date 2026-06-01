@@ -1,0 +1,14 @@
+apiVersion: sarita.io/v1
+kind: RuntimeLatencyMesh
+metadata:
+  name: sovereign-latency-mesh
+spec:
+  governance:
+    mode: mandatory-enforcement
+    jitter_threshold_ms: 0.1
+    latency_budget_ms: 1.0
+  telemetry:
+    provider: ebpf
+    sample_rate: 100%
+  alerting:
+    on_determinism_collapse: trigger-rebalance

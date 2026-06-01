@@ -1,0 +1,9 @@
+apiVersion: sarita.io/v1
+kind: CacheGovernancePolicy
+metadata:
+  name: l3-coherency-policy
+spec:
+  locality_enforcement: strict
+  cross_socket_threshold: 0.01
+  cache_isolation: enabled
+  pressure_redistribution: automatic
