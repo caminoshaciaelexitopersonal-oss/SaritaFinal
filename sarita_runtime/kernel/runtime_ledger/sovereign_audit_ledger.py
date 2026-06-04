@@ -66,10 +66,45 @@ class SovereignAuditLedger:
         return self.record_entry(
             actor=vertex.task_id,
             action=vertex.payload.get('action', 'UNKNOWN'),
-            payload=json.dumps(vertex.payload),
+            payload=json.dumps(vertex.payload, sort_keys=True),
             decision_id=vertex.vertex_id,
             epoch=vertex.execution_epoch
         )
+
+    def record_vertices_batch(self, vertices):
+        """Records multiple vertices in a single transaction for high performance."""
+        conn = sqlite3.connect(self.db_path)
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA synchronous=NORMAL")
+        conn.execute("BEGIN TRANSACTION")
+
+        cursor = conn.cursor()
+
+        # Get last hash for the start of the batch
+        cursor.execute("SELECT entry_hash FROM sovereign_ledger ORDER BY id DESC LIMIT 1")
+        row = cursor.fetchone()
+        prev_hash = row[0] if row else "0" * 64
+
+        for vertex in vertices:
+            actor = vertex.task_id
+            action = vertex.payload.get('action', 'UNKNOWN')
+            payload = json.dumps(vertex.payload, sort_keys=True)
+            decision_id = vertex.vertex_id
+            epoch = vertex.execution_epoch
+            timestamp = time.time()
+
+            raw_data = f"{actor}:{action}:{payload}:{prev_hash}:{timestamp}:{decision_id}:{epoch}"
+            entry_hash = hashlib.sha256(raw_data.encode()).hexdigest()
+
+            cursor.execute("""
+                INSERT INTO sovereign_ledger (actor, action, payload, prev_hash, entry_hash, timestamp, decision_id, epoch)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (actor, action, payload, prev_hash, entry_hash, timestamp, decision_id, epoch))
+
+            prev_hash = entry_hash
+
+        conn.commit()
+        conn.close()
 
     def verify_integrity(self):
         conn = sqlite3.connect(self.db_path)

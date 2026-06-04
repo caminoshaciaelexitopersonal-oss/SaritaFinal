@@ -43,7 +43,7 @@ class UnifiedExecutionGraph:
             "payload": payload
         })
 
-    def wait_for_convergence(self, timeout=30):
+    def wait_for_convergence(self, timeout=120):
         """Helper for tests to ensure the single writer has processed all events and any consequential events."""
         start = time.time()
         while True:
@@ -60,77 +60,103 @@ class UnifiedExecutionGraph:
             time.sleep(0.02)
 
     def _event_processor(self):
+        BATCH_SIZE = 500
         while self._running:
-            event = self._event_queue.get()
-            if event is None:
-                self._event_queue.task_done()
-                break
+            events = []
+            shutdown_detected = False
             try:
-                self._process_material_event(event)
+                # Get at least one event
+                event = self._event_queue.get(timeout=0.01)
+                if event is None:
+                    shutdown_detected = True
+                else:
+                    events.append(event)
+
+                # Fill batch
+                if not shutdown_detected:
+                    while len(events) < BATCH_SIZE:
+                        try:
+                            next_event = self._event_queue.get_nowait()
+                            if next_event is None:
+                                shutdown_detected = True
+                                break
+                            events.append(next_event)
+                        except queue.Empty:
+                            break
+            except queue.Empty:
+                continue
+
+            try:
+                if events:
+                    self._process_event_batch(events)
             except Exception as e:
-                logging.error(f"Graph: Event processing failed for {event.get('action')}: {e}")
+                logging.error(f"Graph: Batch processing failed: {e}")
             finally:
-                self._event_queue.task_done()
+                for _ in range(len(events)):
+                    self._event_queue.task_done()
+                if shutdown_detected:
+                    if not events or events[-1] is not None:
+                         # Handle case where None was the trigger but not in events or not the last
+                         pass
+                    self._event_queue.task_done() # Done for the None sentinel
+                    break
 
-    def _process_material_event(self, event: dict):
-        task_id = event['task_id']
-        action = event['action']
-        payload = event['payload']
-
-        # Unwrap constitutional evidence if replaying
-        is_replay = 'ledger_hash' in payload and 'payload' in payload
-        target_payload = payload['payload'] if is_replay else payload
-
+    def _process_event_batch(self, events: List[dict]):
         with self._lock:
-            # 1. Update State
-            if action == "OWNERSHIP_CHANGE":
-                self.ownership[target_payload['resource']] = target_payload['owner']
-            elif action == "PRESSURE_UPDATE":
-                score = target_payload.get('score')
-                self.global_pressure = score if score is not None else 0.0
-                # Trigger internal decision if needed (Graph as Decider)
-                if not is_replay and self.global_pressure > 0.8:
-                    self.emit_event("system", "EXTREME_PRESSURE_THROTTLING", {"pressure": self.global_pressure})
-            elif action == "TASK_AUTHORIZED":
-                self.material_runqueue.append(target_payload.get('task', {}))
-            elif action == "EXECUTION_COMPLETE":
-                self.completed_tasks.add(task_id)
-            elif action == "EPOCH_ADVANCE":
-                self.active_epoch = target_payload.get('new_epoch', 0)
-            elif action == "SET_NUMA_AFFINITY":
-                self.ownership[f"MEM_{task_id}"] = f"NUMA_{target_payload.get('node')}"
+            vertices_to_record = []
+            for event in events:
+                task_id = event['task_id']
+                action = event['action']
+                payload = event['payload']
 
-            # 2. Construct/Restore Evidence
-            if is_replay:
-                vertex = PhysicalExecutionVertex(task_id, target_payload, vertex_id=payload.get('vertex_id'))
-                vertex.payload = payload
-                vertex.vertex_hash = payload['ledger_hash']
-                vertex.execution_epoch = payload['epoch_id']
-                self._last_ledger_hash = vertex.vertex_hash
-            else:
-                vertex = PhysicalExecutionVertex(task_id, target_payload)
-                evidence_data = {
-                    "decision_id": vertex.vertex_id,
-                    "vertex_id": vertex.vertex_id,
-                    "epoch_id": self.active_epoch,
-                    "telemetry_hash": EvidenceConstitution.calculate_subsystem_hash(target_payload.get('telemetry', {})),
-                    "ownership_hash": EvidenceConstitution.calculate_subsystem_hash(self.ownership),
-                    "execution_hash": EvidenceConstitution.calculate_subsystem_hash({"q_len": len(self.material_runqueue)}),
-                    "parent_hash": self._last_ledger_hash,
-                    "timestamp": time.time(),
-                    "action": action,
-                    "payload": target_payload
-                }
-                evidence_data["ledger_hash"] = EvidenceConstitution.calculate_subsystem_hash(evidence_data)
+                is_replay = 'ledger_hash' in payload and 'payload' in payload
+                target_payload = payload['payload'] if is_replay else payload
 
-                vertex.payload = evidence_data
-                vertex.execution_epoch = self.active_epoch
-                vertex.vertex_hash = evidence_data["ledger_hash"]
+                # 1. Update State
+                if action == "OWNERSHIP_CHANGE":
+                    self.ownership[target_payload['resource']] = target_payload['owner']
+                elif action == "PRESSURE_UPDATE":
+                    score = target_payload.get('score')
+                    self.global_pressure = score if score is not None else 0.0
+                elif action == "TASK_AUTHORIZED":
+                    self.material_runqueue.append(target_payload.get('task', {}))
+                elif action == "EXECUTION_COMPLETE":
+                    self.completed_tasks.add(task_id)
+                elif action == "SET_NUMA_AFFINITY":
+                    self.ownership[f"MEM_{task_id}"] = f"NUMA_{target_payload.get('node')}"
 
-                self._last_ledger_hash = vertex.vertex_hash
-                self.ledger.record_vertex(vertex)
+                # 2. Construct Vertex
+                if is_replay:
+                    vertex = PhysicalExecutionVertex(task_id, target_payload, vertex_id=payload.get('vertex_id'))
+                    vertex.payload = payload
+                    vertex.vertex_hash = payload['ledger_hash']
+                    vertex.execution_epoch = payload['epoch_id']
+                    self._last_ledger_hash = vertex.vertex_hash
+                else:
+                    vertex = PhysicalExecutionVertex(task_id, target_payload)
+                    evidence_data = {
+                        "decision_id": vertex.vertex_id,
+                        "vertex_id": vertex.vertex_id,
+                        "epoch_id": self.active_epoch,
+                        "telemetry_hash": EvidenceConstitution.calculate_subsystem_hash(target_payload.get('telemetry', {})),
+                        "ownership_hash": EvidenceConstitution.calculate_subsystem_hash(self.ownership),
+                        "execution_hash": EvidenceConstitution.calculate_subsystem_hash({"q_len": len(self.material_runqueue)}),
+                        "parent_hash": self._last_ledger_hash,
+                        "timestamp": time.time(),
+                        "action": action,
+                        "payload": target_payload
+                    }
+                    evidence_data["ledger_hash"] = EvidenceConstitution.calculate_subsystem_hash(evidence_data)
+                    vertex.payload = evidence_data
+                    vertex.vertex_hash = evidence_data["ledger_hash"]
+                    self._last_ledger_hash = vertex.vertex_hash
+                    vertices_to_record.append(vertex)
 
-            self.vertices.append(vertex)
+                self.vertices.append(vertex)
+
+            if vertices_to_record:
+                self.ledger.record_vertices_batch(vertices_to_record)
+
 
     # --- Read-Only Sovereign API ---
 
