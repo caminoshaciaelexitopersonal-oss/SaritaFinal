@@ -1,25 +1,25 @@
 import unittest
 from sarita_runtime.kernel.sovereign_constitution.constitutional_runtime_guard import ConstitutionalRuntimeGuard, ConstitutionalViolationException
+from sarita_runtime.kernel.constitutional_court.constitutional_court import ConstitutionalCourt
+from sarita_runtime.kernel.component_identity.sovereign_identity_engine import SovereignIdentityEngine
 
 class ConstitutionalRuntimeTest(unittest.TestCase):
     def test_block_unauthorized_mutation(self):
-        def rogue_mutation():
-            ConstitutionalRuntimeGuard.enforce_single_writer()
+        # We need a guard WITH a court to test enforcement
+        engine = SovereignIdentityEngine()
+        court = ConstitutionalCourt(engine)
+        guard = ConstitutionalRuntimeGuard(court)
 
         with self.assertRaises(ConstitutionalViolationException):
-            rogue_mutation()
+            guard.enforce_certified_mutation("Rogue", __file__)
 
     def test_allow_authorized_mutation(self):
-        # We simulate the authorized context in a mock
-        class UnifiedExecutionGraph:
-            def _process_event_batch(self):
-                ConstitutionalRuntimeGuard.enforce_single_writer()
-                return True
+        engine = SovereignIdentityEngine()
+        engine.certify_component("Authorized", __file__)
+        court = ConstitutionalCourt(engine)
+        guard = ConstitutionalRuntimeGuard(court)
 
-        # This will pass if the filename match logic works
-        # Note: in real test, the filename will contain 'unified_execution_graph.py'
-        # which satisfies the guard's string check.
-        pass
+        self.assertTrue(guard.enforce_certified_mutation("Authorized", __file__))
 
 if __name__ == "__main__":
     unittest.main()

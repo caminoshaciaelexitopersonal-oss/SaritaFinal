@@ -14,8 +14,10 @@ class UnifiedExecutionGraph:
     Unified Execution Graph (Phase 77).
     The SINGLE system nervous system with Single Writer Sovereignty.
     """
-    def __init__(self, ledger_db=":memory:"):
+    def __init__(self, ledger_db=":memory:", court=None):
         self._lock = threading.RLock() # Reentrant lock for safe internal calls
+        self.court = court
+        self.guard = ConstitutionalRuntimeGuard(court)
         self.vertices = []
         self.ownership = {}
         self.global_pressure = 0.0
@@ -67,7 +69,10 @@ class UnifiedExecutionGraph:
             shutdown_detected = False
             try:
                 # Get at least one event
-                event = self._event_queue.get(timeout=0.01)
+                try:
+                    event = self._event_queue.get(timeout=0.01)
+                except queue.Empty:
+                    continue
                 if event is None:
                     shutdown_detected = True
                 else:
@@ -103,8 +108,10 @@ class UnifiedExecutionGraph:
                     break
 
     def _process_event_batch(self, events: List[dict]):
-        # Constitutional Enforcement
-        ConstitutionalRuntimeGuard.enforce_single_writer()
+        # Constitutional Identity Enforcement (Phase 82.4)
+        if self.court:
+            self.guard.enforce_certified_mutation("UnifiedExecutionGraph", __file__)
+
         with self._lock:
             vertices_to_record = []
             for event in events:

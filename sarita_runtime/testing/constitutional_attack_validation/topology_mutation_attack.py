@@ -1,15 +1,19 @@
 import unittest
 from sarita_runtime.kernel.sovereign_constitution.constitutional_runtime_guard import ConstitutionalRuntimeGuard, ConstitutionalViolationException
 from sarita_runtime.kernel.sovereign_constitution.autonomous_defense_engine import AutonomousDefenseEngine
+from sarita_runtime.kernel.constitutional_court.constitutional_court import ConstitutionalCourt
+from sarita_runtime.kernel.component_identity.sovereign_identity_engine import SovereignIdentityEngine
 
 class ConstitutionalAttackValidation(unittest.TestCase):
-    def test_parallel_writer_attack(self):
-        # Attempt to mutate state outside the single writer context
-        def rogue_writer():
-            ConstitutionalRuntimeGuard.enforce_single_writer()
+    def setUp(self):
+        self.engine = SovereignIdentityEngine()
+        self.court = ConstitutionalCourt(self.engine)
+        self.guard = ConstitutionalRuntimeGuard(self.court)
 
+    def test_parallel_writer_attack(self):
+        # Attempt to mutate state without certification
         with self.assertRaises(ConstitutionalViolationException):
-            rogue_writer()
+            self.guard.enforce_certified_mutation("RogueWriter", __file__)
 
     def test_rogue_authority_attack(self):
         # Attempt to register a non-constitutional authority
