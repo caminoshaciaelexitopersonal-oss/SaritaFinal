@@ -8,11 +8,9 @@ from sarita_runtime.kernel.scheduling_fabric.sovereign_scheduler import Sovereig
 class SovereignCortex:
     """
     Unified Sovereign Cortex (Phase 73).
-    Single Cognitive Authority for Scheduling, Pressure, and Legality.
-    Collapses previous Cortex V2, Kernel Cortex, and Agent Coordinators.
     """
-    def __init__(self):
-        self.nervous_system = UnifiedExecutionGraph()
+    def __init__(self, graph=None):
+        self.nervous_system = graph if graph else UnifiedExecutionGraph()
         self.scheduler = SovereignScheduler(self.nervous_system)
         self.is_active = False
 
@@ -29,17 +27,9 @@ class SovereignCortex:
         logging.info(f"Cortex: Processing {signal} from {subsystem} ({value})")
 
         # 1. Update Nervous System State
-        if signal == "TEMPERATURE":
-            self.nervous_system.calculate_saturation({"thermal": value})
-
-        # 2. Trigger Cognitive Decisions
-        if self.nervous_system.global_pressure > 0.8:
-            self._handle_extreme_pressure()
-
-    def _handle_extreme_pressure(self):
-        logging.warning("Cortex: Decision - Triggering global deterministic throttling.")
-        # Directly manipulate the scheduler or graph
-        pass
+        if signal == "TEMPERATURE" or signal == "PRESSURE":
+            # Direct calculation in graph triggers its own events
+            self.nervous_system.calculate_saturation({subsystem: value})
 
     def dispatch_sovereign_task(self, task_id: str, logic, cpu_affinity: int = None):
         """
@@ -49,7 +39,7 @@ class SovereignCortex:
             "id": task_id,
             "logic": logic,
             "cpu_affinity": cpu_affinity,
-            "timestamp": os.times()[4]
+            "timestamp": time.time() if 'time' in globals() else 0
         }
         self.nervous_system.add_authorized_task(task)
         logging.info(f"Cortex: Authorized task {task_id} for dispatch.")
