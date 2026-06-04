@@ -7,23 +7,20 @@ import json
 
 class SovereignAuditLedger:
     """
-    Consolidated Sovereign Ledger (Phase 73/76).
-    REFACTORED PHASE 76: Support for deep vertex evidence and decision_id.
+    Consolidated Sovereign Ledger (Phase 73/76/77).
     """
-    def __init__(self, db_path: str = "/var/lib/sarita/runtime_ledger.db"):
+    def __init__(self, db_path: str = "/tmp/sarita_ledger.db"):
         self.db_path = db_path
         self._init_db()
 
     def _init_db(self):
-        try:
-            os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
-        except Exception:
-            self.db_path = "runtime_ledger.db"
+        if self.db_path != ":memory:":
+            try:
+                os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+            except Exception:
+                pass
 
         conn = sqlite3.connect(self.db_path)
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("PRAGMA synchronous=EXTRA")
-
         conn.execute("""
             CREATE TABLE IF NOT EXISTS sovereign_ledger (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,7 +46,6 @@ class SovereignAuditLedger:
         prev_hash = row[0] if row else "0" * 64
 
         timestamp = time.time()
-        # Richer raw data for Phase 76
         raw_data = f"{actor}:{action}:{payload}:{prev_hash}:{timestamp}:{decision_id}:{epoch}"
         entry_hash = hashlib.sha256(raw_data.encode()).hexdigest()
 
@@ -60,11 +56,9 @@ class SovereignAuditLedger:
 
         conn.commit()
         conn.close()
-        logging.info(f"Ledger: Committed material evidence {entry_hash[:8]} (Decision: {decision_id})")
         return entry_hash
 
     def record_vertex(self, vertex):
-        """Materializes a Graph Vertex directly into the Ledger."""
         return self.record_entry(
             actor=vertex.task_id,
             action=vertex.payload.get('action', 'UNKNOWN'),
@@ -83,14 +77,24 @@ class SovereignAuditLedger:
         for row in rows:
             rid, actor, action, payload, prev_hash, entry_hash, timestamp, decision_id, epoch = row
             if prev_hash != expected_prev:
+                conn.close()
                 return False, f"Integrity violation at ID {rid}"
 
             raw_data = f"{actor}:{action}:{payload}:{prev_hash}:{timestamp}:{decision_id}:{epoch}"
             calc_hash = hashlib.sha256(raw_data.encode()).hexdigest()
             if calc_hash != entry_hash:
+                conn.close()
                 return False, f"Hash mismatch at ID {rid}"
 
             expected_prev = entry_hash
 
         conn.close()
         return True, "LEDGER_INTEGRITY_VERIFIED"
+
+    def get_entry_count(self):
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM sovereign_ledger")
+        count = cursor.fetchone()[0]
+        conn.close()
+        return count

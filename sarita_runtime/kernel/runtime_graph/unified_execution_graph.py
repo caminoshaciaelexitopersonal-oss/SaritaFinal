@@ -2,49 +2,60 @@ import logging
 import threading
 import json
 import queue
+import time
 from typing import Dict, Any, List
 from sarita_runtime.kernel.runtime_graph.physical_execution_vertex import PhysicalExecutionVertex
 from sarita_runtime.kernel.runtime_ledger.sovereign_audit_ledger import SovereignAuditLedger
+from sarita_runtime.kernel.evidence_fabric.evidence_constitution import EvidenceConstitution
 
 class UnifiedExecutionGraph:
     """
-    Unified Execution Graph (Phase 76).
+    Unified Execution Graph (Phase 77).
     The SINGLE system nervous system with Single Writer Sovereignty.
     """
-    def __init__(self):
-        self._lock = threading.Lock()
+    def __init__(self, ledger_db=":memory:"):
+        self._lock = threading.RLock() # Reentrant lock for safe internal calls
         self.vertices = []
         self.ownership = {}
         self.global_pressure = 0.0
         self.active_epoch = 0
         self.material_runqueue = []
         self.completed_tasks = set()
-        self._last_vertex_hash = "0" * 64
+        self._last_ledger_hash = "0" * 64
 
-        # Ledger for persistence
-        self.ledger = SovereignAuditLedger()
-
-        # Event system for causal writing
+        self.ledger = SovereignAuditLedger(ledger_db)
         self._event_queue = queue.Queue()
         self._worker_thread = threading.Thread(target=self._event_processor, daemon=True)
         self._worker_thread.start()
 
     def emit_event(self, task_id: str, action: str, payload: dict):
-        """Standard public entry point for all system events."""
         self._event_queue.put({
             "task_id": task_id,
             "action": action,
             "payload": payload
         })
 
+    def wait_for_convergence(self, timeout=5):
+        """Helper for tests to ensure the single writer has processed all events and any consequential events."""
+        start = time.time()
+        while True:
+            if self._event_queue.empty():
+                time.sleep(0.1) # Grace period for consequential events
+                if self._event_queue.empty():
+                    break
+            if time.time() - start > timeout:
+                # Log state to help debug
+                logging.error(f"Convergence Timeout. Queue empty: {self._event_queue.empty()}, Vertices: {len(self.vertices)}")
+                raise TimeoutError("Graph convergence timed out")
+            time.sleep(0.02)
+
     def _event_processor(self):
-        """Single Writer Thread: The ONLY one that modifies the graph state and vertices."""
         while True:
             event = self._event_queue.get()
             try:
                 self._process_material_event(event)
             except Exception as e:
-                logging.error(f"Graph: Event processing failed: {e}")
+                logging.error(f"Graph: Event processing failed for {event.get('action')}: {e}")
             finally:
                 self._event_queue.task_done()
 
@@ -53,35 +64,60 @@ class UnifiedExecutionGraph:
         action = event['action']
         payload = event['payload']
 
+        # Unwrap constitutional evidence if replaying
+        is_replay = 'ledger_hash' in payload and 'payload' in payload
+        target_payload = payload['payload'] if is_replay else payload
+
         with self._lock:
-            # 1. Update State based on Action
+            # 1. Update State
             if action == "OWNERSHIP_CHANGE":
-                self.ownership[payload['resource']] = payload['owner']
+                self.ownership[target_payload['resource']] = target_payload['owner']
             elif action == "PRESSURE_UPDATE":
-                self.global_pressure = payload['score']
+                score = target_payload.get('score')
+                self.global_pressure = score if score is not None else 0.0
+                # Trigger internal decision if needed (Graph as Decider)
+                if not is_replay and self.global_pressure > 0.8:
+                    self.emit_event("system", "EXTREME_PRESSURE_THROTTLING", {"pressure": self.global_pressure})
             elif action == "TASK_AUTHORIZED":
-                self.material_runqueue.append(payload['task'])
+                self.material_runqueue.append(target_payload.get('task', {}))
             elif action == "EXECUTION_COMPLETE":
                 self.completed_tasks.add(task_id)
             elif action == "EPOCH_ADVANCE":
-                self.active_epoch = payload['new_epoch']
+                self.active_epoch = target_payload.get('new_epoch', 0)
+            elif action == "SET_NUMA_AFFINITY":
+                self.ownership[f"MEM_{task_id}"] = f"NUMA_{target_payload.get('node')}"
 
-            # 2. Register persistent vertex
-            vertex_payload = payload.copy()
-            vertex_payload['action'] = action
-            vertex_payload['previous_hash'] = self._last_vertex_hash
+            # 2. Construct/Restore Evidence
+            if is_replay:
+                vertex = PhysicalExecutionVertex(task_id, target_payload)
+                vertex.payload = payload
+                vertex.vertex_hash = payload['ledger_hash']
+                vertex.execution_epoch = payload['epoch_id']
+                self._last_ledger_hash = vertex.vertex_hash
+            else:
+                vertex = PhysicalExecutionVertex(task_id, target_payload)
+                evidence_data = {
+                    "decision_id": vertex.vertex_id,
+                    "vertex_id": vertex.vertex_id,
+                    "epoch_id": self.active_epoch,
+                    "telemetry_hash": EvidenceConstitution.calculate_subsystem_hash(target_payload.get('telemetry', {})),
+                    "ownership_hash": EvidenceConstitution.calculate_subsystem_hash(self.ownership),
+                    "execution_hash": EvidenceConstitution.calculate_subsystem_hash({"q_len": len(self.material_runqueue)}),
+                    "parent_hash": self._last_ledger_hash,
+                    "timestamp": time.time(),
+                    "action": action,
+                    "payload": target_payload
+                }
+                evidence_data["ledger_hash"] = EvidenceConstitution.calculate_subsystem_hash(evidence_data)
 
-            vertex = PhysicalExecutionVertex(task_id, vertex_payload)
-            vertex.execution_epoch = self.active_epoch
-            vertex.vertex_hash = vertex._calculate_material_hash()
+                vertex.payload = evidence_data
+                vertex.execution_epoch = self.active_epoch
+                vertex.vertex_hash = evidence_data["ledger_hash"]
+
+                self._last_ledger_hash = vertex.vertex_hash
+                self.ledger.record_vertex(vertex)
 
             self.vertices.append(vertex)
-            self._last_vertex_hash = vertex.vertex_hash
-
-            # 3. Automatic Ledger Persistence (Single Authority flow)
-            self.ledger.record_vertex(vertex)
-
-            logging.debug(f"Graph: Materialized vertex and ledger for {action} on {task_id}")
 
     # --- Read-Only Sovereign API ---
 
@@ -102,7 +138,7 @@ class UnifiedExecutionGraph:
         with self._lock:
             return list(self.vertices)
 
-    # --- Legacy/Convenience Proxies (Now emitting events) ---
+    # --- Legacy Proxies ---
 
     def register_material_decision(self, task_id: str, action: str, evidence: dict):
         self.emit_event(task_id, action, evidence)
