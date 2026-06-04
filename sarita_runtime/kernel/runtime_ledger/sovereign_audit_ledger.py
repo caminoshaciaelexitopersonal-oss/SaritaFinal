@@ -21,6 +21,8 @@ class SovereignAuditLedger:
                 pass
 
         conn = sqlite3.connect(self.db_path)
+        # Enable WAL mode for better concurrency and ensure table is committed
+        conn.execute("PRAGMA journal_mode=WAL")
         conn.execute("""
             CREATE TABLE IF NOT EXISTS sovereign_ledger (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,6 +41,8 @@ class SovereignAuditLedger:
 
     def record_entry(self, actor: str, action: str, payload: str, decision_id: str = None, epoch: int = 0):
         conn = sqlite3.connect(self.db_path)
+        # Ensure WAL mode and sync for deterministic writes
+        conn.execute("PRAGMA journal_mode=WAL")
         cursor = conn.cursor()
 
         cursor.execute("SELECT entry_hash FROM sovereign_ledger ORDER BY id DESC LIMIT 1")

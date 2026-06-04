@@ -25,8 +25,16 @@ class UnifiedExecutionGraph:
 
         self.ledger = SovereignAuditLedger(ledger_db)
         self._event_queue = queue.Queue()
-        self._worker_thread = threading.Thread(target=self._event_processor, daemon=True)
+        self._running = True
+        self._worker_thread = threading.Thread(target=self._event_processor, name="GraphEventProcessor", daemon=True)
         self._worker_thread.start()
+
+    def shutdown(self):
+        """Cleanly shuts down the graph worker thread."""
+        self._running = False
+        self._event_queue.put(None) # Sentinel to wake up and stop
+        self._worker_thread.join(timeout=5)
+        logging.info("UnifiedExecutionGraph: Operational shutdown complete.")
 
     def emit_event(self, task_id: str, action: str, payload: dict):
         self._event_queue.put({
@@ -35,14 +43,16 @@ class UnifiedExecutionGraph:
             "payload": payload
         })
 
-    def wait_for_convergence(self, timeout=5):
+    def wait_for_convergence(self, timeout=30):
         """Helper for tests to ensure the single writer has processed all events and any consequential events."""
         start = time.time()
         while True:
             if self._event_queue.empty():
                 time.sleep(0.1) # Grace period for consequential events
                 if self._event_queue.empty():
-                    break
+                    # Double check tasks are done processing
+                    if self._event_queue.unfinished_tasks == 0:
+                        break
             if time.time() - start > timeout:
                 # Log state to help debug
                 logging.error(f"Convergence Timeout. Queue empty: {self._event_queue.empty()}, Vertices: {len(self.vertices)}")
@@ -50,8 +60,11 @@ class UnifiedExecutionGraph:
             time.sleep(0.02)
 
     def _event_processor(self):
-        while True:
+        while self._running:
             event = self._event_queue.get()
+            if event is None:
+                self._event_queue.task_done()
+                break
             try:
                 self._process_material_event(event)
             except Exception as e:
@@ -89,7 +102,7 @@ class UnifiedExecutionGraph:
 
             # 2. Construct/Restore Evidence
             if is_replay:
-                vertex = PhysicalExecutionVertex(task_id, target_payload)
+                vertex = PhysicalExecutionVertex(task_id, target_payload, vertex_id=payload.get('vertex_id'))
                 vertex.payload = payload
                 vertex.vertex_hash = payload['ledger_hash']
                 vertex.execution_epoch = payload['epoch_id']

@@ -8,8 +8,8 @@ class PhysicalExecutionVertex:
     Sovereign Execution Vertex (Phase 76/77).
     Each vertex possesses absolute material evidence.
     """
-    def __init__(self, task_id: str, payload: dict):
-        self.vertex_id = str(uuid.uuid4())
+    def __init__(self, task_id: str, payload: dict, vertex_id: str = None):
+        self.vertex_id = vertex_id if vertex_id else str(uuid.uuid4())
         self.task_id = task_id
         self.payload = payload
 
