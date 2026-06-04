@@ -7,7 +7,7 @@ from typing import Dict, Any, List
 from sarita_runtime.kernel.runtime_graph.physical_execution_vertex import PhysicalExecutionVertex
 from sarita_runtime.kernel.runtime_ledger.sovereign_audit_ledger import SovereignAuditLedger
 from sarita_runtime.kernel.evidence_fabric.evidence_constitution import EvidenceConstitution
-from sarita_runtime.kernel.constitutional_guard.constitutional_guard_engine import SingleWriterGuard
+from sarita_runtime.kernel.sovereign_constitution.constitutional_runtime_guard import ConstitutionalRuntimeGuard
 
 class UnifiedExecutionGraph:
     """
@@ -103,7 +103,8 @@ class UnifiedExecutionGraph:
                     break
 
     def _process_event_batch(self, events: List[dict]):
-        # The guard will check if we are in this function
+        # Constitutional Enforcement
+        ConstitutionalRuntimeGuard.enforce_single_writer()
         with self._lock:
             vertices_to_record = []
             for event in events:
