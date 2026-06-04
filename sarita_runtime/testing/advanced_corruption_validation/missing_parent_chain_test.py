@@ -19,10 +19,10 @@ class MissingParentChainTest(unittest.TestCase):
 
         # Manually create a vertex with a fake parent hash
         from sarita_runtime.kernel.runtime_graph.physical_execution_vertex import PhysicalExecutionVertex
-        v2 = PhysicalExecutionVertex("t2", {"previous_hash": "FAKE_PARENT"})
+        v2 = PhysicalExecutionVertex("t2", {"parent_hash": "FAKE_PARENT"})
 
         # Verify the hash is different or the parent link is broken
-        self.assertNotEqual(v2.previous_hash, v1.vertex_hash)
+        self.assertNotEqual(v2.parent_hash, v1.vertex_hash)
 
         if os.path.exists(db_path): os.remove(db_path)
 

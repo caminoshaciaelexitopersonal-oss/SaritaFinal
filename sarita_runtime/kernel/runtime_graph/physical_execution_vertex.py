@@ -17,7 +17,7 @@ class PhysicalExecutionVertex:
         self.execution_epoch = 0
 
         # Causal Integrity
-        self.previous_hash = payload.get('previous_hash', '0' * 64)
+        self.parent_hash = payload.get('parent_hash', '0' * 64)
         self.vertex_hash = self._calculate_material_hash()
 
         self.edges = []
@@ -29,7 +29,7 @@ class PhysicalExecutionVertex:
             "t_id": self.task_id,
             "payload": self.payload,
             "epoch": self.execution_epoch,
-            "prev": self.previous_hash
+            "prev": self.parent_hash
         }
         evidence_str = json.dumps(evidence_body, sort_keys=True)
         return hashlib.sha256(evidence_str.encode()).hexdigest()
@@ -42,5 +42,5 @@ class PhysicalExecutionVertex:
             "timestamp": self.timestamp,
             "epoch": self.execution_epoch,
             "hash": self.vertex_hash,
-            "prev_hash": self.previous_hash
+            "parent_hash": self.parent_hash
         }

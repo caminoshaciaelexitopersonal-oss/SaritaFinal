@@ -14,6 +14,8 @@ def check_purity():
                 found.append(os.path.join(root, f))
 
     if found:
+        # Filter out __pycache__ if it's currently being accessed by the validator itself
+        # but actually we want absolute purity.
         print(f"Purity Violation! Found: {found}")
         return False
     print("Repository is Pure.")
