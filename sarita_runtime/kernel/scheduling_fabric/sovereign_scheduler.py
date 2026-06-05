@@ -31,9 +31,16 @@ class SovereignScheduler:
         if self.is_running:
             return
         self.is_running = True
-        self.dispatch_thread = threading.Thread(target=self._dispatch_loop, daemon=True)
+        self.dispatch_thread = threading.Thread(target=self._dispatch_loop, name="SchedulerDispatch", daemon=True)
         self.dispatch_thread.start()
         logging.info("Sovereign Scheduler: Physical dispatch loop started.")
+
+    def shutdown(self):
+        """Cleanly stops the dispatcher."""
+        self.is_running = False
+        if self.dispatch_thread:
+            self.dispatch_thread.join(timeout=5)
+        logging.info("Sovereign Scheduler: Operational shutdown complete.")
 
     def _dispatch_loop(self):
         while self.is_running:
