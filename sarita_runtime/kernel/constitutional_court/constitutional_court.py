@@ -18,24 +18,33 @@ class ConstitutionalVerdict:
 
 class ConstitutionalCourt:
     """
-    Independent tribunal for kernel structural and authority decisions (Phase 82.3).
+    Independent tribunal for kernel structural and authority decisions (Phase 82.3/83.5).
     """
-    def __init__(self, identity_engine):
+    def __init__(self, identity_engine, revocation_registry=None):
         self.identity_engine = identity_engine
+        self.revocation_registry = revocation_registry
         self.cases = []
         self.verdicts = []
 
     def judge_case(self, case: ConstitutionalCase):
         self.cases.append(case)
 
-        # Logic for judging structural integrity
+        # 1. Check Revocation Status (Phase 83.5)
+        if self.revocation_registry and not self.revocation_registry.is_valid(case.subject):
+            verdict = ConstitutionalVerdict(case.case_id, "REJECTED", f"Identity for '{case.subject}' is REVOKED or QUARANTINED.")
+            self.verdicts.append(verdict)
+            return verdict
+
+        # 2. Judge Action
         if case.action == "MUTATE_STATE":
-            # Check if subject has valid certificate
             is_valid = self.identity_engine.validate_identity(case.subject, case.details.get('file_path'))
             if is_valid:
                 verdict = ConstitutionalVerdict(case.case_id, "APPROVED", "Identity verified cryptographically.")
             else:
                 verdict = ConstitutionalVerdict(case.case_id, "REJECTED", "Unauthorized component identity.")
+        elif case.action in ["REVOCATION", "QUARANTINE", "SUSPENSION"]:
+            # Sanction logic
+            verdict = ConstitutionalVerdict(case.case_id, "APPROVED", "Sanction authorized by Judicial Precedent.")
         else:
             verdict = ConstitutionalVerdict(case.case_id, "REJECTED", "Unknown action.")
 
