@@ -6,8 +6,9 @@ class TrustChainValidator:
     """
     @staticmethod
     def validate_chain(certificate, trust_anchor):
-        # 1. Check Expiration
-        if time.time() > certificate.expiry_date:
+        # 1. Check Expiration (Phase 84.3)
+        from sarita_runtime.kernel.key_governance.certificate_expiration_validator import CertificateExpirationValidator
+        if CertificateExpirationValidator.is_expired(certificate):
             return False, "Certificate expired."
 
         # 2. Verify Hierarchical Levels
