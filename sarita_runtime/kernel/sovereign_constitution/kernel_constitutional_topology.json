@@ -18,6 +18,11 @@
     "sarita_runtime/kernel/evidence_fabric/runtime_evidence_registry.py": "9586d30a64a58b08f7f9e23dada4b17edb1b5fbcdbd120fcb93b8d0ff525c61d",
     "sarita_runtime/kernel/hardware_authority/hardware_observability_engine.py": "ff792136f87fffd8a0d2b1131b6ca8b0c9f211948824b0bda0c7c9650eaa5233",
     "sarita_runtime/kernel/hardware_authority/physical_resource_authority.py": "d2525fe921a71d256e99c5b0a3eaec9373899b9a71abdf20774010831af4dccb",
+    "sarita_runtime/kernel/hardware_trust/hardware_root_of_trust.py": "b569df636554314b7fa92580e0193e29b8754dcc94e1176e9f0ab631ff7205df",
+    "sarita_runtime/kernel/hardware_trust/runtime_attestation_engine.py": "77bc04986908e21217e4e7e9b6927add670013d5224dc7560d89883ad0832207",
+    "sarita_runtime/kernel/hardware_trust/runtime_integrity_ledger.py": "7485ee2f7ce1c9d6c04f70be6035cbda6dbbb3956f690f1ec38607f656637985",
+    "sarita_runtime/kernel/hardware_trust/secure_enclave_adapter.py": "9da00fb7d1a27ef0086e7124f1b51375d11348713d2e7c8886e53ddf76d3ecd7",
+    "sarita_runtime/kernel/hardware_trust/trust_succession_engine.py": "2d8f7169ca83af613e14628ea5925e5cf03fdef78e8f260626f68d8c109c65d7",
     "sarita_runtime/kernel/hash_chain_stress_validator.py": "66db9c16a2613e3a5ee8197ff196a563a0d99a4be046bb0b759cd2b432f7b90c",
     "sarita_runtime/kernel/invariant_engine/runtime_invariant_engine.py": "930789e13e3e0657cb782ba30e313debeed0f00dd2c5dd6891ae82f3bcfa9aea",
     "sarita_runtime/kernel/io_uring_fabric/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -72,5 +77,6 @@
     "sarita_runtime/kernel/sovereign_trust/trust_anchor.py": "a56d5c23e5ee62b4c267b31603d767c5f8d51ea9918c37cac65bb479583ab056",
     "sarita_runtime/kernel/sovereign_trust/trust_chain_validator.py": "01664157143086b33188ab7cfaca95672784c28f372a714bf7e71452ced0417c",
     "sarita_runtime/kernel/sovereign_trust/trust_ledger.py": "9b90773647cde64ffc50a69da7bf6b7a1068ff3435a4d3c069d169bd8c796df5",
-    "sarita_runtime/kernel/sovereign_trust/trust_quarantine_engine.py": "07347a5d84981a17662f1f2bac016b70c8a4d3d5c479bf19b54fc4b457dec15e"
+    "sarita_runtime/kernel/sovereign_trust/trust_quarantine_engine.py": "07347a5d84981a17662f1f2bac016b70c8a4d3d5c479bf19b54fc4b457dec15e",
+    "sarita_runtime/kernel/state_certification/kernel_state_certificate.py": "e9aa856c59a5b8813dc5d30594da4ce8ba60855af1c628738b738e8d14779199"
 }
