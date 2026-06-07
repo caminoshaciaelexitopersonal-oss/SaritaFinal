@@ -6,3 +6,16 @@ frontend/tsconfig.tsbuildinfo
 
 # Redis
 dump.rdb
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Databases
+*.db
+*.sqlite3
+
+# OS files
+.DS_Store
