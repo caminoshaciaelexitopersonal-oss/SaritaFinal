@@ -1,3 +1,5 @@
+import time
+
 class GoalUtilityLedger:
     """
     Tracks the historical utility and cost of registered goals.

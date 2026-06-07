@@ -1,3 +1,5 @@
+import time
+
 class SurvivalDecisionLedger:
     """
     The absolute record of decisions made by the Constitutional Survival Engine.

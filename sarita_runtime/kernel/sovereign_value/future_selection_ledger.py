@@ -1,3 +1,5 @@
+import time
+
 class FutureSelectionLedger:
     """
     Records the results of future competition and trajectory selection.
