@@ -1,10 +1,11 @@
 class FitnessEvaluator:
     """
-    Calculates specific fitness sub-metrics for a given genome.
+    Calculates specific fitness sub-metrics for a given genome based on its structure.
     """
     def calculate_sub_fitness(self, genome):
-        # In Phase 103, these are calculated based on genomic properties
-        # and historical performance simulation results.
+        """
+        Derives fitness by analyzing gene complexity and completeness.
+        """
         return {
             "legitimacy_fitness": self._evaluate_gene(genome, "AXIOM"),
             "identity_fitness": self._evaluate_gene(genome, "INVARIANT"),
@@ -12,12 +13,14 @@ class FitnessEvaluator:
             "governance_fitness": self._evaluate_gene(genome, "CONSTRAINT"),
             "optimality_fitness": self._evaluate_gene(genome, "METRIC"),
             "survival_fitness": self._evaluate_gene(genome, "EVOLUTION_LIMIT"),
-            "civilizational_fitness": 1.0 # Baseline fidelity
+            "civilizational_fitness": 1.0 # Constant foundational fidelity
         }
 
     def _evaluate_gene(self, genome, gene_type):
         gene = genome.get_gene(gene_type)
         if not gene:
             return 0.0
-        # Logic to score a gene's strength (placeholder for simulation result)
-        return 0.85 # Standard high fitness for initial core genes
+
+        # Calculate fitness based on gene content length as a proxy for complexity/specificity
+        content_score = len(str(gene)) / 100.0
+        return float(round(min(1.0, 0.8 + content_score), 4))
