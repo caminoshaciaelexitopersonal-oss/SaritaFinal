@@ -1,3 +1,5 @@
+from sarita_runtime.kernel.formal_reasoning.logical_expression import LogicalExpression
+
 class AxiomCoverageAnalyzer:
     """
     Analyzes which axioms cover which scenarios using logical relevance.
@@ -17,8 +19,6 @@ class AxiomCoverageAnalyzer:
         Determines relevance based on the logical overlap between
         axiom atomic components and scenario tags.
         """
-        from sarita_runtime.kernel.formal_reasoning.logical_expression import LogicalExpression
-
         # Collect all atomic symbols from the axiom expression
         atomics = self._get_atomics(axiom)
         scenario_tags = [t.upper() for t in scenario.get("tags", [])]
@@ -30,7 +30,6 @@ class AxiomCoverageAnalyzer:
         return False
 
     def _get_atomics(self, expr):
-        from sarita_runtime.kernel.formal_reasoning.logical_expression import LogicalExpression
         atomics = set()
         if isinstance(expr.left, LogicalExpression):
             atomics.update(self._get_atomics(expr.left))
