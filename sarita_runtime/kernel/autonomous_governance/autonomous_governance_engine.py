@@ -24,5 +24,8 @@ class AutonomousGovernanceEngine:
             elif severity > 0.4:
                 self.trigger_engine.request_external_verification(anomaly)
 
+            # Record that the cycle processed this anomaly
+            self.audit_engine.record_processing(anomaly, severity)
+
     def stop(self):
         self.is_running = False
