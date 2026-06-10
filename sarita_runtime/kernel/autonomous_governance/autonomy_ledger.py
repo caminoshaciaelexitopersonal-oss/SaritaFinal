@@ -17,12 +17,15 @@ class AutonomyLedger:
 
 class GovernanceActionLedger(AutonomyLedger):
     """Specific ledger for autonomous governance actions."""
-    pass
+    def log_governance_event(self, action: str, metadata: dict):
+        self.log_action("GOVERNANCE", action, metadata)
 
 class RecoveryHistoryLedger(AutonomyLedger):
     """Specific ledger for autonomous recovery events."""
-    pass
+    def log_recovery_event(self, anomaly_id: str, success: bool):
+        self.log_action("RECOVERY", "EXECUTE_RECOVERY", {"anomaly": anomaly_id, "success": success})
 
 class SelfAuditLedger(AutonomyLedger):
     """Specific ledger for autonomous audit results."""
-    pass
+    def log_audit_event(self, audit_type: str, findings: list):
+        self.log_action("AUDIT", audit_type, {"findings": findings})
