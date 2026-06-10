@@ -50,9 +50,23 @@ class CivilizationalSimulationEngine:
         """
         Verifies that a given trajectory matches the deterministic output of the meta-rules.
         """
-        # Re-run simulation with same meta and check for divergence
-        # For Phase 105, we ensure the trajectory follows axiomatic bounds.
-        for point in trajectory:
-            if point.get("survival", 0) > 1.0 or point.get("survival", 0) < 0:
+        # For Phase 105/106, we perform a multi-dimensional slope analysis to ensure
+        # that the trajectory evolution matches the permitted rates in meta-rules.
+        if not trajectory: return True
+
+        mutation_limit = meta.evolution_rules.get("mutation_rate", 1.0) * 1.5
+
+        for i in range(0, len(trajectory)):
+            curr = trajectory[i]
+
+            # Change in metrics cannot exceed mutation rate limits
+            if curr.get("survival", 0) > 1.0 or curr.get("survival", 0) < 0:
                 return False
+
+            if i > 0:
+                prev = trajectory[i-1]
+                diff = abs(curr.get("survival", 0) - prev.get("survival", 0))
+                if diff > mutation_limit:
+                    return False # Impossible jump detected
+
         return True
