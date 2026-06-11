@@ -1,2 +1,0 @@
-sarita_runtime/kernel/adaptive_evolution/long_term_dominance_engine.py:    Evaluates the long-term dominance of constitutions across simulated futures.
-sarita_runtime/kernel/adaptive_evolution/generation_history_ledger.py:    Ledger for recording the full history of simulated generations.
