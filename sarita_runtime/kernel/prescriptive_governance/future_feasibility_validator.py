@@ -6,4 +6,8 @@ class FutureFeasibilityValidator:
         """
         Checks if the design is reachable and stable.
         """
-        return True # Real logic to be implemented
+        # Feasibility depends on design robustness and plan depth
+        if not design or not plan:
+            return False
+
+        return design.get("robustness", 0) > 0.90 and len(plan) >= 3
