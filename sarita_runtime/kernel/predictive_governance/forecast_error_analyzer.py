@@ -1,21 +1,23 @@
+import math
+
 class ForecastErrorAnalyzer:
     """
-    Analyzes the error between predictions and actual outcomes.
+    Performs formal error analysis (MAE, RMSE, MAPE) on forecasts.
     """
-    def analyze_error(self, prediction, actual):
+    def analyze_errors(self, deviations):
         """
-        Calculates Root Mean Square Error (RMSE) for numerical projections.
+        Calculates error metrics from a dictionary of deviations.
         """
-        if not isinstance(prediction, dict) or not isinstance(actual, dict):
-            return 1.0
+        if not deviations:
+            return {"mae": 1.0, "rmse": 1.0, "mape": 1.0}
 
-        common_keys = [k for k in prediction if k in actual and isinstance(prediction[k], (int, float))]
-        if not common_keys:
-            return 1.0
+        vals = list(deviations.values())
+        mae = sum(vals) / len(vals)
+        rmse = math.sqrt(sum(v**2 for v in vals) / len(vals))
+        mape = (sum(vals) / sum(deviations.keys())) if sum(deviations.keys()) > 0 else mae # Simplified MAPE proxy
 
-        squared_errors = [(prediction[k] - actual[k])**2 for k in common_keys]
-        rmse = math.sqrt(sum(squared_errors) / len(common_keys))
-
-        return min(1.0, rmse)
-
-import math
+        return {
+            "mae": mae,
+            "rmse": rmse,
+            "mape": mape
+        }

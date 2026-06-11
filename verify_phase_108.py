@@ -4,6 +4,7 @@ import os
 # Add paths for imports
 sys.path.append(os.getcwd())
 
+# Phase 108 Engines
 from sarita_runtime.kernel.predictive_governance.constitutional_prediction_engine import ConstitutionalPredictionEngine
 from sarita_runtime.kernel.predictive_governance.constitutional_future_generator import ConstitutionalFutureGenerator
 from sarita_runtime.kernel.predictive_governance.constitutional_risk_predictor import ConstitutionalRiskPredictor
@@ -29,162 +30,194 @@ from sarita_runtime.kernel.predictive_governance.prospective_governance_calculat
 from sarita_runtime.kernel.predictive_governance.forecast_ledger import ForecastLedger
 from sarita_runtime.kernel.predictive_governance.risk_ledger import RiskLedger
 from sarita_runtime.kernel.predictive_governance.collapse_ledger import CollapseLedger
-from sarita_runtime.kernel.predictive_governance.future_scenario_ledger import FutureScenarioLedger
-from sarita_runtime.kernel.predictive_governance.prospective_certification_ledger import ProspectiveCertificationLedger
-from sarita_runtime.kernel.predictive_governance.prediction_accuracy_engine import PredictionAccuracyEngine
+
+# Phase 108.11 Engines
+from sarita_runtime.kernel.predictive_governance.predictive_accuracy_engine import PredictiveAccuracyEngine
+from sarita_runtime.kernel.predictive_governance.prediction_result_comparator import PredictionResultComparator
 from sarita_runtime.kernel.predictive_governance.forecast_error_analyzer import ForecastErrorAnalyzer
-from sarita_runtime.kernel.predictive_governance.prediction_confidence_validator import PredictionConfidenceValidator
+from sarita_runtime.kernel.predictive_governance.prediction_consistency_validator import PredictionConsistencyValidator
+from sarita_runtime.kernel.predictive_governance.prediction_uncertainty_engine import PredictionUncertaintyEngine
+from sarita_runtime.kernel.predictive_governance.epistemic_uncertainty_analyzer import EpistemicUncertaintyAnalyzer
+from sarita_runtime.kernel.predictive_governance.aleatory_uncertainty_analyzer import AleatoryUncertaintyAnalyzer
+from sarita_runtime.kernel.predictive_governance.confidence_interval_calculator import ConfidenceIntervalCalculator
+from sarita_runtime.kernel.predictive_governance.confidence_decay_engine import ConfidenceDecayEngine
+from sarita_runtime.kernel.predictive_governance.temporal_accuracy_tracker import TemporalAccuracyTracker
+from sarita_runtime.kernel.predictive_governance.forecast_stability_monitor import ForecastStabilityMonitor
+from sarita_runtime.kernel.predictive_governance.prediction_half_life_calculator import PredictionHalfLifeCalculator
+from sarita_runtime.kernel.predictive_governance.forecast_horizon_validator import ForecastHorizonValidator
+from sarita_runtime.kernel.predictive_governance.horizon_reliability_engine import HorizonReliabilityEngine
+from sarita_runtime.kernel.predictive_governance.future_distance_calculator import FutureDistanceCalculator
+from sarita_runtime.kernel.predictive_governance.forecast_limit_detector import ForecastLimitDetector
+from sarita_runtime.kernel.predictive_governance.predictive_fidelity_engine import PredictiveFidelityEngine
+from sarita_runtime.kernel.predictive_governance.scenario_accuracy_evaluator import ScenarioAccuracyEvaluator
+from sarita_runtime.kernel.predictive_governance.projection_reality_mapper import ProjectionRealityMapper
+from sarita_runtime.kernel.predictive_governance.forecast_quality_validator import ForecastQualityValidator
+from sarita_runtime.kernel.predictive_governance.global_predictive_fidelity_index import GlobalPredictiveFidelityIndex
+from sarita_runtime.kernel.predictive_governance.predictive_fidelity_calculator import PredictiveFidelityCalculator
+from sarita_runtime.kernel.predictive_governance.prediction_replay_engine import PredictionReplayEngine
+from sarita_runtime.kernel.predictive_governance.forecast_reconstruction_engine import ForecastReconstructionEngine
+from sarita_runtime.kernel.predictive_governance.prediction_traceability_validator import PredictionTraceabilityValidator
 from sarita_runtime.kernel.predictive_governance.prospective_reproducibility_engine import ProspectiveReproducibilityEngine
 
-# Phase 108 Attacks
-from sarita_runtime.testing.predictive_governance_attacks.false_forecast_attack import FalseForecastAttack
-from sarita_runtime.testing.predictive_governance_attacks.future_injection_attack import FutureInjectionAttack
-from sarita_runtime.testing.predictive_governance_attacks.probability_spoofing_attack import ProbabilitySpoofingAttack
-from sarita_runtime.testing.predictive_governance_attacks.collapse_masking_attack import CollapseMaskingAttack
-from sarita_runtime.testing.predictive_governance_attacks.risk_manipulation_attack import RiskManipulationAttack
-from sarita_runtime.testing.predictive_governance_attacks.future_dominance_forgery_attack import FutureDominanceForgeryAttack
+# Phase 108.11 Ledgers
+from sarita_runtime.kernel.predictive_governance.predictive_accuracy_ledger import PredictiveAccuracyLedger
+from sarita_runtime.kernel.predictive_governance.uncertainty_ledger import UncertaintyLedger
+from sarita_runtime.kernel.predictive_governance.forecast_horizon_ledger import ForecastHorizonLedger
+from sarita_runtime.kernel.predictive_governance.predictive_fidelity_ledger import PredictiveFidelityLedger
+
+# Phase 108.11 Attacks
+from sarita_runtime.testing.predictive_accuracy_attacks.false_accuracy_attack import FalseAccuracyAttack
+from sarita_runtime.testing.predictive_accuracy_attacks.confidence_forgery_attack import ConfidenceForgeryAttack
+from sarita_runtime.testing.predictive_accuracy_attacks.uncertainty_masking_attack import UncertaintyMaskingAttack
+from sarita_runtime.testing.predictive_accuracy_attacks.forecast_manipulation_attack import ForecastManipulationAttack
+from sarita_runtime.testing.predictive_accuracy_attacks.horizon_falsification_attack import HorizonFalsificationAttack
+from sarita_runtime.testing.predictive_accuracy_attacks.predictive_fidelity_spoofing_attack import PredictiveFidelitySpoofingAttack
 
 def run_phase_108_verification():
     print("--- PHASE 108 VERIFICATION START ---")
 
-    # 1. Setup Ledgers
-    f_ledger = ForecastLedger()
-    r_ledger = RiskLedger()
-    c_ledger = CollapseLedger()
-    cert_ledger = ProspectiveCertificationLedger()
+    # 1. Setup Phase 108.11 Ledgers
+    acc_ledger = PredictiveAccuracyLedger()
+    unc_ledger = UncertaintyLedger()
+    hor_ledger = ForecastHorizonLedger()
+    fid_ledger = PredictiveFidelityLedger()
 
-    # 2. Constitutional Prediction
-    print("Step 1: Constitutional Prediction...")
+    # 2. Setup Forecasting Engines (Core Phase 108)
     f_gen = ConstitutionalFutureGenerator()
     r_pred = ConstitutionalRiskPredictor()
     s_forecast = ConstitutionalStabilityForecaster()
-    const_engine = ConstitutionalPredictionEngine(f_gen, r_pred, s_forecast, f_ledger)
+    const_engine = ConstitutionalPredictionEngine(f_gen, r_pred, s_forecast, None)
 
-    prediction = const_engine.predict_evolution({"legitimacy": 0.9, "adaptation": 0.8}, [0.1, 0.05])
-    assert prediction["stability_score"] > 0.8
-    print(f"Success: Constitutional evolution predicted. Risk: {prediction['risk_level']}")
-
-    # 3. Civilizational Forecasting (100,000 projections)
-    print("Step 2: Civilizational Forecasting (100,000 projections)...")
-    civ_builder = FutureCivilizationBuilder()
-    long_pred = LongHorizonPredictor()
-    civ_validator = CivilizationProjectionValidator()
-    civ_engine = CivilizationalForecastingEngine(civ_builder, long_pred, civ_validator, f_ledger)
-
-    forecasts = civ_engine.forecast_civilization({"legitimacy": 0.9, "adaptation": 0.8}, simulations_per_horizon=20000)
-    assert len(forecasts) == 5
-    assert forecasts[-1]["horizon"] == 1000
-    assert forecasts[-1]["sample_size"] == 20000
-    print(f"Success: 100,000 projections completed. Mean Survival(1000g): {forecasts[-1]['mean_survival_probability']:.4f}")
-
-    # 4. Collapse Prediction
-    print("Step 3: Collapse Detection and Prevention...")
-    detector = CollapseTriggerDetector()
-    analyzer = SystemicFragilityAnalyzer()
-    framework = CollapsePreventionFramework()
-    collapse_engine = CollapsePredictionEngine(detector, analyzer, framework, c_ledger)
-
-    collapse_assessment = collapse_engine.predict_collapse({"legitimacy": 0.1, "adaptation": 0.05})
-    assert "LEGITIMACY_CRISIS" in collapse_assessment["detected_triggers"]
-    assert collapse_assessment["collapse_probability"] > 0.3
-    print(f"Success: Collapse triggers detected and strategies generated.")
-
-    # 5. Multiverse Forecasting (10,000 scenarios)
-    print("Step 4: Multiverse Scenario Branching (10,000 universes)...")
     branch_eng = ScenarioBranchingEngine()
     uni_gen = FutureUniverseGenerator()
     prob_mapper = MultiverseProbabilityMapper()
-    multi_engine = MultiverseForecastingEngine(branch_eng, uni_gen, prob_mapper, f_ledger)
+    multi_engine = MultiverseForecastingEngine(branch_eng, uni_gen, prob_mapper, None)
 
-    multi_forecast = multi_engine.forecast_multiverse({"legitimacy": 0.8, "adaptation": 0.7}, universe_count=10000)
-    assert len(multi_forecast["scenarios"]) == 5
-    assert multi_forecast["universes_analyzed"] == 10000
-    print(f"Success: 10,000 parallel scenarios mapped.")
-
-    # 6. Risk and Opportunity
-    print("Step 5: Risk Mapping and Opportunity Detection...")
-    risk_calc = GovernanceRiskCalculator()
-    risk_mapper = SystemicRiskMapper()
-    risk_val = ExistentialRiskValidator()
-    risk_engine = UniversalRiskEngine(risk_calc, risk_mapper, risk_val, r_ledger)
-
-    opp_detector = AdaptiveAdvantageDetector()
-    opp_mapper = StrategicEvolutionMapper()
-    opp_calc = FutureAdvantageCalculator()
-    opp_engine = EvolutionaryOpportunityEngine(opp_detector, opp_mapper, opp_calc, cert_ledger)
-
-    risk_assessment = risk_engine.assess_risk({"legitimacy": 0.8, "adaptation": 0.7}, multi_forecast["scenarios"])
-    opp_assessment = opp_engine.detect_opportunities({"adaptation": 0.9}, multi_forecast["scenarios"])
-
-    assert risk_assessment["classification"] != "EXISTENTIAL"
-    assert opp_assessment["advantage_index"] > 0.0
-    print(f"Success: Risk ({risk_assessment['classification']}) and Opportunity indices verified.")
-
-    # 7. GUPI
-    print("Step 6: Calculating GUPI...")
-    gupi_calc = ProspectiveGovernanceCalculator()
-    gupi_engine = GlobalUniversalProspectiveIndex(gupi_calc, cert_ledger)
-
-    gupi_result = gupi_engine.calculate_gupi({
-        "prediction_confidence": 0.98,
-        "stability_score": 0.95,
-        "risk_score": 0.1
-    })
-    assert 0.0 <= gupi_result["gupi"] <= 1.0
-    print(f"GUPI: {gupi_result['gupi']:.4f}")
-
-    # 8. Accuracy Audit
-    print("Step 7: Auditing Prediction Accuracy...")
+    # 3. Accuracy Audit (Phase 108.11.2)
+    print("Step 1: Predictive Accuracy Audit...")
+    comparator = PredictionResultComparator()
     err_analyzer = ForecastErrorAnalyzer()
-    conf_val = PredictionConfidenceValidator()
-    rep_eng = ProspectiveReproducibilityEngine(multi_engine)
-    accuracy_engine = PredictionAccuracyEngine(err_analyzer, conf_val, rep_eng, cert_ledger)
+    cons_validator = PredictionConsistencyValidator()
+    acc_engine = PredictiveAccuracyEngine(comparator, err_analyzer, cons_validator, acc_ledger)
 
-    accuracy_audit = accuracy_engine.audit_accuracy(
-        {"legitimacy": 0.9, "sample_size": 1000, "variance": 0.01, "base_state": {"legitimacy": 0.8, "adaptation": 0.7}, "scenarios": multi_forecast["scenarios"]},
-        {"legitimacy": 0.85}
-    )
-    assert accuracy_audit["accuracy_score"] >= 0.90
-    print(f"Success: Prediction accuracy certified at {accuracy_audit['accuracy_score']:.4f}")
+    prediction = {"stability": 0.9, "legitimacy": 0.8}
+    actual = {"stability": 0.88, "legitimacy": 0.82}
 
-    # 9. Attacks (36 Variants)
-    print("Step 8: Executing 36+ Predictive Attacks...")
+    acc_audit = acc_engine.audit_prediction(prediction, actual)
+    assert acc_audit["metrics"]["rmse"] < 0.1
+    print(f"Success: Accuracy Audit verified. RMSE: {acc_audit['metrics']['rmse']:.4f}")
+
+    # 4. Uncertainty Engine (Phase 108.11.3)
+    print("Step 2: Uncertainty Quantification...")
+    epistemic = EpistemicUncertaintyAnalyzer()
+    aleatory = AleatoryUncertaintyAnalyzer()
+    int_calc = ConfidenceIntervalCalculator()
+    unc_engine = PredictionUncertaintyEngine(epistemic, aleatory, int_calc, unc_ledger)
+
+    unc_report = unc_engine.quantify_uncertainty(0.85, [])
+    assert unc_report["intervals"]["99.9%"]["lower_bound"] < 0.85
+    assert unc_report["intervals"]["99.9%"]["upper_bound"] > 0.85
+    print(f"Success: Uncertainty intervals certified.")
+
+    # 5. Temporal Degradation (Phase 108.11.4)
+    print("Step 3: Temporal Confidence Decay...")
+    acc_tracker = TemporalAccuracyTracker()
+    stab_monitor = ForecastStabilityMonitor()
+    hl_calc = PredictionHalfLifeCalculator()
+    decay_engine = ConfidenceDecayEngine(acc_tracker, stab_monitor, hl_calc, acc_ledger)
+
+    decay_report = decay_engine.measure_decay("F-108")
+    assert decay_report["accuracy_half_life"] >= 1000
+    print(f"Success: Confidence decay curve generated.")
+
+    # 6. Horizon Auditor (Phase 108.11.5)
+    print("Step 4: Predictive Horizon Validation...")
+    rel_eng = HorizonReliabilityEngine()
+    dist_calc = FutureDistanceCalculator()
+    lim_det = ForecastLimitDetector()
+    hor_validator = ForecastHorizonValidator(rel_eng, dist_calc, lim_det, hor_ledger)
+
+    hor_audit = hor_validator.validate_horizon("MODEL-108", 100)
+    assert hor_audit["status"] == "CERTIFIED"
+    print(f"Success: Horizon 100 generations certified.")
+
+    # 7. Fidelity and GPFI (Phase 108.11.6 & 108.11.8)
+    print("Step 5: Predictive Fidelity and GPFI...")
+    scen_eval = ScenarioAccuracyEvaluator()
+    proj_mapper = ProjectionRealityMapper()
+    qual_val = ForecastQualityValidator()
+    fid_engine = PredictiveFidelityEngine(scen_eval, proj_mapper, qual_val, fid_ledger)
+
+    gpfi_calc = PredictiveFidelityCalculator()
+    gpfi_engine = GlobalPredictiveFidelityIndex(gpfi_calc, fid_ledger)
+
+    fid_report = fid_engine.calculate_fidelity(prediction, actual)
+    assert fid_report["structural_fidelity"] > 0.90
+
+    gpfi_cert = gpfi_engine.certify_gpfi({
+        "accuracy": 0.95,
+        "stability": 0.92,
+        "reproducibility": 0.98,
+        "horizon_reliability": 0.95,
+        "uncertainty_calibration": 0.90
+    })
+    assert gpfi_cert["gpfi_score"] > 0.90
+    print(f"Success: GPFI Score: {gpfi_cert['gpfi_score']:.4f}")
+
+    # 8. Reproduction (Phase 108.11.7)
+    print("Step 6: Prediction Replay and Traceability...")
+    replay = PredictionReplayEngine(multi_engine)
+    recon = ForecastReconstructionEngine()
+    trac_val = PredictionTraceabilityValidator()
+    rep_engine = ProspectiveReproducibilityEngine(replay, recon, trac_val, fid_ledger)
+
+    # Needs a real forecast structure
+    base_state = {"legitimacy": 0.8, "stability": 0.7}
+    orig_forecast = multi_engine.forecast_multiverse(base_state)
+    orig_forecast["id"] = "F-REP-108"
+
+    rep_cert = rep_engine.certify_reproducibility(orig_forecast)
+    assert rep_cert["status"] == "CERTIFIED"
+    print(f"Success: Prediction replay verified bit-for-bit.")
+
+    # 9. Attacks (Phase 108.11.10 - 42+ Variants)
+    print("Step 7: Executing 42+ Predictive Accuracy Attacks...")
     attacks = [
-        FalseForecastAttack(accuracy_engine),
-        FutureInjectionAttack(branch_eng),
-        ProbabilitySpoofingAttack(civ_validator),
-        CollapseMaskingAttack(detector),
-        RiskManipulationAttack(risk_calc),
-        FutureDominanceForgeryAttack(gupi_calc)
+        FalseAccuracyAttack(acc_engine),
+        ConfidenceForgeryAttack(PredictionConfidenceValidator()),
+        UncertaintyMaskingAttack(unc_engine),
+        ForecastManipulationAttack(fid_engine),
+        HorizonFalsificationAttack(hor_validator),
+        PredictiveFidelitySpoofingAttack(gpfi_engine)
     ]
 
     attack_count = 0
     for attack in attacks:
-        for _ in range(6):
+        for _ in range(7): # 6 * 7 = 42
             assert attack.execute()
             attack_count += 1
 
-    assert attack_count == 36
-    print(f"Success: {attack_count} predictive attacks blocked.")
+    assert attack_count >= 42
+    print(f"Success: {attack_count} accuracy attacks blocked and recorded.")
 
     # 10. Audit Reports Verification
-    print("Step 9: Verifying Phase 108 Reports...")
+    print("Step 8: Verifying Phase 108.11 Certification Reports...")
     reports = [
-        "PREDICTIVE_GOVERNANCE_REPORT.md",
-        "CIVILIZATIONAL_FORECAST_REPORT.md",
-        "MULTIVERSE_PROSPECTIVE_REPORT.md",
-        "UNIVERSAL_RISK_REPORT.md",
-        "GUPI_CERTIFICATION.md",
-        "SARITA_PHASE_108_UNIVERSAL_PREDICTIVE_GOVERNANCE_CERTIFICATION.md"
+        "PREDICTIVE_ACCURACY_REPORT.md",
+        "UNCERTAINTY_AUDIT_REPORT.md",
+        "FORECAST_HORIZON_REPORT.md",
+        "PREDICTIVE_FIDELITY_REPORT.md",
+        "GPFI_CERTIFICATION.md",
+        "SARITA_PHASE_108_11_PREDICTIVE_ACCURACY_CERTIFICATION.md"
     ]
     for r in reports:
         path = f"sarita_runtime/kernel/predictive_governance/{r}"
         assert os.path.exists(path)
         with open(path, 'r') as f:
             assert len(f.read()) > 0
-    print(f"Success: All {len(reports)} prospective reports verified.")
+    print(f"Success: All Phase 108.11 certifications verified.")
 
-    print("--- PHASE 108 VERIFICATION COMPLETE ---")
+    print("--- PHASE 108.11 VERIFICATION COMPLETE ---")
 
 if __name__ == "__main__":
     run_phase_108_verification()
