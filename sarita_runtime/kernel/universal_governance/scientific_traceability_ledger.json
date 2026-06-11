@@ -1,0 +1,4916 @@
+[
+    {
+        "timestamp": "2026-06-11T15:50:09.583285",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-A48C9A",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-A48C9A",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-7D44DFDE"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.583702",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-A48C9A",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-A48C9A",
+                "traceability_id": "TRC-7D44DFDE",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-A48C9A"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.584444",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-C11E95",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-C11E95",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-7AF86A0B"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.584967",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-C11E95",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-C11E95",
+                "traceability_id": "TRC-7AF86A0B",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-C11E95"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.585531",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-97D8A2",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-97D8A2",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-1EB0ADE1"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.586055",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-97D8A2",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-97D8A2",
+                "traceability_id": "TRC-1EB0ADE1",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-97D8A2"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.586640",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-07EC98",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-07EC98",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-4DFBD0B4"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.587327",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-07EC98",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-07EC98",
+                "traceability_id": "TRC-4DFBD0B4",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-07EC98"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.588212",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-844705",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-844705",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-096C905A"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.588895",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-844705",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-844705",
+                "traceability_id": "TRC-096C905A",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-844705"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.589653",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-E55B4C",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-E55B4C",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-36F6CD19"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.590418",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-E55B4C",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-E55B4C",
+                "traceability_id": "TRC-36F6CD19",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-E55B4C"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.591351",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-AB4C36",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-AB4C36",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-62FF9C23"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.592206",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-AB4C36",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-AB4C36",
+                "traceability_id": "TRC-62FF9C23",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-AB4C36"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.593148",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-94F733",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-94F733",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-F2BCCB58"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.594064",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-94F733",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-94F733",
+                "traceability_id": "TRC-F2BCCB58",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-94F733"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.595198",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-23B825",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-23B825",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-AB5C7544"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.596277",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-23B825",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-23B825",
+                "traceability_id": "TRC-AB5C7544",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-23B825"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.597470",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-F03AAC",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-F03AAC",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-CB03A8CB"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.598668",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-F03AAC",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-F03AAC",
+                "traceability_id": "TRC-CB03A8CB",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-F03AAC"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.600031",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-938011",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-938011",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-29185D74"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.601230",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-938011",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-938011",
+                "traceability_id": "TRC-29185D74",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-938011"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.602588",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-A8C17E",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-A8C17E",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-07C3138E"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.604145",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-A8C17E",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-A8C17E",
+                "traceability_id": "TRC-07C3138E",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-A8C17E"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.605604",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-0F203F",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-0F203F",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-16C0A404"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.606966",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-0F203F",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-0F203F",
+                "traceability_id": "TRC-16C0A404",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-0F203F"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.608465",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-4C3249",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-4C3249",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-0BE6573F"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.610100",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-4C3249",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-4C3249",
+                "traceability_id": "TRC-0BE6573F",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-4C3249"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.611856",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-99738C",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-99738C",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-3A5B2ACF"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.613460",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-99738C",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-99738C",
+                "traceability_id": "TRC-3A5B2ACF",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-99738C"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.615296",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-1EC09C",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-1EC09C",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-B2C9BB65"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.616915",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-1EC09C",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-1EC09C",
+                "traceability_id": "TRC-B2C9BB65",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-1EC09C"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.618660",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-448EBC",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-448EBC",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-B0009BBF"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.620518",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-448EBC",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-448EBC",
+                "traceability_id": "TRC-B0009BBF",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-448EBC"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.622397",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-C33696",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-C33696",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-56FEF700"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.624336",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-C33696",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-C33696",
+                "traceability_id": "TRC-56FEF700",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-C33696"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.626251",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-256606",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-256606",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-B1F65922"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.628291",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-256606",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-256606",
+                "traceability_id": "TRC-B1F65922",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-256606"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.630233",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-3A78DC",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-3A78DC",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-B8504522"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.632371",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-3A78DC",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-3A78DC",
+                "traceability_id": "TRC-B8504522",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-3A78DC"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.634584",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-D3CEE7",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-D3CEE7",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-E0292F14"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.636741",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-D3CEE7",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-D3CEE7",
+                "traceability_id": "TRC-E0292F14",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-D3CEE7"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.639176",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-5BBAF5",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-5BBAF5",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-71008B56"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.641440",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-5BBAF5",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-5BBAF5",
+                "traceability_id": "TRC-71008B56",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-5BBAF5"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.643855",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-638639",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-638639",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-BE4D8FA5"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.646168",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-638639",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-638639",
+                "traceability_id": "TRC-BE4D8FA5",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-638639"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.648574",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-3D07C0",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-3D07C0",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-C3689C28"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.650961",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-3D07C0",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-3D07C0",
+                "traceability_id": "TRC-C3689C28",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-3D07C0"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.653436",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-64E3B7",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-64E3B7",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-B2B426ED"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.655939",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-64E3B7",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-64E3B7",
+                "traceability_id": "TRC-B2B426ED",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-64E3B7"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.658853",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-E8FF91",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-E8FF91",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-A5967110"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.661761",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-E8FF91",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-E8FF91",
+                "traceability_id": "TRC-A5967110",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-E8FF91"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.664773",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-18F55D",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-18F55D",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-960A187F"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.667595",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-18F55D",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-18F55D",
+                "traceability_id": "TRC-960A187F",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-18F55D"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.670433",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-D9E7F6",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-D9E7F6",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-3C184569"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.673318",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-D9E7F6",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-D9E7F6",
+                "traceability_id": "TRC-3C184569",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-D9E7F6"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.676105",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-1794D4",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-1794D4",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-07E7A2B3"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.678936",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-1794D4",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-1794D4",
+                "traceability_id": "TRC-07E7A2B3",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-1794D4"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.681620",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-7498B2",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-7498B2",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-1FB08080"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.684710",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-7498B2",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-7498B2",
+                "traceability_id": "TRC-1FB08080",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-7498B2"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.687835",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-34AF50",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-34AF50",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-C6F07D98"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.690998",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-34AF50",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-34AF50",
+                "traceability_id": "TRC-C6F07D98",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-34AF50"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.694186",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-4B7D67",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-4B7D67",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-BC57738B"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.697259",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-4B7D67",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-4B7D67",
+                "traceability_id": "TRC-BC57738B",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-4B7D67"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.700311",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-A084F2",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-A084F2",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-0ED1BC29"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.703279",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-A084F2",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-A084F2",
+                "traceability_id": "TRC-0ED1BC29",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-A084F2"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.706273",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-8EDBBC",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-8EDBBC",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-AC15F25C"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.709568",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-8EDBBC",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-8EDBBC",
+                "traceability_id": "TRC-AC15F25C",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-8EDBBC"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.712799",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-23AE52",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-23AE52",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-D50ABA44"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.715857",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-23AE52",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-23AE52",
+                "traceability_id": "TRC-D50ABA44",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-23AE52"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.719218",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-20C72E",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-20C72E",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-7EEF0699"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.722529",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-20C72E",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-20C72E",
+                "traceability_id": "TRC-7EEF0699",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-20C72E"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.726089",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-C529DD",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-C529DD",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-7AD21551"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.729541",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-C529DD",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-C529DD",
+                "traceability_id": "TRC-7AD21551",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-C529DD"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.733045",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-C7E511",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-C7E511",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-EB783B04"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.736708",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-C7E511",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-C7E511",
+                "traceability_id": "TRC-EB783B04",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-C7E511"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.740381",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-FDCC69",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-FDCC69",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-6E7166AB"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.743944",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-FDCC69",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-FDCC69",
+                "traceability_id": "TRC-6E7166AB",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-FDCC69"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.747467",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-ED8DF6",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-ED8DF6",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-CDEC0197"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.750884",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-ED8DF6",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-ED8DF6",
+                "traceability_id": "TRC-CDEC0197",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-ED8DF6"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.754481",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-CBE4D0",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-CBE4D0",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-5EB88B21"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.758072",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-CBE4D0",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-CBE4D0",
+                "traceability_id": "TRC-5EB88B21",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-CBE4D0"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.761752",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-06C921",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-06C921",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-124EB7DA"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.765381",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-06C921",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-06C921",
+                "traceability_id": "TRC-124EB7DA",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-06C921"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.769062",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-DD1F53",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-DD1F53",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-5646FFE3"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.772704",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-DD1F53",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-DD1F53",
+                "traceability_id": "TRC-5646FFE3",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-DD1F53"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.776488",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-A4A9CE",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-A4A9CE",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-E7BFCFD4"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.780533",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-A4A9CE",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-A4A9CE",
+                "traceability_id": "TRC-E7BFCFD4",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-A4A9CE"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.784418",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-DD63AE",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-DD63AE",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-3001C745"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.788299",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-DD63AE",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-DD63AE",
+                "traceability_id": "TRC-3001C745",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-DD63AE"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.792294",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-6D0F2E",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-6D0F2E",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-7B6B3302"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.796384",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-6D0F2E",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-6D0F2E",
+                "traceability_id": "TRC-7B6B3302",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-6D0F2E"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.800612",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-62DB36",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-62DB36",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-D8905F1E"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.805009",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-62DB36",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-62DB36",
+                "traceability_id": "TRC-D8905F1E",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-62DB36"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.809249",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-82F40D",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-82F40D",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-7F215480"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.813382",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-82F40D",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-82F40D",
+                "traceability_id": "TRC-7F215480",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-82F40D"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.817982",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-5ACE92",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-5ACE92",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-C9A13FEE"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.822378",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-5ACE92",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-5ACE92",
+                "traceability_id": "TRC-C9A13FEE",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-5ACE92"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.826802",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-DEA039",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-DEA039",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-B89FB4F9"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.831263",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-DEA039",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-DEA039",
+                "traceability_id": "TRC-B89FB4F9",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-DEA039"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.835674",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-A4937E",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-A4937E",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-68A6B0DF"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.840179",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-A4937E",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-A4937E",
+                "traceability_id": "TRC-68A6B0DF",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-A4937E"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.844881",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-E45DB1",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-E45DB1",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-9E7654F7"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.849465",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-E45DB1",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-E45DB1",
+                "traceability_id": "TRC-9E7654F7",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-E45DB1"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.854387",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-E0138A",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-E0138A",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-D6424C24"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.859354",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-E0138A",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-E0138A",
+                "traceability_id": "TRC-D6424C24",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-E0138A"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.864254",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-A42E99",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-A42E99",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-8583766F"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.869082",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-A42E99",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-A42E99",
+                "traceability_id": "TRC-8583766F",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-A42E99"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.873795",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-FB5FB2",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-FB5FB2",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-154505F3"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.878658",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-FB5FB2",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-FB5FB2",
+                "traceability_id": "TRC-154505F3",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-FB5FB2"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.883561",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-5C8879",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-5C8879",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-353B49A5"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.888426",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-5C8879",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-5C8879",
+                "traceability_id": "TRC-353B49A5",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-5C8879"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.893412",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-83A5FF",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-83A5FF",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-3EC225C7"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.898264",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-83A5FF",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-83A5FF",
+                "traceability_id": "TRC-3EC225C7",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-83A5FF"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.903351",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-71FBCD",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-71FBCD",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-F5135051"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.908562",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-71FBCD",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-71FBCD",
+                "traceability_id": "TRC-F5135051",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-71FBCD"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.913593",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-3A37C5",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-3A37C5",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-DF1975B6"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.919010",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-3A37C5",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-3A37C5",
+                "traceability_id": "TRC-DF1975B6",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-3A37C5"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.924117",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-8AC930",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-8AC930",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-225A6011"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.929649",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-8AC930",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-8AC930",
+                "traceability_id": "TRC-225A6011",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-8AC930"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.935011",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-281377",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-281377",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-705984A4"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.940049",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-281377",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-281377",
+                "traceability_id": "TRC-705984A4",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-281377"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.945434",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-C5F8E9",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-C5F8E9",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-1E049D60"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.951276",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-C5F8E9",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-C5F8E9",
+                "traceability_id": "TRC-1E049D60",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-C5F8E9"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.956853",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-478E94",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-478E94",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-7EC08C6F"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.962385",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-478E94",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-478E94",
+                "traceability_id": "TRC-7EC08C6F",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-478E94"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.968294",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-FD9EB5",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-FD9EB5",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-04D9F059"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.973927",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-FD9EB5",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-FD9EB5",
+                "traceability_id": "TRC-04D9F059",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-FD9EB5"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.979649",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-D883EC",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-D883EC",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-97B14835"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.985380",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-D883EC",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-D883EC",
+                "traceability_id": "TRC-97B14835",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-D883EC"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.990921",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-549BD0",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-549BD0",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-536DE26E"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:09.996604",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-549BD0",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-549BD0",
+                "traceability_id": "TRC-536DE26E",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-549BD0"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.002553",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-8CFB9D",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-8CFB9D",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-BFA19C9A"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.008289",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-8CFB9D",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-8CFB9D",
+                "traceability_id": "TRC-BFA19C9A",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-8CFB9D"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.013930",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-33AF9A",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-33AF9A",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-A9709C4A"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.019652",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-33AF9A",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-33AF9A",
+                "traceability_id": "TRC-A9709C4A",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-33AF9A"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.025526",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-180B63",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-180B63",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-38CB8595"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.031149",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-180B63",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-180B63",
+                "traceability_id": "TRC-38CB8595",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-180B63"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.037040",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-FEB6AE",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-FEB6AE",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-A2A56291"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.042765",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-FEB6AE",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-FEB6AE",
+                "traceability_id": "TRC-A2A56291",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-FEB6AE"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.048656",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-F9D166",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-F9D166",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-20498D0E"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.054661",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-F9D166",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-F9D166",
+                "traceability_id": "TRC-20498D0E",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-F9D166"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.060686",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-BD7852",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-BD7852",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-B4435298"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.066616",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-BD7852",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-BD7852",
+                "traceability_id": "TRC-B4435298",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-BD7852"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.072923",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-0492A7",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-0492A7",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-16356456"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.079091",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-0492A7",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-0492A7",
+                "traceability_id": "TRC-16356456",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-0492A7"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.085430",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-B3D1AD",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-B3D1AD",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-D23A32A3"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.092586",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-B3D1AD",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-B3D1AD",
+                "traceability_id": "TRC-D23A32A3",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-B3D1AD"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.099325",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-BA943A",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-BA943A",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-5FB19216"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.106139",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-BA943A",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-BA943A",
+                "traceability_id": "TRC-5FB19216",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-BA943A"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.112802",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-DC9880",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-DC9880",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-319880BB"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.120150",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-DC9880",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-DC9880",
+                "traceability_id": "TRC-319880BB",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-DC9880"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.127118",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-410BF7",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-410BF7",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-A41E0BA2"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.133485",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-410BF7",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-410BF7",
+                "traceability_id": "TRC-A41E0BA2",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-410BF7"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.140245",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-00ADD9",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-00ADD9",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-856C7DCC"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.148095",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-00ADD9",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-00ADD9",
+                "traceability_id": "TRC-856C7DCC",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-00ADD9"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.154964",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-54EAF6",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-54EAF6",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-D69EA465"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.161804",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-54EAF6",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-54EAF6",
+                "traceability_id": "TRC-D69EA465",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-54EAF6"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.168955",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-E57363",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-E57363",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-19C014F2"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.175797",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-E57363",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-E57363",
+                "traceability_id": "TRC-19C014F2",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-E57363"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.185954",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-83C0FF",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-83C0FF",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-60EC7300"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.195197",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-83C0FF",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-83C0FF",
+                "traceability_id": "TRC-60EC7300",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-83C0FF"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.204417",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-155D8B",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-155D8B",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-7BCA725B"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.211730",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-155D8B",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-155D8B",
+                "traceability_id": "TRC-7BCA725B",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-155D8B"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.221415",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-D7A094",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-D7A094",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-DE460CBE"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.229821",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-D7A094",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-D7A094",
+                "traceability_id": "TRC-DE460CBE",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-D7A094"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.238206",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-EE1A7F",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-EE1A7F",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-5AF1F08D"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.245498",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-EE1A7F",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-EE1A7F",
+                "traceability_id": "TRC-5AF1F08D",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-EE1A7F"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.252877",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-5C155D",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-5C155D",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-63336D51"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.260125",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-5C155D",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-5C155D",
+                "traceability_id": "TRC-63336D51",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-5C155D"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.267712",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-48B948",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-48B948",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-978EB8B6"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.275386",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-48B948",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-48B948",
+                "traceability_id": "TRC-978EB8B6",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-48B948"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.282575",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-890E4E",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-890E4E",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-F7E73309"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.290270",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-890E4E",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-890E4E",
+                "traceability_id": "TRC-F7E73309",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-890E4E"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.297547",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-3159E2",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-3159E2",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-A921F402"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.305062",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-3159E2",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-3159E2",
+                "traceability_id": "TRC-A921F402",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-3159E2"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.312367",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-84372E",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-84372E",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-0CB063DF"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.319634",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-84372E",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-84372E",
+                "traceability_id": "TRC-0CB063DF",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-84372E"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.327004",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-797CA9",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-797CA9",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-BC60F5B0"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.334189",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-797CA9",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-797CA9",
+                "traceability_id": "TRC-BC60F5B0",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-797CA9"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.341586",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-9B5CF4",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-9B5CF4",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-5A11A1DA"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.349049",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-9B5CF4",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-9B5CF4",
+                "traceability_id": "TRC-5A11A1DA",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-9B5CF4"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.356535",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-1D690A",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-1D690A",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-1905167E"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.364115",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-1D690A",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-1D690A",
+                "traceability_id": "TRC-1905167E",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-1D690A"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.371712",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-1CEEB1",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-1CEEB1",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-433C50DA"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.379462",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-1CEEB1",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-1CEEB1",
+                "traceability_id": "TRC-433C50DA",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-1CEEB1"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.387124",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-A0700A",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-A0700A",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-FE8AE87C"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.394795",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-A0700A",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-A0700A",
+                "traceability_id": "TRC-FE8AE87C",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-A0700A"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.402978",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-4DA60C",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-4DA60C",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-9353D94C"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.410838",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-4DA60C",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-4DA60C",
+                "traceability_id": "TRC-9353D94C",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-4DA60C"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.418651",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-BE1BF9",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-BE1BF9",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-C372A458"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.426430",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-BE1BF9",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-BE1BF9",
+                "traceability_id": "TRC-C372A458",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-BE1BF9"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.434348",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-5F08DE",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-5F08DE",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-E44736B0"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.442307",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-5F08DE",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-5F08DE",
+                "traceability_id": "TRC-E44736B0",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-5F08DE"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.450346",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-6A5C89",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-6A5C89",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-6679A6CE"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.458648",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-6A5C89",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-6A5C89",
+                "traceability_id": "TRC-6679A6CE",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-6A5C89"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.466770",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-189DE0",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-189DE0",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-6F874B52"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.474855",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-189DE0",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-189DE0",
+                "traceability_id": "TRC-6F874B52",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-189DE0"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.484674",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-4AC31D",
+        "lineage": {
+            "origin_id": "UniversalLawEngine",
+            "experiment_id": "EXP-107",
+            "hypothesis_id": "HYP-107",
+            "law_id": "LAW-U-4AC31D",
+            "theorem_id": "THR-107",
+            "certificate_id": "CERT-107",
+            "traceability_id": "TRC-87F9AE14"
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.493025",
+        "event": "SCIENTIFIC_AUDIT",
+        "result": {
+            "entity_id": "LAW-U-4AC31D",
+            "status": "CERTIFIED",
+            "chain": {
+                "entity_id": "LAW-U-4AC31D",
+                "traceability_id": "TRC-87F9AE14",
+                "steps": [
+                    {
+                        "stage": "HYPOTHESIS",
+                        "id": "HYP-107"
+                    },
+                    {
+                        "stage": "EXPERIMENT",
+                        "id": "EXP-107"
+                    },
+                    {
+                        "stage": "LAW",
+                        "id": "LAW-U-4AC31D"
+                    },
+                    {
+                        "stage": "THEOREM",
+                        "id": "THR-107"
+                    },
+                    {
+                        "stage": "CERTIFICATION",
+                        "id": "CERT-107"
+                    }
+                ]
+            },
+            "traceability_score": 1.0
+        }
+    },
+    {
+        "timestamp": "2026-06-11T15:50:10.643400",
+        "event": "ORIGIN_REGISTRATION",
+        "entity_id": "LAW-U-A48C9A",
+        "lineage": {
+            "origin_id": "O",
+            "experiment_id": "E",
+            "hypothesis_id": "H",
+            "law_id": "L",
+            "theorem_id": "T",
+            "certificate_id": "C",
+            "traceability_id": "TRC-6E10A4D1"
+        }
+    }
+]

@@ -1,4 +1,4 @@
-class FakeInvariantAttack:
+class RogueInvariantAttack:
     """
     Attempts to certify a local trait as a universal invariant.
     """
