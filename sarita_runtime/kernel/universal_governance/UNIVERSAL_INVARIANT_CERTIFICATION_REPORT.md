@@ -2,6 +2,7 @@
 
 ## Overview
 Certification evidence for the 50+ universal governance invariants validated across the multiverse.
+Scientific Evidence for all certified invariants is maintained in the invariant ledger.
 
 ## Certified Invariants
 
