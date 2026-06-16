@@ -18,11 +18,14 @@ class ControlledExpansionEngine:
 
         results = self.growth_manager.deploy_capabilities(constrained_blueprints)
 
+        # Certified only if all valid blueprints were deployed
+        certified = len(results) == len(constrained_blueprints) and len(results) > 0
+
         report = {
             "requested": len(blueprints),
             "deployed": len(results),
             "timestamp": time.time(),
-            "safety_status": "CERTIFIED"
+            "safety_status": "CERTIFIED" if certified else "DENIED"
         }
 
         self.ledger.record_event("CONTROLLED_EXPANSION", report)
