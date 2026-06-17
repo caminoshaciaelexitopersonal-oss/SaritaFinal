@@ -1,7 +1,7 @@
 import os
 import sys
 
-phases = ["111", "112", "113", "114", "115"]
+phases = ["111", "112", "113", "114", "115", "116"]
 for phase in phases:
     print(f"\n>>> VERIFYING PHASE {phase}...")
     res = os.system(f"python3 verify_phase_{phase}.py > /dev/null 2>&1")
@@ -29,4 +29,4 @@ for demo in demos:
         print(f"DEMO {demo} FAILED")
         sys.exit(1)
 
-print("\nSOVEREIGN EVOLUTION OPTIMALITY CERTIFICATION COMPLETE.")
+print("\nSOVEREIGN EVOLUTION TOTAL CYCLE CERTIFICATION COMPLETE.")
