@@ -3,7 +3,7 @@ import time
 
 class FutureCapabilityEngine:
     """
-    Engine to design 100,000 new capabilities mathematically justified.
+    Engine to design new capabilities mathematically justified.
     """
     def __init__(self, architect, designer, blueprint_gen, ledger):
         self.architect = architect
@@ -11,17 +11,17 @@ class FutureCapabilityEngine:
         self.blueprint_gen = blueprint_gen
         self.ledger = ledger
 
-    def design_future_capabilities(self, diagnostic_report):
-        print("[FutureCapabilityEngine] Designing 100,000 new capabilities...")
+    def design_future_capabilities(self, diagnostic_report, count=100000):
+        print(f"[FutureCapabilityEngine] Designing {count} new capabilities...")
 
         capabilities = []
-        for i in range(100000):
+        for i in range(count):
             cap_spec = self.architect.define_spec(i, diagnostic_report)
             justification = self.designer.justify_mathematically(cap_spec)
             blueprint = self.blueprint_gen.generate_blueprint(cap_spec, justification)
             capabilities.append(blueprint)
 
-            if i % 25000 == 0:
+            if count > 1000 and i % 25000 == 0:
                 print(f"Designed {i} capabilities...")
 
         result = {
