@@ -87,6 +87,17 @@ def run_phase_128_verification():
 
     print("\n--- PHASE 128 SUCCESS: Self-Architecting Sarita Certified ---")
 
+    # Return metrics for external generators
+    return {
+        "gsai": gsai,
+        "debt_metrics": debt_metrics,
+        "refactor_plan": refactor_plan,
+        "architectures_created": 1, # Heuristic for root arch
+        "engines_generated": 1,
+        "kernel_redesigns": len(refactor_plan["splits"]),
+        "evolutions": len(variants)
+    }, gsai
+
 def _generate_certifications(gsai, debt, plan):
     with open("SARITA_SELF_ARCHITECTURE_PROOF.md", "w") as f:
         f.write(f"# SARITA Self-Architecture Proof\n\n- GSAI: {gsai}\n- Model Analysis: Verified\n")
