@@ -1,4 +1,4 @@
 # SARITA GSAI Certification
 
-- Value: 0.876
-- Component Traceability: Verified
+- Value: 0.6163
+- Status: VALIDATED

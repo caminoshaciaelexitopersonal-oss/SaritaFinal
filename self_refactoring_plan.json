@@ -1,0 +1,166 @@
+{
+  "merges": [],
+  "splits": [
+    {
+      "action": "SPLIT",
+      "target": "epistemic_completeness",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "predictive_governance",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "existential_legitimacy",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "evolutionary_fitness",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "adaptive_governance",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "formal_reasoning",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "meta_cosmogenesis",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "scientific_autonomy",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "metaevolution",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "prescriptive_governance",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "recursive_epistemology",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "constitutional_identity",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "sovereign_certification",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "formal_legitimacy",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "civilizational_evolution",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "scientific_governance",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "self_architecture",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "formal_optimization",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "epistemic_maturity",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "constitutional_evolution",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "evolution_governance",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "meta_constitution",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "adaptive_constitution",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "constitutional_discovery",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "universal_governance",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "meta_evolution",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "sovereign_value",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "civilizational_emergence",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "civilizational_alignment",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "adaptive_evolution",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "metaconstitutional_governance",
+      "reason": "HIGH_COHESION_VIOLATION"
+    },
+    {
+      "action": "SPLIT",
+      "target": "sovereign_purpose",
+      "reason": "HIGH_COHESION_VIOLATION"
+    }
+  ],
+  "cleanup": []
+}

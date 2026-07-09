@@ -1,0 +1,213 @@
+{
+  "redundancies": [
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/__init__.py",
+        "sarita_runtime/kernel/io_uring_fabric/__init__.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/__init__.py",
+        "sarita_runtime/kernel/runtime_graph/__init__.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/predictive_governance/constitutional_stability_forecaster.py",
+        "sarita_runtime/kernel/metaconstitutional_governance/constitutional_stability_forecaster.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/predictive_governance/constitutional_future_generator.py",
+        "sarita_runtime/kernel/metaconstitutional_governance/constitutional_future_generator.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/existential_legitimacy/legitimacy_score_calculator.py",
+        "sarita_runtime/kernel/formal_legitimacy/legitimacy_score_calculator.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/existential_legitimacy/legitimacy_score_calculator.py",
+        "sarita_runtime/kernel/metaconstitutional_governance/legitimacy_score_calculator.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/evolutionary_fitness/constitutional_fitness_engine.py",
+        "sarita_runtime/kernel/constitutional_evolution/constitutional_fitness_engine.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/scientific_autonomy/hypothesis_generator.py",
+        "sarita_runtime/kernel/universal_governance/hypothesis_generator.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/io_uring_fabric/__init__.py",
+        "sarita_runtime/kernel/runtime_graph/__init__.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/metaevolution/meta_learning_engine.py",
+        "sarita_runtime/kernel/meta_constitution/meta_learning_engine.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/metaevolution/meta_evolution_ledger.py",
+        "sarita_runtime/kernel/meta_constitution/meta_evolution_ledger.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/sovereign_certification/evidence_chain_builder.py",
+        "sarita_runtime/kernel/universal_governance/evidence_chain_builder.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/sovereign_certification/scientific_reproducibility_engine.py",
+        "sarita_runtime/kernel/universal_governance/scientific_reproducibility_engine.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/formal_legitimacy/legitimacy_score_calculator.py",
+        "sarita_runtime/kernel/metaconstitutional_governance/legitimacy_score_calculator.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/audits/cross_universe_validator.py",
+        "sarita_runtime/kernel/universal_governance/cross_universe_validator.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/constitutional_evolution/constitutional_evolution_engine.py",
+        "sarita_runtime/kernel/evolution_governance/constitutional_evolution_engine.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/constitutional_evolution/constitutional_evolution_engine.py",
+        "sarita_runtime/kernel/civilizational_emergence/constitutional_evolution_engine.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/constitutional_evolution/constitutional_evolution_ledger.py",
+        "sarita_runtime/kernel/adaptive_constitution/constitutional_evolution_ledger.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/evolution_governance/constitutional_outcome_predictor.py",
+        "sarita_runtime/kernel/adaptive_constitution/constitutional_outcome_predictor.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/evolution_governance/constitutional_evolution_engine.py",
+        "sarita_runtime/kernel/civilizational_emergence/constitutional_evolution_engine.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/evolution_governance/constitutional_simulation_engine.py",
+        "sarita_runtime/kernel/adaptive_constitution/constitutional_simulation_engine.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/evolution_governance/scientific_ledgers.py",
+        "sarita_runtime/kernel/metaconstitutional_governance/scientific_ledgers.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/sovereign_constitution/constitutional_reform_engine.py",
+        "sarita_runtime/kernel/adaptive_constitution/constitutional_reform_engine.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/meta_evolution/meta_constitution_engine.py",
+        "sarita_runtime/kernel/metaconstitutional_governance/meta_constitution_engine.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/civilizational_emergence/constitutional_legitimacy_validator.py",
+        "sarita_runtime/kernel/metaconstitutional_governance/constitutional_legitimacy_validator.py"
+      ],
+      "confidence": 0.99
+    },
+    {
+      "type": "FILE_OVERLAP",
+      "items": [
+        "sarita_runtime/kernel/adaptive_evolution/constitutional_breakpoint_detector.py",
+        "sarita_runtime/kernel/metaconstitutional_governance/constitutional_breakpoint_detector.py"
+      ],
+      "confidence": 0.99
+    }
+  ],
+  "dead_features": []
+}

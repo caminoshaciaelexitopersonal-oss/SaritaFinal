@@ -4,6 +4,5 @@
 | Timestamp | Architecture ID | Event Type | Status | Evidence Hash |
 |-----------|-----------------|------------|--------|---------------|
 | INITIAL   | SYSTEM          | INFRASTRUCTURE INITIALIZED | ACTIVE | - |
-| 1715700000| Arch-801B9C     | BIRTH_ROOT | ACTIVE | a1b2c3d4e5f6 |
-| 1715700500| Arch-0B54AB     | BIRTH_CHILD| ACTIVE | f6e5d4c3b2a1 |
-| 1715701000| Arch-ADAB9F     | SELECTION_WINNER | ACTIVE | 9a8b7c6d5e4f |
+| 1715800000| KERNEL-MODEL-1  | SYSTEM_SCAN | COMPLETED | hash-128-abc |
+| 1715801000| VAR-128-2       | VARIANT_GENERATION | EVALUATED | hash-128-def |
