@@ -1,0 +1,17 @@
+class EventCatalog:
+    """
+    Catalog of all allowed system events across the SARITA Sovereign Cognitive Operating System.
+    """
+    SYSTEM_BOOT = "system.boot"
+    SYSTEM_SHUTDOWN = "system.shutdown"
+    STATE_CHANGED = "state.changed"
+    METRIC_UPDATED = "metric.updated"
+    AXIOM_VIOLATION = "axiom.violation"
+    DECISION_MADE = "decision.made"
+    EXECUTION_TRIGGERED = "execution.triggered"
+    OPTIMIZATION_PROPOSAL = "optimization.proposal"
+    SECURITY_ATTACK_DETECTED = "security.attack_detected"
+    LEARNING_RECORDED = "learning.recorded"
+    KNOWLEDGE_MUTATED = "knowledge.mutated"
+    COSMO_EVOLVED = "cosmo.evolved"
+    HEALTH_ALERT = "health.alert"

@@ -8,7 +8,7 @@
       {
         "task_id": "TASK-001-SYSTEM-PRECHECK",
         "status": "COMPLETED",
-        "execution_id": "EXE-629AAD96",
+        "execution_id": "EXE-86090184",
         "rollback_triggered": false,
         "quality_delta": 0.0,
         "success": true
@@ -16,10 +16,10 @@
       {
         "task_id": "TASK-002-PROP-OPT-001-SIM",
         "status": "COMPLETED",
-        "execution_id": "EXE-04CE3B33",
+        "execution_id": "EXE-19E32290",
         "decision_id": "PROP-OPT-001",
-        "evidence_id": "EVI-654C5E0C",
-        "learning_id": "LRN-F08B60F6",
+        "evidence_id": "EVI-AC1DADD2",
+        "learning_id": "LRN-C0C6A171",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -27,10 +27,10 @@
       {
         "task_id": "TASK-002-PROP-OPT-001-APP",
         "status": "COMPLETED",
-        "execution_id": "EXE-4AE516BC",
+        "execution_id": "EXE-B3E9D408",
         "decision_id": "PROP-OPT-001",
-        "evidence_id": "EVI-07B9D232",
-        "learning_id": "LRN-87E4EE4E",
+        "evidence_id": "EVI-1C10E9DC",
+        "learning_id": "LRN-221F1EA9",
         "rollback_triggered": false,
         "quality_delta": 0.03,
         "success": true
@@ -38,10 +38,10 @@
       {
         "task_id": "TASK-002-PROP-OPT-001-VAL",
         "status": "COMPLETED",
-        "execution_id": "EXE-08F84C66",
+        "execution_id": "EXE-4895E86F",
         "decision_id": "PROP-OPT-001",
-        "evidence_id": "EVI-82E761A8",
-        "learning_id": "LRN-9E7AA0DE",
+        "evidence_id": "EVI-CDD1DD61",
+        "learning_id": "LRN-16DF4962",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -49,10 +49,10 @@
       {
         "task_id": "TASK-003-PROP-OPT-002-SIM",
         "status": "COMPLETED",
-        "execution_id": "EXE-F8A97232",
+        "execution_id": "EXE-1E59FF08",
         "decision_id": "PROP-OPT-002",
-        "evidence_id": "EVI-9251AB8F",
-        "learning_id": "LRN-4B068E1B",
+        "evidence_id": "EVI-B01C63A0",
+        "learning_id": "LRN-6892E1ED",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -60,10 +60,10 @@
       {
         "task_id": "TASK-003-PROP-OPT-002-APP",
         "status": "COMPLETED",
-        "execution_id": "EXE-887B5AD0",
+        "execution_id": "EXE-33422B1E",
         "decision_id": "PROP-OPT-002",
-        "evidence_id": "EVI-47C2080D",
-        "learning_id": "LRN-2670CB11",
+        "evidence_id": "EVI-E56EB5DA",
+        "learning_id": "LRN-A773699B",
         "rollback_triggered": false,
         "quality_delta": 0.03,
         "success": true
@@ -71,10 +71,10 @@
       {
         "task_id": "TASK-003-PROP-OPT-002-VAL",
         "status": "COMPLETED",
-        "execution_id": "EXE-E0F4CC6B",
+        "execution_id": "EXE-5374D7E0",
         "decision_id": "PROP-OPT-002",
-        "evidence_id": "EVI-F6314C99",
-        "learning_id": "LRN-F5364321",
+        "evidence_id": "EVI-70B7E82A",
+        "learning_id": "LRN-92000CF9",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -90,7 +90,7 @@
       {
         "task_id": "TASK-001-SYSTEM-PRECHECK",
         "status": "COMPLETED",
-        "execution_id": "EXE-E08CA280",
+        "execution_id": "EXE-5B217F3D",
         "rollback_triggered": false,
         "quality_delta": 0.0,
         "success": true
@@ -98,10 +98,10 @@
       {
         "task_id": "TASK-002-PROP-OPT-001-SIM",
         "status": "COMPLETED",
-        "execution_id": "EXE-6683AD2D",
+        "execution_id": "EXE-0DA3C084",
         "decision_id": "PROP-OPT-001",
-        "evidence_id": "EVI-4CCCC308",
-        "learning_id": "LRN-755DBB50",
+        "evidence_id": "EVI-E444E79E",
+        "learning_id": "LRN-499C078C",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -109,10 +109,10 @@
       {
         "task_id": "TASK-002-PROP-OPT-001-APP",
         "status": "COMPLETED",
-        "execution_id": "EXE-71D7E66F",
+        "execution_id": "EXE-A451605C",
         "decision_id": "PROP-OPT-001",
-        "evidence_id": "EVI-8C7CDF9E",
-        "learning_id": "LRN-EE63ED13",
+        "evidence_id": "EVI-C23320A3",
+        "learning_id": "LRN-E8258A0C",
         "rollback_triggered": false,
         "quality_delta": 0.03,
         "success": true
@@ -120,10 +120,10 @@
       {
         "task_id": "TASK-002-PROP-OPT-001-VAL",
         "status": "COMPLETED",
-        "execution_id": "EXE-C117D496",
+        "execution_id": "EXE-D80FE526",
         "decision_id": "PROP-OPT-001",
-        "evidence_id": "EVI-26B87D15",
-        "learning_id": "LRN-F39785A0",
+        "evidence_id": "EVI-B703A57B",
+        "learning_id": "LRN-6C9AA70B",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -131,10 +131,10 @@
       {
         "task_id": "TASK-003-PROP-OPT-002-SIM",
         "status": "COMPLETED",
-        "execution_id": "EXE-C3FB6816",
+        "execution_id": "EXE-804DEFEF",
         "decision_id": "PROP-OPT-002",
-        "evidence_id": "EVI-628C1C24",
-        "learning_id": "LRN-7659E565",
+        "evidence_id": "EVI-99A7F21A",
+        "learning_id": "LRN-BC567BF0",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -142,10 +142,10 @@
       {
         "task_id": "TASK-003-PROP-OPT-002-APP",
         "status": "COMPLETED",
-        "execution_id": "EXE-DA4B9ED0",
+        "execution_id": "EXE-C68D2600",
         "decision_id": "PROP-OPT-002",
-        "evidence_id": "EVI-8CB818D3",
-        "learning_id": "LRN-22E2E574",
+        "evidence_id": "EVI-031417F7",
+        "learning_id": "LRN-322E350F",
         "rollback_triggered": false,
         "quality_delta": 0.03,
         "success": true
@@ -153,10 +153,10 @@
       {
         "task_id": "TASK-003-PROP-OPT-002-VAL",
         "status": "COMPLETED",
-        "execution_id": "EXE-190E2CEF",
+        "execution_id": "EXE-9698B37E",
         "decision_id": "PROP-OPT-002",
-        "evidence_id": "EVI-C1BB8591",
-        "learning_id": "LRN-307606DA",
+        "evidence_id": "EVI-807C8539",
+        "learning_id": "LRN-57F892D5",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -172,7 +172,7 @@
       {
         "task_id": "TASK-001-SYSTEM-PRECHECK",
         "status": "COMPLETED",
-        "execution_id": "EXE-5171372D",
+        "execution_id": "EXE-9CCF9640",
         "rollback_triggered": false,
         "quality_delta": 0.0,
         "success": true
@@ -180,10 +180,10 @@
       {
         "task_id": "TASK-002-PROP-OPT-001-SIM",
         "status": "COMPLETED",
-        "execution_id": "EXE-E49E418A",
+        "execution_id": "EXE-5D1CFC96",
         "decision_id": "PROP-OPT-001",
-        "evidence_id": "EVI-86302604",
-        "learning_id": "LRN-C71FDE3E",
+        "evidence_id": "EVI-8CDF94E8",
+        "learning_id": "LRN-F64FDB4D",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -191,10 +191,10 @@
       {
         "task_id": "TASK-002-PROP-OPT-001-APP",
         "status": "COMPLETED",
-        "execution_id": "EXE-104BC875",
+        "execution_id": "EXE-EF860373",
         "decision_id": "PROP-OPT-001",
-        "evidence_id": "EVI-A14874C1",
-        "learning_id": "LRN-0EFF8008",
+        "evidence_id": "EVI-AEA7BF38",
+        "learning_id": "LRN-6E1DF9E3",
         "rollback_triggered": false,
         "quality_delta": 0.03,
         "success": true
@@ -202,10 +202,10 @@
       {
         "task_id": "TASK-002-PROP-OPT-001-VAL",
         "status": "COMPLETED",
-        "execution_id": "EXE-51090077",
+        "execution_id": "EXE-1822CB4A",
         "decision_id": "PROP-OPT-001",
-        "evidence_id": "EVI-A475970B",
-        "learning_id": "LRN-36240440",
+        "evidence_id": "EVI-383B8E5F",
+        "learning_id": "LRN-AAA9B249",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -213,10 +213,10 @@
       {
         "task_id": "TASK-003-PROP-OPT-002-SIM",
         "status": "COMPLETED",
-        "execution_id": "EXE-368803D9",
+        "execution_id": "EXE-7B376302",
         "decision_id": "PROP-OPT-002",
-        "evidence_id": "EVI-70A4B47F",
-        "learning_id": "LRN-CB690B34",
+        "evidence_id": "EVI-357CE6E3",
+        "learning_id": "LRN-134C3B6F",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
@@ -224,10 +224,10 @@
       {
         "task_id": "TASK-003-PROP-OPT-002-APP",
         "status": "COMPLETED",
-        "execution_id": "EXE-B33EE777",
+        "execution_id": "EXE-5ED5BFB6",
         "decision_id": "PROP-OPT-002",
-        "evidence_id": "EVI-8A99C79F",
-        "learning_id": "LRN-14A21D2E",
+        "evidence_id": "EVI-32BD82F5",
+        "learning_id": "LRN-B17DBF68",
         "rollback_triggered": false,
         "quality_delta": 0.03,
         "success": true
@@ -235,10 +235,10 @@
       {
         "task_id": "TASK-003-PROP-OPT-002-VAL",
         "status": "COMPLETED",
-        "execution_id": "EXE-6E0CFE40",
+        "execution_id": "EXE-FAEC4544",
         "decision_id": "PROP-OPT-002",
-        "evidence_id": "EVI-314B3F74",
-        "learning_id": "LRN-F54BC13C",
+        "evidence_id": "EVI-97D0BFE5",
+        "learning_id": "LRN-D63493D3",
         "rollback_triggered": false,
         "quality_delta": 0.01,
         "success": true
