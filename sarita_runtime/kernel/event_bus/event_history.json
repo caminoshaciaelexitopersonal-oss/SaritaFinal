@@ -85,5 +85,34 @@
       "metric": "phi",
       "value": 0.988
     }
+  },
+  {
+    "event_id": "EVT-DD39FFEE",
+    "type": "system.boot",
+    "sender": "runtime_master",
+    "timestamp": 1783715038.4321787,
+    "data": {
+      "timestamp": 1783715038.4321444
+    }
+  },
+  {
+    "event_id": "EVT-08458DAE",
+    "type": "state.changed",
+    "sender": "runtime_master",
+    "timestamp": 1783715038.4329784,
+    "data": {
+      "new_state": "OPERATIONAL"
+    }
+  },
+  {
+    "event_id": "EVT-8B2E3899",
+    "type": "state.changed",
+    "sender": "system",
+    "timestamp": 1783715038.4338639,
+    "data": {
+      "module": "control_center",
+      "metric": "phi",
+      "value": 0.988
+    }
   }
 ]

@@ -1,8 +1,8 @@
 {
-  "metrics_timestamp": 1783710743.9517288,
+  "metrics_timestamp": 1783715038.0052342,
   "status": "CERTIFIED",
   "cycle_results": {
-    "timestamp": 1783710743.494265,
+    "timestamp": 1783715037.5197163,
     "proposals_count": 2,
     "approved_count": 2,
     "executed_count": 7,
