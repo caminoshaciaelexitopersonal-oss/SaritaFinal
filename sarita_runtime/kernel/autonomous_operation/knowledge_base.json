@@ -1,0 +1,456 @@
+{
+  "best_performing_paths": [
+    {
+      "execution_id": "EXE-7EDA4CBC",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-A24A02B7",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-8F3971EE",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-DAAF3E4D",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-3F7648A0",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-F8089F20",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-7E9E12FF",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-85FCDD6C",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-E6927C18",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-E59CE8D6",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-EEC9E78A",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-759F4883",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-4B8AF5C8",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-1C5F0FD7",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-50434E45",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-DECC0B5A",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-411D6524",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-8F0A0AA1",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-FF9048D7",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-D504AC74",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-C9D75DDE",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-4BCFD385",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-2930CE45",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-1F3AF834",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-3A5AF219",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-325F47EC",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-04CE3B33",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-4AE516BC",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-08F84C66",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-F8A97232",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-887B5AD0",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-E0F4CC6B",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-6683AD2D",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-71D7E66F",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-C117D496",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-C3FB6816",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-DA4B9ED0",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-190E2CEF",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-E49E418A",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-104BC875",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-51090077",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-368803D9",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-B33EE777",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-6E0CFE40",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-0F5B77A5",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-AAE28111",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-22E964EA",
+      "improvements": [
+        "Ignore",
+        "Centralize telemetry only",
+        "Full unified core telemetry merge"
+      ],
+      "risk_level": 0.2
+    },
+    {
+      "execution_id": "EXE-3DD19A68",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-F6DE5AFD",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    },
+    {
+      "execution_id": "EXE-31CC33B2",
+      "improvements": [
+        "Ignore",
+        "Event-driven architecture transition",
+        "Full single-writer lock-free pattern"
+      ],
+      "risk_level": 0.45
+    }
+  ],
+  "critical_risk_zones": [],
+  "last_updated_epoch": 1783700692
+}

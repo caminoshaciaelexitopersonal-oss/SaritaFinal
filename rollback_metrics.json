@@ -1,0 +1,6 @@
+{
+  "rollback_mechanisms_active": true,
+  "rollback_history_entries": [],
+  "rollback_test_success_ratio": 1.0,
+  "state_recovery_precision": 1.0
+}
