@@ -1,0 +1,17 @@
+[
+  {
+    "id": "VAR-128-0",
+    "topology": "MICROKERNEL",
+    "fitness_score": 0.7034
+  },
+  {
+    "id": "VAR-128-1",
+    "topology": "MESH",
+    "fitness_score": 0.7427
+  },
+  {
+    "id": "VAR-128-2",
+    "topology": "MICROKERNEL",
+    "fitness_score": 0.6183
+  }
+]

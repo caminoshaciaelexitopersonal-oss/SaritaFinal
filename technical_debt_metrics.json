@@ -1,0 +1,167 @@
+{
+  "total_complexity": 1099,
+  "avg_maintainability": 0.9107,
+  "debt_ratio": 1.099,
+  "smells": [
+    {
+      "type": "GOD_MODULE",
+      "module": "epistemic_completeness",
+      "count": 21
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "predictive_governance",
+      "count": 59
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "existential_legitimacy",
+      "count": 24
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "evolutionary_fitness",
+      "count": 24
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "adaptive_governance",
+      "count": 30
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "formal_reasoning",
+      "count": 24
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "meta_cosmogenesis",
+      "count": 18
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "scientific_autonomy",
+      "count": 30
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "metaevolution",
+      "count": 31
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "prescriptive_governance",
+      "count": 60
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "recursive_epistemology",
+      "count": 27
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "constitutional_identity",
+      "count": 24
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "sovereign_certification",
+      "count": 31
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "formal_legitimacy",
+      "count": 20
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "civilizational_evolution",
+      "count": 17
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "scientific_governance",
+      "count": 25
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "self_architecture",
+      "count": 19
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "formal_optimization",
+      "count": 24
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "epistemic_maturity",
+      "count": 26
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "constitutional_evolution",
+      "count": 25
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "evolution_governance",
+      "count": 31
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "meta_constitution",
+      "count": 19
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "adaptive_constitution",
+      "count": 16
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "constitutional_discovery",
+      "count": 21
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "universal_governance",
+      "count": 46
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "meta_evolution",
+      "count": 40
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "sovereign_value",
+      "count": 24
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "civilizational_emergence",
+      "count": 32
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "civilizational_alignment",
+      "count": 19
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "adaptive_evolution",
+      "count": 29
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "metaconstitutional_governance",
+      "count": 32
+    },
+    {
+      "type": "GOD_MODULE",
+      "module": "sovereign_purpose",
+      "count": 20
+    }
+  ]
+}

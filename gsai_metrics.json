@@ -1,0 +1,13 @@
+{
+  "cohesion": 0.85,
+  "coupling": 0.2,
+  "modularity": 0.9,
+  "mantenibilidad": 0.9107,
+  "estabilidad": 0.95,
+  "escalabilidad": 0.88,
+  "evolucionabilidad": 0.92,
+  "refactorizaci\u00f3n": 0.8,
+  "complejidad": 2.198,
+  "deuda_t\u00e9cnica": 1.099,
+  "entrop\u00eda": 0.1
+}

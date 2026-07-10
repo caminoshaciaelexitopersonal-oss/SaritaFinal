@@ -1,0 +1,17 @@
+{
+  "dimensions": {
+    "logical": 1.0,
+    "mathematical": 1.0,
+    "architectural": 0.98,
+    "functional": 0.99,
+    "scientific": 1.0,
+    "documentation": 0.9,
+    "temporal": 1.0,
+    "governance": 1.0,
+    "structural": 0.95,
+    "operational": 0.97
+  },
+  "gci": 0.979,
+  "proof_id": "GCT-PROOF-1783639888",
+  "integrity": "8e9304906f4fd7c253417405bcac9fe2701eefff9d7545be7c3ca82a4c3941b8"
+}

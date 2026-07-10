@@ -1,0 +1,55 @@
+{
+  "axioms": {
+    "A1": {
+      "id": "A1",
+      "definition": "Every module belongs to exactly one valid architecture.",
+      "status": "REGISTERED"
+    },
+    "A2": {
+      "id": "A2",
+      "definition": "Every dependency has a valid resolution.",
+      "status": "REGISTERED"
+    },
+    "A3": {
+      "id": "A3",
+      "definition": "No engine can circularly depend on itself.",
+      "status": "REGISTERED"
+    },
+    "A4": {
+      "id": "A4",
+      "definition": "Every audit has evidence.",
+      "status": "REGISTERED"
+    },
+    "A5": {
+      "id": "A5",
+      "definition": "Every certification has an audit.",
+      "status": "REGISTERED"
+    },
+    "A6": {
+      "id": "A6",
+      "definition": "Every index has a verifiable calculation.",
+      "status": "REGISTERED"
+    },
+    "A7": {
+      "id": "A7",
+      "definition": "Every calculation has traceability.",
+      "status": "REGISTERED"
+    },
+    "A8": {
+      "id": "A8",
+      "definition": "Every change has history.",
+      "status": "REGISTERED"
+    },
+    "A9": {
+      "id": "A9",
+      "definition": "No component can be orphaned.",
+      "status": "REGISTERED"
+    },
+    "A10": {
+      "id": "A10",
+      "definition": "No module can exist without governance.",
+      "status": "REGISTERED"
+    }
+  },
+  "postulates": {}
+}
