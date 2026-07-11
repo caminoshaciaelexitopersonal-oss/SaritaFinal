@@ -1,0 +1,13 @@
+{
+  "decisions_evaluated": 50,
+  "average_decision_score": 0.584,
+  "dominance_ratio": 0.985,
+  "decision_accuracy": 0.99,
+  "criteria_weights": {
+    "risk": 0.04707589436770546,
+    "benefit": 0.35521006205502614,
+    "uncertainty": 0.04707589436770546,
+    "priority": 0.33332725731040774,
+    "impact": 0.21731089189915523
+  }
+}

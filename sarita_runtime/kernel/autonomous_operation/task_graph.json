@@ -1,0 +1,64 @@
+{
+  "nodes": [
+    {
+      "id": "TASK-001-SYSTEM-PRECHECK",
+      "label": "System Pre-Execution Healthcheck"
+    },
+    {
+      "id": "TASK-002-PROP-OPT-001-SIM",
+      "label": "Simulate execution for PROP-OPT-001"
+    },
+    {
+      "id": "TASK-002-PROP-OPT-001-APP",
+      "label": "Apply modifications for PROP-OPT-001"
+    },
+    {
+      "id": "TASK-002-PROP-OPT-001-VAL",
+      "label": "Validate and Certify PROP-OPT-001"
+    },
+    {
+      "id": "TASK-003-PROP-OPT-002-SIM",
+      "label": "Simulate execution for PROP-OPT-002"
+    },
+    {
+      "id": "TASK-003-PROP-OPT-002-APP",
+      "label": "Apply modifications for PROP-OPT-002"
+    },
+    {
+      "id": "TASK-003-PROP-OPT-002-VAL",
+      "label": "Validate and Certify PROP-OPT-002"
+    }
+  ],
+  "edges": [
+    {
+      "from": "TASK-001-SYSTEM-PRECHECK",
+      "to": "TASK-002-PROP-OPT-001-SIM",
+      "relationship": "must_precede"
+    },
+    {
+      "from": "TASK-002-PROP-OPT-001-SIM",
+      "to": "TASK-002-PROP-OPT-001-APP",
+      "relationship": "must_precede"
+    },
+    {
+      "from": "TASK-002-PROP-OPT-001-APP",
+      "to": "TASK-002-PROP-OPT-001-VAL",
+      "relationship": "must_precede"
+    },
+    {
+      "from": "TASK-001-SYSTEM-PRECHECK",
+      "to": "TASK-003-PROP-OPT-002-SIM",
+      "relationship": "must_precede"
+    },
+    {
+      "from": "TASK-003-PROP-OPT-002-SIM",
+      "to": "TASK-003-PROP-OPT-002-APP",
+      "relationship": "must_precede"
+    },
+    {
+      "from": "TASK-003-PROP-OPT-002-APP",
+      "to": "TASK-003-PROP-OPT-002-VAL",
+      "relationship": "must_precede"
+    }
+  ]
+}

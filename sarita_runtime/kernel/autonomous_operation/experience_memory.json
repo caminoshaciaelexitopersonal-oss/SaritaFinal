@@ -1,0 +1,3452 @@
+[
+  {
+    "experience_id": "EXP-0001",
+    "action_id": "EXE-EAD8585C",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010155200958251953,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0002",
+    "action_id": "EXE-BB94A71A",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.3603439331054688e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0003",
+    "action_id": "EXE-41E5384E",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 5.9604644775390625e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0004",
+    "action_id": "EXE-251BF88A",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.01013636589050293,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0005",
+    "action_id": "EXE-128662ED",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.5033950805664062e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0006",
+    "action_id": "EXE-AA9BD549",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 5.9604644775390625e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0007",
+    "action_id": "EXE-EFEF0CA3",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010143041610717773,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0008",
+    "action_id": "EXE-87FBC060",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.2649765014648438e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0009",
+    "action_id": "EXE-971E6B99",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.198883056640625e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0010",
+    "action_id": "EXE-0725D119",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010163545608520508,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0011",
+    "action_id": "EXE-7EDA4CBC",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.00012350082397460938,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0012",
+    "action_id": "EXE-A24A02B7",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0013",
+    "action_id": "EXE-8F3971EE",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010175228118896484,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0014",
+    "action_id": "EXE-DAAF3E4D",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.2649765014648438e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0015",
+    "action_id": "EXE-3F7648A0",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0016",
+    "action_id": "EXE-F8089F20",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.01015019416809082,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0017",
+    "action_id": "EXE-7E9E12FF",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 3.123283386230469e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0018",
+    "action_id": "EXE-85FCDD6C",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 9.5367431640625e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0019",
+    "action_id": "EXE-E6927C18",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010145902633666992,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0020",
+    "action_id": "EXE-E59CE8D6",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.1696090698242188e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0021",
+    "action_id": "EXE-EEC9E78A",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0022",
+    "action_id": "EXE-759F4883",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010194063186645508,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0023",
+    "action_id": "EXE-4B8AF5C8",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.2649765014648438e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0024",
+    "action_id": "EXE-1C5F0FD7",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0025",
+    "action_id": "EXE-50434E45",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010182619094848633,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0026",
+    "action_id": "EXE-DECC0B5A",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.3603439331054688e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0027",
+    "action_id": "EXE-411D6524",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0028",
+    "action_id": "EXE-8F0A0AA1",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010196924209594727,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0029",
+    "action_id": "EXE-FF9048D7",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.7418136596679688e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0030",
+    "action_id": "EXE-D504AC74",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 7.152557373046875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0031",
+    "action_id": "EXE-C9D75DDE",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010466575622558594,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0032",
+    "action_id": "EXE-4BCFD385",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.6464462280273438e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0033",
+    "action_id": "EXE-2930CE45",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0034",
+    "action_id": "EXE-1F3AF834",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010201692581176758,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0035",
+    "action_id": "EXE-3A5AF219",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.9325485229492188e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0036",
+    "action_id": "EXE-325F47EC",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.67572021484375e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0037",
+    "action_id": "EXE-04CE3B33",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010156869888305664,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0038",
+    "action_id": "EXE-4AE516BC",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.2649765014648438e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0039",
+    "action_id": "EXE-08F84C66",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0040",
+    "action_id": "EXE-F8A97232",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010174274444580078,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0041",
+    "action_id": "EXE-887B5AD0",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.7179718017578125e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0042",
+    "action_id": "EXE-E0F4CC6B",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0043",
+    "action_id": "EXE-6683AD2D",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010213851928710938,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0044",
+    "action_id": "EXE-71D7E66F",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.3126602172851562e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0045",
+    "action_id": "EXE-C117D496",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0046",
+    "action_id": "EXE-C3FB6816",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010259151458740234,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0047",
+    "action_id": "EXE-DA4B9ED0",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 3.2901763916015625e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0048",
+    "action_id": "EXE-190E2CEF",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0049",
+    "action_id": "EXE-E49E418A",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010161161422729492,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0050",
+    "action_id": "EXE-104BC875",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.2411346435546875e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0051",
+    "action_id": "EXE-51090077",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.198883056640625e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0052",
+    "action_id": "EXE-368803D9",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010181427001953125,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0053",
+    "action_id": "EXE-B33EE777",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.47955322265625e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0054",
+    "action_id": "EXE-6E0CFE40",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0055",
+    "action_id": "EXE-0F5B77A5",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.01018381118774414,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0056",
+    "action_id": "EXE-AAE28111",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.2172927856445312e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0057",
+    "action_id": "EXE-22E964EA",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.9141387939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0058",
+    "action_id": "EXE-3DD19A68",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.01017141342163086,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0059",
+    "action_id": "EXE-F6DE5AFD",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.2649765014648438e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0060",
+    "action_id": "EXE-31CC33B2",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0061",
+    "action_id": "EXE-DD87FC86",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010161161422729492,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0062",
+    "action_id": "EXE-CAFD00E1",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 3.0040740966796875e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0063",
+    "action_id": "EXE-AB2ED455",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0064",
+    "action_id": "EXE-47244D34",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010157346725463867,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0065",
+    "action_id": "EXE-FE85EFC0",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.8371810913085938e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0066",
+    "action_id": "EXE-A2985526",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.9141387939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0067",
+    "action_id": "EXE-B92471CE",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010171651840209961,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0068",
+    "action_id": "EXE-A4D058D1",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.4080276489257812e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0069",
+    "action_id": "EXE-A3AED131",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0070",
+    "action_id": "EXE-C0C6A5F9",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010186195373535156,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0071",
+    "action_id": "EXE-30C81B5E",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 3.743171691894531e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0072",
+    "action_id": "EXE-A88F1E83",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.9141387939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0073",
+    "action_id": "EXE-1774BDC8",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.01017141342163086,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0074",
+    "action_id": "EXE-FCF15BC3",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.574920654296875e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0075",
+    "action_id": "EXE-B5A95260",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.9141387939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0076",
+    "action_id": "EXE-408BA91D",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010190963745117188,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0077",
+    "action_id": "EXE-F174A1E5",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.6702880859375e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0078",
+    "action_id": "EXE-99BE40D0",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.9141387939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0079",
+    "action_id": "EXE-CE9E6F54",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.01023101806640625,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0080",
+    "action_id": "EXE-CA578808",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.6464462280273438e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0081",
+    "action_id": "EXE-DD6E4325",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.67572021484375e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0082",
+    "action_id": "EXE-73BF71D7",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010249853134155273,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0083",
+    "action_id": "EXE-4F11C000",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.4557113647460938e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0084",
+    "action_id": "EXE-F2229D59",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.67572021484375e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0085",
+    "action_id": "EXE-30FB551F",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.01018071174621582,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0086",
+    "action_id": "EXE-F919B39B",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 3.123283386230469e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0087",
+    "action_id": "EXE-2FB74148",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 7.152557373046875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0088",
+    "action_id": "EXE-BD9D029C",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010165214538574219,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0089",
+    "action_id": "EXE-15323432",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.5987625122070312e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0090",
+    "action_id": "EXE-58DE2747",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.9141387939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0091",
+    "action_id": "EXE-9902915A",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010242938995361328,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0092",
+    "action_id": "EXE-1AAE438E",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 3.1948089599609375e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0093",
+    "action_id": "EXE-0EF1250D",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0094",
+    "action_id": "EXE-AD96C666",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010210990905761719,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0095",
+    "action_id": "EXE-86AF1CA9",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.7894973754882812e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0096",
+    "action_id": "EXE-AEC968E0",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.9141387939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0097",
+    "action_id": "EXE-19E32290",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010193109512329102,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0098",
+    "action_id": "EXE-B3E9D408",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.8371810913085938e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0099",
+    "action_id": "EXE-4895E86F",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.9141387939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0100",
+    "action_id": "EXE-1E59FF08",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010198831558227539,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0101",
+    "action_id": "EXE-33422B1E",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.6226043701171875e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0102",
+    "action_id": "EXE-5374D7E0",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.67572021484375e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0103",
+    "action_id": "EXE-0DA3C084",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.01022958755493164,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0104",
+    "action_id": "EXE-A451605C",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.47955322265625e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0105",
+    "action_id": "EXE-D80FE526",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0106",
+    "action_id": "EXE-804DEFEF",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.01031351089477539,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0107",
+    "action_id": "EXE-C68D2600",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.341934204101562e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0108",
+    "action_id": "EXE-9698B37E",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0109",
+    "action_id": "EXE-5D1CFC96",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010215044021606445,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0110",
+    "action_id": "EXE-EF860373",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.574920654296875e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0111",
+    "action_id": "EXE-1822CB4A",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.67572021484375e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0112",
+    "action_id": "EXE-7B376302",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010248899459838867,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0113",
+    "action_id": "EXE-5ED5BFB6",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.4080276489257812e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0114",
+    "action_id": "EXE-FAEC4544",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 7.62939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0115",
+    "action_id": "EXE-74A2FDB9",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010206937789916992,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0116",
+    "action_id": "EXE-2E9DCD60",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.765655517578125e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0117",
+    "action_id": "EXE-CE7F6923",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.9141387939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0118",
+    "action_id": "EXE-EA81FC6A",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010121822357177734,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0119",
+    "action_id": "EXE-81BC2DA4",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.6464462280273438e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0120",
+    "action_id": "EXE-97C07DD1",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 7.3909759521484375e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0121",
+    "action_id": "EXE-39FDED42",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010124683380126953,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0122",
+    "action_id": "EXE-354842AC",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.8371810913085938e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0123",
+    "action_id": "EXE-82BE02B1",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 8.58306884765625e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0124",
+    "action_id": "EXE-244B969A",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010214090347290039,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0125",
+    "action_id": "EXE-E399BB17",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.7894973754882812e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0126",
+    "action_id": "EXE-9A630FC3",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.67572021484375e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0127",
+    "action_id": "EXE-1950BC05",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010213136672973633,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0128",
+    "action_id": "EXE-ECC1225B",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.47955322265625e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0129",
+    "action_id": "EXE-667C9697",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0130",
+    "action_id": "EXE-878DC50A",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.01018071174621582,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0131",
+    "action_id": "EXE-0E212E83",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 5.793571472167969e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0132",
+    "action_id": "EXE-E7C85EB5",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 7.152557373046875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0133",
+    "action_id": "EXE-FE32B96E",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010205268859863281,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0134",
+    "action_id": "EXE-451EB9A8",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.3365020751953125e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0135",
+    "action_id": "EXE-23E65D50",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 6.4373016357421875e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0136",
+    "action_id": "EXE-942FB437",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.01019597053527832,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0137",
+    "action_id": "EXE-4AFEB454",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.8371810913085938e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0138",
+    "action_id": "EXE-E3DC199B",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.198883056640625e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0139",
+    "action_id": "EXE-4223EEDF",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010193109512329102,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0140",
+    "action_id": "EXE-2AB4C76D",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.5272369384765625e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0141",
+    "action_id": "EXE-1A4D0B28",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 7.62939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0142",
+    "action_id": "EXE-05A85DA6",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010174036026000977,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0143",
+    "action_id": "EXE-4C791DDA",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 2.5033950805664062e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0144",
+    "action_id": "EXE-81556EF8",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.9141387939453125e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0145",
+    "action_id": "EXE-0BC12355",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 0.010210275650024414,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0146",
+    "action_id": "EXE-7D0C615F",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 2.5510787963867188e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0147",
+    "action_id": "EXE-96A4526B",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-001",
+      "run_time_sec": 7.3909759521484375e-06,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0148",
+    "action_id": "EXE-006D22CE",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.0195,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 0.010213851928710938,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0149",
+    "action_id": "EXE-2FBAE9E5",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.98,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.06,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 5.698204040527344e-05,
+      "rollback_triggered": false
+    }
+  },
+  {
+    "experience_id": "EXP-0150",
+    "action_id": "EXE-A7664A90",
+    "state_before": {
+      "status": "STABLE",
+      "metrics": {
+        "gaoi": 0.95
+      }
+    },
+    "state_after": {
+      "status": "OPTIMIZED",
+      "metrics": {
+        "gaoi": 0.96,
+        "stability": 1.0
+      }
+    },
+    "reward": 1.02,
+    "metadata": {
+      "decision_id": "PROP-OPT-002",
+      "run_time_sec": 6.67572021484375e-06,
+      "rollback_triggered": false
+    }
+  }
+]

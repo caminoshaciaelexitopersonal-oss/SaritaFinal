@@ -1,0 +1,118 @@
+[
+  {
+    "event_id": "EVT-A30FA12E",
+    "type": "system.boot",
+    "sender": "runtime_master",
+    "timestamp": 1783710630.5357366,
+    "data": {
+      "timestamp": 1783710630.5356565
+    }
+  },
+  {
+    "event_id": "EVT-4E9F07D4",
+    "type": "state.changed",
+    "sender": "runtime_master",
+    "timestamp": 1783710630.536517,
+    "data": {
+      "new_state": "OPERATIONAL"
+    }
+  },
+  {
+    "event_id": "EVT-E3BCCA14",
+    "type": "state.changed",
+    "sender": "system",
+    "timestamp": 1783710630.5368373,
+    "data": {
+      "module": "control_center",
+      "metric": "phi",
+      "value": 0.988
+    }
+  },
+  {
+    "event_id": "EVT-CEF85DAF",
+    "type": "system.boot",
+    "sender": "runtime_master",
+    "timestamp": 1783710710.7671344,
+    "data": {
+      "timestamp": 1783710710.7670999
+    }
+  },
+  {
+    "event_id": "EVT-710E1544",
+    "type": "state.changed",
+    "sender": "runtime_master",
+    "timestamp": 1783710710.76771,
+    "data": {
+      "new_state": "OPERATIONAL"
+    }
+  },
+  {
+    "event_id": "EVT-9F576D68",
+    "type": "state.changed",
+    "sender": "system",
+    "timestamp": 1783710710.7686217,
+    "data": {
+      "module": "control_center",
+      "metric": "phi",
+      "value": 0.988
+    }
+  },
+  {
+    "event_id": "EVT-44DF5283",
+    "type": "system.boot",
+    "sender": "runtime_master",
+    "timestamp": 1783710744.2919364,
+    "data": {
+      "timestamp": 1783710744.2918994
+    }
+  },
+  {
+    "event_id": "EVT-B6AE9B5A",
+    "type": "state.changed",
+    "sender": "runtime_master",
+    "timestamp": 1783710744.293208,
+    "data": {
+      "new_state": "OPERATIONAL"
+    }
+  },
+  {
+    "event_id": "EVT-F4287197",
+    "type": "state.changed",
+    "sender": "system",
+    "timestamp": 1783710744.2937882,
+    "data": {
+      "module": "control_center",
+      "metric": "phi",
+      "value": 0.988
+    }
+  },
+  {
+    "event_id": "EVT-DD39FFEE",
+    "type": "system.boot",
+    "sender": "runtime_master",
+    "timestamp": 1783715038.4321787,
+    "data": {
+      "timestamp": 1783715038.4321444
+    }
+  },
+  {
+    "event_id": "EVT-08458DAE",
+    "type": "state.changed",
+    "sender": "runtime_master",
+    "timestamp": 1783715038.4329784,
+    "data": {
+      "new_state": "OPERATIONAL"
+    }
+  },
+  {
+    "event_id": "EVT-8B2E3899",
+    "type": "state.changed",
+    "sender": "system",
+    "timestamp": 1783715038.4338639,
+    "data": {
+      "module": "control_center",
+      "metric": "phi",
+      "value": 0.988
+    }
+  }
+]

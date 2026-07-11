@@ -1,0 +1,23 @@
+{
+  "tasks": {
+    "TASK-001-SYSTEM-PRECHECK": [],
+    "TASK-002-PROP-OPT-001-SIM": [
+      "TASK-001-SYSTEM-PRECHECK"
+    ],
+    "TASK-002-PROP-OPT-001-APP": [
+      "TASK-002-PROP-OPT-001-SIM"
+    ],
+    "TASK-002-PROP-OPT-001-VAL": [
+      "TASK-002-PROP-OPT-001-APP"
+    ],
+    "TASK-003-PROP-OPT-002-SIM": [
+      "TASK-001-SYSTEM-PRECHECK"
+    ],
+    "TASK-003-PROP-OPT-002-APP": [
+      "TASK-003-PROP-OPT-002-SIM"
+    ],
+    "TASK-003-PROP-OPT-002-VAL": [
+      "TASK-003-PROP-OPT-002-APP"
+    ]
+  }
+}
