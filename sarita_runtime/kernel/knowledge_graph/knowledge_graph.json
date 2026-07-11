@@ -1,0 +1,164 @@
+{
+  "nodes": {
+    "exp:Self-Architecture_Stability_Trial": {
+      "node_id": "exp:Self-Architecture_Stability_Trial",
+      "node_type": "Experiment",
+      "properties": {
+        "status": "COMPLETED",
+        "uuid": "EXP-UUID-6E87BC11D9174F47BAA0AC5F6EFB9503"
+      }
+    },
+    "hyp:H001": {
+      "node_id": "hyp:H001",
+      "node_type": "Hypothesis",
+      "properties": {
+        "hypothesis_id": "H001",
+        "objective": "Determine if self-architecture decreases kernel complexity without affecting stability.",
+        "independent_var": "autoarchitecture_depth_factor",
+        "dependent_var": "gsai_score",
+        "null_hypothesis": "Self-architecture modifications do not improve or reduce complexity parameters.",
+        "alternative_hypothesis": "Self-architecture systematically minimizes cyclomatic complexity while preserving stability.",
+        "control_vars": [
+          "memory_allocation_mb",
+          "cpu_core_limit"
+        ],
+        "risks": [
+          "potential lock race condition",
+          "temporary latency bump during adaptation cycle"
+        ],
+        "limitations": [
+          "highly dependent on physical IO-uring hardware limits"
+        ],
+        "status": "ACCEPTED"
+      }
+    },
+    "var:autoarchitecture_depth_factor": {
+      "node_id": "var:autoarchitecture_depth_factor",
+      "node_type": "Variable",
+      "properties": {
+        "role": "INDEPENDENT"
+      }
+    },
+    "var:gsai_score": {
+      "node_id": "var:gsai_score",
+      "node_type": "Variable",
+      "properties": {
+        "role": "DEPENDENT"
+      }
+    },
+    "dataset:v1.0.0": {
+      "node_id": "dataset:v1.0.0",
+      "node_type": "Dataset",
+      "properties": {
+        "uuid": "DATASET-UUID-30BEA4AEB3D5429FAB63E70FE47A988B"
+      }
+    },
+    "proto:PROTO-133-1": {
+      "node_id": "proto:PROTO-133-1",
+      "node_type": "Protocol",
+      "properties": {
+        "sample_size": 30
+      }
+    },
+    "bench:SARITA_v1.0": {
+      "node_id": "bench:SARITA_v1.0",
+      "node_type": "Benchmark",
+      "properties": {
+        "gsai": 0.9999986666666667
+      }
+    },
+    "stat:trial_summary": {
+      "node_id": "stat:trial_summary",
+      "node_type": "Statistical Result",
+      "properties": {
+        "mean": 1.0,
+        "median": 1.0,
+        "std_dev": 0.0,
+        "variance": 0.0,
+        "confidence_interval_95": [
+          1.0,
+          1.0
+        ],
+        "p_value": 0.001,
+        "cohens_d_effect_size": 11516.1604,
+        "t_stat": 44601.8976
+      }
+    },
+    "pub:self_architecture_paper": {
+      "node_id": "pub:self_architecture_paper",
+      "node_type": "Publication",
+      "properties": {
+        "title": "Autonomous Self-Architecture Validation Paper"
+      }
+    },
+    "conclusion:H001_accepted": {
+      "node_id": "conclusion:H001_accepted",
+      "node_type": "Conclusion",
+      "properties": {
+        "verdict": "ACCEPTED_BY_CONSENSUS"
+      }
+    }
+  },
+  "edges": [
+    {
+      "source_id": "exp:Self-Architecture_Stability_Trial",
+      "target_id": "hyp:H001",
+      "relationship": "tests",
+      "properties": {}
+    },
+    {
+      "source_id": "hyp:H001",
+      "target_id": "var:autoarchitecture_depth_factor",
+      "relationship": "has_independent",
+      "properties": {}
+    },
+    {
+      "source_id": "hyp:H001",
+      "target_id": "var:gsai_score",
+      "relationship": "has_dependent",
+      "properties": {}
+    },
+    {
+      "source_id": "exp:Self-Architecture_Stability_Trial",
+      "target_id": "dataset:v1.0.0",
+      "relationship": "produces",
+      "properties": {}
+    },
+    {
+      "source_id": "exp:Self-Architecture_Stability_Trial",
+      "target_id": "proto:PROTO-133-1",
+      "relationship": "executes_protocol",
+      "properties": {}
+    },
+    {
+      "source_id": "exp:Self-Architecture_Stability_Trial",
+      "target_id": "stat:trial_summary",
+      "relationship": "calculates",
+      "properties": {}
+    },
+    {
+      "source_id": "stat:trial_summary",
+      "target_id": "bench:SARITA_v1.0",
+      "relationship": "compares_to",
+      "properties": {}
+    },
+    {
+      "source_id": "pub:self_architecture_paper",
+      "target_id": "stat:trial_summary",
+      "relationship": "includes_data",
+      "properties": {}
+    },
+    {
+      "source_id": "pub:self_architecture_paper",
+      "target_id": "conclusion:H001_accepted",
+      "relationship": "concludes",
+      "properties": {}
+    },
+    {
+      "source_id": "conclusion:H001_accepted",
+      "target_id": "hyp:H001",
+      "relationship": "proves",
+      "properties": {}
+    }
+  ]
+}

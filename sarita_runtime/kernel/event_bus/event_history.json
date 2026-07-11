@@ -114,5 +114,68 @@
       "metric": "phi",
       "value": 0.988
     }
+  },
+  {
+    "event_id": "EVT-E1C829BE",
+    "type": "system.boot",
+    "sender": "runtime_master",
+    "timestamp": 1783800933.2665431,
+    "data": {
+      "timestamp": 1783800933.266416
+    }
+  },
+  {
+    "event_id": "EVT-3DEC0A06",
+    "type": "state.changed",
+    "sender": "runtime_master",
+    "timestamp": 1783800933.2683692,
+    "data": {
+      "new_state": "OPERATIONAL"
+    }
+  },
+  {
+    "event_id": "EVT-393F98EF",
+    "type": "system.boot",
+    "sender": "runtime_master",
+    "timestamp": 1783800989.3087993,
+    "data": {
+      "timestamp": 1783800989.3087606
+    }
+  },
+  {
+    "event_id": "EVT-0A815C69",
+    "type": "state.changed",
+    "sender": "runtime_master",
+    "timestamp": 1783800989.3094723,
+    "data": {
+      "new_state": "OPERATIONAL"
+    }
+  },
+  {
+    "event_id": "EVT-2F536908",
+    "type": "system.boot",
+    "sender": "runtime_master",
+    "timestamp": 1783801051.996648,
+    "data": {
+      "timestamp": 1783801051.9966078
+    }
+  },
+  {
+    "event_id": "EVT-00A8978B",
+    "type": "state.changed",
+    "sender": "runtime_master",
+    "timestamp": 1783801051.997338,
+    "data": {
+      "new_state": "OPERATIONAL"
+    }
+  },
+  {
+    "event_id": "EVT-7D24ACE0",
+    "type": "system.shutdown",
+    "sender": "runtime_master",
+    "timestamp": 1783801052.208598,
+    "data": {
+      "timestamp": 1783801052.2085583
+    }
   }
 ]

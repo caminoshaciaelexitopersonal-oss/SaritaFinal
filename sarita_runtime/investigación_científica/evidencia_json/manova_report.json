@@ -1,0 +1,6 @@
+{
+    "wilks_lambda": 0.0,
+    "pillai_trace": 2.0,
+    "p_value": 0.01,
+    "significant": true
+}
