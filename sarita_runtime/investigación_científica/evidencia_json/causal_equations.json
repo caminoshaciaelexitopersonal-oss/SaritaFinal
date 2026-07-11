@@ -1,0 +1,6 @@
+{
+    "coefficient": 0.85,
+    "confounders": [
+        "confounder_hardware_speed"
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "analyzed_studies_count": 3,
+    "combined_effect_size": 11427.5746,
+    "heterogeneity": {
+        "cochran_q": 1.785917551378155e+16,
+        "degrees_of_freedom": 2,
+        "i_squared": 1.0,
+        "tau_squared": 167766.7683
+    },
+    "publication_bias": {
+        "publication_bias_detected": false,
+        "asymmetry_coefficient": -0.9707,
+        "correlation_size_effect": 0.9707,
+        "message": "No substantial funnel plot asymmetry detected."
+    },
+    "robustness_score": 0.0
+}

@@ -1,0 +1,9 @@
+{
+    "platform_means": {
+        "linux_x86": 1.0,
+        "macos_arm64": 0.998,
+        "windows_win64": 0.999
+    },
+    "max_delta": 0.002,
+    "consistent": true
+}

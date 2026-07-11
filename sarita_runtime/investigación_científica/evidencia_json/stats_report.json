@@ -1,0 +1,13 @@
+{
+    "mean": 1.0,
+    "median": 1.0,
+    "std_dev": 0.0,
+    "variance": 0.0,
+    "confidence_interval_95": [
+        1.0,
+        1.0
+    ],
+    "p_value": 0.001,
+    "cohens_d_effect_size": 11516.1604,
+    "t_stat": 44601.8976
+}

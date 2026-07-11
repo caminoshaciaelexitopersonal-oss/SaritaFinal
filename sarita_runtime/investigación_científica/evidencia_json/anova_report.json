@@ -1,0 +1,11 @@
+{
+    "ss_between": 0.0375,
+    "ss_within": 0.0,
+    "df_between": 1,
+    "df_within": 58,
+    "ms_between": 0.0375,
+    "ms_within": 0.0,
+    "f_stat": 1989329268.3033,
+    "p_value": 0.01,
+    "significant": true
+}

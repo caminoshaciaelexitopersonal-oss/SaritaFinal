@@ -1,0 +1,41 @@
+{
+  "execution": {
+    "active_tasks_count": 0,
+    "completed_count": 0,
+    "failed_count": 0,
+    "total_execution_time": 0.0
+  },
+  "architecture": {
+    "gsai": 0.981,
+    "coupling_degree": 0.12,
+    "redundancy_ratio": 0.015,
+    "module_count": 142
+  },
+  "governance": {
+    "laws_active": 12,
+    "compliance_ratio": 1.0,
+    "violations_detected": 0
+  },
+  "runtime": {
+    "status": "OFFLINE",
+    "uptime_sec": 0.0,
+    "session_count": 0,
+    "cpu_usage_pct": 5.0,
+    "memory_allocated_mb": 120.0
+  },
+  "consistency": {
+    "ggci_consistency": 0.979,
+    "dimensions_held": 10,
+    "direct_contradictions": 0
+  },
+  "certification": {
+    "certified_phases": 131,
+    "validation_score": 0.9855,
+    "active_proofs": 8
+  },
+  "learning": {
+    "recorded_experiences": 4,
+    "cumulative_reward": 3.821,
+    "policy_entropy": 0.421
+  }
+}

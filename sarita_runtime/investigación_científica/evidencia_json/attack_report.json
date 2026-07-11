@@ -1,0 +1,7 @@
+{
+    "total_attacks_run": 15150,
+    "blocked_attacks_count": 15150,
+    "failed_attacks_count": 0,
+    "immunity_percentage": 100.0,
+    "verdict": "SECURE"
+}
